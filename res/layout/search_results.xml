@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:mitmobile="http://schemas.android.com/apk/res/edu.mit.mitmobile"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="fill_parent">
+ 	
+ 	<edu.mit.mitmobile.TitleBar
+  		android:text="Search Results"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  
+  
+  	<edu.mit.mitmobile.SearchResultsHeader
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:visibility="gone"
+  		android:id="@+id/searchResultsSummaryView" />
+		
+	<ListView android:id="@+id/searchResultsList"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		style="@style/Lists" />
+		
+	<edu.mit.mitmobile.DividerView
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight" />
+		
+	<edu.mit.mitmobile.FullScreenLoader
+		android:id="@+id/searchResultsLoading"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+			
+</LinearLayout>

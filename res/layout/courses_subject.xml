@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:id="@+id/coursesSubjectTopLL"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+			
+	<ListView android:id="@+id/coursesSubjectsLV"
+		android:visibility="gone"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+		style="@style/Lists" />	
+		
+		
+	<edu.mit.mitmobile.FullScreenLoader
+		android:id="@+id/coursesSubjectsLoader"
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent" />
+		
+
+</LinearLayout>

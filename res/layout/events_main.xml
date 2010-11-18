@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@color/rowBackground">
+  
+    <edu.mit.mitmobile.TitleBar
+  		android:text="Events"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  		
+  	<edu.mit.mitmobile.SearchBar
+  		android:id="@+id/eventsSearchBar"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  		
+  	<edu.mit.mitmobile.TwoLineActionRow
+  		android:id="@+id/eventsTodaysEvents"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:text="Today's Events" />
+  		
+  	<edu.mit.mitmobile.DividerView
+  		android:layout_width="fill_parent"
+  		android:layout_height="@dimen/dividerHeight" />
+  		
+  		
+  	<edu.mit.mitmobile.TwoLineActionRow
+  		android:id="@+id/eventsTodaysExhibits"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:text="Today's Exhibits" />
+  		
+  	<edu.mit.mitmobile.DividerView
+  		android:layout_width="fill_parent"
+  		android:layout_height="@dimen/dividerHeight" />
+  		
+
+  	<edu.mit.mitmobile.TwoLineActionRow
+  		android:id="@+id/eventsBrowseCatogories"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:text="Browse Events by Category" />
+  		
+  	<edu.mit.mitmobile.DividerView
+  		android:layout_width="fill_parent"
+  		android:layout_height="@dimen/dividerHeight" />
+  		
+    <edu.mit.mitmobile.TwoLineActionRow
+  		android:id="@+id/eventsAcademicCalendar"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:text="Academic Calendar" />
+  		
+  	<edu.mit.mitmobile.DividerView
+  		android:layout_width="fill_parent"
+  		android:layout_height="@dimen/dividerHeight" />
+  		
+  		
+    <edu.mit.mitmobile.TwoLineActionRow
+  		android:id="@+id/eventsHolidaysCalendar"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:text="Holidays" />
+  		
+  	<edu.mit.mitmobile.DividerView
+  		android:layout_width="fill_parent"
+  		android:layout_height="@dimen/dividerHeight" />
+  		
+  		
+  	
+  	
+</LinearLayout>

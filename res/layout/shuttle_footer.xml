@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@drawable/main_repeat">
+  
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        	 	
+   	        <ImageView android:src="@drawable/shuttle"
+     	        android:layout_width="wrap_content"
+     	        android:layout_height="wrap_content"
+     	        android:layout_gravity="center_vertical"
+     	        android:paddingLeft="@dimen/horizontalPadding"
+     	        android:paddingRight="@dimen/horizontalPadding" />
+	 	
+            <TextView android:text="Shuttle is currently running"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="@dimen/verticalPadding"
+     	        android:paddingBottom="@dimen/verticalPadding"
+                style="@style/SmallPrint"/>
+        </LinearLayout>
+	 	
+        <LinearLayout android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        	 	
+   	        <ImageView android:src="@drawable/shuttle_off"
+     	        android:layout_width="wrap_content"
+     	        android:layout_height="wrap_content"
+     	        android:layout_gravity="center_vertical"
+     	        android:paddingLeft="@dimen/horizontalPadding"
+     	        android:paddingRight="@dimen/horizontalPadding" />
+	 	
+            <TextView android:text="Shuttle is not running at this time, please check the schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingTop="@dimen/verticalPadding"
+     	        android:paddingBottom="@dimen/verticalPadding"
+                style="@style/SmallPrint"/>
+        </LinearLayout>
+        
+        <!-- Contacts -->
+        
+        <edu.mit.mitmobile.SectionHeader
+        	android:id="@+id/shuttleContactsHeader"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:text="Contact Info" />  
+
+		<LinearLayout android:orientation="horizontal"
+	 		android:layout_width="fill_parent"
+	 		android:layout_height="wrap_content"
+            android:paddingTop="@dimen/verticalPadding"
+            android:paddingBottom="@dimen/verticalPadding"
+            android:background="#ffff">
+	 		
+			<TextView
+				android:id="@+id/shuttleParkingTV"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/horizontalPadding"
+		        android:paddingRight="@dimen/horizontalPadding"
+                android:layout_weight="1"/>
+
+			<LinearLayout
+    			android:layout_width="fill_parent"
+    			android:layout_height="fill_parent"
+    			android:layout_gravity="right"
+    			android:layout_weight="9" >	
+
+  				<ImageView
+  					android:src="@drawable/action_phone"
+					android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content"
+        			android:paddingRight="@dimen/horizontalPadding"
+        			android:layout_gravity="center_vertical" />
+
+			</LinearLayout>
+  
+		</LinearLayout>
+		
+		<ImageView android:src="@drawable/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+		
+		<LinearLayout android:orientation="horizontal"
+	 		android:layout_width="fill_parent"
+	 		android:layout_height="wrap_content"
+            android:paddingTop="@dimen/verticalPadding"
+            android:paddingBottom="@dimen/verticalPadding"
+            android:background="#ffff">
+	 		
+			<TextView
+				android:id="@+id/shuttleSaferideTV"
+				android:text="Saferide"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/horizontalPadding"
+		        android:paddingRight="@dimen/horizontalPadding"
+                android:layout_weight="1"/>
+
+			<LinearLayout
+    			android:layout_width="fill_parent"
+    			android:layout_height="fill_parent"
+    			android:layout_gravity="right"
+    			android:layout_weight="9" >	
+
+  				<ImageView
+  					android:src="@drawable/action_phone"
+					android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content"
+        			android:paddingRight="@dimen/horizontalPadding"
+        			android:layout_gravity="center_vertical" />
+
+			</LinearLayout>
+		</LinearLayout>	
+        
+</LinearLayout>

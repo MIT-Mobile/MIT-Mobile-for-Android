@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="edu.mit.mitmobile"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:label="@string/app_name" android:icon="@drawable/mit_mobile_icon" android:debuggable="true" android:theme="@style/Main">
+    
+        <activity android:name=".MITNewsWidgetActivity"
+        		  android:screenOrientation="portrait"
+       			  android:alwaysRetainTaskState="true"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        
+ 		
+		
+		<receiver android:name=".alerts.BootReceiver" android:enabled="true">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<category android:name="android.intent.category.HOME" />
+			</intent-filter>
+		</receiver>
+	        
+        <uses-library android:name="com.google.android.maps" />
+        
+        <activity android:name=".maps.MITMapActivity" android:launchMode="singleTop"  android:process=":map"
+        		android:screenOrientation="portrait">
+        	<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>
+			<meta-data android:name="android.app.searchable" android:resource="@xml/maps_searchable" />
+		</activity>
+        <activity android:name=".maps.MITMapBrowseCatsActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".maps.MITMapActivity" />
+        </activity>
+        <activity android:name=".maps.MITMapBrowseSubCatsActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".maps.MITMapActivity" />
+        </activity>
+        <activity android:name=".maps.MITMapBrowseResultsActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".maps.MITMapActivity" />
+        </activity>
+        <activity android:name=".maps.MITMapDetailsSliderActivity" android:theme="@style/PlainBackground" android:screenOrientation="portrait">
+        	<meta-data android:name="android.app.default_searchable" android:value=".maps.MITMapActivity" />
+        </activity>
+		<provider android:name=".maps.MapsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile.maps.SuggestionsProvider" />
+        
+        <activity android:name=".events.EventsTopActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
+        <activity android:name=".events.EventsSearchActivity" 
+				  android:launchMode="singleTop"
+				  android:windowSoftInputMode="stateAlwaysHidden"
+				  android:theme="@style/PlainBackground">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>			
+			<meta-data android:name="android.app.searchable" android:resource="@xml/events_searchable" />
+		</activity>
+        <activity android:name=".events.MITEventsDaysSliderActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
+        <activity android:name=".events.MITAcademicCalendarSliderActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
+        <activity android:name=".events.MITHolidaysCalendarActivity" android:theme="@style/PlainBackground">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
+        <activity android:name=".events.EventsCategoryActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
+        <activity android:name=".events.MITEventsSliderActivity" android:configChanges="orientation">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
+		<provider android:name=".events.EventsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile.events.SuggestionsProvider" />
+
+
+        <activity android:name=".shuttles.ShuttlesActivity" 
+        		android:label="Shuttles"
+        		android:taskAffinity="edu.mit.mitmobile.shuttles"/>
+        <activity android:name=".shuttles.MITStopsSliderActivity" android:configChanges="orientation"/>
+        <activity android:name=".shuttles.MITRoutesSliderActivity" android:configChanges="orientation"/>
+		
+		<activity android:name=".classes.CoursesTopActivity" android:process=":courses">
+        		<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
+        </activity>
+		<activity android:name=".classes.CoursesSearchActivity"
+			android:process=":courses"
+			android:launchMode="singleTop"
+			android:windowSoftInputMode="stateAlwaysHidden"
+			android:theme="@style/PlainBackground">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>			
+			<meta-data android:name="android.app.searchable" android:resource="@xml/courses_searchable" />
+		</activity>
+		<provider android:name=".classes.CourseSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile.classes.SuggestionsProvider" />
+        <activity android:name=".classes.MITCoursesListsSliderActivity" android:configChanges="orientation" android:process=":courses">
+        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
+        </activity>
+        <activity android:name=".classes.MITCoursesDetailsSliderActivity" android:theme="@style/PlainBackground" android:screenOrientation="portrait" android:process=":courses">
+        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
+        </activity>
+        <activity android:name=".classes.MITCoursesAnnouncementsSliderActivity" android:configChanges="orientation" android:process=":courses">
+        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
+        </activity>
+        <activity android:name=".classes.MITCoursesSubjectsSliderActivity" android:configChanges="orientation" android:process=":courses">
+        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
+        </activity>
+        
+		
+		<activity android:name=".people.PeopleActivity">
+			<meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
+		</activity>
+		<activity android:name=".people.PeopleSearchActivity" 
+				  android:launchMode="singleTop"
+				  android:windowSoftInputMode="stateAlwaysHidden"
+				  android:theme="@style/PlainBackground">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>			
+			<meta-data android:name="android.app.searchable" android:resource="@xml/people_searchable" />
+		</activity>
+		<provider android:name=".people.PeopleSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile.people.SuggestionsProvider" />
+		<activity android:name=".people.PeopleDetailActivity" android:configChanges="orientation">
+			<meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
+		</activity>
+
+		<activity android:name=".news.NewsListSliderActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+			<meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
+		</activity>
+		<activity android:name=".news.NewsSearchActivity" 
+				android:launchMode="singleTop"
+				android:windowSoftInputMode="stateAlwaysHidden"
+				android:theme="@style/PlainBackground">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>
+			<meta-data android:name="android.app.searchable" android:resource="@xml/news_searchable" />
+		</activity>
+		<provider android:name=".news.NewsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile.news.SuggestionsProvider" />
+		<activity android:name=".news.NewsBookmarksActivity" android:theme="@style/PlainBackground">
+			<meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
+		</activity>
+		<activity android:name=".news.NewsDetailsActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+			<meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
+		</activity>	
+		<activity android:name=".news.NewsImageActivity" android:theme="@style/PlainBackground">
+			<meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
+		</activity>
+		
+		<activity android:name=".emergency.EmergencyActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".emergency.EmergencyContactsActivity" android:theme="@style/PlainBackground" />
+
+		<activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Light" />
+
+		<activity android:name=".about.AboutActivity" />
+		<activity android:name=".about.AboutMITActivity" />
+		<activity android:name=".about.AboutCreditsActivity" />
+		
+		<receiver android:name=".alerts.NotificationsAlarmReceiver"  class=".NotificationsAlarmReceiver" />
+		<!-- 
+		<service android:name=".UpdateService"   class=".UpdateService"  />
+		<service android:name=".UpdateService"  android:enabled="true"  >
+		 	<intent-filter>
+                        <category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</service>
+		<service android:name=".UpdateService"  class="UpdateService" android:enabled="true"  />
+		<service android:name=".UpdateService"  android:enabled="true"  />
+		<intentservice android:name=".UpdateService"  android:enabled="true"  />
+		 -->
+		<service android:name=".alerts.NotificationService"  android:enabled="true"  ></service>
+			          	          	           
+    
+</application>
+
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+	<uses-sdk android:minSdkVersion="7"></uses-sdk>
+
+<uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
+<uses-permission android:name="android.permission.WRITE_CALENDAR"></uses-permission>
+<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+</manifest> 

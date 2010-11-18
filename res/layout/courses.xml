@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:id="@+id/coursesTopLL"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+  
+  	<edu.mit.mitmobile.TitleBar
+  		android:text="MIT Stellar"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+  	<edu.mit.mitmobile.SearchBar
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:id="@+id/coursesSearchBar" />
+	
+	<ScrollView
+  		android:layout_width="fill_parent"
+ 	    android:layout_height="wrap_content">
+ 	    
+ 	    <LinearLayout
+ 	    	android:orientation="vertical"
+ 	    	android:layout_width="fill_parent"
+ 	    	android:layout_height="wrap_content">
+ 	    		 
+			<LinearLayout
+				android:background="@color/rowBackground" 
+				android:id="@+id/coursesMyStellar"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:orientation="vertical" />	
+		
+			<ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>	
+	
+			<!-- Browse -->
+			<edu.mit.mitmobile.SectionHeader
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Browse By Courses" />
+	
+			<LinearLayout 
+				android:id="@+id/coursesBrowseList"
+				android:background="@color/rowBackground"
+  				android:orientation="vertical"
+  				android:visibility="gone"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content">
+		
+					<edu.mit.mitmobile.TwoLineActionRow
+						android:id="@+id/courses01TV"
+						android:text="Courses 1-10"
+						android:layout_width="fill_parent" 
+						android:layout_height="wrap_content"/>	
+			
+					<View
+						android:layout_width="fill_parent"
+						android:layout_height="@dimen/dividerHeight"
+						android:background="@color/dividerColor" />
+				
+				
+					<edu.mit.mitmobile.TwoLineActionRow
+						android:id="@+id/courses11TV"
+						android:text="Courses 11-20"
+						android:layout_width="fill_parent" 
+						android:layout_height="wrap_content"/>	
+			
+					<View
+						android:layout_width="fill_parent"
+						android:layout_height="@dimen/dividerHeight"
+						android:background="@color/dividerColor" />
+				
+					<edu.mit.mitmobile.TwoLineActionRow
+						android:id="@+id/courses21TV"
+						android:text="Courses 21-24"
+						android:layout_width="fill_parent" 
+						android:layout_height="wrap_content"/>	
+			
+					<View
+						android:layout_width="fill_parent"
+						android:layout_height="@dimen/dividerHeight"
+						android:background="@color/dividerColor" />
+				
+				
+					<edu.mit.mitmobile.TwoLineActionRow
+						android:id="@+id/coursesOtherTV"
+						android:text="Other Courses"
+						android:layout_width="fill_parent" 
+						android:layout_height="wrap_content"/>	
+					
+			</LinearLayout>
+	
+			<edu.mit.mitmobile.FullScreenLoader
+				android:layout_width="fill_parent"
+				android:layout_height="80dip"
+				android:id="@+id/coursesBrowseLoader" />	
+		
+		</LinearLayout>
+	</ScrollView>		
+
+</LinearLayout>

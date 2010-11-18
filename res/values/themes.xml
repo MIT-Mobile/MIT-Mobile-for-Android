@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="Main">
+		<item name="android:windowBackground">@drawable/main_repeat</item>
+		<item name="android:background">@android:color/transparent</item>
+		<item name="android:windowNoTitle">true</item>
+	</style>
+	
+	<style name="PlainBackground" parent="@style/Main">
+		<item name="android:windowBackground">@color/plainBackground</item>
+	</style>
+	
+	<!--  row styles -->
+	<style name="Lists">
+		<item name="android:background">#ffffffff</item>
+		<item name="android:cacheColorHint">#ffffffff</item>
+		
+		<item name="android:divider">@color/dividerColor</item>
+		<item name="android:dividerHeight">@dimen/dividerHeight</item>
+	</style>
+	
+	<style name="PageTitle">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:textColor">#ffd5d5d5</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="PageSubtitle">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:textColor">#fff0f0f0</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="ListItemPrimary">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">17sp</item>
+		<item name="android:textColor">#ff191919</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="ListItemSecondary">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">13sp</item>
+		<item name="android:textColor">#ff8c8c8c</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="ListValue">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">17sp</item>
+		<item name="android:textColor">#ff000000</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="Label">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#ff990000</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<!--  content styles -->
+	<style name="ContentTitle">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">22sp</item>
+		<item name="android:textColor">#ff000000</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="Deck">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">17sp</item>
+		<item name="android:textColor">#ff505050</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="Byline">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">#ff505050</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="Caption">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">11sp</item>
+		<item name="android:textColor">#ff999999</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="BodyText">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#ff202020</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="SubHead">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">13sp</item>
+		<item name="android:textColor">#ffffffff</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="SmallPrint">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">#ff505050</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="BoldRed">
+	    <item name="android:textColor">#ff990000</item>
+	    <item name="android:textStyle">bold</item>
+	</style>
+	
+</resources>

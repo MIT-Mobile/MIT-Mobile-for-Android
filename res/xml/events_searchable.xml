@@ -1,0 +1,7 @@
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+   android:label="@string/events_search_label"
+   android:hint="@string/events_search_hint"
+   android:searchMode="showSearchLabelAsBadge"
+   android:searchSuggestAuthority="edu.mit.mitmobile.events.SuggestionsProvider"
+   android:searchSuggestSelection=" ?"
+/>

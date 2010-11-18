@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/ll_top"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    
+    <edu.mit.mitmobile.TitleBar
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/sliderActivityTitleBar" />
+
+	<edu.mit.mitmobile.SliderView
+		android:id="@+id/sliderMainContent"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" />
+
+</LinearLayout>

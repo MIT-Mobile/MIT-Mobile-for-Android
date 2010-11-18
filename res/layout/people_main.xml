@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content">
+  
+  	<edu.mit.mitmobile.TitleBar
+  		android:text="People Directory"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  		
+  	<edu.mit.mitmobile.SearchBar
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:id="@+id/peopleSearchBar" />
+		
+	<ListView android:id="@+id/peopleRecentlyViewed"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		style="@style/Lists" />
+			
+</LinearLayout>

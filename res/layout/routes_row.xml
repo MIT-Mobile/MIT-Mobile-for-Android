@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:minHeight="@dimen/minRowHeight"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+  
+    <ImageView android:id="@+id/routesRowIV"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/horizontalPadding"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView android:id="@+id/routesRowNextTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/horizontalPadding"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+		style="@style/ListValue" />
+        
+     <TextView android:id="@+id/routesRowStopTV"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/routesRowNextTV"
+		android:layout_toRightOf="@id/routesRowIV"
+        android:paddingLeft="@dimen/horizontalPadding"
+        android:layout_centerVertical="true"
+        android:singleLine="true"
+        android:ellipsize="end"
+        style="@style/ListItemPrimary" />
+	
+</RelativeLayout>

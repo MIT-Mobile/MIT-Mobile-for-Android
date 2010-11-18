@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+  
+	<LinearLayout
+ 		xmlns:android="http://schemas.android.com/apk/res/android"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:orientation="horizontal">
+  
+  		<!-- title bar logo -->
+  		<ImageButton 
+  			android:src="@drawable/title_bar_logo"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:id="@+id/titleBarHomeButton"
+  			android:background="@android:color/transparent"
+  		/>
+  	
+  	    <RelativeLayout
+  			android:id="@+id/titleWrapper"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_weight="1">
+  	
+  			<!-- Background Image -->
+  			<ImageView
+  				android:id="@+id/titleBarBackgrooundIV"
+  				android:src="@drawable/navbar"
+  				android:scaleType="fitXY"
+  				android:layout_alignParentLeft="true"
+  				android:layout_width="fill_parent"
+  				android:layout_height="wrap_content" />
+  		
+  			<!--  Right arrow -->
+  			<ImageView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:layout_alignParentRight="true"
+  				android:visibility="gone"
+  				android:id="@+id/titleBarRightArrow"
+  				android:src="@drawable/arrow_right" />
+  		
+  		
+  			<!--  Left arrow  -->
+  			<ImageView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:layout_toLeftOf="@id/titleBarRightArrow"
+  				android:visibility="gone"
+  				android:id="@+id/titleBarLeftArrow"
+  				android:src="@drawable/arrow_left" />
+  		
+  			<!--  Title text -->
+  			<TextView
+  				android:layout_width="wrap_content"
+  				android:layout_height="fill_parent" 
+  				android:gravity="center_vertical"
+  				android:layout_alignParentLeft="true"
+  				android:layout_toLeftOf="@id/titleBarLeftArrow"
+  				android:singleLine="true"
+  				android:ellipsize="end"
+  				android:paddingLeft="@dimen/verticalPadding"
+  				android:background="@android:color/transparent"
+  				android:id="@+id/titleBarTV" 
+  				style="@style/PageTitle" />
+  		
+  		</RelativeLayout>
+  	</LinearLayout>
+  	
+  	<RelativeLayout
+  		android:layout_width="wrap_content"
+  		android:layout_height="42dip"
+  		android:background="#ff404040"
+  		android:id="@+id/titleBarSubtitleBar"
+  		android:visibility="gone">
+  		
+  		<TextView
+  			android:layout_width="wrap_content"
+  			android:layout_height="fill_parent" 
+  			android:gravity="center_vertical"
+  			android:layout_alignParentLeft="true"
+  			android:paddingLeft="11dip"
+  			android:background="@android:color/transparent"
+  			android:id="@+id/titleBarSubtitleTV" 
+  			style="@style/PageSubtitle" />
+  				
+  		<!--  Right arrow -->
+  		<ImageView
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:layout_alignParentRight="true"
+  			android:visibility="gone"
+  			android:id="@+id/titleBarSubtitleRightArrow"
+  			android:src="@drawable/arrow_right" />
+  		
+  		
+  		<!--  Left arrow  -->
+  		<ImageView
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:layout_toLeftOf="@id/titleBarSubtitleRightArrow"
+  			android:visibility="gone"
+  			android:id="@+id/titleBarSubtitleLeftArrow"
+  			android:src="@drawable/arrow_left" />
+  			
+  			
+  	</RelativeLayout>
+  			
+</LinearLayout>

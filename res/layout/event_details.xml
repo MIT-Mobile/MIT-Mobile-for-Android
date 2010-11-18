@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.mit.mitmobile.LockingScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  
+	<LinearLayout
+  		android:id="@+id/eventDetailsLinearLayout"
+  		android:orientation="vertical"
+  		android:background="#FFFFFF"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent">
+  
+  
+		<TextView
+			android:id="@+id/eventDetailsTitleTV"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+			style="@style/ContentTitle" />
+		
+		<TextView
+			android:id="@+id/eventDetailsDateTV"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+			style="@style/Deck" />
+		
+		<edu.mit.mitmobile.DividerView
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/dividerHeight" />		
+					
+	</LinearLayout>
+</edu.mit.mitmobile.LockingScrollView>

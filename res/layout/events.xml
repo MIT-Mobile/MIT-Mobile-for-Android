@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:id="@+id/eventsTopLL"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+	<!-- Top menu bar -->
+	<LinearLayout 
+		android:id="@+id/eventsTopMenuLL"
+		android:orientation="horizontal"
+		android:background="#FC30"
+		android:paddingBottom="3px"
+		android:paddingTop="3px"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" >
+			<ImageView 
+				android:id="@+id/eventsSearchIV"
+				android:layout_gravity="center"
+				android:src="@drawable/searchfield_star"
+				android:scaleType="center"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />
+			<Spinner
+				android:id="@+id/eventsCatsSpin"
+				android:entries="@array/EventTypes"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content" />
+			<EditText
+				android:id="@+id/eventsSearchET"
+				android:layout_weight="1"
+				android:visibility="gone"
+				android:paddingBottom="3px"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />			
+			<Button
+				android:id="@+id/eventsSearchButton"
+				android:text="Cancel"
+				android:visibility="gone"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>			
+	</LinearLayout>
+	
+	 
+	<!-- Date bar -->
+	<LinearLayout 
+		android:id="@+id/eventsDateLL"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent" 
+		android:layout_height="40px">
+			<ImageButton android:id="@+id/eventsPrevIB"
+				android:src="@drawable/arrow_white_left"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+			<TextView android:id="@+id/eventsDateTV"
+				android:gravity="center"
+				android:text="today"
+				android:textStyle="bold"
+				android:layout_weight="1"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+			<ImageButton android:id="@+id/eventsNextIB"
+				android:src="@drawable/arrow_white_right"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+	</LinearLayout>
+		
+		
+	<ListView android:id="@android:id/list"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" 
+		android:layout_weight="1"/>
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="boldBlack">#000000</color>
+	<color name="detailText">#505050</color>
+	<color name="dividerColor">#CCC</color>
+	<dimen name="dividerHeight">1px</dimen>
+
+
+
+	<color name="rowBackground">#FFFFFF</color>
+	<dimen name="horizontalPadding">10dip</dimen>
+	<dimen name="verticalPadding">6dip</dimen>
+	<dimen name="interlinePadding">2dip</dimen>
+	<dimen name="minRowHeight">40dip</dimen>
+	<color name="plainBackground">#FFFFFF</color>
+
+<dimen name="tabTextSize">12sp</dimen>
+</resources>

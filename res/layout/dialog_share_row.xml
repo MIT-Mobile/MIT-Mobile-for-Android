@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+  
+		<ImageView android:id="@+id/shareIV"
+			android:padding="4dip"
+			android:scaleType="fitXY"
+			android:layout_width="72px"
+			android:layout_height="72px"
+			android:layout_gravity="center"/>
+			
+		<TextView
+			android:id="@+id/shareTV"
+			android:layout_gravity="center"
+			android:paddingLeft="@dimen/horizontalPadding"
+			style="@style/ListItemPrimary"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+			
+</LinearLayout>

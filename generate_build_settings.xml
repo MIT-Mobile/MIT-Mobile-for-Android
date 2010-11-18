@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MITSplashActivity">
+    <sequential>
+        <exec executable="../build-deployment/build_source.py" />
+    </sequential>
+</project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- disabled state --> 
+    <item android:drawable="@drawable/arrow_left_disabled"
+          android:state_enabled="false" />
+          
+    <!-- pressed state --> 
+    <item android:drawable="@drawable/arrow_left_pressed"
+          android:state_pressed="true" />
+          
+    <!-- default -->
+    <item android:drawable="@drawable/arrow_left_normal" />
+</selector>

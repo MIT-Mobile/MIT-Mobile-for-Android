@@ -1,0 +1,13 @@
+android_sdk_path = "path/to/android-sdk-mac_86"
+
+git_repository = "git@github.com:MIT-Mobile/MIT-Mobile-for-Android.git"
+
+mobile_web_domain = "m.mit.edu"
+
+google_maps_api_key = "aaa" # this needs to be the google maps api key  
+
+news_office_path = "newsoffice"
+
+verbose_logging = True
+
+build_tag = "development"

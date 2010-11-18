@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+  
+  
+	<TextView 
+		android:id="@+id/eventTitleTV"
+		android:paddingTop="@dimen/verticalPadding" 
+		android:paddingLeft="@dimen/horizontalPadding"
+		android:paddingRight="@dimen/horizontalPadding"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" 
+		style="@style/ListItemPrimary" />
+	
+	<!--  bottom line contains date and location -->
+	<RelativeLayout
+		android:orientation="horizontal"
+	  	android:paddingBottom="@dimen/verticalPadding"
+	  	android:paddingLeft="@dimen/horizontalPadding"
+		android:paddingRight="@dimen/horizontalPadding"
+  		android:layout_width="fill_parent" 
+  		android:layout_height="wrap_content">
+					
+		<TextView
+			android:id="@+id/eventLocTV"  
+			android:gravity="right"
+			android:layout_width="70dip" 
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:singleLine="true"
+			android:ellipsize="end"
+			style="@style/ListItemSecondary"
+			/>
+			
+			
+		<TextView
+			android:id="@+id/eventDateTV"
+			android:layout_alignParentLeft="true"
+			android:layout_toLeftOf="@id/eventLocTV"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			style="@style/ListItemSecondary" />
+
+	</RelativeLayout>
+
+</LinearLayout>

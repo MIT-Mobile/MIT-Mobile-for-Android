@@ -1,0 +1,6 @@
+*.class
+bin/
+gen/
+src/edu/mit/mitmobile/about/BuildSettings.java
+local.properties
+res/values/build_settings_resource.xml

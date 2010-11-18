@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content" >
+
+	<!-- 
+		for some reason to get the dynamic setting of height
+		based on image assets to work we need an extra wrapper view
+	 -->
+	 
+	<FrameLayout
+		android:id="@+id/sectionHeaderWrapper"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" >
+  	
+  		<!-- Background Image -->
+  		<ImageView
+  			android:id="@+id/sectionHeaderBackgroundIV"
+  			android:src="@drawable/list_subhead"
+  			android:scaleType="fitXY"
+  			android:layout_alignParentLeft="true"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content" />
+
+  		<!--  Title text -->
+  		<TextView
+  			android:layout_width="wrap_content"
+  			android:layout_height="fill_parent"
+  			android:gravity="center_vertical"
+  			android:layout_alignParentLeft="true"
+  			android:paddingLeft="@dimen/horizontalPadding"
+  			android:background="@android:color/transparent"
+  			android:id="@+id/sectionHeaderTV" 
+  			style="@style/SubHead" />
+  
+	</FrameLayout>
+</FrameLayout>

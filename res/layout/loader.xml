@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="fill_parent"
+  android:layout_height="25dip"
+  android:background="#ff191919" >
+  
+
+ 	<ImageView
+	    android:id="@+id/loaderLoadingImage"
+	    android:src="@drawable/sm_busybox"
+	    android:scaleType="center"
+	    android:layout_width="25dip"
+	    android:layout_height="25dip"/>
+	    
+	<TextView
+		android:id="@+id/loaderLoadingMessageTV"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical" 
+		style="@style/Caption" />
+		
+ 
+	<TextView 
+		android:id="@+id/loaderTV" 
+		android:visibility="gone"
+		android:paddingLeft="@dimen/horizontalPadding"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical" 
+		style="@style/Caption" />
+	
+</LinearLayout>

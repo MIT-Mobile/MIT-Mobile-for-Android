@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:id="@+id/shuttlesLL"
+  android:background="@drawable/main_repeat"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  
+    <edu.mit.mitmobile.TitleBar
+  		android:text="Shuttles"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+	 	
+    <TextView android:text="Select a shuttle to view the full schedule and realtime map locations."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/horizontalPadding"
+        android:paddingRight="@dimen/horizontalPadding"
+        android:paddingTop="@dimen/verticalPadding"
+        android:paddingBottom="@dimen/verticalPadding"
+        style="@style/SmallPrint" />
+        
+	<LinearLayout
+  		android:orientation="vertical"
+  		android:id="@+id/shuttlesDayLL"
+	 	android:layout_width="fill_parent"
+	 	android:layout_height="fill_parent">
+		
+        <ListView
+            android:id="@+id/routeLV"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+	 	    android:background="#ffffffff"
+	 	    android:visibility="gone"
+            style="@style/Lists"/>
+            
+        <edu.mit.mitmobile.FullScreenLoader
+        	android:id="@+id/shuttleRoutesLoader"
+        	android:layout_width="fill_parent"
+        	android:layout_height="250dip" />
+	 	
+		<!-- Contact -->
+		<!-- 
+		<TextView
+				android:paddingTop="5px"
+				android:text="Contact Info:"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>
+
+		<LinearLayout android:orientation="horizontal"
+  			android:background="@layout/border"
+	 		android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<TextView
+				android:id="@+id/shuttleParkingTV"
+				android:text="Parking Office"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>
+			<ImageView 
+				android:id="@+id/shuttleParkingIV"
+				android:src="@drawable/phone"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+		</LinearLayout>		
+		
+		<LinearLayout android:orientation="horizontal"
+  			android:background="@layout/border"
+	 		android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<TextView
+				android:id="@+id/shuttleSaferideTV"
+				android:text="Saferide"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>
+			<ImageView 
+				android:id="@+id/shuttleSaferideIV"
+				android:src="@drawable/phone"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+		</LinearLayout>	
+			 -->			
+	</LinearLayout>
+  <!-- 
+  <Button android:id="@+id/shuttleTestBtn"
+				android:text="Test Alarm"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/> 
+ -->
+	
+</LinearLayout>

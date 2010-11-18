@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.mit.mitmobile.LockingScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:id="@+id/mapDetailsSV"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+<LinearLayout
+  android:orientation="vertical"
+  android:id="@+id/mapDetailsLL"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+	<!-- Mini Map and Info -->
+	<RelativeLayout 
+        android:orientation="horizontal"
+        android:paddingBottom="16dip"
+        android:background="@drawable/main_repeat"
+        android:paddingLeft="@dimen/horizontalPadding"
+        android:paddingRight="@dimen/horizontalPadding"
+        android:paddingTop="@dimen/verticalPadding"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content">
+		
+		<FrameLayout android:id="@+id/mapDetailsThumbnail"
+			android:background="#ff000000"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:layout_width="@dimen/mapThumbnailOuter"
+			android:layout_height="@dimen/mapThumbnailOuter">
+			
+			<ImageView
+				android:id="@+id/mapDetailsThumbnailIV"
+				android:layout_width="@dimen/mapThumbnailInner"
+				android:layout_height="@dimen/mapThumbnailInner"
+				android:layout_gravity="center" />
+
+		</FrameLayout>
+	
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_toLeftOf="@id/mapDetailsThumbnail"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content">
+	
+			<TextView  android:id="@+id/mapDetailsQueryTV"
+				style="@style/Deck"			
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+			
+			<TextView  android:id="@+id/mapDetailsTitleTV"
+				style="@style/ContentTitle"			
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+			
+			<TextView  android:id="@+id/mapDetailsSubtitleTV"
+				style="@style/Deck"			
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>	
+		
+		</LinearLayout>
+		
+
+			
+	</RelativeLayout>
+	
+	
+	<LinearLayout 
+  		android:orientation="vertical"
+		android:layout_weight="1"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"> 
+		
+			<TabHost 
+				    android:id="@+id/mapDetailsTH"
+					android:layout_weight="1"
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"> 
+				    
+			    <LinearLayout
+				        android:orientation="vertical"
+						android:layout_weight="1"
+						android:layout_width="fill_parent" 
+						android:layout_height="wrap_content"> 
+			        <TabWidget
+				            android:id="@android:id/tabs"
+				            android:layout_width="fill_parent"
+				            android:layout_height="@dimen/tabHeight"/>
+			        <FrameLayout
+					        android:id="@android:id/tabcontent"
+				        	android:paddingTop="@dimen/verticalPadding"
+				        	android:paddingBottom="@dimen/verticalPadding"
+				        	android:paddingLeft="@dimen/horizontalPadding"
+				        	android:paddingRight="@dimen/horizontalPadding"
+							android:layout_width="fill_parent" 
+							android:layout_height="fill_parent">
+			            
+			            <LinearLayout android:id="@+id/mapDetailsHereLL" 
+									android:orientation="vertical"
+									android:layout_width="fill_parent" 
+									android:layout_height="fill_parent">
+								<TextView android:id="@+id/mapDetailsHereTV" 
+									style="@style/BodyText"
+									android:layout_width="wrap_content" 
+									android:layout_height="wrap_content"/>	
+						</LinearLayout> 
+						
+						<LinearLayout android:id="@+id/mapDetailsPhotosLL" 
+									android:orientation="vertical"
+									android:layout_width="fill_parent" 
+									android:layout_height="fill_parent">
+								<WebView android:id="@+id/mapDetailsPhotosWV" android:padding="3px"
+									android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+									
+							   <ImageView
+  									android:layout_width="fill_parent"
+  									android:layout_height="300dip"
+  									android:id="@+id/mapDetailsImageLoadingView"
+  									android:scaleType="center"
+  									android:background="#FFFFFF"
+  									android:visibility="gone"
+  									android:src="@drawable/busybox" />
+  									
+								<TextView android:id="@+id/mapDetailsPhotosTV" 
+									style="@style/Caption"
+									android:padding="3px"
+									android:gravity="center_horizontal"
+									android:layout_width="fill_parent" 
+									android:layout_height="wrap_content"/>	
+						</LinearLayout>
+						
+						
+						
+			       </FrameLayout>
+			    </LinearLayout>
+			</TabHost>
+
+	</LinearLayout>
+		
+
+</LinearLayout>
+</edu.mit.mitmobile.LockingScrollView>
