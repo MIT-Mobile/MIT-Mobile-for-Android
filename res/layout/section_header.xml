@@ -17,7 +17,6 @@
   		<!-- Background Image -->
   		<ImageView
   			android:id="@+id/sectionHeaderBackgroundIV"
-  			android:src="@drawable/list_subhead"
   			android:scaleType="fitXY"
   			android:layout_alignParentLeft="true"
   			android:layout_width="fill_parent"

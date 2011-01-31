@@ -53,6 +53,15 @@
   				android:visibility="gone"
   				android:id="@+id/titleBarLeftArrow"
   				android:src="@drawable/arrow_left" />
+  				
+  			<!--  back button -->
+  			<ImageView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:layout_alignParentRight="true"
+  				android:visibility="gone"
+  				android:id="@+id/titleBarBackButton"
+  				android:src="@drawable/arrow_back" />
   		
   			<!--  Title text -->
   			<TextView

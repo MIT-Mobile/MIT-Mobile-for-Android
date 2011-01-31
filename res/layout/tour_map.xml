@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:id="@+id/mapLL"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  
+   	<edu.mit.mitmobile2.TitleBar
+   		android:id="@+id/mapTitleBar"
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content" />
+   		
+    <edu.mit.mitmobile2.tour.TourStartHelpActionRow
+    	android:id="@+id/tourMapStartHelp"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#ffffff"
+		android:visibility="gone" />
+		   		
+	<edu.mit.mitmobile2.maps.MITMapView
+	    android:id="@id/mapview"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:clickable="true"
+	    android:apiKey="@string/googleMapsApiKey" />
+	    
+	<include layout="@layout/tour_map_legend" />
+		
+	<ListView
+		android:id="@id/mapListView"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:visibility="gone"
+		style="@style/Lists" />
+		
+	<include layout="@layout/tour_map_list_switch" />
+
+ </LinearLayout>

@@ -6,14 +6,20 @@
     android:layout_height="fill_parent">
     
     
-    <edu.mit.mitmobile.TitleBar
+    <edu.mit.mitmobile2.TitleBar
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:id="@+id/sliderActivityTitleBar" />
 
-	<edu.mit.mitmobile.SliderView
+	<edu.mit.mitmobile2.SliderView
 		android:id="@+id/sliderMainContent"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent" />
+	    
+	<edu.mit.mitmobile2.FullScreenLoader
+		android:visibility="gone"
+		android:id="@+id/sliderActivityLoader"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
 
 </LinearLayout>

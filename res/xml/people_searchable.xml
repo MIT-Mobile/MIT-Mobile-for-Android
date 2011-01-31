@@ -2,6 +2,6 @@
    android:label="@string/people_search_label"
    android:hint="@string/people_search_hint"
    android:searchMode="showSearchLabelAsBadge"
-   android:searchSuggestAuthority="edu.mit.mitmobile.people.SuggestionsProvider"
+   android:searchSuggestAuthority="edu.mit.mitmobile2.people.SuggestionsProvider"
    android:searchSuggestSelection=" ?"
 />

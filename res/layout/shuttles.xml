@@ -7,7 +7,7 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   
-    <edu.mit.mitmobile.TitleBar
+    <edu.mit.mitmobile2.TitleBar
   		android:text="Shuttles"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
@@ -35,7 +35,7 @@
 	 	    android:visibility="gone"
             style="@style/Lists"/>
             
-        <edu.mit.mitmobile.FullScreenLoader
+        <edu.mit.mitmobile2.FullScreenLoader
         	android:id="@+id/shuttleRoutesLoader"
         	android:layout_width="fill_parent"
         	android:layout_height="250dip" />

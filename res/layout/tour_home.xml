@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:orientation="vertical"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent">
+
+  	<edu.mit.mitmobile2.TitleBar
+  		android:text="Campus Tour"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  		
+	<FrameLayout
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent">
+		
+		
+		<edu.mit.mitmobile2.tour.MainTourBackgroundView
+	  		android:id="@+id/tourHomeBackground"
+	  		android:layout_width="fill_parent"
+	  		android:layout_height="fill_parent" />
+	  
+	  	<edu.mit.mitmobile2.FullScreenLoader
+	  		android:id="@+id/tourHomeLoader"
+	  		android:background="#00ffffff"
+	  		android:layout_width="fill_parent"
+	  		android:layout_height="fill_parent" />
+
+	 		<LinearLayout
+					android:visibility="gone"
+					android:id="@+id/tourHomeContent"
+				 	android:orientation="vertical"
+		  			android:layout_width="fill_parent"
+		  			android:layout_height="fill_parent">
+				<TextView
+	  				android:id="@+id/tourHomeIntroduction"
+	  				android:layout_weight="1"
+	  				android:layout_width="fill_parent"
+	  				android:layout_height="wrap_content"
+	  				android:paddingLeft="@dimen/horizontalPadding"
+	  				android:paddingRight="@dimen/horizontalPadding"
+	  				android:paddingTop="@dimen/verticalPadding"
+	  				style="@style/TourHomeText"/>
+	  		 	<edu.mit.mitmobile2.DividerView
+					android:layout_width="fill_parent"
+					android:layout_height="@dimen/dividerHeight"
+	  		 		android:background="@color/dividerColor" />
+	  		 	<edu.mit.mitmobile2.TwoLineActionRow
+	  		 		android:layout_width="fill_parent"
+	  				android:layout_height="wrap_content"
+	  		 		android:id="@+id/tourSelectStartPoint"
+	  		 		android:background="@color/tourHomeRowBackground"
+	  		 		android:text="Begin Self-Guided Tour"
+	  		 		android:textColor="#900"
+	  		 		/>
+	  		 	<edu.mit.mitmobile2.DividerView
+					android:layout_width="fill_parent"
+					android:layout_height="@dimen/dividerHeight"
+	  		 		android:background="#66000000" />
+	  		 	<edu.mit.mitmobile2.TwoLineActionRow
+	  		 		android:id="@+id/tourHomeMITIntroductionButton"
+	  		 		android:layout_width="fill_parent"
+	  				android:layout_height="wrap_content"
+	  		 		android:background="@color/tourHomeRowBackground"
+	  		 		android:text="Introduction to MIT"
+	  		 		android:textColor="#000000"
+	  		 		/>
+	  		 	<edu.mit.mitmobile2.DividerView
+					android:layout_width="fill_parent"
+					android:layout_height="@dimen/dividerHeight"
+	  		 		android:background="#66000000" />
+	  		   <edu.mit.mitmobile2.TwoLineActionRow
+	  		   		android:id="@+id/tourHomeGuidedToursButton"
+	  		 		android:layout_width="fill_parent"
+	  				android:layout_height="wrap_content"
+	  		 		android:background="@color/tourHomeRowBackground"
+	  		 		android:text="Guided Tours"
+	  		 		android:textColor="#000000"
+	  		 		android:src="@drawable/action_external"
+	  		 		/>
+			</LinearLayout>
+
+	</FrameLayout>
+</LinearLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="44dip"
+	android:background="@drawable/tour_bottombar">
+
+	<ImageView
+		android:id="@+id/tourMapListSwitchImage"
+		android:src="@drawable/tour_toggle_left"
+		android:layout_width="wrap_content"
+		android:layout_height="40dip"
+		android:layout_centerInParent="true" />
+	
+	<TextView
+		android:id="@+id/tourMapListSwitchMapLabel"
+		android:layout_width="wrap_content"
+		android:layout_height="40dip"
+		android:gravity="center_vertical"
+		android:paddingRight="3dip"
+		android:text="Map"
+		android:layout_toLeftOf="@id/tourMapListSwitchImage" 
+		android:layout_centerVertical="true" />
+		
+	<TextView
+		android:id="@+id/tourMapListSwitchListLabel"
+		android:layout_width="wrap_content"
+		android:layout_height="40dip"
+		android:gravity="center_vertical"
+		android:paddingLeft="3dip"
+		android:text="List"
+		android:layout_toRightOf="@id/tourMapListSwitchImage" 
+		android:layout_centerVertical="true" />		
+</RelativeLayout>

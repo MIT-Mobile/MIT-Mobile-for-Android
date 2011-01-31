@@ -1,6 +1,10 @@
+*.DS_Store
 *.class
 bin/
 gen/
+libs/
 src/edu/mit/mitmobile/about/BuildSettings.java
 local.properties
 res/values/build_settings_resource.xml
+res/raw/*.mp4
+build-deployment/build_settings.py

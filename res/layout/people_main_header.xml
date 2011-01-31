@@ -17,7 +17,7 @@
 		android:textColor="#ff000000"
 		style="@style/SmallPrint" />
 		
-	<edu.mit.mitmobile.SectionHeader
+	<edu.mit.mitmobile2.SectionHeader
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:text="Campus Contacts" />
@@ -29,7 +29,7 @@
 		android:orientation="vertical">
 		
 		<!--  Main Directory Phone Number -->
-		<edu.mit.mitmobile.TwoLineActionRow
+		<edu.mit.mitmobile2.TwoLineActionRow
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/peopleDirectoryNumberRow"
@@ -41,14 +41,14 @@
 			android:background="@color/dividerColor" />
 			
 		<!-- More Emergency Contacts Row Button -->
-		<edu.mit.mitmobile.TwoLineActionRow
+		<edu.mit.mitmobile2.TwoLineActionRow
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/moreEmergencyContactsRow" />
 	
 	</LinearLayout>
 	
-	<edu.mit.mitmobile.SectionHeader
+	<edu.mit.mitmobile2.SectionHeader
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone"

@@ -2,6 +2,6 @@
    android:label="@string/events_search_label"
    android:hint="@string/events_search_hint"
    android:searchMode="showSearchLabelAsBadge"
-   android:searchSuggestAuthority="edu.mit.mitmobile.events.SuggestionsProvider"
+   android:searchSuggestAuthority="edu.mit.mitmobile2.events.SuggestionsProvider"
    android:searchSuggestSelection=" ?"
 />

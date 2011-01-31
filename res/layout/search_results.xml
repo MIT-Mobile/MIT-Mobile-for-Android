@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:mitmobile="http://schemas.android.com/apk/res/edu.mit.mitmobile"
+	xmlns:modolabs="http://schemas.android.com/apk/res/edu.mit.mitmobile2"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
  	android:layout_height="fill_parent">
  	
- 	<edu.mit.mitmobile.TitleBar
+ 	<edu.mit.mitmobile2.TitleBar
   		android:text="Search Results"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
   
   
-  	<edu.mit.mitmobile.SearchResultsHeader
+  	<edu.mit.mitmobile2.SearchResultsHeader
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content"
   		android:visibility="gone"
@@ -24,11 +24,11 @@
 		android:visibility="gone"
 		style="@style/Lists" />
 		
-	<edu.mit.mitmobile.DividerView
+	<edu.mit.mitmobile2.DividerView
 		android:layout_width="fill_parent"
 		android:layout_height="@dimen/dividerHeight" />
 		
-	<edu.mit.mitmobile.FullScreenLoader
+	<edu.mit.mitmobile2.FullScreenLoader
 		android:id="@+id/searchResultsLoading"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />

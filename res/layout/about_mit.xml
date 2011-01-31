@@ -5,7 +5,7 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content">
   
-    <edu.mit.mitmobile.TitleBar
+    <edu.mit.mitmobile2.TitleBar
   		android:text="About MIT"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />

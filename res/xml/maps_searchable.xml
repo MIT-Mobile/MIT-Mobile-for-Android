@@ -2,6 +2,6 @@
    android:label="@string/maps_search_label"
    android:hint="@string/maps_search_hint"
    android:searchMode="showSearchLabelAsBadge"
-   android:searchSuggestAuthority="edu.mit.mitmobile.maps.SuggestionsProvider"
+   android:searchSuggestAuthority="edu.mit.mitmobile2.maps.SuggestionsProvider"
    android:searchSuggestSelection=" ?"
 />

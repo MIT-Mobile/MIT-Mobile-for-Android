@@ -7,138 +7,151 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   
-    <edu.mit.mitmobile.TitleBar
+    <edu.mit.mitmobile2.TitleBar
   		android:text="About"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
+  		
+    <ScrollView
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="fill_parent" 
+  	    android:fillViewport="true" >
+  		
+  	    <LinearLayout
+  		    android:layout_width="fill_parent"
+  		    android:layout_height="wrap_content" 
+  		    android:orientation="vertical" >
 	 	
-    <LinearLayout android:id="@+id/aboutHeader"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#ffff"
-        android:paddingBottom="12dip"
-        android:paddingTop="6dip" >
+    	    <LinearLayout android:id="@+id/aboutHeader"
+  		        android:layout_width="fill_parent"
+  		        android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#ffff"
+                android:paddingBottom="12dip"
+                android:paddingTop="6dip" >
 
-        <LinearLayout
-            android:orientation="vertical"
-  		    android:layout_width="wrap_content"
-  	        android:layout_height="wrap_content"
-	        android:gravity="left" 
-            android:paddingLeft="@dimen/horizontalPadding">
+        	    <LinearLayout
+                    android:orientation="vertical"
+  		            android:layout_width="wrap_content"
+  	                android:layout_height="wrap_content"
+	                android:gravity="left" 
+                    android:paddingLeft="@dimen/horizontalPadding">
 	 	
-            <TextView 
-                android:id="@+id/aboutAppTitle"
-                style="@style/ContentTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/horizontalPadding" />
+                    <TextView 
+                        android:id="@+id/aboutAppTitle"
+                        style="@style/ContentTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="@dimen/horizontalPadding" />
 	 	
-            <TextView 
-                android:id="@+id/aboutAppVersion"
-                style="@style/Deck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/horizontalPadding" />
+                    <TextView 
+                        android:id="@+id/aboutAppVersion"
+                        style="@style/Deck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="@dimen/horizontalPadding" />
         
-        </LinearLayout>
+                </LinearLayout>
         
-        <ImageView
-            android:id="@+id/aboutVersionImage"
-            android:layout_width="56dip"
-            android:layout_height="56dip"
-            android:paddingTop="8dip"
-            android:paddingRight="@dimen/horizontalPadding"
-            android:paddingLeft="@dimen/horizontalPadding"
-            android:paddingBottom="@dimen/verticalPadding"
-            android:gravity="right"
-  		    android:scaleType="fitEnd"
-            android:layout_gravity="top"
-		    android:layout_weight="1" />
+                <ImageView
+                    android:id="@+id/aboutVersionImage"
+                    android:layout_width="56dip"
+                    android:layout_height="56dip"
+                    android:paddingTop="8dip"
+                    android:paddingRight="@dimen/horizontalPadding"
+                    android:paddingLeft="@dimen/horizontalPadding"
+                    android:paddingBottom="@dimen/verticalPadding"
+                    android:gravity="right"
+  		            android:scaleType="fitEnd"
+                    android:layout_gravity="top"
+		            android:layout_weight="1" />
 
-    </LinearLayout>
+            </LinearLayout>
 
-	<LinearLayout
-		android:id="@+id/aboutSettingsList"
-		android:orientation="vertical"
-		android:visibility="gone"
-		android:paddingBottom="16dip"
-		android:paddingLeft="@dimen/horizontalPadding"
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-        android:background="#ffff" >
+	        <LinearLayout
+	        	android:id="@+id/aboutSettingsList"
+	        	android:orientation="vertical"
+	        	android:visibility="gone"
+	        	android:paddingBottom="16dip"
+	        	android:paddingLeft="@dimen/horizontalPadding"
+	        	android:layout_height="wrap_content"
+	        	android:layout_width="fill_parent"
+                android:background="#ffff" >
 				
-	    <TextView
-	    	android:id="@+id/aboutVersionId"
-	    	android:layout_height="wrap_content"
-           	android:layout_width="wrap_content" 
-           	style="@style/BodyText" />
+	            <TextView
+	            	android:id="@+id/aboutVersionId"
+	            	android:layout_height="wrap_content"
+                   	android:layout_width="wrap_content" 
+                   	style="@style/BodyText" />
                 
-        <TextView
-	    	android:id="@+id/aboutBuildDate"
-	    	android:layout_height="wrap_content"
-           	android:layout_width="wrap_content"
-           	style="@style/BodyText" />
+                <TextView
+	            	android:id="@+id/aboutBuildDate"
+	            	android:layout_height="wrap_content"
+                   	android:layout_width="wrap_content"
+                   	style="@style/BodyText" />
                 
-        <TextView
-	    	android:id="@+id/aboutBuildSource"
-	    	android:layout_height="wrap_content"
-           	android:layout_width="wrap_content"
-           	style="@style/BodyText" />
+                <TextView
+	            	android:id="@+id/aboutBuildSource"
+	            	android:layout_height="wrap_content"
+                   	android:layout_width="wrap_content"
+                   	style="@style/BodyText" />
            	
-       <TextView
-	    	android:id="@+id/aboutBuildTag"
-	    	android:layout_height="wrap_content"
-           	android:layout_width="wrap_content"
-           	style="@style/BodyText" />
+               <TextView
+	            	android:id="@+id/aboutBuildTag"
+	            	android:layout_height="wrap_content"
+                   	android:layout_width="wrap_content"
+                   	style="@style/BodyText" />
             
-        <TextView
-	    	android:id="@+id/aboutServerDomain"
-	    	android:layout_height="wrap_content"
-           	android:layout_width="wrap_content" 
-           	style="@style/BodyText" />
+                <TextView
+	            	android:id="@+id/aboutServerDomain"
+	            	android:layout_height="wrap_content"
+                   	android:layout_width="wrap_content" 
+                   	style="@style/BodyText" />
                 	
-    </LinearLayout>
+            </LinearLayout>
 	 	
-    <TextView android:text="@string/about_app"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="16dip"
-        android:paddingLeft="@dimen/horizontalPadding"
-        android:paddingRight="@dimen/horizontalPadding"
-        style="@style/BodyText"
-        android:background="#ffff" />
+            <TextView android:text="@string/about_app"
+  	        	android:layout_width="fill_parent"
+  	        	android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dip"
+                android:paddingLeft="@dimen/horizontalPadding"
+                android:paddingRight="@dimen/horizontalPadding"
+                style="@style/BodyText"
+                android:background="#ffff" />
         
-    <ImageView android:src="@drawable/divider"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+            <ImageView android:src="@drawable/divider"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
 	
-    <edu.mit.mitmobile.TwoLineActionRow android:id="@+id/aboutCreditsTV"
-    	android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/rowBackground"
-        android:text="Credits"  />
+            <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/aboutCreditsTV"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Credits"  />
         
-    <ImageView android:src="@drawable/divider"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+            <ImageView android:src="@drawable/divider"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
 	 	
-    <edu.mit.mitmobile.TwoLineActionRow android:id="@+id/aboutMITTV"
-    	android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/rowBackground"
-        android:text="About MIT"  />
+            <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/aboutMITTV"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="About MIT"  />
         
-    <ImageView android:src="@drawable/divider"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+            <ImageView android:src="@drawable/divider"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
 	
-    <edu.mit.mitmobile.TwoLineActionRow android:id="@+id/send_feedback"
-    	android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/rowBackground"
-    	android:text="Send Feedback"
-    	android:src="@drawable/action_email" />
+            <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/send_feedback"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+            	android:text="Send Feedback"
+            	android:src="@drawable/action_email" />
+    	
+        </LinearLayout>
+    </ScrollView>
         
 </LinearLayout>

@@ -6,12 +6,12 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content">
   
-  	<edu.mit.mitmobile.TitleBar
+  	<edu.mit.mitmobile2.TitleBar
   		android:text="MIT Stellar"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
 
-  	<edu.mit.mitmobile.SearchBar
+  	<edu.mit.mitmobile2.SearchBar
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content"
   		android:id="@+id/coursesSearchBar" />
@@ -35,7 +35,7 @@
 			<ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>	
 	
 			<!-- Browse -->
-			<edu.mit.mitmobile.SectionHeader
+			<edu.mit.mitmobile2.SectionHeader
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:text="Browse By Courses" />
@@ -48,7 +48,7 @@
 				android:layout_width="fill_parent" 
 				android:layout_height="wrap_content">
 		
-					<edu.mit.mitmobile.TwoLineActionRow
+					<edu.mit.mitmobile2.TwoLineActionRow
 						android:id="@+id/courses01TV"
 						android:text="Courses 1-10"
 						android:layout_width="fill_parent" 
@@ -60,7 +60,7 @@
 						android:background="@color/dividerColor" />
 				
 				
-					<edu.mit.mitmobile.TwoLineActionRow
+					<edu.mit.mitmobile2.TwoLineActionRow
 						android:id="@+id/courses11TV"
 						android:text="Courses 11-20"
 						android:layout_width="fill_parent" 
@@ -71,7 +71,7 @@
 						android:layout_height="@dimen/dividerHeight"
 						android:background="@color/dividerColor" />
 				
-					<edu.mit.mitmobile.TwoLineActionRow
+					<edu.mit.mitmobile2.TwoLineActionRow
 						android:id="@+id/courses21TV"
 						android:text="Courses 21-24"
 						android:layout_width="fill_parent" 
@@ -83,7 +83,7 @@
 						android:background="@color/dividerColor" />
 				
 				
-					<edu.mit.mitmobile.TwoLineActionRow
+					<edu.mit.mitmobile2.TwoLineActionRow
 						android:id="@+id/coursesOtherTV"
 						android:text="Other Courses"
 						android:layout_width="fill_parent" 
@@ -91,7 +91,7 @@
 					
 			</LinearLayout>
 	
-			<edu.mit.mitmobile.FullScreenLoader
+			<edu.mit.mitmobile2.FullScreenLoader
 				android:layout_width="fill_parent"
 				android:layout_height="80dip"
 				android:id="@+id/coursesBrowseLoader" />	

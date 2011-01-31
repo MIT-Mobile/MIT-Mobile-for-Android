@@ -6,8 +6,6 @@ import build_include
 """   parameters -- tag: the git tag or branch to use, fast: use git pull versus git clone
       zero parameters means build local source without pulling from git"""
 
-
-
 if len(sys.argv) > 1:
     tag = sys.argv[1]
 else:

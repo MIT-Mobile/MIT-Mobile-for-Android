@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/qrDialogLL"
+  style="@style/Lists" 
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+	<!-- 
+  android:background=""
+  style="@style/Lists" 
+	 -->
+  
+	<LinearLayout
+		  android:orientation="horizontal"
+		  android:layout_width="fill_parent"
+		  android:layout_height="wrap_content">
+  
+		<TextView
+			android:layout_width="30dp" android:layout_height="wrap_content" android:layout_weight="1"
+			android:padding="2dp" style="@style/ListValue" 
+			android:text="QR codes are two dimensional bar codes. Most MIT buildings and many other campus features have been tagged with QR codes which can be read by mobile devices with cameras." />
+			
+			<!-- 
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+			 -->
+		<ImageView
+	  	  android:src="@drawable/qrcode"
+	  	  android:scaleType="fitXY"
+		  android:padding="4dp" 
+		  android:layout_width="90dp"
+		  android:layout_height="90dp"/>
+	  
+	</LinearLayout>
+	
+	<TextView
+		android:layout_width="wrap_content" android:layout_height="wrap_content" 
+		android:padding="2dp" style="@style/ListValue" 
+		android:text="You can scan the QR code on any MIT building to locate yourself or find more information about that building."
+		/>
+
+</LinearLayout>

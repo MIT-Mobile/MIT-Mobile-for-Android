@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:mit="http://schemas.android.com/apk/res/edu.mit.mitmobile2"
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content">
@@ -12,35 +13,11 @@
         android:paddingBottom="@dimen/verticalPadding"
         android:paddingLeft="@dimen/horizontalPadding"
         android:paddingRight="@dimen/horizontalPadding" />
-
-    <FrameLayout
-  	    android:layout_width="fill_parent"
-  	    android:layout_height="wrap_content">
         
-    <FrameLayout
-		android:id="@+id/graySectionHeaderWrapper"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" >
-  	
-  		<ImageView android:id="@+id/graySectionHeaderBackground"
-  			android:src="@drawable/list_subhead_gray"
-  			android:scaleType="fitXY"
-  			android:layout_alignParentLeft="true"
-  			android:layout_width="fill_parent"
-  			android:layout_height="wrap_content" />
-
-  		<TextView
-  		    android:text="Emergency Contacts"
-  			android:layout_width="wrap_content"
-  			android:layout_height="fill_parent"
-  			android:gravity="center_vertical"
-  			android:layout_alignParentLeft="true"
-  			android:paddingLeft="@dimen/horizontalPadding"
-  			android:background="@android:color/transparent"
-  			style="@style/SubHead" />
-  
-	</FrameLayout>
-	
-	</FrameLayout>
+    <edu.mit.mitmobile2.SectionHeader
+        	mit:prominence="secondary"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:text="Emergency Contacts" />  
 	
 </LinearLayout>

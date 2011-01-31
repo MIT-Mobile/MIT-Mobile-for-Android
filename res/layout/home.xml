@@ -35,7 +35,7 @@
 					android:layout_height="40dip" />
 					
 				<!-- News content appears -->
-				<edu.mit.mitmobile.SliderView
+				<edu.mit.mitmobile2.SliderView
   					android:id="@+id/newsWidgetSlider"
   					android:layout_width="fill_parent"
   					android:layout_height="140dip" />

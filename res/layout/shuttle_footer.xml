@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:orientation="vertical"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:mit="http://schemas.android.com/apk/res/edu.mit.mitmobile2"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:background="@drawable/main_repeat">
@@ -47,8 +48,9 @@
         
         <!-- Contacts -->
         
-        <edu.mit.mitmobile.SectionHeader
+        <edu.mit.mitmobile2.SectionHeader
         	android:id="@+id/shuttleContactsHeader"
+        	mit:prominence="secondary"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:text="Contact Info" />  

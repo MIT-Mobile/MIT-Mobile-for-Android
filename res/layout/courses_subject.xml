@@ -13,7 +13,7 @@
 		style="@style/Lists" />	
 		
 		
-	<edu.mit.mitmobile.FullScreenLoader
+	<edu.mit.mitmobile2.FullScreenLoader
 		android:id="@+id/coursesSubjectsLoader"
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent" />

@@ -23,7 +23,7 @@
     android:paddingBottom="@dimen/verticalPadding"
     style="@style/Byline" />
     
-   <edu.mit.mitmobile.DividerView
+   <edu.mit.mitmobile2.DividerView
    		android:layout_width="fill_parent"
   		android:layout_height="@dimen/dividerHeight"
     />

@@ -6,7 +6,7 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   
-   	<edu.mit.mitmobile.TitleBar
+   	<edu.mit.mitmobile2.TitleBar
    		android:id="@+id/mapTitleBar"
    		android:layout_width="fill_parent"
    		android:layout_height="wrap_content"  />
@@ -38,7 +38,7 @@
    			style="@style/SmallPrint" />   		
    	</LinearLayout>
    	
-	<edu.mit.mitmobile.maps.MITMapView
+	<edu.mit.mitmobile2.maps.MITMapView
 	    android:id="@+id/mapview"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
 	    android:apiKey="@string/googleMapsApiKey"
 	/>
 	
-	<edu.mit.mitmobile.LoaderBar
+	<edu.mit.mitmobile2.LoaderBar
 		android:visibility="gone" 
 		android:id="@+id/mapSearchLoader"
 		android:layout_width="fill_parent"

@@ -5,7 +5,7 @@ import sys
 import build_settings
 import time
 
-VERSION_NUMBER = "1.0"
+VERSION_NUMBER = "2.0.1"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
@@ -23,7 +23,7 @@ def shell(command, silent=False):
 def write_build_settings(build_settings_dictionary):
 
     build_class_source = """
-         package edu.mit.mitmobile.about;
+         package edu.mit.mitmobile2.about;
 
          public class BuildSettings {
               public final static String BUILD_ID = "%(build_id)s";
@@ -39,7 +39,7 @@ def write_build_settings(build_settings_dictionary):
          }
     """ % build_settings_dictionary
       
-    build_settings_file = open("src/edu/mit/mitmobile/about/BuildSettings.java", "w")
+    build_settings_file = open("src/edu/mit/mitmobile2/about/BuildSettings.java", "w")
     build_settings_file.write(build_class_source)
     build_settings_file.close()
 
@@ -84,7 +84,7 @@ def build_source(builder, tag, fresh_repository):
          tmp_tag_path = '/tmp/MIT-Mobile-%s' % tag
 
          if os.path.exists(tmp_tag_path):
-             shutil.rmtree(tmp_tag_path)
+            shutil.rmtree(tmp_tag_path)
 
          os.system('git clone %s %s/' % (git_repository, tmp_tag_path))
 
@@ -97,7 +97,7 @@ def build_source(builder, tag, fresh_repository):
          # shell("git pull", False)
          shell("git checkout %s" % tag, False)
          build_id = shell("git rev-parse HEAD", True)     
-         build_source = "local code"      
+         build_source = "local code"
       
    if tag:
        tag_literal = '"' + tag + '"'

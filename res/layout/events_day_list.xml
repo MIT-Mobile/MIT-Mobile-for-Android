@@ -24,12 +24,12 @@
 		android:visibility="gone"
 		style="@style/BodyText" />
 		
-  <edu.mit.mitmobile.FullScreenLoader
+  <edu.mit.mitmobile2.FullScreenLoader
   	android:id="@+id/eventsDayListLoader"
   	android:layout_width="fill_parent"
   	android:layout_height="fill_parent" />
   	
-  <edu.mit.mitmobile.DividerView
+  <edu.mit.mitmobile2.DividerView
   	android:layout_width="fill_parent"
   	android:layout_height="@dimen/dividerHeight" />  
   

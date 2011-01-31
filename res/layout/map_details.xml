@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edu.mit.mitmobile.LockingScrollView
+<edu.mit.mitmobile2.LockingScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:id="@+id/mapDetailsSV"
@@ -144,4 +144,4 @@
 		
 
 </LinearLayout>
-</edu.mit.mitmobile.LockingScrollView>
+</edu.mit.mitmobile2.LockingScrollView>

@@ -2,6 +2,6 @@
    android:label="@string/news_search_label"
    android:hint="@string/news_search_hint"
    android:searchMode="showSearchLabelAsBadge"
-   android:searchSuggestAuthority="edu.mit.mitmobile.news.SuggestionsProvider"
+   android:searchSuggestAuthority="edu.mit.mitmobile2.news.SuggestionsProvider"
    android:searchSuggestSelection=" ?"
 />
