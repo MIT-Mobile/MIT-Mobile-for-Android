@@ -18,11 +18,14 @@ import org.json.JSONObject;
 
 import edu.mit.mitmobile2.about.BuildSettings;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-public abstract class JSONParser {
+public abstract class JSONParser  {
 	
+	private static final String TAG = "JSONParser";
+
 	private static final String HTTP_USER_AGENT = 
 		"MIT Mobile " + BuildSettings.VERSION_NUMBER + " for Android";
 	
@@ -35,7 +38,7 @@ public abstract class JSONParser {
 	public List items;
 	
 	public static JSONObject jItem;
-	
+		
     public static String convertStreamToString(InputStream is) {
       
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));

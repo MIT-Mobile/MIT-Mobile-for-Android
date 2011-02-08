@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
-
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.LoadingUIHelper;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.R;
@@ -46,8 +47,7 @@ public class MapDetailsView implements SliderInterface {
 	TabHost.TabSpec specPhotos;
 	private ImageView mThumbnailView;
 	
-	/****************************************************/
-	
+	/****************************************************/	
 	public MapDetailsView(Context context, MapItem mapItem) {
 		this.mi = mapItem;
 		mActivity = (Activity) context;
@@ -210,7 +210,7 @@ public class MapDetailsView implements SliderInterface {
 			final int topOffset = (int) (MITMapView.IMAGE_TILE_SIZE * (yTop - tileY));
 			final int leftOffset = (int) (MITMapView.IMAGE_TILE_SIZE * (xLeft - tileX));
 			
-			final String baseURL = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/api/map/tile2/";
+			final String baseURL = "http://" + Global.getMobileWebDomain() + "/api/map/tile2/";
 			
 			final Handler uiHandler = new Handler();
 			

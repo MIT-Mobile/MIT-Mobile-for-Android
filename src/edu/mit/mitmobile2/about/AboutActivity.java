@@ -85,7 +85,8 @@ public class AboutActivity extends ModuleActivity {
 		buildTagTV.setText("Built for: " + BuildSettings.BUILD_TAG);
 		
 		TextView serverDomainTV = (TextView) findViewById(R.id.aboutServerDomain);
-		serverDomainTV.setText("Server: " + BuildSettings.MOBILE_WEB_DOMAIN);
+		//serverDomainTV.setText("Server: " + BuildSettings.MOBILE_WEB_DOMAIN);
+		serverDomainTV.setText("Server: " + app.getMobileWebDomain());
 
 		//mHeader = (LinearLayout) findViewById(R.id.aboutHeader);
 		//mHeader.setOnClickListener(newListener(true));

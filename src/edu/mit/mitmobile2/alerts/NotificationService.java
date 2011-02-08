@@ -263,7 +263,8 @@ public class NotificationService extends Service {
 			
 			// Query for more accurate time...
 			StopsParser sp = new StopsParser();
-			sp.getJSON(RoutesParser.ROUTES_BASE_URL+"?command=stopInfo&id="+stop_id,true);
+			RoutesParser rp = new RoutesParser();
+			sp.getJSON(rp.getBaseUrl()+"?command=stopInfo&id="+stop_id,true);
 			ArrayList<Stops> sss = (ArrayList<Stops>) sp.items;
 			
 			if (sss.isEmpty()) {

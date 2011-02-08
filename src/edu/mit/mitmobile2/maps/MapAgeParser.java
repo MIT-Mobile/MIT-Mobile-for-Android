@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.maps;
 
 import org.json.JSONException;
 
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
 import edu.mit.mitmobile2.about.BuildSettings;
 
@@ -17,7 +18,7 @@ public class MapAgeParser extends JSONParser {
 
 	@Override
 	public String getBaseUrl() {
-		return "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/api/map/";
+		return "http://" + Global.getMobileWebDomain() + "/api/map/";
 	}
 	
 	@Override

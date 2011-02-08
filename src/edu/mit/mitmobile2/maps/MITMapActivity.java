@@ -196,7 +196,8 @@ public class MITMapActivity extends MapBaseActivity {
 			
 		    mut = new MITMapShuttlesUpdaterTask(ctx, mapView, mRouteItem);
 		    
-		    mut.execute(RoutesParser.ROUTES_BASE_URL+"?command=routeInfo&full=true", null, null);
+		    RoutesParser rp = new RoutesParser();
+		    mut.execute(rp.getBaseUrl()+"?command=routeInfo&full=true", null, null);
 		    
 		    markers = mut.stopsMarkers;
 		    

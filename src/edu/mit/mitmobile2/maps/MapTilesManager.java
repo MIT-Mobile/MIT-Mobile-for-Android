@@ -27,12 +27,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.ModoLog;
 import edu.mit.mitmobile2.about.BuildSettings;
@@ -45,7 +45,7 @@ public class MapTilesManager {
 	@SuppressWarnings("unused")
 	private boolean mExternalStorageWriteable = false;  // TODO drop? 
 	
-	private static String SERVER = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/api/map/tile2/";
+	private String SERVER = "http://" + Global.getMobileWebDomain() + "/api/map/tile2/";
 	//static String SERVER = "http://maps.mit.edu/ArcGIS/rest/services/Mobile/WhereIs_MobileAll/MapServer/tile/";
 	
 	private static String SUBDIR_MITAPP = "/edu.mit.mitmobile2";
@@ -80,7 +80,7 @@ public class MapTilesManager {
 	private long mLastBitmapDecoderOutOfMemoryExceptionTime = System.currentTimeMillis() - REST_VM_GC_TIME - 1;
     
 	private BitmapFactory.Options mBitmapOptions;
-	
+		
     public MapTilesManager(MITMapView mv, Context ctx) {
     	mBitmapOptions = new BitmapFactory.Options();
     	mBitmapOptions.inPurgeable = true;

@@ -73,4 +73,16 @@ MIT\&apos;s commitment to innovation has led to a host of scientific breakthroug
         <item>Larry Brutti, Joe Coen, Lisa Mayer, Yuki Nagatoshi, Rachel Russell, Michael Parkin, Jeff Schiller, Bill Witts, Andrew Yu</item>
     </string-array>
 
+	<string-array name="mobile_web_domain_options">
+        <item>Dev</item>
+        <item>Staging</item>
+        <item>Production</item>
+    </string-array>
+
+    <string-array name="mobile_web_domain_values">
+        <item>mobile-dev.mit.edu</item>
+        <item>mobile-stage.mit.edu</item>
+        <item>m.mit.edu</item>
+    </string-array>	
+    
 </resources>

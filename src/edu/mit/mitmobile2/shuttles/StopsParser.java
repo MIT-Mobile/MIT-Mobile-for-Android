@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.RouteItem;
@@ -13,7 +14,7 @@ import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 public class StopsParser extends JSONParser {
 
-	public static String ROUTES_BASE_URL = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/api/shuttles/";
+	public String ROUTES_BASE_URL = "http://" + Global.getMobileWebDomain() + "/api/shuttles/";
 	
 	public String getBaseUrl() {
 		return ROUTES_BASE_URL;

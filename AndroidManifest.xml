@@ -3,7 +3,11 @@
       package="edu.mit.mitmobile2"
       android:versionCode="5"
       android:versionName="2.0.1">
-    <application android:label="@string/app_name" android:icon="@drawable/mit_mobile_icon" android:debuggable="true" android:theme="@style/Main">
+    <application android:label="@string/app_name" 
+    			 android:name=".Global"
+                 android:icon="@drawable/mit_mobile_icon" 
+                 android:debuggable="true" 
+                 android:theme="@style/Main">
     
         <activity android:name=".MITNewsWidgetActivity"
         		  android:screenOrientation="portrait"
@@ -203,6 +207,8 @@
 			       
 	    <provider android:name=".WebImageCacheProvider" android:authorities="edu.mit.mitmobile2.WebImageCacheProvider" />   	          	           
     
+<activity android:name=".PrefsActivity"></activity>
+<activity android:name=".PreferencesHelper"></activity>
 </application>
 
  		

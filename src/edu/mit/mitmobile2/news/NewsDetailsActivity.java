@@ -132,7 +132,7 @@ public class NewsDetailsActivity extends SliderActivity {
 			mNewsModel.setStoryBookmarkStatus(newsItem, !mNewsModel.isBookmarked(newsItem));
 			return true;
 		} else if(item.getItemId() == MENU_SHARE) {
-			String url  = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/n/" + IdEncoder.shortenId(newsItem.story_id);
+			String url  = "http://" + this.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(newsItem.story_id);
 			CommonActions.shareCustomContent(this, newsItem.title, newsItem.description, url);
 			return true;
 		}

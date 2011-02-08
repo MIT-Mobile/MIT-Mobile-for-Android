@@ -13,21 +13,24 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout.LayoutParams;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -45,12 +48,15 @@ public class MainMIT150Activity extends ModuleActivity {
 	Context ctx;
 
 	MIT150Model mit150model = new MIT150Model(this);
+	
+	public static final String TAG = "MainMIT150Activity";
 
 	@Override
 	protected void onCreate(Bundle savedInstance) {
 		
 		super.onCreate(savedInstance);
-
+		Log.d(TAG, "onCreate()");
+	     
 		setContentView(R.layout.mit150_home);
 
 		ctx = this;
