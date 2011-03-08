@@ -104,7 +104,6 @@ public class MITNewsWidgetActivity extends Activity implements OnGesturePerforme
 		ctx = this;
 		
 		createView();
-		Log.d(TAG,"before gesture");
 		// GESTURE
 		mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
         if (!mLibrary.load()) {
@@ -114,7 +113,6 @@ public class MITNewsWidgetActivity extends Activity implements OnGesturePerforme
 	    GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
 	    gestures.addOnGesturePerformedListener(this);
 	    // GESTURE
-		Log.d(TAG,"after gesture");
 		
 		getData();
 		

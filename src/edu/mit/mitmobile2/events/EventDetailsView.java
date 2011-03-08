@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
@@ -32,7 +33,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 	private EventDetailsItem mFullDetails = null;
 	private FullScreenLoader mLoaderView = null;
 	private WebView mDescriptionView;
-	
+	public static final String TAG = "EventDetailsView";
 	public EventDetailsView(Activity activity, EventDetailsItem briefDetails, boolean briefMode) {
 		super(activity);
 		
@@ -88,6 +89,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		
 
 		TextView dateView = (TextView) findViewById(R.id.eventDetailsDateTV);
+		Log.d(TAG,"event date = " + mBriefDetails.getStartDate().toString());
 		dateView.setText(mBriefDetails.getTimeSummary(EventDetailsItem.LONG_DAY_TIME));	
 		
 		// add the location row				

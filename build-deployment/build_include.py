@@ -9,14 +9,19 @@ VERSION_NUMBER = "2.0.1"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
-   statusoutput = commands.getstatusoutput(command)
-   if not silent:
-       print statusoutput[1]
+    print command
+    os.system(command)
 
-   if statusoutput[0] != 0:
-      raise Exception("Error executing shell commmand")
+ #  statusoutput = commands.getstatusoutput(command)
+ #  if not silent:
+ #      print statusoutput[1]
 
-   return statusoutput[1]
+ #  if statusoutput[0] != 0:
+ #     raise Exception("Error executing shell commmand")
+
+ #  return statusoutput[1]
+
+
 
 # generate a source code file that contains
 # constants which are build compile time settings
@@ -24,6 +29,8 @@ def write_build_settings(build_settings_dictionary):
 
     build_class_source = """
          package edu.mit.mitmobile2.about;
+         
+         
 
          public class BuildSettings {
               public final static String BUILD_ID = "%(build_id)s";
@@ -37,12 +44,10 @@ def write_build_settings(build_settings_dictionary):
               public final static boolean VERBOSE_LOGGING = %(verbose_logging)s;
               public final static String BUILD_TAG = "%(build_tag)s";
          }
-    """ % build_settings_dictionary
-      
+	""" % build_settings_dictionary
     build_settings_file = open("src/edu/mit/mitmobile2/about/BuildSettings.java", "w")
     build_settings_file.write(build_class_source)
     build_settings_file.close()
-
     build_settings_resource_source = """<?xml version="1.0" encoding="utf-8"?><resources>
                <string name="googleMapsApiKey">%s</string>
     </resources>
@@ -74,11 +79,10 @@ def write_local_properties(android_sdk_path):
 
 def build_source(builder, tag, fresh_repository):
    inital_cwd = os.getcwd()
-
+   print inital_cwd
    if not tag:
       build_id = shell("git rev-parse HEAD", True)     
       build_source = "local code"
-      
    else:
       if fresh_repository:
          tmp_tag_path = '/tmp/MIT-Mobile-%s' % tag

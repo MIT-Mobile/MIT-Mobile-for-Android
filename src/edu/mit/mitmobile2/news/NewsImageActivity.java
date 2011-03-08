@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Picture;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -27,6 +28,8 @@ public class NewsImageActivity extends SliderActivity {
 	static final String NEWS_ITEM_ID_KEY = "news_item_cache_id";
 	
 	private static ActivityPassingCache<NewsItem> sNewsItemCache = new ActivityPassingCache<NewsItem>();
+	
+	public static final String TAG = "NewsImageActivity";
 	
 	public static void launchActivity(Context context, NewsItem newsItem) {
 		Intent i = new Intent(context, NewsImageActivity.class); 

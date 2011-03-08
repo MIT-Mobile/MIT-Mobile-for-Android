@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="MITSplashActivity">
-    <sequential>
-        <exec executable="../build-deployment/build_source.py" />
-    </sequential>
+<project name="MITSplashActivity" default="all" >
+    <!-- <sequential> -->
+    	<echo>starting build script</echo>
+    	<property name="project.dtd" location="project.dtd"/>
+		<echo>dir = ${user.dir}</echo>
+        <!-- <exec executable="../build-deployment/build_source.py" /> -->
+       
+		<condition property="isWindows">
+      		<os family="windows"/>
+  		</condition>
+
+		<condition property="isMac">
+      		<os family="mac"/>
+  		</condition>
+
+		<condition property="isUnix">
+      		<os family="unix" />
+  		</condition>
+
+		<target name="doWindows" if="isWindows">
+  			<echo message="running windows build" />
+  			<exec executable="cmd.exe">
+        		<arg line="/c python build-deployment/build_source.py" />  
+    		</exec>
+  		</target>
+  			
+		<target name="doMac" if="isMac">
+  			<echo message="running mac build" />
+        	<exec executable="../build-deployment/build_source.py" />
+		</target>
+		
+		<target name="all" depends="doWindows,doMac"/>
+    <!--  </sequential> -->
 </project>
+
+
+
+
+
