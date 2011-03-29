@@ -230,7 +230,9 @@ public class TourModel {
 					contentNodeJson.getString("title"),
 					contentNodeJson.getString("html"),
 					optString(contentNodeJson, "photo-url"),
-					optString(contentNodeJson, "audio-url")
+					contentNodeJson.getString("thumbnail156-url"),
+					optString(contentNodeJson, "audio-url"),
+					parseLatLon(contentNodeJson.getJSONObject("latlon"))
 				));
 			}
 		}

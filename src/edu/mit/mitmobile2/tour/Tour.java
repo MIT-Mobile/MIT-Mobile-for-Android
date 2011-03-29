@@ -328,13 +328,21 @@ public class Tour {
 		String mHtml; 
 		String mTitle;
 		String mPhotoUrl;
+		String mThumbnailUrl;
 		String mAudioUrl;
+		GeoPoint mGeoPoint;
 		
-		SideTrip(String id, String title, String html, String photoUrl, String audioUrl) {
+		SideTrip(String id, String title, String html, 
+				String photoUrl, String thumbnailUrl, 
+				String audioUrl, GeoPoint geoPoint) {
+			
 			mId = id;
 			mTitle = title;
 			mHtml = html;
 			mPhotoUrl = photoUrl;
+			mThumbnailUrl = thumbnailUrl;
+			mAudioUrl = audioUrl;
+			mGeoPoint = geoPoint;
 		}	
 		
 		public String getId() {
@@ -353,8 +361,16 @@ public class Tour {
 			return mPhotoUrl;
 		}
 		
+		public String getThumbnailUrl() {
+			return mThumbnailUrl;
+		}
+		
 		public String getAudioUrl() {
 			return mAudioUrl;
+		}
+		
+		public GeoPoint getGeoPoint() {
+			return mGeoPoint;
 		}
 	}
 	
