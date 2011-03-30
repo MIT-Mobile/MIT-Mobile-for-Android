@@ -328,7 +328,8 @@ public class NewsModel {
 		}
 	}
 	
-	Map<Integer, Boolean> mPendingThumbnails = Collections.synchronizedMap(new HashMap<Integer, Boolean>());
+	private Map<Integer, Boolean> mPendingThumbnails = new HashMap<Integer, Boolean>();
+	private Map<Integer, Boolean> mRejectedThumbnails = new HashMap<Integer, Boolean>();
 	
 	private static int FETCH_THUMBNAIL_THREADS_MAX = 5;
 	private FetchThumbnailThread[] mThumbnailThreads = new FetchThumbnailThread[FETCH_THUMBNAIL_THREADS_MAX];
@@ -355,18 +356,24 @@ public class NewsModel {
 						FetchThumbnailMessage fetchMessage = (FetchThumbnailMessage) msg.obj;
 						NewsItem newsItem = fetchMessage.getNewsItem();
 						
-						if(mPendingThumbnails.containsKey(newsItem.story_id)) {
-							// already being fetched
-							return;
-						} else {
-							mPendingThumbnails.put(newsItem.story_id, true);
+						synchronized (mPendingThumbnails) {
+							if(mPendingThumbnails.containsKey(newsItem.story_id)) {
+								// already being fetched
+								return;
+							} else if(mRejectedThumbnails.containsKey(newsItem.story_id)) {
+								// already failed to decode this image
+								// do not try again
+								return;
+							} else {
+								mPendingThumbnails.put(newsItem.story_id, true);
+							}
 						}
 						
 						if(newsItem.thumbURL == null) {
-							// no image to download, hence nothing to do
-							return;
+								// no image to download, hence nothing to do
+								return;
 						}
-						
+							
 						byte[] imageBytes = mNewsDB.retrieveThumbnailBytes(newsItem);
 						
 				
@@ -419,6 +426,9 @@ public class NewsModel {
 							try {
 								message.arg1 = FETCH_SUCCESSFUL;
 								message.obj = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);	
+								if(message.obj == null) {
+									mRejectedThumbnails.put(newsItem.story_id, true);
+								}
 							} catch (OutOfMemoryError memoryException) {
 								message.arg1 = FETCH_FAILED;
 							}
@@ -426,7 +436,9 @@ public class NewsModel {
 							message.arg1 = FETCH_FAILED;
 						}
 	            
-						mPendingThumbnails.remove(newsItem.story_id);
+						synchronized (mPendingThumbnails) {
+							mPendingThumbnails.remove(newsItem.story_id);
+						}
 						
 						fetchMessage.getUIHandler().sendMessage(message);
 					}
