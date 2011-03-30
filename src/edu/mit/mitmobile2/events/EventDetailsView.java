@@ -117,7 +117,6 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 			// loader for more detail info
 			mLoaderView = new FullScreenLoader(mActivity, null);
 			mLoaderView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, AttributesParser.parseDimension("200dip", mActivity)));
-			mLoaderView.setVisibility(View.GONE);
 			mLinearLayout.addView(mLoaderView);
 		}
 	}
@@ -134,7 +133,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 			return;
 		}
 		
-		mLoaderView.setVisibility(View.VISIBLE);
+		mLoaderView.showLoading();
 		EventsModel.fetchEventDetails(mBriefDetails.id, mActivity, 
 			new Handler () {
 			

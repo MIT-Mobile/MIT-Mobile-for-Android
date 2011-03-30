@@ -29,13 +29,14 @@ public class EventsTopActivity extends ModuleActivity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.events_main);
+		final FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.eventsMainLoader);
+		loader.showLoading();
 		
 		EventsModel.fetchEventTypes(this, new Handler() {
 			boolean mTypesLoaded = false;
 			
 			@Override
 			public void handleMessage(Message msg) {
-				FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.eventsMainLoader);
 				LinearLayout topLevelList = (LinearLayout) findViewById(R.id.eventsTopLevelTypes);
 				View loaderDivider = findViewById(R.id.eventsMainLoaderDivider);
 				

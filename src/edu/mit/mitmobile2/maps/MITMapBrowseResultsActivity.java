@@ -109,7 +109,10 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		//lv.setOnLongClickListener(this);  // FIXME only regular or long click possible, not both
 		
         if (cat==null) showBookmarks();
-        else searchCategory(cat);
+        else {
+        	mLoaderView.showLoading();
+        	searchCategory(cat);
+        }
 		
 	}
 	

@@ -26,7 +26,6 @@
 		
   <edu.mit.mitmobile2.FullScreenLoader
   	android:id="@+id/eventsDayListLoader"
-  	android:visibility="gone"
   	android:layout_width="fill_parent"
   	android:layout_height="fill_parent" />
   	

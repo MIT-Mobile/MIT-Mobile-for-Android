@@ -20,12 +20,15 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class EmergencyContactsActivity extends ModuleActivity {
 	
+	FullScreenLoader mLoadingView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.emergency);
 		setTitle("Emergeny Contacts");
+		mLoadingView = (FullScreenLoader) findViewById(R.id.emergencyListLoader);
 		
 		Handler uiHandler = new Handler() {
 			@Override
@@ -38,9 +41,8 @@ public class EmergencyContactsActivity extends ModuleActivity {
 		EmergencyParser.fetchContacts(this, uiHandler);
 	}
 	
-	private void updateView() {
-		FullScreenLoader loadingView = (FullScreenLoader) findViewById(R.id.emergencyListLoader);		
-		loadingView.setVisibility(View.GONE);
+	private void updateView() {	
+		mLoadingView.setVisibility(View.GONE);
 		
 		ListView listView = (ListView) findViewById(R.id.emergencyListView);
 		listView.setVisibility(View.VISIBLE);

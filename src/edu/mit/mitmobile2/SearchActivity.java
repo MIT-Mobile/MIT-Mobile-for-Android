@@ -32,7 +32,7 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	
 	protected ListView mSearchListView;
 	protected SearchResultsHeader mSearchResultsHeader;
-	protected View mLoadingView;
+	protected FullScreenLoader mLoadingView;
 	
 	
 	protected boolean mSearching = true;
@@ -97,7 +97,8 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 			
 			// show the search indicator
 			// do the search
-			mLoadingView.setVisibility(View.VISIBLE);					
+			mLoadingView.setVisibility(View.VISIBLE);
+			mLoadingView.showLoading();			
 
 			mResultsDisplayed = false;
 			mSearching = true;
@@ -120,7 +121,7 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		
 		mSearchListView = (ListView) findViewById(R.id.searchResultsList);
 		mSearchResultsHeader = (SearchResultsHeader) findViewById(R.id.searchResultsSummaryView);
-		mLoadingView = findViewById(R.id.searchResultsLoading);
+		mLoadingView = (FullScreenLoader) findViewById(R.id.searchResultsLoading);
 		
 		doSearch(getIntent());
 	}

@@ -97,6 +97,7 @@ public class MapDetailsView implements SliderInterface {
 			
 			final ImageView loadingView = (ImageView) topView.findViewById(R.id.mapDetailsImageLoadingView);
 			loadingView.setVisibility(View.VISIBLE);
+			LoadingUIHelper.startLoadingImage(new Handler(), loadingView);
 			
 			// turn off loading view after picture completes loading
 			wv.setPictureListener(new WebView.PictureListener() {

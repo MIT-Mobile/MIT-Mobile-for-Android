@@ -112,6 +112,7 @@ public class CourseDetailsView implements SliderInterface {
 			}
 		};
 	
+		mLoader.showLoading();
 		CoursesDataModel.fetchDetailsList(mActivity, myHandler, mCourseItem.masterId);
 		
 	}
