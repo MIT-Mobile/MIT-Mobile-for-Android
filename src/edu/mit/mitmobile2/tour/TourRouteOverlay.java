@@ -31,7 +31,7 @@ public class TourRouteOverlay extends MITBaseItemizedOverlay {
 	
 	OnTourItemSelectedListener mItemSelectedListener;
 	
-	public TourRouteOverlay(Context context, MITMapView mapView, List<TourMapItem> tourMapItems, List<ParcelableGeoPoint> geoPoints) {
+	public TourRouteOverlay(Context context, MITMapView mapView, List<? extends TourMapItem> tourMapItems, List<ParcelableGeoPoint> geoPoints) {
 		super(defaultMarker(context), context, mapView);
 		
 		mGeoPoints = geoPoints;

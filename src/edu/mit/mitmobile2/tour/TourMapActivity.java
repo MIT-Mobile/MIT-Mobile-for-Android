@@ -13,6 +13,7 @@ import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.maps.GeoRect;
 import edu.mit.mitmobile2.maps.MapBaseActivity;
 import edu.mit.mitmobile2.tour.Tour.ParcelableGeoPoint;
+import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourSiteStatus;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
@@ -54,7 +55,7 @@ public class TourMapActivity extends MapBaseActivity {
 	TourStartHelpActionRow mStartHelpActionRow;
 	boolean mTourActive;
 	int mTourCurrentPosition;
-	List<TourMapItem> mTourMapItems;
+	List<SiteTourMapItem> mTourMapItems;
 	LocationManager mLocationManager;
 	String mBestLocationProviderName;
 	String mWorstLocationProviderName;
@@ -91,7 +92,10 @@ public class TourMapActivity extends MapBaseActivity {
 		mSiteMarkers.setOnTourItemSelectedListener(new TourRouteOverlay.OnTourItemSelectedListener() {
 			@Override
 			public void onTourItemSelected(TourMapItem tourItem) {
-				launchTour(tourItem);
+				if(tourItem.getClass() == SiteTourMapItem.class) {
+					SiteTourMapItem siteItem = (SiteTourMapItem) tourItem;
+					launchTour(siteItem);
+				}
 			}
 		});
 		
@@ -111,7 +115,7 @@ public class TourMapActivity extends MapBaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TourMapItem tourMapItem = mTourMapItems.get(position);
+				SiteTourMapItem tourMapItem = mTourMapItems.get(position);
 				launchTour(tourMapItem);			
 			}
 		});
@@ -291,7 +295,7 @@ public class TourMapActivity extends MapBaseActivity {
 	
 	private int getTourItemPosition(String siteGuid) {
 		for(int i = 0; i < mTourMapItems.size(); i++) {
-			TourMapItem item = mTourMapItems.get(i);
+			SiteTourMapItem item = mTourMapItems.get(i);
 			if(item.getSiteGuid().equals(siteGuid)) {
 				return i;
 			}
@@ -299,7 +303,7 @@ public class TourMapActivity extends MapBaseActivity {
 		return -1;
 	}
 	
-	void launchTour(final TourMapItem tourItem) {
+	void launchTour(final SiteTourMapItem tourItem) {
 		int position = getTourItemPosition(tourItem.getSiteGuid());
 		
 		if(mTourActive) {
@@ -415,7 +419,7 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 	}
 	
-	class TourItemAdapter extends ArrayAdapter<TourMapItem> {
+	class TourItemAdapter extends ArrayAdapter<SiteTourMapItem> {
 		
 		// we need to cache the views to prevent the thumbnail images
 		// from reloading the bitmap images, when distances change
@@ -431,7 +435,7 @@ public class TourMapActivity extends MapBaseActivity {
 		RowViewHashMap mViewCache = new RowViewHashMap();
 		
 		private Context mContext;
-		public TourItemAdapter(Context context, List<TourMapItem> items) {
+		public TourItemAdapter(Context context, List<SiteTourMapItem> items) {
 			super(context, 0, 0, items);
 			mContext = context;
 		}
@@ -439,7 +443,7 @@ public class TourMapActivity extends MapBaseActivity {
 		@Override
 		public View getView(int position, View view, ViewGroup parent) {
 			TourMapItem item = getItem(position);
-			if(!mViewCache.containsKey(item.getSiteGuid())) {
+			if(!mViewCache.containsKey(item.getId())) {
 				LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				view = inflator.inflate(R.layout.tour_list_item, null);
 				
@@ -465,7 +469,7 @@ public class TourMapActivity extends MapBaseActivity {
 			
 				statusImage.setImageDrawable(getResources().getDrawable(resourceId));		
 			} else {
-				view = mViewCache.get(item.getSiteGuid());
+				view = mViewCache.get(item.getId());
 			}
 			
 			TextView subtitleView = (TextView) view.findViewById(R.id.tourItemSubtitle);
@@ -476,7 +480,7 @@ public class TourMapActivity extends MapBaseActivity {
 				subtitleView.setText(null);
 			}
 			
-			mViewCache.put(item.getSiteGuid(), view);
+			mViewCache.put(item.getId(), view);
 			return view;
 		}
 	}

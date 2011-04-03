@@ -114,39 +114,30 @@ public class Tour {
 	 */
 	public static class TourMapItem implements Parcelable {
 
-		private String mSiteGuid;
-		private String mPhotoUrl;
+		private String mId;
 		private ParcelableGeoPoint mGeoPoint;
 		private String mTitle;
+		private String mPhotoUrl;
 		private TourSiteStatus mStatus;
 		
-		TourMapItem(String siteGuid, GeoPoint geoPoint, String title, String photoUrl, TourSiteStatus status) {
-			mSiteGuid = siteGuid;
+		TourMapItem(String id, GeoPoint geoPoint, String title, String photoUrl, TourSiteStatus status) {
+			mId = id;
 			mGeoPoint = new ParcelableGeoPoint(geoPoint);
 			mTitle = title;
 			mPhotoUrl = photoUrl;
 			mStatus = status;
 		}
+
+		public static TourMapItem readItem(Parcel source) {
+			String id = source.readString();
+			ParcelableGeoPoint geoPoint = source.readParcelable(ParcelableGeoPoint.class.getClassLoader());
+			String title = source.readString();
+			String photoUrl = source.readString();
+			TourSiteStatus status = TourSiteStatus.values()[source.readInt()];
+			
+			return new TourMapItem(id, geoPoint, title, photoUrl, status);
+		}
 		
-		public static final Parcelable.Creator<TourMapItem> CREATOR = new Parcelable.Creator<TourMapItem>() {
-
-			@Override
-			public TourMapItem createFromParcel(Parcel source) {
-				String siteGuid = source.readString();
-				ParcelableGeoPoint geoPoint = source.readParcelable(ParcelableGeoPoint.class.getClassLoader());
-				String title = source.readString();
-				String photoUrl = source.readString();
-				TourSiteStatus status = TourSiteStatus.values()[source.readInt()];
-				
-				return new TourMapItem(siteGuid, geoPoint, title, photoUrl, status);
-			}
-
-			@Override
-			public TourMapItem[] newArray(int size) {
-				return new TourMapItem[size];
-			}
-		};
-
 		@Override
 		public int describeContents() {
 			// TODO Auto-generated method stub
@@ -155,19 +146,19 @@ public class Tour {
 
 		@Override
 		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeString(mSiteGuid);
+			dest.writeString(mId);
 			dest.writeParcelable(mGeoPoint, 0);
 			dest.writeString(mTitle);
 			dest.writeString(mPhotoUrl);
 			dest.writeInt(mStatus.ordinal());
 		}
 		
-		public String getSiteGuid() {
-			return mSiteGuid;
-		}
-		
 		public GeoPoint getGeoPoint() {
 			return mGeoPoint;
+		}
+		
+		public String getId() {
+			return mId;
 		}
 		
 		public String getTitle() {
@@ -251,6 +242,99 @@ public class Tour {
 		public void writeToParcel(Parcel dest, int flags) {
 			dest.writeInt(getLatitudeE6());
 			dest.writeInt(getLongitudeE6());
+		}
+	}
+	
+	public static class SiteTourMapItem extends TourMapItem {
+		private ArrayList<SideTripTourMapItem> mSideTrips = new ArrayList<SideTripTourMapItem>();
+		
+		SiteTourMapItem(TourMapItem i) {
+			super(i.mId, i.mGeoPoint, i.mTitle, i.mPhotoUrl, i.mStatus);
+		}		
+		
+		public static final Parcelable.Creator<SiteTourMapItem> CREATOR = new Parcelable.Creator<SiteTourMapItem>() {
+
+			@Override
+			public SiteTourMapItem createFromParcel(Parcel source) {
+				TourMapItem item = TourMapItem.readItem(source);
+				SiteTourMapItem site = new SiteTourMapItem(item);
+				
+				@SuppressWarnings("unchecked")
+				ArrayList<SideTripTourMapItem> sideTrips = source.readArrayList(SideTripTourMapItem.class.getClassLoader());
+				for(SideTripTourMapItem sideTrip : sideTrips) {
+					sideTrip.setParent(site);
+					site.addSideTrip(sideTrip);
+				}
+				return site;
+			}
+
+			@Override
+			public SiteTourMapItem[] newArray(int size) {
+				return new SiteTourMapItem[size];
+			}
+		};
+		
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+		
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			super.writeToParcel(dest, flags);
+			dest.writeList(mSideTrips);
+		}
+		
+		String getSiteGuid() {
+			return getId();
+		}
+		
+		void addSideTrip(SideTripTourMapItem sideTrip) {
+			mSideTrips.add(sideTrip);
+		}
+	}
+	
+	public static class SideTripTourMapItem extends TourMapItem {
+		SiteTourMapItem mParent;
+		
+		SideTripTourMapItem(String id, GeoPoint geoPoint, String title, String photoUrl) {
+			super(id, geoPoint, title, photoUrl, TourSiteStatus.FUTURE);
+		}
+		
+		SideTripTourMapItem(TourMapItem i) {
+			super(i.mId, i.mGeoPoint, i.mTitle, i.mPhotoUrl, i.mStatus);
+		}		
+		
+		public static final Parcelable.Creator<SideTripTourMapItem> CREATOR = new Parcelable.Creator<SideTripTourMapItem>() {
+
+			@Override
+			public SideTripTourMapItem createFromParcel(Parcel source) {
+				TourMapItem item = TourMapItem.readItem(source);
+				return new SideTripTourMapItem(item);
+			}
+
+			@Override
+			public SideTripTourMapItem[] newArray(int size) {
+				return new SideTripTourMapItem[size];
+			}
+		};
+		
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+		
+		public void setParent(SiteTourMapItem mapItem) {
+			mParent = mapItem;
+		}
+		
+		public SiteTourMapItem getParent() {
+			return mParent;
+		}
+		
+		@Override
+		public String getId() {
+			return mParent.getSiteGuid() + "_" + super.getId();
 		}
 	}
 	
@@ -371,6 +455,10 @@ public class Tour {
 		
 		public GeoPoint getGeoPoint() {
 			return mGeoPoint;
+		}
+		
+		public SideTripTourMapItem getTourMapItem() {
+			return new SideTripTourMapItem(mId, mGeoPoint, mTitle, mThumbnailUrl);
 		}
 	}
 	
@@ -580,8 +668,16 @@ public class Tour {
 			return mName;
 		}
 		
-		public TourMapItem getTourMapItem(TourSiteStatus status) {
-			return new TourMapItem(mSiteGuid, mGeoPoint, mName, mThumbnailUrl, status);
+		public SiteTourMapItem getTourMapItem(TourSiteStatus status) {
+			TourMapItem item = new TourMapItem(mSiteGuid, mGeoPoint, mName, mThumbnailUrl, status);
+			SiteTourMapItem siteItem = new SiteTourMapItem(item);
+			for(TourItemContentNode node : mContent.mContentNodes) {
+				if(node.getClass() == SideTrip.class) {
+					SideTrip sideTrip = (SideTrip) node;
+					siteItem.addSideTrip(sideTrip.getTourMapItem());
+				}
+			}
+			return siteItem;
 		}
 
 		public String getThumbnailUrl() {
