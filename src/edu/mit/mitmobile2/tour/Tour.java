@@ -183,6 +183,10 @@ public class Tour {
 		}
 		
 		public Float distance() {
+			if(mLocationSupplier == null) {
+				return null;
+			}
+			
 			Location location = mLocationSupplier.getLocation();
 			if(location == null) {
 				return null;
@@ -289,6 +293,10 @@ public class Tour {
 			return getId();
 		}
 		
+		List<SideTripTourMapItem> getSideTrips() {
+			return mSideTrips;
+		}
+		
 		void addSideTrip(SideTripTourMapItem sideTrip) {
 			mSideTrips.add(sideTrip);
 		}
@@ -335,6 +343,10 @@ public class Tour {
 		@Override
 		public String getId() {
 			return mParent.getSiteGuid() + "_" + super.getId();
+		}
+		
+		public String getSideTripId() {
+			return super.getId();
 		}
 	}
 	
@@ -671,6 +683,8 @@ public class Tour {
 		public SiteTourMapItem getTourMapItem(TourSiteStatus status) {
 			TourMapItem item = new TourMapItem(mSiteGuid, mGeoPoint, mName, mThumbnailUrl, status);
 			SiteTourMapItem siteItem = new SiteTourMapItem(item);
+			
+			// loop thru sidetrips
 			for(TourItemContentNode node : mContent.mContentNodes) {
 				if(node.getClass() == SideTrip.class) {
 					SideTrip sideTrip = (SideTrip) node;
@@ -680,6 +694,19 @@ public class Tour {
 			return siteItem;
 		}
 
+		public SideTrip getSideTrip(String sidetripId) {
+			// loop thru sidetrips
+			for(TourItemContentNode node : mContent.mContentNodes) {
+				if(node.getClass() == SideTrip.class) {
+					SideTrip sideTrip = (SideTrip) node;
+					if(sideTrip.getId().equals(sidetripId)) {
+						return sideTrip;
+					}
+				}
+			}
+			return null;
+		}
+		
 		public String getThumbnailUrl() {
 			return mThumbnailUrl;
 		}

@@ -22,6 +22,7 @@ import com.google.android.maps.GeoPoint;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 public class TourModel {
 	
