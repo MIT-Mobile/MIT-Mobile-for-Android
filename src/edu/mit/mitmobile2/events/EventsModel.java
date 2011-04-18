@@ -33,11 +33,13 @@ public class EventsModel {
 		private String mId;
 		private String mLongName;
 		private String mShortName;
+		private boolean mHasCategories;
 	
-		public EventType(String id, String longName, String shortName) {
+		public EventType(String id, String longName, String shortName, boolean hasCategories) {
 			mId = id;
 			mLongName = longName;
 			mShortName = shortName;
+			mHasCategories = hasCategories;
 		}
 		
 		public String getTypeId() {
@@ -50,6 +52,10 @@ public class EventsModel {
 		
 		public String getShortName() {
 			return mShortName;
+		}
+		
+		public boolean hasCategories() {
+			return mHasCategories;
 		}
 	}
 	
@@ -66,6 +72,7 @@ public class EventsModel {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "calendar");
 		params.put("command", "extraTopLevels");
+		params.put("version", "2");
 	
 		webApi.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
 				new MobileWebApi.DefaultErrorListener(uiHandler), null) {
@@ -75,14 +82,15 @@ public class EventsModel {
 					JSONException {
 				
 				sEventTypes = new ArrayList<EventType>();
-				sEventTypes.add(new EventType("Events", "Today's Events", "Events"));
+				sEventTypes.add(new EventType("Events", "Today's Events", "Events", false));
 				
 				for(int i = 0; i < array.length(); i++) {
 					JSONObject eventType = array.getJSONObject(i);
 					sEventTypes.add(new EventType(
 						eventType.getString("type"),
 						eventType.getString("longName"),
-						eventType.getString("shortName")
+						eventType.getString("shortName"),
+						eventType.getBoolean("hasCategories")
 					));
 				}
 				
@@ -254,9 +262,13 @@ public class EventsModel {
 	/*
 	 * Event category related stuff
 	 */
-	private static List<EventCategoryItem> sCategories = null;
+	private static HashMap<String, List<EventCategoryItem>> sCategories = new HashMap<String, List<EventCategoryItem>>();
 	
-	public static void fetchCategories(Context context, final Handler uiHandler) {
+	public static void fetchCategories(Context context, Handler uiHandler) {
+		fetchCategories(context, getEventType("Events"), uiHandler);
+	}
+	
+	public static void fetchCategories(Context context, final EventType type, final Handler uiHandler) {
 		if(getCategories() != null) {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
@@ -267,24 +279,29 @@ public class EventsModel {
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
 		eventParameters.put("command", "categories");
 		eventParameters.put("module", "calendar");
+		eventParameters.put("type", type.getTypeId());
 		
 		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
 			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
 			@Override
 			public void onResponse(JSONArray jArray) {
-				sCategories = parseCategoryArray(jArray);				
+				sCategories.put(type.getTypeId(), parseCategoryArray(jArray));				
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 		});
 	}
 	
+	public static List<EventCategoryItem> getCategories(EventType type) {
+		return sCategories.get(type.getTypeId());
+	}
+	
 	public static List<EventCategoryItem> getCategories() {
-		return sCategories;
+		return sCategories.get("Events");
 	}
 	
 	public static EventCategoryItem getCategory(int categoryId) {
-		for(EventCategoryItem categoryItem : sCategories) {
+		for(EventCategoryItem categoryItem : getCategories()) {
 			if(categoryItem.catid == categoryId) {
 					return categoryItem;
 			}

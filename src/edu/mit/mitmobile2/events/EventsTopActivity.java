@@ -50,7 +50,11 @@ public class EventsTopActivity extends ModuleActivity {
 							
 							@Override
 							public void onClick(View v) {
-								MITEventsDaysSliderActivity.launch(EventsTopActivity.this, eventType);
+								if(eventType.hasCategories()) {
+									EventsSimpleCategoryActivity.launch(EventsTopActivity.this, eventType);
+								} else {
+									MITEventsDaysSliderActivity.launch(EventsTopActivity.this, eventType);
+								}
 							}
 						});
 						

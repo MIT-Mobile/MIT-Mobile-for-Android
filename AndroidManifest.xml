@@ -93,6 +93,9 @@
         <activity android:name=".events.EventsCategoryActivity">
         	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
         </activity>
+        <activity android:name=".events.EventsSimpleCategoryActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>
         <activity android:name=".events.MITEventsSliderActivity" android:configChanges="orientation">
         	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
         </activity>
