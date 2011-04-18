@@ -50,6 +50,7 @@ public class MITHolidaysCalendarActivity extends ModuleActivity {
 		});
 		
 		mLoaderView = (FullScreenLoader) findViewById(R.id.boringListLoader);		
+		mLoaderView.showLoading();
 		
 		EventsModel.fetchHolidays(this, new Handler() {
 			@Override

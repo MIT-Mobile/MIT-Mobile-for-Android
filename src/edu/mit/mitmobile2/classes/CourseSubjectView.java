@@ -63,13 +63,13 @@ public class CourseSubjectView implements SliderInterface, OnItemClickListener, 
 	
 	/****************************************************/
 	protected void getData() {
-
+		final FullScreenLoader loader = (FullScreenLoader) mView.findViewById(R.id.coursesSubjectsLoader);
+		loader.showLoading();
+		
 		final Runnable updateResultsUI = new Runnable() {
 			public void run() {
 				
 				subjects = CoursesDataModel.getSubjectList(courseId);
-				
-				FullScreenLoader loader = (FullScreenLoader) mView.findViewById(R.id.coursesSubjectsLoader);
 				
 				if(subjects == null) {
 					loader.showError();

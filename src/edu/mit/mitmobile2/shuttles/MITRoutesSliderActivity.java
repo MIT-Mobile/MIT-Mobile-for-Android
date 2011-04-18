@@ -12,15 +12,14 @@ import android.view.MenuItem;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
 import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITRoutesSliderActivity extends SliderActivity {
+public class MITRoutesSliderActivity extends SliderActivity implements OnPositionChangedListener {
 
 	static String KEY_ROUTE_ID = "route_id";
-	
-	private int last_pos = -1;
 	
 	private RoutesAsyncListView curView;
 
@@ -40,6 +39,8 @@ public class MITRoutesSliderActivity extends SliderActivity {
     	setTitle("MIT Routes");
     	
     	createViews();
+    	
+    	setOnPositionChangedListener(this);
 
 	}
     /****************************************************/
@@ -58,9 +59,9 @@ public class MITRoutesSliderActivity extends SliderActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// FIXME
-		//if (curView!=null) curView.getData();
+		if (curView!=null) curView.onSelected();
 	}
+	
 	/****************************************************/
     void createViews() {
 
@@ -79,24 +80,17 @@ public class MITRoutesSliderActivity extends SliderActivity {
     		addScreen(cv, r.title, "Route Detail");
    		
     	}
-    	last_pos = getPositionValue();
-    	setPosition(last_pos);
-		curView = (RoutesAsyncListView) getScreen(last_pos);  // need to set here first time to avoid memory leak (otherwise onStop() will find curView==null)
+    	int initialPosition = getPositionValue();
+    	setPosition(initialPosition);
+		curView = (RoutesAsyncListView) getScreen(initialPosition);  // need to set here first time to avoid memory leak (otherwise onStop() will find curView==null)
     }
     
 	@Override
-	protected void setPosition(int position) {
-		
-		super.setPosition(position);
-		
-		int curPos = getPosition();
-		
-		if (last_pos!=curPos) {
-			if (curView!=null) curView.terminate();
-			curView = (RoutesAsyncListView) getScreen(curPos);
-			last_pos = curPos;
+	public void onPositionChanged(int newPosition, int oldPosition) {
+		if(curView != null) {
+			curView.terminate();
 		}
-		
+		curView = (RoutesAsyncListView) getScreen(newPosition);
 	}
     
 

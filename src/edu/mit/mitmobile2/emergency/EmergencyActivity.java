@@ -65,6 +65,8 @@ public class EmergencyActivity extends ModuleActivity {
 		
 		pref = this.getSharedPreferences(Global.PREFS,MODE_PRIVATE);  // FIXME
 		
+		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.emergencyListLoader);
+		loader.showLoading();
 		getData();
 		
 	}

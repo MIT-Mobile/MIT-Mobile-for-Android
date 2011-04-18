@@ -118,7 +118,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		} else if(!mBriefMode) {
 			// loader for more detail info
 			mLoaderView = new FullScreenLoader(mActivity, null);
-			mLoaderView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, AttributesParser.parseDimension("200dip", mActivity)));	
+			mLoaderView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, AttributesParser.parseDimension("200dip", mActivity)));
 			mLinearLayout.addView(mLoaderView);
 		}
 	}
@@ -130,11 +130,12 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 
 	@Override
 	public void onSelected() {
-		if(mBriefMode) {
-			// nothing to load (in brief mode)
+		if(mBriefMode || mFullDetails != null) {
+			// nothing to load (in brief mode) or already loaded
 			return;
 		}
 		
+		mLoaderView.showLoading();
 		EventsModel.fetchEventDetails(mBriefDetails.id, mActivity, 
 			new Handler () {
 			

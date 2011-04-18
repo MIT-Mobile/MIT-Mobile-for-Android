@@ -46,6 +46,7 @@ public class CorridorListActivity extends ModuleActivity {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		mFooterView = inflater.inflate(R.layout.mit150_corridor_list_footer, null);
 		
+		mLoader.showLoading();
 		CorridorModel.fetchInitialStories(this, mLoadStoriesHandler);
 		
 		mStoryListView.setOnItemClickListener(mOnItemClickListener);

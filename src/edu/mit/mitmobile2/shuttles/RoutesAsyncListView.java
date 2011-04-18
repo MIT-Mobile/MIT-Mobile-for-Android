@@ -36,7 +36,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 
 	LoaderBar lb;
 	
-	boolean cancelUpdateThread = false;
+	boolean cancelUpdateThread;
 	boolean updateThreadRunning = false;
 	
 	RouteStopsArrayAdapter ra;
@@ -71,12 +71,13 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 			//cancelUpdateThread = true;
 			return;
 		}
-
-		cancelUpdateThread = false;
 		
 		mStops = new ArrayList<Stops>();
-		ra = new RouteStopsArrayAdapter(mActivity, R.layout.routes_row, 0, mStops);
-		lv.setAdapter(ra);
+		
+		if(ra == null) {
+			ra = new RouteStopsArrayAdapter(mActivity, R.layout.routes_row, 0, mStops);
+			lv.setAdapter(ra);
+		}
 		
 		final Handler routeUpdateHandler = new Handler() {
 			@Override
@@ -103,7 +104,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		new Thread() {
 			@Override
 			public void run() {
-				 int refresh_wait = 1000*15;  // quicker first refresh...
+				 int refresh_wait = 1000*20;  // refresh every 20 seconds
 		    	 while(!cancelUpdateThread) {
 		    		 // Update routes...
 		    		 ShuttleModel.fetchRouteDetails(mActivity, ri, routeUpdateHandler);
@@ -112,7 +113,6 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		    		 } catch (InterruptedException e) {
 		    			 e.printStackTrace();
 		    		 } 
-		    		 refresh_wait = 1000*60;
 		    	 }
 		    	 updateThreadRunning = false;
 			}
@@ -208,6 +208,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 	
 	@Override
 	public void onSelected() {
+		cancelUpdateThread = false;
 		if (!updateThreadRunning) {
 			lb.startLoading();
 			getData();

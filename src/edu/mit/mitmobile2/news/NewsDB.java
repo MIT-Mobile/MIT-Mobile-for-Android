@@ -171,6 +171,15 @@ public class NewsDB {
 		ContentValues thumbValue = new ContentValues();
 		thumbValue.put(THUMBNAIL, thumbnailBytes);
 		db.update(STORIES_TABLE, thumbValue, STORY_ID_WHERE, whereArgs(newsItem));
+		
+		// saving multiple thumbnails too quickly triggers a strange garbage collection
+		// bug in gingerbread (that cause the phone CPU to run near 100% indefinitely)
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 	public void markAsRead(NewsItem newsItem) {

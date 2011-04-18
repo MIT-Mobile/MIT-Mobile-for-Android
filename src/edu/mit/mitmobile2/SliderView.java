@@ -429,23 +429,32 @@ public class SliderView extends HorizontalScrollView {
 		// that event loop does not try to lay them all out at once)
 		synchronized(mPositionsToLayout) {
 			mPositionsToLayout.add(position);
+			startLayoutThread();
 		}
 		
 	}
 	
 	
-	public void start() {
+	synchronized private void startLayoutThread() {
 		if(mLayoutThread == null) {
 			mLayoutThread = new LayoutThread();
 			mLayoutThread.start();
-		}
+		}		
 	}
 	
-	public void stop() {
+	synchronized private void stopLayoutThread() {
 		if(mLayoutThread != null) {
 			mLayoutThread.requestStop();
 			mLayoutThread = null;
 		}
+	}
+	
+	public void start() {
+		startLayoutThread();
+	}
+	
+	public void stop() {
+		stopLayoutThread();
 	}
 	
 	public void destroy() {
@@ -460,6 +469,8 @@ public class SliderView extends HorizontalScrollView {
 	
 	private class LayoutThread extends Thread {
 		
+		private static final int MAX_IDLE_CYCLES = 20;
+		
 		boolean mStopRequested = false;
 		public void requestStop() {
 			mStopRequested = true;
@@ -467,7 +478,9 @@ public class SliderView extends HorizontalScrollView {
 		
 		@Override
 		public void run() {
-			while(!mStopRequested) {
+			int emptyQueueCount = 0;
+			
+			while(!mStopRequested && (emptyQueueCount < MAX_IDLE_CYCLES) ) {
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
@@ -485,9 +498,17 @@ public class SliderView extends HorizontalScrollView {
 								layoutPosition(position);
 							}
 						});
+						
+						
+					} else {
+						emptyQueueCount++;	
+						if (emptyQueueCount >= MAX_IDLE_CYCLES) {
+							stopLayoutThread(); // make sure SliderView is notified
+							                    // that the layout thread is being stopped
+						}
 					}
 				}
-			};
+			}		
 		}
 	}
 	

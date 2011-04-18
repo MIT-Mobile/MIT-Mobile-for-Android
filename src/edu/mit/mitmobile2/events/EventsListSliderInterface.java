@@ -109,6 +109,7 @@ public class EventsListSliderInterface implements SliderInterface {
 			return;
 		}
 		
+		mLoadingView.setVisibility(View.VISIBLE);
 		mLoadingView.showLoading();
 		if(mEventType != null) {
 			EventsModel.fetchDayEvents(mDayTime, mEventType, mContext, uiHandler());

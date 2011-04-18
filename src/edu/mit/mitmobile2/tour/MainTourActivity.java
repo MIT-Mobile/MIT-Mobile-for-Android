@@ -35,6 +35,7 @@ public class MainTourActivity extends ModuleActivity {
 		mLoader = (FullScreenLoader) findViewById(R.id.tourHomeLoader);
 		mIntroductionView = (TextView) findViewById(R.id.tourHomeIntroduction);
 		
+		mLoader.showLoading();
 		TourModel.fetchTour(this, mTourLoadedHandler);
 		
 		findViewById(R.id.tourSelectStartPoint).setOnClickListener(new View.OnClickListener() {

@@ -123,10 +123,12 @@ public class CoursesTopActivity extends ModuleActivity {
 	
 	/****************************************************/
 	protected void prefetchAllData() {			
+		final FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.coursesBrowseLoader);
+		loader.showLoading();
+		
 		CoursesDataModel.fetchList(this, new Handler() {
 			@Override
 			public void handleMessage(Message message) {
-				FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.coursesBrowseLoader);
 				
 				if(message.arg1 == MobileWebApi.SUCCESS) {	
 					loader.setVisibility(View.GONE);	
