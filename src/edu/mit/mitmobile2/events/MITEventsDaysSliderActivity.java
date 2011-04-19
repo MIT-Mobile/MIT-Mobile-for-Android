@@ -52,11 +52,12 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 		context.startActivity(intent);
 	}
 	
-	public static void launchCategory(Context context, int categoryId, String categoryName) {	
+	public static void launchCategory(Context context, int categoryId, String categoryName, String eventType) {	
 		Intent intent = new Intent(context, MITEventsDaysSliderActivity.class);
 		intent.putExtra(LIST_TYPE_KEY, LIST_BY_CATEGORY);
 		intent.putExtra(CATEGORY_ID_KEY, categoryId);
 		intent.putExtra(CATEGORY_NAME_KEY, categoryName);
+		intent.putExtra(EVENT_TYPE_KEY, eventType);
 		context.startActivity(intent);
 	}
 	
@@ -69,38 +70,37 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 		
 		setJumpTitle("Go to Date", R.drawable.menu_go_to_date);
 		
-		if(extras.getInt(LIST_TYPE_KEY) == STANDARD_LIST) {
-			if(EventsModel.eventTypesLoaded()) {
-				mEventType = EventsModel.getEventType(extras.getString(EVENT_TYPE_KEY));
-				createViews();
-			} else {
-				// need to load the event types
-				showLoading("Events");
-				EventsModel.fetchEventTypes(this, new Handler() {
-					@Override
-					public void handleMessage(Message msg) {
-						if(msg.arg1 == MobileWebApi.SUCCESS) {
-							mEventType = EventsModel.getEventType(extras.getString(EVENT_TYPE_KEY));
-							showLoadingCompleted();
-							createViews();
-						} else {
-							showLoadingError();
-						}
-					}
-				});
-			}
-		} else {
+		if(extras.getInt(LIST_TYPE_KEY) == LIST_BY_CATEGORY) {
 			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
 			mCategoryName = extras.getString(CATEGORY_NAME_KEY);
+		}
+		
+		if(EventsModel.eventTypesLoaded()) {
+			mEventType = EventsModel.getEventType(extras.getString(EVENT_TYPE_KEY));
 			createViews();
+		} else {
+			// need to load the event types
+			showLoading("Events");
+			EventsModel.fetchEventTypes(this, new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					if(msg.arg1 == MobileWebApi.SUCCESS) {
+						mEventType = EventsModel.getEventType(extras.getString(EVENT_TYPE_KEY));
+						showLoadingCompleted();
+						createViews();
+					} else {
+						showLoadingError();
+					}
+				}
+			});
 		}
 	}
 	
 	protected void createViews() {
-		if(mEventType != null) {
-			useSubtitles(mEventType.getShortName());
-		} else if(mCategoryName != null) {
+		if(mCategoryName != null) {
 			useSubtitles(mCategoryName);
+		} else if(mEventType != null) {
+			useSubtitles(mEventType.getShortName());
 		}
 		
 		// create views for today, and a fixed number of days in the past and future
@@ -108,11 +108,11 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 			long dayTime = mCurrentTime + i * TWENTY_FOUR_HOURS;
 			
 			EventsListSliderInterface sliderInterface = null;
-			if(mEventType != null) {
+			if(mCategoryId < 0) {
 				sliderInterface	= EventsListSliderInterface.daysFactory(this, mEventType, dayTime/1000);
-			} else if(mCategoryId > -1) {
-				sliderInterface = EventsListSliderInterface.categoriesFactory(this, mCategoryId, dayTime/1000);
-			}
+			} else {
+				sliderInterface = EventsListSliderInterface.categoriesFactory(this, mCategoryId, mEventType, dayTime/1000);
+			} 
 			
 			String dayTitle = null;
 			if(i == 0) {

@@ -345,9 +345,9 @@ public class EventsModel {
 		return category;
 	}
 	
-	public static void fetchCategoryDayEvents(final long unixtime, final int categoryId, Context context, final Handler uiHandler) {
+	public static void fetchCategoryDayEvents(final long unixtime, final int categoryId, final EventType eventType, Context context, final Handler uiHandler) {
 		
-		if(getCategoryDayEvents(unixtime, categoryId) != null) {
+		if(getCategoryDayEvents(unixtime, categoryId, eventType) != null) {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
 		}
@@ -357,6 +357,7 @@ public class EventsModel {
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
 		eventParameters.put("module", "calendar");
 		eventParameters.put("command", "category");
+		eventParameters.put("type", eventType.getTypeId());
 		eventParameters.put("id", Integer.toString(categoryId));
 		eventParameters.put("start", Long.toString(unixtime));
 		
@@ -366,7 +367,7 @@ public class EventsModel {
 			@Override
 			public void onResponse(JSONArray jArray) {
 				List<EventDetailsItem> events = parseDetailArray(jArray);
-				putInCategoryDayEventsCache(unixtime, categoryId, events);
+				putInCategoryDayEventsCache(unixtime, categoryId, eventType, events);
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 		});
@@ -374,32 +375,38 @@ public class EventsModel {
 	
 	// HashMap with keys of categoryId then day timestamp as a key
 	// the values are lists of eventIds, this data structure is a little ugly
-	static private HashMap<Integer, HashMap<Long, List<String>>> sCategoryDayEventsCache = 
-		new HashMap<Integer, HashMap<Long, List<String>>>();
+	static private HashMap<String, HashMap<Long, List<String>>> sCategoryDayEventsCache = 
+		new HashMap<String, HashMap<Long, List<String>>>();
 	
-	private static void putInCategoryDayEventsCache(long unixtime, int categoryId, List<EventDetailsItem> events) {
+	private static String categoryKey(int categoryId, EventType eventType) {
+		return eventType.getTypeId() + "-" + categoryId;
+	}
+	
+	private static void putInCategoryDayEventsCache(long unixtime, int categoryId, EventType eventType, List<EventDetailsItem> events) {
 		Long timeKey = getDayEventKey(unixtime);		
 		List<String> eventIds = eventIds(events);
 		
-		if(!sCategoryDayEventsCache.containsKey(categoryId)) {
-			sCategoryDayEventsCache.put(categoryId, new HashMap<Long, List<String>>());
+		String categoryKey = categoryKey(categoryId, eventType);
+		if(!sCategoryDayEventsCache.containsKey(categoryKey)) {
+			sCategoryDayEventsCache.put(categoryKey, new HashMap<Long, List<String>>());
 		}
 		
-		HashMap<Long, List<String>> categoryCache = sCategoryDayEventsCache.get(categoryId);
+		HashMap<Long, List<String>> categoryCache = sCategoryDayEventsCache.get(categoryKey);
 		categoryCache.put(timeKey, eventIds);		
 	}
 	
-	public static List<EventDetailsItem> getCategoryDayEvents(long unixtime, int categoryId) {
+	public static List<EventDetailsItem> getCategoryDayEvents(long unixtime, int categoryId, EventType eventType) {
 		Long timeKey = getDayEventKey(unixtime);
-		if(!sCategoryDayEventsCache.containsKey(categoryId)) {
+		String categoryKey = categoryKey(categoryId, eventType);
+		if(!sCategoryDayEventsCache.containsKey(categoryKey)) {
 			return null;
 		}
 		
-		if(!sCategoryDayEventsCache.get(categoryId).containsKey(timeKey)) {
+		if(!sCategoryDayEventsCache.get(categoryKey).containsKey(timeKey)) {
 			return null;
 		}
 		
-		List<String> eventIds = sCategoryDayEventsCache.get(categoryId).get(timeKey);
+		List<String> eventIds = sCategoryDayEventsCache.get(categoryKey).get(timeKey);
 		return eventList(eventIds);
 	}
 	
