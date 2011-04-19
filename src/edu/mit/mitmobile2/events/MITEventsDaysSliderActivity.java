@@ -24,6 +24,7 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	
 	final static String CATEGORY_ID_KEY = "category_id";
 	final static String CATEGORY_NAME_KEY = "category_name";
+	final static String START_TIME_KEY = "start_time";
 	
 	final static String EVENT_TYPE_KEY = "event_type";
 	final static int EVENT_TYPE_EVENTS = 0;
@@ -33,6 +34,7 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	private static final long TWENTY_FOUR_HOURS = 24 * 60 *  60 * 1000;
 	
 	private long mCurrentTime = System.currentTimeMillis();
+	private long mStartTime;
 	
 	private SimpleDateFormat sDateFormat = new SimpleDateFormat("MMMM d");
 	
@@ -42,22 +44,28 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	private String mCategoryName = null;
 	
 	public static void launch(Context context, EventType eventType) {	
-		launchEventType(context, eventType.getTypeId());
+		launchEventType(context, eventType.getTypeId(), null);
 	}
 	
-	public static void launchEventType(Context context, String eventType) {	
+	public static void launchEventType(Context context, String eventType, Long startTime) {	
 		Intent intent = new Intent(context, MITEventsDaysSliderActivity.class);
 		intent.putExtra(EVENT_TYPE_KEY, eventType);
 		intent.putExtra(LIST_TYPE_KEY, STANDARD_LIST);
+		if(startTime != null) {
+			intent.putExtra(START_TIME_KEY, startTime);
+		}
 		context.startActivity(intent);
 	}
 	
-	public static void launchCategory(Context context, int categoryId, String categoryName, String eventType) {	
+	public static void launchCategory(Context context, int categoryId, String categoryName, String eventType, Long startTime) {	
 		Intent intent = new Intent(context, MITEventsDaysSliderActivity.class);
 		intent.putExtra(LIST_TYPE_KEY, LIST_BY_CATEGORY);
 		intent.putExtra(CATEGORY_ID_KEY, categoryId);
 		intent.putExtra(CATEGORY_NAME_KEY, categoryName);
 		intent.putExtra(EVENT_TYPE_KEY, eventType);
+		if(startTime != null) {
+			intent.putExtra(START_TIME_KEY, startTime);
+		}
 		context.startActivity(intent);
 	}
 	
@@ -70,6 +78,7 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 		
 		setJumpTitle("Go to Date", R.drawable.menu_go_to_date);
 		
+		mStartTime = extras.getLong(START_TIME_KEY, System.currentTimeMillis());
 		if(extras.getInt(LIST_TYPE_KEY) == LIST_BY_CATEGORY) {
 			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
 			mCategoryName = extras.getString(CATEGORY_NAME_KEY);
@@ -110,7 +119,7 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 		
 		// create views for today, and a fixed number of days in the past and future
 		for(long i = -DAYS_PAST_FUTURE; i <= DAYS_PAST_FUTURE; i++) {
-			long dayTime = mCurrentTime + i * TWENTY_FOUR_HOURS;
+			long dayTime = mStartTime + i * TWENTY_FOUR_HOURS;
 			
 			EventsListSliderInterface sliderInterface = null;
 			if(mCategoryId < 0) {

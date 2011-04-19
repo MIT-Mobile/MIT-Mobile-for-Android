@@ -92,11 +92,11 @@ public class EventsCategoryActivity extends ModuleActivity {
 				@Override
 				public void onItemSelected(EventCategoryItem item) {
 					if(item.subcats == null) {
-						MITEventsDaysSliderActivity.launchCategory(mContext, item.catid, item.name, "Events");						
+						MITEventsDaysSliderActivity.launchCategory(mContext, item.catid, item.name, "Events", null);						
 					} else {
 						// the category has subcategories
 						if(mIsSubcategory) {
-							MITEventsDaysSliderActivity.launchCategory(mContext, item.catid, item.name, "Events");
+							MITEventsDaysSliderActivity.launchCategory(mContext, item.catid, item.name, "Events", null);
 						} else {
 							// at the root level so launch subcategories
 							Intent intent = new Intent(mContext, EventsCategoryActivity.class);
