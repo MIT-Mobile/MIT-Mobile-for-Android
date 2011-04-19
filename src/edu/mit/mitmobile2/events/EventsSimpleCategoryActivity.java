@@ -90,7 +90,12 @@ public class EventsSimpleCategoryActivity extends ModuleActivity {
 			new SimpleArrayAdapter.OnItemClickListener<EventCategoryItem>() {
 				@Override
 				public void onItemSelected(EventCategoryItem item) {
-					MITEventsDaysSliderActivity.launchCategory(mContext, item.catid, item.name, mEventType.getTypeId(), null);						
+					// hard code the open house to show april 30th;
+					Long startTime = null;
+					if(mEventType.getTypeId().equals("OpenHouse")) {
+						startTime = 1304179200L * 1000; // April 30th, 2011
+					}
+					MITEventsDaysSliderActivity.launchCategory(mContext, item.catid, item.name, mEventType.getTypeId(), startTime);						
 				}
 			}
 		);
