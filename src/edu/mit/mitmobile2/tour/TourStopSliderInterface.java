@@ -35,6 +35,7 @@ import edu.mit.mitmobile2.maps.MapCanvasDrawer;
 import edu.mit.mitmobile2.tour.Tour.HtmlContentNode;
 import edu.mit.mitmobile2.tour.Tour.PhotoInfo;
 import edu.mit.mitmobile2.tour.Tour.SideTrip;
+import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.TourItem;
 import edu.mit.mitmobile2.tour.Tour.TourItemContentNode;
 
@@ -305,8 +306,8 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if(url.startsWith("sidetrip://")) {
 					String sideTripId = url.substring("sidetrip://".length());
-					SideTrip sideTrip = mTourItem.getContent().getSideTrip(sideTripId);
-					TourSideTripActivity.launch(mContext, sideTrip);	
+					Site site = (Site) mTourItem;
+					TourSideTripActivity.launch(mContext, site.getSiteGuid(), sideTripId);	
 				} else {
 					CommonActions.viewURL(mContext, url);
 				}
