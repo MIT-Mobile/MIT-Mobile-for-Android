@@ -17,6 +17,8 @@
 package com.google.zxing.client.android;
 
 import edu.mit.mitmobile2.R;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
@@ -87,7 +89,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   
   private static final int DIALOG_QR_HELP = 1;
 	
-  private static final long INTENT_RESULT_DURATION = 1500L;
+  private static final long INTENT_RESULT_DURATION = 500L;
   private static final float BEEP_VOLUME = 0.10f;
   private static final long VIBRATE_DURATION = 200L;
 
@@ -523,6 +525,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
       intent.putExtra(Intents.Scan.RESULT, rawResult.toString());
       intent.putExtra(Intents.Scan.RESULT_FORMAT, rawResult.getBarcodeFormat().toString());
+      
+      
+      // crop barcode bitmap by 5pixels on each side
+      barcode = Bitmap.createBitmap(barcode, 5, 5, barcode.getWidth()-10, barcode.getHeight()-10);
+      
+      ByteArrayOutputStream bitmapOutStream = new ByteArrayOutputStream();
+      barcode.compress(Bitmap.CompressFormat.JPEG, 35, bitmapOutStream);
+      intent.putExtra(Intents.Scan.RESULT_BITMAP_BYTES, bitmapOutStream.toByteArray());
       Message message = Message.obtain(handler, R.id.return_scan_result);
       message.obj = intent;
       handler.sendMessageDelayed(message, INTENT_RESULT_DURATION);

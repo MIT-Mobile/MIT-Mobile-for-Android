@@ -92,6 +92,11 @@ public final class Intents {
      * See Contents.Format for possible values.
      */
     public static final String RESULT_FORMAT = "SCAN_RESULT_FORMAT";
+    
+    /**
+     * the bitmap of the successful scan
+     */
+    public static final String RESULT_BITMAP_BYTES = "SCAN_RESULT_BITMAP_BYTES";
 
     /**
      * Setting this to false will not save scanned codes in the history.

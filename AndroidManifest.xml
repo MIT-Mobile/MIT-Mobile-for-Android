@@ -187,6 +187,9 @@
 		<activity android:name=".tour.TourMapActivity" android:process=":tourmap" android:screenOrientation="portrait"/>
 		<activity android:name=".tour.TourStartHelpActivity" android:screenOrientation="portrait"/>
 		
+		<activity android:name=".qrreader.QRReaderMainActivity" android:process=":qrreader"/>
+		<activity android:name=".qrreader.QRReaderDetailActivity" android:screenOrientation="portrait" android:process=":qrreader" />
+		
 		<activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Light" />
 
 		<activity android:name=".about.AboutActivity" />
