@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+  
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="QR Reader"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  		
+  	<TextView
+  		android:id="@+id/qrreaderHelpTV"
+  		android:paddingLeft="@dimen/horizontalPadding"
+  		android:paddingRight="@dimen/horizontalPadding"
+  		android:paddingTop="@dimen/verticalPadding"
+  		android:paddingBottom="@dimen/verticalPadding"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" 
+  		android:text="A QR code is a two-dimensional data matrix similar to a barcode for encoding URLs and other data.\n\nMIT is using themed QR codes to help visitors learn more about the many activities happening on campus during its Open House, happening April 30, 2011.\n\nTap the button below to begin scanning a QR code."
+ 		style="@style/BodyText"
+  		/>
+  		
+ 		
+  	<RelativeLayout
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent" >
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:id="@+id/qrreaderMainButtons"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+  			android:layout_alignParentRight="true"
+  			android:layout_alignParentBottom="true">
+			
+			<edu.mit.mitmobile2.DividerView
+  				android:layout_width="fill_parent"
+  				android:layout_height="@dimen/dividerHeight" />
+  		
+  			<edu.mit.mitmobile2.TwoLineActionRow
+  				android:id="@+id/qrreaderScanButton"
+  				android:layout_width="fill_parent"
+  				android:layout_height="wrap_content"
+  				android:background="@color/rowBackground"
+  				android:text="Scan QR Code" />
+  		</LinearLayout>
+  		
+  		<ListView
+  			android:id="@+id/qrreaderMainHistoryLV"
+  			android:layout_alignParentTop="true"
+  			android:layout_above="@id/qrreaderMainButtons"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+ 			android:visibility="gone"
+ 			style="@style/Lists" />
+ 			
+  	</RelativeLayout>
+</LinearLayout>

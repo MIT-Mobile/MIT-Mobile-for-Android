@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.about.AboutActivity;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
@@ -232,6 +233,7 @@ public class MITNewsWidgetActivity extends Activity implements OnGesturePerforme
 			new PeopleModule(),
 			new TourModule(),
 			new MIT150Module(),
+			new QRReaderModule(),
 			new EmergencyModule(),
 		};
 		
