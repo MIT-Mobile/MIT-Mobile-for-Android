@@ -249,7 +249,7 @@ public class MainMIT150Activity extends ModuleActivity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					MIT150MoreItem mi = items.get(position);
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mi.url)));
+					CommonActions.doAction(ctx, mi.url);
 				}
 			});
 			
