@@ -80,7 +80,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 	}
 	
 	private void launchScan() {
-		Intent i = new Intent("com.google.zxing.client.android.SCAN");
+		Intent i = new Intent(this, com.google.zxing.client.android.CaptureActivity.class);
+		i.setAction(com.google.zxing.client.android.Intents.Scan.ACTION);
 		i.putExtra("SCAN_MODE", "QR_CODE_MODE");
 		startActivityForResult(i, 1);
 	}
