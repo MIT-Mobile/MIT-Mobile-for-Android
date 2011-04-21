@@ -18,30 +18,35 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.os.Message;
+import android.util.Log;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 
+/*
+ * Here be more dragons than the rest of the code
+ * This code has a somewhat confused notion of caching
+ * the database is mainly just used to cache images
+ * and the rest of the data is cached in a json snipper
+ */
+
 public class MIT150Model {
 	
-	private ArrayList<MIT150FeatureItem> features;
-	public ArrayList<MIT150MoreFeaturesItem> more_features;
+	private static ArrayList<MIT150FeatureItem> features = null;
+	public static ArrayList<MIT150MoreFeaturesItem> more_features = null;
 	
 	private long lastModified;
-	private long cachedLastModified;
 	private String json;
 	
 	private MIT150DB mit150db;
 	
 	//HashMap<String, Bitmap> mThumbnails = new HashMap<String, Bitmap>();
 
-	static private String PREF_150_LAST_MOD = "pref_150_last_mod";
+	static private String PREF_150_LAST_SAVED = "pref_150_last_saved";
 	static private String PREF_150_JSON = "pref_150_json";
 	
-	private SharedPreferences pref;
-	private SharedPreferences.Editor editor;
+	//private SharedPreferences.Editor editor;
 
 	/********************************************************************/
 	MIT150Model(Context ctx) {
@@ -50,53 +55,38 @@ public class MIT150Model {
 	/********************************************************************/
 	public ArrayList<MIT150FeatureItem> getFeatures(Context ctx) {
 		
-		// get cached if none
-		//if (features==null) {
-		//	features = mit150db.getCachedFeatures();
-		//}
-		
 		return features;
 	}
 	/********************************************************************/
 	public void fetchMIT150(final Context context, final Handler uiHandler) {	
+		if(features != null && more_features != null) {
+			MobileWebApi.sendSuccessMessage(uiHandler);
+			return;
+		}
 		
-		pref = context.getSharedPreferences(Global.PREFS,Context.MODE_WORLD_READABLE|Context.MODE_WORLD_READABLE);  
-
-		cachedLastModified = pref.getLong(PREF_150_LAST_MOD, -1); 	
-		json = pref.getString(PREF_150_JSON, null); 		
-		
-		
-		final Handler midHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				if(msg.arg1 == MobileWebApi.SUCCESS) {
-					if (lastModified>cachedLastModified) {
-						fetchMainImages(uiHandler);
-					} else {
-						// don't download again but flag success
-						if (json!=null) {
-							try {
-								handleJSON(new JSONObject(json));
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-						}
-						features = mit150db.getCachedFeatures();
-						mit150db.getCachedMoreThumbnails(more_features);
-						MobileWebApi.sendSuccessMessage(uiHandler);
-					}
-				} 
+		final SharedPreferences pref = context.getSharedPreferences(Global.PREFS,Context.MODE_WORLD_READABLE|Context.MODE_WORLD_READABLE);
+		final long cachedLastSaved = pref.getLong(PREF_150_LAST_SAVED, -1); 	
+		// keep for 6 hours
+		if(System.currentTimeMillis() - cachedLastSaved < 6L * 60L * 60L * 1000L) { // cache less than 6 hours  
+			json = pref.getString(PREF_150_JSON, null); 
+			// don't download again but flag success
+			if (json!=null) {
+				try {
+					handleJSON(new JSONObject(json));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
-		};
+			features = mit150db.getCachedFeatures();
+			MobileWebApi.sendSuccessMessage(uiHandler);
+			return;
+		} 
 		
-		
-		MobileWebApi webApi = new MobileWebApi(false, true, "MIT150", context, midHandler);
+		MobileWebApi webApi = new MobileWebApi(false, true, "MIT150", context, uiHandler);
 		
 		HashMap<String, String> query = new HashMap<String, String>();
 		query.put("module", "features");
 		query.put("command", "list");
-		
-		features = null;
 		
 		webApi.requestJSONObject(query, new JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 
@@ -105,11 +95,28 @@ public class MIT150Model {
 					throws ServerResponseException, JSONException {
 				
 				handleJSON(object);
-
 				json = object.toString();
+
+				new Thread() {
+					public void run() {
+						
+						if(cachedLastSaved == -1 || cachedLastSaved > lastModified) {
+							// do not bother downloading new images
+							// since data has not been modified since last saved
+							fetchMainImages();
 				
-				MobileWebApi.sendSuccessMessage(midHandler);
-				
+							mit150db.updateFeatures(features);
+							SharedPreferences.Editor editor = pref.edit();
+							editor.putLong(PREF_150_LAST_SAVED, System.currentTimeMillis());
+							editor.putString(PREF_150_JSON, json);
+							editor.commit();
+						} else {
+							features = mit150db.getCachedFeatures();
+						}
+						
+						MobileWebApi.sendSuccessMessage(uiHandler);
+					}
+				}.start();
 			}
 		});
 	}
@@ -165,38 +172,11 @@ public class MIT150Model {
 	}
 
 	/********************************************************************/
-	public void fetchMainImages(final Handler uiHandler) {
-		
-		// TODO send failure msg
-		
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-				
-				boolean saw_error = false;
-				BitmapFactory.Options opts = new BitmapFactory.Options();
-				for (MIT150FeatureItem f : features) {
-					if (f.photo_url==null) {
-						saw_error = true;
-						continue;
-					}
-					f.bm = getImage(f.photo_url,opts);
-				}
-				
-				if (!saw_error) {
-					// Cache new data 
-					mit150db.updateFeatures(features);
-					editor = pref.edit();
-					editor.putLong(PREF_150_LAST_MOD, lastModified);
-					editor.putString(PREF_150_JSON, json);
-					editor.commit();
-				}
-				
-				MobileWebApi.sendSuccessMessage(uiHandler);
-			}
-		};
-		t.start();
-		
+	public void fetchMainImages() {
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		for (MIT150FeatureItem f : features) {
+			f.bm = getImage(f.photo_url,opts);
+		}		
 	}
 
 	/********************************************************************/
@@ -229,7 +209,8 @@ public class MIT150Model {
     	DefaultHttpClient httpClient = new DefaultHttpClient();
     	HttpGet request = new HttpGet(url);
     	HttpResponse response;
-			
+		
+    	Log.d("MIT150", "requesting image " + url);
 		try {
 			response = httpClient.execute(request);
 

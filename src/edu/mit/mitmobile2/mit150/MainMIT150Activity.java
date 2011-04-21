@@ -130,10 +130,10 @@ public class MainMIT150Activity extends ModuleActivity {
 			if ((f.subtitle==null) || ("".equalsIgnoreCase(f.subtitle))) {
 				tv.setText(f.title);
 			} else {
-				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.tint_colorInt| 0x40000000);
+				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.getTintColor() | 0x40000000);
 				bd = new BitmapDrawable(bm);
 				tv.setBackgroundDrawable(bd);
-				setText(tv,f.title,f.subtitle,f.tint_colorInt| 0xFF000000);
+				setText(tv,f.title,f.subtitle,f.getTitleColor() | 0xFF000000);
 			}
 
 			

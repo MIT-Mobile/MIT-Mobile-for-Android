@@ -18,27 +18,57 @@ public class MIT150FeatureItem implements BaseColumns {
 	public String id;
 	public String title;
 	public String subtitle;
-	private String tint_color;
-	public int tint_colorInt;
+	private int tintColorInt;
+	private int titleColorInt;
+	private int arrowColorInt;
 	public String url;
 	public String photo_url;
 	public Bitmap bm;
 	public Dimension dim;
 	
 	public void setTintColor(String tint) {	
-		// tint should be int but json starts with # not 0x which is illegal 
-		if (tint==null) {
-			tint_color = "0";
-			tint_colorInt = 0;
+		tintColorInt = colorString2int(tint);	
+	}
+	
+	public void setTintColor(int tint) {	
+		tintColorInt = tint;	
+	}
+	
+	public void setTitleColor(String titleColor) {
+		titleColorInt = colorString2int(titleColor);
+	}
+	
+	public void setTitleColor(int titleColor) {
+		titleColorInt = titleColor;
+	}
+	
+	public void setArrowColor(String arrowColor) {
+		arrowColorInt = colorString2int(arrowColor);
+	}
+	
+	public void setArrowColor(int arrowColor) {
+		arrowColorInt = arrowColor;
+	}
+	
+	private static int colorString2int(String color) {
+		String hexString;
+		if (color.startsWith("#")) {
+			hexString = color.substring(1);
 		} else {
-			if (tint.startsWith("#")) tint_color = tint.substring(1);
-			else tint_color = tint;
-			tint_colorInt = Integer.valueOf(tint_color,16);
+			hexString = color;
 		}	
+	    return Integer.valueOf(hexString, 16);
 	}
 	
-	public String getTintColor() {
-		return tint_color;
+	public int getTintColor() {
+		return tintColorInt;
 	}
 	
+	public int getTitleColor() {
+		return titleColorInt;
+	}
+	
+	public int getArrowColor() {
+		return arrowColorInt;
+	}	
 }
