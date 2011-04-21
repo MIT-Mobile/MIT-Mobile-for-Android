@@ -25,7 +25,7 @@ import com.google.android.maps.GeoPoint;
 public class TourDB {
 	private static final long TOUR_CACHE_EXPIRES = 24 * 60 * 60 * 1000;
 	
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "tour.db";
 	private static final String TOURS_TABLE = "tours";
 	private static final String SITES_TABLE = "sites";
@@ -87,7 +87,10 @@ public class TourDB {
 	private static final String SIDE_TRIP_ID = "side_trip_id";
 	private static final String SIDE_TRIP_TITLE = "side_trip_title";
 	private static final String SIDE_TRIP_PHOTO_URL = "side_trip_photo_url";
+	private static final String SIDE_TRIP_THUMBNAIL_URL = "side_trip_thumbnail_url";
 	private static final String SIDE_TRIP_AUDIO_URL = "side_trip_audio_url";
+	// LATITUDE
+	// LONGITUDE
 	private static final String PARENT_GUID = "parent_guid";
 	private static final String PARENT_TYPE = "parent_type";
 	
@@ -347,7 +350,10 @@ public class TourDB {
 				nodeValues.put(SIDE_TRIP_ID, sideTrip.getId());
 				nodeValues.put(SIDE_TRIP_TITLE, sideTrip.getTitle());
 				nodeValues.put(SIDE_TRIP_PHOTO_URL, sideTrip.getPhotoUrl());
+				nodeValues.put(SIDE_TRIP_THUMBNAIL_URL, sideTrip.getThumbnailUrl());
 				nodeValues.put(SIDE_TRIP_AUDIO_URL, sideTrip.getAudioUrl());
+				nodeValues.put(LATITUDE, sideTrip.getGeoPoint().getLatitudeE6());
+				nodeValues.put(LONGITUDE, sideTrip.getGeoPoint().getLongitudeE6());
 			}
 			
 			
@@ -515,7 +521,10 @@ public class TourDB {
 		int sideTripIdIndex = cursor.getColumnIndex(SIDE_TRIP_ID);
 		int sideTripTitleIndex = cursor.getColumnIndex(SIDE_TRIP_TITLE);
 		int sideTripPhotoIndex = cursor.getColumnIndex(SIDE_TRIP_PHOTO_URL);
+		int sideTripThumbnailIndex = cursor.getColumnIndex(SIDE_TRIP_THUMBNAIL_URL);
 		int sideTripAudioIndex = cursor.getColumnIndex(SIDE_TRIP_AUDIO_URL);
+		int sideTripLatitude = cursor.getColumnIndex(LATITUDE);
+		int sideTripLongitude = cursor.getColumnIndex(LONGITUDE);
 		
 		if(cursor.moveToFirst()) {
 			while(!cursor.isAfterLast()) {
@@ -523,12 +532,18 @@ public class TourDB {
 				if(nodeType == ContentNodeType.INLINE) {
 					content.addHtml(cursor.getString(htmlIndex));
 				} else if(nodeType == ContentNodeType.SIDE_TRIP) {
+					int latitude = cursor.getInt(sideTripLatitude);
+					int longitude = cursor.getInt(sideTripLongitude);
+
+					GeoPoint geoPoint = new GeoPoint(latitude, longitude);
 					SideTrip sideTrip = new SideTrip(
 							cursor.getString(sideTripIdIndex),
 							cursor.getString(sideTripTitleIndex),
 							cursor.getString(htmlIndex),
 							cursor.getString(sideTripPhotoIndex),
-							cursor.getString(sideTripAudioIndex)
+							cursor.getString(sideTripThumbnailIndex),
+							cursor.getString(sideTripAudioIndex),
+							geoPoint
 					);
 					content.addSideTrip(sideTrip);
 				}
@@ -563,17 +578,6 @@ public class TourDB {
 		}
 		cursor.close();
 	}
-
-	/*
-	private static String getStringOrNull(Cursor cursor, int columnIndex) {
-		String value = cursor.getString(columnIndex);
-		if(value.equals("")) {
-			return null;
-		} else {
-			return value;
-		}
-	}
-	*/
 	
 	private static class TourDatabaseHelper extends SQLiteOpenHelper {
 		
@@ -608,8 +612,8 @@ public class TourDB {
 					+ SITE_THUMBNAIL_URL + " TEXT,"
 					+ SITE_AUDIO_URL + " TEXT,"
 					
-					+ LATITUDE + " FLOAT,"
-					+ LONGITUDE + " FLOAT,"
+					+ LATITUDE + " INTEGER,"
+					+ LONGITUDE + " INTEGER,"
 					
 					+ EXIT_DIRECTIONS_TITLE  + " TEXT,"
 					+ EXIT_DIRECTIONS_DESTINATION_GUID + " TEXT,"
@@ -641,6 +645,9 @@ public class TourDB {
 					+ SIDE_TRIP_ID + " TEXT,"
 					+ SIDE_TRIP_TITLE + " TEXT,"
 					+ SIDE_TRIP_PHOTO_URL + " TEXT,"
+					+ SIDE_TRIP_THUMBNAIL_URL + " TEXT,"
+					+ LATITUDE + " INTEGER,"
+					+ LONGITUDE + " INTEGER,"
 					+ SIDE_TRIP_AUDIO_URL + " TEXT,"
 					+ PARENT_GUID + " TEXT,"
 					+ PARENT_TYPE + " INTEGER"

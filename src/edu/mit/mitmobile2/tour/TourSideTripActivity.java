@@ -24,19 +24,15 @@ public class TourSideTripActivity extends ModuleActivity {
 	private String mPhotoUrl;
 	private String mAudioUrl;
 	
-	private static String TITLE = "title";
-	private static String HTML = "html";
-	private static String PHOTO_URL = "photo_url";
-	private static String AUDIO_URL = "audio_url";
+	private static String SITE_GUID = "site_guid";
+	private static String SIDETRIP_ID = "sidetrip_id";
 	
 	private AudioPlayer mAudioPlayer;
 	
-	public static void launch(Context context, SideTrip sideTrip) {
+	public static void launch(Context context, String siteGuid, String sidetripId) {
 		Intent intent = new Intent(context, TourSideTripActivity.class);
-		intent.putExtra(TITLE, sideTrip.getTitle());
-		intent.putExtra(HTML, sideTrip.getHtml());
-		intent.putExtra(PHOTO_URL, sideTrip.getPhotoUrl());
-		intent.putExtra(AUDIO_URL, sideTrip.getAudioUrl());
+		intent.putExtra(SITE_GUID, siteGuid);
+		intent.putExtra(SIDETRIP_ID, sidetripId);
 		context.startActivity(intent);
 	}
 	
@@ -44,10 +40,14 @@ public class TourSideTripActivity extends ModuleActivity {
 	protected void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		
-		mTitle = getIntent().getStringExtra(TITLE);
-		mHtml = getIntent().getStringExtra(HTML);
-		mPhotoUrl = getIntent().getStringExtra(PHOTO_URL);
-		mAudioUrl = getIntent().getStringExtra(AUDIO_URL);
+		String siteGuid = getIntent().getStringExtra(SITE_GUID);
+		String sidetripId = getIntent().getStringExtra(SIDETRIP_ID);
+		SideTrip sidetrip = TourModel.getTour().getSite(siteGuid).getSideTrip(sidetripId);
+		
+		mTitle = sidetrip.getTitle();
+		mHtml = sidetrip.getHtml();
+		mPhotoUrl = sidetrip.getPhotoUrl();
+		mAudioUrl = sidetrip.getAudioUrl();
 		
 		setContentView(R.layout.tour_side_trip);
 		

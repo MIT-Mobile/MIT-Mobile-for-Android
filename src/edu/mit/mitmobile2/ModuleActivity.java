@@ -1,9 +1,20 @@
 package edu.mit.mitmobile2;
 
+import java.text.DateFormat;
+import java.util.Date;
+
+import edu.mit.mitmobile2.about.AboutCreditsActivity;
+import edu.mit.mitmobile2.about.AboutMITActivity;
+import edu.mit.mitmobile2.about.BuildSettings;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public abstract class ModuleActivity extends Activity {
 	
@@ -12,7 +23,14 @@ public abstract class ModuleActivity extends Activity {
 	protected static final int MENU_MODULE_HOME = MENU_HOME + 1;
 	protected static final int MENU_SEARCH = MENU_MODULE_HOME + 1;
 	protected static final String MENU_SEARCH_TITLE = "Search";
+	protected Global app;
 	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {	
+		super.onCreate(savedInstanceState);
+		app = (Global)getApplication();
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
@@ -58,4 +76,8 @@ public abstract class ModuleActivity extends Activity {
 	abstract public boolean isModuleHomeActivity();
 	
 	abstract protected void prepareActivityOptionsMenu(Menu menu);
+	
+	public String getMobileWebDomain() {
+		return app.getMobileWebDomain();
+	}
 }

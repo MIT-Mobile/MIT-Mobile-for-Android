@@ -397,7 +397,8 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 		
 		
 		stopsTask = new CheckStopsTask();
-		stopsTask.execute(RoutesParser.ROUTES_BASE_URL+"?command=stopInfo&id="+si.id, null, null);
+		RoutesParser rp = new RoutesParser();
+		stopsTask.execute(rp.getBaseUrl()+"?command=stopInfo&id="+si.id, null, null);
 		
 	}
 

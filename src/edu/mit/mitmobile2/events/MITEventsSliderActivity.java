@@ -57,12 +57,13 @@ public class MITEventsSliderActivity extends SliderActivity {
 		context.startActivity(intent);
 	}
 	
-	public static void launchCategory(Context context, String eventId, long unixtime, int categoryId) {
+	public static void launchCategory(Context context, String eventId, long unixtime, int categoryId, EventType eventType) {
 		Intent intent = new Intent(context, MITEventsSliderActivity.class);
 		intent.putExtra(LIST_MODE_KEY, CATEGORY_DAY_LIST);
 		intent.putExtra(EVENT_ID_KEY, eventId);
 		intent.putExtra(UNIXTIME_KEY, unixtime);
 		intent.putExtra(CATEGORY_ID_KEY , categoryId);
+		intent.putExtra(EVENT_TYPE_KEY, eventType.getTypeId());
 		context.startActivity(intent);
 	}
 	
@@ -100,14 +101,24 @@ public class MITEventsSliderActivity extends SliderActivity {
     	mInitialEventId = extras.getString(EVENT_ID_KEY);
     	int listMode = extras.getInt(LIST_MODE_KEY);
     	
+    	EventType eventType = null;
+    	if(extras.containsKey(EVENT_TYPE_KEY)) {
+    		if(EventsModel.eventTypesLoaded()) {
+    			eventType = EventsModel.getEventType(extras.getString(EVENT_TYPE_KEY));
+    		} else {
+    			// graceful exit
+    			finish();
+    			return;
+    		}
+    	}
+    	
     	if(listMode == EVENTS_DAY_LIST) {
     		long unixtime = extras.getLong(UNIXTIME_KEY);
-    		EventType eventType = EventsModel.getEventType(extras.getString(EVENT_TYPE_KEY));
     		mEvents = EventsModel.getDayEvents(unixtime, eventType);
     	} else if(listMode == CATEGORY_DAY_LIST) {
     		long unixtime = extras.getLong(UNIXTIME_KEY);
     		int categoryId = extras.getInt(CATEGORY_ID_KEY);
-    		mEvents = EventsModel.getCategoryDayEvents(unixtime, categoryId);
+    		mEvents = EventsModel.getCategoryDayEvents(unixtime, categoryId, eventType);
     	} else if(listMode == SEARCH_LIST) {
     		String searchTerms = extras.getString(SEARCH_TERMS_KEY);
     		mEvents = EventsModel.executeLocalSearch(searchTerms);
@@ -121,8 +132,13 @@ public class MITEventsSliderActivity extends SliderActivity {
     		mBriefMode = true;
     	}
     	
+    	if(mEvents == null) {
+    		// gracefull exit
+    		finish();
+    		return;
+    	}
+    	
     	createViews();
-
 	}
 	/****************************************************/
     void createViews() {

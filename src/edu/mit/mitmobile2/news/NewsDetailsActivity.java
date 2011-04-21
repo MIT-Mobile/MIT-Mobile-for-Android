@@ -18,6 +18,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ public class NewsDetailsActivity extends SliderActivity {
 	
 	static final int MENU_BOOKMARKED = MENU_LAST + 1;
 	static final int MENU_SHARE = MENU_BOOKMARKED + 1;
+	static final String TAG = "NewsDetailsActivity";
 	
 	public static final String CATEGORY_ID_KEY = "category_id";
 	static final String SEARCH_TERM_KEY = "search_term";
@@ -45,7 +47,7 @@ public class NewsDetailsActivity extends SliderActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-		
+
 		mStartPosition = getPositionValue();
 	
 		Bundle extras = getIntent().getExtras();
@@ -116,7 +118,16 @@ public class NewsDetailsActivity extends SliderActivity {
 		for(int index=0; index < totalStories; index++) {
 			NewsItem newsItem = mNewsItems.get(index);
 			String headerTitle = "Story " + Integer.toString(index+1) + " of " + Integer.toString(totalStories);
-				
+			//DEBUG
+//			if (index == 0) {
+//				Log.d(TAG,"author = " + newsItem.author);
+//				Log.d(TAG,"body = " + newsItem.body);
+//				Log.d(TAG,"description = " + newsItem.description);
+//				Log.d(TAG,"link = " + newsItem.link);
+//				Log.d(TAG,"thumbURL = " + newsItem.thumbURL);
+//				Log.d(TAG,"title = " + newsItem.title);
+//			}
+			//DEBUG
 			addScreen(new NewsDetailsScreen(this, newsItem), newsItem.title, headerTitle);
 		}
 		
@@ -132,7 +143,7 @@ public class NewsDetailsActivity extends SliderActivity {
 			mNewsModel.setStoryBookmarkStatus(newsItem, !mNewsModel.isBookmarked(newsItem));
 			return true;
 		} else if(item.getItemId() == MENU_SHARE) {
-			String url  = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/n/" + IdEncoder.shortenId(newsItem.story_id);
+			String url  = "http://" + this.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(newsItem.story_id);
 			CommonActions.shareCustomContent(this, newsItem.title, newsItem.description, url);
 			return true;
 		}

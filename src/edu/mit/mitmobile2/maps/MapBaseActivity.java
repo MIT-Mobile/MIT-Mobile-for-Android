@@ -142,10 +142,11 @@ public abstract class MapBaseActivity extends MapActivity {
 
 		
 		// My Location
-	    myLocationOverlay = new FixedMyLocation(this, mapView);
-		ovrlys.add(myLocationOverlay);
-		myLocationOverlay.enableMyLocation();
-
+		if(myLocationOverlay == null) {
+			myLocationOverlay = new FixedMyLocation(this, mapView);
+			ovrlys.add(myLocationOverlay);
+			myLocationOverlay.enableMyLocation();
+		}
 
 		// possibly catch memory leaks?
 		ZoomButtonsController zoomctrl = mapView.getZoomButtonsController(); 

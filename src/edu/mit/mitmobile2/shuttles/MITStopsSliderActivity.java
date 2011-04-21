@@ -15,9 +15,10 @@ import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITStopsSliderActivity extends SliderActivity {
+public class MITStopsSliderActivity extends SliderActivity implements OnPositionChangedListener {
 	
 	// Alarm related
 	static public HashMap<String,HashMap <String,Long>> alertIdx;  // <Stop,<Routes,Times>>
@@ -60,6 +61,8 @@ public class MITStopsSliderActivity extends SliderActivity {
     	setTitle("MIT Stops");
     	
     	createViews();
+    	
+    	setOnPositionChangedListener(this);
 
 	}
 	
@@ -107,23 +110,14 @@ public class MITStopsSliderActivity extends SliderActivity {
     }	
     
 
-	/****************************************************/
 	@Override
-	protected void setPosition(int position) {
-		
-		super.setPosition(position);
-
-		int curPos = getPosition();
-		
-		if (last_pos!=curPos) {
-			
-			curView = (StopsAsyncView) getScreen(curPos);
-			
-			last_pos = curPos;
+	public void onPositionChanged(int newPosition, int oldPosition) {
+		if (curView != null) {
+			curView.terminate();
 		}
-		
+		curView = (StopsAsyncView) getScreen(newPosition);
 	}
-
+	
 	/****************************************************/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

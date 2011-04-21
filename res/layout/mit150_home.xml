@@ -34,7 +34,7 @@
 				 	android:orientation="horizontal"
 		  			android:layout_width="fill_parent"
 		  			android:layout_height="wrap_content">
-		  		<FrameLayout
+		  		<RelativeLayout
 					    android:id="@+id/mit150WelcomeFL"
 						android:paddingTop="7dp"
 						android:paddingLeft="7dp"
@@ -49,11 +49,14 @@
 				  			android:layout_height="fill_parent"/>
 				  	<TextView
 							android:id="@+id/mit150WelcomeTV"
-							android:padding="9dp"
-						 	android:textColor="#ffffffff"
+						 	android:layout_marginBottom="5dp"
+						 	android:layout_marginTop="7dp"
+						 	android:layout_marginRight="5dp"
+						 	android:layout_marginLeft="7dp"
+						 	android:layout_alignParentBottom="true"
 				  			android:layout_width="fill_parent"
 				  			android:layout_height="wrap_content"/>
-		  		</FrameLayout>
+		  		</RelativeLayout>
 		  		
 		  		<!-- Corridor -->
 		  		<RelativeLayout
@@ -88,9 +91,7 @@
 			<!-- Events -->
 		 	<RelativeLayout
 					android:id="@+id/mit150EventsRL"
-					android:paddingBottom="2dp"
 					android:layout_marginTop="3dp"
-					android:layout_marginBottom="2dp"
 		  			android:layout_width="fill_parent"
 		  			android:layout_height="wrap_content">
 		  		<ImageView				
@@ -106,6 +107,8 @@
 			  	<TextView
 						android:id="@+id/mit150EventsTV"
 					 	android:paddingLeft="6dp"
+					 	android:layout_marginBottom="5dp"
+						android:layout_marginTop="7dp"
 					 	android:layout_marginLeft="7dp"
 					 	android:layout_marginRight="7dp"
 						android:layout_alignParentBottom="true"

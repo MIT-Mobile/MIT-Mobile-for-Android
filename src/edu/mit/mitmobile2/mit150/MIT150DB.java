@@ -16,7 +16,7 @@ import android.graphics.drawable.BitmapDrawable;
 
 public class MIT150DB {
 
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "mit150.db";
 	private static final String FEATURES_TABLE = "features";
 	private static final String MORE_FEATURES_TABLE = "more_features";  // may not need...
@@ -25,7 +25,9 @@ public class MIT150DB {
 	private static final String FEATURE_ID = "feature_id";
 	private static final String TITLE = "title";
 	private static final String SUBTITLE = "subtitle";
-	private static final String TINT = "tint";
+	private static final String TINT_COLOR = "tint_color";
+	private static final String TITLE_COLOR = "title_color";
+	private static final String ARROW_COLOR = "arrow_color";
 	private static final String URL = "url";
 	private static final String PHOTO_URL = "photo_url";
 	private static final String BITMAP = "bitmap";
@@ -37,7 +39,7 @@ public class MIT150DB {
 
 	static String[] proj_thumb = {URL,BITMAP};
 	
-	static String[] proj = {FEATURE_ID,TITLE,SUBTITLE,TINT,URL,PHOTO_URL,BITMAP,DIM_H,DIM_W};
+	static String[] proj = {FEATURE_ID,TITLE,SUBTITLE,TINT_COLOR,TITLE_COLOR,ARROW_COLOR,URL,PHOTO_URL,BITMAP,DIM_H,DIM_W};
 	
 	SQLiteOpenHelper mMIT150DBHelper;
 	
@@ -97,7 +99,9 @@ public class MIT150DB {
 		int feature_id_index = cursor.getColumnIndex(FEATURE_ID);
 		int title_index = cursor.getColumnIndex(TITLE);
 		int subtitle_index = cursor.getColumnIndex(SUBTITLE);
-		int tint_index = cursor.getColumnIndex(TINT);
+		int tint_index = cursor.getColumnIndex(TINT_COLOR);
+		int title_color_index = cursor.getColumnIndex(TITLE_COLOR);
+		int arrow_color_index = cursor.getColumnIndex(ARROW_COLOR);
 		int url_index = cursor.getColumnIndex(URL);
 		int photo_index = cursor.getColumnIndex(PHOTO_URL);
 		int bitmap_index = cursor.getColumnIndex(BITMAP);
@@ -108,7 +112,9 @@ public class MIT150DB {
 		item.id = cursor.getString(feature_id_index);
 		item.title = cursor.getString(title_index);
 		item.subtitle = cursor.getString(subtitle_index);
-		item.setTintColor(cursor.getString(tint_index));
+		item.setTintColor(cursor.getInt(tint_index));
+		item.setTitleColor(cursor.getInt(title_color_index));
+		item.setArrowColor(cursor.getInt(arrow_color_index));
 		item.url = cursor.getString(url_index);
 		item.photo_url = cursor.getString(photo_index);
 		item.dim.height = cursor.getInt(dim_h_index);
@@ -132,7 +138,9 @@ public class MIT150DB {
 		cv.put(FEATURE_ID, featureItem.id);
 		cv.put(TITLE, featureItem.title);
 		cv.put(SUBTITLE, featureItem.subtitle);
-		cv.put(TINT, featureItem.getTintColor());
+		cv.put(TINT_COLOR, featureItem.getTintColor());
+		cv.put(TITLE_COLOR, featureItem.getTitleColor());
+		cv.put(ARROW_COLOR, featureItem.getArrowColor());
 		cv.put(URL, featureItem.url);
 		cv.put(PHOTO_URL, featureItem.photo_url);
 		
@@ -195,7 +203,10 @@ public class MIT150DB {
 		SQLiteDatabase db = mMIT150DBHelper.getReadableDatabase();
 		
 		Cursor cursor = db.query(MORE_THUMBS_TABLE, proj_thumb, WHERE_URL, new String[]{item.url}, null, null, null);
-		if (cursor.getCount()==0) return;
+		if (cursor.getCount()==0) {
+			cursor.close();
+			return;
+		}
 		cursor.moveToFirst();
 		
 		int url_index = cursor.getColumnIndex(URL);
@@ -208,8 +219,7 @@ public class MIT150DB {
 			bm = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 			//assert(bm!=null);
 			if (bm!=null) item.bd = new BitmapDrawable(bm);
-		}
-		
+		}		
 	}	
 	
 	public void getCachedMoreThumbnails(ArrayList<MIT150MoreFeaturesItem> moreItems) {
@@ -236,7 +246,9 @@ public class MIT150DB {
 					+ FEATURE_ID + " TEXT,"
 					+ TITLE + " TEXT,"
 					+ SUBTITLE + " TEXT,"
-					+ TINT + " TEXT,"
+					+ TINT_COLOR + " INTEGER,"
+					+ TITLE_COLOR + " INTEGER,"
+					+ ARROW_COLOR + " INTEGER,"
 					+ URL + " TEXT,"
 					+ PHOTO_URL + " TEXT,"
 					+ BITMAP + " BLOB,"
@@ -254,7 +266,11 @@ public class MIT150DB {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			// simplist migration possible delete old table, create new table
+			db.execSQL("DROP TABLE " + FEATURES_TABLE + ";");
+			db.execSQL("DROP TABLE " + MORE_THUMBS_TABLE + ";");
 			
+			onCreate(db);
 		}
 	}
 

@@ -33,11 +33,13 @@ public class EventsModel {
 		private String mId;
 		private String mLongName;
 		private String mShortName;
+		private boolean mHasCategories;
 	
-		public EventType(String id, String longName, String shortName) {
+		public EventType(String id, String longName, String shortName, boolean hasCategories) {
 			mId = id;
 			mLongName = longName;
 			mShortName = shortName;
+			mHasCategories = hasCategories;
 		}
 		
 		public String getTypeId() {
@@ -50,6 +52,10 @@ public class EventsModel {
 		
 		public String getShortName() {
 			return mShortName;
+		}
+		
+		public boolean hasCategories() {
+			return mHasCategories;
 		}
 	}
 	
@@ -66,6 +72,7 @@ public class EventsModel {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "calendar");
 		params.put("command", "extraTopLevels");
+		params.put("version", "2");
 	
 		webApi.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
 				new MobileWebApi.DefaultErrorListener(uiHandler), null) {
@@ -75,14 +82,22 @@ public class EventsModel {
 					JSONException {
 				
 				sEventTypes = new ArrayList<EventType>();
-				sEventTypes.add(new EventType("Events", "Today's Events", "Events"));
+				sEventTypes.add(new EventType("Events", "Today's Events", "Events", false));
 				
 				for(int i = 0; i < array.length(); i++) {
 					JSONObject eventType = array.getJSONObject(i);
+					
+					// server may not yet be returning verion 2 of the api
+					boolean hasCategories = false;
+					if(eventType.has("hasCategories")) {
+						hasCategories = eventType.getBoolean("hasCategories");
+					}
+					
 					sEventTypes.add(new EventType(
 						eventType.getString("type"),
 						eventType.getString("longName"),
-						eventType.getString("shortName")
+						eventType.getString("shortName"),
+						hasCategories
 					));
 				}
 				
@@ -254,9 +269,13 @@ public class EventsModel {
 	/*
 	 * Event category related stuff
 	 */
-	private static List<EventCategoryItem> sCategories = null;
+	private static HashMap<String, List<EventCategoryItem>> sCategories = new HashMap<String, List<EventCategoryItem>>();
 	
-	public static void fetchCategories(Context context, final Handler uiHandler) {
+	public static void fetchCategories(Context context, Handler uiHandler) {
+		fetchCategories(context, getEventType("Events"), uiHandler);
+	}
+	
+	public static void fetchCategories(Context context, final EventType type, final Handler uiHandler) {
 		if(getCategories() != null) {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
@@ -267,24 +286,29 @@ public class EventsModel {
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
 		eventParameters.put("command", "categories");
 		eventParameters.put("module", "calendar");
+		eventParameters.put("type", type.getTypeId());
 		
 		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
 			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
 			@Override
 			public void onResponse(JSONArray jArray) {
-				sCategories = parseCategoryArray(jArray);				
+				sCategories.put(type.getTypeId(), parseCategoryArray(jArray));				
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 		});
 	}
 	
+	public static List<EventCategoryItem> getCategories(EventType type) {
+		return sCategories.get(type.getTypeId());
+	}
+	
 	public static List<EventCategoryItem> getCategories() {
-		return sCategories;
+		return sCategories.get("Events");
 	}
 	
 	public static EventCategoryItem getCategory(int categoryId) {
-		for(EventCategoryItem categoryItem : sCategories) {
+		for(EventCategoryItem categoryItem : getCategories()) {
 			if(categoryItem.catid == categoryId) {
 					return categoryItem;
 			}
@@ -328,9 +352,9 @@ public class EventsModel {
 		return category;
 	}
 	
-	public static void fetchCategoryDayEvents(final long unixtime, final int categoryId, Context context, final Handler uiHandler) {
+	public static void fetchCategoryDayEvents(final long unixtime, final int categoryId, final EventType eventType, Context context, final Handler uiHandler) {
 		
-		if(getCategoryDayEvents(unixtime, categoryId) != null) {
+		if(getCategoryDayEvents(unixtime, categoryId, eventType) != null) {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
 		}
@@ -340,6 +364,7 @@ public class EventsModel {
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
 		eventParameters.put("module", "calendar");
 		eventParameters.put("command", "category");
+		eventParameters.put("type", eventType.getTypeId());
 		eventParameters.put("id", Integer.toString(categoryId));
 		eventParameters.put("start", Long.toString(unixtime));
 		
@@ -349,7 +374,7 @@ public class EventsModel {
 			@Override
 			public void onResponse(JSONArray jArray) {
 				List<EventDetailsItem> events = parseDetailArray(jArray);
-				putInCategoryDayEventsCache(unixtime, categoryId, events);
+				putInCategoryDayEventsCache(unixtime, categoryId, eventType, events);
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 		});
@@ -357,32 +382,38 @@ public class EventsModel {
 	
 	// HashMap with keys of categoryId then day timestamp as a key
 	// the values are lists of eventIds, this data structure is a little ugly
-	static private HashMap<Integer, HashMap<Long, List<String>>> sCategoryDayEventsCache = 
-		new HashMap<Integer, HashMap<Long, List<String>>>();
+	static private HashMap<String, HashMap<Long, List<String>>> sCategoryDayEventsCache = 
+		new HashMap<String, HashMap<Long, List<String>>>();
 	
-	private static void putInCategoryDayEventsCache(long unixtime, int categoryId, List<EventDetailsItem> events) {
+	private static String categoryKey(int categoryId, EventType eventType) {
+		return eventType.getTypeId() + "-" + categoryId;
+	}
+	
+	private static void putInCategoryDayEventsCache(long unixtime, int categoryId, EventType eventType, List<EventDetailsItem> events) {
 		Long timeKey = getDayEventKey(unixtime);		
 		List<String> eventIds = eventIds(events);
 		
-		if(!sCategoryDayEventsCache.containsKey(categoryId)) {
-			sCategoryDayEventsCache.put(categoryId, new HashMap<Long, List<String>>());
+		String categoryKey = categoryKey(categoryId, eventType);
+		if(!sCategoryDayEventsCache.containsKey(categoryKey)) {
+			sCategoryDayEventsCache.put(categoryKey, new HashMap<Long, List<String>>());
 		}
 		
-		HashMap<Long, List<String>> categoryCache = sCategoryDayEventsCache.get(categoryId);
+		HashMap<Long, List<String>> categoryCache = sCategoryDayEventsCache.get(categoryKey);
 		categoryCache.put(timeKey, eventIds);		
 	}
 	
-	public static List<EventDetailsItem> getCategoryDayEvents(long unixtime, int categoryId) {
+	public static List<EventDetailsItem> getCategoryDayEvents(long unixtime, int categoryId, EventType eventType) {
 		Long timeKey = getDayEventKey(unixtime);
-		if(!sCategoryDayEventsCache.containsKey(categoryId)) {
+		String categoryKey = categoryKey(categoryId, eventType);
+		if(!sCategoryDayEventsCache.containsKey(categoryKey)) {
 			return null;
 		}
 		
-		if(!sCategoryDayEventsCache.get(categoryId).containsKey(timeKey)) {
+		if(!sCategoryDayEventsCache.get(categoryKey).containsKey(timeKey)) {
 			return null;
 		}
 		
-		List<String> eventIds = sCategoryDayEventsCache.get(categoryId).get(timeKey);
+		List<String> eventIds = sCategoryDayEventsCache.get(categoryKey).get(timeKey);
 		return eventList(eventIds);
 	}
 	

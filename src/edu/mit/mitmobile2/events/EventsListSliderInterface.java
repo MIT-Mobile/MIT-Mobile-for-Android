@@ -55,11 +55,12 @@ public class EventsListSliderInterface implements SliderInterface {
 	/*
 	 * Look up by category and day (constructor)
 	 */
-	public static EventsListSliderInterface categoriesFactory(Context context, int categoryId, long dayTime) {
+	public static EventsListSliderInterface categoriesFactory(Context context, int categoryId, EventType eventType, long dayTime) {
 		EventsListSliderInterface sliderInterface = new EventsListSliderInterface();
 		sliderInterface.mContext = context;
 		sliderInterface.mDayTime = dayTime;
 		sliderInterface.mCategoryId = categoryId;
+		sliderInterface.mEventType = eventType;
 		return sliderInterface;
 	}
 	
@@ -88,12 +89,12 @@ public class EventsListSliderInterface implements SliderInterface {
 			public void onItemClick(AdapterView<?> adapterView, View row, int position, long arg3) {
 				EventDetailsItem event = (EventDetailsItem) adapterView.getItemAtPosition(position);
 				
-				if(mEventType != null) {
-					MITEventsSliderActivity.launchEvents(mContext, event.id, mDayTime, mEventType);
-				} else if(mCategoryId > -1) {
-					MITEventsSliderActivity.launchCategory(mContext, event.id, mDayTime, mCategoryId);
+				if(mCategoryId > -1) {
+					MITEventsSliderActivity.launchCategory(mContext, event.id, mDayTime, mCategoryId, mEventType);
 				} else if(mAcademicCalendar) {
 					MITEventsSliderActivity.launchAcademicCalendar(mContext, event.id, mYear, mMonth);
+				} else {
+					MITEventsSliderActivity.launchEvents(mContext, event.id, mDayTime, mEventType);
 				}
 			}
 		});
@@ -109,13 +110,14 @@ public class EventsListSliderInterface implements SliderInterface {
 			return;
 		}
 		
+		mLoadingView.setVisibility(View.VISIBLE);
 		mLoadingView.showLoading();
-		if(mEventType != null) {
-			EventsModel.fetchDayEvents(mDayTime, mEventType, mContext, uiHandler());
-		} else if(mCategoryId > -1) {
-			EventsModel.fetchCategoryDayEvents(mDayTime, mCategoryId, mContext, uiHandler());
-		} else if(mAcademicCalendar) {
+		if(mAcademicCalendar) {
 			EventsModel.fetchAcademicCalendar(mYear, mMonth, mContext, uiHandler());
+		} else if(mCategoryId > -1) {
+			EventsModel.fetchCategoryDayEvents(mDayTime, mCategoryId, mEventType, mContext, uiHandler());
+		} else {
+			EventsModel.fetchDayEvents(mDayTime, mEventType, mContext, uiHandler());
 		}
 	}
 
@@ -127,12 +129,12 @@ public class EventsListSliderInterface implements SliderInterface {
 					mLoadingCompleted = true;
 					
 					List<EventDetailsItem> events = null;
-					if(mEventType != null) {
-						events = EventsModel.getDayEvents(mDayTime, mEventType);
-					} else if(mCategoryId > -1) {
-						events = EventsModel.getCategoryDayEvents(mDayTime, mCategoryId);
+					if(mCategoryId > -1) {
+						events = EventsModel.getCategoryDayEvents(mDayTime, mCategoryId, mEventType);
 					} else if(mAcademicCalendar) {
 						events = EventsModel.getAcademicCalendar(mYear, mMonth);
+					} else {
+						events = EventsModel.getDayEvents(mDayTime, mEventType);
 					}
 					
 					TimeSummaryMode timeSummaryMode = mAcademicCalendar ? EventDetailsItem.SHORT_DAYS_ONLY : EventDetailsItem.TIMES_ONLY;

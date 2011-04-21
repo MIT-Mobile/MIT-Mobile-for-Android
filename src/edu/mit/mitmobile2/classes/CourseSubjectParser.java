@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.CourseItem;
@@ -32,7 +33,7 @@ public class CourseSubjectParser extends JSONParser {
 	
 	
 	public String getBaseUrl() {
-		return "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/api/?module=stellar";
+		return "http://" + Global.getMobileWebDomain() + "/api/?module=stellar";
 	}
 	
 	/////////////////////////////////////////

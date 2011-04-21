@@ -74,6 +74,7 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
         titleBar.setTitle("Browse Map");
 	    
         mLoader = (FullScreenLoader) findViewById(R.id.boringListLoader);
+        mLoader.showLoading();
 		
 		
         fetchCats();

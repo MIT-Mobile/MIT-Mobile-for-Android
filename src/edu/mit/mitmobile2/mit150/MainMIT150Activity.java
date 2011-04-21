@@ -13,21 +13,24 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout.LayoutParams;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -45,12 +48,15 @@ public class MainMIT150Activity extends ModuleActivity {
 	Context ctx;
 
 	MIT150Model mit150model = new MIT150Model(this);
+	
+	public static final String TAG = "MainMIT150Activity";
 
 	@Override
 	protected void onCreate(Bundle savedInstance) {
 		
 		super.onCreate(savedInstance);
-
+		Log.d(TAG, "onCreate()");
+	     
 		setContentView(R.layout.mit150_home);
 
 		ctx = this;
@@ -123,11 +129,15 @@ public class MainMIT150Activity extends ModuleActivity {
 
 			if ((f.subtitle==null) || ("".equalsIgnoreCase(f.subtitle))) {
 				tv.setText(f.title);
+				tv.setTextColor(f.getTitleColor() | 0xFF000000);
+				RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+				tv.setLayoutParams(layoutParams);
 			} else {
-				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.tint_colorInt| 0x40000000);
+				setText(tv,f.title,f.subtitle,f.getTitleColor() | 0xFF000000);
+				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.getTintColor() | 0x40000000);
 				bd = new BitmapDrawable(bm);
 				tv.setBackgroundDrawable(bd);
-				setText(tv,f.title,f.subtitle,f.tint_colorInt| 0xFF000000);
 			}
 
 			
@@ -147,9 +157,9 @@ public class MainMIT150Activity extends ModuleActivity {
 		f = fs.get(0);
 		if (f!=null) {
 			
-			fl = (FrameLayout) findViewById(R.id.mit150WelcomeFL);
+			rl = (RelativeLayout) findViewById(R.id.mit150WelcomeFL);
 			params = new LinearLayout.LayoutParams((int) (0.333*screenWidth),LayoutParams.FILL_PARENT);
-			fl.setLayoutParams(params);
+			rl.setLayoutParams(params);
 			
 		}
 		
@@ -243,7 +253,7 @@ public class MainMIT150Activity extends ModuleActivity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					MIT150MoreItem mi = items.get(position);
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mi.url)));
+					CommonActions.doAction(ctx, mi.url);
 				}
 			});
 			

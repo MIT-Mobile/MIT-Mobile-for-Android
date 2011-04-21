@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -22,6 +23,7 @@ abstract public class SliderActivity extends ModuleActivity {
 	public static final String KEY_POSITION = "start_position";
 	private static final String KEY_POSITION_SAVED = "saved_start_position";
 	private int mLastSavedPosition = -1;
+	public static String TAG = "SliderActivity";
 	
 	protected Context ctx;
 
@@ -201,6 +203,8 @@ abstract public class SliderActivity extends ModuleActivity {
 	}
 	
 	protected void addScreen(SliderInterface sliderInterface, String jumpTitle, String headerTitle) {
+		Log.d(TAG,"jumpTitle = " + jumpTitle);
+		Log.d(TAG,"headerTitle = " + headerTitle);
 		jumpTitles.add(jumpTitle);
 		headerTitles.add(headerTitle);
 		mSliderView.addScreen(sliderInterface);

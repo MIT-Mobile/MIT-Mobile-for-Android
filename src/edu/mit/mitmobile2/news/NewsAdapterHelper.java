@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +27,8 @@ public class NewsAdapterHelper  {
 	private NewsModel mNewsModel;
 	private ListView mListView;
 	
+	public static String TAG = "NewsAdapterHelper";
+	
 	public NewsAdapterHelper(ListView listView, NewsModel newsModel) {
 		mThumbnails = new HashMap<Integer, SoftReference<Bitmap>>();
 		mNewsModel = newsModel;
@@ -40,6 +43,7 @@ public class NewsAdapterHelper  {
 			
 			TextView newsDeckTV = (TextView) view.findViewById(R.id.newsRowDeckTV);
 			newsDeckTV.setText(newsItem.description);
+			//Log.d(TAG,"description = " + newsItem.description);
 			
 			// ImageView
 			final ImageView newsIV = (ImageView) view.findViewById(R.id.newsRowIV);

@@ -42,7 +42,7 @@ public class EventsModule extends Module {
 		if(url.startsWith("mitmobile://calendar/?source=")) {
 			try {
 				String eventSource = URLDecoder.decode(url.substring("mitmobile://calendar/?source=".length()), "UTF-8");
-				MITEventsDaysSliderActivity.launchEventType(context, eventSource);
+				MITEventsDaysSliderActivity.launchEventType(context, eventSource, null);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

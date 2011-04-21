@@ -12,6 +12,7 @@ public class EventCategoryItem {
 	public String name;
 	public int catid;
 	public List<EventCategoryItem> subcats=null;
+	public String sourceId=null;
 	
 }
 

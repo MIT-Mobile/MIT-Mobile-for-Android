@@ -3,8 +3,9 @@ package edu.mit.mitmobile2.maps;
 import java.util.List;
 
 import com.google.android.maps.GeoPoint;
+
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.ImageDiskCache;
-import edu.mit.mitmobile2.about.BuildSettings;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
@@ -33,7 +35,7 @@ public class MapCanvasDrawer {
 	
 	static final double EARTH_RADIUS_METERS = 6370.0 * 1000.0;
 	
-	private static String SERVER = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/api/map/tile2/";
+	private String SERVER = "http://" + Global.getMobileWebDomain() + "/api/map/tile2/";
 	
 	private boolean mRequestCanceled = false;
 	

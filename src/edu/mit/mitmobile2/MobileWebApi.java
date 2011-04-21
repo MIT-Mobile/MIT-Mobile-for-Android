@@ -18,6 +18,7 @@ import edu.mit.mitmobile2.about.BuildSettings;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class MobileWebApi {
 	
 	final static String GENERIC_MESSAGE =  "Loading...";
 	final static String SEARCH_MESSAGE = "Searching...";
-	
+		
 	public static interface ErrorResponseListener {
 		public void onError();
 	}
@@ -348,7 +349,7 @@ public class MobileWebApi {
 			loadingDialog.show();
 		}
 		
-		String urlString = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + BASE_PATH + path + "/?" + query(parameters);
+		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path + "/?" + query(parameters);
 		Log.d("MobileWebAPI", "requesting " + urlString);
 		boolean isStarted = connection.openURL(urlString, callback);
 

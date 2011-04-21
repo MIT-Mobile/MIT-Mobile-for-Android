@@ -22,6 +22,7 @@ import com.google.android.maps.GeoPoint;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 public class TourModel {
 	
@@ -230,7 +231,9 @@ public class TourModel {
 					contentNodeJson.getString("title"),
 					contentNodeJson.getString("html"),
 					optString(contentNodeJson, "photo-url"),
-					optString(contentNodeJson, "audio-url")
+					contentNodeJson.getString("thumbnail156-url"),
+					optString(contentNodeJson, "audio-url"),
+					parseLatLon(contentNodeJson.getJSONObject("latlon"))
 				));
 			}
 		}

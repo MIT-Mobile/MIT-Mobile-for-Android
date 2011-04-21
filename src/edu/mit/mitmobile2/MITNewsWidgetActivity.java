@@ -1,18 +1,31 @@
 package edu.mit.mitmobile2;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.util.AndroidException;
+import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,8 +34,11 @@ import android.view.View.OnClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.about.AboutActivity;
+import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
 import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
@@ -39,7 +55,7 @@ import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 import edu.mit.mitmobile2.tour.TourModule;
 
-public class MITNewsWidgetActivity extends Activity {
+public class MITNewsWidgetActivity extends Activity implements OnGesturePerformedListener, OnSharedPreferenceChangeListener {
 	
 	private static final long TIMER_DELAY = 5000;
 	
@@ -65,16 +81,39 @@ public class MITNewsWidgetActivity extends Activity {
 
 	private SliderView mNewsSlider;
 
+	public static final String TAG = "MITNewsWidgetActivity";
+	private Global app;
+	private GestureLibrary mLibrary;
+	private SharedPreferences prefs;
 
+	
 	/****************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		Log.d(TAG,"onCreate()");
+    
+		// get App
+		app = (Global)this.getApplication();
+		Log.d(TAG,"app = " + app);
+		
+		// get preferences
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
 		
 		ctx = this;
 		
 		createView();
+		// GESTURE
+		mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        if (!mLibrary.load()) {
+        	finish();
+        }
+	
+	    GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
+	    gestures.addOnGesturePerformedListener(this);
+	    // GESTURE
 		
 		getData();
 		
@@ -91,12 +130,15 @@ public class MITNewsWidgetActivity extends Activity {
 		if(mNewsLoadingFailed || !topTenStillFresh) {
 			getData();
 		}
+		
+		Log.d(TAG,"onResume()");
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		cancelSlideShow();
+		Log.d(TAG,"onPause()");
 	}
 	
 	/****************************************************/
@@ -191,6 +233,7 @@ public class MITNewsWidgetActivity extends Activity {
 			new PeopleModule(),
 			new TourModule(),
 			new MIT150Module(),
+			new QRReaderModule(),
 			new EmergencyModule(),
 		};
 		
@@ -353,7 +396,7 @@ public class MITNewsWidgetActivity extends Activity {
 				startActivity(intent);
 				return true;
 			case MOBILE_WEB_MENU_ID:
-				CommonActions.viewURL(ctx, "http://m.mit.edu/");
+				CommonActions.viewURL(ctx, "http://" + Global.getMobileWebDomain() + "/");
 				return true;
 		}
 
@@ -365,4 +408,29 @@ public class MITNewsWidgetActivity extends Activity {
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(i);
 	}
+
+	@Override
+	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+		ArrayList  predictions = mLibrary.recognize(gesture);
+
+	    // We want at least one prediction
+	    if (predictions.size() > 0) {
+	        Prediction prediction = (Prediction)predictions.get(0);
+	        // We want at least some confidence in the result
+	        if (prediction.score > 1.0) {
+	            // Show the selection
+	        	startActivity( new Intent(this, PrefsActivity.class) );
+	            //Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	        }
+	    }
+	}
+	
+	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+		Log.d(TAG, "Preference changed: " + key);
+		if (key.equalsIgnoreCase(Global.MIT_MOBILE_SERVER_KEY)) {
+			Global.setMobileWebDomain(prefs.getString(Global.MIT_MOBILE_SERVER_KEY, null));
+			Toast.makeText(this, "Mobile Web Domain set to " + Global.getMobileWebDomain(), Toast.LENGTH_SHORT).show();
+		}
+	}
+
 }

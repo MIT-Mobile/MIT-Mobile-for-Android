@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ public class NewsListSliderActivity extends SliderActivity {
 	final static int MAX_STORIES = 200;
 	final static String LOAD_MORE_ARTICLES = "Load 10 more articles...";
 	final static String LOADING_ARTICLES = "Loading...";
+	public static final String TAG = "NewsListSliderActivity";
 	
 	private boolean mCurrentlyLoading = false;
 	
@@ -53,7 +55,7 @@ public class NewsListSliderActivity extends SliderActivity {
 	/****************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-	
+		//Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		
 		mContext = this;
@@ -63,12 +65,9 @@ public class NewsListSliderActivity extends SliderActivity {
 		setJumpTitle("Categories", R.drawable.menu_browse);
 		
 		createView();
-		
-		
 	}
 	/****************************************************/
 	void createView() {
-		
 		for(int i = 0; i < NewsModel.category_ids.length; i++) {
 			addScreen(new NewsListSliderInterface(NewsModel.category_ids[i]), NewsModel.category_titles[i], NewsModel.category_titles[i]);
 		}
@@ -81,8 +80,8 @@ public class NewsListSliderActivity extends SliderActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		mNewsModel.stop();
-	}
-	
+	}	
+
 	private class NewsListSliderInterface implements SliderInterface {
 
 		private int mCategoryId;

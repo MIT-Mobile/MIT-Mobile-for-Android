@@ -46,7 +46,7 @@ public class EventDetailsItem {
 	}
 	
 	private static final SimpleDateFormat sShortDayFormat = new SimpleDateFormat("M/d/yy");
-	private static final SimpleDateFormat sLongDayFormat = new SimpleDateFormat("EEEE, MMMM d yyyy");
+	private static final SimpleDateFormat sLongDayFormat = new SimpleDateFormat("EEEE, MMMM d, yyyy");
 	private static final SimpleDateFormat sTimeFormat = new SimpleDateFormat("h:mm a");
 	
 	public static class TimeSummaryMode {
