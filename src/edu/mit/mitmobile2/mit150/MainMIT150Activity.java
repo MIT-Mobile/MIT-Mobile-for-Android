@@ -129,11 +129,15 @@ public class MainMIT150Activity extends ModuleActivity {
 
 			if ((f.subtitle==null) || ("".equalsIgnoreCase(f.subtitle))) {
 				tv.setText(f.title);
+				tv.setTextColor(f.getTitleColor() | 0xFF000000);
+				RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+				tv.setLayoutParams(layoutParams);
 			} else {
+				setText(tv,f.title,f.subtitle,f.getTitleColor() | 0xFF000000);
 				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.getTintColor() | 0x40000000);
 				bd = new BitmapDrawable(bm);
 				tv.setBackgroundDrawable(bd);
-				setText(tv,f.title,f.subtitle,f.getTitleColor() | 0xFF000000);
 			}
 
 			
@@ -153,9 +157,9 @@ public class MainMIT150Activity extends ModuleActivity {
 		f = fs.get(0);
 		if (f!=null) {
 			
-			fl = (FrameLayout) findViewById(R.id.mit150WelcomeFL);
+			rl = (RelativeLayout) findViewById(R.id.mit150WelcomeFL);
 			params = new LinearLayout.LayoutParams((int) (0.333*screenWidth),LayoutParams.FILL_PARENT);
-			fl.setLayoutParams(params);
+			rl.setLayoutParams(params);
 			
 		}
 		
