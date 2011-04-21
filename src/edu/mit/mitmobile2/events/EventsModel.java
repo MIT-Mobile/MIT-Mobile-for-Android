@@ -86,11 +86,18 @@ public class EventsModel {
 				
 				for(int i = 0; i < array.length(); i++) {
 					JSONObject eventType = array.getJSONObject(i);
+					
+					// server may not yet be returning verion 2 of the api
+					boolean hasCategories = false;
+					if(eventType.has("hasCategories")) {
+						hasCategories = eventType.getBoolean("hasCategories");
+					}
+					
 					sEventTypes.add(new EventType(
 						eventType.getString("type"),
 						eventType.getString("longName"),
 						eventType.getString("shortName"),
-						eventType.getBoolean("hasCategories")
+						hasCategories
 					));
 				}
 				
