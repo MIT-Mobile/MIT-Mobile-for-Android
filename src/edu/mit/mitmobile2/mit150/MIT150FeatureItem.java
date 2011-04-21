@@ -18,9 +18,9 @@ public class MIT150FeatureItem implements BaseColumns {
 	public String id;
 	public String title;
 	public String subtitle;
-	private int tintColorInt;
-	private int titleColorInt;
-	private int arrowColorInt;
+	private int tintColorInt = -1;
+	private int titleColorInt = -1;
+	private int arrowColorInt = -1;
 	public String url;
 	public String photo_url;
 	public Bitmap bm;
@@ -65,10 +65,18 @@ public class MIT150FeatureItem implements BaseColumns {
 	}
 	
 	public int getTitleColor() {
-		return titleColorInt;
+		if(titleColorInt > -1) {
+			return titleColorInt;
+		} else {
+			return tintColorInt;
+		}
 	}
 	
 	public int getArrowColor() {
-		return arrowColorInt;
+		if(arrowColorInt > -1) {
+			return arrowColorInt;
+		} else {
+			return tintColorInt;
+		}
 	}	
 }

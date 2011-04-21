@@ -139,6 +139,8 @@ public class MIT150DB {
 		cv.put(TITLE, featureItem.title);
 		cv.put(SUBTITLE, featureItem.subtitle);
 		cv.put(TINT_COLOR, featureItem.getTintColor());
+		cv.put(TITLE_COLOR, featureItem.getTitleColor());
+		cv.put(ARROW_COLOR, featureItem.getArrowColor());
 		cv.put(URL, featureItem.url);
 		cv.put(PHOTO_URL, featureItem.photo_url);
 		

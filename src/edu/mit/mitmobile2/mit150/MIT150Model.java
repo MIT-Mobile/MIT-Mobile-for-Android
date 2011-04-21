@@ -139,6 +139,12 @@ public class MIT150Model {
 			f.photo_url = jo.getString("photo-url");
 			
 			f.setTintColor(jo.getString("tint-color"));
+			if(jo.has("title-color")) {
+				f.setTitleColor(jo.getString("title-color"));
+			}
+			if(jo.has("arrow-color")) {
+				f.setArrowColor(jo.getString("arrow-color"));
+			}
 			
 			
 			JSONObject dim = jo.getJSONObject("dimensions");
