@@ -29,7 +29,7 @@ public class TourModule extends Module {
 
 	@Override
 	public String getShortName() {
-		return "Tour";
+		return "Tours";
 	}
 
 }
