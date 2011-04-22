@@ -9,17 +9,19 @@ VERSION_NUMBER = "2.0.1"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
-    print command
-    os.system(command)
+   # I think this function causes issues
+   # on windows will consult with seth later
+   #   print command
+   #   os.system(command)
 
- #  statusoutput = commands.getstatusoutput(command)
- #  if not silent:
- #      print statusoutput[1]
+   statusoutput = commands.getstatusoutput(command)
+   if not silent:
+       print statusoutput[1]
 
- #  if statusoutput[0] != 0:
- #     raise Exception("Error executing shell commmand")
+   if statusoutput[0] != 0:
+      raise Exception("Error executing shell commmand")
 
- #  return statusoutput[1]
+   return statusoutput[1]
 
 
 
