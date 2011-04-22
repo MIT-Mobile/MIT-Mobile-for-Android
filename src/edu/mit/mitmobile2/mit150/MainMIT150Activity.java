@@ -135,7 +135,7 @@ public class MainMIT150Activity extends ModuleActivity {
 				tv.setLayoutParams(layoutParams);
 			} else {
 				setText(tv,f.title,f.subtitle,f.getTitleColor() | 0xFF000000);
-				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.getTintColor() | 0xA0000000);
+				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, overlayColor(f.getTintColor()));
 				bd = new BitmapDrawable(bm);
 				tv.setBackgroundDrawable(bd);
 			}
@@ -289,6 +289,20 @@ public class MainMIT150Activity extends ModuleActivity {
 		
 	}
 	/*********************************************************************/
+	
+	private static int overlayColor(int tintColor) {
+		int red = (tintColor / (256 * 256)) % 256;
+		int blue = (tintColor / (256)) % 256;
+		int green = ((tintColor / (1))) % 256;
+		
+		// divide each channel by three
+		red = red / 3;
+		blue = blue / 3;
+		green = green / 3;
+		int alpha = 154; // use 0.6 for the alpha
+		
+		return 256*(256*(256*alpha + red) + blue) + green;
+	}
 	@Override
 	protected Module getModule() {
 		return new MIT150Module();
