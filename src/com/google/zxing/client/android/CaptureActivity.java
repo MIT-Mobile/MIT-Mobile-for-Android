@@ -296,11 +296,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   public boolean onPrepareOptionsMenu(Menu menu) {
     super.onPrepareOptionsMenu(menu);
 	menu.clear();
-	menu.add(0, MENU_QR_HELP, Menu.NONE, "QR Help");
+	menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
+		.setIcon(R.drawable.menu_about);
     return true;
   }
   
-  @Override
+   @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_QR_HELP:
@@ -313,24 +314,29 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
 		switch (id) {
 		case DIALOG_QR_HELP:
-			LayoutInflater inflater = (LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE);
-			View layout = inflater.inflate(R.layout.qr_dialog,null);
-			builder.setTitle("Scan QR Code");
-			builder.setView(layout);
-			break;
+			return helpDialog(this);
 		}
+		return null;
+	}
+	
+	public static Dialog helpDialog(Activity activity) {
+		//Context context = activity.getApplicationContext();
+		Dialog dialog = new Dialog(activity);
+		dialog.setTitle("Scan QR Code");
+		dialog.setContentView(R.layout.qr_dialog);
+		return dialog;
 		
-		AlertDialog alert = builder.create();
-
-		return alert;
-		
+		//AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		//LayoutInflater inflater = (LayoutInflater) activity.getSystemService(LAYOUT_INFLATER_SERVICE);
+		//View layout = inflater.inflate(R.layout.qr_dialog,null);
+		//builder.setTitle("Scan QR Code");
+		//builder.setC
+		//return builder.create();
 	}
   
+
   @Override
   public void onConfigurationChanged(Configuration config) {
     // Do nothing, this is to prevent the activity from being restarted when the keyboard opens.

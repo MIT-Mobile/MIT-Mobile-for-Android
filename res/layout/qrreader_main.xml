@@ -9,18 +9,46 @@
   		android:text="QR Reader"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
-  		
-  	<TextView
-  		android:id="@+id/qrreaderHelpTV"
-  		android:paddingLeft="@dimen/horizontalPadding"
-  		android:paddingRight="@dimen/horizontalPadding"
-  		android:paddingTop="@dimen/verticalPadding"
-  		android:paddingBottom="@dimen/verticalPadding"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" 
-  		android:text="A QR code is a two-dimensional data matrix similar to a barcode for encoding URLs and other data.\n\nMIT is using themed QR codes to help visitors learn more about the many activities happening on campus during its Open House, happening April 30, 2011.\n\nTap the button below to begin scanning a QR code."
- 		style="@style/BodyText"
-  		/>
+
+<!--  copied for qr_dialog with tweaks --> 		
+<LinearLayout
+  android:id="@+id/qrreaderHelpView"
+  android:orientation="vertical"
+  android:paddingLeft="@dimen/horizontalPadding"
+  android:paddingRight="@dimen/horizontalPadding"
+  android:paddingTop="@dimen/verticalPadding"
+  android:paddingBottom="@dimen/verticalPadding"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+   
+	<RelativeLayout
+		  android:orientation="horizontal"
+		  android:layout_width="fill_parent"
+		  android:layout_height="wrap_content">
+  
+  		<ImageView
+	  	  android:src="@drawable/sample_qr"
+	  	  android:scaleType="fitXY"
+		  android:padding="4dp" 
+		  android:id="@+id/qrreaderHelpIV"
+		  android:layout_alignParentRight="true"
+		  android:layout_width="90dp"
+		  android:layout_height="90dp"/>
+		  
+		<TextView
+			android:layout_toLeftOf="@id/qrreaderHelpIV"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:padding="2dp" style="@style/BodyText" 
+			android:text="A QR code is a two-dimensional data matrix similar to a barcode for encoding URLs and other data." /> 
+	</RelativeLayout>
+
+	<TextView
+		android:layout_width="fill_parent" android:layout_height="wrap_content" 
+		android:padding="2dp" style="@style/BodyText" 
+		android:text="MIT is using themed QR codes to help visitors learn more about the many activities happening on campus during its Open House, happening April 30, 2011.\n\nTap the button below to begin scanning a QR code."
+		/>
+
+</LinearLayout>
   		
  		
   	<RelativeLayout

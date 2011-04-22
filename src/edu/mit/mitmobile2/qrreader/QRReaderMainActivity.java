@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.zxing.client.android.CaptureActivity;
+
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -48,7 +51,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 		mListAdapter = new QRCodeArrayAdapter(this, mQRCodes);
 		
 		setContentView(R.layout.qrreader_main);
-		mHelpView = findViewById(R.id.qrreaderHelpTV);
+		mHelpView = findViewById(R.id.qrreaderHelpView);
 		mHistoryListView = (ListView) findViewById(R.id.qrreaderMainHistoryLV);
 		mHistoryListView.setAdapter(mListAdapter);
 		mListAdapter.setOnItemClickListener(mHistoryListView,
@@ -128,11 +131,14 @@ public class QRReaderMainActivity extends ModuleActivity {
 	}
 
 	static final int MENU_SCAN_QR = MENU_MODULE_HOME + 1;
+	static final int MENU_QR_HELP = MENU_MODULE_HOME + 2;
 	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) {
 		menu.add(0, MENU_SCAN_QR, Menu.NONE, "Scan")
 			.setIcon(R.drawable.menu_camera);
+		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
+			.setIcon(R.drawable.menu_about);
 	}
 	
 	/*****************************************************************************/
@@ -142,10 +148,24 @@ public class QRReaderMainActivity extends ModuleActivity {
 			case MENU_SCAN_QR:
 				launchScan();
 				return true;
+				
+			case MENU_QR_HELP:
+				showDialog(DIALOG_QR_HELP);
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	
+	private final static int DIALOG_QR_HELP = 1;
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DIALOG_QR_HELP:
+			return CaptureActivity.helpDialog(this);
+		}
+		return null;
+	}
 	private static class QRCodeArrayAdapter extends SimpleArrayAdapter<QRCode> {
 
 		public QRCodeArrayAdapter(Context context, List<QRCode> items) {
