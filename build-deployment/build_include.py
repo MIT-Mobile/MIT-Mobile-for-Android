@@ -5,7 +5,8 @@ import sys
 import build_settings
 import time
 
-VERSION_NUMBER = "2.1"
+VERSION_NUMBER = 6
+VERSION_NAME = "2.1"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
@@ -41,7 +42,7 @@ def write_build_settings(build_settings_dictionary):
               public final static String TAG = %(tag_literal)s;
               public final static long BUILD_TIME = %(build_time)iL;
               public final static String MOBILE_WEB_DOMAIN = "%(mobile_web_domain)s";
-              public final static String VERSION_NUMBER = "%(version_number)s";
+              public final static String VERSION_NAME = "%(version_name)s";
               public final static String NEWS_OFFICE_PATH = "%(news_office_path)s";
               public final static boolean VERBOSE_LOGGING = %(verbose_logging)s;
               public final static String BUILD_TAG = "%(build_tag)s";
@@ -51,9 +52,11 @@ def write_build_settings(build_settings_dictionary):
     build_settings_file.write(build_class_source)
     build_settings_file.close()
     build_settings_resource_source = """<?xml version="1.0" encoding="utf-8"?><resources>
-               <string name="googleMapsApiKey">%s</string>
+               <string name="googleMapsApiKey">%(google_maps_api_key)s</string>
+               <integer name="versionNumber">%(version_number)i</integer>
+               <string name="versionName">%(version_name)s</string>
     </resources>
-    """ % build_settings_dictionary['google_maps_api_key']
+    """ % build_settings_dictionary
 
     build_settings_resource_file = open("res/values/build_settings_resource.xml", "w")
     build_settings_resource_file.write(build_settings_resource_source)
@@ -125,6 +128,7 @@ def build_source(builder, tag, fresh_repository):
        "mobile_web_domain" : build_settings.mobile_web_domain,
        "google_maps_api_key" : build_settings.google_maps_api_key,
        "version_number" : VERSION_NUMBER,
+       "version_name" : VERSION_NAME,
        "news_office_path" : build_settings.news_office_path,
        "verbose_logging" : verbose_logging_literal,
        "build_tag" : build_settings.build_tag,

@@ -60,7 +60,7 @@ public class AboutActivity extends ModuleActivity implements OnGesturePerformedL
 		tv.setText(this.getResources().getString(R.string.app_name));
 
 		tv = (TextView) findViewById(R.id.aboutAppVersion);
-		tv.setText("v" + BuildSettings.VERSION_NUMBER);
+		tv.setText("v" + BuildSettings.VERSION_NAME);
 		
 		mAboutImage = (ImageView) findViewById(R.id.aboutVersionImage);
 		if (sBitmap == null) {

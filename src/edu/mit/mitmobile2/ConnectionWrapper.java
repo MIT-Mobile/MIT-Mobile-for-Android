@@ -26,7 +26,7 @@ public class ConnectionWrapper {
 	};
 	
 	private static final String HTTP_USER_AGENT = 
-		"MIT Mobile " + BuildSettings.VERSION_NUMBER + " for Android";
+		"MIT Mobile " + BuildSettings.VERSION_NAME + " for Android";
 	
 	private static final int CONNECTION_ERROR = 0;
 	private static final int CONNECTION_RESPONSE = 1;
