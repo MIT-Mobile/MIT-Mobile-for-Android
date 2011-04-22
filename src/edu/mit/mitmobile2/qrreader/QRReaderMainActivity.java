@@ -131,7 +131,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SCAN_QR, Menu.NONE, "Scan");
+		menu.add(0, MENU_SCAN_QR, Menu.NONE, "Scan")
+			.setIcon(R.drawable.menu_camera);
 	}
 	
 	/*****************************************************************************/
