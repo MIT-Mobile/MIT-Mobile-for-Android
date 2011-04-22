@@ -10,8 +10,6 @@ import android.os.Parcelable;
 
 import com.google.android.maps.GeoPoint;
 
-import edu.mit.mitmobile2.tour.Tour.TourItemContent;
-
 public class Tour {
 	
 	public List<TourItem> getTourList(StartLocation startLocation) {
