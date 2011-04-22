@@ -145,7 +145,7 @@
 		<GridView
 			android:paddingTop="10dip"
     		android:id="@+id/homeSpringBoardGV"
-    		android:numColumns="3"
+    		android:numColumns="4"
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:verticalSpacing="10dip"
