@@ -370,10 +370,10 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 	
 	public boolean onCreateOptionsMenu(Menu menu){
 		menu.add(0, ABOUT_MENU_ID     , 0, "About")
-			.setIcon(R.drawable.module_about);
+			.setIcon(R.drawable.menu_about);
 		
 		menu.add(0, MOBILE_WEB_MENU_ID, 0, "Mobile Web")
-			.setIcon(R.drawable.module_webmitedu);
+			.setIcon(R.drawable.menu_mobile_web);
 		
 		return true;
 	}
