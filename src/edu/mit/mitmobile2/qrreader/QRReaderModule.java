@@ -23,11 +23,11 @@ public class QRReaderModule extends Module {
 
 	@Override
 	public int getMenuIconResourceId() {
-		return R.drawable.menu_events;
+		return R.drawable.home_qr;
 	}
 
 	@Override
 	public int getHomeIconResourceId() {
-		return R.drawable.home_events;
+		return R.drawable.home_qr;
 	}
 }
