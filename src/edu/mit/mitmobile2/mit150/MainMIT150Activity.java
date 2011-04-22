@@ -135,7 +135,7 @@ public class MainMIT150Activity extends ModuleActivity {
 				tv.setLayoutParams(layoutParams);
 			} else {
 				setText(tv,f.title,f.subtitle,f.getTitleColor() | 0xFF000000);
-				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.getTintColor() | 0x40000000);
+				bm = BitmapUtils.createRoundedBottomBitmap(this, widths[fx], 50, f.getTintColor() | 0xA0000000);
 				bd = new BitmapDrawable(bm);
 				tv.setBackgroundDrawable(bd);
 			}
