@@ -21,7 +21,7 @@
 		<TextView
 			android:layout_width="30dp" android:layout_height="wrap_content" android:layout_weight="1"
 			android:padding="2dp" style="@style/BodyText" 
-			android:text="A QR code is a two-dimensional data matrix similar to a barcode for encoding URLs and other data." />
+			android:text="QR codes, similar to barcodes, are two-dimensional data matrices used to encode URLs and other data." />
 			
 			<!-- 
 		  android:layout_width="wrap_content"
