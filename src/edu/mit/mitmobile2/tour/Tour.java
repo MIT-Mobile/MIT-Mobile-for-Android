@@ -10,6 +10,8 @@ import android.os.Parcelable;
 
 import com.google.android.maps.GeoPoint;
 
+import edu.mit.mitmobile2.tour.Tour.TourItemContent;
+
 public class Tour {
 	
 	public List<TourItem> getTourList(StartLocation startLocation) {
@@ -30,10 +32,10 @@ public class Tour {
 		while(!finished) {
 			Site currentSite = mSites.get(currentSiteIndex);
 			tourItems.add(currentSite);
-			if(currentSiteIndex != lastSiteIndex) {
-				tourItems.add(currentSite.getExitDirections());
-			} else {
-				finished = true;
+			tourItems.add(currentSite.getExitDirections());
+			
+			if(currentSiteIndex == lastSiteIndex) {
+				break;
 			}
 			
 			currentSiteIndex++;
@@ -304,13 +306,16 @@ public class Tour {
 	
 	public static class SideTripTourMapItem extends TourMapItem {
 		SiteTourMapItem mParent;
+		boolean mIsOnSite; // (otherwise its on directions)
 		
-		SideTripTourMapItem(String id, GeoPoint geoPoint, String title, String photoUrl) {
+		SideTripTourMapItem(String id, GeoPoint geoPoint, String title, String photoUrl, boolean isOnSite) {
 			super(id, geoPoint, title, photoUrl, TourSiteStatus.FUTURE);
+			mIsOnSite = isOnSite;
 		}
 		
-		SideTripTourMapItem(TourMapItem i) {
+		SideTripTourMapItem(TourMapItem i, boolean isOnSite) {
 			super(i.mId, i.mGeoPoint, i.mTitle, i.mPhotoUrl, i.mStatus);
+			mIsOnSite = isOnSite;
 		}		
 		
 		public static final Parcelable.Creator<SideTripTourMapItem> CREATOR = new Parcelable.Creator<SideTripTourMapItem>() {
@@ -318,7 +323,8 @@ public class Tour {
 			@Override
 			public SideTripTourMapItem createFromParcel(Parcel source) {
 				TourMapItem item = TourMapItem.readItem(source);
-				return new SideTripTourMapItem(item);
+				int isOnSiteFlag = source.readInt();
+				return new SideTripTourMapItem(item, (isOnSiteFlag == 1));
 			}
 
 			@Override
@@ -342,11 +348,22 @@ public class Tour {
 		
 		@Override
 		public String getId() {
-			return mParent.getSiteGuid() + "_" + super.getId();
+			String delimiter = mIsOnSite ? "_" : "_directions_";
+			return mParent.getSiteGuid() + delimiter + super.getId();
 		}
 		
 		public String getSideTripId() {
 			return super.getId();
+		}
+		
+		public boolean isOnSideTrip() {
+			return mIsOnSite;
+		}
+		
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			super.writeToParcel(dest, flags);
+			dest.writeInt(mIsOnSite ? 1 : 0);
 		}
 	}
 	
@@ -469,8 +486,8 @@ public class Tour {
 			return mGeoPoint;
 		}
 		
-		public SideTripTourMapItem getTourMapItem() {
-			return new SideTripTourMapItem(mId, mGeoPoint, mTitle, mThumbnailUrl);
+		public SideTripTourMapItem getTourMapItem(boolean isOnSite) {
+			return new SideTripTourMapItem(mId, mGeoPoint, mTitle, mPhotoUrl, isOnSite);
 		}
 	}
 	
@@ -646,7 +663,7 @@ public class Tour {
 		private Directions mExitDirections;
 		
 		public Directions setExitDirections(String title, String destinationGuid, int zoom) {
-			mExitDirections = new Directions(title, destinationGuid, zoom);
+			mExitDirections = new Directions(this, title, destinationGuid, zoom);
 			return mExitDirections;
 		}
 		
@@ -688,15 +705,30 @@ public class Tour {
 			for(TourItemContentNode node : mContent.mContentNodes) {
 				if(node.getClass() == SideTrip.class) {
 					SideTrip sideTrip = (SideTrip) node;
-					siteItem.addSideTrip(sideTrip.getTourMapItem());
+					siteItem.addSideTrip(sideTrip.getTourMapItem(true));
+				}
+			}
+			
+			// loop thru sidetrips on the directions
+			for(TourItemContentNode node : mExitDirections.getContent().getContentNodes()) {
+				if(node.getClass() == SideTrip.class) {
+					SideTrip sideTrip = (SideTrip) node;
+					siteItem.addSideTrip(sideTrip.getTourMapItem(false));
 				}
 			}
 			return siteItem;
 		}
 
-		public SideTrip getSideTrip(String sidetripId) {
-			// loop thru sidetrips
-			for(TourItemContentNode node : mContent.mContentNodes) {
+		public SideTrip getSideTrip(String sidetripId, boolean isOnSite) {
+			TourItemContent content;
+			if(isOnSite) {
+				content = mContent;
+			} else {
+				content = mExitDirections.getContent();
+			}
+			
+			// loop thru content nodes
+			for(TourItemContentNode node : content.mContentNodes) {
 				if(node.getClass() == SideTrip.class) {
 					SideTrip sideTrip = (SideTrip) node;
 					if(sideTrip.getId().equals(sidetripId)) {
@@ -719,6 +751,7 @@ public class Tour {
 	}
 	
 	public class Directions extends TourItem {
+		private Site mSource;
 		private String mTitle;
 		private TourItemContent mContent;
 		private Path mPath;
@@ -726,7 +759,8 @@ public class Tour {
 		private String mPhotoUrl;
 		private String mAudioUrl;
 		
-		Directions(String title, String destinationGuid, int zoom) {
+		Directions(Site source, String title, String destinationGuid, int zoom) {
+			mSource = source;
 			mTitle = title;
 			mContent = new TourItemContent();
 			mPath = new Path(zoom);
@@ -783,6 +817,10 @@ public class Tour {
 		public
 		String getAudioUrl() {
 			return mAudioUrl;
+		}
+		
+		public Site getSource() {
+			return mSource;
 		}
 	}
 	

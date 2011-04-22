@@ -150,7 +150,8 @@ public class TourStopSliderActivity extends SliderActivity {
 	private void createView() {
 		mTourStopSliderInterfaces = new ArrayList<TourStopSliderInterface>();
 		for(TourItem tourItem : mTourItems) {
-			TourStopSliderInterface sliderInterface = new TourStopSliderInterface(this, mTour, tourItem, ap, progbar);
+			boolean isSite = (tourItem.getClass() == Site.class);
+			TourStopSliderInterface sliderInterface = new TourStopSliderInterface(this, mTour, tourItem, ap, progbar, isSite);
 			addScreen(sliderInterface, null, tourItem.getLabel());
 			mTourStopSliderInterfaces.add(sliderInterface);
 		}

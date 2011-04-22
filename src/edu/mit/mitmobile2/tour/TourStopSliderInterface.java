@@ -32,6 +32,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.ResizableImageView;
 import edu.mit.mitmobile2.maps.MapCanvasDrawer;
+import edu.mit.mitmobile2.tour.Tour.Directions;
 import edu.mit.mitmobile2.tour.Tour.HtmlContentNode;
 import edu.mit.mitmobile2.tour.Tour.PhotoInfo;
 import edu.mit.mitmobile2.tour.Tour.SideTrip;
@@ -50,12 +51,14 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 	private AudioPlayer mAudioPlayer;
 	private ImageButton audioButton;
 	private RemoteImageView mMainImageView;
+	private boolean mIsSite;
 	
-	public TourStopSliderInterface(Context context, Tour tour, TourItem tourItem, AudioPlayer ap, TourProgressBar progbar) {
+	public TourStopSliderInterface(Context context, Tour tour, TourItem tourItem, AudioPlayer ap, TourProgressBar progbar, boolean isSite) {
 		mContext = context;
 		mTour = tour;
 		mTourItem = tourItem;
 		mAudioPlayer = ap;
+		mIsSite = isSite;
 	}
 	
 	@Override
@@ -306,8 +309,16 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				if(url.startsWith("sidetrip://")) {
 					String sideTripId = url.substring("sidetrip://".length());
-					Site site = (Site) mTourItem;
-					TourSideTripActivity.launch(mContext, site.getSiteGuid(), sideTripId);	
+					
+					Site site = null;
+					if(mTourItem.getClass() == Site.class) {
+						site = (Site) mTourItem;
+					} else if(mTourItem.getClass() == Directions.class) {
+						Directions directions = (Directions) mTourItem;
+						site = directions.getSource();
+					}
+				
+					TourSideTripActivity.launch(mContext, site.getSiteGuid(), sideTripId, mIsSite);	
 				} else {
 					CommonActions.viewURL(mContext, url);
 				}

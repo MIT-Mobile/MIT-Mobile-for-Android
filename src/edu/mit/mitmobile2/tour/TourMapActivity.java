@@ -124,7 +124,9 @@ public class TourMapActivity extends MapBaseActivity {
 					launchTour(siteItem);	
 				} else if(tourMapItem.getClass() == SideTripTourMapItem.class) {
 					SideTripTourMapItem sidetripItem = (SideTripTourMapItem) tourMapItem;
-					TourSideTripActivity.launch(TourMapActivity.this, sidetripItem.getParent().getSiteGuid(), sidetripItem.getSideTripId());
+					TourSideTripActivity.launch(
+						TourMapActivity.this, sidetripItem.getParent().getSiteGuid(), 
+						sidetripItem.getSideTripId(), sidetripItem.isOnSideTrip());
 				}
 			}
 		});

@@ -7,6 +7,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.tour.Tour.SideTrip;
+import edu.mit.mitmobile2.tour.Tour.Site;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,13 +27,15 @@ public class TourSideTripActivity extends ModuleActivity {
 	
 	private static String SITE_GUID = "site_guid";
 	private static String SIDETRIP_ID = "sidetrip_id";
+	private static String IS_ON_SITE = "is_on_site";
 	
 	private AudioPlayer mAudioPlayer;
 	
-	public static void launch(Context context, String siteGuid, String sidetripId) {
+	public static void launch(Context context, String siteGuid, String sidetripId, boolean isOnSite) {
 		Intent intent = new Intent(context, TourSideTripActivity.class);
 		intent.putExtra(SITE_GUID, siteGuid);
 		intent.putExtra(SIDETRIP_ID, sidetripId);
+		intent.putExtra(IS_ON_SITE, isOnSite);
 		context.startActivity(intent);
 	}
 	
@@ -42,7 +45,11 @@ public class TourSideTripActivity extends ModuleActivity {
 		
 		String siteGuid = getIntent().getStringExtra(SITE_GUID);
 		String sidetripId = getIntent().getStringExtra(SIDETRIP_ID);
-		SideTrip sidetrip = TourModel.getTour().getSite(siteGuid).getSideTrip(sidetripId);
+		boolean isOnSite = getIntent().getBooleanExtra(IS_ON_SITE, true);
+		
+		Site site = TourModel.getTour().getSite(siteGuid);
+		
+		SideTrip sidetrip = site.getSideTrip(sidetripId, isOnSite);
 		
 		mTitle = sidetrip.getTitle();
 		mHtml = sidetrip.getHtml();
