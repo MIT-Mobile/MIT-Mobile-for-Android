@@ -24,7 +24,7 @@ public class MapAgeParser extends JSONParser {
 	@Override
 	public void parseObj() {
         try {
-	        last_updated = jItem.getString("last_updated");
+	        last_updated = jItem.getString("lastupdated");
     	} catch (JSONException e) {
 			e.printStackTrace();
 		}

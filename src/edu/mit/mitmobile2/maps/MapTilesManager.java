@@ -71,7 +71,7 @@ public class MapTilesManager {
 	private  static int MAX_THREADS = 3;
 	private  ArrayList<DownloadThread> mDownloadThreads;	
     
-	static String KEY_LAST_UPDATED = "last_updated";
+	static String KEY_LAST_UPDATED = "lastupdated";
 	
 	private MITMapView mv;
 	
