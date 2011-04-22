@@ -83,11 +83,13 @@ public class TourMapActivity extends MapBaseActivity {
 		Intent i = getIntent();
 		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
-		setTourItemsList(false);
 		List<ParcelableGeoPoint> geoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
 		mTourActive = i.getBooleanExtra(TOUR_ACTIVE_KEY, false);
 		mTourCurrentPosition = getCurrentPosition();
-		
+				
+		// be default show sidetrips in list if tour not yet active
+		mShowingSidetrips = !mTourActive;
+		setTourItemsList(mShowingSidetrips);
 		
 		GeoRect geoRect = new GeoRect(geoPoints);
 		
@@ -408,7 +410,8 @@ public class TourMapActivity extends MapBaseActivity {
 			  .setIcon(R.drawable.menu_view_on_map);
 			
 			String sidetripsAction = mShowingSidetrips ? "Hide Side Trips" : "Show Side Trips";
-			menu.add(0, MENU_SHOW_OR_HIDE_SIDETRIPS, Menu.NONE, sidetripsAction);
+			menu.add(0, MENU_SHOW_OR_HIDE_SIDETRIPS, Menu.NONE, sidetripsAction)
+				.setIcon(R.drawable.menu_sidetrips);
 		}
 		
 		return super.onPrepareOptionsMenu(menu);
@@ -442,7 +445,7 @@ public class TourMapActivity extends MapBaseActivity {
 	/*
 	 * methods for hiding and showing the side trips in the list view
 	 */
-	private boolean mShowingSidetrips = false;
+	private boolean mShowingSidetrips = true;
 	private void showOrHideSidetrips() {
 		mShowingSidetrips = !mShowingSidetrips;
 		setTourItemsList(mShowingSidetrips);
