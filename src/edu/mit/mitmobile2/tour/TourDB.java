@@ -674,6 +674,16 @@ public class TourDB {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			// no old versions exists
+			
+			// simplist migration possible delete old tables, create new tables
+			db.execSQL("DROP TABLE " + TOURS_TABLE + ";");
+			db.execSQL("DROP TABLE " + SITES_TABLE + ";");
+			db.execSQL("DROP TABLE " + START_LOCATIONS_TABLE + ";");
+			db.execSQL("DROP TABLE " + CONTENT_NODES_TABLE + ";");
+			db.execSQL("DROP TABLE " + PATHS_TABLE + ";");
+			db.execSQL("DROP TABLE " + FOOTER_LINKS_TABLE + ";");
+			
+			onCreate(db);
 		}
 	}
 }
