@@ -225,14 +225,27 @@ public class TourModel {
 				content.addHtml(contentNodeJson.getString("html"));
 			} else if(contentNodeType.equals("sidetrip")) {
 				
+				// optional fields
+				String thumbUrl = null;
+				GeoPoint geoPoint = null;
+				if(contentNodeJson.has("thumbnail156-url")) {
+					thumbUrl = contentNodeJson.getString("thumbnail156-url");
+				}
+				if(contentNodeJson.has("latlon")) {
+					geoPoint = parseLatLon(contentNodeJson.getJSONObject("latlon"));
+				} else {
+					// sidetrips off the coast of africa
+					geoPoint = new GeoPoint(0,0);
+				}
+				
 				content.addSideTrip(new SideTrip(
 					contentNodeJson.getString("id"),
 					contentNodeJson.getString("title"),
 					contentNodeJson.getString("html"),
 					optString(contentNodeJson, "photo-url"),
-					contentNodeJson.getString("thumbnail156-url"),
+					thumbUrl,
 					optString(contentNodeJson, "audio-url"),
-					parseLatLon(contentNodeJson.getJSONObject("latlon"))
+					geoPoint
 				));
 			}
 		}
