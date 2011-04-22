@@ -35,6 +35,7 @@ public class StopsParser extends JSONParser {
         try {
            
             JSONArray jStops = jItem.optJSONArray("stops");
+            int now = jItem.getInt("now");
             
             if (jStops!=null) {
             	
@@ -49,6 +50,7 @@ public class StopsParser extends JSONParser {
                 	si.lat = jStop.getString("lat");
                 	si.lon = jStop.getString("lon");
                 	si.next = jStop.getInt("next");  // TODO long?
+                	si.now = now;
 
                 	//si.path = jStop.optJSONArray("path");
                 	si.direction = jStop.optString("direction");

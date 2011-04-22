@@ -165,6 +165,7 @@ public class RouteItem implements Parcelable {
 		public String lat;
 		public String lon;
 		public long next;  // next arrival unixtime
+		public long now; // reference time for predictions
 		public ArrayList<Integer> predictions;
 		public String direction;
 		public ArrayList<Loc> path;

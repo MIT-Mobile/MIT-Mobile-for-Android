@@ -273,7 +273,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	    				p = s.predictions.get(z);
 	    				
 	    				pi = new Predicted();
-	    				pi.next = s.next + p.longValue();
+	    				pi.next = s.now + p.longValue();
 	    				pi.stop_id = s.id;
 	    				pi.route_id = s.route_id;
 	    				pi.alertSet = false;

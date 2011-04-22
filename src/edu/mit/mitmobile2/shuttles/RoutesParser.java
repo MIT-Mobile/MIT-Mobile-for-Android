@@ -86,6 +86,7 @@ public class RoutesParser extends JSONParser{
 		try {
 			ArrayList<Stops> stops = new ArrayList<Stops>();
 			JSONArray jStops = jsonObject.getJSONArray("stops");
+			int now = jsonObject.getInt("now");
 			
 			for(int s=0; s<jStops.length(); s++)
             {
@@ -101,6 +102,7 @@ public class RoutesParser extends JSONParser{
             	stopItem.upcoming = jStop.optBoolean("upcoming",false);
                 
             	stopItem.next = jStop.optInt("next",0);
+            	stopItem.now = now;
             	//if (jStop.isNull("next")) stopItem.next=0;
             	
             	stopItem.route_id = jStop.optString("route_id", null);
