@@ -49,6 +49,9 @@ public class QRReaderDetailActivity extends ModuleActivity {
 				CommonActions.doAction(QRReaderDetailActivity.this, qrcode.getUrl());
 			}
 		});
+		if(SpecialActions.actionSummary(qrcode.getUrl()) != null) {
+			openURLAction.setTitle(SpecialActions.actionSummary(qrcode.getUrl()));
+		}
 		
 		TwoLineActionRow shareURLAction = (TwoLineActionRow) findViewById(R.id.qrreaderDetailShareURL);
 		shareURLAction.setOnClickListener(new View.OnClickListener() {

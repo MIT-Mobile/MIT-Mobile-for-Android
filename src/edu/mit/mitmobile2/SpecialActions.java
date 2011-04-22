@@ -10,14 +10,21 @@ public class SpecialActions {
 		if(specialUrl.startsWith("http://m.mit.edu/open-house")) {
 			OpenHouseCategory category = getOpenHouseCategory(specialUrl);
 			if(category != null) {
-				return category.getTitle();
+				return "MIT150 Open House: " + category.getTitle();
 			};
 			// must not be a specific category
-			return "Open House";
+			return "MIT150 Open House";
 		}		
 		return null;
 	}
 
+	public static String actionSummary(String specialUrl) {
+		if(specialUrl.startsWith("http://m.mit.edu/open-house")) {
+			return "View Events";
+		}
+		return null;
+	}
+		
 	public static String actionUrl(String specialUrl) {
 		if(specialUrl.startsWith("http://m.mit.edu/open-house")) {
 			OpenHouseCategory category = getOpenHouseCategory(specialUrl);
