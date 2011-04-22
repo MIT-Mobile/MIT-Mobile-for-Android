@@ -11,6 +11,7 @@ import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SpecialActions;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class QRReaderDetailActivity extends ModuleActivity {
@@ -34,13 +35,18 @@ public class QRReaderDetailActivity extends ModuleActivity {
 		qrcodeIV.setImageBitmap(qrcode.getBitmap());
 		
 		TextView qrcodeTV = (TextView) findViewById(R.id.qrreaderDetailTV);
-		qrcodeTV.setText(qrcode.getUrl());
+		String urlTitle = SpecialActions.actionTitle(qrcode.getUrl());
+		if(urlTitle != null) {
+			qrcodeTV.setText(urlTitle);
+		} else {
+			qrcodeTV.setText(qrcode.getUrl());
+		}
 		
 		TwoLineActionRow openURLAction = (TwoLineActionRow) findViewById(R.id.qrreaderDetailOpenURL);
 		openURLAction.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CommonActions.viewURL(QRReaderDetailActivity.this, qrcode.getUrl());
+				CommonActions.doAction(QRReaderDetailActivity.this, qrcode.getUrl());
 			}
 		});
 		

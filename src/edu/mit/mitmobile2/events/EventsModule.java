@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.events;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -46,6 +47,36 @@ public class EventsModule extends Module {
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+		else if(url.startsWith("mitmobile://calendar/category?")) {
+			String query = url.substring("mitmobile://calendar/category?".length());
+			String[] parts = query.split("&");
+			HashMap<String, String> params = new HashMap<String, String>();
+			for(String part : parts) {
+				String[] keyValuePair = part.split("=");
+				try {
+					params.put(keyValuePair[0], URLDecoder.decode(keyValuePair[1], "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					return;
+				}
+			}
+			
+			if(params.containsKey("catID")) {
+				int catID = Integer.parseInt(params.get("catID"));
+				String title = params.get("title");
+				String eventType = params.get("listID");
+				
+				// hard code open house time
+				Long startTime = null;
+				if(eventType.equals("OpenHouse")) {
+					startTime = 1304179200L * 1000; // April 30th, 2011
+				}
+				MITEventsDaysSliderActivity.launchCategory(context, catID, title, eventType, startTime);
+			}
+			else if(params.containsKey("listID")) {
+				EventsSimpleCategoryActivity.launch(context, params.get("listID"));
 			}
 		}
 	}

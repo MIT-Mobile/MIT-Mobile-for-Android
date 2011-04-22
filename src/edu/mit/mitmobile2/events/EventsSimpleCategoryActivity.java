@@ -36,10 +36,14 @@ public class EventsSimpleCategoryActivity extends ModuleActivity {
 	
 	final static String SOURCE_ID_KEY = "source_id";	
 	
-	public static void launch(Context context, EventType type) {
+	public static void launch(Context context, String eventTypeId) {
 		Intent intent = new Intent(context, EventsSimpleCategoryActivity.class);
-		intent.putExtra(SOURCE_ID_KEY, type.getTypeId());
-		context.startActivity(intent);
+		intent.putExtra(SOURCE_ID_KEY, eventTypeId);
+		context.startActivity(intent);		
+	}
+	
+	public static void launch(Context context, EventType type) {
+		launch(context, type.getTypeId());	
 	}
 	
 	@Override
@@ -49,14 +53,6 @@ public class EventsSimpleCategoryActivity extends ModuleActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		mSourceId = extras.getString(SOURCE_ID_KEY);
-		mEventType = EventsModel.getEventType(mSourceId);
-		if(mEventType == null) {
-			// graceful exit
-			finish();
-			return;
-		}
-		
-		mSourceName = mEventType.getShortName();
 		
 		mListView = (ListView) findViewById(R.id.eventsCategoryLV);	
 		mLoadingView = (FullScreenLoader) findViewById(R.id.eventsCategoriesLoading);
@@ -64,9 +60,28 @@ public class EventsSimpleCategoryActivity extends ModuleActivity {
 		mContext = this;
 		
 
-		EventsModel.fetchCategories(this, mEventType, handleCategories());
-			
+		mLoadingView.showLoading();
+		if(EventsModel.eventTypesLoaded()) {
+			startLoadingCategories();
+		} else {
+			EventsModel.fetchEventTypes(this, new Handler() {
+				@Override
+				public void handleMessage(Message message) {
+					if(message.arg1 == MobileWebApi.SUCCESS) {
+						startLoadingCategories();
+					} else {
+						mLoadingView.showError();
+					}
+				}
+			});
+		}
+	}
+	
+	private void startLoadingCategories() {
+		mEventType = EventsModel.getEventType(mSourceId);
+		mSourceName = mEventType.getShortName();
 		mTitleBar.setTitle(mSourceName);
+		EventsModel.fetchCategories(this, mEventType, handleCategories());
 	}
 	
 	private Handler handleCategories() {

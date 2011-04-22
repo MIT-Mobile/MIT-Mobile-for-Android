@@ -208,6 +208,11 @@ public class CommonActions {
 	}
 	
 	public static void doAction(Context context, String actionUrl) {
+		// first check if this is a recognized URL
+		if(SpecialActions.actionUrl(actionUrl) != null) {
+			actionUrl = SpecialActions.actionUrl(actionUrl);
+		}
+		
 		if(actionUrl.startsWith("http://")) {
 			viewURL(context, actionUrl);
 		}

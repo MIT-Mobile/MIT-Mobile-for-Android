@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
@@ -53,6 +54,10 @@ public class MapsModule extends Module {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		else if(url.startsWith("mitmobile://map/search/")) {
+			Intent i = new Intent(context, getModuleHomeActivity());
+			context.startActivity(i);
 		}
 	}
 }
