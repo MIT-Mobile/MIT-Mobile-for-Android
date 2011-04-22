@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.gesture.GestureOverlayView
   xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/gestures"
+  android:layout_width="fill_parent" 
+  android:layout_height="fill_parent"
+  android:gestureColor="#00000000" 
+  android:uncertainGestureColor="#00000000" >  
+    	
+<LinearLayout
   android:orientation="vertical"
   android:background="@drawable/main_repeat"
   android:layout_gravity="center"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   
+ 
+    
     <edu.mit.mitmobile2.TitleBar
   		android:text="About"
   		android:layout_width="fill_parent"
@@ -155,3 +164,4 @@
     </ScrollView>
         
 </LinearLayout>
+</android.gesture.GestureOverlayView>

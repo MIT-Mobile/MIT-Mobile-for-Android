@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
@@ -12,10 +13,17 @@ import java.util.zip.Deflater;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.PrefsActivity;
 import edu.mit.mitmobile2.R;
 
 import android.content.Context;
 import android.content.Intent;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,7 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AboutActivity extends ModuleActivity {
+public class AboutActivity extends ModuleActivity implements OnGesturePerformedListener {
 
 	//private static int sSquareSize; // must be an even number
 	private static final int sSquareSize = 10;
@@ -34,6 +42,7 @@ public class AboutActivity extends ModuleActivity {
 	private View mBuildSettingsView;
 	//private LinearLayout mHeader;
 	private Context mContext = this;
+	private GestureLibrary mLibrary;
 	
 	static final int MENU_HOME = Menu.FIRST;
 	
@@ -118,6 +127,15 @@ public class AboutActivity extends ModuleActivity {
 			}
 		});
 
+		// GESTURE
+		mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        if (!mLibrary.load()) {
+        	finish();
+        }
+	
+	    GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
+	    gestures.addOnGesturePerformedListener(this);
+	    // GESTURE
 	}
 	
 	private OnClickListener newListener(boolean toggleVersionOn) {
@@ -142,6 +160,21 @@ public class AboutActivity extends ModuleActivity {
 		}
 	}
 	
+	@Override
+	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+		ArrayList  predictions = mLibrary.recognize(gesture);
+
+	    // We want at least one prediction
+	    if (predictions.size() > 0) {
+	        Prediction prediction = (Prediction)predictions.get(0);
+	        // We want at least some confidence in the result
+	        if (prediction.score > 1.0) {
+	            // Show the selection
+	        	startActivity( new Intent(this, PrefsActivity.class) );
+	            //Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	        }
+	    }
+	}
 	private BitmapDrawable getVersionBitmap() {
 		String dirpath = "/data/data/edu.mit.mitmobile2/about";
 		String buildId = BuildSettings.BUILD_ID;

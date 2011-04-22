@@ -55,7 +55,7 @@ import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 import edu.mit.mitmobile2.tour.TourModule;
 
-public class MITNewsWidgetActivity extends Activity implements OnGesturePerformedListener, OnSharedPreferenceChangeListener {
+public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenceChangeListener {
 	
 	private static final long TIMER_DELAY = 5000;
 	
@@ -83,7 +83,6 @@ public class MITNewsWidgetActivity extends Activity implements OnGesturePerforme
 
 	public static final String TAG = "MITNewsWidgetActivity";
 	private Global app;
-	private GestureLibrary mLibrary;
 	private SharedPreferences prefs;
 
 	
@@ -105,15 +104,7 @@ public class MITNewsWidgetActivity extends Activity implements OnGesturePerforme
 		ctx = this;
 		
 		createView();
-		// GESTURE
-		mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
-        if (!mLibrary.load()) {
-        	finish();
-        }
-	
-	    GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
-	    gestures.addOnGesturePerformedListener(this);
-	    // GESTURE
+
 		
 		getData();
 		
@@ -407,22 +398,6 @@ public class MITNewsWidgetActivity extends Activity implements OnGesturePerforme
 		Intent i = new Intent(context, MITNewsWidgetActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(i);
-	}
-
-	@Override
-	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		ArrayList  predictions = mLibrary.recognize(gesture);
-
-	    // We want at least one prediction
-	    if (predictions.size() > 0) {
-	        Prediction prediction = (Prediction)predictions.get(0);
-	        // We want at least some confidence in the result
-	        if (prediction.score > 1.0) {
-	            // Show the selection
-	        	startActivity( new Intent(this, PrefsActivity.class) );
-	            //Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
-	        }
-	    }
 	}
 	
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
