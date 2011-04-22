@@ -5,7 +5,7 @@ import sys
 import build_settings
 import time
 
-VERSION_NUMBER = "2.0.1"
+VERSION_NUMBER = "2.1"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
