@@ -485,7 +485,7 @@ public class Tour {
 		}
 		
 		public SideTripTourMapItem getTourMapItem(boolean isOnSite) {
-			return new SideTripTourMapItem(mId, mGeoPoint, mTitle, mThumbnailUrl, isOnSite);
+			return new SideTripTourMapItem(mId, mGeoPoint, mTitle, mPhotoUrl, isOnSite);
 		}
 	}
 	
