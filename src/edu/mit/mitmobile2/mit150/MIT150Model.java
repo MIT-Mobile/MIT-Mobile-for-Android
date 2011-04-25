@@ -35,6 +35,7 @@ public class MIT150Model {
 	
 	private static ArrayList<MIT150FeatureItem> features = null;
 	public static ArrayList<MIT150MoreFeaturesItem> more_features = null;
+	private boolean mainImagesFetched = false;
 	
 	private long lastModified;
 	private String json;
@@ -59,7 +60,7 @@ public class MIT150Model {
 	}
 	/********************************************************************/
 	public void fetchMIT150(final Context context, final Handler uiHandler) {	
-		if(features != null && more_features != null) {
+		if(features != null && more_features != null && mainImagesFetched) {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
 		}
@@ -78,6 +79,7 @@ public class MIT150Model {
 				}
 			}
 			features = mit150db.getCachedFeatures();
+			mainImagesFetched = true;
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
 		} 
@@ -98,13 +100,20 @@ public class MIT150Model {
 				json = object.toString();
 
 				new Thread() {
+
 					public void run() {
 						
 						if(cachedLastSaved == -1 || cachedLastSaved > lastModified) {
 							// do not bother downloading new images
 							// since data has not been modified since last saved
-							fetchMainImages();
+							mainImagesFetched = fetchMainImages();
 				
+							if(!mainImagesFetched) {
+								// early exit failed to receive main button images
+								MobileWebApi.sendErrorMessage(uiHandler);
+								return;
+							}
+							
 							mit150db.updateFeatures(features);
 							SharedPreferences.Editor editor = pref.edit();
 							editor.putLong(PREF_150_LAST_SAVED, System.currentTimeMillis());
@@ -178,11 +187,16 @@ public class MIT150Model {
 	}
 
 	/********************************************************************/
-	public void fetchMainImages() {
+	public boolean fetchMainImages() {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		for (MIT150FeatureItem f : features) {
 			f.bm = getImage(f.photo_url,opts);
+			
+			if(f.bm == null) {
+				return false;
+			}
 		}		
+		return true;
 	}
 
 	/********************************************************************/
@@ -198,8 +212,10 @@ public class MIT150Model {
 					if (m.bd!=null) continue;
 					bm = getImage(m.thumbnail152_url,opts);
 					//mThumbnails.put(m.thumbnail152_url, bm);
-					m.bd = new BitmapDrawable(bm);
-					mit150db.saveMoreThumbnail(m);
+					if(bm != null) {
+						m.bd = new BitmapDrawable(bm);
+						mit150db.saveMoreThumbnail(m);
+					}
 				}
 				// TODO cache?
 				uiHandler.sendEmptyMessage(0);
