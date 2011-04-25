@@ -113,7 +113,7 @@ public class TourMapActivity extends MapBaseActivity {
 		
 		TitleBar titleBar = (TitleBar) findViewById(R.id.mapTitleBar);
 		
-		ListView mTourListView = (ListView) findViewById(R.id.mapListView);
+		mTourListView = (ListView) findViewById(R.id.mapListView);
 		mTourListAdapter = new TourItemAdapter(this, mTourMapItems);
 		mTourListView.setAdapter(mTourListAdapter);
 		mTourListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -537,7 +537,12 @@ public class TourMapActivity extends MapBaseActivity {
 				distanceView.setText(null);
 			}
 			
-			mViewCache.put(item.getId(), view);
+			// only cache views which are visible (to prevent flicker)
+			// invisible views cant filcker
+			if(position >= mTourListView.getFirstVisiblePosition()) { 
+				mViewCache.put(item.getId(), view);
+			}
+			
 			return view;
 		}
 	}
