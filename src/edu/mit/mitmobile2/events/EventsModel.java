@@ -274,7 +274,7 @@ public class EventsModel {
 	}
 	
 	public static void fetchCategories(Context context, final EventType type, final Handler uiHandler) {
-		if(getCategories() != null) {
+		if(sCategories.containsKey(type.getTypeId())) {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 			return;
 		}
