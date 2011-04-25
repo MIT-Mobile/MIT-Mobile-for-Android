@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -11,21 +10,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
-import android.gesture.Gesture;
-import android.gesture.GestureLibraries;
-import android.gesture.GestureLibrary;
-import android.gesture.GestureOverlayView;
-import android.gesture.Prediction;
-import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.util.AndroidException;
 import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -38,7 +28,6 @@ import android.widget.Toast;
 
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.about.AboutActivity;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
 import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
