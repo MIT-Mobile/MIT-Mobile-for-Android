@@ -23,7 +23,7 @@ public class QRReaderModule extends Module {
 
 	@Override
 	public int getMenuIconResourceId() {
-		return R.drawable.home_qr;
+		return R.drawable.menu_qr;
 	}
 
 	@Override
