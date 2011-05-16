@@ -31,3 +31,5 @@ if not os.path.exists(adb_path):
         raise Exception("adb not found")
 
 build_include.shell(adb_path + " install -r " + android_path + "/bin/MITSplashActivity-debug.apk", False)
+
+print "Built project to: " + android_path

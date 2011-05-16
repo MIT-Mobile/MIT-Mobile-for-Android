@@ -9,3 +9,7 @@ news_office_path = "newsoffice"
 verbose_logging = True
 
 build_tag = "development"
+
+#release_project_name = ""
+
+#source_project_name = ""
