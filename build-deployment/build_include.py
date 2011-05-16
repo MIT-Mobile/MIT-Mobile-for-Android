@@ -154,6 +154,7 @@ def build_source(builder, tag, fresh_repository):
       build_id = shell("git rev-parse HEAD", True)     
       build_source = "local code"
       oldProjName = build_settings.source_project_name
+      newProjName = build_settings.release_project_name
       
       #make a new dir based on project name 
       tmp_tag_path = '/tmp/%s-Mobile' % build_settings.release_project_name
@@ -175,13 +176,17 @@ def build_source(builder, tag, fresh_repository):
       for s in src:
       	srcF = srcF + "/" + s
       
-      shutil.copytree(inital_cwd + "/src" + srcProjLocF,tmp_tag_path + "/src" + srcF)
-      shutil.rmtree(tmp_tag_path + "/src"+srcProjLocF)
+      if oldProjName != newProjName:
+      	shutil.copytree(inital_cwd + "/src" + srcProjLocF,tmp_tag_path + "/src" + srcF)
+      	shutil.rmtree(tmp_tag_path + "/src"+srcProjLocF)
+      
 	  
       # make the android project folder the current working directory, proceed to find and replace
       os.chdir(tmp_tag_path)
       
-      renameProjName(tmp_tag_path)
+      if oldProjName != newProjName:
+      	renameProjName(tmp_tag_path)
+      
       
       
    else:
