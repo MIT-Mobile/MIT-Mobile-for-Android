@@ -156,7 +156,7 @@ def build_source(builder, tag, fresh_repository):
       oldProjName = build_settings.source_project_name
       
       #make a new dir based on project name 
-      tmp_tag_path = '/%s-Mobile' % build_settings.release_project_name
+      tmp_tag_path = '/tmp/%s-Mobile' % build_settings.release_project_name
       
       if os.path.exists(tmp_tag_path):
             shutil.rmtree(tmp_tag_path)
@@ -181,9 +181,7 @@ def build_source(builder, tag, fresh_repository):
       # make the android project folder the current working directory, proceed to find and replace
       os.chdir(tmp_tag_path)
       
-      print 'start find and replace'
       renameProjName(tmp_tag_path)
-      print 'completed find and replace'
       
       
    else:
