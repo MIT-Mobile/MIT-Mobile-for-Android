@@ -28,7 +28,7 @@ def shell(command, silent=False):
 def write_build_settings(build_settings_dictionary):
 
     build_class_source = """
-         package %(project_name)s.about;
+         package %(release_project_name)s.about;
          
          
 
@@ -43,15 +43,15 @@ def write_build_settings(build_settings_dictionary):
               public final static String NEWS_OFFICE_PATH = "%(news_office_path)s";
               public final static boolean VERBOSE_LOGGING = %(verbose_logging)s;
               public final static String BUILD_TAG = "%(build_tag)s";
-              public final static String PROJECT_NAME = "%(project_name)s";
+              public final static String release_project_name = "%(release_project_name)s";
+              public final static String source_project_name = "%(source_project_name)s";
          }
 	""" % build_settings_dictionary
-    src = build_settings.project_name.split('.')
+    src = build_settings.release_project_name.split('.')
     srcF = ""
     for s in src:
     	srcF = srcF + "/" + s
     build_settings_file = open("src" + srcF + "/about/BuildSettings.java", "w")
-    #build_settings_file = open("src/edu/mit/mitmobile2/about/BuildSettings.java", "w")
     build_settings_file.write(build_class_source)
     build_settings_file.close()
     build_settings_resource_source = """<?xml version="1.0" encoding="utf-8"?><resources>
@@ -85,8 +85,8 @@ def write_local_properties(android_sdk_path):
 
 def renameProjName(dir):
 
-	newProjName = build_settings.project_name
-	oldProjName = "edu.mit.mitmobile2"
+	newProjName = build_settings.release_project_name
+	oldProjName = build_settings.source_project_name
 	x = ""
 	srcF = ""
 	src = newProjName.split('.')
@@ -98,26 +98,18 @@ def renameProjName(dir):
 	
 	for x in os.listdir(dir):
 		if os.path.isdir(dir + "/" + x):
-			#rename file src file structure
-			#if x.find("mitmobile2"):
-			#	for s in src:
-			#		srcF = srcF + "/" + s
-			#	os.rename(dir + "/" + x, dir + "/src" + srcF)
-			#delve deeper if directory
 			renameProjName(dir + "/" + x)
 		
 		elif os.path.isfile(dir + "/" + x):
-			#print 'considering file: ' + dir + "/"+x
 			if x == 'AndroidManifest.xml':
 				file = dir + "/" + x
-				#print 'AndroidManifest found'
 				infile = open(file,"r")
 				text = infile.read()
 				
 				if text.find(oldProjName) != -1:
 					infile.close()
 					infile = open(file,"w")
-					text = text.replace("package=\"edu.mit.mitmobile2","package=\"" + newProjName)
+					text = text.replace("package=\""+oldProjName,"package=\"" + newProjName)
 					text = text.replace("name=\".","name=\""+oldProjName+".")
 					infile.write(text)
 				infile.close()
@@ -128,10 +120,10 @@ def renameProjName(dir):
 					infile = open(file, "r")
 					text = infile.read()
 				
-					if text.find("res/edu.mit.mitmobile2") != -1:
+					if text.find("res/"+oldProjName) != -1:
 						infile.close()
 						infile = open(file,"w")
-						text = text.replace("res/edu.mit.mitmobile2","res/"+newProjName)
+						text = text.replace("res/"+oldProjName,"res/"+newProjName)
 						infile.write(text)
 					infile.close()
 				
@@ -142,12 +134,11 @@ def renameProjName(dir):
 					infile = open(file,"r")
 					text = infile.read()
 				
-					if text.find("edu.mit.mitmobile2") != -1:
+					if text.find(oldProjName) != -1:
 						infile.close()
 						infile = open(file, "w")
-						text = text.replace("package edu.mit.mitmobile2","package "+newProjName)
-						#text = text.replace("import edu.mit.mitmobile2.R","import "+newProjName+".R")
-						text = text.replace("import edu.mit.mitmobile2","import "+newProjName)
+						text = text.replace("package "+oldProjName,"package "+newProjName)
+						text = text.replace("import "+oldProjName,"import "+newProjName)
 						infile.write(text)
 					infile.close()
 					
@@ -162,9 +153,10 @@ def build_source(builder, tag, fresh_repository):
    if not tag:
       build_id = shell("git rev-parse HEAD", True)     
       build_source = "local code"
+      oldProjName = build_settings.source_project_name
       
       #make a new dir based on project name 
-      tmp_tag_path = '/%s-Mobile' % build_settings.project_name
+      tmp_tag_path = '/%s-Mobile' % build_settings.release_project_name
       
       if os.path.exists(tmp_tag_path):
             shutil.rmtree(tmp_tag_path)
@@ -172,13 +164,19 @@ def build_source(builder, tag, fresh_repository):
       #copy files over from original directory
       shutil.copytree(inital_cwd,tmp_tag_path)
       
+      srcProjLocF = ""
+      srcProjLoc = build_settings.source_project_name.split('.')
+      for p in srcProjLoc:
+      	srcProjLocF = srcProjLocF + "/" + p
+      
+      
       srcF = ""
-      src = build_settings.project_name.split('.')
+      src = build_settings.release_project_name.split('.')
       for s in src:
       	srcF = srcF + "/" + s
       
-      shutil.copytree(inital_cwd + "/src/edu/mit/mitmobile2",tmp_tag_path + "/src" + srcF)
-      shutil.rmtree(tmp_tag_path + "/src/edu/mit/mitmobile2")
+      shutil.copytree(inital_cwd + "/src" + srcProjLocF,tmp_tag_path + "/src" + srcF)
+      shutil.rmtree(tmp_tag_path + "/src"+srcProjLocF)
 	  
       # make the android project folder the current working directory, proceed to find and replace
       os.chdir(tmp_tag_path)
@@ -231,7 +229,8 @@ def build_source(builder, tag, fresh_repository):
        "news_office_path" : build_settings.news_office_path,
        "verbose_logging" : verbose_logging_literal,
        "build_tag" : build_settings.build_tag,
-       "project_name" : build_settings.project_name,
+       "release_project_name" : build_settings.release_project_name,
+       "source_project_name" : build_settings.source_project_name,
    })
 
    project_path = os.getcwd()
