@@ -43,6 +43,7 @@ def write_build_settings(build_settings_dictionary):
               public final static long BUILD_TIME = %(build_time)iL;
               public final static String MOBILE_WEB_DOMAIN = "%(mobile_web_domain)s";
               public final static String VERSION_NAME = "%(version_name)s";
+              public final static String VERSION_NUMBER = "%(version_number)s";
               public final static String NEWS_OFFICE_PATH = "%(news_office_path)s";
               public final static boolean VERBOSE_LOGGING = %(verbose_logging)s;
               public final static String BUILD_TAG = "%(build_tag)s";

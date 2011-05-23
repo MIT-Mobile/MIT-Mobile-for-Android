@@ -10,6 +10,6 @@ verbose_logging = True
 
 build_tag = "development"
 
-#release_project_name = ""
+#release_project_name = "" #name of the project when released
 
-#source_project_name = ""
+#source_project_name = "" #name of project in source code
