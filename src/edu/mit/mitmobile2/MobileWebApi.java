@@ -267,6 +267,7 @@ public class MobileWebApi {
 
 			@Override
 			public void onError(final ErrorType error) {
+
 				if(responseListener.wasRequestCancelled()) {
 					// nothing to handle request was cancelled
 					return;
@@ -289,7 +290,7 @@ public class MobileWebApi {
 							if(mIsSearchQuery) {
 								errorMessage = SEARCH_ERROR_MESSAGE;
 							}
-							
+							Log.d("MobileWebApi","requestResponce() error");
 							Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
 						}
 					});
@@ -397,7 +398,7 @@ public class MobileWebApi {
 		return query;
 	}
 	
-    private static String convertStreamToString(InputStream stream) {
+    public static String convertStreamToString(InputStream stream) {
         
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         StringBuilder stringBuilder = new StringBuilder();

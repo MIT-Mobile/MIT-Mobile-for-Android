@@ -49,7 +49,7 @@ public class ConnectionWrapper {
 	 * This will create a connection wrapper that does not attempt to check
 	 * if it has a network conenction before making the network request
 	 */
-	ConnectionWrapper() {
+	public ConnectionWrapper() {
 		mConnectivityManager = null;
 	}
 	

@@ -192,6 +192,12 @@
 		
 		<activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Light" />
 
+		<!-- FACILITIES -->
+		<activity android:name=".facilities.FacilitiesActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesProblemTypeActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesProblemLocationActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesLocationsForCategoryActivity" android:theme="@style/PlainBackground" />
+
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
 		<activity android:name=".about.AboutCreditsActivity" />
@@ -224,7 +230,8 @@
 	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>	
+	
 	<uses-sdk android:minSdkVersion="7"></uses-sdk>
 
 <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>

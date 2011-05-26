@@ -10,17 +10,26 @@ VERSION_NAME = "2.1"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
-   # I think this function causes issues
-   # on windows will consult with seth later
-   #   print command
-   #   os.system(command)
+   print command
+   #DEBUG
+   import subprocess as sub
+   p = sub.Popen(command,stdout=sub.PIPE,stderr=sub.PIPE)
+   output = p.communicate()
+   print "output = " + str(output)
+   #DEBUG
+   
+   return output[0].strip()
+   
+   #ret = os.system(command)
+   #print "ret = " + ret
+   #statusoutput = commands.getstatusoutput(command)
+   #print statusoutput
+   #if not silent:
+   #    print statusoutput[1]
 
-   statusoutput = commands.getstatusoutput(command)
-   if not silent:
-       print statusoutput[1]
 
-   if statusoutput[0] != 0:
-      raise Exception("Error executing shell commmand")
+   #if statusoutput[0] != 0:
+   #   raise Exception("Error executing shell commmand")
 
    return statusoutput[1]
 
