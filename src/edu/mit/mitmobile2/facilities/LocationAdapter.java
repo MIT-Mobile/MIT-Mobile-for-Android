@@ -35,8 +35,12 @@ class LocationAdapter extends CursorAdapter {
 
 		TextView locationTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
 		
-		locationTV.setText(locationRecord.name,  TextView.BufferType.SPANNABLE);
-		
+		if (locationRecord.bldgnum.equals("")) {
+			locationTV.setText(locationRecord.name,  TextView.BufferType.SPANNABLE);
+		}
+		else {
+			locationTV.setText(locationRecord.name + " - " + locationRecord.bldgnum,  TextView.BufferType.SPANNABLE);		
+		}
 		int separator = locationRecord.name.length() + 1;
 		//spannable.setSpan(mContactStyle, 0,
 		//		separator, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

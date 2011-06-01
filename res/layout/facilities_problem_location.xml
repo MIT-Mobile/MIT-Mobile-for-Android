@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/facilitiesLocationLayout"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -10,12 +12,26 @@
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
 
+<!--  
+		<edu.mit.mitmobile2.facilities.FacilitiesBackgroundView
+	  		android:id="@+id/facilitiesBackground"
+	  		android:layout_width="fill_parent"
+	  		android:layout_height="fill_parent" />
+	  -->
+	  <!-- 
+	  	<edu.mit.mitmobile2.FullScreenLoader
+	  		android:id="@+id/facilitiesLoader"
+	  		android:background="#00ffffff"
+	  		android:layout_width="fill_parent"
+	  		android:layout_height="fill_parent" />
+	   -->
+	  		
  	<AutoCompleteTextView android:id="@+id/facilitiesTextLocation"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
         android:text="Search"  />
     />      
-        
+	        
 	<!-- Divider -->
 	<View
 		android:layout_width="fill_parent"

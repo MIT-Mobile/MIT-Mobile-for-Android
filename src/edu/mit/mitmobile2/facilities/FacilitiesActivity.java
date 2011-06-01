@@ -72,11 +72,6 @@ public class FacilitiesActivity extends Activity {
 		mContext = this;
         Handler uiHandler = new Handler();
 
-        /* 
-         * check the version of the local facilities database against the mobile server and update it if necessary
-         */ 
-        FacilitiesDB.updateCategories(mContext, uiHandler);
-        FacilitiesDB.updateLocations(mContext, uiHandler);
 		createViews();
 	}
 
@@ -96,7 +91,8 @@ public class FacilitiesActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
+				Intent intent = new Intent(mContext, FacilitiesLoadingActivity.class);
+				//Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
 				startActivity(intent);
 			}
 		});

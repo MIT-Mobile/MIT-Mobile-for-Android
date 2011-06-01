@@ -1,57 +1,38 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
-import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.emergency.EmergencyDB;
-import edu.mit.mitmobile2.objs.EmergencyItem.Contact;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
-//public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
 
-public class FacilitiesProblemLocationActivity extends ModuleActivity {
-
-	public static final String TAG = "FacilitiesProblemLocationActivity";
+public class FacilitiesRoomLocationsActivity extends ModuleActivity {
+	public static final String TAG = "FacilitiesLocationsForCategoryActivity";
 
 	Context mContext;
 	ListView mListView;
 	FacilitiesDB db;
-	private AutoCompleteTextView facilitiesTextLocation;
-	private Button useMyLocationButton;
 
-	private static String[] FROM = { "location_suggestion"};
-
-	private static int[] TO = {R.id.facilitiesTextLocation};
-	ArrayAdapter adapter;
 	//ArrayAdapter<String> adapter;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		
 		mContext = this;
@@ -62,32 +43,14 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	}
 
 	public void createViews() {
-        setContentView(R.layout.facilities_problem_location);
+        setContentView(R.layout.facilities_locations_for_category);
 
-        // Set up location search
-
-        // Set up use my location button
-		TwoLineActionRow useMyLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesUseMyLocationActionRow);
-		String title1 = "Use My Location";
-		String title2 = "";
-		useMyLocationActionRow.setTitle(title1 + " " + title2, TextView.BufferType.SPANNABLE);
-		useMyLocationActionRow.setActionIconResource(R.drawable.arrow_right_normal);
-		useMyLocationActionRow.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
-				startActivity(intent);
-			}
-		});
-        
-        // Set up browse by location
-		///locationCategories = db.getCategoryArray();
-		///setListAdapter(new ArrayAdapter<String>(this,R.layout.simple_row,db.getCategoryArray()));
-
+        // Set up locations for selected category
 		final FacilitiesDB db = FacilitiesDB.getInstance(this);
-		CategoryAdapter adapter = new CategoryAdapter(this, db.getCategoryCursor());
-		ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
+		//LocationCategoryAdapter adapter = new LocationCategoryAdapter(this, db.getLocationCategoryCursor());
+		LocationAdapter adapter = new LocationAdapter(this, db.getLocationCategoryCursor());
+		Log.d(TAG,"num records in adapter = " + adapter.getCount());
+		ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationsForCategoryListView);
 		listView.setAdapter(adapter);
 		listView.setVisibility(View.VISIBLE);
 
@@ -95,15 +58,12 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				CategoryRecord category = db.getCategory(position);
-				Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
-				// save the selected category
-				Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
-				Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-				startActivity(intent);          
-			
-				//Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + numericPhone));
-				//startActivity(intent);
+				LocationRecord location = db.getLocation(position);
+//				Log.d(TAG,"position = " + position + " location_id = " + locationCategory.locationId + " category_id = " + locationCategory.categoryId);
+//				// save the selected category
+				Global.sharedData.getFacilitiesData().setLocationId(location.id);
+				//				Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
+//				startActivity(intent);
 			}
 		});
 		

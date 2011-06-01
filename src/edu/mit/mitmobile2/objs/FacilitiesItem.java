@@ -16,6 +16,7 @@ public class FacilitiesItem {
 		public String lat_wgs84;
 		public String long_wgs84;
 		public String bldgnum;
+		public String last_updated;
 	}
 
 	public static class LocationCategoryRecord {
