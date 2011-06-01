@@ -34,7 +34,7 @@ public class FacilitiesDB {
 
 	// Data  Version Info
 	private static Integer BLDG_DATA_VERSION = 1;
-	static Integer CATEGORY_LIST_VERSION = 1;
+	private static Integer CATEGORY_LIST_VERSION = 1;
 	private static Integer LOCATION_VERSION = 1;
 	private static Integer ROOM_VERSION = 1;
 
@@ -453,7 +453,7 @@ public class FacilitiesDB {
 		Message msg = new Message();
 		
 		// compare local category version to remote version
-		int remoteVersion = Global.getVersion("map", "category_list");
+		final int remoteVersion = Global.getVersion("map", "category_list");
 		if (remoteVersion > db.CATEGORY_LIST_VERSION) {
 			Log.d(TAG,"updating category list");
 			db.clearCategories();
@@ -483,7 +483,7 @@ public class FacilitiesDB {
 					}
 			});			
 			// update local version
-			db.CATEGORY_LIST_VERSION = remoteVersion;
+			FacilitiesDB.setCATEGORY_LIST_VERSION(remoteVersion);
 			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
 		else {
@@ -499,7 +499,7 @@ public class FacilitiesDB {
 			Message msg = new Message();
 				
 			// compare local category version to remote version
-			int remoteVersion = Global.getVersion("map", "location");
+			final int remoteVersion = Global.getVersion("map", "location");
 			if (remoteVersion > db.LOCATION_VERSION) {
 				Log.d(TAG,"updating location list");
 				db.clearLocations();
@@ -544,6 +544,7 @@ public class FacilitiesDB {
 								}
 							}
 							Log.d(TAG,"locations inserted into database");
+							FacilitiesDB.setLOCATION_VERSION(remoteVersion);
 							Message msg = new Message();
 							msg.arg1 = FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL;
 							Log.d(TAG, "sending location success message to uiHandler");
@@ -605,5 +606,37 @@ public class FacilitiesDB {
 				}
 		});
 	}
-	
+
+	public static Integer getBLDG_DATA_VERSION() {
+		return BLDG_DATA_VERSION;
+	}
+
+	public static void setBLDG_DATA_VERSION(Integer bLDG_DATA_VERSION) {
+		BLDG_DATA_VERSION = bLDG_DATA_VERSION;
+	}
+
+	public static Integer getCATEGORY_LIST_VERSION() {
+		return CATEGORY_LIST_VERSION;
+	}
+
+	public static void setCATEGORY_LIST_VERSION(Integer cATEGORY_LIST_VERSION) {
+		CATEGORY_LIST_VERSION = cATEGORY_LIST_VERSION;
+	}
+
+	public static Integer getLOCATION_VERSION() {
+		return LOCATION_VERSION;
+	}
+
+	public static void setLOCATION_VERSION(Integer lOCATION_VERSION) {
+		LOCATION_VERSION = lOCATION_VERSION;
+	}
+
+	public static Integer getROOM_VERSION() {
+		return ROOM_VERSION;
+	}
+
+	public static void setROOM_VERSION(Integer rOOM_VERSION) {
+		ROOM_VERSION = rOOM_VERSION;
+	}
+
 }

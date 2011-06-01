@@ -1,46 +1,20 @@
 package edu.mit.mitmobile2.facilities;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.telephony.PhoneNumberUtils;
-import android.text.Spannable;
-import android.text.style.TextAppearanceSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.HighlightEffects;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.emergency.EmergencyContactsActivity;
-import edu.mit.mitmobile2.news.NewsDetailsActivity;
-import edu.mit.mitmobile2.news.NewsModel;
-import edu.mit.mitmobile2.objs.EmergencyItem;
-import edu.mit.mitmobile2.people.PeopleActivity;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class FacilitiesActivity extends Activity {
@@ -49,7 +23,6 @@ public class FacilitiesActivity extends Activity {
 	private Button reportButton;
 	//private ImageView callButton;
 	
-	private WebView mEmergencyMsgTV = null;
 
 	private Context mContext;	
 
@@ -57,9 +30,7 @@ public class FacilitiesActivity extends Activity {
 
 	SharedPreferences pref;
 	
-	static EmergencyItem emergencyItem;
 	
-	static String PREF_KEY_EMERGENCY_TEXT = "emergency_text";
 	
 	//static final int MENU_REFRESH = MENU_SEARCH + 1;
 	public static final String TAG = "FacilitiesActivity";
@@ -72,6 +43,8 @@ public class FacilitiesActivity extends Activity {
 		mContext = this;
         Handler uiHandler = new Handler();
 
+        // call getVersionMap incase it failed in the Global activity before the correct mobile server was selected
+        Global.getVersionMap(mContext, uiHandler);
 		createViews();
 	}
 
@@ -91,8 +64,20 @@ public class FacilitiesActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, FacilitiesLoadingActivity.class);
-				//Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
+				Intent intent;
+				// compare local and remote versions of the category and location tables
+				int remoteCategoryVersion = Global.getVersion("map", "category_list");
+				int localCategoryVersion = FacilitiesDB.getCATEGORY_LIST_VERSION();
+				
+				int remoteLocationVersion = Global.getVersion("map", "location");
+				int localLocationVersion = FacilitiesDB.getLOCATION_VERSION();
+
+				if ( (remoteCategoryVersion > localCategoryVersion) || (remoteLocationVersion > localLocationVersion)) {
+					intent = new Intent(mContext, FacilitiesLoadingActivity.class);				
+				}
+				else {
+					intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);					
+				}
 				startActivity(intent);
 			}
 		});
@@ -114,11 +99,5 @@ public class FacilitiesActivity extends Activity {
 
 	}
 
-	final Runnable updateDataInBackground = new Runnable() {
-		Handler uiHandler = new Handler();
-		public void run() {
-			FacilitiesDB.updateFacilitiesDatabase(mContext, uiHandler);
-		}
-	};
 
 }

@@ -55,21 +55,13 @@ public class FacilitiesLoadingActivity extends ModuleActivity {
 		super.onCreate(savedInstance);
 		mContext = this;
 		db = FacilitiesDB.getInstance(mContext);
-		//DatabaseUpdater databaseUpdater = new DatabaseUpdater();
 		setContentView(R.layout.facilities_loading);
 
-		//mBackgroundView = (FacilitiesBackgroundView) findViewById(R.id.facilitiesBackground);
-
 		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
-		//mIntroductionView = (TextView) findViewById(R.id.tourHomeIntroduction);
 		
 		mLoader.showLoading();
 		
-		//FacilitiesDB.updateCategories(mContext, mFacilitiesLoadedHandler );
-		//FacilitiesDB.updateLocations(mContext, mFacilitiesLoadedHandler );
-		new DatabaseUpdater().execute("test");
-		//DatabaseUpdater du = new DatabaseUpdater();
-		//du.run();
+		new DatabaseUpdater().execute("");
 	}
 
 	
