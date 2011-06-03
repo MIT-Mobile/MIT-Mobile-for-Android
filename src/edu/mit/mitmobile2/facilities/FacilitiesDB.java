@@ -41,6 +41,7 @@ public class FacilitiesDB {
 
 	public final static Integer STATUS_CATEGORIES_SUCCESSFUL = 900;
 	public final static Integer STATUS_LOCATIONS_SUCCESSFUL = 901;
+	public final static Integer STATUS_ROOMS_SUCCESSFUL = 902;
 	
 	private static final String CATEGORY_TABLE = "categories";
 	private static final String LOCATION_TABLE = "locations";
@@ -193,9 +194,8 @@ public class FacilitiesDB {
 	public Cursor getLocationCategoryCursor() {
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		String sql = "select " 				
-					+ LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable._ID + ", " 
-					+ LocationCategoryTable.CATEGORY_ID + ", " 
-					+ LocationCategoryTable.LOCATION_ID + ", " 
+					+ LOCATION_TABLE + "." + LocationTable._ID + ", " 
+					+ LocationTable.ID + ", "
 					+ LocationTable.NAME + ", "
 					+ LocationTable.LAT + ", " 
 					+ LocationTable.LONG + ", " 
@@ -258,6 +258,31 @@ public class FacilitiesDB {
 		return location;
 	}
 
+	public LocationRecord getLocationForCategory(int position) {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		LocationRecord location = null;
+		Cursor cursor = getLocationCategoryCursor();
+		cursor.move(position + 1);
+		if (cursor.getCount() > 0) {
+//			Log.d(TAG,"string 0 = " + cursor.getString(0));
+//			Log.d(TAG,"string 1 = " + cursor.getString(1));
+//			Log.d(TAG,"string 2 = " + cursor.getString(2));
+//			Log.d(TAG,"string 3 = " + cursor.getString(3));
+//			Log.d(TAG,"string 4 = " + cursor.getString(4));
+//			Log.d(TAG,"string 5 = " + cursor.getString(5));
+//			Log.d(TAG,"string 6 = " + cursor.getString(6));
+			location = new LocationRecord();
+			location.id = cursor.getString(1);
+			location.name = cursor.getString(2);
+			location.lat_wgs84 = cursor.getString(3);
+			location.long_wgs84 = cursor.getString(4);
+			location.bldgnum = cursor.getString(5);
+			location.last_updated = cursor.getString(6);
+		}
+		cursor.close();
+		return location;
+	}
+
 	public Cursor getRoomCursor() {
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		String sql = "select " 				
@@ -282,6 +307,10 @@ public class FacilitiesDB {
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
 			room = new RoomRecord();
+			Log.d(TAG,"string 0 = " + cursor.getString(0));
+			Log.d(TAG,"string 1 = " + cursor.getString(1));
+			Log.d(TAG,"string 2 = " + cursor.getString(2));
+			Log.d(TAG,"string 3 = " + cursor.getString(3));
 			room.building = cursor.getString(1);
 			room.floor = cursor.getString(2);
 			room.room = cursor.getString(3);
@@ -559,9 +588,9 @@ public class FacilitiesDB {
 									record.lat_wgs84 = obj.getString("lat_wgs84");
 									record.long_wgs84 = obj.getString("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
-									//Log.d("ZZZ","adding bldgnum " + record.bldgnum + " for " + record.name );
+									Log.d("ZZZ","adding bldgnum " + record.bldgnum + " for " + record.name );
 									db.addLocation(record);
-									Log.d(TAG,"after adding location" + record.name );
+									//Log.d(TAG,"after adding location" + record.name );
 									
 									// convert categories into an array and add to location category table 
 									//Log.d(TAG,"category string for " + record.id + " = " + obj.getString("category"));
@@ -599,7 +628,8 @@ public class FacilitiesDB {
 	
 	public static void updateRooms(Context mContext,final Handler uiHandler, final String buildingNumber) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
-			
+		Message msg = new Message();
+	
 		MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "facilities");
@@ -643,7 +673,10 @@ public class FacilitiesDB {
 					}
 					// Set last updated field for location so rooms are not re-read for that location
 					FacilitiesDB.setLocationLastUpdated(buildingNumber);
-					MobileWebApi.sendSuccessMessage(uiHandler);
+					Message msg = new Message();
+					msg.arg1 = FacilitiesDB.STATUS_ROOMS_SUCCESSFUL;
+					Log.d(TAG, "sending room success message to uiHandler");
+					uiHandler.sendMessage(msg);
 				}
 		});
 	}
@@ -657,6 +690,23 @@ public class FacilitiesDB {
 		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
 		db.rawQuery(sql,null);
 	}
+	
+	// gets the last_updated value for a specified locatio id
+	public static String getLocationLastUpdated(String locationId) {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		Date date = new Date();
+		
+		String sql = "select " + LocationTable.LAST_UPDATED + " from " + LOCATION_TABLE + " where " + LocationTable.ID + " = '" + locationId + "'";
+		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+			return cursor.getString(0);
+		}
+		else {
+			return null;
+		}
+	}
+	
 	
 	public static Integer getBLDG_DATA_VERSION() {
 		return BLDG_DATA_VERSION;

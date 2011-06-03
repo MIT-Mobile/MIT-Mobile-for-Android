@@ -27,11 +27,11 @@ class LocationAdapter extends CursorAdapter {
 	
 	private void setupRow(Cursor cursor, View row) {
 		LocationRecord locationRecord = new LocationRecord();
-		locationRecord.id = cursor.getString(2);
-		locationRecord.name = cursor.getString(3);
-		locationRecord.lat_wgs84 = cursor.getString(4);
-		locationRecord.long_wgs84 = cursor.getString(5);
-		locationRecord.bldgnum = cursor.getString(6);
+		locationRecord.id = cursor.getString(1);
+		locationRecord.name = cursor.getString(2);
+		locationRecord.lat_wgs84 = cursor.getString(3);
+		locationRecord.long_wgs84 = cursor.getString(4);
+		locationRecord.bldgnum = cursor.getString(5);
 
 		TextView locationTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
 		
@@ -42,11 +42,6 @@ class LocationAdapter extends CursorAdapter {
 			locationTV.setText(locationRecord.name + " - " + locationRecord.bldgnum,  TextView.BufferType.SPANNABLE);		
 		}
 		int separator = locationRecord.name.length() + 1;
-		//spannable.setSpan(mContactStyle, 0,
-		//		separator, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		//spannable.setSpan(mPhoneStyle, separator,
-		//		spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
 	}
 	
 	@Override

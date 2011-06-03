@@ -35,11 +35,6 @@ class LocationCategoryAdapter extends CursorAdapter {
 		locationTV.setText(locationCategoryRecord.locationId,  TextView.BufferType.SPANNABLE);
 		
 		int separator = locationCategoryRecord.categoryId.length() + 1;
-		//spannable.setSpan(mContactStyle, 0,
-		//		separator, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		//spannable.setSpan(mPhoneStyle, separator,
-		//		spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
 	}
 	
 	@Override

@@ -52,31 +52,3 @@ public class FacilitiesProblemTypeActivity extends ListActivity {
 	}
 }
 	
-
-//	private ListView lv;
-//	private String problem_types[];
-//	Context mContext;
-//	ListView mListView;
-//	
-//	/****************************************************/
-//	@Override
-//	protected void onCreate(Bundle savedInstanceState) {
-//		Log.d(TAG,"onCreate()");
-//		super.onCreate(savedInstanceState);
-//		mContext = this;
-//		Resources res = getResources();
-//		problem_types = res.getStringArray(R.array.facilities_problem_types);
-//
-//		setContentView(R.layout.facilities_problem_type);
-//		ArrayAdapter adapter = new ArrayAdapter(mContext, problem_types);
-//		setListAdapter(adapter);
-//				
-//	}
-//
-//	/****************************************************/
-//
-//	
-//	public void onClick(View v) {
-//		Log.d(TAG, "clicked " + v.getId());
-//	}
-//	

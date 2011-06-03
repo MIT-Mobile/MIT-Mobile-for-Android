@@ -9,6 +9,7 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 class RoomAdapter extends CursorAdapter {
 
 	private Context mContext;
+	private static String TAG = "RoomAdapter";
 	
 	public RoomAdapter(Context context, Cursor cursor) {
 		super(context, cursor);
@@ -28,19 +30,19 @@ class RoomAdapter extends CursorAdapter {
 	
 	private void setupRow(Cursor cursor, View row) {
 		RoomRecord roomRecord = new RoomRecord();
-		roomRecord.building = cursor.getString(2);
-		roomRecord.floor = cursor.getString(3);
-		roomRecord.room = cursor.getString(4);
+		Log.d(TAG,"String 0 = " + cursor.getString(0));
+		Log.d(TAG,"String 1 = " + cursor.getString(1));
+		Log.d(TAG,"String 2 = " + cursor.getString(2));
+		Log.d(TAG,"String 3 = " + cursor.getString(3));
+
+		roomRecord.building = cursor.getString(1);
+		roomRecord.floor = cursor.getString(2);
+		roomRecord.room = cursor.getString(3);
 
 		TextView roomTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
 		
 		roomTV.setText(roomRecord.room,  TextView.BufferType.SPANNABLE);		
 		int separator = roomRecord.room.length() + 1;
-		//spannable.setSpan(mContactStyle, 0,
-		//		separator, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		//spannable.setSpan(mPhoneStyle, separator,
-		//		spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
 	}
 	
 	@Override

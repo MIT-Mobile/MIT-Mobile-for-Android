@@ -32,7 +32,6 @@ public class FacilitiesActivity extends Activity {
 	
 	
 	
-	//static final int MENU_REFRESH = MENU_SEARCH + 1;
 	public static final String TAG = "FacilitiesActivity";
 	
 	/****************************************************/
@@ -65,19 +64,7 @@ public class FacilitiesActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent;
-				// compare local and remote versions of the category and location tables
-				//int remoteCategoryVersion = Global.getVersion("map", "category_list");
-				//int localCategoryVersion = FacilitiesDB.getCATEGORY_LIST_VERSION();
-				
-				//int remoteLocationVersion = Global.getVersion("map", "location");
-				//int localLocationVersion = FacilitiesDB.getLOCATION_VERSION();
-
-				//if ( (remoteCategoryVersion > localCategoryVersion) || (remoteLocationVersion > localLocationVersion)) {
-				//	intent = new Intent(mContext, FacilitiesLoadingActivity.class);				
-				//}
-				//else {
-					intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);					
-				//}
+				intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);					
 				startActivity(intent);
 			}
 		});

@@ -34,7 +34,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 
 	Context mContext;
 	ListView mListView;
-	FacilitiesDB db;
+	final FacilitiesDB db = FacilitiesDB.getInstance(this);
 	FullScreenLoader mLoader;
 	private AutoCompleteTextView facilitiesTextLocation;
 	private Button useMyLocationButton;
@@ -42,14 +42,31 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	Handler mFacilitiesLoadedHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			//if(msg.arg1 == MobileWebApi.SUCCESS) {
 			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
 				Log.d(TAG,"received success message for categories");
 			} 
 			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
 				Log.d(TAG,"received success message for locations, launching next activity");
-				//Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
-				//startActivity(intent);	
+				
+				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
+				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
+				listView.setAdapter(adapter);
+				listView.setVisibility(View.VISIBLE);
+				
+				listView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position,
+							long id) {
+						CategoryRecord category = db.getCategory(position);
+						Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
+						// save the selected category
+						Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
+						Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
+						startActivity(intent);          
+					}
+				});
+
+
 				mLoader.setVisibility(View.GONE);
 			}
 			else {
@@ -58,7 +75,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		}		
 	};
 	
-	//ArrayAdapter<String> adapter;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,23 +83,8 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		
 		mContext = this;
 		Handler uiHandler = new Handler();
-		db = FacilitiesDB.getInstance(mContext);
 
-		createViews();
-/*
- * 		super.onCreate(savedInstance);
-		mContext = this;
-		db = FacilitiesDB.getInstance(mContext);
-		setContentView(R.layout.facilities_loading);
-
-		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
-		
-		mLoader.showLoading();
-		
-		new DatabaseUpdater().execute("");
-
- */
-		
+		createViews();		
 	}
 
 	public void createViews() {
@@ -101,7 +102,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		String title1 = "Use My Location";
 		String title2 = "";
 		useMyLocationActionRow.setTitle(title1 + " " + title2, TextView.BufferType.SPANNABLE);
-		useMyLocationActionRow.setActionIconResource(R.drawable.arrow_right_normal);
 		useMyLocationActionRow.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -110,35 +110,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				startActivity(intent);
 			}
 		});
-        
-        // Set up browse by location
-		///locationCategories = db.getCategoryArray();
-		///setListAdapter(new ArrayAdapter<String>(this,R.layout.simple_row,db.getCategoryArray()));
-
-		final FacilitiesDB db = FacilitiesDB.getInstance(this);
-		CategoryAdapter adapter = new CategoryAdapter(this, db.getCategoryCursor());
-		ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
-		listView.setAdapter(adapter);
-		listView.setVisibility(View.VISIBLE);
-
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				CategoryRecord category = db.getCategory(position);
-				Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
-				// save the selected category
-				Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
-				Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-				startActivity(intent);          
-			
-				//Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + numericPhone));
-				//startActivity(intent);
-			}
-		});
-		
-		
-		
+        		
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event){
@@ -158,7 +130,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 
 		@Override
 		protected void onPreExecute() {
-			//dialog = ProgressDialog.show(StatusUpdateActivity.this, "", "Posting message. Please wait", true);
 		}
 
 		@Override
