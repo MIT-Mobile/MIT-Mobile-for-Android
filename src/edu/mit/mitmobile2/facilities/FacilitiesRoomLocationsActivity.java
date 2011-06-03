@@ -19,6 +19,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
@@ -43,12 +44,12 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 	}
 
 	public void createViews() {
-        setContentView(R.layout.facilities_locations_for_category);
+        setContentView(R.layout.facilities_rooms_for_location);
 
         // Set up locations for selected category
 		final FacilitiesDB db = FacilitiesDB.getInstance(this);
 		//LocationCategoryAdapter adapter = new LocationCategoryAdapter(this, db.getLocationCategoryCursor());
-		LocationAdapter adapter = new LocationAdapter(this, db.getLocationCategoryCursor());
+		RoomAdapter adapter = new RoomAdapter(this, db.getRoomCursor());
 		Log.d(TAG,"num records in adapter = " + adapter.getCount());
 		ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationsForCategoryListView);
 		listView.setAdapter(adapter);
@@ -58,10 +59,10 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				LocationRecord location = db.getLocation(position);
+				RoomRecord  room = db.getRoom(position);
 //				Log.d(TAG,"position = " + position + " location_id = " + locationCategory.locationId + " category_id = " + locationCategory.categoryId);
 //				// save the selected category
-				Global.sharedData.getFacilitiesData().setLocationId(location.id);
+				//Global.sharedData.getFacilitiesData().setLocationId(location.id);
 				//				Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
 //				startActivity(intent);
 			}

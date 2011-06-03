@@ -5,7 +5,16 @@ public class FacilitiesData {
 	private String problemType;
 	private String locationCategory;
 	private String locationId;
+	private String buildingNumber;
 	
+	public String getBuildingNumber() {
+		return buildingNumber;
+	}
+
+	public void setBuildingNumber(String buildingNumber) {
+		this.buildingNumber = buildingNumber;
+	}
+
 	public String getLocationId() {
 		return locationId;
 	}

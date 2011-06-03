@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.facilities;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -91,7 +92,7 @@ public class FacilitiesDB {
 
 	// END TABLE DEFINITIONS
 	
-	SQLiteOpenHelper mDBHelper;
+	static SQLiteOpenHelper mDBHelper;
 	
 	private static FacilitiesDB sInstance = null;
 	
@@ -199,7 +200,7 @@ public class FacilitiesDB {
 					+ LocationTable.LAT + ", " 
 					+ LocationTable.LONG + ", " 
 					+ LocationTable.BLDGNUM + ", " 
-					+ LocationTable.LAST_UPDATED + ", " 
+					+ LocationTable.LAST_UPDATED + " " 
 					+ "FROM " + LOCATION_CATEGORY_TABLE
 					+ " JOIN " + LOCATION_TABLE + " on " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + " = " + LOCATION_TABLE + "." + LocationTable.ID
 					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "'"
@@ -257,6 +258,39 @@ public class FacilitiesDB {
 		return location;
 	}
 
+	public Cursor getRoomCursor() {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		String sql = "select " 				
+					+ ROOMS_TABLE + "." + RoomTable._ID + ", " 
+					+ ROOMS_TABLE + "." + RoomTable.BUILDING + ", " 
+					+ ROOMS_TABLE + "." + RoomTable.FLOOR + ", " 
+					+ ROOMS_TABLE + "." + RoomTable.ROOM  
+					+ " FROM " + ROOMS_TABLE
+					+ " where upper(building) = '" + Global.sharedData.getFacilitiesData().getBuildingNumber().toUpperCase() + "'"
+					+ " order by " + RoomTable.ROOM;
+//		String sql = "select * from " + LOCATION_CATEGORY_TABLE;
+		Log.d(TAG,"room sql = " + sql);
+		Cursor cursor = db.rawQuery(sql, null);
+		Log.d(TAG,"number of rooms for building " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " = " + cursor.getCount());
+		return cursor;
+	}
+
+	public RoomRecord getRoom(int position) {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		RoomRecord room = null;
+		Cursor cursor = getLocationCursor();
+		cursor.move(position + 1);
+		if (cursor.getCount() > 0) {
+			room = new RoomRecord();
+			room.building = cursor.getString(1);
+			room.floor = cursor.getString(2);
+			room.room = cursor.getString(3);
+		}
+		cursor.close();
+		return room;
+	}
+
+	
 	// END FETCH METHODS
 	
 	synchronized void clearAll() {
@@ -468,7 +502,7 @@ public class FacilitiesDB {
 					public void onResponse(JSONArray array) {
 						for (int i = 0; i < array.length(); i++) {
 							try {
-								Log.d(TAG,array.getString(i));
+								//Log.d(TAG,array.getString(i));
 								 JSONObject obj = array.getJSONObject(i);
 								CategoryRecord record = new CategoryRecord();
 								record.id = obj.getString("id");
@@ -513,10 +547,10 @@ public class FacilitiesDB {
 			                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 						@Override
 						public void onResponse(JSONArray array) {
-							Log.d(TAG, "processing locations from server");
+							//Log.d(TAG, "processing locations from server");
 							for (int i = 0; i < array.length(); i++) {
 								try {
-									Log.d(TAG,array.getString(i));
+									//Log.d(TAG,array.getString(i));
 									JSONObject obj = array.getJSONObject(i);
 									LocationRecord record = new LocationRecord();
 									record.id = obj.getString("id");
@@ -524,7 +558,7 @@ public class FacilitiesDB {
 									record.lat_wgs84 = obj.getString("lat_wgs84");
 									record.long_wgs84 = obj.getString("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
-									Log.d("ZZZ","adding bldgnum " + record.bldgnum + " for " + record.name );
+									//Log.d("ZZZ","adding bldgnum " + record.bldgnum + " for " + record.name );
 									db.addLocation(record);
 									//Log.d(TAG,"after adding location" + record.name );
 									
@@ -562,31 +596,34 @@ public class FacilitiesDB {
 		}
 
 	
-	public static void updateRooms(Context mContext,final Handler uiHandler) {
+	public static void updateRooms(Context mContext,final Handler uiHandler, final String buildingNumber) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 			
 		MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "facilities");
 		params.put("command", "room");
+		params.put("building", buildingNumber);
 		api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
 	                new MobileWebApi.DefaultErrorListener(uiHandler),
 	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 				@Override
 				public void onResponse(JSONObject obj) {
 					// iterate through all building on json object
+					Log.d(TAG,"got room response from server");
 					Iterator b = obj.keys();
+					Log.d(TAG,"response for room = " + obj.toString());
 					while (b.hasNext()) {						
 						try {
 							String building = (String)b.next();
-							//Log.d(TAG,"adding rooms for building " + building);
+							Log.d(TAG,"adding rooms for building " + building);
 							// iterate through each floor of the building
 							JSONObject floors = (JSONObject)obj.get(building);
 							Iterator f = floors.keys();
 							while (f.hasNext()) {
 								String floor = (String)f.next();
 								// get the array of rooms for each floor
-								//Log.d(TAG,"adding rooms for building " + building + " floor " + floor);
+								Log.d(TAG,"adding rooms for building " + building + " floor " + floor);
 								JSONArray rooms = (JSONArray)floors.getJSONArray(floor);
 								for (int r = 0; r < rooms.length(); r++) {
 									String room = rooms.getString(r);
@@ -595,6 +632,7 @@ public class FacilitiesDB {
 									roomRecord.floor = floor;
 									roomRecord.room = room;
 									db.addRoom(roomRecord);
+									Log.d(TAG,"adding room " + room + " for building " + building);
 								}
 							}
 						}
@@ -602,11 +640,23 @@ public class FacilitiesDB {
 							Log.d(TAG,e.getMessage());							
 						}
 					}
+					// Set last updated field for location so rooms are not re-read for that location
+					FacilitiesDB.setLocationLastUpdated(buildingNumber);
 					MobileWebApi.sendSuccessMessage(uiHandler);
 				}
 		});
 	}
 
+	// sets the last_updated field on the specified table and row to the given value 
+	public static void setLocationLastUpdated(String locationId) {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		Date date = new Date();
+		
+		String sql = "update " + LOCATION_TABLE + " set " + LocationTable.LAST_UPDATED + " = " + date.getTime() + " where " + LocationTable.ID + " = '" + locationId + "'";
+		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
+		db.rawQuery(sql,null);
+	}
+	
 	public static Integer getBLDG_DATA_VERSION() {
 		return BLDG_DATA_VERSION;
 	}

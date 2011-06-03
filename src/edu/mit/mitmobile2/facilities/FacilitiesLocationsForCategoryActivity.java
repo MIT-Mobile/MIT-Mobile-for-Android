@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.facilities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -27,7 +28,7 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 	Context mContext;
 	ListView mListView;
 	FacilitiesDB db;
-
+	Handler uiHandler = new Handler();
 	//ArrayAdapter<String> adapter;
 	/** Called when the activity is first created. */
 	@Override
@@ -62,8 +63,18 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 //				Log.d(TAG,"position = " + position + " location_id = " + locationCategory.locationId + " category_id = " + locationCategory.categoryId);
 //				// save the selected category
 				Global.sharedData.getFacilitiesData().setLocationId(location.id);
-				//				Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-//				startActivity(intent);
+				Global.sharedData.getFacilitiesData().setBuildingNumber(location.bldgnum);
+				
+				// check to see if rooms for the selected location have already been retrieved and retrieve them if necesary
+				if (location.last_updated == null || location.last_updated.equals("")) {
+					Log.d(TAG,"retrieving rooms for " + location.bldgnum);
+					FacilitiesDB.updateRooms(mContext, uiHandler, location.bldgnum);
+				}
+				else {
+					Log.d(TAG,"rooms for " + location.bldgnum + " already retrieved");
+				}
+				Intent intent = new Intent(mContext, FacilitiesRoomLocationsActivity.class);
+				startActivity(intent);
 			}
 		});
 		
@@ -89,41 +100,5 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 		
 	}
 
-	
-//	public void onListItemClick(ListView parent, View v,int position, long id) {   
-//    	Toast.makeText(this, "You have selected " + locationTypes[position],Toast.LENGTH_SHORT).show();
-//    } 
-//    
-//	public void onClick(View v) {
-//		Log.d(TAG, "clicked " + v.getId());
-//    	Toast.makeText(this, "You have clicked " + v.getId(),Toast.LENGTH_SHORT).show();
-//    	Log.d(TAG, "autocomplete selected clicked " + v.getId());
-//	}
-//
-//	@Override
-//	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	final TextWatcher textWatcher = new TextWatcher() {
-//		public void afterTextChanged(Editable s) {
-//			Log.d(TAG, "after text changed()");
-//		}
-//
-//		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//	
-//		public void onTextChanged(CharSequence s, int start, int before, int count) {
-//			updateAdapter(s, adapter, facilitiesTextLocation);
-//	    }
-//	};
-//
-//	private void updateAdapter(CharSequence s, ArrayAdapter<String> adapter, AutoCompleteTextView aCT) {
-//		facilitiesTextLocationValues = db.getLocationSuggestionArray(s.toString());
-//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, facilitiesTextLocationValues);
-//        adapter.setNotifyOnChange(true);
-//        aCT.setAdapter(adapter);
-//	}
-	
 }
 	
