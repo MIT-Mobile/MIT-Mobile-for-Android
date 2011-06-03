@@ -41,8 +41,9 @@ public class FacilitiesLoadingActivity extends ModuleActivity {
 			} 
 			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
 				Log.d(TAG,"received success message for locations, launching next activity");
-				Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
-				startActivity(intent);	
+				//Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
+				//startActivity(intent);
+				
 			}
 			else {
 				mLoader.showError();
@@ -58,21 +59,10 @@ public class FacilitiesLoadingActivity extends ModuleActivity {
 		setContentView(R.layout.facilities_loading);
 
 		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
-		
 		mLoader.showLoading();
 		
 		new DatabaseUpdater().execute("");
 	}
-
-	
-//	private class DatabaseUpdater extends Thread {
-//		
-//		@Override
-//		public void run() {
-//			FacilitiesDB.updateCategories(mContext, mFacilitiesLoadedHandler );
-//			FacilitiesDB.updateLocations(mContext, mFacilitiesLoadedHandler );
-//		}
-//	}
 
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
 		
@@ -108,18 +98,9 @@ public class FacilitiesLoadingActivity extends ModuleActivity {
 	public void onWindowFocusChanged(boolean hasFocus) {
 		//mBackgroundView.startBackgroundAnimation();
 	}
-		
-
-	static final int MENU_SCAN_QR = MENU_MODULE_HOME + 1;
-	static final int MENU_SHOW_TOUR_MAP = MENU_MODULE_HOME + 4;
-	
+			
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) {
-		if(mFacilitiesAvailable) {
-			//menu.add(0, MENU_SHOW_TOUR_MAP, Menu.NONE, "Tour Map")
-			//	.setIcon(R.drawable.menu_maps);
-		}
-		//menu.add(0, MENU_SCAN_QR, Menu.NONE, "Scan QR Code");
 	}
 	/*****************************************************************************/
 	

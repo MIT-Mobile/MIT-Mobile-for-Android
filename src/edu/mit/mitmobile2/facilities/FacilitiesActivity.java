@@ -66,18 +66,18 @@ public class FacilitiesActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent;
 				// compare local and remote versions of the category and location tables
-				int remoteCategoryVersion = Global.getVersion("map", "category_list");
-				int localCategoryVersion = FacilitiesDB.getCATEGORY_LIST_VERSION();
+				//int remoteCategoryVersion = Global.getVersion("map", "category_list");
+				//int localCategoryVersion = FacilitiesDB.getCATEGORY_LIST_VERSION();
 				
-				int remoteLocationVersion = Global.getVersion("map", "location");
-				int localLocationVersion = FacilitiesDB.getLOCATION_VERSION();
+				//int remoteLocationVersion = Global.getVersion("map", "location");
+				//int localLocationVersion = FacilitiesDB.getLOCATION_VERSION();
 
-				if ( (remoteCategoryVersion > localCategoryVersion) || (remoteLocationVersion > localLocationVersion)) {
-					intent = new Intent(mContext, FacilitiesLoadingActivity.class);				
-				}
-				else {
+				//if ( (remoteCategoryVersion > localCategoryVersion) || (remoteLocationVersion > localLocationVersion)) {
+				//	intent = new Intent(mContext, FacilitiesLoadingActivity.class);				
+				//}
+				//else {
 					intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);					
-				}
+				//}
 				startActivity(intent);
 			}
 		});

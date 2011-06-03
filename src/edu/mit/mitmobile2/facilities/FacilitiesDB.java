@@ -534,6 +534,7 @@ public class FacilitiesDB {
 				
 			// compare local category version to remote version
 			final int remoteVersion = Global.getVersion("map", "location");
+			Log.d(TAG,"remoteVersion = " + remoteVersion + " localVersion = " + db.LOCATION_VERSION);
 			if (remoteVersion > db.LOCATION_VERSION) {
 				Log.d(TAG,"updating location list");
 				db.clearLocations();
@@ -560,7 +561,7 @@ public class FacilitiesDB {
 									record.bldgnum = obj.getString("bldgnum");
 									//Log.d("ZZZ","adding bldgnum " + record.bldgnum + " for " + record.name );
 									db.addLocation(record);
-									//Log.d(TAG,"after adding location" + record.name );
+									Log.d(TAG,"after adding location" + record.name );
 									
 									// convert categories into an array and add to location category table 
 									//Log.d(TAG,"category string for " + record.id + " = " + obj.getString("category"));

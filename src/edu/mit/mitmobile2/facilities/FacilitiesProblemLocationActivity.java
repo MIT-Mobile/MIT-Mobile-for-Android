@@ -1,9 +1,12 @@
 package edu.mit.mitmobile2.facilities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -14,6 +17,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
@@ -30,8 +35,28 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	Context mContext;
 	ListView mListView;
 	FacilitiesDB db;
+	FullScreenLoader mLoader;
 	private AutoCompleteTextView facilitiesTextLocation;
 	private Button useMyLocationButton;
+	
+	Handler mFacilitiesLoadedHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			//if(msg.arg1 == MobileWebApi.SUCCESS) {
+			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
+				Log.d(TAG,"received success message for categories");
+			} 
+			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
+				Log.d(TAG,"received success message for locations, launching next activity");
+				//Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
+				//startActivity(intent);	
+				mLoader.setVisibility(View.GONE);
+			}
+			else {
+				mLoader.showError();
+			}
+		}		
+	};
 	
 	//ArrayAdapter<String> adapter;
 	/** Called when the activity is first created. */
@@ -45,12 +70,30 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		db = FacilitiesDB.getInstance(mContext);
 
 		createViews();
+/*
+ * 		super.onCreate(savedInstance);
+		mContext = this;
+		db = FacilitiesDB.getInstance(mContext);
+		setContentView(R.layout.facilities_loading);
 
+		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
+		
+		mLoader.showLoading();
+		
+		new DatabaseUpdater().execute("");
+
+ */
+		
 	}
 
 	public void createViews() {
-        setContentView(R.layout.facilities_problem_location);
-
+		
+		setContentView(R.layout.facilities_problem_location);
+		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
+		
+		mLoader.showLoading();
+		new DatabaseUpdater().execute(""); 
+		
         // Set up location search
 
         // Set up use my location button
@@ -108,59 +151,59 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	    return false;
 	}
 
+
+	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
+		
+	    ProgressDialog dialog;
+
+		@Override
+		protected void onPreExecute() {
+			//dialog = ProgressDialog.show(StatusUpdateActivity.this, "", "Posting message. Please wait", true);
+		}
+
+		@Override
+		protected String doInBackground(String... msg) {
+			// Executed in worker thread
+			String result = "";
+			try {
+				FacilitiesDB.updateCategories(mContext, mFacilitiesLoadedHandler );
+				FacilitiesDB.updateLocations(mContext, mFacilitiesLoadedHandler );
+				result = "success";
+			} catch (Exception e) {
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// Executed in UI thread
+			//dialog.dismiss();
+			Toast.makeText(FacilitiesProblemLocationActivity.this, result, Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		//mBackgroundView.startBackgroundAnimation();
+	}
+		
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+	}
+	
+
 	@Override
 	protected Module getModule() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 	@Override
 	public boolean isModuleHomeActivity() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	
-//	public void onListItemClick(ListView parent, View v,int position, long id) {   
-//    	Toast.makeText(this, "You have selected " + locationTypes[position],Toast.LENGTH_SHORT).show();
-//    } 
-//    
-//	public void onClick(View v) {
-//		Log.d(TAG, "clicked " + v.getId());
-//    	Toast.makeText(this, "You have clicked " + v.getId(),Toast.LENGTH_SHORT).show();
-//    	Log.d(TAG, "autocomplete selected clicked " + v.getId());
-//	}
-//
-//	@Override
-//	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	final TextWatcher textWatcher = new TextWatcher() {
-//		public void afterTextChanged(Editable s) {
-//			Log.d(TAG, "after text changed()");
-//		}
-//
-//		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//	
-//		public void onTextChanged(CharSequence s, int start, int before, int count) {
-//			updateAdapter(s, adapter, facilitiesTextLocation);
-//	    }
-//	};
-//
-//	private void updateAdapter(CharSequence s, ArrayAdapter<String> adapter, AutoCompleteTextView aCT) {
-//		facilitiesTextLocationValues = db.getLocationSuggestionArray(s.toString());
-//        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, facilitiesTextLocationValues);
-//        adapter.setNotifyOnChange(true);
-//        aCT.setAdapter(adapter);
-//	}
 	
 }
 	
