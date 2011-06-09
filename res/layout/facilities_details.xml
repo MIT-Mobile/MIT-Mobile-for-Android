@@ -27,7 +27,8 @@
             android:gravity="left"
             android:singleLine="false" android:lines="5"
             android:layout_marginLeft="5dip" 
-            android:text="Required!\nPlease enter a bried description of the problem" 
+            android:hint="Required!\nPlease enter a bried description of the problem"
+            android:text="" 
             />
 	      
 	<!-- Divider -->
@@ -135,7 +136,8 @@
             android:layout_height="wrap_content" 
             android:gravity="left"
             android:layout_marginLeft="5dip" 
-            android:text="Anonymous" 
+            android:hint="Anonymous"
+            android:text="" 
             />
 	          
 </LinearLayout>
