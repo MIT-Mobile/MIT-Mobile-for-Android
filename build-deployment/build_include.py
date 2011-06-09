@@ -5,6 +5,7 @@ import sys
 import build_settings
 import time
 import platform
+import shlex
 
 VERSION_NUMBER = 6
 VERSION_NAME = "2.1"
@@ -14,25 +15,18 @@ def shell(command, silent=False):
 
    # for windows (since commands module has issues on windows)
    if platform.system() == 'Windows':
-      import subprocess as sub
-      p = sub.Popen(command,stdout=sub.PIPE,stderr=sub.PIPE)
-      output = p.communicate()
-      if not silent:
-         print command
-         print "output = " + str(output)
-      return output[0].strip()
-
+      popenArgs = command
    else:
-      statusoutput = commands.getstatusoutput(command)
-      if not silent:
-         print command
-         print statusoutput[1]
+      popenArgs = shlex.split(command)
 
-      if statusoutput[0] != 0:
-         raise Exception("Error executing shell commmand")
-
-      return statusoutput[1]
-
+   import subprocess as sub
+   p = sub.Popen(popenArgs,stdout=sub.PIPE,stderr=sub.PIPE)
+   output = p.communicate()
+   if not silent:
+      print command
+      print output[0]
+      print output[1]
+   return output[0].strip()
 
 
 # generate a source code file that contains
