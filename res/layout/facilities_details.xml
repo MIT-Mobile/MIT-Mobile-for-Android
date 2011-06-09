@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/facilitiesDetailsMainLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Details"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+	<TextView 
+			android:id="@+id/facilitiesProblemString"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:textColor="#000000"
+	        android:text="problem goes here" 
+	        android:textSize="20dp"
+	        android:visibility="visible"
+	        android:layout_marginBottom="10dip"></TextView>
+	<EditText 
+			android:id="@+id/problemDescription"
+			android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:gravity="left"
+            android:singleLine="false" android:lines="5"
+            android:layout_marginLeft="5dip" 
+            android:text="Required!\nPlease enter a bried description of the problem" 
+            />
+	      
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Add A photo -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesAddAPhotoActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Add a Photo"  />
+
+  <ImageView
+                    android:id="@+id/selectedImage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="10dp"
+                    android:paddingRight="@dimen/horizontalPadding"
+                    android:paddingLeft="@dimen/horizontalPadding"
+                    android:paddingBottom="@dimen/verticalPadding"
+                    android:gravity="center"
+  		            android:visibility="gone"
+  		            android:layout_gravity="top"
+		            android:layout_weight="1" />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/facilitiesCameraOptionsLayout"
+	   	android:background="@drawable/main_repeat"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:visibility="gone"
+			android:layout_height="wrap_content">
+	
+		<!-- Divider -->
+		<View
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/dividerHeight"
+			android:background="@color/dividerColor" />
+	
+		<!-- Take a Photo -->
+	   	<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesTakePhotoActionRow"
+	           	android:layout_width="fill_parent"
+	               android:layout_height="wrap_content"
+	               android:background="@color/rowBackground"
+	               android:text="Take a Photo"  />
+	               
+	       <!-- Divider -->
+		<View
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/dividerHeight"
+			android:background="@color/dividerColor" />
+	
+		<!-- Choose Existing Photo -->
+	   	<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesChooseExistingPhotoActionRow"
+	           	android:layout_width="fill_parent"
+	               android:layout_height="wrap_content"
+	               android:background="@color/rowBackground"
+	               android:text="Choose Existing Photo"  />
+	               
+	       <!-- Divider -->
+		<View
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/dividerHeight"
+			android:background="@color/dividerColor" />
+	               
+		<!-- Cancel -->
+	   	<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesCancelActionRow"
+	           	android:layout_width="fill_parent"
+	               android:layout_height="wrap_content"
+	               android:background="@color/rowBackground"
+	               android:text="Cancel"  />
+	               
+	       <!-- Divider -->
+		<View
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/dividerHeight"
+			android:background="@color/dividerColor" />
+	
+	</LinearLayout>
+
+
+	<!-- Send As -->
+	<TextView 
+			android:id="@+id/facilitiesSendAsLabel"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+	        android:textColor="#000000"
+	        android:text="Send as" 
+	        android:textSize="20dp"
+	        android:visibility="visible"
+	        android:layout_marginBottom="10dip"></TextView>
+
+	<EditText 
+			android:id="@+id/facilitiesSendAs"
+			android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:gravity="left"
+            android:layout_marginLeft="5dip" 
+            android:text="Anonymous" 
+            />
+	          
+</LinearLayout>
+
+

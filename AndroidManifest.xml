@@ -198,6 +198,8 @@
 		<activity android:name=".facilities.FacilitiesProblemLocationActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesLocationsForCategoryActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesRoomLocationsActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesInsideOutsideActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesDetailsActivity" android:theme="@style/PlainBackground" />
 
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />

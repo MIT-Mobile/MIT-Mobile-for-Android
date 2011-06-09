@@ -6,7 +6,16 @@ public class FacilitiesData {
 	private String locationCategory;
 	private String locationId;
 	private String buildingNumber;
+	private String buildingRoomName;
 	
+	public String getBuildingRoomName() {
+		return buildingRoomName;
+	}
+
+	public void setBuildingRoomName(String buildingRoomName) {
+		this.buildingRoomName = buildingRoomName;
+	}
+
 	public String getBuildingNumber() {
 		return buildingNumber;
 	}

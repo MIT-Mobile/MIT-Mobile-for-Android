@@ -38,16 +38,13 @@ public class FacilitiesProblemTypeActivity extends ListActivity {
 	}
 
     public void onListItemClick(ListView parent, View v,int position, long id) {   
-    	Toast.makeText(this, "You have selected " + problemTypes[position],Toast.LENGTH_SHORT).show();
     	Object o =  problemTypes[position];
-    	Log.d(TAG,o.getClass().toString());
     	selectProblemType(problemTypes[position]);
     } 
     
 	public void selectProblemType(String problem) {		
-    	Global.setProblemType(problem);
-		Log.d(TAG, "problem = " + problem);
-    	Intent i = new Intent(mContext, FacilitiesProblemLocationActivity.class);
+    	Global.sharedData.getFacilitiesData().setProblemType(problem);
+    	Intent i = new Intent(mContext, FacilitiesDetailsActivity.class);
 		startActivity(i);
 	}
 }

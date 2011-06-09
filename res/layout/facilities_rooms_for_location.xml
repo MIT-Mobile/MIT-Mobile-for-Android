@@ -6,7 +6,7 @@
     >
     
     <edu.mit.mitmobile2.TitleBar
-  		android:text="Where is it 2?"
+  		android:text="Where is it?"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
 
@@ -28,9 +28,28 @@
   		android:layout_width="fill_parent"
   		android:layout_height="@dimen/dividerHeight" />   
         
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Outside -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesOutsideLocationActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Outside"  />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
         
-    <!-- LIST OF LOCATIONS FOR SELECTED CATEGORIES -->    
-	<ListView android:id="@+id/facilitiesProblemLocationsForCategoryListView"
+        
+    <!-- LIST OF ROOMS FOR SELECTED LOCATION -->    
+	<ListView android:id="@+id/facilitiesRoomsForLocationListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#ffff"

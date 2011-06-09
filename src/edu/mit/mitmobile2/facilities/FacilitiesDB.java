@@ -284,6 +284,7 @@ public class FacilitiesDB {
 	}
 
 	public Cursor getRoomCursor() {
+		Log.d(TAG,"getRoomCursor");
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		String sql = "select " 				
 					+ ROOMS_TABLE + "." + RoomTable._ID + ", " 
@@ -297,23 +298,38 @@ public class FacilitiesDB {
 		Log.d(TAG,"room sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		Log.d(TAG,"number of rooms for building " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " = " + cursor.getCount());
+		//DEBUG ROOMS
+		cursor.moveToFirst();
+		for (int r = 0; r < cursor.getCount(); r++) {
+			Log.d(TAG,"ROOM _ID = " + cursor.getString(0));
+			Log.d(TAG,"ROOM BUILDING = " + cursor.getString(1));
+			Log.d(TAG,"ROOM FLOOR = " + cursor.getString(2));
+			Log.d(TAG,"ROOM ROOM = " + cursor.getString(3));
+			cursor.moveToNext();
+		}
+		//DEBUG
 		return cursor;
 	}
 
 	public RoomRecord getRoom(int position) {
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		RoomRecord room = null;
-		Cursor cursor = getLocationCursor();
+		Cursor cursor = getRoomCursor();
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
 			room = new RoomRecord();
-			Log.d(TAG,"string 0 = " + cursor.getString(0));
-			Log.d(TAG,"string 1 = " + cursor.getString(1));
-			Log.d(TAG,"string 2 = " + cursor.getString(2));
-			Log.d(TAG,"string 3 = " + cursor.getString(3));
-			room.building = cursor.getString(1);
-			room.floor = cursor.getString(2);
-			room.room = cursor.getString(3);
+			if (cursor != null) {
+				Log.d(TAG,"string 0 = " + cursor.getString(0));
+				Log.d(TAG,"string 1 = " + cursor.getString(1));
+				Log.d(TAG,"string 2 = " + cursor.getString(2));
+				Log.d(TAG,"string 3 = " + cursor.getString(3));
+				room.building = cursor.getString(1);
+				room.floor = cursor.getString(2);
+				room.room = cursor.getString(3);
+			}
+			else {
+				Log.d(TAG,"cursor is null for position " + position);
+			}
 		}
 		cursor.close();
 		return room;
@@ -588,7 +604,6 @@ public class FacilitiesDB {
 									record.lat_wgs84 = obj.getString("lat_wgs84");
 									record.long_wgs84 = obj.getString("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
-									Log.d("ZZZ","adding bldgnum " + record.bldgnum + " for " + record.name );
 									db.addLocation(record);
 									//Log.d(TAG,"after adding location" + record.name );
 									

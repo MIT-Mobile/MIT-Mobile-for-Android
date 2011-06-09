@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.facilities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,11 +19,13 @@ import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
-	public static final String TAG = "FacilitiesLocationsForCategoryActivity";
+	public static final String TAG = "FacilitiesRoomLocationsActivity";
 
 	Context mContext;
 	ListView mListView;
@@ -33,10 +36,9 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		@Override
 		public void handleMessage(Message msg) {
 			if(msg.arg1 == FacilitiesDB.STATUS_ROOMS_SUCCESSFUL) {
-				Log.d(TAG,"received success message for locations, launching next activity");
-				
+				Log.d(TAG,"received success message for locations, launching next activity");				
 				RoomAdapter adapter = new RoomAdapter(FacilitiesRoomLocationsActivity.this, db.getRoomCursor());
-				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
+				ListView listView = (ListView) findViewById(R.id.facilitiesRoomsForLocationListView);
 				listView.setAdapter(adapter);
 				listView.setVisibility(View.VISIBLE);
 				
@@ -44,13 +46,15 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position,
 							long id) {
-						RoomRecord room = db.getRoom(position);
-						//Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-						//startActivity(intent);          
+						Cursor cursor = (Cursor)parent.getItemAtPosition(position);
+
+						String room = cursor.getString(3);
+						Global.sharedData.getFacilitiesData().setBuildingRoomName(room);
+						Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);
+						startActivity(intent);          
 					}
 				});
-
-
+				
 				mLoader.setVisibility(View.GONE);
 			}
 			else {
@@ -58,6 +62,9 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 			}
 		}		
 	};
+	
+	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,25 +83,20 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		
 		mLoader.showLoading();
 		new DatabaseUpdater().execute(""); 
-
-		RoomAdapter adapter = new RoomAdapter(this, db.getRoomCursor());
-		Log.d(TAG,"num records in adapter = " + adapter.getCount());
-		ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationsForCategoryListView);
-		listView.setAdapter(adapter);
-		listView.setVisibility(View.VISIBLE);
-				
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		
+		// Outside
+		TwoLineActionRow outsideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesOutsideLocationActionRow);
+		outsideLocationActionRow.setOnClickListener(new View.OnClickListener() {
+			
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				RoomRecord  room = db.getRoom(position);
-				//				Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-				//				startActivity(intent);
+			public void onClick(View v) {
+				Global.sharedData.getFacilitiesData().setBuildingRoomName("outside");
+				Intent intent;
+				intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);					
+				startActivity(intent);
 			}
 		});
-		
-		
-		
+
 	}
 
 	@Override

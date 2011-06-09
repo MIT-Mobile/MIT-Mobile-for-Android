@@ -91,7 +91,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		
 		setContentView(R.layout.facilities_problem_location);
 		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
-		
 		mLoader.showLoading();
 		new DatabaseUpdater().execute(""); 
 		
@@ -149,7 +148,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		protected void onPostExecute(String result) {
 			// Executed in UI thread
 			//dialog.dismiss();
-			Toast.makeText(FacilitiesProblemLocationActivity.this, result, Toast.LENGTH_SHORT).show();
 		}
 	}
 	

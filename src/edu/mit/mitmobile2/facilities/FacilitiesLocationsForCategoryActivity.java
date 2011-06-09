@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.facilities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -59,19 +60,27 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				
-				Log.d(TAG,"selected position = " + position);
-				Log.d(TAG,"selected id = " + id);
+				Cursor cursor = (Cursor)parent.getItemAtPosition(position);
+				LocationRecord location = new LocationRecord();
+				location.id = cursor.getString(1);
+				location.name = cursor.getString(2);
+				location.lat_wgs84 = cursor.getString(3);
+				location.long_wgs84 = cursor.getString(4);
+				location.bldgnum = cursor.getString(5);
+				location.last_updated = cursor.getString(6);
 
-				Log.d(TAG,"id of view =  " + view.getId());
-				
-				LocationRecord location = db.getLocationForCategory(position);
-//				// save the selected category
 				Global.sharedData.getFacilitiesData().setLocationId(location.id);
 				Global.sharedData.getFacilitiesData().setBuildingNumber(location.bldgnum);
-				Log.d(TAG,"setting building number to " + location.bldgnum);
-				Intent intent = new Intent(mContext, FacilitiesRoomLocationsActivity.class);
-				startActivity(intent);
+
+				// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
+				if (location.bldgnum == null || location.bldgnum.equals("")) {
+					Intent intent = new Intent(mContext, FacilitiesInsideOutsideActivity.class);
+					startActivity(intent);
+				}
+				else {
+					Intent intent = new Intent(mContext, FacilitiesRoomLocationsActivity.class);
+					startActivity(intent);
+				}
 			}
 		});
 		

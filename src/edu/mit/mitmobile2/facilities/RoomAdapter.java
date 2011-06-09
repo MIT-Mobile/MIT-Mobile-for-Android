@@ -29,20 +29,22 @@ class RoomAdapter extends CursorAdapter {
 	}
 	
 	private void setupRow(Cursor cursor, View row) {
-		RoomRecord roomRecord = new RoomRecord();
-		Log.d(TAG,"String 0 = " + cursor.getString(0));
-		Log.d(TAG,"String 1 = " + cursor.getString(1));
-		Log.d(TAG,"String 2 = " + cursor.getString(2));
-		Log.d(TAG,"String 3 = " + cursor.getString(3));
-
-		roomRecord.building = cursor.getString(1);
-		roomRecord.floor = cursor.getString(2);
-		roomRecord.room = cursor.getString(3);
-
-		TextView roomTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
+		Log.d(TAG,"setupRow " + row.getId());
+		try {
+			RoomRecord roomRecord = new RoomRecord();	
+			
+			roomRecord.building = cursor.getString(1);	
+			roomRecord.floor = cursor.getString(2);
+			roomRecord.room = cursor.getString(3);
 		
-		roomTV.setText(roomRecord.room,  TextView.BufferType.SPANNABLE);		
-		int separator = roomRecord.room.length() + 1;
+			TextView roomTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
+			
+			roomTV.setText(roomRecord.room,  TextView.BufferType.SPANNABLE);		
+			int separator = roomRecord.room.length() + 1;
+		}
+		catch (Exception e) {
+			Log.d(TAG,"setupRow exception = " + e.getMessage());
+		}
 	}
 	
 	@Override
