@@ -31,6 +31,7 @@ public class FacilitiesDetailsActivity extends Activity {
 	private Context mContext;	
 	private TextView problemStringTextView;
     private static final int CAMERA_PIC_REQUEST = 1;
+    private static final int PIC_SELECTION = 2;
     private TwoLineActionRow addAPhotoActionRow;
     private TwoLineActionRow takePhotoActionRow;
     private TwoLineActionRow chooseExistingPhotoActionRow;
@@ -99,6 +100,13 @@ public class FacilitiesDetailsActivity extends Activity {
     	
     	// Use Exisitng Photo
     	chooseExistingPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesChooseExistingPhotoActionRow);
+    	chooseExistingPhotoActionRow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), PIC_SELECTION);
+			}
+    	});
+    	
     	
     	// Cancel
     	cancelActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesCancelActionRow);
@@ -113,11 +121,17 @@ public class FacilitiesDetailsActivity extends Activity {
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
-        if (requestCode == CAMERA_PIC_REQUEST) {  
-        	Bitmap thumbnail = (Bitmap) data.getExtras().get("data"); 
-            ImageView imageView = (ImageView)findViewById(R.id.selectedImage);
-            imageView.setVisibility(View.VISIBLE);
-            imageView.setImageBitmap(thumbnail); 
+        if (requestCode == CAMERA_PIC_REQUEST || requestCode == PIC_SELECTION) {  
+        	try {
+	        	Bitmap thumbnail = (Bitmap) data.getExtras().get("data"); 
+	            ImageView imageView = (ImageView)findViewById(R.id.selectedImage);
+	            imageView.setVisibility(View.VISIBLE);
+	            imageView.setImageBitmap(thumbnail); 
+	            facilitiesCameraOptionsLayout .setVisibility(View.GONE);
+        	}
+        	catch (Exception e) {
+        		Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
+        	}
         }  
     }
 
