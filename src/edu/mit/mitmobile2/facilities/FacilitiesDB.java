@@ -283,6 +283,12 @@ public class FacilitiesDB {
 		return location;
 	}
 
+	public Cursor getLocationSearchCursor(CharSequence searchTerm) {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		return db.query(LOCATION_TABLE, new String[] {LocationTable._ID, LocationTable.NAME}, LocationTable.NAME + " LIKE ?", 
+				new String[] { "%" + searchTerm + "%"}, null, null, LocationTable.BLDGNUM);
+	}
+	
 	public Cursor getRoomCursor() {
 		Log.d(TAG,"getRoomCursor");
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();

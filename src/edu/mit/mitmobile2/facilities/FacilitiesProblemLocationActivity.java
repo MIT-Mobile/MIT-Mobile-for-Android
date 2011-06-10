@@ -109,6 +109,9 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				startActivity(intent);
 			}
 		});
+		
+		facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
+		facilitiesTextLocation.setAdapter(new LocationsSearchCursorAdapter(this, db));
         		
 	}
 
