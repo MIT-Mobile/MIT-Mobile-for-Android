@@ -102,7 +102,7 @@ public class FacilitiesDetailsActivity extends Activity {
 		});
 
     	
-    	// Use Exisitng Photo
+    	// Use Existing Photo
     	chooseExistingPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesChooseExistingPhotoActionRow);
     	chooseExistingPhotoActionRow.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -137,13 +137,16 @@ public class FacilitiesDetailsActivity extends Activity {
 	            addAPhotoActionRow.setVisibility(View.VISIBLE);	            
         	}
         	catch (Exception e) {
-        		Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
+        		Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
         	}
     	}
     	if (requestCode == PIC_SELECTION) {
     		if (resultCode == Activity.RESULT_OK) {
     			Uri selectedImageUrl = data.getData();
-        		Toast.makeText(mContext, "selectedImageUrl = " + selectedImageUrl.toString(), Toast.LENGTH_SHORT);    			
+	            selectedImage.setVisibility(View.VISIBLE);
+	            selectedImage.setImageURI(selectedImageUrl); 
+	            facilitiesCameraOptionsLayout .setVisibility(View.GONE);
+	            addAPhotoActionRow.setVisibility(View.VISIBLE);	                    		
     		}
         }  
     }
