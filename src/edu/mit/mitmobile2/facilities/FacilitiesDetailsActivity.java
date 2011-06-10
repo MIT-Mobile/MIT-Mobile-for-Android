@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -51,7 +52,7 @@ public class FacilitiesDetailsActivity extends Activity {
         setContentView(R.layout.facilities_details);        
         
     	facilitiesCameraOptionsLayout = (View)findViewById(R.id.facilitiesCameraOptionsLayout);
-
+    	
     	// Set problem string
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);
         String problemString = "I'm reporting a problem with the " + Global.sharedData.getFacilitiesData().getProblemType();
@@ -85,6 +86,9 @@ public class FacilitiesDetailsActivity extends Activity {
 			}
 		});
     	
+    	// selected Image
+    	selectedImage = (ImageView)findViewById(R.id.selectedImage);
+    	
     	// Take Photo
     	takePhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesTakePhotoActionRow);
 
@@ -103,7 +107,8 @@ public class FacilitiesDetailsActivity extends Activity {
     	chooseExistingPhotoActionRow.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), PIC_SELECTION);
+				Intent choosePhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+				startActivityForResult(choosePhoto, PIC_SELECTION);
 			}
     	});
     	
@@ -114,24 +119,32 @@ public class FacilitiesDetailsActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				addAPhotoActionRow.setVisibility(View.VISIBLE);
+				addAPhotoActionRow.setVisibility(View.VISIBLE);				
+	            selectedImage.setVisibility(View.VISIBLE);
 				facilitiesCameraOptionsLayout.setVisibility(View.GONE);
 			}
 		});
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
-        if (requestCode == CAMERA_PIC_REQUEST || requestCode == PIC_SELECTION) {  
-        	try {
+		super.onActivityResult(requestCode, resultCode, data);
+    	if (requestCode == CAMERA_PIC_REQUEST) {
+    		try {
 	        	Bitmap thumbnail = (Bitmap) data.getExtras().get("data"); 
-	            ImageView imageView = (ImageView)findViewById(R.id.selectedImage);
-	            imageView.setVisibility(View.VISIBLE);
-	            imageView.setImageBitmap(thumbnail); 
+	            selectedImage.setVisibility(View.VISIBLE);
+	            selectedImage.setImageBitmap(thumbnail); 
 	            facilitiesCameraOptionsLayout .setVisibility(View.GONE);
+	            addAPhotoActionRow.setVisibility(View.VISIBLE);	            
         	}
         	catch (Exception e) {
         		Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT);
         	}
+    	}
+    	if (requestCode == PIC_SELECTION) {
+    		if (resultCode == Activity.RESULT_OK) {
+    			Uri selectedImageUrl = data.getData();
+        		Toast.makeText(mContext, "selectedImageUrl = " + selectedImageUrl.toString(), Toast.LENGTH_SHORT);    			
+    		}
         }  
     }
 

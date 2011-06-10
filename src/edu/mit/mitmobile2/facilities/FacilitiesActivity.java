@@ -64,6 +64,7 @@ public class FacilitiesActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent;
+				Log.d(TAG,"clicked report a problem");
 				intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);					
 				startActivity(intent);
 			}

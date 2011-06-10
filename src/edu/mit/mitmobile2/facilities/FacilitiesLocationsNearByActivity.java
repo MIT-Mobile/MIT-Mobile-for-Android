@@ -3,6 +3,9 @@ package edu.mit.mitmobile2.facilities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,20 +28,20 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
+import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
 
 //public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
 
-public class FacilitiesProblemLocationActivity extends ModuleActivity {
+public class FacilitiesLocationsNearByActivity extends ModuleActivity {
 
-	public static final String TAG = "FacilitiesProblemLocationActivity";
+	public static final String TAG = "FacilitiesLocationsNearByActivity";
 
 	Context mContext;
 	ListView mListView;
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
 	FullScreenLoader mLoader;
-	TwoLineActionRow useMyLocationActionRow;
-	private AutoCompleteTextView facilitiesTextLocation;
-	
+	private LocationManager locmgr = null;
+
 	Handler mFacilitiesLoadedHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -48,7 +51,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
 				Log.d(TAG,"received success message for locations, launching next activity");
 				
-				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
+				CategoryAdapter adapter = new CategoryAdapter(FacilitiesLocationsNearByActivity.this, db.getCategoryCursor());
 				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
 				listView.setAdapter(adapter);
 				listView.setVisibility(View.VISIBLE);
@@ -82,34 +85,25 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		Log.d(TAG,"onCreate()");
 		
 		mContext = this;
-		Handler uiHandler = new Handler();
-
+		Handler uiHandler = new Handler();		
 		createViews();		
 	}
 
 	public void createViews() {
 		
 		setContentView(R.layout.facilities_problem_location);
-		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
-		mLoader.showLoading();
-		new DatabaseUpdater().execute(""); 
+		//mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
+		//mLoader.showLoading();
+		//new DatabaseUpdater().execute(""); 
 		
         // Set up location search
+		LocationSupplier mLocationSupplier = null;
+		Location location = mLocationSupplier.getLocation();
+		location.getLatitude();
+		location.getLongitude();
+		Toast.makeText(mContext, "latitude = " + location.getLatitude() + " longitude = " + location.getLongitude(), Toast.LENGTH_LONG);
 
-        // Set up use my location button
-		useMyLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesUseMyLocationActionRow);
-		String title1 = "Use My Location";
-		String title2 = "";
-		useMyLocationActionRow.setTitle(title1 + " " + title2, TextView.BufferType.SPANNABLE);
-		useMyLocationActionRow.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mContext, FacilitiesLocationsNearByActivity.class);
-				startActivity(intent);
-			}
-		});
-        		
+	     		
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event){

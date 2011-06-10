@@ -200,6 +200,7 @@
 		<activity android:name=".facilities.FacilitiesRoomLocationsActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesInsideOutsideActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesDetailsActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesLocationsNearByActivity" android:theme="@style/PlainBackground" />
 
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
