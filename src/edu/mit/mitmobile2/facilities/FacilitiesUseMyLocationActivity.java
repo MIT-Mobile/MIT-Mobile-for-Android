@@ -32,7 +32,7 @@ import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
 
 //public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
 
-public class FacilitiesLocationsNearByActivity extends ModuleActivity {
+public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesLocationsNearByActivity";
 
@@ -51,7 +51,7 @@ public class FacilitiesLocationsNearByActivity extends ModuleActivity {
 			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
 				Log.d(TAG,"received success message for locations, launching next activity");
 				
-				CategoryAdapter adapter = new CategoryAdapter(FacilitiesLocationsNearByActivity.this, db.getCategoryCursor());
+				CategoryAdapter adapter = new CategoryAdapter(FacilitiesUseMyLocationActivity.this, db.getCategoryCursor());
 				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
 				listView.setAdapter(adapter);
 				listView.setVisibility(View.VISIBLE);
@@ -70,10 +70,10 @@ public class FacilitiesLocationsNearByActivity extends ModuleActivity {
 				});
 
 
-				mLoader.setVisibility(View.GONE);
+				//mLoader.setVisibility(View.GONE);
 			}
 			else {
-				mLoader.showError();
+				//mLoader.showError();
 			}
 		}		
 	};
@@ -81,6 +81,7 @@ public class FacilitiesLocationsNearByActivity extends ModuleActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+	
 		super.onCreate(savedInstanceState);
 		Log.d(TAG,"onCreate()");
 		
@@ -91,59 +92,55 @@ public class FacilitiesLocationsNearByActivity extends ModuleActivity {
 
 	public void createViews() {
 		
-		setContentView(R.layout.facilities_problem_location);
+		setContentView(R.layout.facilities_use_my_location);
+
 		//mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
 		//mLoader.showLoading();
 		//new DatabaseUpdater().execute(""); 
 		
         // Set up location search
-		LocationSupplier mLocationSupplier = null;
-		Location location = mLocationSupplier.getLocation();
-		location.getLatitude();
-		location.getLongitude();
-		Toast.makeText(mContext, "latitude = " + location.getLatitude() + " longitude = " + location.getLongitude(), Toast.LENGTH_LONG);
+		Toast.makeText(mContext, "locationsNearMe", Toast.LENGTH_LONG).show();
 
-	     		
-	}
+		LocationManager mlocManager = (LocationManager)getSystemService(mContext.LOCATION_SERVICE);
+		LocationListener mlocListener = new MyLocationListener();
 
-	public boolean onKeyDown(int keyCode, KeyEvent event){
-	    if(keyCode == KeyEvent.KEYCODE_BACK) {
-	            Intent intent = new Intent(mContext, FacilitiesActivity.class);              
-	            startActivity(intent);          
-	            finish();
-	            return true;
-	    }
-	    return false;
-	}
+		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
-
-	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
-		
-	    ProgressDialog dialog;
-
-		@Override
-		protected void onPreExecute() {
 		}
 
-		@Override
-		protected String doInBackground(String... msg) {
-			// Executed in worker thread
-			String result = "";
-			try {
-				FacilitiesDB.updateCategories(mContext, mFacilitiesLoadedHandler );
-				FacilitiesDB.updateLocations(mContext, mFacilitiesLoadedHandler );
-				result = "success";
-			} catch (Exception e) {
+		/* Class My Location Listener */
+
+		public class MyLocationListener implements LocationListener {
+
+
+			public void onLocationChanged(Location loc){
+				loc.getLatitude();
+				loc.getLongitude();
+
+				String Text = "My current location is: " + "Latitud = " + loc.getLatitude() + "Longitud = " + loc.getLongitude();
+				Toast.makeText( getApplicationContext(),Text,Toast.LENGTH_SHORT).show();
 			}
-			return result;
+
+			@Override
+			public void onProviderDisabled(String arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+	
+			@Override
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+	
+			@Override
+			public void onStatusChanged(String provider, int status, Bundle extras) {
+				// TODO Auto-generated method stub
+				
+			}
+	     		
 		}
 
-		@Override
-		protected void onPostExecute(String result) {
-			// Executed in UI thread
-			//dialog.dismiss();
-		}
-	}
 	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {

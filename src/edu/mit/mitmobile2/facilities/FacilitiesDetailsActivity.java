@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -21,12 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class FacilitiesDetailsActivity extends Activity {
+public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
 	private Context mContext;	
@@ -150,6 +153,24 @@ public class FacilitiesDetailsActivity extends Activity {
     		}
         }  
     }
+
+	@Override
+	protected Module getModule() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
 
 		
 }

@@ -7,17 +7,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class FacilitiesInsideOutsideActivity extends Activity {
+public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 
 	// this is a test 
 	private Button reportButton;
@@ -76,6 +79,24 @@ public class FacilitiesInsideOutsideActivity extends Activity {
 			}
 		});
 
+	}
+
+	@Override
+	protected Module getModule() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -24,6 +24,7 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.ProblemTypeRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 import org.json.JSONObject;
 
@@ -34,6 +35,7 @@ public class FacilitiesDB {
 	private static final String DATABASE_NAME = "facilities.db";
 
 	// Data  Version Info
+	private static Integer PROBLEM_TYPE_VERSION = 1;
 	private static Integer BLDG_DATA_VERSION = 1;
 	private static Integer CATEGORY_LIST_VERSION = 1;
 	private static Integer LOCATION_VERSION = 1;
@@ -42,15 +44,14 @@ public class FacilitiesDB {
 	public final static Integer STATUS_CATEGORIES_SUCCESSFUL = 900;
 	public final static Integer STATUS_LOCATIONS_SUCCESSFUL = 901;
 	public final static Integer STATUS_ROOMS_SUCCESSFUL = 902;
+	public final static Integer STATUS_PROBLEM_TYPES_SUCCESSFUL = 903;
 	
 	private static final String CATEGORY_TABLE = "categories";
 	private static final String LOCATION_TABLE = "locations";
 	private static final String LOCATION_CATEGORY_TABLE = "location_categories";
 	private static final String LOCATION_CONTENT_TABLE = "location_contents";
 	private static final String ROOMS_TABLE = "rooms";
-	
-	private static final String LOCATION_SUGGESTION_TABLE = "location_suggestion";
-	
+	private static final String PROBLEM_TYPE_TABLE = "problem_types";
 	private static final String SHORT_LIST_LIMIT = "3";
 	
 	// BEGIN TABLE DEFINITIONS
@@ -91,6 +92,11 @@ public class FacilitiesDB {
 		static final String ROOM = "room";
 	}
 
+	// PROBLEM TYPES
+	static final class ProblemTypeTable implements BaseColumns {
+		static final String PROBLEM_TYPE = "problem_type";
+	}
+
 	// END TABLE DEFINITIONS
 	
 	static SQLiteOpenHelper mDBHelper;
@@ -117,6 +123,14 @@ public class FacilitiesDB {
 		values.put(CategoryTable.ID, categoryRecord.id);
 		values.put(CategoryTable.NAME, categoryRecord.name);
 		db.insert(CATEGORY_TABLE, CategoryTable.ID + "," + CategoryTable.NAME,values);
+	}
+
+	// ADDPROBLEMTYPE
+	synchronized public void addProblemType(ProblemTypeRecord problemTypeRecord) {
+		SQLiteDatabase db = mDBHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(ProblemTypeTable.PROBLEM_TYPE, problemTypeRecord.problem_type);
+		db.insert(PROBLEM_TYPE_TABLE, ProblemTypeTable.PROBLEM_TYPE,values);
 	}
 
 	// ADDLOCATION
@@ -264,13 +278,6 @@ public class FacilitiesDB {
 		Cursor cursor = getLocationCategoryCursor();
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
-//			Log.d(TAG,"string 0 = " + cursor.getString(0));
-//			Log.d(TAG,"string 1 = " + cursor.getString(1));
-//			Log.d(TAG,"string 2 = " + cursor.getString(2));
-//			Log.d(TAG,"string 3 = " + cursor.getString(3));
-//			Log.d(TAG,"string 4 = " + cursor.getString(4));
-//			Log.d(TAG,"string 5 = " + cursor.getString(5));
-//			Log.d(TAG,"string 6 = " + cursor.getString(6));
 			location = new LocationRecord();
 			location.id = cursor.getString(1);
 			location.name = cursor.getString(2);
@@ -327,12 +334,19 @@ public class FacilitiesDB {
 				room.floor = cursor.getString(2);
 				room.room = cursor.getString(3);
 			}
-			else {
-				Log.d(TAG,"cursor is null for position " + position);
-			}
 		}
 		cursor.close();
 		return room;
+	}
+
+	public Cursor getProblemTypeCursor() {
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		Cursor cursor = db.query(PROBLEM_TYPE_TABLE, new String[] {
+				ProblemTypeTable._ID,
+				ProblemTypeTable.PROBLEM_TYPE
+		}, null, null, null, null, null);
+		Log.d(TAG,"num problem types = " + cursor.getCount());
+		return cursor;
 	}
 
 	
@@ -380,6 +394,16 @@ public class FacilitiesDB {
 		}		
 	}
 
+	synchronized void clearProblemTypes() {
+		SQLiteDatabase db = mDBHelper.getWritableDatabase();
+		try {
+			db.delete(PROBLEM_TYPE_TABLE, null, null);
+		}
+		catch (Exception e) {
+			Log.d(TAG,e.getMessage());
+		}		
+	}
+
 	synchronized void clearLocations() {
 		SQLiteDatabase db = mDBHelper.getWritableDatabase();
 
@@ -420,6 +444,7 @@ public class FacilitiesDB {
 			createLocationTable(db);
 			createLocationCategoryTable(db);
 			createRoomTable(db);
+			createProblemTypeTable(db);
 		}
 
 		@Override
@@ -506,6 +531,23 @@ public class FacilitiesDB {
 		}				
 	}
 
+	private static void createProblemTypeTable(SQLiteDatabase db) {
+		
+		String roomTableSql = 
+			"CREATE TABLE \n" + PROBLEM_TYPE_TABLE + "\n ("
+			+ ProblemTypeTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, \n"
+			+ ProblemTypeTable.PROBLEM_TYPE + " TEXT \n "
+			+ ");";
+
+		Log.d(TAG,"create category table sql = " + roomTableSql);
+		try {
+			db.execSQL(roomTableSql);
+		}
+		catch (SQLException e) {
+			Log.d(TAG,e.getMessage());
+		}				
+	}
+
 	public static void updateFacilitiesDatabase(Context mContext,final Handler uiHandler) {
 		// ultimately this method will check the version of the facilities DB from mobile web and update the android db if the server viewer is newer
 		// for testing purposes, it currently uses data from the strings xml
@@ -518,8 +560,7 @@ public class FacilitiesDB {
 		try {
 			updateCategories(mContext,uiHandler);
 			updateLocations(mContext,uiHandler);
-			// inserting all the rooms at once takes too long and causes android to crash, add them on a per building basis when a building is selected
-			//updateRooms(mContext,uiHandler);
+			updateProblemTypes(mContext,uiHandler);
 		}
 		catch (Exception e) {
 			Log.d(TAG,"error updating the database: " + e.getMessage());
@@ -641,6 +682,48 @@ public class FacilitiesDB {
 		}
 
 	
+	public static void updateProblemTypes(Context mContext,final Handler uiHandler) {
+		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
+		Message msg = new Message();
+		
+		// compare local category version to remote version
+		final int remoteVersion = Global.getVersion("facilities", "problem_type");
+		if (remoteVersion > db.PROBLEM_TYPE_VERSION) {
+			Log.d(TAG,"updating problem type list");
+			db.clearProblemTypes();
+			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("module", "facilities");
+			params.put("command", "problemtype");
+			api.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+		                new MobileWebApi.DefaultErrorListener(uiHandler),
+		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
+					@Override
+					public void onResponse(JSONArray array) {
+						for (int i = 0; i < array.length(); i++) {
+							try {
+								ProblemTypeRecord record = new ProblemTypeRecord();
+								record.problem_type = array.getString(i);
+								db.addProblemType(record);
+								Log.d(TAG,"adding problem type " + record.problem_type);
+							}
+							catch (Exception e) {
+								Log.d(TAG,e.getMessage());							
+							}
+						}
+					}
+			});			
+			// update local version
+			//FacilitiesDB.setP.setCATEGORY_LIST_VERSION(remoteVersion);
+			msg.arg1 = FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL;
+		}
+		else {
+			Log.d(TAG,"category list is up to date");
+			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
+		}
+		uiHandler.sendMessage(msg);
+	}
+
 	public static void updateRooms(Context mContext,final Handler uiHandler, final String buildingNumber) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 		Message msg = new Message();
@@ -755,4 +838,12 @@ public class FacilitiesDB {
 		ROOM_VERSION = rOOM_VERSION;
 	}
 
+	public static Integer getPROBLEM_TYPE_VERSION() {
+		return PROBLEM_TYPE_VERSION;
+	}
+
+	public static void setPROBLEM_TYPE_VERSION(Integer pROBLEM_TYPE_VERSION) {
+		PROBLEM_TYPE_VERSION = pROBLEM_TYPE_VERSION;
+	}
+		
 }

@@ -10,6 +10,10 @@ public class FacilitiesItem {
 		public String name;
 	}
 
+	public static class ProblemTypeRecord {
+		public String problem_type;
+	}
+
 	public static class LocationRecord {
 		public String id;
 		public String name;
