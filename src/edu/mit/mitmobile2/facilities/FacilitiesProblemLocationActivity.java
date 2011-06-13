@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -104,7 +105,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 			}
 		});
 		
-		facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
+		AutoCompleteTextView facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
 		facilitiesTextLocation.setAdapter(new LocationsSearchCursorAdapter(this, db));
 		facilitiesTextLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
