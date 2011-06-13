@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.facilities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -112,6 +113,21 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		
 		facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
 		facilitiesTextLocation.setAdapter(new LocationsSearchCursorAdapter(this, db));
+		facilitiesTextLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> listView, View row, int position,
+					long id) {
+				
+				// have no idea what this method should actually do
+				// this is completey a placeholder
+				Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+				int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
+				String name = cursor.getString(titleIndex);
+				Log.d(TAG, "Location Selected: " + name);
+				
+			}
+		});
         		
 	}
 
