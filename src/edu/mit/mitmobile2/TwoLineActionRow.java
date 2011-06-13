@@ -50,16 +50,16 @@ public class TwoLineActionRow extends ActionRow {
 		mActionIconView = (ImageView) findViewById(R.id.simpleRowActionIcon);	
 	}
 	
-	public void setTitle(String title, int color) {
+	public void setTitle(CharSequence title, int color) {
 		setTitle(title, TextView.BufferType.NORMAL);
 		mTitleView.setTextColor(color);
 	}
 	
-	public void setTitle(String title) {
+	public void setTitle(CharSequence title) {
 		setTitle(title, TextView.BufferType.NORMAL);
 	}
 	
-	public void setTitle(String title, TextView.BufferType bufferType) {
+	public void setTitle(CharSequence title, TextView.BufferType bufferType) {
 		if(title != null) {
 			mTitleView.setText(title, bufferType);
 			mTitleView.setVisibility(VISIBLE);
