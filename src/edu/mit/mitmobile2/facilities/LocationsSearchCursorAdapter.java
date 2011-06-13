@@ -4,14 +4,17 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.FilterQueryProvider;
+import android.widget.TextView;
 
 public class LocationsSearchCursorAdapter extends CursorAdapter implements FilterQueryProvider {
 	
-	CharSequence mLastConstraint = null;
 	FacilitiesDB mFacilitiesDB;
 	
 	public LocationsSearchCursorAdapter(Context context, FacilitiesDB facilitiesDB) {
@@ -23,13 +26,27 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		Cursor c = mFacilitiesDB.getLocationSearchCursor(constraint);
-		return new FilteredCursor(c, constraint);
+		return new FilteredCursor(c, constraint.toString());
 	}
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		TwoLineActionRow actionRow = (TwoLineActionRow) view;
-		actionRow.setTitle(convertToString(cursor));	
+		String result = convertToString(cursor);
+		Spannable title = Spannable.Factory.getInstance().newSpannable(result);		
+		
+		// find substrings matching constraint
+		int currentIndex = 0;
+		FilteredCursor filteredCursor = (FilteredCursor) cursor;
+		String constraint = filteredCursor.getConstraint().toLowerCase();
+		String resultLower = result.toLowerCase();
+		while(resultLower.indexOf(constraint, currentIndex) >= 0) {
+			int foundIndex = resultLower.indexOf(constraint, currentIndex);
+			title.setSpan(new ForegroundColorSpan(Color.RED), foundIndex, foundIndex + constraint.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+			currentIndex = foundIndex + constraint.length();
+		}
+		
+		actionRow.setTitle(title, TextView.BufferType.SPANNABLE);	
 	}
 
 	@Override
@@ -38,21 +55,21 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 	}
 
 	@Override
-	public CharSequence convertToString(Cursor cursor) {
+	public String convertToString(Cursor cursor) {
 		int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
 		return cursor.getString(titleIndex);
 	}
 	
 	private static class FilteredCursor extends CursorWrapper {
 
-		CharSequence mConstraint;
+		String mConstraint;
 		
-		public FilteredCursor(Cursor cursor, CharSequence constraint) {
+		public FilteredCursor(Cursor cursor, String constraint) {
 			super(cursor);
 			mConstraint = constraint;
 		}
 		
-		public CharSequence getConstraint() {
+		public String getConstraint() {
 			return mConstraint;
 		}
 	}
