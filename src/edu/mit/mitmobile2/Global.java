@@ -132,7 +132,7 @@ public class Global extends Application {
 	}
 
 	
-	public static HashMap getVersionMap(Context mContext,final Handler uiHandler) {
+	public static HashMap getVersionMap(final Context mContext,final Handler uiHandler) {
 		// uses the version api to get a json string of all databases and their version numbers and returns them as a hash map
 		// this hashmap can be used to determine if the local copy of the database is out of date and needs to be updated
     	Log.d(TAG,"getVersionMap()");
@@ -153,9 +153,11 @@ public class Global extends Application {
 			@Override
 			public void onResponse(JSONObject obj) {
 				String versionKey;
+
 				try {
 					Iterator m = obj.keys();
 					while (m.hasNext()) {
+
 						String module = (String)m.next();
 						if (!serverVersionMap.containsKey(module)) {
 							serverVersionMap.put(module, new HashMap());

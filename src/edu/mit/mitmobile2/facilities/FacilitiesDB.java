@@ -380,7 +380,7 @@ public class FacilitiesDB {
 				      + " '' as " + LocationTable.BLDGNUM + ", "
 				      + " '' as sort_value, "
 				      + " '" + searchTerm + "' as name, " 
-				      + " 'use " + searchTerm + "' as display_name "
+				      + " ? as display_name "
 		              + " UNION " 
 		              + " SELECT DISTINCT "
 			          + LOCATION_TABLE + "." + LocationTable._ID + ", "
@@ -401,7 +401,7 @@ public class FacilitiesDB {
 					  + " ORDER BY sort_value ";
 
 		Log.d(TAG,"location search sql = " + sql);
-		Cursor cursor = db.rawQuery(sql, null);
+		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'"});
 		Log.d(TAG,"num results = " + cursor.getCount());
 		return cursor;
 	}

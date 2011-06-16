@@ -25,7 +25,9 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.facilities.FacilitiesDB.LocationTable;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
 
 //public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
 
@@ -124,10 +126,31 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				// have no idea what this method should actually do
 				// this is completey a placeholder
 				Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-				int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
-				String name = cursor.getString(titleIndex);
-				Toast.makeText(mContext, "you selected " + name, Toast.LENGTH_LONG).show();
-				Log.d(TAG, "Location Selected: " + name);
+				LocationSearchRecord locationSearchRecord = new LocationSearchRecord(cursor);
+				/* 
+				 * if the user selected a use what I typed option, use this as the actual location
+				 * and jump to the problem type selection screen
+				 * Else, go to the room selection screen if building number is defined, else inside/outside screen
+				 */
+				Global.sharedData.getFacilitiesData().setLocationId(locationSearchRecord.id);
+				Global.sharedData.getFacilitiesData().setBuildingNumber(locationSearchRecord.bldgnum);
+				Log.d(TAG,"locastion search _id = " + locationSearchRecord._id);
+				if (Integer.parseInt(locationSearchRecord._id) == -1) {
+					Global.sharedData.getFacilitiesData().setBuildingRoomName(locationSearchRecord.name);
+					Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);
+					startActivity(intent);					
+				}				
+				// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
+				else if (locationSearchRecord.bldgnum == null || locationSearchRecord.bldgnum.equals("")) {
+					Intent intent = new Intent(mContext, FacilitiesInsideOutsideActivity.class);
+					startActivity(intent);
+				}
+				else {
+					Intent intent = new Intent(mContext, FacilitiesRoomLocationsActivity.class);
+					startActivity(intent);
+				}
+				//String name = cursor.getString(titleIndex);
+				//Toast.makeText(mContext, "you selected " + locationSearchRecord.name, Toast.LENGTH_LONG).show();
 			}
 		});
         		
