@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.facilities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,8 +14,11 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
@@ -23,14 +27,18 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 
+//public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
+
 public class FacilitiesProblemLocationActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemLocationActivity";
 
 	Context mContext;
+	ListView mListView;
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
 	FullScreenLoader mLoader;
-	TwoLineActionRow useMyLocationActionRow;
+	private AutoCompleteTextView facilitiesTextLocation;
+	private Button useMyLocationButton;
 	
 	Handler mFacilitiesLoadedHandler = new Handler() {
 		@Override
@@ -39,12 +47,10 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				Log.d(TAG,"received success message for categories");
 			} 
 			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
-				Log.d(TAG,"received success message for categories");
-			} 
-
+				Log.d(TAG,"received success message for locations");
+			}	
 			else if(msg.arg1 == FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL) {
 				Log.d(TAG,"received success message for problem types, launching next activity");
-				
 				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
 				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
 				listView.setAdapter(adapter);
@@ -76,8 +82,11 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG,"onCreate()");		
+		Log.d(TAG,"onCreate()");
+		
 		mContext = this;
+		Handler uiHandler = new Handler();
+
 		createViews();		
 	}
 
@@ -91,7 +100,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
         // Set up location search
 
         // Set up use my location button
-		useMyLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesUseMyLocationActionRow);
+		TwoLineActionRow useMyLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesUseMyLocationActionRow);
 		String title1 = "Use My Location";
 		String title2 = "";
 		useMyLocationActionRow.setTitle(title1 + " " + title2, TextView.BufferType.SPANNABLE);
@@ -99,7 +108,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, FacilitiesUseMyLocationActivity.class);
+				Intent intent = new Intent(mContext, FacilitiesProblemLocationActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -117,8 +126,8 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				Cursor cursor = (Cursor) listView.getItemAtPosition(position);
 				int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
 				String name = cursor.getString(titleIndex);
+				Toast.makeText(mContext, "you selected " + name, Toast.LENGTH_LONG).show();
 				Log.d(TAG, "Location Selected: " + name);
-				
 			}
 		});
         		
@@ -137,6 +146,8 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
 		
+	    ProgressDialog dialog;
+
 		@Override
 		protected void onPreExecute() {
 		}
@@ -148,7 +159,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 			try {
 				FacilitiesDB.updateCategories(mContext, mFacilitiesLoadedHandler );
 				FacilitiesDB.updateLocations(mContext, mFacilitiesLoadedHandler );
-				FacilitiesDB.updateProblemTypes(mContext, mFacilitiesLoadedHandler );
+				FacilitiesDB.updateProblemTypes(mContext,mFacilitiesLoadedHandler);
 				result = "success";
 			} catch (Exception e) {
 			}

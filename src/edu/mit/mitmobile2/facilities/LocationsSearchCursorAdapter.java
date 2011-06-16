@@ -7,6 +7,7 @@ import android.database.CursorWrapper;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 public class LocationsSearchCursorAdapter extends CursorAdapter implements FilterQueryProvider {
 	
 	FacilitiesDB mFacilitiesDB;
+	private static final String TAG = "LocationsSearchCursorAdapter";
 	
 	public LocationsSearchCursorAdapter(Context context, FacilitiesDB facilitiesDB) {
 		super(context, facilitiesDB.getLocationCursor());
@@ -25,7 +27,8 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
-		Cursor c = mFacilitiesDB.getLocationSearchCursor(constraint);
+		Log.d(TAG,"constraint = " + constraint);
+		Cursor c = mFacilitiesDB.getLocationSearchCursor2(constraint);
 		return new FilteredCursor(c, constraint.toString());
 	}
 
@@ -56,8 +59,8 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 
 	@Override
 	public String convertToString(Cursor cursor) {
-		int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
-		return cursor.getString(titleIndex);
+		//int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
+		return cursor.getString(5); // display_name index
 	}
 	
 	private static class FilteredCursor extends CursorWrapper {
