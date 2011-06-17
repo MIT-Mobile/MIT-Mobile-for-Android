@@ -103,9 +103,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 			
 			@Override
 			public void onClick(View v) {
-			    String fileName = "temp.jpg";  
-			    ContentValues values = new ContentValues();  
-			    values.put(MediaStore.Images.Media.TITLE, fileName);  
+			    ContentValues values = new ContentValues();   
 			    mCapturedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);  
 			        
             	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // Normally you would populate this with your custom intent.
