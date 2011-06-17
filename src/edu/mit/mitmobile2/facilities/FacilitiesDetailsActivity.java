@@ -2,6 +2,8 @@ package edu.mit.mitmobile2.facilities;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -42,6 +44,8 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
     private TwoLineActionRow cancelActionRow;    
 	private View facilitiesCameraOptionsLayout;
 	private ImageView selectedImage;
+	private Uri mCapturedImageUri;
+	private Uri mSelectedImageUri;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -99,7 +103,13 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 			
 			@Override
 			public void onClick(View v) {
+			    String fileName = "temp.jpg";  
+			    ContentValues values = new ContentValues();  
+			    values.put(MediaStore.Images.Media.TITLE, fileName);  
+			    mCapturedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);  
+			        
             	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // Normally you would populate this with your custom intent.
+            	cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageUri);
             	startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);  
 			}
 		});
@@ -131,27 +141,20 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		super.onActivityResult(requestCode, resultCode, data);
-    	if (requestCode == CAMERA_PIC_REQUEST) {
-    		try {
-	        	Bitmap thumbnail = (Bitmap) data.getExtras().get("data"); 
-	            selectedImage.setVisibility(View.VISIBLE);
-	            selectedImage.setImageBitmap(thumbnail); 
-	            facilitiesCameraOptionsLayout .setVisibility(View.GONE);
-	            addAPhotoActionRow.setVisibility(View.VISIBLE);	            
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == CAMERA_PIC_REQUEST) {
+    			mSelectedImageUri = mCapturedImageUri;          
+        	} else if(requestCode == PIC_SELECTION) {
+        		mSelectedImageUri = data.getData();
         	}
-        	catch (Exception e) {
-        		Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
-        	}
-    	}
-    	if (requestCode == PIC_SELECTION) {
-    		if (resultCode == Activity.RESULT_OK) {
-    			Uri selectedImageUrl = data.getData();
-	            selectedImage.setVisibility(View.VISIBLE);
-	            selectedImage.setImageURI(selectedImageUrl); 
-	            facilitiesCameraOptionsLayout .setVisibility(View.GONE);
-	            addAPhotoActionRow.setVisibility(View.VISIBLE);	                    		
-    		}
-        }  
+			
+	        selectedImage.setVisibility(View.VISIBLE);
+	        long imageId = ContentUris.parseId(mSelectedImageUri);
+	        Bitmap thumbnail = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), imageId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+	        selectedImage.setImageBitmap(thumbnail);
+	        facilitiesCameraOptionsLayout.setVisibility(View.GONE);
+	        addAPhotoActionRow.setVisibility(View.VISIBLE);	 
+    	} 
     }
 
 	@Override
