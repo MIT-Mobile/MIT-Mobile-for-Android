@@ -811,6 +811,7 @@ public class FacilitiesDB {
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
 					public void onResponse(JSONArray array) {
+						db.startTransaction();
 						for (int i = 0; i < array.length(); i++) {
 							try {
 								//Log.d(TAG,array.getString(i));
@@ -824,7 +825,7 @@ public class FacilitiesDB {
 								Log.d(TAG,e.getMessage());							
 							}
 						}
-						//MobileWebApi.sendSuccessMessage(uiHandler);
+						db.endTransaction();
 					}
 			});			
 			// update local version
@@ -845,11 +846,10 @@ public class FacilitiesDB {
 				
 			// compare local category version to remote version
 			final int remoteVersion = Global.getVersion("map", "location");
-			Log.d(TAG,"remoteVersion = " + remoteVersion + " localVersion = " + db.LOCATION_VERSION);
+			Log.d(TAG,"remoteVersion = " + remoteVersion + " localVersion = " + FacilitiesDB.LOCATION_VERSION);
 			if (remoteVersion > db.LOCATION_VERSION) {
 				Log.d(TAG,"updating location list");
 				db.clearLocations();
-
 				MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
 				HashMap<String, String> params = new HashMap<String, String>();
 				params.put("module", "facilities");
@@ -859,6 +859,7 @@ public class FacilitiesDB {
 			                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 						@Override
 						public void onResponse(JSONArray array) {
+							db.startTransaction();
 							for (int i = 0; i < array.length(); i++) {
 								try {
 									JSONObject obj = array.getJSONObject(i);
@@ -934,6 +935,7 @@ public class FacilitiesDB {
 									Log.d(TAG,e.getMessage());							
 								}
 							}
+							db.endTransaction();
 							Log.d(TAG,"locations inserted into database");
 							FacilitiesDB.setLOCATION_VERSION(remoteVersion);
 							Message msg = new Message();
@@ -952,15 +954,11 @@ public class FacilitiesDB {
 			//MobileWebApi.sendSuccessMessage(uiHandler);
 		}
 
-	
 	public static void updateProblemTypes(Context mContext,final Handler uiHandler) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 		Message msg = new Message();
 		Log.d(TAG,"updating problem types");
-		
-		// compare local category version to remote version
-		final int remoteVersion = Global.getVersion("facilities", "problem_type");
-		Log.d(TAG,"remote version = " + remoteVersion);		
+		int remoteVersion = Global.getVersion("facilities", "problem_type");
 		if (remoteVersion > FacilitiesDB.PROBLEM_TYPE_VERSION) {
 			Log.d(TAG,"updating problem type list");
 			db.clearProblemTypes();
@@ -974,7 +972,7 @@ public class FacilitiesDB {
 					@Override
 					public void onResponse(JSONArray array) {
 						Log.d(TAG,"got problemtype response");
-						Log.d(TAG,"aray length = " + array.length());
+						db.startTransaction();
 						for (int i = 0; i < array.length(); i++) {
 							try {
 								ProblemTypeRecord record = new ProblemTypeRecord();
@@ -986,10 +984,11 @@ public class FacilitiesDB {
 								Log.d(TAG,e.getMessage());							
 							}
 						}
+						db.endTransaction();
 					}
 			});			
 			// update local version
-			//FacilitiesDB.setP.setCATEGORY_LIST_VERSION(remoteVersion);
+			FacilitiesDB.setPROBLEM_TYPE_VERSION(remoteVersion);
 			msg.arg1 = FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL;
 		}
 		else {
@@ -1000,8 +999,8 @@ public class FacilitiesDB {
 	}
 
 	public static void updateRooms(Context mContext,final Handler uiHandler, final String buildingNumber) {
-		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 		Message msg = new Message();
+		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 	
 		MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -1013,6 +1012,7 @@ public class FacilitiesDB {
 	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 				@Override
 				public void onResponse(JSONObject obj) {
+					db.startTransaction();
 					// iterate through all building on json object
 					Log.d(TAG,"got room response from server");
 					Iterator b = obj.keys();
@@ -1046,6 +1046,7 @@ public class FacilitiesDB {
 					}
 					// Set last updated field for location so rooms are not re-read for that location
 					FacilitiesDB.setLocationLastUpdated(buildingNumber);
+					db.endTransaction();
 					Message msg = new Message();
 					msg.arg1 = FacilitiesDB.STATUS_ROOMS_SUCCESSFUL;
 					Log.d(TAG, "sending room success message to uiHandler");

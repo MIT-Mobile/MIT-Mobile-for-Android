@@ -45,14 +45,26 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	Handler mFacilitiesLoadedHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
+			Log.d(TAG,"message = " + msg.arg1);
+//			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
+//				Log.d(TAG,"received success message for categories");
+//			} 
+//			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
+//				Log.d(TAG,"received success message for locations");
+//			}	
+//			else if(msg.arg1 == FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL) {
+//
+//				Log.d(TAG,"received success message for problem types, launching next activity");
+
 			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
 				Log.d(TAG,"received success message for categories");
-			} 
+			}
 			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
 				Log.d(TAG,"received success message for locations");
-			}	
+			}
+			
 			else if(msg.arg1 == FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL) {
-				Log.d(TAG,"received success message for problem types, launching next activity");
+				Log.d(TAG,"received success message for problem types");
 				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
 				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
 				listView.setAdapter(adapter);
@@ -116,6 +128,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		});
 		
 		facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
+		facilitiesTextLocation.setThreshold(1);
 		facilitiesTextLocation.setAdapter(new LocationsSearchCursorAdapter(this, db));
 		facilitiesTextLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -155,17 +168,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		});
         		
 	}
-
-	public boolean onKeyDown(int keyCode, KeyEvent event){
-	    if(keyCode == KeyEvent.KEYCODE_BACK) {
-	            Intent intent = new Intent(mContext, FacilitiesActivity.class);              
-	            startActivity(intent);          
-	            finish();
-	            return true;
-	    }
-	    return false;
-	}
-
 
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
 		

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -60,6 +62,8 @@ public class Global extends Application {
 	private Resources res;
 
 	// Shared Data
+	public static SharedPreferences prefs;
+
 	public static final SharedData sharedData = new SharedData();
 	
 	// Facilities 
@@ -72,7 +76,7 @@ public class Global extends Application {
 		mContext = this; 
 		// load Mobile Web Domain preferences
 		try {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			Global.setMobileWebDomain(prefs.getString(Global.MIT_MOBILE_SERVER_KEY, null));
 		}
 		catch (RuntimeException e) {
@@ -89,7 +93,7 @@ public class Global extends Application {
 
 		Global.getVersionMap(mContext, uiHandler);
 
-		Global.updateData(mContext, uiHandler);
+		//Global.updateData(mContext, uiHandler);
 	}
 
 	// Maps related:
@@ -132,7 +136,7 @@ public class Global extends Application {
 	}
 
 	
-	public static HashMap getVersionMap(final Context mContext,final Handler uiHandler) {
+	public static void getVersionMap(final Context mContext,final Handler uiHandler) {
 		// uses the version api to get a json string of all databases and their version numbers and returns them as a hash map
 		// this hashmap can be used to determine if the local copy of the database is out of date and needs to be updated
     	Log.d(TAG,"getVersionMap()");
@@ -144,31 +148,35 @@ public class Global extends Application {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "version");
 		params.put("command", "list");
-    	Log.d(TAG,"before request json");
-		final HashMap serverVersionMap = new HashMap();
-
+		Date date = new Date();
+		params.put("key", date.getTime() + "");
+		Log.d(TAG,"before request json");
+		
 		api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override
 			public void onResponse(JSONObject obj) {
-				String versionKey;
-
+				String module;
+				String key;
+				String versionKey; // contenation of the module and key strings, e.g. facilities_room
+				String version;
+			    
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+				SharedPreferences.Editor prefsEditor = prefs.edit();
 				try {
 					Iterator m = obj.keys();
 					while (m.hasNext()) {
 
-						String module = (String)m.next();
-						if (!serverVersionMap.containsKey(module)) {
-							serverVersionMap.put(module, new HashMap());
-						}
+						module = (String)m.next();
+//	
 						JSONObject data = (JSONObject)obj.get(module);
 						Iterator d = data.keys();
 						while (d.hasNext()) {
-							String key = (String)d.next();
-							String version = (String)data.getString(key);
-							HashMap moduleMap = (HashMap)serverVersionMap.get(module);
-							moduleMap.put(key,version);
+							key = (String)d.next();
+							versionKey = module + "_" + key;
+							version = (String)data.getString(key);
+							prefsEditor.putString(versionKey, version);
 						}
 					}
 				}
@@ -176,6 +184,7 @@ public class Global extends Application {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				prefsEditor.commit();
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 			
@@ -184,9 +193,6 @@ public class Global extends Application {
 			}
 		});
     	
-    	Global.version = serverVersionMap;
-    	return serverVersionMap;
-
 	}
 	
 	public static boolean upToDate(String module, Integer localVersion, String remoteKey) {
@@ -195,29 +201,12 @@ public class Global extends Application {
 		Integer remoteVersion = Global.getVersion(module,remoteKey);
 		return (localVersion >= remoteVersion);
 	}
-	
-	private static void updateData(Context mContext,final Handler uiHandler) {
-		// retrieves the version map from the server
-		// for each entry in the map, compares the remote version to the local version and calls an appropriate function to update the data if it is out of date
-
-		int localVersion;
-		int serverVersion;
-
-		HashMap serverVersionMap = (HashMap)Global.getVersionMap(mContext, uiHandler);
-		for (Iterator it = serverVersionMap.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			localVersion = Integer.parseInt((String)Global.version.get(key));
-			serverVersion = Integer.parseInt((String)serverVersionMap.get(key));
-			   
-			if (serverVersion > localVersion) {
-				Log.d(TAG,"updating " + key);
-			}
-		}
-	}
-	
+		
 	public static Integer getVersion(String module,String key) {
-		HashMap version = (HashMap)Global.version.get(module);
-		return Integer.parseInt(version.get(key).toString());
+		String versionKey = module + "_" + key;
+		int version = Integer.parseInt(Global.prefs.getString(versionKey, "9999999999")); // debugging, forces a get of the remote data if version not read
+		Log.d(TAG,"version for " + module + " " + key + " " + version);
+		return version;
 	}
 		
 }

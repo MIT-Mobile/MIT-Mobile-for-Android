@@ -45,8 +45,6 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 		mContext = this;
         Handler uiHandler = new Handler();
 
-        // call getVersionMap incase it failed in the Global activity before the correct mobile server was selected
-        Global.getVersionMap(mContext, uiHandler);
 		createViews();
 	}
 
