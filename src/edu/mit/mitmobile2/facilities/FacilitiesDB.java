@@ -154,7 +154,7 @@ public class FacilitiesDB {
 		values.put(LocationTable.BLDGNUM, locationRecord.bldgnum);
 		try {
 			db.insert(LOCATION_TABLE, LocationTable.ID + "," + LocationTable.NAME + "," + LocationTable.LAT + "," + LocationTable.LONG + "," + LocationTable.BLDGNUM,values);		
-			Log.d(TAG,"addLocation " + locationRecord.name);
+			//Log.d(TAG,"addLocation " + locationRecord.name);
 		}
 		catch (Exception e) {
 			Log.d(TAG,"error inserting record " + e.getMessage());
@@ -258,7 +258,6 @@ public class FacilitiesDB {
 		Cursor cursor = getCategoryCursor();
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
-			//Log.d(TAG,"index 0 = " + cursor.getString(0) + " index 1 = " + cursor.getString(1) + " index 2 = " + cursor.getString(2));
 			category = new CategoryRecord();
 			category.id = cursor.getString(1);
 			category.name = cursor.getString(2);
@@ -350,15 +349,8 @@ public class FacilitiesDB {
 		cursor.close();
 		return location;
 	}
-
-	public Cursor getLocationSearchCursor(CharSequence searchTerm) {
-		Log.d(TAG,"searchTerm = " + searchTerm);
-		SQLiteDatabase db = mDBHelper.getReadableDatabase();
-		return db.query(LOCATION_TABLE, new String[] {LocationTable._ID, LocationTable.NAME}, LocationTable.NAME + " LIKE ?", 
-				new String[] { "%" + searchTerm + "%"}, null, null, LocationTable.BLDGNUM);
-	}
 	
-	public Cursor getLocationSearchCursor2(CharSequence searchTerm) {
+	public Cursor getLocationSearchCursor(CharSequence searchTerm) {
 		Log.d(TAG,"searchTerm = " + searchTerm);
 		String searchTermUppercase = searchTerm.toString().toUpperCase();
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
@@ -804,8 +796,7 @@ public class FacilitiesDB {
 						Log.d(TAG,"category list begin transaction");
 						for (int i = 0; i < array.length(); i++) {
 							try {
-								//Log.d(TAG,array.getString(i));
-								 JSONObject obj = array.getJSONObject(i);
+								JSONObject obj = array.getJSONObject(i);
 								CategoryRecord record = new CategoryRecord();
 								record.id = obj.getString("id");
 								record.name = obj.getString("name");
@@ -819,21 +810,14 @@ public class FacilitiesDB {
 						Log.d(TAG,"category list end transaction");
 					}
 			});			
-			// update local version			
-			//Global.setVersion("local", "map", "category_list",Global.getVersion("remote","map","category_list") + "",mContext);
-			//msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
 		else {
 			Log.d(TAG,"category list is up to date");
-			//msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
-		//uiHandler.sendMessage(msg);
-		Log.d(TAG,"returing category verson");
 		return version;
 	}
 	
 	public static String updateLocations(Context mContext,final Handler uiHandler) {
-			//String url = "http://" + Global.getMobileWebDomain() + "/api/map/index.php?command=categorylist";
 			final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 				
 			final String version = Global.getVersion("remote", "map","location") + "";
@@ -877,12 +861,9 @@ public class FacilitiesDB {
 									}
 									
 									// convert contents into an array and add to location contents table 
-									//Log.d(TAG,"reading contents for " + obj.getString("id"));
-									//Log.d(TAG,"contents = " + obj.getString("contents"));
 									if (!obj.getString("contents").equalsIgnoreCase("null")) {	
 										JSONArray contentsArray = new JSONArray(obj.getString("contents"));
 										for (int c = 0; c < contentsArray.length(); c++) {
-											//Log.d(TAG,"content record " + c);
 											JSONObject contentObj = contentsArray.getJSONObject(c);
 											LocationContentRecord locationContentRecord = new LocationContentRecord();
 											locationContentRecord.location_id = obj.getString("id");
@@ -937,16 +918,11 @@ public class FacilitiesDB {
 							catch (Exception e) {
 								Log.d(TAG,e.getMessage());
 							}
-							Message msg = new Message();
-							msg.arg1 = FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL;
-							Log.d(TAG, "sending location success message to uiHandler");
-							//uiHandler.sendMessage(msg);
 						}
 				});
 			}
 			else {
 				Log.d(TAG,"location list is up to date");
-				Log.d(TAG, "sending location success message to uiHandler");
 			}
 			return version;
 		}
@@ -968,7 +944,6 @@ public class FacilitiesDB {
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
 					public void onResponse(JSONArray array) {
-						Log.d(TAG,"got problemtype response");
 						db.startTransaction();
 						for (int i = 0; i < array.length(); i++) {
 							try {

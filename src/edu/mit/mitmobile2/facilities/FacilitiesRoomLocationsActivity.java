@@ -143,7 +143,6 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		@Override
 		protected void onPostExecute(String result) {
 			// Executed in UI thread
-			//Toast.makeText(FacilitiesProblemLocationActivity.this, result, Toast.LENGTH_SHORT).show();
 		}
 	}
 	

@@ -41,40 +41,40 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		@Override
 		public void handleMessage(Message msg) {
 			Log.d(TAG,"message = " + msg.arg1);
-
-			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
-				Log.d(TAG,"received success message for categories");
-			}
-			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
-				Log.d(TAG,"received success message for locations");
-			}
-			
-			else if(msg.arg1 == FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL) {
-				Log.d(TAG,"received success message for problem types");
-				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
-				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
-				listView.setAdapter(adapter);
-				listView.setVisibility(View.VISIBLE);
-				
-				listView.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
-						CategoryRecord category = db.getCategory(position);
-						Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
-						// save the selected category
-						Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
-						Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-						startActivity(intent);          
-					}
-				});
-
-
-				mLoader.setVisibility(View.GONE);
-			}
-			else {
-				mLoader.showError();
-			}
+//
+//			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
+//				Log.d(TAG,"received success message for categories");
+//			}
+//			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
+//				Log.d(TAG,"received success message for locations");
+//			}
+//			
+//			else if(msg.arg1 == FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL) {
+//				Log.d(TAG,"received success message for problem types");
+//				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
+//				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
+//				listView.setAdapter(adapter);
+//				listView.setVisibility(View.VISIBLE);
+//				
+//				listView.setOnItemClickListener(new OnItemClickListener() {
+//					@Override
+//					public void onItemClick(AdapterView<?> parent, View view, int position,
+//							long id) {
+//						CategoryRecord category = db.getCategory(position);
+//						Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
+//						// save the selected category
+//						Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
+//						Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
+//						startActivity(intent);          
+//					}
+//				});
+//
+//
+//				mLoader.setVisibility(View.GONE);
+//			}
+//			else {
+//				mLoader.showError();
+//			}
 		}		
 	};
 	
