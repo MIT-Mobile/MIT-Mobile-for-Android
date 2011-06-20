@@ -49,7 +49,7 @@ public class FacilitiesActivity extends ModuleActivity {
         Handler uiHandler = new Handler();
 
         // call getVersionMap incase it failed in the Global activity before the correct mobile server was selected
-        Global.getVersionMap(mContext, uiHandler);
+        Global.getVersionInfo(mContext, uiHandler);
 		createViews();
 	}
 

@@ -5,20 +5,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.widget.Toast;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
@@ -29,19 +27,11 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.LocationContentRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.ProblemTypeRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
-import org.json.JSONObject;
 public class FacilitiesDB {
 
 	private static final String TAG = "FacilitiesDB";	
 
 	private static final String DATABASE_NAME = "facilities.db";
-
-	// Data  Version Info
-	private static Integer PROBLEM_TYPE_VERSION = 1;
-	private static Integer BLDG_DATA_VERSION = 1;
-	private static Integer CATEGORY_LIST_VERSION = 1;
-	private static Integer LOCATION_VERSION = 1;
-	private static Integer ROOM_VERSION = 1;
 
 	public final static Integer STATUS_CATEGORIES_SUCCESSFUL = 900;
 	public final static Integer STATUS_LOCATIONS_SUCCESSFUL = 901;
@@ -162,9 +152,9 @@ public class FacilitiesDB {
 		values.put(LocationTable.LAT, locationRecord.lat_wgs84);
 		values.put(LocationTable.LONG,locationRecord.long_wgs84);
 		values.put(LocationTable.BLDGNUM, locationRecord.bldgnum);
-		//Log.d(TAG,"adding location " + locationRecord.name );
 		try {
 			db.insert(LOCATION_TABLE, LocationTable.ID + "," + LocationTable.NAME + "," + LocationTable.LAT + "," + LocationTable.LONG + "," + LocationTable.BLDGNUM,values);		
+			Log.d(TAG,"addLocation " + locationRecord.name);
 		}
 		catch (Exception e) {
 			Log.d(TAG,"error inserting record " + e.getMessage());
@@ -291,8 +281,7 @@ public class FacilitiesDB {
 					+ " JOIN " + LOCATION_TABLE + " on " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + " = " + LOCATION_TABLE + "." + LocationTable.ID
 					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "'"
 					+ " order by " + LocationTable.NAME;
-//		String sql = "select * from " + LOCATION_CATEGORY_TABLE;
-		Log.d(TAG,"locationCategory sql = " + sql);
+		//Log.d(TAG,"locationCategory sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		return cursor;
 	}
@@ -369,7 +358,6 @@ public class FacilitiesDB {
 				new String[] { "%" + searchTerm + "%"}, null, null, LocationTable.BLDGNUM);
 	}
 	
-	/// ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ/////
 	public Cursor getLocationSearchCursor2(CharSequence searchTerm) {
 		Log.d(TAG,"searchTerm = " + searchTerm);
 		String searchTermUppercase = searchTerm.toString().toUpperCase();
@@ -601,7 +589,6 @@ public class FacilitiesDB {
 		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			//Log.d(TAG,"onCreate()");
 			createCategoryTable(db);
 			createLocationTable(db);
 			createLocationCategoryTable(db);
@@ -610,6 +597,7 @@ public class FacilitiesDB {
 			createLocationContentAltnameTable(db);
 			createRoomTable(db);
 			createProblemTypeTable(db);
+			Log.d(TAG,"table creation complete");
 		}
 
 		@Override
@@ -627,7 +615,7 @@ public class FacilitiesDB {
 			+ CategoryTable.NAME + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + categoryTableSql);
+		//Log.d(TAG,"create category table sql = " + categoryTableSql);
 		try {
 			db.execSQL(categoryTableSql);
 		}
@@ -649,9 +637,10 @@ public class FacilitiesDB {
 			+ LocationTable.LAST_UPDATED + " TEXT \n " 
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + locationTableSql);
+		//Log.d(TAG,"create category table sql = " + locationTableSql);
 		try {
 			db.execSQL(locationTableSql);
+			Log.d(TAG,"location table created");
 		}
 		catch (SQLException e) {
 			Log.d(TAG,e.getMessage());
@@ -667,7 +656,7 @@ public class FacilitiesDB {
 			+ LocationCategoryTable.CATEGORY_ID + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create location category table sql = " + locationCategoryTableSql);
+		//Log.d(TAG,"create location category table sql = " + locationCategoryTableSql);
 		try {
 			db.execSQL(locationCategoryTableSql);
 			Log.d(TAG,"location category table created");
@@ -687,7 +676,7 @@ public class FacilitiesDB {
 			+ LocationContentTable.URL + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create location category table sql = " + locationContentTableSql);
+		//Log.d(TAG,"create location category table sql = " + locationContentTableSql);
 		try {
 			db.execSQL(locationContentTableSql);
 			Log.d(TAG,"location category table created");
@@ -707,7 +696,7 @@ public class FacilitiesDB {
 			+ LocationContentCategoryTable.CATEGORY + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create location content category table sql = " + locationContentCategoryTableSql);
+		//Log.d(TAG,"create location content category table sql = " + locationContentCategoryTableSql);
 		try {
 			db.execSQL(locationContentCategoryTableSql);
 			Log.d(TAG,"location content category table created");
@@ -727,7 +716,7 @@ public class FacilitiesDB {
 			+ LocationContentAltnameTable.ALTNAME + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create location content altname table sql = " + locationContentAltnameTableSql);
+		//Log.d(TAG,"create location content altname table sql = " + locationContentAltnameTableSql);
 		try {
 			db.execSQL(locationContentAltnameTableSql);
 			Log.d(TAG,"location content altname table created");
@@ -747,7 +736,7 @@ public class FacilitiesDB {
 			+ RoomTable.ROOM + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + roomTableSql);
+		//Log.d(TAG,"create category table sql = " + roomTableSql);
 		try {
 			db.execSQL(roomTableSql);
 		}
@@ -764,7 +753,7 @@ public class FacilitiesDB {
 			+ ProblemTypeTable.PROBLEM_TYPE + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + roomTableSql);
+		//Log.d(TAG,"create category table sql = " + roomTableSql);
 		try {
 			db.execSQL(roomTableSql);
 		}
@@ -793,13 +782,13 @@ public class FacilitiesDB {
 
 	}
 
-	public static void updateCategories(Context mContext,final Handler uiHandler) {
+	public static String updateCategories(Context mContext,final Handler uiHandler) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 		Message msg = new Message();
 		
+		final String version = Global.getVersion("remote", "map","category_list") + "";
 		// compare local category version to remote version
-		final int remoteVersion = Global.getVersion("map", "category_list");
-		if (remoteVersion > db.CATEGORY_LIST_VERSION) {
+		if (!Global.upToDate("map", "category_list")) {
 			Log.d(TAG,"updating category list");
 			db.clearCategories();
 			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
@@ -812,6 +801,7 @@ public class FacilitiesDB {
 					@Override
 					public void onResponse(JSONArray array) {
 						db.startTransaction();
+						Log.d(TAG,"category list begin transaction");
 						for (int i = 0; i < array.length(); i++) {
 							try {
 								//Log.d(TAG,array.getString(i));
@@ -826,28 +816,30 @@ public class FacilitiesDB {
 							}
 						}
 						db.endTransaction();
+						Log.d(TAG,"category list end transaction");
 					}
 			});			
-			// update local version
-			FacilitiesDB.setCATEGORY_LIST_VERSION(remoteVersion);
-			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
+			// update local version			
+			//Global.setVersion("local", "map", "category_list",Global.getVersion("remote","map","category_list") + "",mContext);
+			//msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
 		else {
 			Log.d(TAG,"category list is up to date");
-			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
+			//msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
-		uiHandler.sendMessage(msg);
+		//uiHandler.sendMessage(msg);
+		Log.d(TAG,"returing category verson");
+		return version;
 	}
 	
-	public static void updateLocations(Context mContext,final Handler uiHandler) {
+	public static String updateLocations(Context mContext,final Handler uiHandler) {
 			//String url = "http://" + Global.getMobileWebDomain() + "/api/map/index.php?command=categorylist";
 			final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
-			Message msg = new Message();
 				
+			final String version = Global.getVersion("remote", "map","location") + "";
+
 			// compare local category version to remote version
-			final int remoteVersion = Global.getVersion("map", "location");
-			Log.d(TAG,"remoteVersion = " + remoteVersion + " localVersion = " + FacilitiesDB.LOCATION_VERSION);
-			if (remoteVersion > db.LOCATION_VERSION) {
+			if (!Global.upToDate("map", "location")) {
 				Log.d(TAG,"updating location list");
 				db.clearLocations();
 				MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
@@ -859,6 +851,7 @@ public class FacilitiesDB {
 			                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 						@Override
 						public void onResponse(JSONArray array) {
+							Log.d(TAG,"received location response");
 							db.startTransaction();
 							for (int i = 0; i < array.length(); i++) {
 								try {
@@ -937,29 +930,33 @@ public class FacilitiesDB {
 							}
 							db.endTransaction();
 							Log.d(TAG,"locations inserted into database");
-							FacilitiesDB.setLOCATION_VERSION(remoteVersion);
+							// update local version
+							try {
+								Global.setVersion("local", "map","location",Global.getVersion("remote","map","location") + "",Global.mContext);
+							}
+							catch (Exception e) {
+								Log.d(TAG,e.getMessage());
+							}
 							Message msg = new Message();
 							msg.arg1 = FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL;
 							Log.d(TAG, "sending location success message to uiHandler");
-							uiHandler.sendMessage(msg);
+							//uiHandler.sendMessage(msg);
 						}
 				});
 			}
 			else {
 				Log.d(TAG,"location list is up to date");
-				msg.arg1 = FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL;
 				Log.d(TAG, "sending location success message to uiHandler");
-				uiHandler.sendMessage(msg);
 			}
-			//MobileWebApi.sendSuccessMessage(uiHandler);
+			return version;
 		}
 
-	public static void updateProblemTypes(Context mContext,final Handler uiHandler) {
+	public static String updateProblemTypes(Context mContext,final Handler uiHandler) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
-		Message msg = new Message();
 		Log.d(TAG,"updating problem types");
-		int remoteVersion = Global.getVersion("facilities", "problem_type");
-		if (remoteVersion > FacilitiesDB.PROBLEM_TYPE_VERSION) {
+		final String version = Global.getVersion("remote","facilities", "problem_type") + "";
+
+		if (!Global.upToDate("facilities", "problem_type")) {
 			Log.d(TAG,"updating problem type list");
 			db.clearProblemTypes();
 			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
@@ -987,15 +984,11 @@ public class FacilitiesDB {
 						db.endTransaction();
 					}
 			});			
-			// update local version
-			FacilitiesDB.setPROBLEM_TYPE_VERSION(remoteVersion);
-			msg.arg1 = FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL;
 		}
 		else {
 			Log.d(TAG,"problem type list is up to date");
-			msg.arg1 = FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL;
 		}
-		uiHandler.sendMessage(msg);
+		return version;
 	}
 
 	public static void updateRooms(Context mContext,final Handler uiHandler, final String buildingNumber) {
@@ -1080,46 +1073,5 @@ public class FacilitiesDB {
 			return null;
 		}
 	}
-	
-	
-	public static Integer getBLDG_DATA_VERSION() {
-		return BLDG_DATA_VERSION;
-	}
-
-	public static void setBLDG_DATA_VERSION(Integer bLDG_DATA_VERSION) {
-		BLDG_DATA_VERSION = bLDG_DATA_VERSION;
-	}
-
-	public static Integer getCATEGORY_LIST_VERSION() {
-		return CATEGORY_LIST_VERSION;
-	}
-
-	public static void setCATEGORY_LIST_VERSION(Integer cATEGORY_LIST_VERSION) {
-		CATEGORY_LIST_VERSION = cATEGORY_LIST_VERSION;
-	}
-
-	public static Integer getLOCATION_VERSION() {
-		return LOCATION_VERSION;
-	}
-
-	public static void setLOCATION_VERSION(Integer lOCATION_VERSION) {
-		LOCATION_VERSION = lOCATION_VERSION;
-	}
-
-	public static Integer getROOM_VERSION() {
-		return ROOM_VERSION;
-	}
-
-	public static void setROOM_VERSION(Integer rOOM_VERSION) {
-		ROOM_VERSION = rOOM_VERSION;
-	}
-
-	public static Integer getPROBLEM_TYPE_VERSION() {
-		return PROBLEM_TYPE_VERSION;
-	}
-
-	public static void setPROBLEM_TYPE_VERSION(Integer pROBLEM_TYPE_VERSION) {
-		PROBLEM_TYPE_VERSION = pROBLEM_TYPE_VERSION;
-	}
-		
+			
 }
