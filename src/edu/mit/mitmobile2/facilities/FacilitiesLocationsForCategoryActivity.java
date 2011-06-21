@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
 
 
 public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
@@ -87,8 +89,43 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 			}
 		});
 		
-		
-		
+		AutoCompleteTextView facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
+		facilitiesTextLocation.setAdapter(new LocationsForCategorySearchCursorAdapter(this, db));
+		facilitiesTextLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> listView, View row, int position,
+					long id) {
+				
+				// have no idea what this method should actually do
+				// this is completey a placeholder
+				Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+				LocationSearchRecord locationSearchRecord = new LocationSearchRecord(cursor);
+				/* 
+				 * if the user selected a use what I typed option, use this as the actual location
+				 * and jump to the problem type selection screen
+				 * Else, go to the room selection screen if building number is defined, else inside/outside screen
+				 */
+				Global.sharedData.getFacilitiesData().setLocationId(locationSearchRecord.id);
+				Global.sharedData.getFacilitiesData().setBuildingNumber(locationSearchRecord.bldgnum);
+				Log.d(TAG,"locastion search _id = " + locationSearchRecord._id);
+				if (Integer.parseInt(locationSearchRecord._id) == -1) {
+					Global.sharedData.getFacilitiesData().setBuildingRoomName(locationSearchRecord.name);
+					Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);
+					startActivity(intent);					
+				}				
+				// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
+				else if (locationSearchRecord.bldgnum == null || locationSearchRecord.bldgnum.equals("")) {
+					Intent intent = new Intent(mContext, FacilitiesInsideOutsideActivity.class);
+					startActivity(intent);
+				}
+				else {
+					Intent intent = new Intent(mContext, FacilitiesRoomLocationsActivity.class);
+					startActivity(intent);
+				}
+			}
+		});
+				
 	}
 
 	@Override
