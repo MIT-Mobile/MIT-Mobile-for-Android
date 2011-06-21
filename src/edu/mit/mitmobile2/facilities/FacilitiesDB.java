@@ -367,8 +367,10 @@ public class FacilitiesDB {
 		              + LOCATION_TABLE + "." + LocationTable.ID + ", "
 			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
 			          + LOCATION_TABLE + "." + LocationTable.ID + " as sort_value, "
-			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "
-			          + LOCATION_TABLE + "." + LocationTable.NAME + " as display_name "
+			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "			          
+			          + " CASE WHEN length(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") > 0 THEN " 
+			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + " || '-' || " + LOCATION_TABLE + "." + LocationTable.NAME 
+			          + " ELSE " + LOCATION_TABLE + "." + LocationTable.NAME + " END as display_name "
 			          + " FROM " + LOCATION_TABLE
 			          + " LEFT JOIN " + LOCATION_CATEGORY_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID
 			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
