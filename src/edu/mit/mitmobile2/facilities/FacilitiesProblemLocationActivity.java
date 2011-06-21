@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -30,7 +31,8 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
 public class FacilitiesProblemLocationActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemLocationActivity";
-
+	private static final int MENU_INFO = 0;
+	
 	Context mContext;
 	ListView mListView;
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
@@ -41,40 +43,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		@Override
 		public void handleMessage(Message msg) {
 			Log.d(TAG,"message = " + msg.arg1);
-//
-//			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
-//				Log.d(TAG,"received success message for categories");
-//			}
-//			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
-//				Log.d(TAG,"received success message for locations");
-//			}
-//			
-//			else if(msg.arg1 == FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL) {
-//				Log.d(TAG,"received success message for problem types");
-//				CategoryAdapter adapter = new CategoryAdapter(FacilitiesProblemLocationActivity.this, db.getCategoryCursor());
-//				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
-//				listView.setAdapter(adapter);
-//				listView.setVisibility(View.VISIBLE);
-//				
-//				listView.setOnItemClickListener(new OnItemClickListener() {
-//					@Override
-//					public void onItemClick(AdapterView<?> parent, View view, int position,
-//							long id) {
-//						CategoryRecord category = db.getCategory(position);
-//						Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
-//						// save the selected category
-//						Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
-//						Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-//						startActivity(intent);          
-//					}
-//				});
-//
-//
-//				mLoader.setVisibility(View.GONE);
-//			}
-//			else {
-//				mLoader.showError();
-//			}
 		}		
 	};
 	
@@ -224,22 +192,30 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	}
 		
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
+	protected Module getModule() {
+		return new FacilitiesModule();
 	}
-	
 
 	@Override
-	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_INFO:
+			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 	
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) { 
+	}
+
 	
 }
 	

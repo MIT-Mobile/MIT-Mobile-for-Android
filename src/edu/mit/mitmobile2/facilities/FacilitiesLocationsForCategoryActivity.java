@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,7 +27,9 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 
 public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
+	
 	public static final String TAG = "FacilitiesLocationsForCategoryActivity";
+	private static final int MENU_INFO = 0;
 
 	Context mContext;
 	ListView mListView;
@@ -90,20 +93,27 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 
 	@Override
 	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FacilitiesModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_INFO:
+			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected void prepareActivityOptionsMenu(Menu menu) { 
 	}
 
 }

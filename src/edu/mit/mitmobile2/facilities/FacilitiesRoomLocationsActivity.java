@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,6 +27,7 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 	public static final String TAG = "FacilitiesRoomLocationsActivity";
+	private static final int MENU_INFO = 0;
 
 	Context mContext;
 	ListView mListView;
@@ -99,24 +101,6 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 
 	}
 
-	@Override
-	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
 		
 	    ProgressDialog dialog;
@@ -145,6 +129,32 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 			// Executed in UI thread
 		}
 	}
+	
+	@Override
+	protected Module getModule() {
+		return new FacilitiesModule();
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		return false;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_INFO:
+			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) { 
+	}
+	
 	
 }
 	
