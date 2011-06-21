@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -22,6 +23,7 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 
 
@@ -85,6 +87,10 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		
 		mLoader.showLoading();
 		new DatabaseUpdater().execute(""); 
+		
+		// Autocomplete
+		AutoCompleteTextView facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
+		facilitiesTextLocation.setAdapter(new RoomSearchCursorAdapter(this, db));
 		
 		// Outside
 		TwoLineActionRow outsideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesOutsideLocationActionRow);

@@ -442,6 +442,26 @@ public class FacilitiesDB {
 		return cursor;
 	}
 
+	public Cursor getRoomSearchCursor(CharSequence searchTerm) {
+		Log.d(TAG,"searchTerm = " + searchTerm);
+		String searchTermUppercase = searchTerm.toString().toUpperCase();
+		String selectedBuilding = Global.sharedData.getFacilitiesData().getBuildingNumber().toUpperCase();
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		String sql = "select " 				
+			+ ROOMS_TABLE + "." + RoomTable._ID + ", " 
+			+ ROOMS_TABLE + "." + RoomTable.BUILDING + ", " 
+			+ ROOMS_TABLE + "." + RoomTable.FLOOR + ", " 
+			+ ROOMS_TABLE + "." + RoomTable.ROOM  
+			+ " FROM " + ROOMS_TABLE
+			+ " where upper(building) = '" + selectedBuilding + "' "  
+			+ " and upper(room) like '%" + searchTermUppercase + "%' " 
+			+ " order by " + RoomTable.ROOM;
+
+			Log.d(TAG,"location search sql = " + sql);
+			Cursor cursor = db.rawQuery(sql,null);
+			return cursor;
+	}
+
 	public Cursor getLocationContentCursor() {
 		Log.d(TAG,"getLocationContentCursor");
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();

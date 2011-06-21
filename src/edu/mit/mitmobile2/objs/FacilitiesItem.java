@@ -53,6 +53,17 @@ public class FacilitiesItem {
 		public String building;
 		public String floor;
 		public String room;
+		
+		public RoomRecord() {
+			super();
+		}
+
+		public RoomRecord(Cursor cursor) {
+			this.building = cursor.getString(0);
+			this.floor = cursor.getString(1);
+			this.room = cursor.getString(2);
+		}
+
 	}
 	
 	public static class LocationSearchRecord {		
