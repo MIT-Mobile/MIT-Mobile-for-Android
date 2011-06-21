@@ -1,5 +1,20 @@
 package edu.mit.mitmobile2.facilities;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.commons.io.IOUtils;
+
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -42,6 +57,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
     private TwoLineActionRow takePhotoActionRow;
     private TwoLineActionRow chooseExistingPhotoActionRow;
     private TwoLineActionRow cancelActionRow;    
+    private TwoLineActionRow submitActionRow;
 	private View facilitiesCameraOptionsLayout;
 	private ImageView selectedImage;
 	private Uri mCapturedImageUri;
@@ -135,6 +151,16 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 				facilitiesCameraOptionsLayout.setVisibility(View.GONE);
 			}
 		});
+    	
+    	// Submit form
+    	submitActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesSubmitActionRow);
+    	submitActionRow.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				submitForm();
+			}
+		});
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
@@ -173,7 +199,32 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 		
 	}
 
-		
+	private void submitForm() {
+		new Thread() {
+			public void run() {
+				try {
+					HttpClient httpClient = new DefaultHttpClient();
+					HttpPost httpPost = new HttpPost("http://" + Global.getMobileWebDomain() + "/api/?module=facilities&command=upload");
+					InputStream imageStream;
+					imageStream = getContentResolver().openInputStream(mSelectedImageUri);
+					byte[] imageData;
+					imageData = IOUtils.toByteArray(imageStream);
+					InputStreamBody imageStreamBody = new InputStreamBody(new ByteArrayInputStream(imageData), "image");
+					MultipartEntity multipartContent = new MultipartEntity();
+					multipartContent.addPart("image", imageStreamBody);	
+					multipartContent.addPart("email", new StringBody("example@example.com"));
+					httpPost.setEntity(multipartContent);
+					HttpResponse response;
+					response = httpClient.execute(httpPost);
+					response.getEntity().getContent().close();
+				} catch (FileNotFoundException fileException)  {
+					fileException.printStackTrace();
+				} catch (IOException ioException) {
+					ioException.printStackTrace();
+				} 
+			}			
+		}.start();
+	}
 }
 	
 
