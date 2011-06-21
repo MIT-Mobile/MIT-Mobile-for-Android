@@ -220,7 +220,12 @@ public class FacilitiesDB {
 			db.insert(LOCATION_CONTENT_ALTNAME_TABLE, 
 					  LocationContentAltnameTable.LOCATION_ID + "," 
 					  + LocationContentAltnameTable.NAME + "," 
-					  + LocationContentAltnameTable.ALTNAME,values);		
+					  + LocationContentAltnameTable.ALTNAME,values);
+			Log.d(TAG,"added location_content_altname: ");
+			Log.d(TAG,"location_id = " + locationContentAltnameRecord.location_id);
+			Log.d(TAG,"name = " + locationContentAltnameRecord.name);
+			Log.d(TAG,"altname = " + locationContentAltnameRecord.altname);
+			Log.d(TAG,"");
 		}
 		catch (Exception e) {
 			Log.d(TAG,"error inserting location content altname: " + e.getMessage());
@@ -374,12 +379,15 @@ public class FacilitiesDB {
 			          + " FROM " + LOCATION_TABLE
 			          + " LEFT JOIN " + LOCATION_CATEGORY_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID
 			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
+			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
 			          + " WHERE "
 			          + " upper(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") like '%" + searchTermUppercase + "%'"
 			          + " OR "
 			          + " upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + ") like '%" + searchTermUppercase + "%'"
 					  + " OR "
 					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
+					  + " OR "
+					  + " upper(" + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ") like '%" + searchTermUppercase + "%'"
 					  + " ORDER BY sort_value ";
 
 		Log.d(TAG,"location search sql = " + sql);
