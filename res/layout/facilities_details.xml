@@ -18,7 +18,7 @@
 		<LinearLayout 
 			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="fill_parent">
 			
 			<TextView 
 				android:id="@+id/facilitiesProblemString"
@@ -34,7 +34,8 @@
 				android:layout_width="fill_parent"
             	android:layout_height="wrap_content" 
             	android:gravity="left"
-            	android:singleLine="false" android:lines="5"
+            	android:singleLine="false" 
+            	android:lines="5"
             	android:layout_marginLeft="5dip" 
             	android:hint="Required!\nPlease enter a brief description of the problem"
             	android:text="" 

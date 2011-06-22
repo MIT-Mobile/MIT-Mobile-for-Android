@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<EditTextPreference
+		android:key="facilities_problem_type_version"
+		android:title="Problem Types Version" />
+
+	<EditTextPreference
+		android:key="map_bldg_data_version"
+		android:title="Build Data Version" />
+
+	<EditTextPreference
+		android:key="map_category_list_version"
+		android:title="Category List Version" />
+
+	<EditTextPreference
+		android:key="map_location_version"
+		android:title="Location Version" />
+
+	<EditTextPreference
+		android:key="facilities_room_version"
+		android:title="Room Version" />
+
+</PreferenceScreen>

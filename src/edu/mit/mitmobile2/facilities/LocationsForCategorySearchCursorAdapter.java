@@ -14,12 +14,12 @@ import android.widget.CursorAdapter;
 import android.widget.FilterQueryProvider;
 import android.widget.TextView;
 
-public class LocationsSearchCursorAdapter extends CursorAdapter implements FilterQueryProvider {
+public class LocationsForCategorySearchCursorAdapter extends CursorAdapter implements FilterQueryProvider {
 	
 	FacilitiesDB mFacilitiesDB;
 	private static final String TAG = "LocationsSearchCursorAdapter";
 	
-	public LocationsSearchCursorAdapter(Context context, FacilitiesDB facilitiesDB) {
+	public LocationsForCategorySearchCursorAdapter(Context context, FacilitiesDB facilitiesDB) {
 		super(context, facilitiesDB.getLocationCursor());
 		mFacilitiesDB = facilitiesDB;
 		setFilterQueryProvider(this);
@@ -28,7 +28,7 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		Log.d(TAG,"constraint = " + constraint);
-		Cursor c = mFacilitiesDB.getLocationSearchCursor(constraint);
+		Cursor c = mFacilitiesDB.getLocationForCategorySearchCursor(constraint);
 		return new FilteredCursor(c, constraint.toString());
 	}
 

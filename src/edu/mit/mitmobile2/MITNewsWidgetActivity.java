@@ -399,7 +399,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			Global.setMobileWebDomain(prefs.getString(Global.MIT_MOBILE_SERVER_KEY, null));
 
 			// Update the version map any time the Mobile server is changed
-			Global.getVersionMap(mContext, uiHandler);
+			Global.getVersionInfo(mContext, uiHandler);
 			Toast.makeText(this, "Mobile Web Domain set to " + Global.getMobileWebDomain(), Toast.LENGTH_SHORT).show();
 		}
 	}

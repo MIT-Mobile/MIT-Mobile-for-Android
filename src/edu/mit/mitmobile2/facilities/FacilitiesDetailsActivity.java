@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -56,6 +57,8 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
+	private static final int MENU_INFO = 0;
+
 	private Context mContext;	
 	private TextView problemStringTextView;
 	private EditText problemDescription;
@@ -196,20 +199,27 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	@Override
 	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FacilitiesModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_INFO:
+			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected void prepareActivityOptionsMenu(Menu menu) { 
 	}
 	
 	void submitForm() {

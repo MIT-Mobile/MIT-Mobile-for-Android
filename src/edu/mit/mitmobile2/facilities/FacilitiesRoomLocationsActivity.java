@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -21,11 +23,13 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
 
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 	public static final String TAG = "FacilitiesRoomLocationsActivity";
+	private static final int MENU_INFO = 0;
 
 	Context mContext;
 	ListView mListView;
@@ -84,6 +88,10 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		mLoader.showLoading();
 		new DatabaseUpdater().execute(""); 
 		
+		// Autocomplete
+		AutoCompleteTextView facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
+		facilitiesTextLocation.setAdapter(new RoomSearchCursorAdapter(this, db));
+		
 		// Outside
 		TwoLineActionRow outsideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesOutsideLocationActionRow);
 		outsideLocationActionRow.setOnClickListener(new View.OnClickListener() {
@@ -97,24 +105,6 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 			}
 		});
 
-	}
-
-	@Override
-	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
@@ -143,9 +133,34 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		@Override
 		protected void onPostExecute(String result) {
 			// Executed in UI thread
-			//Toast.makeText(FacilitiesProblemLocationActivity.this, result, Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	@Override
+	protected Module getModule() {
+		return new FacilitiesModule();
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		return false;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_INFO:
+			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) { 
+	}
+	
 	
 }
 	

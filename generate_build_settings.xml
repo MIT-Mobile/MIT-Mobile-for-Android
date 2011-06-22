@@ -4,16 +4,18 @@
     	<echo>starting build script</echo>
     	<property name="project.dtd" location="project.dtd"/>
 		<echo>dir = ${user.dir}</echo>
+        <!-- <exec executable="../build-deployment/build_source.py" /> -->
        
 		<condition property="isWindows">
       		<os family="windows"/>
   		</condition>
 
-		<condition property="isUnixLike">
-			<or>
-				<os family="unix"/>
-				<os family="mac"/>
-			</or>
+		<condition property="isMac">
+      		<os family="mac"/>
+  		</condition>
+
+		<condition property="isUnix">
+      		<os family="unix" />
   		</condition>
 
 		<target name="doWindows" if="isWindows">
@@ -23,12 +25,12 @@
     		</exec>
   		</target>
   			
-		<target name="doUnix" if="isUnixLike">
-  			<echo message="running mac/unix build" />
-        	<exec executable="build-deployment/build_source.py" />
+		<target name="doMac" if="isMac">
+  			<echo message="running mac build" />
+        	<exec executable="../build-deployment/build_source.py" />
 		</target>
 		
-		<target name="all" depends="doWindows,doUnix"/>
+		<target name="all" depends="doWindows,doMac"/>
     <!--  </sequential> -->
 </project>
 

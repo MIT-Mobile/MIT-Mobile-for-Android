@@ -4,12 +4,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,25 +17,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.AndroidException;
 import android.util.Log;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.classes.SharedData;
-import edu.mit.mitmobile2.emergency.EmergencyDB;
-import edu.mit.mitmobile2.facilities.FacilitiesDB;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
-import edu.mit.mitmobile2.objs.EmergencyItem.Contact;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
-//import com.thoughtworks.xstream.XStream;
-//import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
 
 public class Global extends Application {
 
 	public static final boolean DEBUG = false;
-	public Context mContext;
+	public static Context mContext;
 	
 	// Shared preferences MUST use separate entries (docs say otherwise but seen failures to commit edits)
 	public static final String PREFS = "prefs";
@@ -60,6 +54,8 @@ public class Global extends Application {
 	private Resources res;
 
 	// Shared Data
+	public static SharedPreferences prefs;
+
 	public static final SharedData sharedData = new SharedData();
 	
 	// Facilities 
@@ -72,7 +68,7 @@ public class Global extends Application {
 		mContext = this; 
 		// load Mobile Web Domain preferences
 		try {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			Global.setMobileWebDomain(prefs.getString(Global.MIT_MOBILE_SERVER_KEY, null));
 		}
 		catch (RuntimeException e) {
@@ -87,9 +83,9 @@ public class Global extends Application {
 		
 		Handler uiHandler = new Handler();
 
-		Global.getVersionMap(mContext, uiHandler);
+		Global.getVersionInfo(mContext, uiHandler);
 
-		Global.updateData(mContext, uiHandler);
+		//Global.updateData(mContext, uiHandler);
 	}
 
 	// Maps related:
@@ -132,41 +128,47 @@ public class Global extends Application {
 	}
 
 	
-	public static HashMap getVersionMap(Context mContext,final Handler uiHandler) {
-		// uses the version api to get a json string of all databases and their version numbers and returns them as a hash map
-		// this hashmap can be used to determine if the local copy of the database is out of date and needs to be updated
-    	Log.d(TAG,"getVersionMap()");
-    	if (Global.version == null) {
-    		Global.version = new HashMap();
-    	}
-    	
-		MobileWebApi api = new MobileWebApi(false, true, "Version", mContext, uiHandler);
+	public static void getVersionInfo(final Context mContext,final Handler uiHandler) {
+		// uses the version api to get a json string of all databases and their version numbers and returns them as a shared preference string
+		// these values can be used to determine if the local copy of the database is out of date and needs to be updated
+    	Log.d(TAG,"getVersionInfo()");
+
+    	MobileWebApi api = new MobileWebApi(false, true, "Version", mContext, uiHandler);
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "version");
 		params.put("command", "list");
-    	Log.d(TAG,"before request json");
-		final HashMap serverVersionMap = new HashMap();
-
+		Date date = new Date();
+		params.put("key", date.getTime() + "");
+		Log.d(TAG,"before request json");
+		
 		api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override
 			public void onResponse(JSONObject obj) {
-				String versionKey;
+				String module;
+				String key;
+				String versionKey; // contenation of the module and key strings, e.g. facilities_room
+				String version;
+			    
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+				SharedPreferences.Editor prefsEditor = prefs.edit();
 				try {
 					Iterator m = obj.keys();
 					while (m.hasNext()) {
-						String module = (String)m.next();
-						if (!serverVersionMap.containsKey(module)) {
-							serverVersionMap.put(module, new HashMap());
-						}
+
+						module = (String)m.next();
+						Log.d(TAG,"module = " + module);
+	
 						JSONObject data = (JSONObject)obj.get(module);
 						Iterator d = data.keys();
 						while (d.hasNext()) {
-							String key = (String)d.next();
-							String version = (String)data.getString(key);
-							HashMap moduleMap = (HashMap)serverVersionMap.get(module);
-							moduleMap.put(key,version);
+							key = (String)d.next();
+							versionKey = "remote_" + module + "_" + key;
+							version = (String)data.getString(key);
+							Log.d(TAG,"key = " + key);
+							Log.d(TAG,"version = " + version);
+							prefsEditor.putString(versionKey, version);
 						}
 					}
 				}
@@ -174,6 +176,7 @@ public class Global extends Application {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				prefsEditor.commit();
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 			
@@ -182,40 +185,42 @@ public class Global extends Application {
 			}
 		});
     	
-    	Global.version = serverVersionMap;
-    	return serverVersionMap;
-
 	}
 	
-	public static boolean upToDate(String module, Integer localVersion, String remoteKey) {
+	public static boolean upToDate(String module, String key) {
 		// compares the version of the local data against the version on the mobile server.
 		// returns true if the local version is greater than or equal to the server version
-		Integer remoteVersion = Global.getVersion(module,remoteKey);
+
+		Integer remoteVersion = Global.getVersion("remote",module,key);
+		Integer localVersion = Global.getVersion("local",module,key);
+
 		return (localVersion >= remoteVersion);
 	}
-	
-	private static void updateData(Context mContext,final Handler uiHandler) {
-		// retrieves the version map from the server
-		// for each entry in the map, compares the remote version to the local version and calls an appropriate function to update the data if it is out of date
-
-		int localVersion;
-		int serverVersion;
-
-		HashMap serverVersionMap = (HashMap)Global.getVersionMap(mContext, uiHandler);
-		for (Iterator it = serverVersionMap.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			localVersion = Integer.parseInt((String)Global.version.get(key));
-			serverVersion = Integer.parseInt((String)serverVersionMap.get(key));
-			   
-			if (serverVersion > localVersion) {
-				Log.d(TAG,"updating " + key);
-			}
-		}
-	}
-	
-	public static Integer getVersion(String module,String key) {
-		HashMap version = (HashMap)Global.version.get(module);
-		return Integer.parseInt(version.get(key).toString());
+		
+	public static Integer getVersion(String type, String module,String key) {
+		// returns version information for specified module, key and type
+		// version keys are in the form of <type>_<module>_<key>
+		// type can be "local" or "remote"
+		String versionKey = type + "_" + module + "_" + key;
+		int version = Integer.parseInt(Global.prefs.getString(versionKey, "0"));
+		Log.d(TAG,"version for " + module + " " + key + " " + version);
+		return version;
 	}
 		
+	public static void setVersion(String type, String module,String key, String value, Context mContext) {
+		// sets the version information for specified module, key and type
+		// version keys are in the form of <type>_<module>_<key>
+		// type can be "local" or "remote"
+		try {
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+			SharedPreferences.Editor prefsEditor = prefs.edit();
+			String versionKey = type + "_" + module + "_" + key;
+			prefsEditor.putString(versionKey, value);
+			prefsEditor.commit();
+		}
+		catch (Exception e) {
+			Log.d(TAG,"exception for module " + module + " key " + key + " = " + e.getMessage()+ " " + e.getStackTrace() + e.getLocalizedMessage());
+		}
+	}
+
 }

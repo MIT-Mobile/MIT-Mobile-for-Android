@@ -49,7 +49,7 @@ public class FacilitiesActivity extends ModuleActivity {
         Handler uiHandler = new Handler();
 
         // call getVersionMap incase it failed in the Global activity before the correct mobile server was selected
-        Global.getVersionMap(mContext, uiHandler);
+        Global.getVersionInfo(mContext, uiHandler);
 		createViews();
 	}
 
@@ -77,9 +77,10 @@ public class FacilitiesActivity extends ModuleActivity {
 		});
 		
 		// Call Facilities
+		final String phone = mContext.getString(R.string.facilities_phone);
 		TwoLineActionRow callFacilitiesActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesCallFacilitiesActionRow);
 		title1 = "Call Facilities";
-		title2 = "(555.555.5555)";
+		title2 = "(" + phone + ")";
 		callFacilitiesActionRow.setTitle(title1 + " " + title2, TextView.BufferType.SPANNABLE);
 				
 		callFacilitiesActionRow.setActionIconResource(R.drawable.action_phone);
@@ -87,7 +88,23 @@ public class FacilitiesActivity extends ModuleActivity {
 			
 			@Override
 			public void onClick(View v) {
-				CommonActions.callPhone(FacilitiesActivity.this, "6172531000");
+				CommonActions.callPhone(FacilitiesActivity.this, phone);
+			}
+		});
+
+		// Email Facilities
+		final String facilitiesEmail = mContext.getString(R.string.facilities_email);
+		TwoLineActionRow emailFacilitiesActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesEmailFacilitiesActionRow);
+		title1 = "Email Facilities";
+		title2 = "(" + facilitiesEmail + ")";
+		emailFacilitiesActionRow.setTitle(title1 + " " + title2, TextView.BufferType.SPANNABLE);
+				
+		emailFacilitiesActionRow.setActionIconResource(R.drawable.action_email);
+		emailFacilitiesActionRow.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CommonActions.composeEmail(mContext, "facilities@mit.edu");
 			}
 		});
 

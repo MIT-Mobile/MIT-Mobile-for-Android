@@ -5,41 +5,33 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.widget.Toast;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationContentAltnameRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationContentCategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationContentRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.ProblemTypeRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
-import org.json.JSONObject;
-
 public class FacilitiesDB {
 
 	private static final String TAG = "FacilitiesDB";	
 
 	private static final String DATABASE_NAME = "facilities.db";
-
-	// Data  Version Info
-	private static Integer PROBLEM_TYPE_VERSION = 1;
-	private static Integer BLDG_DATA_VERSION = 1;
-	private static Integer CATEGORY_LIST_VERSION = 1;
-	private static Integer LOCATION_VERSION = 1;
-	private static Integer ROOM_VERSION = 1;
 
 	public final static Integer STATUS_CATEGORIES_SUCCESSFUL = 900;
 	public final static Integer STATUS_LOCATIONS_SUCCESSFUL = 901;
@@ -50,6 +42,9 @@ public class FacilitiesDB {
 	private static final String LOCATION_TABLE = "locations";
 	private static final String LOCATION_CATEGORY_TABLE = "location_categories";
 	private static final String LOCATION_CONTENT_TABLE = "location_contents";
+	private static final String LOCATION_CONTENT_CATEGORY_TABLE = "location_content_categories"; // stores one to many relationship for a location content record and its categories 
+	private static final String LOCATION_CONTENT_ALTNAME_TABLE = "location_content_altnames"; // stores one to many relationship for a location content record and its altnames 
+
 	private static final String ROOMS_TABLE = "rooms";
 	private static final String PROBLEM_TYPE_TABLE = "problem_types";
 	private static final String SHORT_LIST_LIMIT = "3";
@@ -64,7 +59,7 @@ public class FacilitiesDB {
 	}
 
 	// LOCATIONS
-	static final class LocationTable implements BaseColumns {
+	public static final class LocationTable implements BaseColumns {
 		static final String ID = "id";
 		static final String NAME = "name";
 		static final String LAT = "lat_wgs84";
@@ -81,10 +76,25 @@ public class FacilitiesDB {
 
 	// LOCATION CONTENTS - stores the one to many relationships between location and contents
 	static final class LocationContentTable implements BaseColumns {
-		static final String OBJECT_ID = "object_id";
-		static final String CONTENT = "content";
+		static final String LOCATION_ID = "location_id";
+		static final String NAME = "name";
+		static final String URL = "url";
 	}
 
+	// LOCATION CONTENT CATEGORIES - stores one to many relationship for a location content record and its categories 
+	static final class LocationContentCategoryTable implements BaseColumns {
+		static final String LOCATION_ID = "location_id";
+		static final String NAME = "name";
+		static final String CATEGORY = "category";
+	}
+
+	// LOCATION CONTENT ALTNAMES - stores one to many relationship for a location content record and its altnames
+	static final class LocationContentAltnameTable implements BaseColumns {
+		static final String LOCATION_ID = "location_id";
+		static final String NAME = "name";
+		static final String ALTNAME = "altname";
+	}
+	
 	// ROOMS
 	static final class RoomTable implements BaseColumns {
 		static final String BUILDING = "building";
@@ -142,9 +152,9 @@ public class FacilitiesDB {
 		values.put(LocationTable.LAT, locationRecord.lat_wgs84);
 		values.put(LocationTable.LONG,locationRecord.long_wgs84);
 		values.put(LocationTable.BLDGNUM, locationRecord.bldgnum);
-		//Log.d(TAG,"adding location " + locationRecord.name );
 		try {
 			db.insert(LOCATION_TABLE, LocationTable.ID + "," + LocationTable.NAME + "," + LocationTable.LAT + "," + LocationTable.LONG + "," + LocationTable.BLDGNUM,values);		
+			//Log.d(TAG,"addLocation " + locationRecord.name);
 		}
 		catch (Exception e) {
 			Log.d(TAG,"error inserting record " + e.getMessage());
@@ -162,6 +172,63 @@ public class FacilitiesDB {
 		}
 		catch (Exception e) {
 			Log.d(TAG,"error inserting location category: " + e.getMessage());
+		}
+	}
+
+	// ADDLOCATIONCONTENT
+	synchronized public void addLocationContent(LocationContentRecord locationContentRecord) {
+		SQLiteDatabase db = mDBHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(LocationContentTable.LOCATION_ID, locationContentRecord.location_id);
+		values.put(LocationContentTable.NAME, locationContentRecord.name);
+		values.put(LocationContentTable.URL, locationContentRecord.url);
+		try {
+			//Log.d(TAG,"inserting " + LOCATION_CONTENT_TABLE + " location_id = " + locationContentRecord.location_id + " name = " + locationContentRecord.name );
+			db.insert(LOCATION_CONTENT_TABLE, LocationContentTable.LOCATION_ID + "," + LocationContentTable.NAME + "," + LocationContentTable.URL + ",",values);		
+		}
+		catch (Exception e) {
+			Log.d(TAG,"error inserting location content: " + e.getMessage());
+		}
+	}
+
+	// ADDLOCATIONCONTENTCATEGORY
+	synchronized public void addLocationContentCategory(LocationContentCategoryRecord locationContentCategoryRecord) {
+		SQLiteDatabase db = mDBHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(LocationContentCategoryTable.LOCATION_ID, locationContentCategoryRecord.location_id);
+		values.put(LocationContentCategoryTable.NAME, locationContentCategoryRecord.name);
+		values.put(LocationContentCategoryTable.CATEGORY, locationContentCategoryRecord.category);
+		try {
+			db.insert(LOCATION_CONTENT_CATEGORY_TABLE, 
+					  LocationContentCategoryTable.LOCATION_ID + "," 
+					  + LocationContentCategoryTable.NAME + "," 
+					  + LocationContentCategoryTable.CATEGORY,values);		
+		}
+		catch (Exception e) {
+			Log.d(TAG,"error inserting location content category: " + e.getMessage());
+		}
+	}
+
+	// ADDLOCATIONCONTENTALTNAME
+	synchronized public void addLocationContentAltname(LocationContentAltnameRecord locationContentAltnameRecord) {
+		SQLiteDatabase db = mDBHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(LocationContentAltnameTable.LOCATION_ID, locationContentAltnameRecord.location_id);
+		values.put(LocationContentAltnameTable.NAME, locationContentAltnameRecord.name);
+		values.put(LocationContentAltnameTable.ALTNAME, locationContentAltnameRecord.altname);
+		try {
+			db.insert(LOCATION_CONTENT_ALTNAME_TABLE, 
+					  LocationContentAltnameTable.LOCATION_ID + "," 
+					  + LocationContentAltnameTable.NAME + "," 
+					  + LocationContentAltnameTable.ALTNAME,values);
+//			Log.d(TAG,"added location_content_altname: ");
+//			Log.d(TAG,"location_id = " + locationContentAltnameRecord.location_id);
+//			Log.d(TAG,"name = " + locationContentAltnameRecord.name);
+//			Log.d(TAG,"altname = " + locationContentAltnameRecord.altname);
+//			Log.d(TAG,"");
+		}
+		catch (Exception e) {
+			Log.d(TAG,"error inserting location content altname: " + e.getMessage());
 		}
 	}
 
@@ -196,7 +263,6 @@ public class FacilitiesDB {
 		Cursor cursor = getCategoryCursor();
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
-			//Log.d(TAG,"index 0 = " + cursor.getString(0) + " index 1 = " + cursor.getString(1) + " index 2 = " + cursor.getString(2));
 			category = new CategoryRecord();
 			category.id = cursor.getString(1);
 			category.name = cursor.getString(2);
@@ -219,8 +285,7 @@ public class FacilitiesDB {
 					+ " JOIN " + LOCATION_TABLE + " on " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + " = " + LOCATION_TABLE + "." + LocationTable.ID
 					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "'"
 					+ " order by " + LocationTable.NAME;
-//		String sql = "select * from " + LOCATION_CATEGORY_TABLE;
-		Log.d(TAG,"locationCategory sql = " + sql);
+		//Log.d(TAG,"locationCategory sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		return cursor;
 	}
@@ -289,13 +354,138 @@ public class FacilitiesDB {
 		cursor.close();
 		return location;
 	}
-
+	
 	public Cursor getLocationSearchCursor(CharSequence searchTerm) {
+		Log.d(TAG,"searchTerm = " + searchTerm);
+		String searchTermUppercase = searchTerm.toString().toUpperCase();
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
-		return db.query(LOCATION_TABLE, new String[] {LocationTable._ID, LocationTable.NAME}, LocationTable.NAME + " LIKE ?", 
-				new String[] { "%" + searchTerm + "%"}, null, null, LocationTable.BLDGNUM);
+		String sql = "SELECT " 
+	          		  + " -1 as " + LocationTable._ID + ", " 
+	          		  + "'object-0'" + LocationTable.ID + ", " 
+				      + " '' as " + LocationTable.BLDGNUM + ", "
+				      + " '' as sort_value, "
+				      + " '" + searchTerm + "' as name, " 
+				      + " ? as display_name "
+		              + " UNION " 
+		              + " SELECT DISTINCT "
+			          + LOCATION_TABLE + "." + LocationTable._ID + ", "
+		              + LOCATION_TABLE + "." + LocationTable.ID + ", "
+			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
+			          + LOCATION_TABLE + "." + LocationTable.ID + " as sort_value, "
+			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "			          
+			          + " CASE WHEN length(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") > 0 THEN " 
+			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + " || '-' || " + LOCATION_TABLE + "." + LocationTable.NAME 
+			          + " ELSE " + LOCATION_TABLE + "." + LocationTable.NAME + " END as display_name "
+			          + " FROM " + LOCATION_TABLE
+			          + " LEFT JOIN " + LOCATION_CATEGORY_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID
+			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
+			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
+			          + " WHERE "
+			          + " upper(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") like '%" + searchTermUppercase + "%'"
+			          + " OR "
+			          + " upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + ") like '%" + searchTermUppercase + "%'"
+					  + " OR "
+					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
+					  + " OR "
+					  + " upper(" + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ") like '%" + searchTermUppercase + "%'"
+					  + " ORDER BY sort_value ";
+
+		Log.d(TAG,"location search sql = " + sql);
+		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'"});
+		Log.d(TAG,"num results = " + cursor.getCount());
+		return cursor;
 	}
 	
+	public Cursor getLocationForCategorySearchCursor(CharSequence searchTerm) {
+		Log.d(TAG,"searchTerm = " + searchTerm);
+		String searchTermUppercase = searchTerm.toString().toUpperCase();
+		String selectedCategory = Global.sharedData.getFacilitiesData().getLocationCategory();
+		Log.d(TAG,"selectedCategoty = " + selectedCategory);
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		String sql = "SELECT " 
+	          		  + " -1 as " + LocationTable._ID + ", " 
+	          		  + "'object-0'" + LocationTable.ID + ", " 
+				      + " '' as " + LocationTable.BLDGNUM + ", "
+				      + " '' as sort_value, "
+				      + " '" + searchTerm + "' as name, " 
+				      + " ? as display_name "
+		              + " UNION " 
+		              + " SELECT DISTINCT "
+			          + LOCATION_TABLE + "." + LocationTable._ID + ", "
+		              + LOCATION_TABLE + "." + LocationTable.ID + ", "
+			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
+			          + LOCATION_TABLE + "." + LocationTable.ID + " as sort_value, "
+			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "			          
+			          + " CASE WHEN length(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") > 0 THEN " 
+			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + " || '-' || " + LOCATION_TABLE + "." + LocationTable.NAME 
+			          + " ELSE " + LOCATION_TABLE + "." + LocationTable.NAME + " END as display_name "
+			          + " FROM " + LOCATION_TABLE
+			          + " LEFT JOIN " + LOCATION_CATEGORY_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID
+			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
+			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
+			          + " WHERE "
+			          + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + " = ? "
+			          + " AND ( "	
+			          + " upper(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") like '%" + searchTermUppercase + "%'"
+			          + " OR "
+			          + " upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + ") like '%" + searchTermUppercase + "%'"
+					  + " OR "
+					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
+					  + " OR "
+					  + " upper(" + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ") like '%" + searchTermUppercase + "%'"
+					  + " ) "
+					  + " ORDER BY sort_value ";
+
+		Log.d(TAG,"location search sql = " + sql);
+		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'",selectedCategory});
+		Log.d(TAG,"num results = " + cursor.getCount());
+		return cursor;
+	}
+
+	public Cursor getRoomSearchCursor(CharSequence searchTerm) {
+		Log.d(TAG,"searchTerm = " + searchTerm);
+		String searchTermUppercase = searchTerm.toString().toUpperCase();
+		String selectedBuilding = Global.sharedData.getFacilitiesData().getBuildingNumber().toUpperCase();
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		String sql = "select " 				
+			+ ROOMS_TABLE + "." + RoomTable._ID + ", " 
+			+ ROOMS_TABLE + "." + RoomTable.BUILDING + ", " 
+			+ ROOMS_TABLE + "." + RoomTable.FLOOR + ", " 
+			+ ROOMS_TABLE + "." + RoomTable.ROOM  
+			+ " FROM " + ROOMS_TABLE
+			+ " where upper(building) = '" + selectedBuilding + "' "  
+			+ " and upper(room) like '%" + searchTermUppercase + "%' " 
+			+ " order by " + RoomTable.ROOM;
+
+			Log.d(TAG,"location search sql = " + sql);
+			Cursor cursor = db.rawQuery(sql,null);
+			return cursor;
+	}
+
+	public Cursor getLocationContentCursor() {
+		Log.d(TAG,"getLocationContentCursor");
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		String sql = "select " 				
+					+ LOCATION_CONTENT_TABLE + "." + LocationContentTable._ID + ", " 
+					+ LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID + ", " 
+					+ LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ", " 
+					+ LOCATION_CONTENT_TABLE + "." + LocationContentTable.URL  
+					+ " FROM " + LOCATION_CONTENT_TABLE
+					+ " order by " + LocationContentTable.LOCATION_ID;
+		Cursor cursor = db.rawQuery(sql, null);
+		//DEBUG CONTENT
+		cursor.moveToFirst();
+		for (int c = 0; c < cursor.getCount(); c++) {
+			Log.d(TAG,"CONTENT _ID = " + cursor.getString(0));
+			Log.d(TAG,"CONTENT LOCATION_ID = " + cursor.getString(1));
+			Log.d(TAG,"CONTENT NAME = " + cursor.getString(2));
+			Log.d(TAG,"CONTENT URL = " + cursor.getString(3));
+			cursor.moveToNext();
+		}
+		//DEBUG
+		return cursor;
+	}
+
 	public Cursor getRoomCursor() {
 		Log.d(TAG,"getRoomCursor");
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
@@ -426,6 +616,28 @@ public class FacilitiesDB {
 		catch (Exception e) {
 			Log.d(TAG,e.getMessage());
 		}
+
+		try {
+			db.delete(LOCATION_CONTENT_TABLE, null, null);
+		}
+		catch (Exception e) {
+			Log.d(TAG,e.getMessage());
+		}
+
+		try {
+			db.delete(LOCATION_CONTENT_CATEGORY_TABLE, null, null);
+		}
+		catch (Exception e) {
+			Log.d(TAG,e.getMessage());
+		}
+
+		try {
+			db.delete(LOCATION_CONTENT_ALTNAME_TABLE, null, null);
+		}
+		catch (Exception e) {
+			Log.d(TAG,e.getMessage());
+		}
+
 	}
 
 	
@@ -445,12 +657,15 @@ public class FacilitiesDB {
 		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			//Log.d(TAG,"onCreate()");
 			createCategoryTable(db);
 			createLocationTable(db);
 			createLocationCategoryTable(db);
+			createLocationContentTable(db);
+			createLocationContentCategoryTable(db);
+			createLocationContentAltnameTable(db);
 			createRoomTable(db);
 			createProblemTypeTable(db);
+			Log.d(TAG,"table creation complete");
 		}
 
 		@Override
@@ -468,7 +683,7 @@ public class FacilitiesDB {
 			+ CategoryTable.NAME + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + categoryTableSql);
+		//Log.d(TAG,"create category table sql = " + categoryTableSql);
 		try {
 			db.execSQL(categoryTableSql);
 		}
@@ -490,9 +705,10 @@ public class FacilitiesDB {
 			+ LocationTable.LAST_UPDATED + " TEXT \n " 
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + locationTableSql);
+		//Log.d(TAG,"create category table sql = " + locationTableSql);
 		try {
 			db.execSQL(locationTableSql);
+			Log.d(TAG,"location table created");
 		}
 		catch (SQLException e) {
 			Log.d(TAG,e.getMessage());
@@ -508,10 +724,70 @@ public class FacilitiesDB {
 			+ LocationCategoryTable.CATEGORY_ID + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create location category table sql = " + locationCategoryTableSql);
+		//Log.d(TAG,"create location category table sql = " + locationCategoryTableSql);
 		try {
 			db.execSQL(locationCategoryTableSql);
 			Log.d(TAG,"location category table created");
+		}
+		catch (SQLException e) {
+			Log.d(TAG,e.getMessage());
+		}				
+	}
+
+	private static void createLocationContentTable(SQLiteDatabase db) {
+
+		String locationContentTableSql = 
+			"CREATE TABLE \n" + LOCATION_CONTENT_TABLE + "\n ("
+			+ LocationContentTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, \n"
+			+ LocationContentTable.LOCATION_ID + " TEXT, \n "
+			+ LocationContentTable.NAME + " TEXT, \n "
+			+ LocationContentTable.URL + " TEXT \n "
+			+ ");";
+
+		//Log.d(TAG,"create location category table sql = " + locationContentTableSql);
+		try {
+			db.execSQL(locationContentTableSql);
+			Log.d(TAG,"location category table created");
+		}
+		catch (SQLException e) {
+			Log.d(TAG,e.getMessage());
+		}				
+	}
+
+	private static void createLocationContentCategoryTable(SQLiteDatabase db) {
+
+		String locationContentCategoryTableSql = 
+			"CREATE TABLE \n" + LOCATION_CONTENT_CATEGORY_TABLE + "\n ("
+			+ LocationContentCategoryTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, \n"
+			+ LocationContentCategoryTable.LOCATION_ID + " TEXT, \n "
+			+ LocationContentCategoryTable.NAME + " TEXT, \n "
+			+ LocationContentCategoryTable.CATEGORY + " TEXT \n "
+			+ ");";
+
+		//Log.d(TAG,"create location content category table sql = " + locationContentCategoryTableSql);
+		try {
+			db.execSQL(locationContentCategoryTableSql);
+			Log.d(TAG,"location content category table created");
+		}
+		catch (SQLException e) {
+			Log.d(TAG,e.getMessage());
+		}				
+	}
+
+	private static void createLocationContentAltnameTable(SQLiteDatabase db) {
+
+		String locationContentAltnameTableSql = 
+			"CREATE TABLE \n" + LOCATION_CONTENT_ALTNAME_TABLE + "\n ("
+			+ LocationContentAltnameTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, \n"
+			+ LocationContentAltnameTable.LOCATION_ID + " TEXT, \n "
+			+ LocationContentAltnameTable.NAME + " TEXT, \n "
+			+ LocationContentAltnameTable.ALTNAME + " TEXT \n "
+			+ ");";
+
+		//Log.d(TAG,"create location content altname table sql = " + locationContentAltnameTableSql);
+		try {
+			db.execSQL(locationContentAltnameTableSql);
+			Log.d(TAG,"location content altname table created");
 		}
 		catch (SQLException e) {
 			Log.d(TAG,e.getMessage());
@@ -528,7 +804,7 @@ public class FacilitiesDB {
 			+ RoomTable.ROOM + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + roomTableSql);
+		//Log.d(TAG,"create category table sql = " + roomTableSql);
 		try {
 			db.execSQL(roomTableSql);
 		}
@@ -545,7 +821,7 @@ public class FacilitiesDB {
 			+ ProblemTypeTable.PROBLEM_TYPE + " TEXT \n "
 			+ ");";
 
-		Log.d(TAG,"create category table sql = " + roomTableSql);
+		//Log.d(TAG,"create category table sql = " + roomTableSql);
 		try {
 			db.execSQL(roomTableSql);
 		}
@@ -574,13 +850,13 @@ public class FacilitiesDB {
 
 	}
 
-	public static void updateCategories(Context mContext,final Handler uiHandler) {
+	public static String updateCategories(Context mContext,final Handler uiHandler) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 		Message msg = new Message();
 		
+		final String version = Global.getVersion("remote", "map","category_list") + "";
 		// compare local category version to remote version
-		final int remoteVersion = Global.getVersion("map", "category_list");
-		if (remoteVersion > db.CATEGORY_LIST_VERSION) {
+		if (!Global.upToDate("map", "category_list")) {
 			Log.d(TAG,"updating category list");
 			db.clearCategories();
 			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
@@ -592,10 +868,11 @@ public class FacilitiesDB {
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
 					public void onResponse(JSONArray array) {
+						db.startTransaction();
+						Log.d(TAG,"category list begin transaction");
 						for (int i = 0; i < array.length(); i++) {
 							try {
-								//Log.d(TAG,array.getString(i));
-								 JSONObject obj = array.getJSONObject(i);
+								JSONObject obj = array.getJSONObject(i);
 								CategoryRecord record = new CategoryRecord();
 								record.id = obj.getString("id");
 								record.name = obj.getString("name");
@@ -605,32 +882,26 @@ public class FacilitiesDB {
 								Log.d(TAG,e.getMessage());							
 							}
 						}
-						//MobileWebApi.sendSuccessMessage(uiHandler);
+						db.endTransaction();
+						Log.d(TAG,"category list end transaction");
 					}
 			});			
-			// update local version
-			FacilitiesDB.setCATEGORY_LIST_VERSION(remoteVersion);
-			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
 		else {
 			Log.d(TAG,"category list is up to date");
-			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
 		}
-		uiHandler.sendMessage(msg);
+		return version;
 	}
 	
-	public static void updateLocations(Context mContext,final Handler uiHandler) {
-			//String url = "http://" + Global.getMobileWebDomain() + "/api/map/index.php?command=categorylist";
+	public static String updateLocations(Context mContext,final Handler uiHandler) {
 			final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
-			Message msg = new Message();
 				
+			final String version = Global.getVersion("remote", "map","location") + "";
+
 			// compare local category version to remote version
-			final int remoteVersion = Global.getVersion("map", "location");
-			Log.d(TAG,"remoteVersion = " + remoteVersion + " localVersion = " + db.LOCATION_VERSION);
-			if (remoteVersion > db.LOCATION_VERSION) {
+			if (!Global.upToDate("map", "location")) {
 				Log.d(TAG,"updating location list");
 				db.clearLocations();
-
 				MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
 				HashMap<String, String> params = new HashMap<String, String>();
 				params.put("module", "facilities");
@@ -640,10 +911,10 @@ public class FacilitiesDB {
 			                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 						@Override
 						public void onResponse(JSONArray array) {
-							//Log.d(TAG, "processing locations from server");
+							Log.d(TAG,"received location response");
+							db.startTransaction();
 							for (int i = 0; i < array.length(); i++) {
 								try {
-									//Log.d(TAG,array.getString(i));
 									JSONObject obj = array.getJSONObject(i);
 									LocationRecord record = new LocationRecord();
 									record.id = obj.getString("id");
@@ -652,49 +923,92 @@ public class FacilitiesDB {
 									record.long_wgs84 = obj.getString("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
 									db.addLocation(record);
-									//Log.d(TAG,"after adding location" + record.name );
-									
-									// convert categories into an array and add to location category table 
-									//Log.d(TAG,"category string for " + record.id + " = " + obj.getString("category"));
-									JSONArray categories = new JSONArray(obj.getString("category"));
-									for (int c = 0; c < categories.length(); c++) {
-										LocationCategoryRecord locationCategoryRecord = new LocationCategoryRecord();
-										locationCategoryRecord.locationId = obj.getString("id");
-										locationCategoryRecord.categoryId = categories.getString(c);
-										db.addLocationCategory(locationCategoryRecord);
-									}
 
+									// convert categories into an array and add to location category table 
+									String locationCategoryString = obj.getString("category");
+									if (locationCategoryString != null) {
+										JSONArray categories = new JSONArray(locationCategoryString);
+										for (int c = 0; c < categories.length(); c++) {
+											LocationCategoryRecord locationCategoryRecord = new LocationCategoryRecord();
+											locationCategoryRecord.locationId = obj.getString("id");
+											locationCategoryRecord.categoryId = categories.getString(c);
+											db.addLocationCategory(locationCategoryRecord);
+										}
+									}
+									
+									// convert contents into an array and add to location contents table 
+									if (!obj.getString("contents").equalsIgnoreCase("null")) {	
+										JSONArray contentsArray = new JSONArray(obj.getString("contents"));
+										for (int c = 0; c < contentsArray.length(); c++) {
+											JSONObject contentObj = contentsArray.getJSONObject(c);
+											LocationContentRecord locationContentRecord = new LocationContentRecord();
+											locationContentRecord.location_id = obj.getString("id");
+											
+											// contents - name
+											if (contentObj.getString("name") != null) {
+												locationContentRecord.name = contentObj.getString("name");											
+											}
+											else {
+												locationContentRecord.name = "";																						
+											}
+											db.addLocationContent(locationContentRecord);
+											
+											// contents - altname
+											if (!contentObj.isNull("altname")) { 
+												String contentAltnameString = contentObj.getString("altname");
+												JSONArray altnameArray = new JSONArray(contentAltnameString);
+												for (int a = 0; i < altnameArray.length(); a++) {
+													LocationContentAltnameRecord locationContentAltnameRecord = new LocationContentAltnameRecord(); 
+													locationContentAltnameRecord.location_id = obj.getString("id");
+													locationContentAltnameRecord.name = contentObj.getString("name");
+													locationContentAltnameRecord.altname = altnameArray.getString(a);
+													db.addLocationContentAltname(locationContentAltnameRecord);
+												}
+											}
+
+											// contents - category
+											if (!contentObj.isNull("category")) { 
+												String contentCategoryString = contentObj.getString("category");
+												JSONArray categoryArray = new JSONArray(contentCategoryString);
+												for (int cc = 0; i < categoryArray.length(); cc++) {
+													LocationContentCategoryRecord locationContentCategoryRecord = new LocationContentCategoryRecord(); 
+													locationContentCategoryRecord.location_id = obj.getString("id");
+													locationContentCategoryRecord.name = contentObj.getString("name");
+													locationContentCategoryRecord.category = categoryArray.getString(cc);
+													db.addLocationContentCategory(locationContentCategoryRecord);
+												}
+											}
+										}
+									}
 								}
 								catch (Exception e) {
 									Log.d(TAG,e.getMessage());							
 								}
 							}
+							db.endTransaction();
 							Log.d(TAG,"locations inserted into database");
-							FacilitiesDB.setLOCATION_VERSION(remoteVersion);
-							Message msg = new Message();
-							msg.arg1 = FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL;
-							Log.d(TAG, "sending location success message to uiHandler");
-							uiHandler.sendMessage(msg);
+							// update local version
+							try {
+								Global.setVersion("local", "map","location",Global.getVersion("remote","map","location") + "",Global.mContext);
+							}
+							catch (Exception e) {
+								Log.d(TAG,e.getMessage());
+							}
 						}
 				});
 			}
 			else {
 				Log.d(TAG,"location list is up to date");
-				msg.arg1 = FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL;
-				Log.d(TAG, "sending location success message to uiHandler");
-				uiHandler.sendMessage(msg);
 			}
-			//MobileWebApi.sendSuccessMessage(uiHandler);
+			return version;
 		}
 
-	
-	public static void updateProblemTypes(Context mContext,final Handler uiHandler) {
+	public static String updateProblemTypes(Context mContext,final Handler uiHandler) {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
-		Message msg = new Message();
-		
-		// compare local category version to remote version
-		final int remoteVersion = Global.getVersion("facilities", "problem_type");
-		if (remoteVersion > db.PROBLEM_TYPE_VERSION) {
+		Log.d(TAG,"updating problem types");
+		final String version = Global.getVersion("remote","facilities", "problem_type") + "";
+
+		if (!Global.upToDate("facilities", "problem_type")) {
 			Log.d(TAG,"updating problem type list");
 			db.clearProblemTypes();
 			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
@@ -706,6 +1020,7 @@ public class FacilitiesDB {
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
 					public void onResponse(JSONArray array) {
+						db.startTransaction();
 						for (int i = 0; i < array.length(); i++) {
 							try {
 								ProblemTypeRecord record = new ProblemTypeRecord();
@@ -717,22 +1032,19 @@ public class FacilitiesDB {
 								Log.d(TAG,e.getMessage());							
 							}
 						}
+						db.endTransaction();
 					}
 			});			
-			// update local version
-			//FacilitiesDB.setP.setCATEGORY_LIST_VERSION(remoteVersion);
-			msg.arg1 = FacilitiesDB.STATUS_PROBLEM_TYPES_SUCCESSFUL;
 		}
 		else {
-			Log.d(TAG,"category list is up to date");
-			msg.arg1 = FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL;
+			Log.d(TAG,"problem type list is up to date");
 		}
-		uiHandler.sendMessage(msg);
+		return version;
 	}
 
 	public static void updateRooms(Context mContext,final Handler uiHandler, final String buildingNumber) {
-		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 		Message msg = new Message();
+		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 	
 		MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -744,6 +1056,7 @@ public class FacilitiesDB {
 	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 				@Override
 				public void onResponse(JSONObject obj) {
+					db.startTransaction();
 					// iterate through all building on json object
 					Log.d(TAG,"got room response from server");
 					Iterator b = obj.keys();
@@ -777,6 +1090,7 @@ public class FacilitiesDB {
 					}
 					// Set last updated field for location so rooms are not re-read for that location
 					FacilitiesDB.setLocationLastUpdated(buildingNumber);
+					db.endTransaction();
 					Message msg = new Message();
 					msg.arg1 = FacilitiesDB.STATUS_ROOMS_SUCCESSFUL;
 					Log.d(TAG, "sending room success message to uiHandler");
@@ -810,46 +1124,5 @@ public class FacilitiesDB {
 			return null;
 		}
 	}
-	
-	
-	public static Integer getBLDG_DATA_VERSION() {
-		return BLDG_DATA_VERSION;
-	}
-
-	public static void setBLDG_DATA_VERSION(Integer bLDG_DATA_VERSION) {
-		BLDG_DATA_VERSION = bLDG_DATA_VERSION;
-	}
-
-	public static Integer getCATEGORY_LIST_VERSION() {
-		return CATEGORY_LIST_VERSION;
-	}
-
-	public static void setCATEGORY_LIST_VERSION(Integer cATEGORY_LIST_VERSION) {
-		CATEGORY_LIST_VERSION = cATEGORY_LIST_VERSION;
-	}
-
-	public static Integer getLOCATION_VERSION() {
-		return LOCATION_VERSION;
-	}
-
-	public static void setLOCATION_VERSION(Integer lOCATION_VERSION) {
-		LOCATION_VERSION = lOCATION_VERSION;
-	}
-
-	public static Integer getROOM_VERSION() {
-		return ROOM_VERSION;
-	}
-
-	public static void setROOM_VERSION(Integer rOOM_VERSION) {
-		ROOM_VERSION = rOOM_VERSION;
-	}
-
-	public static Integer getPROBLEM_TYPE_VERSION() {
-		return PROBLEM_TYPE_VERSION;
-	}
-
-	public static void setPROBLEM_TYPE_VERSION(Integer pROBLEM_TYPE_VERSION) {
-		PROBLEM_TYPE_VERSION = pROBLEM_TYPE_VERSION;
-	}
-		
+			
 }
