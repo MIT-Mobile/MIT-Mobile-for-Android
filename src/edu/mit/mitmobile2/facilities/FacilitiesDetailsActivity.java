@@ -2,8 +2,10 @@ package edu.mit.mitmobile2.facilities;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -17,14 +19,17 @@ import org.apache.commons.io.IOUtils;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -33,12 +38,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -51,6 +58,8 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	public static final String TAG = "FacilitiesProblemTypeActivity";
 	private Context mContext;	
 	private TextView problemStringTextView;
+	private EditText problemDescription;
+	private EditText sendAsEditText;
     private static final int CAMERA_PIC_REQUEST = 1;
     private static final int PIC_SELECTION = 2;
     private TwoLineActionRow addAPhotoActionRow;
@@ -92,6 +101,9 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
         problemStringTextView.setText(problemString);
         
+        problemDescription = (EditText) findViewById(R.id.problemDescription);
+        sendAsEditText = (EditText) findViewById(R.id.facilitiesSendAs);
+        
         // Add A Photo
     	addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
     	addAPhotoActionRow.setActionIconResource(R.drawable.photoopp);
@@ -106,6 +118,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	            selectedImage.setVisibility(View.GONE);	
 				View facilitiesCameraOptionsLayout = findViewById(R.id.facilitiesCameraOptionsLayout);
 				facilitiesCameraOptionsLayout.setVisibility(View.VISIBLE);
+				mSelectedImageUri = null;
 			}
 		});
     	
@@ -198,32 +211,165 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 		// TODO Auto-generated method stub
 		
 	}
-
-	private void submitForm() {
-		new Thread() {
-			public void run() {
-				try {
-					HttpClient httpClient = new DefaultHttpClient();
-					HttpPost httpPost = new HttpPost("http://" + Global.getMobileWebDomain() + "/api/?module=facilities&command=upload");
-					InputStream imageStream;
-					imageStream = getContentResolver().openInputStream(mSelectedImageUri);
-					byte[] imageData;
-					imageData = IOUtils.toByteArray(imageStream);
+	
+	void submitForm() {
+		FileUploader fileUploader = new FileUploader();
+		fileUploader.execute();
+	}
+	
+	private class FileUploader extends AsyncTask<Void, Long, Boolean> implements FileUploadListener {
+		ProgressDialog mProgressDialog;
+		long mMaxBytes;
+		String mSendAs;
+		String mProblemDescription;
+		CountingMultipartEntity mUploadEntity; 
+		
+		@Override
+		protected void onPreExecute() {
+			mProblemDescription = problemDescription.getText().toString();
+			mSendAs = sendAsEditText.getText().toString();
+			mUploadEntity = new CountingMultipartEntity(this);
+			mProgressDialog = new ProgressDialog(mContext);
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			mProgressDialog.setMessage("Uploading Data");
+			mProgressDialog.setIndeterminate(false);
+			mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					mUploadEntity.cancel();	
+					FileUploader.this.cancel(true);
+				}
+			});
+			mProgressDialog.show();
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... unusedArgs) {
+			try {
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpPost httpPost = new HttpPost("http://" + Global.getMobileWebDomain() + "/api/?module=facilities&command=upload");
+				mMaxBytes = 500;
+				if(mSelectedImageUri != null) {
+					InputStream imageStream = getContentResolver().openInputStream(mSelectedImageUri);
+					byte[] imageData = IOUtils.toByteArray(imageStream);
+					mMaxBytes += imageData.length; // this an approximation of the total bytes to be transferred
 					InputStreamBody imageStreamBody = new InputStreamBody(new ByteArrayInputStream(imageData), "image");
-					MultipartEntity multipartContent = new MultipartEntity();
-					multipartContent.addPart("image", imageStreamBody);	
-					multipartContent.addPart("email", new StringBody("example@example.com"));
-					httpPost.setEntity(multipartContent);
-					HttpResponse response;
-					response = httpClient.execute(httpPost);
-					response.getEntity().getContent().close();
-				} catch (FileNotFoundException fileException)  {
-					fileException.printStackTrace();
-				} catch (IOException ioException) {
-					ioException.printStackTrace();
-				} 
-			}			
-		}.start();
+					mUploadEntity.addPart("image", imageStreamBody);
+				}
+				mUploadEntity.addPart("name", new StringBody(mSendAs));
+				mUploadEntity.addPart("message", new StringBody(mProblemDescription));
+				publishProgress(new Long(0)); // initialize the progress bar
+				
+				httpPost.setEntity(mUploadEntity);
+				HttpResponse response;
+				response = httpClient.execute(httpPost);
+				response.getEntity().getContent().close();
+				return true;
+			} catch (FileNotFoundException fileException)  {
+				fileException.printStackTrace();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+			
+			return false;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean success) {
+			mProgressDialog.dismiss();
+			if(!success) {
+				Toast.makeText(mContext, MobileWebApi.NETWORK_ERROR, Toast.LENGTH_SHORT);
+			}
+		}
+		
+		@Override
+		public void onBytesTransfered(long transferred) {
+			publishProgress(transferred);	
+		}
+		
+		@Override
+		public void onProgressUpdate(Long... progress) {
+			long progressBytes = progress[0];
+			if(progressBytes > mMaxBytes) {
+				// this a hack to account for the fact
+				// that maxKiloBytes is just an approximation
+				progressBytes = mMaxBytes; 
+			}
+			if(mMaxBytes > 10000) {
+				// use kilobytes	
+				int maxKiloBytes = (int)(mMaxBytes / 1000);
+				mProgressDialog.setMax(maxKiloBytes);
+				int progressKiloBytes = (int)(progress[0] / 1000);
+				mProgressDialog.setProgress(progressKiloBytes);
+			} else {
+				mProgressDialog.setMax((int)mMaxBytes);
+				mProgressDialog.setProgress((int)progressBytes);
+			}
+		}
+		
+	}
+
+
+	/*
+	 * methods and classes to hook into count how many bytes of the image have been uploaded
+	 */
+	private interface FileUploadListener {
+		void onBytesTransfered(long transferred);
+	}
+	
+	private class CountingMultipartEntity extends MultipartEntity {		
+		FileUploadListener mFileUploadListener;
+		CountingOutputStream mCountingOutputStream;
+		
+		CountingMultipartEntity(FileUploadListener fileUploadListener) {
+			mFileUploadListener = fileUploadListener;
+		}
+		
+		@Override
+		public void writeTo(final OutputStream outstream) throws IOException {
+			mCountingOutputStream = new CountingOutputStream(outstream, mFileUploadListener);
+			super.writeTo(mCountingOutputStream);
+		}
+		
+		public void cancel() {
+			mCountingOutputStream.cancel();
+		}
+	}
+	
+	public static class CountingOutputStream extends FilterOutputStream {
+
+		private long mTransferred;
+		FileUploadListener mFileUploadListener;
+		CountingMultipartEntity mUploadEntity;
+		boolean isCancelled = false;
+		
+	    public CountingOutputStream(final OutputStream out, FileUploadListener fileUploadListener) {
+	    	super(out);
+	        mTransferred = 0;
+	        mFileUploadListener = fileUploadListener;
+	    }
+
+	    public void cancel() {
+	    	isCancelled = true;	
+	    }
+	    
+	    public void write(byte[] b, int off, int len) throws IOException {
+	    	if(isCancelled) {
+	    		throw new IOException("Upload was cancelled");
+	    	}
+	    	out.write(b, off, len);
+	        mTransferred += len;
+	        mFileUploadListener.onBytesTransfered(mTransferred);
+	    }
+
+	    public void write(int b) throws IOException {
+	    	if(isCancelled) {
+	    		throw new IOException("Upload was cancelled");
+	    	}
+	    	out.write(b);
+	        mTransferred++;
+	        mFileUploadListener.onBytesTransfered(mTransferred);
+	    }
 	}
 }
 	
