@@ -99,6 +99,7 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				 * Else, go to the room selection screen if building number is defined, else inside/outside screen
 				 */
 				Global.sharedData.getFacilitiesData().setLocationId(locationSearchRecord.id);
+				Global.sharedData.getFacilitiesData().setLocationName(locationSearchRecord.name);
 				Global.sharedData.getFacilitiesData().setBuildingNumber(locationSearchRecord.bldgnum);
 				Log.d(TAG,"locastion search _id = " + locationSearchRecord._id);
 				if (Integer.parseInt(locationSearchRecord._id) == -1) {
