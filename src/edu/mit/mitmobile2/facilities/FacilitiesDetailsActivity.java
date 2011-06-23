@@ -16,6 +16,8 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -61,7 +63,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	private Context mContext;	
 	private TextView problemStringTextView;
-	private EditText problemDescription;
+	private EditText mProblemDescriptionEditText;
 	private EditText sendAsEditText;
     private static final int CAMERA_PIC_REQUEST = 1;
     private static final int PIC_SELECTION = 2;
@@ -104,7 +106,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
         problemStringTextView.setText(problemString);
         
-        problemDescription = (EditText) findViewById(R.id.problemDescription);
+        mProblemDescriptionEditText = (EditText) findViewById(R.id.problemDescription);
         sendAsEditText = (EditText) findViewById(R.id.facilitiesSendAs);
         
         // Add A Photo
@@ -118,7 +120,8 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 				TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
 				addAPhotoActionRow.setVisibility(View.GONE);
 	            selectedImage = (ImageView)findViewById(R.id.selectedImage);
-	            selectedImage.setVisibility(View.GONE);	
+	            selectedImage.setVisibility(View.GONE);
+				selectedImage.setImageBitmap(null);
 				View facilitiesCameraOptionsLayout = findViewById(R.id.facilitiesCameraOptionsLayout);
 				facilitiesCameraOptionsLayout.setVisibility(View.VISIBLE);
 				mSelectedImageUri = null;
@@ -162,8 +165,9 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 			
 			@Override
 			public void onClick(View v) {
-				addAPhotoActionRow.setVisibility(View.VISIBLE);				
-	            selectedImage.setVisibility(View.VISIBLE);
+				addAPhotoActionRow.setVisibility(View.VISIBLE);
+				mSelectedImageUri = null;
+	            selectedImage.setVisibility(View.GONE);
 				facilitiesCameraOptionsLayout.setVisibility(View.GONE);
 			}
 		});
@@ -236,7 +240,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 		
 		@Override
 		protected void onPreExecute() {
-			mProblemDescription = problemDescription.getText().toString();
+			mProblemDescription = mProblemDescriptionEditText.getText().toString();
 			mSendAs = sendAsEditText.getText().toString();
 			mUploadEntity = new CountingMultipartEntity(this);
 			mProgressDialog = new ProgressDialog(mContext);
@@ -263,22 +267,30 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 					InputStream imageStream = getContentResolver().openInputStream(mSelectedImageUri);
 					byte[] imageData = IOUtils.toByteArray(imageStream);
 					mMaxBytes += imageData.length; // this an approximation of the total bytes to be transferred
-					InputStreamBody imageStreamBody = new InputStreamBody(new ByteArrayInputStream(imageData), "image");
+					InputStreamBody imageStreamBody = new InputStreamBody(new ByteArrayInputStream(imageData), "image/jpeg", "image");
 					mUploadEntity.addPart("image", imageStreamBody);
 				}
 				mUploadEntity.addPart("name", new StringBody(mSendAs));
 				mUploadEntity.addPart("message", new StringBody(mProblemDescription));
+				mUploadEntity.addPart("location", new StringBody(Global.sharedData.getFacilitiesData().getLocationId()));
+				mUploadEntity.addPart("locationName", new StringBody(Global.sharedData.getFacilitiesData().getLocationName()));
+				mUploadEntity.addPart("buildingNumber", new StringBody(Global.sharedData.getFacilitiesData().getBuildingNumber()));
+				mUploadEntity.addPart("roomName", new StringBody(Global.sharedData.getFacilitiesData().getBuildingRoomName()));
 				publishProgress(new Long(0)); // initialize the progress bar
 				
 				httpPost.setEntity(mUploadEntity);
 				HttpResponse response;
 				response = httpClient.execute(httpPost);
-				response.getEntity().getContent().close();
-				return true;
+				String responseText = MobileWebApi.convertStreamToString(response.getEntity().getContent());
+				JSONObject responseObject = new JSONObject(responseText);
+				return responseObject.getBoolean("success");
+				
 			} catch (FileNotFoundException fileException)  {
 				fileException.printStackTrace();
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
+			} catch(JSONException jsonException) {
+				jsonException.printStackTrace();
 			}
 			
 			return false;
@@ -287,8 +299,11 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 		@Override
 		protected void onPostExecute(Boolean success) {
 			mProgressDialog.dismiss();
-			if(!success) {
-				Toast.makeText(mContext, MobileWebApi.NETWORK_ERROR, Toast.LENGTH_SHORT);
+			if(success) {
+				Intent intent = new Intent(mContext, FacilitiesUploadSuccessModuleActivity.class);
+				mContext.startActivity(intent);
+			} else {
+				Toast.makeText(mContext, MobileWebApi.NETWORK_ERROR, Toast.LENGTH_SHORT).show();
 			}
 		}
 		
