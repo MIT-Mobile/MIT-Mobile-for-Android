@@ -276,6 +276,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 				mUploadEntity.addPart("locationName", new StringBody(Global.sharedData.getFacilitiesData().getLocationName()));
 				mUploadEntity.addPart("buildingNumber", new StringBody(Global.sharedData.getFacilitiesData().getBuildingNumber()));
 				mUploadEntity.addPart("roomName", new StringBody(Global.sharedData.getFacilitiesData().getBuildingRoomName()));
+				mUploadEntity.addPart("problemType", new StringBody(Global.sharedData.getFacilitiesData().getProblemType()));
 				publishProgress(new Long(0)); // initialize the progress bar
 				
 				httpPost.setEntity(mUploadEntity);
