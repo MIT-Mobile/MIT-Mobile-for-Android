@@ -26,13 +26,11 @@ class LocationAdapter extends CursorAdapter {
 	}
 	
 	private void setupRow(Cursor cursor, View row) {
-		LocationRecord locationRecord = new LocationRecord();
-		locationRecord.id = cursor.getString(1);
-		locationRecord.name = cursor.getString(2);
-		locationRecord.lat_wgs84 = cursor.getString(3);
-		locationRecord.long_wgs84 = cursor.getString(4);
-		locationRecord.bldgnum = cursor.getString(5);
-
+		LocationRecord locationRecord = FacilitiesDB.getLocationRecord(cursor);
+		populateView(locationRecord, row);
+	}
+	
+	public static void populateView(LocationRecord locationRecord, View row) {
 		TextView locationTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
 		
 		if (locationRecord.bldgnum.equals("")) {

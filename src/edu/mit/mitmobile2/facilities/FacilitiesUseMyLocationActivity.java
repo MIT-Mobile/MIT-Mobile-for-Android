@@ -1,82 +1,44 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.ProgressDialog;
+import java.util.List;
+
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
-import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
-import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
+import edu.mit.mitmobile2.SimpleArrayAdapter;
+import edu.mit.mitmobile2.TitleBar;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
-//public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
 
 public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesLocationsNearByActivity";
-
+	private static final int SUFFICIENT_ACCURACY = 20; // 20 meters;
+	private static final int MAX_WAIT_TIME = 5000; // do not wait more than 6000 miliseconds
+	
+	private Location mLocation;
+	private LocationListener mLocationListener;
+	boolean mLocationSet = false;
+	boolean mLocationErrorShown = false;
+	
 	Context mContext;
 	ListView mListView;
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
 	FullScreenLoader mLoader;
-	private LocationManager locmgr = null;
-
-	Handler mFacilitiesLoadedHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			if(msg.arg1 == FacilitiesDB.STATUS_CATEGORIES_SUCCESSFUL) {
-				Log.d(TAG,"received success message for categories");
-			} 
-			else if(msg.arg1 == FacilitiesDB.STATUS_LOCATIONS_SUCCESSFUL) {
-				Log.d(TAG,"received success message for locations, launching next activity");
-				
-				CategoryAdapter adapter = new CategoryAdapter(FacilitiesUseMyLocationActivity.this, db.getCategoryCursor());
-				ListView listView = (ListView) findViewById(R.id.facilitiesProblemLocationListView);
-				listView.setAdapter(adapter);
-				listView.setVisibility(View.VISIBLE);
-				
-				listView.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position,
-							long id) {
-						CategoryRecord category = db.getCategory(position);
-						Log.d(TAG,"position = " + position + " id = " + category.id + " name = " + category.name);
-						// save the selected category
-						Global.sharedData.getFacilitiesData().setLocationCategory(category.id);
-						Intent intent = new Intent(mContext, FacilitiesLocationsForCategoryActivity.class);
-						startActivity(intent);          
-					}
-				});
-
-
-				//mLoader.setVisibility(View.GONE);
-			}
-			else {
-				//mLoader.showError();
-			}
-		}		
-	};
+	private Handler uiHandler;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -86,45 +48,116 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 		Log.d(TAG,"onCreate()");
 		
 		mContext = this;
-		Handler uiHandler = new Handler();		
+		uiHandler = new Handler();
+		uiHandler.postDelayed(
+			new Runnable() {
+				public void run() {
+					loadLocations();
+				}
+			}, 
+		MAX_WAIT_TIME);
+		
+		
 		createViews();		
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		locManager.removeUpdates(mLocationListener);
+	}
+	
+	public void loadLocations() {
+		if(!mLocationSet) {
+			mLocationSet = true;
+			LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+			locManager.removeUpdates(mLocationListener);
+			
+			if(mLocation == null) {
+				FacilitiesUseMyLocationActivity.this.locationNotFound();
+				return; // early exit 
+			}
+			
+			new Thread() {
+				public void run() {					
+					FacilitiesDB db = FacilitiesDB.getInstance(mContext);
+					List<LocationRecord> allLocations = db.getLocationsNearLocation(mLocation);
+					final List<LocationRecord>  closestLocations = allLocations.subList(0, 10);
+					
+					uiHandler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							mListView.setAdapter(new LocationArrayAdapter(mContext, closestLocations));
+							mListView.setVisibility(View.VISIBLE);
+							mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+								@Override
+								public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+									LocationRecord location = closestLocations.get(position);
+									FacilitiesActivity.launchActivityForLocation(mContext, location);
+								}
+							});
+							
+							mLoader.setVisibility(View.GONE);
+						}
+					});
+				}
+			}.start();
+		}
+	}
+	
 	public void createViews() {
 		
-		setContentView(R.layout.facilities_use_my_location);
-
-		//mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
-		//mLoader.showLoading();
-		//new DatabaseUpdater().execute(""); 
+		setContentView(R.layout.boring_list_layout);
+		TitleBar titleBar = (TitleBar) findViewById(R.id.boringListTitleBar);
+		titleBar.setTitle("Nearby Locations");
 		
-        // Set up location search
-		Toast.makeText(mContext, "locationsNearMe", Toast.LENGTH_LONG).show();
+		mLoader = (FullScreenLoader) findViewById(R.id.boringListLoader);
+		mLoader.showLoading();
+		
+		mListView = (ListView) findViewById(R.id.boringListLV);
 
-		LocationManager mlocManager = (LocationManager)getSystemService(mContext.LOCATION_SERVICE);
-		LocationListener mlocListener = new MyLocationListener();
+		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		mLocationListener = new MyLocationListener();
 
-		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+		locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
 
+	}
+
+	private void locationNotFound() {
+		if(!mLocationErrorShown) {
+			Toast.makeText(this, "No location found please check your settings", Toast.LENGTH_LONG).show();
+			finish();
+			mLocationErrorShown = true;
 		}
+	}
+	
+	/* Class My Location Listener */
 
-		/* Class My Location Listener */
-
-		public class MyLocationListener implements LocationListener {
+	public class MyLocationListener implements LocationListener {
 
 
 			public void onLocationChanged(Location loc){
 				loc.getLatitude();
 				loc.getLongitude();
 
-				String Text = "My current location is: " + "Latitud = " + loc.getLatitude() + "Longitud = " + loc.getLongitude();
-				Toast.makeText( getApplicationContext(),Text,Toast.LENGTH_SHORT).show();
+				if (mLocation == null) {
+					mLocation = loc;
+				} else if (loc.getAccuracy() < mLocation.getAccuracy()) {
+					mLocation = loc;
+				}
+				
+				if (mLocation.getAccuracy() < SUFFICIENT_ACCURACY) {
+					loadLocations();
+				}
 			}
 
 			@Override
 			public void onProviderDisabled(String arg0) {
-				// TODO Auto-generated method stub
-				
+				FacilitiesUseMyLocationActivity.this.locationNotFound();				
 			}
 	
 			@Override
@@ -139,13 +172,10 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 				
 			}
 	     		
-		}
+	}
 
 	
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		//mBackgroundView.startBackgroundAnimation();
-	}
+
 		
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) {
@@ -154,9 +184,9 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 
 	@Override
 	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FacilitiesModule();
 	}
+	
 	@Override
 	public boolean isModuleHomeActivity() {
 		// TODO Auto-generated method stub
@@ -164,6 +194,16 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 	}
 
 	
-	
+	private static class LocationArrayAdapter extends SimpleArrayAdapter<LocationRecord> {
+
+		public LocationArrayAdapter(Context context, List<LocationRecord> items) {
+			super(context, items, R.layout.facilities_row);
+		}
+
+		@Override
+		public void updateView(LocationRecord item, View view) {
+			LocationAdapter.populateView(item, view);
+		}
+	}
 }
 	

@@ -20,6 +20,7 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class FacilitiesActivity extends ModuleActivity {
@@ -138,4 +139,19 @@ public class FacilitiesActivity extends ModuleActivity {
 	}
 
 
+	public static void launchActivityForLocation(Context context, LocationRecord location) {
+		Global.sharedData.getFacilitiesData().setLocationId(location.id);
+		Global.sharedData.getFacilitiesData().setLocationName(location.name);
+		Global.sharedData.getFacilitiesData().setBuildingNumber(location.bldgnum);
+
+		// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
+		if (location.bldgnum == null || location.bldgnum.equals("")) {
+			Intent intent = new Intent(context, FacilitiesInsideOutsideActivity.class);
+			context.startActivity(intent);
+		}
+		else {
+			Intent intent = new Intent(context, FacilitiesRoomLocationsActivity.class);
+			context.startActivity(intent);
+		}
+	}
 }

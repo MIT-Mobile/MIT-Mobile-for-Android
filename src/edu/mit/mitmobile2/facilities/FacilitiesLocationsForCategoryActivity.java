@@ -66,27 +66,8 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Cursor cursor = (Cursor)parent.getItemAtPosition(position);
-				LocationRecord location = new LocationRecord();
-				location.id = cursor.getString(1);
-				location.name = cursor.getString(2);
-				location.lat_wgs84 = cursor.getString(3);
-				location.long_wgs84 = cursor.getString(4);
-				location.bldgnum = cursor.getString(5);
-				location.last_updated = cursor.getString(6);
-
-				Global.sharedData.getFacilitiesData().setLocationId(location.id);
-				Global.sharedData.getFacilitiesData().setLocationName(location.name);
-				Global.sharedData.getFacilitiesData().setBuildingNumber(location.bldgnum);
-
-				// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
-				if (location.bldgnum == null || location.bldgnum.equals("")) {
-					Intent intent = new Intent(mContext, FacilitiesInsideOutsideActivity.class);
-					startActivity(intent);
-				}
-				else {
-					Intent intent = new Intent(mContext, FacilitiesRoomLocationsActivity.class);
-					startActivity(intent);
-				}
+				LocationRecord location = FacilitiesDB.getLocationRecord(cursor);
+				FacilitiesActivity.launchActivityForLocation(mContext, location);
 			}
 		});
 		

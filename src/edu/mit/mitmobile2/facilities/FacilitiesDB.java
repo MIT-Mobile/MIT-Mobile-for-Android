@@ -1,8 +1,13 @@
 package edu.mit.mitmobile2.facilities;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +18,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
@@ -318,38 +324,38 @@ public class FacilitiesDB {
 		return cursor;
 	}
 
+	public static LocationRecord getLocationRecord(Cursor cursor) {
+		//Log.d(TAG,"index 0 = " + cursor.getString(0) + " index 1 = " + cursor.getString(1) + " index 2 = " + cursor.getString(2));
+		LocationRecord location = new LocationRecord();
+		location.id = cursor.getString(1);
+		location.name = cursor.getString(2);
+		location.lat_wgs84 = cursor.getFloat(3);
+		location.long_wgs84 = cursor.getFloat(4);
+		location.bldgnum = cursor.getString(5);
+		location.last_updated = cursor.getString(6);
+		return location;
+	}
+	
 	public LocationRecord getLocation(int position) {
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		LocationRecord location = null;
 		Cursor cursor = getLocationCursor();
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
-			//Log.d(TAG,"index 0 = " + cursor.getString(0) + " index 1 = " + cursor.getString(1) + " index 2 = " + cursor.getString(2));
-			location = new LocationRecord();
-			location.id = cursor.getString(1);
-			location.name = cursor.getString(2);
-			location.lat_wgs84 = cursor.getString(3);
-			location.long_wgs84 = cursor.getString(4);
-			location.bldgnum = cursor.getString(5);
-			location.last_updated = cursor.getString(6);
+			location = getLocationRecord(cursor);
 		}
 		cursor.close();
 		return location;
 	}
 
+	
 	public LocationRecord getLocationForCategory(int position) {
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		LocationRecord location = null;
 		Cursor cursor = getLocationCategoryCursor();
 		cursor.move(position + 1);
 		if (cursor.getCount() > 0) {
-			location = new LocationRecord();
-			location.id = cursor.getString(1);
-			location.name = cursor.getString(2);
-			location.lat_wgs84 = cursor.getString(3);
-			location.long_wgs84 = cursor.getString(4);
-			location.bldgnum = cursor.getString(5);
-			location.last_updated = cursor.getString(6);
+			location = getLocationRecord(cursor);
 		}
 		cursor.close();
 		return location;
@@ -442,6 +448,32 @@ public class FacilitiesDB {
 		return cursor;
 	}
 
+	public List<LocationRecord> getLocationsNearLocation(final Location location) {
+		ArrayList<LocationRecord> locations = new ArrayList<LocationRecord>();
+		Cursor cursor = getLocationCursor();
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()) {
+			locations.add(getLocationRecord(cursor));
+			cursor.moveToNext();
+		}
+		Collections.sort(locations, new Comparator<LocationRecord>() {
+			@Override
+			public int compare(LocationRecord location1, LocationRecord location2) {
+				float[] distance1Container = new float[1];
+				Location.distanceBetween(location.getLatitude(), location.getLongitude(), location1.lat_wgs84 , location1.long_wgs84, distance1Container);
+				float distance1 = distance1Container[0];
+				
+				float[] distance2Container = new float[1];
+				Location.distanceBetween(location.getLatitude(), location.getLongitude(), location2.lat_wgs84, location2.long_wgs84, distance2Container);
+				float distance2 = distance2Container[0];
+				
+				return Float.compare(distance1, distance2);
+			}
+		});
+		
+		return locations;
+	}
+	
 	public Cursor getRoomSearchCursor(CharSequence searchTerm) {
 		Log.d(TAG,"searchTerm = " + searchTerm);
 		String searchTermUppercase = searchTerm.toString().toUpperCase();
@@ -699,8 +731,8 @@ public class FacilitiesDB {
 			+ LocationTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, \n"
 			+ LocationTable.ID + " TEXT, \n "
 			+ LocationTable.NAME + " TEXT, \n "
-			+ LocationTable.LAT + " TEXT, \n "
-			+ LocationTable.LONG + " TEXT, \n "
+			+ LocationTable.LAT + " FLOAT, \n "
+			+ LocationTable.LONG + " FLOAT, \n "
 			+ LocationTable.BLDGNUM + " TEXT, \n "
 			+ LocationTable.LAST_UPDATED + " TEXT \n " 
 			+ ");";
@@ -919,8 +951,8 @@ public class FacilitiesDB {
 									LocationRecord record = new LocationRecord();
 									record.id = obj.getString("id");
 									record.name = obj.getString("name");
-									record.lat_wgs84 = obj.getString("lat_wgs84");
-									record.long_wgs84 = obj.getString("long_wgs84");
+									record.lat_wgs84 = (float) obj.getDouble("lat_wgs84");
+									record.long_wgs84 = (float) obj.getDouble("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
 									db.addLocation(record);
 

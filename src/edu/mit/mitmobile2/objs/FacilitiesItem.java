@@ -20,8 +20,8 @@ public class FacilitiesItem {
 	public static class LocationRecord {
 		public String id;
 		public String name;
-		public String lat_wgs84;
-		public String long_wgs84;
+		public float lat_wgs84;
+		public float long_wgs84;
 		public String bldgnum;
 		public String last_updated;
 	}
