@@ -82,7 +82,10 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 	}
 	
 	private boolean isRecentLocation(Location location) {
-		return System.currentTimeMillis() - location.getTime() < REASONABLE_LOCATION_AGE;
+		if(location != null) {
+			return System.currentTimeMillis() - location.getTime() < REASONABLE_LOCATION_AGE;
+		}
+		return false;
 	}
 	
 	private boolean isReasonableLocation(Location location) {
