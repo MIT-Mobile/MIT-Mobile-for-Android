@@ -22,25 +22,98 @@
 			
 			<TextView 
 				android:id="@+id/facilitiesProblemString"
-				android:layout_width="wrap_content" 
+				android:layout_width="fill_parent" 
 	        	android:layout_height="wrap_content"
 	        	android:textColor="#000000"
 	        	android:text="problem goes here" 
 	        	android:textSize="20dp"
-	        	android:visibility="visible"
-	        	android:layout_marginBottom="10dip"></TextView>
-			<EditText 
-				android:id="@+id/problemDescription"
-				android:layout_width="fill_parent"
-            	android:layout_height="wrap_content" 
-            	android:gravity="left"
-            	android:singleLine="false" 
-            	android:lines="5"
-            	android:layout_marginLeft="5dip" 
-            	android:hint="Required!\nPlease enter a brief description of the problem"
-            	android:text="" 
-            	/>
-	      
+	        	android:padding="15dip"
+	        	style="@style/ContentTitle"
+	        	 />
+	        	
+	        <FrameLayout
+	            android:layout_width="fill_parent"
+	        	android:paddingLeft="15dip"
+	        	android:paddingRight="15dip"
+	            android:layout_height="150dip">
+
+				<RelativeLayout 
+	            	android:layout_width="fill_parent"
+	            	android:layout_height="fill_parent">
+	            	
+	            	<EditText 
+						android:id="@+id/problemDescription"
+						android:layout_width="fill_parent"
+            			android:layout_height="fill_parent" 
+            			android:layout_alignParentLeft="true"
+            			android:gravity="left"
+            			android:singleLine="false" 
+            			android:lines="5"
+            			android:hint="Problem Description (required)"
+            		/>
+            		
+            		<!-- centerCrop and padding seems to be broken
+            		    so will use a bunch of dummy views to create padding
+            		    for the imageview -->
+            		    
+            		<View
+            			android:layout_width="5dip"
+            			android:layout_height="5dip"
+            			android:layout_alignParentTop="true"
+            			android:layout_alignParentRight="true"
+            			android:id="@+id/facilitiesDetailDummyViewTopRight" />
+            			
+            		<View
+            			android:layout_width="5dip"
+            			android:layout_height="9dip"
+            			android:layout_alignParentBottom="true"
+            			android:layout_alignParentRight="true"
+            			android:id="@+id/facilitiesDetailDummyViewBottomRight" />
+            			
+	            	<ImageView
+                    	android:id="@+id/selectedImage"
+                    	android:layout_width="100dip"
+                    	android:layout_height="fill_parent"
+						android:layout_below="@id/facilitiesDetailDummyViewTopRight"
+						android:layout_toLeftOf="@id/facilitiesDetailDummyViewTopRight"
+						android:layout_above="@+id/facilitiesDetailDummyViewBottomRight"
+						android:scaleType="centerCrop"
+  		            	android:visibility="gone"/>
+	      		</RelativeLayout>
+	      	</FrameLayout>
+	      	
+	        <FrameLayout
+	            android:layout_width="fill_parent"
+	        	android:paddingLeft="15dip"
+	        	android:paddingRight="15dip"
+	            android:layout_height="50dip">
+
+				<RelativeLayout 
+	            	android:layout_width="fill_parent"
+	            	android:layout_height="fill_parent">
+	            	
+	            	<TextView
+	            		android:layout_width="wrap_content"
+	            		android:layout_height="wrap_content"
+	            		android:layout_centerVertical="true"
+	            		android:layout_alignParentLeft="true"
+	            		android:paddingRight="6dip"
+	            		android:text="Contact:"
+	            		android:id="@+id/facilitiesDetailEmailLabel"
+	            		style="@style/ContentTitle" />
+	            		
+	            	<EditText 
+						android:id="@+id/facilitiesSendAs"
+						android:layout_width="fill_parent"
+            			android:layout_height="wrap_content" 
+						android:layout_alignParentRight="true"
+						android:layout_toRightOf="@id/facilitiesDetailEmailLabel"
+						android:layout_centerVertical="true"
+            			android:lines="1" 
+            			android:hint="email (required)" />
+	            		
+	      		</RelativeLayout>
+	      	</FrameLayout>
 			<!-- Divider -->
 			<View
 				android:layout_width="fill_parent"
@@ -52,103 +125,7 @@
             	android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/rowBackground"
-                android:text="Add a Photo"  />
-
-  			<ImageView
-                    android:id="@+id/selectedImage"
-                    android:layout_width="fill_parent"
-                    android:layout_height="200dp"
-                    android:paddingRight="@dimen/horizontalPadding"
-                    android:paddingLeft="@dimen/horizontalPadding"
-                    android:paddingBottom="@dimen/verticalPadding"
-                    android:gravity="center"
-  		            android:visibility="gone"
-  		            android:layout_gravity="top"
-		            android:layout_weight="1" />
-
-			<!-- Divider -->
-			<View
-				android:layout_width="fill_parent"
-				android:layout_height="@dimen/dividerHeight"
-				android:background="@color/dividerColor" />
-
-			<LinearLayout
-				xmlns:android="http://schemas.android.com/apk/res/android"
-				android:id="@+id/facilitiesCameraOptionsLayout"
-	   			android:background="@drawable/main_repeat"
-				android:orientation="vertical"
-				android:layout_width="fill_parent"
-				android:visibility="gone"
-				android:layout_height="wrap_content">
-	
-				<!-- Divider -->
-				<View
-					android:layout_width="fill_parent"
-					android:layout_height="@dimen/dividerHeight"
-					android:background="@color/dividerColor" />
-	
-				<!-- Take a Photo -->
-	   			<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesTakePhotoActionRow"
-	    	       	android:layout_width="fill_parent"
-	    	        android:layout_height="wrap_content"
-	    	        android:background="@color/rowBackground"
-	    	        android:text="Take a Photo"  />
-	               
-	    	    <!-- Divider -->
-				<View
-					android:layout_width="fill_parent"
-					android:layout_height="@dimen/dividerHeight"
-					android:background="@color/dividerColor" />
-	
-				<!-- Choose Existing Photo -->
-	   			<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesChooseExistingPhotoActionRow"
-	           		android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:background="@color/rowBackground"
-	                android:text="Choose Existing Photo"  />
-	               
-	       		<!-- Divider -->
-				<View
-					android:layout_width="fill_parent"
-					android:layout_height="@dimen/dividerHeight"
-					android:background="@color/dividerColor" />
-	               
-				<!-- Cancel -->
-	   			<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesCancelActionRow"
-	           		android:layout_width="fill_parent"
-	                android:layout_height="wrap_content"
-	                android:background="@color/rowBackground"
-	                android:text="Cancel"  />
-	               
-	       		<!-- Divider -->
-				<View
-					android:layout_width="fill_parent"
-					android:layout_height="@dimen/dividerHeight"
-					android:background="@color/dividerColor" />
-	
-			</LinearLayout>
-
-
-			<!-- Send As -->
-			<TextView 
-				android:id="@+id/facilitiesSendAsLabel"
-				android:layout_width="wrap_content" 
-	        	android:layout_height="wrap_content"
-	        	android:textColor="#000000"
-	        	android:text="Send as" 
-	        	android:textSize="20dp"
-	        	android:visibility="visible"
-	        	android:layout_marginBottom="10dip"></TextView>
-
-			<EditText 
-				android:id="@+id/facilitiesSendAs"
-				android:layout_width="fill_parent"
-            	android:layout_height="wrap_content" 
-            	android:gravity="left"
-            	android:layout_marginLeft="5dip" 
-            	android:hint="Anonymous"
-            	android:text="" 
-            />
+                android:text="Attach Photo"  />
             
             <!-- Divider -->
 			<View

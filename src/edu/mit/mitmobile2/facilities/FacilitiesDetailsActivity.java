@@ -20,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
@@ -47,6 +49,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
@@ -66,13 +69,8 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	private EditText mProblemDescriptionEditText;
 	private EditText sendAsEditText;
     private static final int CAMERA_PIC_REQUEST = 1;
-    private static final int PIC_SELECTION = 2;
-    private TwoLineActionRow addAPhotoActionRow;
-    private TwoLineActionRow takePhotoActionRow;
-    private TwoLineActionRow chooseExistingPhotoActionRow;
-    private TwoLineActionRow cancelActionRow;    
+    private static final int PIC_SELECTION = 2;    
     private TwoLineActionRow submitActionRow;
-	private View facilitiesCameraOptionsLayout;
 	private ImageView selectedImage;
 	private Uri mCapturedImageUri;
 	private Uri mSelectedImageUri;
@@ -87,8 +85,6 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public void createViews() {
         setContentView(R.layout.facilities_details);        
-        
-    	facilitiesCameraOptionsLayout = (View)findViewById(R.id.facilitiesCameraOptionsLayout);
     	
     	// Set problem string
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);
@@ -107,81 +103,105 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         problemStringTextView.setText(problemString);
         
         mProblemDescriptionEditText = (EditText) findViewById(R.id.problemDescription);
+        initDescriptionPadding();
         sendAsEditText = (EditText) findViewById(R.id.facilitiesSendAs);
         
         // Add A Photo
-    	addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
+    	TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
     	addAPhotoActionRow.setActionIconResource(R.drawable.photoopp);
 	
     	addAPhotoActionRow.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
-				addAPhotoActionRow.setVisibility(View.GONE);
-	            selectedImage = (ImageView)findViewById(R.id.selectedImage);
-	            selectedImage.setVisibility(View.GONE);
-				selectedImage.setImageBitmap(null);
-				View facilitiesCameraOptionsLayout = findViewById(R.id.facilitiesCameraOptionsLayout);
-				facilitiesCameraOptionsLayout.setVisibility(View.VISIBLE);
-				mSelectedImageUri = null;
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+				builder.setTitle("Choose Action");
+				String[] choices;
+				
+				final int takePhoto = 0;
+				final int pickExistingPhoto = 1;
+				final int detachPhoto = 2;
+				
+				if(mSelectedImageUri != null) {
+					choices = new String[] {"Take a Photo", "Pick Existing Photo", "Detach Photo"};
+				} else {
+					choices = new String[] {"Take a Photo", "Pick Existing Photo"};
+				}
+				builder.setItems(choices, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+							case takePhoto:
+								takePhoto();
+								break;
+							case pickExistingPhoto:
+								pickExistingPhoto();
+								break;
+							case detachPhoto:
+								detachPhoto();
+								break;
+						}
+						
+					}
+				});
+				
+				AlertDialog dialog = builder.create();
+				dialog.show();
+				
 			}
 		});
     	
     	// selected Image
     	selectedImage = (ImageView)findViewById(R.id.selectedImage);
     	
-    	// Take Photo
-    	takePhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesTakePhotoActionRow);
-
-    	takePhotoActionRow.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-			    ContentValues values = new ContentValues();   
-			    mCapturedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);  
-			        
-            	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // Normally you would populate this with your custom intent.
-            	cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageUri);
-            	startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);  
-			}
-		});
-
-    	
-    	// Use Existing Photo
-    	chooseExistingPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesChooseExistingPhotoActionRow);
-    	chooseExistingPhotoActionRow.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent choosePhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-				startActivityForResult(choosePhoto, PIC_SELECTION);
-			}
-    	});
-    	
-    	
-    	// Cancel
-    	cancelActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesCancelActionRow);
-    	cancelActionRow.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				addAPhotoActionRow.setVisibility(View.VISIBLE);
-				mSelectedImageUri = null;
-	            selectedImage.setVisibility(View.GONE);
-				facilitiesCameraOptionsLayout.setVisibility(View.GONE);
-			}
-		});
-    	
     	// Submit form
     	submitActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesSubmitActionRow);
     	submitActionRow.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) {				
 				submitForm();
 			}
 		});
 	}
+	
+	int mPaddingLeft;
+	int mPaddingTop;
+	int mPaddingRightNoPicture;
+	int mPaddingRightPicture;
+	int mPaddingBottom;
+	
+	private void initDescriptionPadding() {
+		mPaddingLeft = mProblemDescriptionEditText.getPaddingLeft();
+		mPaddingTop = mProblemDescriptionEditText.getPaddingTop();
+		mPaddingRightNoPicture = mProblemDescriptionEditText.getPaddingRight();
+		mPaddingRightPicture = AttributesParser.parseDimension("104dip", mContext);
+		mPaddingBottom = mProblemDescriptionEditText.getPaddingBottom();
+	}
+	
+	private void takePhoto() {
+	    ContentValues values = new ContentValues();   
+	    mCapturedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);  
+	        
+    	Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // Normally you would populate this with your custom intent.
+    	cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageUri);
+    	startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);  
+	}
+	
+	private void pickExistingPhoto() {
+		Intent choosePhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		startActivityForResult(choosePhoto, PIC_SELECTION);
+	}
+	
+	private void detachPhoto() {
+        selectedImage = (ImageView)findViewById(R.id.selectedImage);
+        selectedImage.setVisibility(View.GONE);
+		selectedImage.setImageBitmap(null);
+		mProblemDescriptionEditText.setPadding(mPaddingLeft, mPaddingTop, mPaddingRightNoPicture, mPaddingBottom);
+		mSelectedImageUri = null;
+	}
+	
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		super.onActivityResult(requestCode, resultCode, data);
@@ -193,11 +213,10 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         	}
 			
 	        selectedImage.setVisibility(View.VISIBLE);
+	        mProblemDescriptionEditText.setPadding(mPaddingLeft, mPaddingTop, mPaddingRightPicture, mPaddingBottom);
 	        long imageId = ContentUris.parseId(mSelectedImageUri);
 	        Bitmap thumbnail = MediaStore.Images.Thumbnails.getThumbnail(getContentResolver(), imageId, MediaStore.Images.Thumbnails.MINI_KIND, null);
-	        selectedImage.setImageBitmap(thumbnail);
-	        facilitiesCameraOptionsLayout.setVisibility(View.GONE);
-	        addAPhotoActionRow.setVisibility(View.VISIBLE);	 
+	        selectedImage.setImageBitmap(thumbnail); 
     	} 
     }
 
@@ -234,14 +253,24 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	private class FileUploader extends AsyncTask<Void, Long, Boolean> implements FileUploadListener {
 		ProgressDialog mProgressDialog;
 		long mMaxBytes;
-		String mSendAs;
+		String mEmail;
 		String mProblemDescription;
 		CountingMultipartEntity mUploadEntity; 
 		
 		@Override
 		protected void onPreExecute() {
-			mProblemDescription = mProblemDescriptionEditText.getText().toString();
-			mSendAs = sendAsEditText.getText().toString();
+			mProblemDescription = mProblemDescriptionEditText.getText().toString().trim();
+			mEmail = sendAsEditText.getText().toString().trim();
+			if(mProblemDescription.length() == 0 || mEmail.length() == 0) {
+				Builder builder = new AlertDialog.Builder(mContext);
+				builder.setMessage("Email and a description of the problem is required.");
+				builder.setNeutralButton("Okay", null);
+				AlertDialog dialog = builder.create();
+				dialog.show();
+				FileUploader.this.cancel(true);
+				return;
+			}
+			
 			mUploadEntity = new CountingMultipartEntity(this);
 			mProgressDialog = new ProgressDialog(mContext);
 			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -270,7 +299,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 					InputStreamBody imageStreamBody = new InputStreamBody(new ByteArrayInputStream(imageData), "image/jpeg", "image");
 					mUploadEntity.addPart("image", imageStreamBody);
 				}
-				mUploadEntity.addPart("name", new StringBody(mSendAs));
+				mUploadEntity.addPart("email", new StringBody(mEmail));
 				mUploadEntity.addPart("message", new StringBody(mProblemDescription));
 				mUploadEntity.addPart("location", new StringBody(Global.sharedData.getFacilitiesData().getLocationId()));
 				mUploadEntity.addPart("locationName", new StringBody(Global.sharedData.getFacilitiesData().getLocationName()));
