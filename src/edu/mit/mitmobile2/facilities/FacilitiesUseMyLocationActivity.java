@@ -26,8 +26,9 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesLocationsNearByActivity";
-	private static final int SUFFICIENT_ACCURACY = 20; // 20 meters;
-	private static final int MAX_WAIT_TIME = 5000; // do not wait more than 6000 miliseconds
+	private static final int REASONABLE_LOCATION_AGE = 90 * 1000; // 90 seconds
+	private static final int SUFFICIENT_ACCURACY = 100; // 100 meters;
+	private static final int MAX_WAIT_TIME = 6000; // do not wait more than 5000 miliseconds
 	
 	private Location mLocation;
 	private LocationListener mLocationListener;
@@ -59,6 +60,18 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 		
 		
 		createViews();		
+		
+		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		mLocationListener = new MyLocationListener();
+
+		Location lastKnownLocation = lastKnownLocation();
+		if(isReasonableLocation(lastKnownLocation)) {
+			mLocation = lastKnownLocation;
+			loadLocations();
+		} else {
+			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+			locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+		}
 	}
 
 	@Override
@@ -68,11 +81,46 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 		locManager.removeUpdates(mLocationListener);
 	}
 	
+	private boolean isRecentLocation(Location location) {
+		return System.currentTimeMillis() - location.getTime() < REASONABLE_LOCATION_AGE;
+	}
+	
+	private boolean isReasonableLocation(Location location) {
+		if(location != null) {
+			if(isRecentLocation(location)) {
+				return location.getAccuracy() < SUFFICIENT_ACCURACY;
+			}
+		}
+		return false;
+	}
+	
+	private Location lastKnownLocation() {
+		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		Location lastGPS = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location lastNetwork = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		
+		if(isRecentLocation(lastGPS)) {
+			return lastGPS;
+		}
+		if(isRecentLocation(lastNetwork)) {
+			return lastNetwork;
+		}
+		
+		// for simplicity fallback to the lastGPS
+		return lastGPS;
+	}
+	
 	public void loadLocations() {
 		if(!mLocationSet) {
 			mLocationSet = true;
 			LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 			locManager.removeUpdates(mLocationListener);
+			
+			// if no location found attempt to fall back
+			// to last known location
+			if(mLocation == null) {
+				mLocation = lastKnownLocation();
+			}
 			
 			if(mLocation == null) {
 				FacilitiesUseMyLocationActivity.this.locationNotFound();
@@ -118,12 +166,6 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 		mLoader.showLoading();
 		
 		mListView = (ListView) findViewById(R.id.boringListLV);
-
-		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		mLocationListener = new MyLocationListener();
-
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-		locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
 
 	}
 
