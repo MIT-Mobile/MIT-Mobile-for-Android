@@ -75,6 +75,7 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 				location.last_updated = cursor.getString(6);
 
 				Global.sharedData.getFacilitiesData().setLocationId(location.id);
+				Global.sharedData.getFacilitiesData().setLocationName(location.name);
 				Global.sharedData.getFacilitiesData().setBuildingNumber(location.bldgnum);
 
 				// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
