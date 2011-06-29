@@ -132,7 +132,13 @@ public class FacilitiesDB {
 		ContentValues values = new ContentValues();
 		values.put(CategoryTable.ID, categoryRecord.id);
 		values.put(CategoryTable.NAME, categoryRecord.name);
-		db.insert(CATEGORY_TABLE, CategoryTable.ID + "," + CategoryTable.NAME,values);
+		Log.d(TAG,"adding category_id: " + categoryRecord.id);
+		try {
+			db.insert(CATEGORY_TABLE, CategoryTable.ID + "," + CategoryTable.NAME,values);
+		}
+		catch (Exception e) {
+			Log.d(TAG,"addCategory Exception: " + e.getMessage());
+		}
 	}
 
 	// ADDPROBLEMTYPE
@@ -168,6 +174,7 @@ public class FacilitiesDB {
 		values.put(LocationCategoryTable.LOCATION_ID, locationCategoryRecord.locationId);
 		values.put(LocationCategoryTable.CATEGORY_ID, locationCategoryRecord.categoryId);
 		try {
+			Log.d(TAG,"adding location category: location_id = " + locationCategoryRecord.locationId + " category_id = " + locationCategoryRecord.categoryId);
 			db.insert(LOCATION_CATEGORY_TABLE, LocationCategoryTable.LOCATION_ID + "," + LocationCategoryTable.CATEGORY_ID,values);		
 		}
 		catch (Exception e) {
@@ -282,10 +289,10 @@ public class FacilitiesDB {
 					+ LocationTable.BLDGNUM + ", " 
 					+ LocationTable.LAST_UPDATED + " " 
 					+ "FROM " + LOCATION_CATEGORY_TABLE
-					+ " JOIN " + LOCATION_TABLE + " on " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + " = " + LOCATION_TABLE + "." + LocationTable.ID
+					+ " JOIN " + LOCATION_TABLE + " on upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + ") = upper(" + LOCATION_TABLE + "." + LocationTable.ID + ")"
 					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "'"
 					+ " order by " + LocationTable.NAME;
-		//Log.d(TAG,"locationCategory sql = " + sql);
+		Log.d(TAG,"locationCategory sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		return cursor;
 	}
@@ -588,6 +595,14 @@ public class FacilitiesDB {
 		catch (Exception e) {
 			Log.d(TAG,e.getMessage());
 		}		
+		
+		try {
+			db.delete(LOCATION_CATEGORY_TABLE, null, null);
+		}
+		catch (Exception e) {
+			Log.d(TAG,e.getMessage());
+		}
+
 	}
 
 	synchronized void clearProblemTypes() {
@@ -605,13 +620,6 @@ public class FacilitiesDB {
 
 		try {
 			db.delete(LOCATION_TABLE, null, null);
-		}
-		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
-		}
-
-		try {
-			db.delete(LOCATION_CATEGORY_TABLE, null, null);
 		}
 		catch (Exception e) {
 			Log.d(TAG,e.getMessage());
@@ -863,20 +871,36 @@ public class FacilitiesDB {
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("module", "facilities");
 			params.put("command", "categorylist");
-			api.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+			api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
 		                new MobileWebApi.DefaultErrorListener(uiHandler),
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
-					public void onResponse(JSONArray array) {
+					public void onResponse(JSONObject obj) {
 						db.startTransaction();
 						Log.d(TAG,"category list begin transaction");
-						for (int i = 0; i < array.length(); i++) {
+						Iterator c = obj.keys();
+						while (c.hasNext()) {	
 							try {
-								JSONObject obj = array.getJSONObject(i);
+								String category_id = (String)c.next();
+								// get the array of rooms for each floor
+								JSONObject category = obj.getJSONObject(category_id);
 								CategoryRecord record = new CategoryRecord();
-								record.id = obj.getString("id");
-								record.name = obj.getString("name");
+								record.id = category_id;
+								record.name = category.getString("name");
 								db.addCategory(record);
+								
+								// convert locations into an array and add to location category table 
+								String locationString = category.getString("locations");
+								if (locationString != null) {
+									JSONArray locations = new JSONArray(locationString);
+									for (int l = 0; l < locations.length(); l++) {
+										LocationCategoryRecord locationCategoryRecord = new LocationCategoryRecord();
+										locationCategoryRecord.locationId = locations.getString(l);
+										locationCategoryRecord.categoryId = category_id;
+										db.addLocationCategory(locationCategoryRecord);
+									}
+								}
+
 							}
 							catch (Exception e) {
 								Log.d(TAG,e.getMessage());							
@@ -923,18 +947,6 @@ public class FacilitiesDB {
 									record.long_wgs84 = obj.getString("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
 									db.addLocation(record);
-
-									// convert categories into an array and add to location category table 
-									String locationCategoryString = obj.getString("category");
-									if (locationCategoryString != null) {
-										JSONArray categories = new JSONArray(locationCategoryString);
-										for (int c = 0; c < categories.length(); c++) {
-											LocationCategoryRecord locationCategoryRecord = new LocationCategoryRecord();
-											locationCategoryRecord.locationId = obj.getString("id");
-											locationCategoryRecord.categoryId = categories.getString(c);
-											db.addLocationCategory(locationCategoryRecord);
-										}
-									}
 									
 									// convert contents into an array and add to location contents table 
 									if (!obj.getString("contents").equalsIgnoreCase("null")) {	
