@@ -46,7 +46,6 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 		FilteredCursor filteredCursor = (FilteredCursor) cursor;
 		String constraint = filteredCursor.getConstraint().toLowerCase();
 		String displayNameLower = displayName.toLowerCase();
-		
 		if(displayNameLower.indexOf(constraint) < 0) {
 			int extraFieldsFirstIndex = cursor.getColumnIndexOrThrow("categoryName");
 			int extraFieldsLastIndex = cursor.getColumnIndexOrThrow("altname");
@@ -62,7 +61,7 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 				}
 				fieldIndex++;
 			}
-		}
+		}	
 		Spannable title = Spannable.Factory.getInstance().newSpannable(displayName);		
 		
 		// find substrings matching constraint

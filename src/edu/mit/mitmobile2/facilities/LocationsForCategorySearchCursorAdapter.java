@@ -35,16 +35,39 @@ public class LocationsForCategorySearchCursorAdapter extends CursorAdapter imple
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		TwoLineActionRow actionRow = (TwoLineActionRow) view;
-		String result = convertToString(cursor);
-		Spannable title = Spannable.Factory.getInstance().newSpannable(result);		
+		int idIndex = cursor.getColumnIndexOrThrow("_id");
+		int displayNameIndex = cursor.getColumnIndexOrThrow("display_name");
+		String displayName = cursor.getString(displayNameIndex);
+		if(cursor.getLong(idIndex) == -1) {
+			actionRow.setTitle(displayName);
+			return;
+		}
+		
+		FilteredCursor filteredCursor = (FilteredCursor) cursor;
+		String constraint = filteredCursor.getConstraint().toLowerCase();
+		String displayNameLower = displayName.toLowerCase();
+		if(displayNameLower.indexOf(constraint) < 0) {
+			int extraFieldsFirstIndex = cursor.getColumnIndexOrThrow("categoryName");
+			int extraFieldsLastIndex = cursor.getColumnIndexOrThrow("altname");
+			int fieldIndex = extraFieldsFirstIndex;
+			while(fieldIndex <= extraFieldsLastIndex) {
+				String matchCandidate = cursor.getString(fieldIndex);
+				if(matchCandidate != null) {
+					if(matchCandidate.toLowerCase().indexOf(constraint) >= 0) {
+						displayName += " (" + matchCandidate +  ")";
+						displayNameLower = displayName.toLowerCase();
+						break;
+					}
+				}
+				fieldIndex++;
+			}
+		}	
+		Spannable title = Spannable.Factory.getInstance().newSpannable(displayName);		
 		
 		// find substrings matching constraint
 		int currentIndex = 0;
-		FilteredCursor filteredCursor = (FilteredCursor) cursor;
-		String constraint = filteredCursor.getConstraint().toLowerCase();
-		String resultLower = result.toLowerCase();
-		while(resultLower.indexOf(constraint, currentIndex) >= 0) {
-			int foundIndex = resultLower.indexOf(constraint, currentIndex);
+		while(displayNameLower.indexOf(constraint, currentIndex) >= 0) {
+			int foundIndex = displayNameLower.indexOf(constraint, currentIndex);
 			title.setSpan(new ForegroundColorSpan(Color.RED), foundIndex, foundIndex + constraint.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 			currentIndex = foundIndex + constraint.length();
 		}
@@ -59,8 +82,7 @@ public class LocationsForCategorySearchCursorAdapter extends CursorAdapter imple
 
 	@Override
 	public String convertToString(Cursor cursor) {
-		//int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
-		return cursor.getString(5); // display_name index
+		return "";
 	}
 	
 	private static class FilteredCursor extends CursorWrapper {

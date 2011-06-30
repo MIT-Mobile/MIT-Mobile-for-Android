@@ -357,7 +357,6 @@ public class FacilitiesDB {
 
 	
 	public LocationRecord getLocationForCategory(int position) {
-		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		LocationRecord location = null;
 		Cursor cursor = getLocationCategoryCursor();
 		cursor.move(position + 1);
@@ -368,10 +367,36 @@ public class FacilitiesDB {
 		return location;
 	}
 	
+
 	public Cursor getLocationSearchCursor(CharSequence searchTerm) {
+		String sql = getLocationSearchQuery(searchTerm, null);
+		Log.d(TAG,"location search sql = " + sql);
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'"});
+		Log.d(TAG,"num results = " + cursor.getCount());
+		return cursor;
+	}
+	
+	public Cursor getLocationForCategorySearchCursor(CharSequence searchTerm) {
+		String sql = getLocationSearchQuery(searchTerm, LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + " = ? ");
+		String selectedCategory = Global.sharedData.getFacilitiesData().getLocationCategory();
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'", selectedCategory});
+		Log.d(TAG,"num results = " + cursor.getCount());
+		return cursor;
+	}
+		
+	private String getLocationSearchQuery(CharSequence searchTerm, String extraWhereClause) {
 		Log.d(TAG,"searchTerm = " + searchTerm);
 		String searchTermUppercase = searchTerm.toString().toUpperCase();
-		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		String beginAND="";
+		String endAND="";
+		if(extraWhereClause != null) {
+			beginAND = " AND ( ";
+			endAND = " ) ";
+		} else {
+			extraWhereClause = "";
+		}
 		String sql = "SELECT " 
 	          		  + " -1 as " + LocationTable._ID + ", " 
 	          		  + "'object-0'" + LocationTable.ID + ", " 
@@ -383,7 +408,7 @@ public class FacilitiesDB {
 				      + " '' as altname,"
 				      + " ? as display_name"
 		              + " UNION " 
-		              + " SELECT DISTINCT "
+		              + " SELECT "
 			          + LOCATION_TABLE + "." + LocationTable._ID + ", "
 		              + LOCATION_TABLE + "." + LocationTable.ID + ", "
 			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
@@ -401,65 +426,19 @@ public class FacilitiesDB {
 			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
 			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
 			          + " WHERE "
-			          + " upper(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") like '%" + searchTermUppercase + "%'"
+			          + extraWhereClause
+			          + beginAND
+			          + " upper(display_name) like '%" + searchTermUppercase + "%'"
 			          + " OR "
 			          + " upper(" + CATEGORY_TABLE + "." + CategoryTable.NAME + ") like '%" + searchTermUppercase + "%'"
 					  + " OR "
 					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
 					  + " OR "
 					  + " upper(" + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ") like '%" + searchTermUppercase + "%'"
+					  + endAND
+					  + " GROUP BY " + LOCATION_TABLE + "." + LocationTable.ID 
 					  + " ORDER BY sort_value ";
-
-		Log.d(TAG,"location search sql = " + sql);
-		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'"});
-		Log.d(TAG,"num results = " + cursor.getCount());
-		return cursor;
-	}
-	
-	public Cursor getLocationForCategorySearchCursor(CharSequence searchTerm) {
-		Log.d(TAG,"searchTerm = " + searchTerm);
-		String searchTermUppercase = searchTerm.toString().toUpperCase();
-		String selectedCategory = Global.sharedData.getFacilitiesData().getLocationCategory();
-		Log.d(TAG,"selectedCategoty = " + selectedCategory);
-		SQLiteDatabase db = mDBHelper.getReadableDatabase();
-		String sql = "SELECT " 
-	          		  + " -1 as " + LocationTable._ID + ", " 
-	          		  + "'object-0'" + LocationTable.ID + ", " 
-				      + " '' as " + LocationTable.BLDGNUM + ", "
-				      + " '' as sort_value, "
-				      + " '" + searchTerm + "' as name, " 
-				      + " ? as display_name "
-		              + " UNION " 
-		              + " SELECT DISTINCT "
-			          + LOCATION_TABLE + "." + LocationTable._ID + ", "
-		              + LOCATION_TABLE + "." + LocationTable.ID + ", "
-			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
-			          + LOCATION_TABLE + "." + LocationTable.ID + " as sort_value, "
-			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "			          
-			          + " CASE WHEN length(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") > 0 THEN " 
-			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + " || '-' || " + LOCATION_TABLE + "." + LocationTable.NAME 
-			          + " ELSE " + LOCATION_TABLE + "." + LocationTable.NAME + " END as display_name "
-			          + " FROM " + LOCATION_TABLE
-			          + " LEFT JOIN " + LOCATION_CATEGORY_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID
-			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
-			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
-			          + " WHERE "
-			          + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + " = ? "
-			          + " AND ( "	
-			          + " upper(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") like '%" + searchTermUppercase + "%'"
-			          + " OR "
-			          + " upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + ") like '%" + searchTermUppercase + "%'"
-					  + " OR "
-					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
-					  + " OR "
-					  + " upper(" + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ") like '%" + searchTermUppercase + "%'"
-					  + " ) "
-					  + " ORDER BY sort_value ";
-
-		Log.d(TAG,"location search sql = " + sql);
-		Cursor cursor = db.rawQuery(sql, new String[] { "use '" + searchTerm + "'",selectedCategory});
-		Log.d(TAG,"num results = " + cursor.getCount());
-		return cursor;
+		return sql;
 	}
 
 	public List<LocationRecord> getLocationsNearLocation(final Location location) {
