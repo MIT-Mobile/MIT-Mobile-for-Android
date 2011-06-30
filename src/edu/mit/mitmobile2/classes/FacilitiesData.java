@@ -6,8 +6,11 @@ public class FacilitiesData {
 	private String locationCategory;
 	private String locationId;
 	private String locationName;
+	private String userAssignedLocationName;
 	private String buildingNumber;
 	private String buildingRoomName;
+	private String userAssignedRoomName;
+	
 	
 	public String getBuildingRoomName() {
 		return buildingRoomName;
@@ -17,6 +20,14 @@ public class FacilitiesData {
 		this.buildingRoomName = buildingRoomName;
 	}
 
+	public String getUserAssignedRoomName() {
+		return userAssignedRoomName;
+	}
+
+	public void setUserAssignedRoomName(String userAssignedRoomName) {
+		this.userAssignedRoomName = userAssignedRoomName;
+	}
+	
 	public String getBuildingNumber() {
 		return buildingNumber;
 	}
@@ -33,6 +44,14 @@ public class FacilitiesData {
 		this.locationId = locationId;
 	}
 	
+	public String getUserAssignedLocationName() {
+		return userAssignedLocationName;
+	}
+
+	public void setUserAssignedLocationName(String userAssignedLocationName) {
+		this.userAssignedLocationName = userAssignedLocationName;
+	}
+
 	public String getLocationName() {
 		return locationName;
 	}
@@ -40,7 +59,7 @@ public class FacilitiesData {
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
 	}
-
+	
 	public String getLocationCategory() {
 		return locationCategory;
 	}

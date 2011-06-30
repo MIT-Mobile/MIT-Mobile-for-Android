@@ -6,6 +6,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -36,6 +37,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -91,7 +94,10 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);
         String problemString = "I'm reporting a problem with the " + Global.sharedData.getFacilitiesData().getProblemType();
         
-        if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("INSIDE")) {
+        if (Global.sharedData.getFacilitiesData().getUserAssignedLocationName() != null) {
+        	problemString += " in " + Global.sharedData.getFacilitiesData().getUserAssignedLocationName();
+        }
+        else if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("INSIDE")) {
         	problemString += " inside " + Global.sharedData.getFacilitiesData().getLocationId();
         }
         else if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("OUTSIDE")) {
@@ -101,26 +107,30 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         	problemString += " at " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " in " + Global.sharedData.getFacilitiesData().getBuildingRoomName();        	
         }
 
+        TextWatcher textWatcher = new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				boolean emailExists = sendAsEditText.getText().toString().trim().length() > 0;
+				boolean descriptionExists = mProblemDescriptionEditText.getText().toString().trim().length() > 0;
+				submitActionRow.setEnabled(emailExists && descriptionExists);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+        };
+        
         problemStringTextView.setText(problemString);
         
         mProblemDescriptionEditText = (EditText) findViewById(R.id.problemDescription);
-        mProblemDescriptionEditText.setOnKeyListener(new View.OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				updateSubmitButtonState();
-				return false;
-			}
-		});
+        mProblemDescriptionEditText.addTextChangedListener(textWatcher);
         
         initDescriptionPadding();
         sendAsEditText = (EditText) findViewById(R.id.facilitiesSendAs);
-        sendAsEditText.setOnKeyListener(new View.OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				updateSubmitButtonState();
-				return false;
-			}
-		});
+        sendAsEditText.addTextChangedListener(textWatcher);
         
         // Add A Photo
     	TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
@@ -236,12 +246,6 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	        selectedImage.setImageBitmap(thumbnail); 
     	} 
     }
-
-    private void updateSubmitButtonState() {
-		boolean emailExists = sendAsEditText.getText().toString().trim().length() > 0;
-		boolean descriptionExists = mProblemDescriptionEditText.getText().toString().trim().length() > 0;
-		submitActionRow.setEnabled(emailExists && descriptionExists);
-    }
     
 	@Override
 	protected Module getModule() {
@@ -322,13 +326,14 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 					InputStreamBody imageStreamBody = new InputStreamBody(new ByteArrayInputStream(imageData), "image/jpeg", "image");
 					mUploadEntity.addPart("image", imageStreamBody);
 				}
-				mUploadEntity.addPart("email", new StringBody(mEmail));
-				mUploadEntity.addPart("message", new StringBody(mProblemDescription));
-				mUploadEntity.addPart("location", new StringBody(Global.sharedData.getFacilitiesData().getLocationId()));
-				mUploadEntity.addPart("locationName", new StringBody(Global.sharedData.getFacilitiesData().getLocationName()));
-				mUploadEntity.addPart("buildingNumber", new StringBody(Global.sharedData.getFacilitiesData().getBuildingNumber()));
-				mUploadEntity.addPart("roomName", new StringBody(Global.sharedData.getFacilitiesData().getBuildingRoomName()));
-				mUploadEntity.addPart("problemType", new StringBody(Global.sharedData.getFacilitiesData().getProblemType()));
+				addField("email", mEmail);
+				addField("message", mProblemDescription);
+				addField("location", Global.sharedData.getFacilitiesData().getLocationId());
+				addField("locationName", Global.sharedData.getFacilitiesData().getLocationName());
+				addField("locationNameByUser",  Global.sharedData.getFacilitiesData().getUserAssignedLocationName());
+				addField("buildingNumber", Global.sharedData.getFacilitiesData().getBuildingNumber());
+				addField("roomName",  Global.sharedData.getFacilitiesData().getBuildingRoomName());
+				addField("problemType",  Global.sharedData.getFacilitiesData().getProblemType());
 				publishProgress(new Long(0)); // initialize the progress bar
 				
 				httpPost.setEntity(mUploadEntity);
@@ -349,6 +354,12 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 			return false;
 		}
 		
+		private void addField(String fieldName, String fieldValue) throws UnsupportedEncodingException {
+			if(fieldValue != null) {
+				mUploadEntity.addPart(fieldName, new StringBody(fieldValue));
+			}
+		}
+			
 		@Override
 		protected void onPostExecute(Boolean success) {
 			mProgressDialog.dismiss();

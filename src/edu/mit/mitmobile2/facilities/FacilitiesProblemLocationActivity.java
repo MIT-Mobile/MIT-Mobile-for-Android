@@ -37,7 +37,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	ListView mListView;
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
 	FullScreenLoader mLoader;
-	private AutoCompleteTextView facilitiesTextLocation;
 	
 	Handler mFacilitiesLoadedHandler = new Handler() {
 		@Override
@@ -98,17 +97,20 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 				 * and jump to the problem type selection screen
 				 * Else, go to the room selection screen if building number is defined, else inside/outside screen
 				 */
+				Log.d(TAG,"locastion search _id = " + locationSearchRecord._id);
+				if (Integer.parseInt(locationSearchRecord._id) == -1) {
+					Global.sharedData.getFacilitiesData().setUserAssignedLocationName(locationSearchRecord.name);
+					Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);
+					startActivity(intent);	
+					return;
+				}		
+				
 				Global.sharedData.getFacilitiesData().setLocationId(locationSearchRecord.id);
 				Global.sharedData.getFacilitiesData().setLocationName(locationSearchRecord.name);
 				Global.sharedData.getFacilitiesData().setBuildingNumber(locationSearchRecord.bldgnum);
-				Log.d(TAG,"locastion search _id = " + locationSearchRecord._id);
-				if (Integer.parseInt(locationSearchRecord._id) == -1) {
-					Global.sharedData.getFacilitiesData().setBuildingRoomName(locationSearchRecord.name);
-					Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);
-					startActivity(intent);					
-				}				
+				Log.d(TAG,"locastion search _id = " + locationSearchRecord._id);			
 				// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
-				else if (locationSearchRecord.bldgnum == null || locationSearchRecord.bldgnum.equals("")) {
+				if (locationSearchRecord.bldgnum == null || locationSearchRecord.bldgnum.equals("")) {
 					Intent intent = new Intent(mContext, FacilitiesInsideOutsideActivity.class);
 					startActivity(intent);
 				}
