@@ -378,7 +378,7 @@ public class FacilitiesDB {
 				      + " '' as " + LocationTable.BLDGNUM + ", "
 				      + " '' as sort_value, "
 				      + " '" + searchTerm + "' as name, " 
-				      + " 'UserTyped' as category_id,"
+				      + " 'UserTyped' as categoryName,"
 				      + " '' as contents_name,"
 				      + " '' as altname,"
 				      + " ? as display_name"
@@ -389,7 +389,7 @@ public class FacilitiesDB {
 			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
 			          + LOCATION_TABLE + "." + LocationTable.ID + " as sort_value, "
 			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "
-			          + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + ","
+			          + CATEGORY_TABLE + "." + CategoryTable.NAME + ","
 			          + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ","
 			          + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ","
 			          + " CASE WHEN length(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") > 0 THEN " 
@@ -397,12 +397,13 @@ public class FacilitiesDB {
 			          + " ELSE " + LOCATION_TABLE + "." + LocationTable.NAME + " END as display_name "
 			          + " FROM " + LOCATION_TABLE
 			          + " LEFT JOIN " + LOCATION_CATEGORY_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID
+			          + " LEFT JOIN " + CATEGORY_TABLE + " on " + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + " = " + CATEGORY_TABLE + "." + CategoryTable.ID
 			          + " LEFT JOIN " + LOCATION_CONTENT_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_TABLE + "." + LocationContentTable.LOCATION_ID
 			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
 			          + " WHERE "
 			          + " upper(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") like '%" + searchTermUppercase + "%'"
 			          + " OR "
-			          + " upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.CATEGORY_ID + ") like '%" + searchTermUppercase + "%'"
+			          + " upper(" + CATEGORY_TABLE + "." + CategoryTable.NAME + ") like '%" + searchTermUppercase + "%'"
 					  + " OR "
 					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
 					  + " OR "

@@ -48,7 +48,7 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 		String displayNameLower = displayName.toLowerCase();
 		
 		if(displayNameLower.indexOf(constraint) < 0) {
-			int extraFieldsFirstIndex = cursor.getColumnIndexOrThrow("category_id");
+			int extraFieldsFirstIndex = cursor.getColumnIndexOrThrow("categoryName");
 			int extraFieldsLastIndex = cursor.getColumnIndexOrThrow("altname");
 			int fieldIndex = extraFieldsFirstIndex;
 			while(fieldIndex <= extraFieldsLastIndex) {
@@ -56,6 +56,7 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 				if(matchCandidate != null) {
 					if(matchCandidate.toLowerCase().indexOf(constraint) >= 0) {
 						displayName += " (" + matchCandidate +  ")";
+						displayNameLower = displayName.toLowerCase();
 						break;
 					}
 				}
