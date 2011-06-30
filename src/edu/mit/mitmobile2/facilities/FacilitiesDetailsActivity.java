@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -23,15 +22,12 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -39,20 +35,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -60,9 +49,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
-//public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
@@ -96,6 +83,9 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         
         if (Global.sharedData.getFacilitiesData().getUserAssignedLocationName() != null) {
         	problemString += " in " + Global.sharedData.getFacilitiesData().getUserAssignedLocationName();
+        }
+        else if (Global.sharedData.getFacilitiesData().getUserAssignedRoomName() != null) {
+        	problemString += " at " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " in " + Global.sharedData.getFacilitiesData().getUserAssignedRoomName();      	
         }
         else if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("INSIDE")) {
         	problemString += " inside " + Global.sharedData.getFacilitiesData().getLocationId();
@@ -333,6 +323,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 				addField("locationNameByUser",  Global.sharedData.getFacilitiesData().getUserAssignedLocationName());
 				addField("buildingNumber", Global.sharedData.getFacilitiesData().getBuildingNumber());
 				addField("roomName",  Global.sharedData.getFacilitiesData().getBuildingRoomName());
+				addField("roomNameByUser", Global.sharedData.getFacilitiesData().getUserAssignedRoomName());
 				addField("problemType",  Global.sharedData.getFacilitiesData().getProblemType());
 				publishProgress(new Long(0)); // initialize the progress bar
 				

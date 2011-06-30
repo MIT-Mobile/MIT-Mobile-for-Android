@@ -22,9 +22,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
-import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
-import edu.mit.mitmobile2.objs.FacilitiesItem.RoomRecord;
+import edu.mit.mitmobile2.facilities.RoomSearchCursorAdapter.RoomSearchFilteredCursor;
 
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
@@ -91,6 +89,22 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 		// Autocomplete
 		AutoCompleteTextView facilitiesTextLocation = (AutoCompleteTextView) findViewById(R.id.facilitiesTextLocation);
 		facilitiesTextLocation.setAdapter(new RoomSearchCursorAdapter(this, db));
+		facilitiesTextLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				RoomSearchFilteredCursor cursor = (RoomSearchFilteredCursor) parent.getItemAtPosition(position);
+				if(id == -1) {
+					Global.sharedData.getFacilitiesData().setUserAssignedRoomName(cursor.getConstraint());
+				} else {
+					int roomNameIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable.ROOM);
+					String roomName = cursor.getString(roomNameIndex);
+					Global.sharedData.getFacilitiesData().setBuildingRoomName(roomName);
+				}
+				
+				Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);					
+				startActivity(intent);
+			}
+		});
 		
 		// Outside
 		TwoLineActionRow outsideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesOutsideLocationActionRow);
@@ -108,8 +122,6 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 	}
 
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
-		
-	    ProgressDialog dialog;
 
 		@Override
 		protected void onPreExecute() {

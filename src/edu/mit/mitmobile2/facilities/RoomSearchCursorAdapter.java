@@ -4,6 +4,8 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.style.ForegroundColorSpan;
@@ -28,19 +30,19 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		Log.d(TAG,"constraint = " + constraint);
-		Cursor c = mFacilitiesDB.getRoomSearchCursor(constraint);
-		return new FilteredCursor(c, constraint.toString());
+		Cursor cursor = mFacilitiesDB.getRoomSearchCursor(constraint);
+		return new RoomSearchFilteredCursor(cursor, constraint.toString());
 	}
 
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		TwoLineActionRow actionRow = (TwoLineActionRow) view;
-		String result = convertToString(cursor);
+		RoomSearchFilteredCursor filteredCursor = (RoomSearchFilteredCursor) cursor;
+		String result = rowString(filteredCursor);
 		Spannable title = Spannable.Factory.getInstance().newSpannable(result);		
 		
 		// find substrings matching constraint
 		int currentIndex = 0;
-		FilteredCursor filteredCursor = (FilteredCursor) cursor;
 		String constraint = filteredCursor.getConstraint().toLowerCase();
 		String resultLower = result.toLowerCase();
 		while(resultLower.indexOf(constraint, currentIndex) >= 0) {
@@ -57,18 +59,28 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 		return new TwoLineActionRow(context);
 	}
 
-	@Override
-	public String convertToString(Cursor cursor) {
-		//int titleIndex = cursor.getColumnIndex(FacilitiesDB.LocationTable.NAME);
-		return cursor.getString(5); // display_name index
+	private String rowString(RoomSearchFilteredCursor cursor) {
+		int idIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable._ID);
+		long id = cursor.getLong(idIndex);
+		if (id == -1) {
+			return "Use '" + cursor.getConstraint() + "'";
+		} else {
+			int titleIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable.ROOM);
+			return cursor.getString(titleIndex);
+		}
 	}
 	
-	private static class FilteredCursor extends CursorWrapper {
+	@Override
+	public String convertToString(Cursor cursor) {
+		return "";
+	}
+	
+	public static class RoomSearchFilteredCursor extends CursorWrapper {
 
 		String mConstraint;
 		
-		public FilteredCursor(Cursor cursor, String constraint) {
-			super(cursor);
+		public RoomSearchFilteredCursor(Cursor cursor, String constraint) {
+			super(cursorWithHeader(cursor));
 			mConstraint = constraint;
 		}
 		
@@ -77,4 +89,9 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 		}
 	}
 
+	private static Cursor cursorWithHeader(Cursor cursor) {
+		MatrixCursor header = new MatrixCursor(new String[]{"_id"}, 1);
+		header.addRow(new Object[] { new Long(-1)});
+		return new MergeCursor(new Cursor[] {header, cursor});
+	}
 }
