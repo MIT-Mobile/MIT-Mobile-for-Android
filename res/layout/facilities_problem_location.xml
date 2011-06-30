@@ -70,7 +70,13 @@
         android:layout_height="wrap_content"
         android:background="#ffff"
         style="@style/Lists" 
-        android:visibility="gone" />        
+        android:visibility="gone" />  
+        
+   	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />      
         
 
 </LinearLayout>
