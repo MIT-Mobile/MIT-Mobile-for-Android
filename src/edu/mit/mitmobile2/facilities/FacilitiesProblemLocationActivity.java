@@ -26,8 +26,6 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationSearchRecord;
 
-//public class FacilitiesProblemLocationActivity extends ListActivity implements OnClickListener, OnItemClickListener {
-
 public class FacilitiesProblemLocationActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemLocationActivity";
@@ -52,7 +50,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 		Log.d(TAG,"onCreate()");
 		
 		mContext = this;
-		Handler uiHandler = new Handler();
 
 		createViews();		
 	}
@@ -126,8 +123,6 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	}
 
 	private class DatabaseUpdater extends AsyncTask<String, Void, String> {
-        
-        ProgressDialog dialog;
 
             @Override
             protected void onPreExecute() {
