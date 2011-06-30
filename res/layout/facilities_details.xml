@@ -13,7 +13,8 @@
 
 	<ScrollView
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+		android:layout_height="fill_parent"
+		android:fillViewport="true">
 		
 		<LinearLayout 
 			android:orientation="vertical"
@@ -139,6 +140,18 @@
 	                android:layout_height="wrap_content"
 	                android:background="@color/rowBackground"
 	                android:text="Submit"  />
+	                
+	        <!-- Divider -->
+			<View
+					android:layout_width="fill_parent"
+					android:layout_height="@dimen/dividerHeight"
+					android:background="@color/dividerColor" />
+					
+			<!-- Fill the bottom of the screen with background color -->
+			<View
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:background="@color/rowBackground" />
             
     	</LinearLayout>
 	</ScrollView>      
