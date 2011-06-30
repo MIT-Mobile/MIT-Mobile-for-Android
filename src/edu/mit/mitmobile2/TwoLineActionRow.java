@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -93,5 +94,12 @@ public class TwoLineActionRow extends ActionRow {
 	@Override
 	protected int getLayoutId() {
 		return R.layout.two_line_action_row;
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		mTitleView.setEnabled(enabled);
+		mSubtitleView.setEnabled(enabled);
 	}
 }
