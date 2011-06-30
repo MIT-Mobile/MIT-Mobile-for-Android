@@ -37,6 +37,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,8 +104,23 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         problemStringTextView.setText(problemString);
         
         mProblemDescriptionEditText = (EditText) findViewById(R.id.problemDescription);
+        mProblemDescriptionEditText.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				updateSubmitButtonState();
+				return false;
+			}
+		});
+        
         initDescriptionPadding();
         sendAsEditText = (EditText) findViewById(R.id.facilitiesSendAs);
+        sendAsEditText.setOnKeyListener(new View.OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				updateSubmitButtonState();
+				return false;
+			}
+		});
         
         // Add A Photo
     	TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
@@ -164,6 +180,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 				submitForm();
 			}
 		});
+    	submitActionRow.setEnabled(false);
 	}
 	
 	int mPaddingLeft;
@@ -220,6 +237,12 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
     	} 
     }
 
+    private void updateSubmitButtonState() {
+		boolean emailExists = sendAsEditText.getText().toString().trim().length() > 0;
+		boolean descriptionExists = mProblemDescriptionEditText.getText().toString().trim().length() > 0;
+		submitActionRow.setEnabled(emailExists && descriptionExists);
+    }
+    
 	@Override
 	protected Module getModule() {
 		return new FacilitiesModule();
