@@ -266,7 +266,7 @@ public class FacilitiesDB {
 				CategoryTable._ID,
 				CategoryTable.ID,
 				CategoryTable.NAME
-				}, null, null, null, null, null);
+				}, null, null, null, null, CategoryTable._ID + " DESC");
 		return cursor;
 	}
 
