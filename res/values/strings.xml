@@ -84,45 +84,5 @@ MIT\&apos;s commitment to innovation has led to a host of scientific breakthroug
         <item>mobile-stage.mit.edu</item>
         <item>m.mit.edu</item>
     </string-array>	
-    
-<!-- ################################################################################################################################################################ -->
-<!-- FACILITIES -->
-    <string name="facilities_home">Use this tool to report on-campus maintenance issues such as leaks, lighting, and locks. You can mark your location and optionally include a photo of the issue.
-
-For urgent issues, please call or email the Department of Facilities directly.</string>
-    <string name="facilities_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nulla justo, blandit et varius faucibus, tempus sit amet libero. Integer placerat, purus a dictum blandit, quam neque blandit tellus, ac pharetra orci sapien nec augue. Mauris dictum condimentum risus eget congue. In vulputate augue ac erat porttitor in faucibus nibh imperdiet. In et laoreet nulla. Donec tempus ultrices nulla a dapibus. Sed vel odio quis turpis sollicitudin hendrerit sit amet sit amet lectus.</string>
-	<string name="facilities_phone">617.253.4948</string>    
-    <string name="facilities_email">txtdof@mit.edu</string>     
-    <string name="facilities_problem_type">What is the Problem</string>
-    <string name="facilities_problem_location">What is the Location</string>
-    <string name="facilities_problem_location_header">Browse:</string>
-    <string name="facilities_problem_location_search_hint">Search</string>
-	
-	<string-array name="facilities_problem_types">
-		<item>Clock</item>
-		<item>Door</item>
-		<item>Floor</item>
-		<item>Light</item>
-		<item>Parking Garage/Lot</item>
-		<item>Restroom</item>
-		<item>Sign</item>
-		<item>Trash/Recycling</item>
-		<item>Window</item>
-		<item>Other</item>
-	</string-array>
-	
-	<string-array name="facilities_location_types">
-		<item>Building Number</item>
-		<item>Building Name</item>
-		<item>Selected Rooms</item>
-		<item>Food Services</item>
-		<item>Libraries</item>
-		<item>Residences</item>
-		<item>Parking Lot</item>
-		<item>Course/Green Spaces</item>
-		<item>Athena Clusters</item>
-		<item>Museums/Galleries</item>
-	</string-array>
-	
 
 </resources>
