@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:dropDownHeight="fill_parent"
         android:singleLine="true"
+        android:imeOptions="actionDone"
         android:completionThreshold="1"
         android:hint="Search"  />
     />  

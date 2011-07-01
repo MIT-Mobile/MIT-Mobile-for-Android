@@ -48,7 +48,7 @@
             			android:layout_height="fill_parent" 
             			android:layout_alignParentLeft="true"
             			android:gravity="left"
-            			android:singleLine="false" 
+            			android:singleLine="true" 
             			android:lines="5"
             			android:hint="Problem Description (required)"
             		/>
@@ -110,6 +110,7 @@
 						android:layout_alignParentRight="true"
 						android:layout_toRightOf="@id/facilitiesDetailEmailLabel"
 						android:layout_centerVertical="true"
+						android:singleLine="true" 
             			android:lines="1" 
             			android:hint="email (required)" />
 	            		
