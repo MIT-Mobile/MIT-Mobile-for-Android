@@ -55,10 +55,13 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
 	private static final int MENU_INFO = 0;
+	private static String ATTACH_PHOTO = "Attach Photo";
+	private static String CHANGE_PHOTO = "Change Photo";
 
 	private Context mContext;	
 	private TextView problemStringTextView;
 	private EditText mProblemDescriptionEditText;
+	private TwoLineActionRow mAddAPhotoActionRow;
 	private EditText sendAsEditText;
     private static final int CAMERA_PIC_REQUEST = 1;
     private static final int PIC_SELECTION = 2;    
@@ -142,10 +145,11 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 		});
         
         // Add A Photo
-    	TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
-    	addAPhotoActionRow.setActionIconResource(R.drawable.photoopp);
+    	mAddAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
+    	mAddAPhotoActionRow.setTitle(ATTACH_PHOTO);
+    	mAddAPhotoActionRow.setActionIconResource(R.drawable.photoopp);
 	
-    	addAPhotoActionRow.setOnClickListener(new View.OnClickListener() {
+    	mAddAPhotoActionRow.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -246,6 +250,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 		selectedImage.setImageBitmap(null);
 		mProblemDescriptionEditText.setPadding(mPaddingLeft, mPaddingTop, mPaddingRightNoPicture, mPaddingBottom);
 		mSelectedImageUri = null;
+		mAddAPhotoActionRow.setTitle(ATTACH_PHOTO);
 	}
 	
 	
@@ -257,6 +262,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         	} else if(requestCode == PIC_SELECTION) {
         		mSelectedImageUri = data.getData();
         	}
+			mAddAPhotoActionRow.setTitle(CHANGE_PHOTO);
 			
 	        selectedImage.setVisibility(View.VISIBLE);
 	        mProblemDescriptionEditText.setPadding(mPaddingLeft, mPaddingTop, mPaddingRightPicture, mPaddingBottom);

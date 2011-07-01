@@ -126,8 +126,7 @@
     		<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesAddAPhotoActionRow"
             	android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/rowBackground"
-                android:text="Attach Photo"  />
+                android:background="@color/rowBackground" />
             
             <!-- Divider -->
 			<View
