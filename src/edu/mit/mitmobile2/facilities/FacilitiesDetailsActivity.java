@@ -38,6 +38,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -117,10 +118,28 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         
         mProblemDescriptionEditText = (EditText) findViewById(R.id.problemDescription);
         mProblemDescriptionEditText.addTextChangedListener(textWatcher);
+        mProblemDescriptionEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(!hasFocus) {
+					String problemText = mProblemDescriptionEditText.getText().toString();
+					mProblemDescriptionEditText.setText(problemText.trim());
+				}
+			}
+		});
         
         initDescriptionPadding();
         sendAsEditText = (EditText) findViewById(R.id.facilitiesSendAs);
         sendAsEditText.addTextChangedListener(textWatcher);
+        sendAsEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(!hasFocus) {
+					String sendAsText = sendAsEditText.getText().toString();
+					sendAsEditText.setText(sendAsText.trim());
+				}
+			}
+		});
         
         // Add A Photo
     	TwoLineActionRow addAPhotoActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesAddAPhotoActionRow);
@@ -181,6 +200,16 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 			}
 		});
     	submitActionRow.setEnabled(false);
+    	submitActionRow.setFocusableInTouchMode(true);
+    	submitActionRow.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+					InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);	
+					imm.hideSoftInputFromWindow(submitActionRow.getWindowToken(), 0);
+				}
+			}
+		});
 	}
 	
 	int mPaddingLeft;
