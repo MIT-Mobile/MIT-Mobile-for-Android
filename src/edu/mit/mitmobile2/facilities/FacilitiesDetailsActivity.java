@@ -149,50 +149,21 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
     	mAddAPhotoActionRow.setTitle(ATTACH_PHOTO);
     	mAddAPhotoActionRow.setActionIconResource(R.drawable.photoopp);
 	
-    	mAddAPhotoActionRow.setOnClickListener(new View.OnClickListener() {
-			
+    	mAddAPhotoActionRow.setOnClickListener(new View.OnClickListener() {	
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-				builder.setTitle("Choose Action");
-				String[] choices;
-				
-				final int takePhoto = 0;
-				final int pickExistingPhoto = 1;
-				final int detachPhoto = 2;
-				
-				if(mSelectedImageUri != null) {
-					choices = new String[] {"Take a Photo", "Pick Existing Photo", "Detach Photo"};
-				} else {
-					choices = new String[] {"Take a Photo", "Pick Existing Photo"};
-				}
-				builder.setItems(choices, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-							case takePhoto:
-								takePhoto();
-								break;
-							case pickExistingPhoto:
-								pickExistingPhoto();
-								break;
-							case detachPhoto:
-								detachPhoto();
-								break;
-						}
-						
-					}
-				});
-				
-				AlertDialog dialog = builder.create();
-				dialog.show();
-				
+				addOrChangePhoto();
 			}
 		});
     	
     	// selected Image
     	selectedImage = (ImageView)findViewById(R.id.selectedImage);
+    	selectedImage.setOnClickListener(new View.OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				addOrChangePhoto();
+			}
+		});
     	
     	// Submit form
     	submitActionRow = (TwoLineActionRow)findViewById(R.id.facilitiesSubmitActionRow);
@@ -223,6 +194,44 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 			return Global.sharedData.getFacilitiesData().getLocationName();
 		}
 	}
+	
+	private void addOrChangePhoto() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle("Choose Action");
+		String[] choices;
+		
+		final int takePhoto = 0;
+		final int pickExistingPhoto = 1;
+		final int detachPhoto = 2;
+		
+		if(mSelectedImageUri != null) {
+			choices = new String[] {"Take a Photo", "Pick Existing Photo", "Detach Photo"};
+		} else {
+			choices = new String[] {"Take a Photo", "Pick Existing Photo"};
+		}
+		builder.setItems(choices, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+					case takePhoto:
+						takePhoto();
+						break;
+					case pickExistingPhoto:
+						pickExistingPhoto();
+						break;
+					case detachPhoto:
+						detachPhoto();
+						break;
+				}
+				
+			}
+		});
+		
+		AlertDialog dialog = builder.create();
+		dialog.show();	
+	}
+	
 	
 	int mPaddingLeft;
 	int mPaddingTop;
