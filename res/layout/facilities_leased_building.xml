@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/facilitiesLeasedMainLinearLayout"
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
@@ -19,6 +18,55 @@
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content"
   		style="@style/ContentTitle" />
+  		
+  <LinearLayout
+  		android:id="@+id/facilitiesLeasedEmailContainer"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:visibility="gone"
+  		android:orientation="vertical">
+  	
+  	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Email Facilities -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesLeasedEmailActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/action_email"
+                android:background="@color/rowBackground" />
+  	  		
+  </LinearLayout>
+  
+   <LinearLayout
+  		android:id="@+id/facilitiesLeasedPhoneContainer"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:visibility="gone"
+  		android:orientation="vertical">
+  	
+  	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Email Facilities -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesLeasedPhoneActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/action_phone"
+                android:background="@color/rowBackground" />
+  	  		
+  </LinearLayout>
+  
+  <View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
 
 		  		
 </LinearLayout>

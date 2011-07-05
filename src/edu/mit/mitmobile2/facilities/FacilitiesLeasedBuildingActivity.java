@@ -52,10 +52,10 @@ public class FacilitiesLeasedBuildingActivity extends ModuleActivity {
 		TextView maintainerMessageTV = (TextView) findViewById(R.id.facilitiesLeasedTV);
 		maintainerMessageTV.setText(message);
 		
-		LinearLayout mainLinearLayout = (LinearLayout) findViewById(R.id.facilitiesLeasedMainLinearLayout);
 		if(mEmail.length() > 0) {
-			TwoLineActionRow emailActionRow = new TwoLineActionRow(this);
-			emailActionRow.setBackgroundColor(getResources().getColor(R.color.rowBackground));
+			View emailActionContainer = findViewById(R.id.facilitiesLeasedEmailContainer);
+			emailActionContainer.setVisibility(View.VISIBLE);
+			TwoLineActionRow emailActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesLeasedEmailActionRow);
 			emailActionRow.setActionIconResource(R.drawable.action_email);
 			emailActionRow.setTitle("Email (" + mEmail + ")");
 			emailActionRow.setOnClickListener(new View.OnClickListener() {
@@ -66,27 +66,22 @@ public class FacilitiesLeasedBuildingActivity extends ModuleActivity {
 				}
 			});
 			
-			mainLinearLayout.addView(new DividerView(this, null));
-			mainLinearLayout.addView(emailActionRow);
 		}
 		
 		if(mPhone.length() > 0) {
-			TwoLineActionRow phoneActionRow = new TwoLineActionRow(this);
-			phoneActionRow.setBackgroundColor(getResources().getColor(R.color.rowBackground));
+			View phoneActionContainer = findViewById(R.id.facilitiesLeasedPhoneContainer);
+			phoneActionContainer.setVisibility(View.VISIBLE);
+			TwoLineActionRow phoneActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesLeasedPhoneActionRow);
 			phoneActionRow.setActionIconResource(R.drawable.action_phone);
-			phoneActionRow.setTitle("Call (" + mPhone + ")");
+			String dotDelimitedNumber = mPhone.substring(0, 3) + "." + mPhone.substring(3, 6) + "." + mPhone.substring(6);
+			phoneActionRow.setTitle("Call (" + dotDelimitedNumber + ")");
 			phoneActionRow.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					CommonActions.callPhone(mContext, mPhone);
 				}
 			});
-			
-			mainLinearLayout.addView(new DividerView(this, null));
-			mainLinearLayout.addView(phoneActionRow);
 		}
-		
-		
 	}
 	
 	@Override
