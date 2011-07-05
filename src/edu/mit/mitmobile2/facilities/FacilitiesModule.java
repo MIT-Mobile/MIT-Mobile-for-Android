@@ -9,12 +9,12 @@ public class FacilitiesModule extends Module {
 
 	@Override
 	public String getLongName() {
-		return "Facilities";
+		return "Bldg Services";
 	}
 
 	@Override
 	public String getShortName() {
-		return "Facilities";
+		return "Bldg Services";
 	}
 	
 	@Override

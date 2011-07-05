@@ -213,10 +213,9 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new ClassesModule(),
 			new PeopleModule(),
 			new TourModule(),
-			new MIT150Module(),
 			new EmergencyModule(),
-			new QRReaderModule(),
 			new FacilitiesModule(),
+			new QRReaderModule(),
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);
