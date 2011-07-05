@@ -1,18 +1,13 @@
 package edu.mit.mitmobile2.facilities;
 
-import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
-import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.style.TextAppearanceSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 class LocationCategoryAdapter extends CursorAdapter {
 
@@ -29,24 +24,18 @@ class LocationCategoryAdapter extends CursorAdapter {
 		locationCategoryRecord.categoryId = cursor.getString(1);
 		locationCategoryRecord.locationId = cursor.getString(2);
 
-		
-		TextView locationTV = (TextView) row.findViewById(R.id.facilitiesRowTV);
-		
-		locationTV.setText(locationCategoryRecord.locationId,  TextView.BufferType.SPANNABLE);
-		
-		int separator = locationCategoryRecord.categoryId.length() + 1;
+		TwoLineActionRow actionRow = (TwoLineActionRow) row;
+		actionRow.setTitle(locationCategoryRecord.locationId);
 	}
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		LinearLayout row = (LinearLayout) view;
-		setupRow(cursor, row);
+		setupRow(cursor, view);
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout row = (LinearLayout) inflater.inflate(R.layout.facilities_row, null);
+		View row = new TwoLineActionRow(mContext);
 		setupRow(cursor, row);
 		return row;
 	}

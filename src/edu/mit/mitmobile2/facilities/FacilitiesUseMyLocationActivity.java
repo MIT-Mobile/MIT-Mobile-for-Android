@@ -11,15 +11,17 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TitleBar;
+import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 
@@ -140,7 +142,7 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 
 						@Override
 						public void run() {
-							mListView.setAdapter(new LocationArrayAdapter(mContext, closestLocations));
+							mListView.setAdapter(new LocationArrayAdapter(mContext, 0, closestLocations));
 							mListView.setVisibility(View.VISIBLE);
 							mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -239,15 +241,24 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 	}
 
 	
-	private static class LocationArrayAdapter extends SimpleArrayAdapter<LocationRecord> {
+	private static class LocationArrayAdapter extends ArrayAdapter<LocationRecord> {
 
-		public LocationArrayAdapter(Context context, List<LocationRecord> items) {
-			super(context, items, R.layout.facilities_row);
+		private Context mContext;
+		public LocationArrayAdapter(Context context, int textViewResourceId,
+				List<LocationRecord> objects) {
+			super(context, textViewResourceId, objects);
+			mContext = context;
 		}
-
+		
 		@Override
-		public void updateView(LocationRecord item, View view) {
-			LocationAdapter.populateView(item, view);
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if(convertView == null) {
+				convertView = new TwoLineActionRow(mContext);
+			}
+			
+			LocationRecord item = getItem(position);
+			LocationAdapter.populateView(item, convertView);
+			return convertView;
 		}
 	}
 }
