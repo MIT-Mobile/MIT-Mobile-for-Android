@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,8 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
@@ -19,15 +16,10 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class FacilitiesActivity extends ModuleActivity {
-
-	// this is a test 
-	private Button reportButton;
-	//private ImageView callButton;
 	
 
 	private Context mContext;	
@@ -143,9 +135,12 @@ public class FacilitiesActivity extends ModuleActivity {
 		Global.sharedData.getFacilitiesData().setLocationId(location.id);
 		Global.sharedData.getFacilitiesData().setLocationName(location.name);
 		Global.sharedData.getFacilitiesData().setBuildingNumber(location.bldgnum);
-
+		
+		if(location.leased_bldg_services) {
+			FacilitiesLeasedBuildingActivity.launch(context, location);
+		}
 		// If there is no building number for the selected location, go to the inside/outside selection activity, else retrieve the rooms for the location
-		if (location.bldgnum == null || location.bldgnum.equals("")) {
+		else if (location.bldgnum == null || location.bldgnum.equals("")) {
 			Intent intent = new Intent(context, FacilitiesInsideOutsideActivity.class);
 			context.startActivity(intent);
 		}

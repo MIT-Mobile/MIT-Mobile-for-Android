@@ -71,27 +71,5 @@ public class FacilitiesItem {
 			this.room = cursor.getString(2);
 		}
 
-	}
-	
-	public static class LocationSearchRecord {		
-		public String _id;
-		public String id;
-		public String name;
-		public String bldgnum;
-		public String display_name;
-		
-		public LocationSearchRecord() {
-			super();
-		}
-
-		public LocationSearchRecord(Cursor cursor) {
-			this._id = cursor.getString(0);
-			this.id = cursor.getString(1);
-			this.bldgnum = cursor.getString(2);
-			this.name = cursor.getString(4);
-			this.display_name = cursor.getString(5);
-		}
-
-	}
-	
+	}	
 }

@@ -202,6 +202,7 @@
 		<activity android:name=".facilities.FacilitiesInsideOutsideActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesDetailsActivity" android:windowSoftInputMode="stateHidden"/>
 		<activity android:name=".facilities.FacilitiesUseMyLocationActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesLeasedBuildingActivity" />
 		<activity android:name=".facilities.FacilitiesUploadSuccessModuleActivity" />
 
 		<activity android:name=".about.AboutActivity" />

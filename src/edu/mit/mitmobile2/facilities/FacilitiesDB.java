@@ -354,16 +354,29 @@ public class FacilitiesDB {
 	public static LocationRecord getLocationRecord(Cursor cursor) {
 		//Log.d(TAG,"index 0 = " + cursor.getString(0) + " index 1 = " + cursor.getString(1) + " index 2 = " + cursor.getString(2));
 		LocationRecord location = new LocationRecord();
-		location.id = cursor.getString(1);
-		location.name = cursor.getString(2);
-		location.lat_wgs84 = cursor.getFloat(3);
-		location.long_wgs84 = cursor.getFloat(4);
-		location.bldgnum = cursor.getString(5);
-		location.last_updated = cursor.getString(6);
-		location.leased_bldg_services = (cursor.getInt(7) == 1);
-		location.contact_email_bldg_services = cursor.getString(8);
-		location.contact_name_bldg_services = cursor.getString(9);
-		location.contact_phone_bldg_services = cursor.getString(10);
+		location.id = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.ID));
+		location.name = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.NAME));
+		
+		int latIndex = cursor.getColumnIndex(LocationTable.LAT);
+		if (latIndex >= 0) {
+			location.lat_wgs84 = cursor.getFloat(latIndex);
+		}
+		int longIndex = cursor.getColumnIndex(LocationTable.LONG);
+		if (longIndex >= 0) {
+			location.long_wgs84 = cursor.getFloat(longIndex);
+		}
+		
+		location.bldgnum = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.BLDGNUM));
+		
+		int lastUpdatedIndex = cursor.getColumnIndex(LocationTable.LAST_UPDATED);
+		if (lastUpdatedIndex >=0 ) { 
+			location.last_updated = cursor.getString(lastUpdatedIndex);
+		}
+		
+		location.leased_bldg_services = (cursor.getInt(cursor.getColumnIndexOrThrow(LocationTable.LEASED_BLDG_SERVICES)) == 1);
+		location.contact_email_bldg_services = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.CONTACT_EMAIL_BLDG_SERVICES));
+		location.contact_name_bldg_services = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.CONTACT_NAME_BLDG_SERVICES));
+		location.contact_phone_bldg_services = cursor.getString(cursor.getColumnIndexOrThrow(LocationTable.CONTACT_PHONE_BLDG_SERVICES));
 		return location;
 	}
 	
