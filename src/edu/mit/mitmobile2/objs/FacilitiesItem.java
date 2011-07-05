@@ -24,6 +24,13 @@ public class FacilitiesItem {
 		public float long_wgs84;
 		public String bldgnum;
 		public String last_updated;
+		
+		// properties specific to bldg services
+		public boolean hidden_bldg_services;
+		public boolean leased_bldg_services;
+		public String contact_email_bldg_services;
+		public String contact_name_bldg_services;
+		public String contact_phone_bldg_services;
 	}
 
 	public static class LocationCategoryRecord {

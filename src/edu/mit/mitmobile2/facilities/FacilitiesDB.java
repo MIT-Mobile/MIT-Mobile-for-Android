@@ -72,6 +72,13 @@ public class FacilitiesDB {
 		static final String LONG = "long_wgs84";
 		static final String BLDGNUM = "bldgnum";
 		static final String LAST_UPDATED = "last_updated";
+		
+		// bldg_services fields;
+		static final String HIDDEN_BLDG_SERVICES = "hidden_bldg_services";
+		static final String LEASED_BLDG_SERVICES = "leased_bldg_services";
+		static final String CONTACT_EMAIL_BLDG_SERVICES = "contact_email_bldg_services";
+		static final String CONTACT_NAME_BLDG_SERVICES = "contact_name_bldg_services";
+		static final String CONTACT_PHONE_BLDG_SERVICES = "contact_phone_bldg_services";
 	}
 
 	// LOCATION CATEGORIES - stores the one to many relationships between location and category
@@ -164,6 +171,11 @@ public class FacilitiesDB {
 		values.put(LocationTable.LAT, locationRecord.lat_wgs84);
 		values.put(LocationTable.LONG,locationRecord.long_wgs84);
 		values.put(LocationTable.BLDGNUM, locationRecord.bldgnum);
+		values.put(LocationTable.HIDDEN_BLDG_SERVICES, locationRecord.hidden_bldg_services);
+		values.put(LocationTable.LEASED_BLDG_SERVICES, locationRecord.leased_bldg_services);
+		values.put(LocationTable.CONTACT_EMAIL_BLDG_SERVICES, locationRecord.contact_email_bldg_services);
+		values.put(LocationTable.CONTACT_NAME_BLDG_SERVICES, locationRecord.contact_name_bldg_services);
+		values.put(LocationTable.CONTACT_PHONE_BLDG_SERVICES, locationRecord.contact_phone_bldg_services);
 		try {
 			db.insert(LOCATION_TABLE, LocationTable.ID + "," + LocationTable.NAME + "," + LocationTable.LAT + "," + LocationTable.LONG + "," + LocationTable.BLDGNUM,values);		
 			//Log.d(TAG,"addLocation " + locationRecord.name);
@@ -293,10 +305,14 @@ public class FacilitiesDB {
 					+ LocationTable.LAT + ", " 
 					+ LocationTable.LONG + ", " 
 					+ LocationTable.BLDGNUM + ", " 
-					+ LocationTable.LAST_UPDATED + " " 
+					+ LocationTable.LAST_UPDATED + ", "
+					+ LocationTable.LEASED_BLDG_SERVICES + ", "
+					+ LocationTable.CONTACT_EMAIL_BLDG_SERVICES + ", "
+					+ LocationTable.CONTACT_NAME_BLDG_SERVICES + ", "
+					+ LocationTable.CONTACT_PHONE_BLDG_SERVICES + " "
 					+ "FROM " + LOCATION_CATEGORY_TABLE
 					+ " JOIN " + LOCATION_TABLE + " on upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + ") = upper(" + LOCATION_TABLE + "." + LocationTable.ID + ")"
-					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "'"
+					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "' AND hidden_bldg_services = 0"
 					+ " order by " + LocationTable.NAME;
 		Log.d(TAG,"locationCategory sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
@@ -326,8 +342,12 @@ public class FacilitiesDB {
 				LocationTable.LAT,
 				LocationTable.LONG,
 				LocationTable.BLDGNUM,
-				LocationTable.LAST_UPDATED				
-				}, null, null, null, null, null);
+				LocationTable.LAST_UPDATED,
+				LocationTable.LEASED_BLDG_SERVICES,
+				LocationTable.CONTACT_EMAIL_BLDG_SERVICES,
+				LocationTable.CONTACT_NAME_BLDG_SERVICES,
+				LocationTable.CONTACT_PHONE_BLDG_SERVICES
+				}, "hidden_bldg_services = 0" , null, null, null, null);
 		return cursor;
 	}
 
@@ -340,6 +360,10 @@ public class FacilitiesDB {
 		location.long_wgs84 = cursor.getFloat(4);
 		location.bldgnum = cursor.getString(5);
 		location.last_updated = cursor.getString(6);
+		location.leased_bldg_services = (cursor.getInt(7) == 1);
+		location.contact_email_bldg_services = cursor.getString(8);
+		location.contact_name_bldg_services = cursor.getString(9);
+		location.contact_phone_bldg_services = cursor.getString(10);
 		return location;
 	}
 	
@@ -389,11 +413,9 @@ public class FacilitiesDB {
 	private String getLocationSearchQuery(CharSequence searchTerm, String extraWhereClause) {
 		Log.d(TAG,"searchTerm = " + searchTerm);
 		String searchTermUppercase = searchTerm.toString().toUpperCase();
-		String beginAND="";
-		String endAND="";
+		String AND = "";
 		if(extraWhereClause != null) {
-			beginAND = " AND ( ";
-			endAND = " ) ";
+			AND = " AND ";
 		} else {
 			extraWhereClause = "";
 		}
@@ -403,6 +425,10 @@ public class FacilitiesDB {
 				      + " '' as " + LocationTable.BLDGNUM + ", "
 				      + " '' as sort_value, "
 				      + " '" + searchTerm + "' as name, " 
+				      + " 0 as leased_bldg_services,"
+				      + " '' as contact_email_bldg_services,"
+				      + " '' as contact_name_bldg_services,"
+				      + " '' as contact_phone_bldg_services,"
 				      + " 'UserTyped' as categoryName,"
 				      + " '' as contents_name,"
 				      + " '' as altname,"
@@ -414,6 +440,10 @@ public class FacilitiesDB {
 			          + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ", "
 			          + LOCATION_TABLE + "." + LocationTable.ID + " as sort_value, "
 			          + LOCATION_TABLE + "." + LocationTable.NAME + ", "
+					  + LOCATION_TABLE + "." + LocationTable.LEASED_BLDG_SERVICES + ","
+					  + LOCATION_TABLE + "." + LocationTable.CONTACT_EMAIL_BLDG_SERVICES + ","
+					  + LOCATION_TABLE + "." + LocationTable.CONTACT_NAME_BLDG_SERVICES + ","
+					  + LOCATION_TABLE + "." + LocationTable.CONTACT_PHONE_BLDG_SERVICES + ","
 			          + CATEGORY_TABLE + "." + CategoryTable.NAME + ","
 			          + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ","
 			          + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ","
@@ -427,7 +457,8 @@ public class FacilitiesDB {
 			          + " LEFT JOIN " + LOCATION_CONTENT_ALTNAME_TABLE + " on " + LOCATION_TABLE + "." + LocationTable.ID + " = " + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.LOCATION_ID
 			          + " WHERE "
 			          + extraWhereClause
-			          + beginAND
+			          + AND
+			          + "("
 			          + " upper(display_name) like '%" + searchTermUppercase + "%'"
 			          + " OR "
 			          + " upper(" + CATEGORY_TABLE + "." + CategoryTable.NAME + ") like '%" + searchTermUppercase + "%'"
@@ -435,7 +466,8 @@ public class FacilitiesDB {
 					  + " upper(" + LOCATION_CONTENT_TABLE + "." + LocationContentTable.NAME + ") like '%" + searchTermUppercase + "%'"
 					  + " OR "
 					  + " upper(" + LOCATION_CONTENT_ALTNAME_TABLE + "." + LocationContentAltnameTable.ALTNAME + ") like '%" + searchTermUppercase + "%'"
-					  + endAND
+					  + ")"
+					  + "AND (" + LOCATION_TABLE + "." + LocationTable.HIDDEN_BLDG_SERVICES + "= 0)"
 					  + " GROUP BY " + LOCATION_TABLE + "." + LocationTable.ID 
 					  + " ORDER BY sort_value ";
 		return sql;
@@ -728,7 +760,12 @@ public class FacilitiesDB {
 			+ LocationTable.LAT + " FLOAT, \n "
 			+ LocationTable.LONG + " FLOAT, \n "
 			+ LocationTable.BLDGNUM + " TEXT, \n "
-			+ LocationTable.LAST_UPDATED + " TEXT \n " 
+			+ LocationTable.LAST_UPDATED + " TEXT, \n " 
+			+ LocationTable.HIDDEN_BLDG_SERVICES + " BOOLEAN, \n"
+			+ LocationTable.LEASED_BLDG_SERVICES + " BOOLEAN, \n"
+			+ LocationTable.CONTACT_EMAIL_BLDG_SERVICES + " TEXT, \n"
+			+ LocationTable.CONTACT_NAME_BLDG_SERVICES + " TEXT, \n"
+			+ LocationTable.CONTACT_PHONE_BLDG_SERVICES + " TEXT \n"
 			+ ");";
 
 		//Log.d(TAG,"create category table sql = " + locationTableSql);
@@ -964,6 +1001,18 @@ public class FacilitiesDB {
 									record.lat_wgs84 = (float) obj.getDouble("lat_wgs84");
 									record.long_wgs84 = (float) obj.getDouble("long_wgs84");
 									record.bldgnum = obj.getString("bldgnum");
+									if(obj.has("leased_bldg_services")) {
+										record.leased_bldg_services = obj.getString("leased_bldg_services").equals("YES");
+									}
+									if(obj.has("hidden_bldg_services")) {
+										record.hidden_bldg_services = obj.getString("hidden_bldg_services").equals("YES");
+									}
+									
+									if(record.leased_bldg_services) {
+										record.contact_email_bldg_services = obj.getString("contact-email_bldg_services");
+										record.contact_name_bldg_services = obj.getString("contact-name_bldg_services");
+										record.contact_phone_bldg_services = obj.getString("contact-phone_bldg_services");
+									}
 									db.addLocation(record);
 									
 									// convert contents into an array and add to location contents table 
