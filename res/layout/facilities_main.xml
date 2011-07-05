@@ -6,7 +6,7 @@
  	android:layout_height="wrap_content">
   
     <edu.mit.mitmobile2.TitleBar
-  		android:text="Facilites"
+  		android:text="Building Services"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
   
