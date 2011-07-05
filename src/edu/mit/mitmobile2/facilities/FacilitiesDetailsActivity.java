@@ -92,13 +92,13 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         	problemString += " at " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " in " + Global.sharedData.getFacilitiesData().getUserAssignedRoomName();      	
         }
         else if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("INSIDE")) {
-        	problemString += " inside " + Global.sharedData.getFacilitiesData().getLocationId();
+        	problemString += " inside " + buildingNumberOrBuildingName();
         }
         else if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("OUTSIDE")) {
-        	problemString += " outside " + Global.sharedData.getFacilitiesData().getLocationId();
+        	problemString += " outside " + buildingNumberOrBuildingName();
         }
         else {
-        	problemString += " at " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " in " + Global.sharedData.getFacilitiesData().getBuildingRoomName();        	
+        	problemString += " at " + buildingNumberOrBuildingName() + " in " + Global.sharedData.getFacilitiesData().getBuildingRoomName();        	
         }
 
         TextWatcher textWatcher = new TextWatcher() {
@@ -214,6 +214,14 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 				}
 			}
 		});
+	}
+	
+	private String buildingNumberOrBuildingName() {
+		if(Global.sharedData.getFacilitiesData().getBuildingNumber() != null) {
+			return Global.sharedData.getFacilitiesData().getBuildingNumber();
+		} else {
+			return Global.sharedData.getFacilitiesData().getLocationName();
+		}
 	}
 	
 	int mPaddingLeft;
