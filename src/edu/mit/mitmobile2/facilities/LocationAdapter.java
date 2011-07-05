@@ -37,7 +37,7 @@ class LocationAdapter extends CursorAdapter {
 			locationTV.setText(locationRecord.name,  TextView.BufferType.SPANNABLE);
 		}
 		else {
-			locationTV.setText(locationRecord.name + " - " + locationRecord.bldgnum,  TextView.BufferType.SPANNABLE);		
+			locationTV.setText(locationRecord.bldgnum + " - " + locationRecord.name,  TextView.BufferType.SPANNABLE);		
 		}
 		int separator = locationRecord.name.length() + 1;
 	}
