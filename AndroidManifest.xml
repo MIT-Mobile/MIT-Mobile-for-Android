@@ -193,7 +193,7 @@
 		<activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Light" />
 
 		<!-- FACILITIES -->
-		<activity android:name=".facilities.FacilitiesActivity" android:theme="@style/PlainBackground" />
+		<activity android:name=".facilities.FacilitiesActivity" />
 		<activity android:name=".facilities.FacilitiesInfoActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesProblemTypeActivity" android:theme="@style/PlainBackground" />
 		<activity android:name=".facilities.FacilitiesProblemLocationActivity" android:theme="@style/PlainBackground" />
