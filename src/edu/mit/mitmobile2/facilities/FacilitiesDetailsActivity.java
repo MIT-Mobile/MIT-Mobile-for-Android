@@ -83,13 +83,18 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
     	
     	// Set problem string
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);
-        String problemString = "I'm reporting a problem with the " + Global.sharedData.getFacilitiesData().getProblemType();
+        String problemString = "I am reporting a problem";
+        String problemType = Global.sharedData.getFacilitiesData().getProblemType(); 
+        
+        if (problemType.equalsIgnoreCase("Other") == false) {
+        	problemString += " with a " + problemType.toLowerCase();
+        }
         
         if (Global.sharedData.getFacilitiesData().getUserAssignedLocationName() != null) {
-        	problemString += " in " + Global.sharedData.getFacilitiesData().getUserAssignedLocationName();
+        	problemString += " at \"" + Global.sharedData.getFacilitiesData().getUserAssignedLocationName() + "\"";
         }
         else if (Global.sharedData.getFacilitiesData().getUserAssignedRoomName() != null) {
-        	problemString += " at " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " in " + Global.sharedData.getFacilitiesData().getUserAssignedRoomName();      	
+        	problemString += " at " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " near \"" + Global.sharedData.getFacilitiesData().getUserAssignedRoomName() + "\"";      	
         }
         else if (Global.sharedData.getFacilitiesData().getBuildingRoomName().equalsIgnoreCase("INSIDE")) {
         	problemString += " inside " + buildingNumberOrBuildingName();
@@ -98,8 +103,9 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         	problemString += " outside " + buildingNumberOrBuildingName();
         }
         else {
-        	problemString += " at " + buildingNumberOrBuildingName() + " in " + Global.sharedData.getFacilitiesData().getBuildingRoomName();        	
+        	problemString += " at " + buildingNumberOrBuildingName() + " near " + Global.sharedData.getFacilitiesData().getBuildingRoomName();        	
         }
+        problemString += ".";
 
         TextWatcher textWatcher = new TextWatcher() {
 
