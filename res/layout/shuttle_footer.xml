@@ -122,5 +122,47 @@
 
 			</LinearLayout>
 		</LinearLayout>	
+		
+		<edu.mit.mitmobile2.SectionHeader
+        	mit:prominence="secondary"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:text="MBTA Information" />  
+		    
+		<edu.mit.mitmobile2.TwoLineActionRow
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/rowBackground"
+			android:id="@+id/shuttleMbtaBusTimes"
+			android:src="@drawable/action_external"
+			android:text="Real-time Bus Arrivals" />
+			
+		<!-- divider -->
+		<View
+		 	android:layout_width="fill_parent"
+		 	android:layout_height="@dimen/dividerHeight"
+		 	android:background="@color/dividerColor" />
+			
+		<edu.mit.mitmobile2.TwoLineActionRow
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/rowBackground"
+			android:id="@+id/shuttleMbtaTrainTimes"
+			android:src="@drawable/action_external"
+			android:text="Real-time Train Arrivals" />
+
+		<!-- divider -->
+		<View
+		 	android:layout_width="fill_parent"
+		 	android:layout_height="@dimen/dividerHeight"
+		 	android:background="@color/dividerColor" />
+			
+		<edu.mit.mitmobile2.TwoLineActionRow
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/rowBackground"
+			android:id="@+id/shuttleGoogleTransit"
+			android:src="@drawable/action_external"
+			android:text="Google Transit" />
         
 </LinearLayout>
