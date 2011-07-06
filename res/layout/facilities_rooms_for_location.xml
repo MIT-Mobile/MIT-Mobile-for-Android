@@ -24,6 +24,7 @@
         android:singleLine="true"
         android:imeOptions="actionDone"
         android:completionThreshold="1"
+        android:layout_margin="4dip"
         android:hint="Search"  />
     />  
     
