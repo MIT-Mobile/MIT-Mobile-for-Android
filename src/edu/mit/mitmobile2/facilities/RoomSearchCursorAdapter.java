@@ -42,8 +42,17 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		TwoLineActionRow actionRow = (TwoLineActionRow) view;
+		int idIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable._ID);
 		RoomSearchFilteredCursor filteredCursor = (RoomSearchFilteredCursor) cursor;
-		String result = rowString(filteredCursor);
+		long id = cursor.getLong(idIndex);
+		if (id == -1 ) {
+			String useMyTextString = "Use '" + filteredCursor.getConstraint() + "'";
+			actionRow.setTitle(useMyTextString);
+			return;
+		}
+		
+		int titleIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable.ROOM);
+		String result = cursor.getString(titleIndex);
 		Spannable title = Spannable.Factory.getInstance().newSpannable(result);		
 		
 		// find substrings matching constraint
@@ -62,17 +71,6 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		return new TwoLineActionRow(context);
-	}
-
-	private String rowString(RoomSearchFilteredCursor cursor) {
-		int idIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable._ID);
-		long id = cursor.getLong(idIndex);
-		if (id == -1) {
-			return "Use '" + cursor.getConstraint() + "'";
-		} else {
-			int titleIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable.ROOM);
-			return cursor.getString(titleIndex);
-		}
 	}
 	
 	@Override
