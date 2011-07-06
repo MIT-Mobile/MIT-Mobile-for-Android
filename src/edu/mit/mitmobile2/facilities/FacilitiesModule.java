@@ -29,7 +29,7 @@ public class FacilitiesModule extends Module {
 
 	@Override
 	public String getMenuOptionTitle() {
-		return "Facilities";
+		return "Bldg Services";
 	}
 	
 	@Override
