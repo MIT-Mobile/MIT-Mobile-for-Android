@@ -309,11 +309,14 @@ public class FacilitiesDB {
 					+ LocationTable.LEASED_BLDG_SERVICES + ", "
 					+ LocationTable.CONTACT_EMAIL_BLDG_SERVICES + ", "
 					+ LocationTable.CONTACT_NAME_BLDG_SERVICES + ", "
-					+ LocationTable.CONTACT_PHONE_BLDG_SERVICES + " "
+					+ LocationTable.CONTACT_PHONE_BLDG_SERVICES + ", "
+					+ " CASE WHEN length(" + LOCATION_TABLE + "." + LocationTable.BLDGNUM + ") > 0 THEN " 
+			          	+ LOCATION_TABLE + "." + LocationTable.BLDGNUM + " || ' - ' || " + LOCATION_TABLE + "." + LocationTable.NAME 
+			          	+ " ELSE " + LOCATION_TABLE + "." + LocationTable.NAME + " END as display_name "
 					+ "FROM " + LOCATION_CATEGORY_TABLE
 					+ " JOIN " + LOCATION_TABLE + " on upper(" + LOCATION_CATEGORY_TABLE + "." + LocationCategoryTable.LOCATION_ID + ") = upper(" + LOCATION_TABLE + "." + LocationTable.ID + ")"
 					+ " where category_id = '" + Global.sharedData.getFacilitiesData().getLocationCategory() + "' AND hidden_bldg_services = 0"
-					+ " order by " + LocationTable.NAME;
+					+ " order by display_name";
 		Log.d(TAG,"locationCategory sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		return cursor;
