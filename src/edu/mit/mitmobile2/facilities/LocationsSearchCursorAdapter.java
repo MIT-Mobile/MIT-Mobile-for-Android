@@ -28,8 +28,13 @@ public class LocationsSearchCursorAdapter extends CursorAdapter implements Filte
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		Log.d(TAG,"constraint = " + constraint);
-		Cursor c = mFacilitiesDB.getLocationSearchCursor(constraint);
-		return new FilteredCursor(c, constraint.toString());
+		constraint = constraint.toString().trim();
+		if(constraint.length() > 0) {
+			Cursor c = mFacilitiesDB.getLocationSearchCursor(constraint);
+			return new FilteredCursor(c, constraint.toString());
+		} else {
+			return null;
+		}
 	}
 
 	@Override

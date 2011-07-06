@@ -96,6 +96,7 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 				if(id == -1) {
 					Global.sharedData.getFacilitiesData().setUserAssignedRoomName(cursor.getConstraint());
 				} else {
+					Global.sharedData.getFacilitiesData().setUserAssignedRoomName(null);
 					int roomNameIndex = cursor.getColumnIndex(FacilitiesDB.RoomTable.ROOM);
 					String roomName = cursor.getString(roomNameIndex);
 					Global.sharedData.getFacilitiesData().setBuildingRoomName(roomName);

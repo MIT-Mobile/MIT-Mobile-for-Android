@@ -28,8 +28,13 @@ public class LocationsForCategorySearchCursorAdapter extends CursorAdapter imple
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		Log.d(TAG,"constraint = " + constraint);
-		Cursor c = mFacilitiesDB.getLocationForCategorySearchCursor(constraint);
-		return new FilteredCursor(c, constraint.toString());
+		String trimmedConstraint = constraint.toString().trim();
+		if(trimmedConstraint.length() > 0) {
+			Cursor c = mFacilitiesDB.getLocationForCategorySearchCursor(trimmedConstraint);
+			return new FilteredCursor(c, trimmedConstraint.toString());
+		} else {
+			return null;
+		}
 	}
 
 	@Override

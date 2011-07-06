@@ -88,7 +88,9 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 					Intent intent = new Intent(mContext, FacilitiesProblemTypeActivity.class);
 					startActivity(intent);	
 					return;
-				}		
+				} else {
+					Global.sharedData.getFacilitiesData().setUserAssignedLocationName(null);
+				}
 				
 				FacilitiesActivity.launchActivityForLocation(mContext, locationRecord);
 			}

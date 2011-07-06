@@ -30,8 +30,13 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 	@Override
 	public Cursor runQuery(CharSequence constraint) {
 		Log.d(TAG,"constraint = " + constraint);
-		Cursor cursor = mFacilitiesDB.getRoomSearchCursor(constraint);
-		return new RoomSearchFilteredCursor(cursor, constraint.toString());
+		String trimmedConstraint = constraint.toString().trim();
+		if(trimmedConstraint.length() > 0) {
+			Cursor cursor = mFacilitiesDB.getRoomSearchCursor(trimmedConstraint);
+			return new RoomSearchFilteredCursor(cursor, trimmedConstraint);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
