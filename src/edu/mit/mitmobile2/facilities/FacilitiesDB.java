@@ -1192,9 +1192,7 @@ public class FacilitiesDB {
 		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
 		ContentValues values = new ContentValues();
 		values.put(LocationTable.LAST_UPDATED, date.getTime());
-		int temp = db.update(LOCATION_TABLE, values, LocationTable.ID + " = ? ", new String[] {locationId});
-		int temp2 = temp;
-		//db.rawQuery(sql,null);
+		db.update(LOCATION_TABLE, values, LocationTable.ID + " = ? ", new String[] {locationId});
 	}
 	
 	// gets the last_updated value for a specified locatio id
