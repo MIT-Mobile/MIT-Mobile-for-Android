@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.classes.FacilitiesData;
 import edu.mit.mitmobile2.facilities.RoomSearchCursorAdapter.RoomSearchFilteredCursor;
 
 
@@ -136,6 +137,10 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 				String lastUpdated = FacilitiesDB.getLocationLastUpdated(Global.sharedData.getFacilitiesData().getLocationId());
 				if (lastUpdated == null || lastUpdated.equals("")) {
 					FacilitiesDB.updateRooms(mContext, mFacilitiesLoadedHandler,Global.sharedData.getFacilitiesData().getBuildingNumber() );
+				} else {
+					Message roomMsg = Message.obtain();
+					roomMsg.arg1 = FacilitiesDB.STATUS_ROOMS_SUCCESSFUL;
+					mFacilitiesLoadedHandler.sendMessage(roomMsg);
 				}
 				result = "success";
 			} catch (Exception e) {

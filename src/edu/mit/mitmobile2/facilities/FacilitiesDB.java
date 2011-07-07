@@ -574,16 +574,6 @@ public class FacilitiesDB {
 		Log.d(TAG,"room sql = " + sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		Log.d(TAG,"number of rooms for building " + Global.sharedData.getFacilitiesData().getBuildingNumber() + " = " + cursor.getCount());
-		//DEBUG ROOMS
-		cursor.moveToFirst();
-		for (int r = 0; r < cursor.getCount(); r++) {
-			Log.d(TAG,"ROOM _ID = " + cursor.getString(0));
-			Log.d(TAG,"ROOM BUILDING = " + cursor.getString(1));
-			Log.d(TAG,"ROOM FLOOR = " + cursor.getString(2));
-			Log.d(TAG,"ROOM ROOM = " + cursor.getString(3));
-			cursor.moveToNext();
-		}
-		//DEBUG
 		return cursor;
 	}
 
@@ -1184,7 +1174,7 @@ public class FacilitiesDB {
 						}
 					}
 					// Set last updated field for location so rooms are not re-read for that location
-					FacilitiesDB.setLocationLastUpdated(buildingNumber);
+					FacilitiesDB.setLocationLastUpdated("object-" + buildingNumber);
 					db.endTransaction();
 					Message msg = new Message();
 					msg.arg1 = FacilitiesDB.STATUS_ROOMS_SUCCESSFUL;
@@ -1196,12 +1186,17 @@ public class FacilitiesDB {
 
 	// sets the last_updated field on the specified table and row to the given value 
 	public static void setLocationLastUpdated(String locationId) {
-		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		SQLiteDatabase db = mDBHelper.getWritableDatabase();
 		Date date = new Date();
 		
 		String sql = "update " + LOCATION_TABLE + " set " + LocationTable.LAST_UPDATED + " = " + date.getTime() + " where " + LocationTable.ID + " = '" + locationId + "'";
 		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
-		db.rawQuery(sql,null);
+		Log.d(TAG, sql);
+		ContentValues values = new ContentValues();
+		values.put(LocationTable.LAST_UPDATED, date.getTime());
+		int temp = db.update(LOCATION_TABLE, values, LocationTable.ID + " = ? ", new String[] {locationId});
+		int temp2 = temp;
+		//db.rawQuery(sql,null);
 	}
 	
 	// gets the last_updated value for a specified locatio id
@@ -1209,11 +1204,13 @@ public class FacilitiesDB {
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 		Date date = new Date();
 		
-		String sql = "select " + LocationTable.LAST_UPDATED + " from " + LOCATION_TABLE + " where " + LocationTable.ID + " = '" + locationId + "'";
+		String sql = "select " + LocationTable.LAST_UPDATED + " from " + LOCATION_TABLE + " where " + LocationTable.ID + " = ? ";
 		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
-		Cursor cursor = db.rawQuery(sql, null);
+		Cursor cursor = db.rawQuery(sql, new String[] {locationId});
 		if (cursor.moveToFirst()) {
-			return cursor.getString(0);
+			String lastUpdated = cursor.getString(0);
+			cursor.close();
+			return lastUpdated;
 		}
 		else {
 			return null;

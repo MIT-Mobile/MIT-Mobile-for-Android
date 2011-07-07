@@ -22,7 +22,7 @@ public class RoomSearchCursorAdapter extends CursorAdapter implements FilterQuer
 	private static final String TAG = "LocationsSearchCursorAdapter";
 	
 	public RoomSearchCursorAdapter(Context context, FacilitiesDB facilitiesDB) {
-		super(context, facilitiesDB.getRoomCursor());
+		super(context, null);
 		mFacilitiesDB = facilitiesDB;
 		setFilterQueryProvider(this);
 	}
