@@ -48,7 +48,6 @@
             			android:layout_height="fill_parent" 
             			android:layout_alignParentLeft="true"
             			android:gravity="left"
-            			android:singleLine="true" 
             			android:lines="5"
             			android:hint="Problem Description (required)"
             		/>
