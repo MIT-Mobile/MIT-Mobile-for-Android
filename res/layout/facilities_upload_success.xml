@@ -24,14 +24,14 @@
   			<TextView
   				android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
-  				android:text="Report successfully submitted"
+  				android:text="Report submitted successfully."
   				android:layout_gravity="center_horizontal"
   				android:paddingBottom="5dip" 
   				style="@style/BodyText"
   				/>
   				  		
     		<Button
-    			android:text="return to start"
+    			android:text="Return to Start"
     			android:id="@+id/facilitiesUploadSuccessReturnHome"
     			android:layout_gravity="center_horizontal"
     			android:layout_width="wrap_content"
