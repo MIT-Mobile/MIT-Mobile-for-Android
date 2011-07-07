@@ -1189,9 +1189,7 @@ public class FacilitiesDB {
 		SQLiteDatabase db = mDBHelper.getWritableDatabase();
 		Date date = new Date();
 		
-		String sql = "update " + LOCATION_TABLE + " set " + LocationTable.LAST_UPDATED + " = " + date.getTime() + " where " + LocationTable.ID + " = '" + locationId + "'";
 		Log.d(TAG,"setting last updated for " + locationId + " to " + date.getTime());
-		Log.d(TAG, sql);
 		ContentValues values = new ContentValues();
 		values.put(LocationTable.LAST_UPDATED, date.getTime());
 		int temp = db.update(LOCATION_TABLE, values, LocationTable.ID + " = ? ", new String[] {locationId});
