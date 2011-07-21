@@ -111,7 +111,7 @@
 						android:layout_centerVertical="true"
 						android:singleLine="true" 
             			android:lines="1" 
-            			android:hint="email (required)" />
+            			android:hint="Email (required)" />
 	            		
 	      		</RelativeLayout>
 	      	</FrameLayout>
