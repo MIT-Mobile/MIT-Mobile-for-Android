@@ -43,6 +43,7 @@ import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
+import edu.mit.mitmobile2.touchstone.TouchstoneModule;
 import edu.mit.mitmobile2.tour.TourModule;
 
 public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenceChangeListener {
@@ -216,6 +217,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new EmergencyModule(),
 			new FacilitiesModule(),
 			new QRReaderModule(),
+			new TouchstoneModule(),
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);
