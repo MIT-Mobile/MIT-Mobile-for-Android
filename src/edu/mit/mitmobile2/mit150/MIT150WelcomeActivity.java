@@ -142,7 +142,8 @@ public class MIT150WelcomeActivity extends Activity {
 	    	if (!newfile.exists()) {
 	    		
 	    		Resources res = ctx.getResources();
-		    	InputStream is = res.openRawResource(R.raw.hockfield_150);   
+		    	//InputStream is = res.openRawResource(R.raw.hockfield_150); 
+	    		InputStream is = res.openRawResource(-1); 
 		    	FileOutputStream os;
 		    	
 		    	byte[] buffer = new byte[4096];  
