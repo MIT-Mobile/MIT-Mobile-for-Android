@@ -54,7 +54,7 @@ def write_build_settings(build_settings_dictionary):
               public final static String source_project_name = "%(source_project_name)s";
          }
 	""" % build_settings_dictionary
-    relProjLoc = build_settings.release_project_name.split('.')
+    relProjLoc = build_settings_dictionary['release_project_name'].split('.')
     relProjLocF = ""
     for s in relProjLoc:
     	relProjLocF = relProjLocF + "/" + s
@@ -103,6 +103,7 @@ def renameProjName(dir):
 		dir = dir[0:-1]
 	
 	for x in os.listdir(dir):
+
 		if os.path.isdir(dir + "/" + x):
 			renameProjName(dir + "/" + x)
 		
@@ -116,7 +117,6 @@ def renameProjName(dir):
 					infile.close()
 					infile = open(file,"w")
 					text = text.replace("package=\""+oldProjName,"package=\"" + newProjName)
-					text = text.replace("name=\".","name=\""+oldProjName+".")
 					infile.write(text)
 				infile.close()
 			
@@ -126,10 +126,10 @@ def renameProjName(dir):
 					infile = open(file, "r")
 					text = infile.read()
 				
-					if text.find("res/"+oldProjName) != -1:
+					if text.find(oldProjName) != -1:
 						infile.close()
 						infile = open(file,"w")
-						text = text.replace("res/"+oldProjName,"res/"+newProjName)
+						text = text.replace(oldProjName, newProjName)
 						infile.write(text)
 					infile.close()
 				
@@ -158,39 +158,45 @@ def build_source(builder, tag, fresh_repository):
    if not tag:
       build_id = shell("git rev-parse HEAD", True)     
       build_source = "local code"
-      oldProjName = build_settings.source_project_name
-      newProjName = build_settings.release_project_name
+
+      # only want to do project renaming if release_project_name is set
+      if hasattr(build_settings, 'release_project_name'):
+         if builder == 'eclipse':
+             raise Exception('Remapping of project package name, is not allowed for eclipse builds')         
+
+         oldProjName = build_settings.source_project_name
+         newProjName = build_settings.release_project_name
       
-      #make a new dir based on project name 
-      tmp_tag_path = '/tmp/%s-Mobile' % build_settings.release_project_name
-      
-      if os.path.exists(tmp_tag_path):
+         #make a new dir based on project name 
+         tmp_tag_path = '/tmp/%s-Mobile' % build_settings.release_project_name
+
+         if os.path.exists(tmp_tag_path):
             shutil.rmtree(tmp_tag_path)
             
-      #copy files over from original directory
-      shutil.copytree(inital_cwd,tmp_tag_path)
+         #copy files over from original directory
+         shutil.copytree(inital_cwd,tmp_tag_path)
       
-      srcProjLocF = ""
-      srcProjLoc = build_settings.source_project_name.split('.')
-      for p in srcProjLoc:
-      	srcProjLocF = srcProjLocF + "/" + p
+         srcProjLocF = ""
+         srcProjLoc = build_settings.source_project_name.split('.')
+         for p in srcProjLoc:
+      	     srcProjLocF = srcProjLocF + "/" + p
       
       
-      relProjLocF = ""
-      relProjLoc = build_settings.release_project_name.split('.')
-      for s in relProjLoc:
-      	relProjLocF = relProjLocF + "/" + s
+         relProjLocF = ""
+         relProjLoc = build_settings.release_project_name.split('.')
+         for s in relProjLoc:
+      	     relProjLocF = relProjLocF + "/" + s
       
-      if oldProjName != newProjName:
-      	shutil.copytree(inital_cwd + "/src" + srcProjLocF,tmp_tag_path + "/src" + relProjLocF)
-      	shutil.rmtree(tmp_tag_path + "/src"+srcProjLocF)
+         if oldProjName != newProjName:
+      	     shutil.copytree(inital_cwd + "/src" + srcProjLocF,tmp_tag_path + "/src" + relProjLocF)
+      	     shutil.rmtree(tmp_tag_path + "/src"+srcProjLocF)
       
 	  
-      # make the android project folder the current working directory, proceed to find and replace
-      os.chdir(tmp_tag_path)
+         # make the android project folder the current working directory, proceed to find and replace
+         os.chdir(tmp_tag_path)
       
-      if oldProjName != newProjName:
-      	renameProjName(tmp_tag_path)
+         if oldProjName != newProjName:
+      	     renameProjName(tmp_tag_path)
       
    else:
       if fresh_repository:
@@ -222,6 +228,11 @@ def build_source(builder, tag, fresh_repository):
    else:
        verbose_logging_literal = 'false'
 
+   if hasattr(build_settings, 'release_project_name'):
+       release_project_name = build_settings.release_project_name
+   else:  
+       release_project_name = build_settings.source_project_name
+
    write_local_properties(build_settings.android_sdk_path)
    write_build_settings({
        "build_id" : build_id,
@@ -236,7 +247,7 @@ def build_source(builder, tag, fresh_repository):
        "news_office_path" : build_settings.news_office_path,
        "verbose_logging" : verbose_logging_literal,
        "build_tag" : build_settings.build_tag,
-       "release_project_name" : build_settings.release_project_name,
+       "release_project_name" : release_project_name,
        "source_project_name" : build_settings.source_project_name,
    })
 
