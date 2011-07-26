@@ -16,6 +16,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.StyledContentHTML;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.about.BuildSettings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -113,7 +114,7 @@ public class MIT150WelcomeActivity extends Activity {
 	void playVideo() {
 	
 		
-		String subpath = "/Android/data/edu.mit.mitmobile2/cache/";  
+		String subpath = "/Android/data/" + BuildSettings.release_project_name + "/cache/";  
 
     	String state = Environment.getExternalStorageState();
 

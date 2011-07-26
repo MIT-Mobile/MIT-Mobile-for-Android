@@ -177,7 +177,7 @@ public class AboutActivity extends ModuleActivity implements OnGesturePerformedL
 	    }
 	}
 	private BitmapDrawable getVersionBitmap() {
-		String dirpath = "/data/data/edu.mit.mitmobile2/about";
+		String dirpath = "/data/data/" + BuildSettings.release_project_name + "/about";
 		String buildId = BuildSettings.BUILD_ID;
 		File dir = new File(dirpath);
 		if (!dir.exists())

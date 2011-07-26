@@ -376,7 +376,7 @@ public class NotificationService extends Service {
 		List<ActivityManager.RunningAppProcessInfo> apps = am.getRunningAppProcesses();
 		boolean running = false;
 		for (ActivityManager.RunningAppProcessInfo p : apps) {
-			if (p.processName.equalsIgnoreCase("edu.mit.mitmobile2")) {
+			if (p.processName.equalsIgnoreCase(BuildSettings.release_project_name)) {
 				if (p.importance==ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) running = true;
 			}
 		}

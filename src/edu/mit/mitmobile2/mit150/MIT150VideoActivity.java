@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.widget.MediaController;
 import android.widget.VideoView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.about.BuildSettings;
 
 public class MIT150VideoActivity extends Activity {
 
@@ -35,7 +36,7 @@ public class MIT150VideoActivity extends Activity {
 
 		final Context ctx = this;
 
-		final Uri video = Uri.parse("android.resource://edu.mit.mitmobile2/raw/hockfield_150");
+		final Uri video = Uri.parse("android.resource://" + BuildSettings.release_project_name +"/raw/hockfield_150");
 		
 		videoPlayer = (VideoView) findViewById(R.id.videoView);
 		

@@ -16,6 +16,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.tour.Tour;
 import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.TourItem;
@@ -199,7 +200,7 @@ public class AudioPlayer implements OnCompletionListener, OnErrorListener {
 	/*****************************************************/
 	private void setupCache() {
 	
-		String subpath = "/Android/data/edu.mit.mitmobile2/cache/";  // TODO for API 7 or lower, this dir will get deleted on uninstall
+		String subpath = "/Android/data/" + BuildSettings.release_project_name + "/cache/";  // TODO for API 7 or lower, this dir will get deleted on uninstall
 		
     	String state = Environment.getExternalStorageState();
 

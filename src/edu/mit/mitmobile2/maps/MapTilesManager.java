@@ -48,7 +48,7 @@ public class MapTilesManager {
 	private String SERVER = "http://" + Global.getMobileWebDomain() + "/api/map/tile2/";
 	//static String SERVER = "http://maps.mit.edu/ArcGIS/rest/services/Mobile/WhereIs_MobileAll/MapServer/tile/";
 	
-	private static String SUBDIR_MITAPP = "/edu.mit.mitmobile2";
+	private static String SUBDIR_MITAPP = "/" + BuildSettings.release_project_name;
 	
 	private String path;
 	private String subdir;
@@ -459,7 +459,7 @@ public class MapTilesManager {
     	
     	String state = Environment.getExternalStorageState();
 
-    	path = "/data/data/edu.mit.mitmobile2";  // default to Internal file
+    	path = "/data/data/" + BuildSettings.release_project_name;  // default to Internal file
     	
     	if (Environment.MEDIA_MOUNTED.equals(state)) {
     	    mExternalStorageAvailable = mExternalStorageWriteable = true;
