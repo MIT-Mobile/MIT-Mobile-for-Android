@@ -59,6 +59,11 @@ import edu.mit.mitmobile2.TouchstonePrefsActivity;
 public class TouchstoneActivity extends ModuleActivity {
 	
 
+	public static final String OK_STATE = "ok";
+	public static final String WAYF_STATE = "wayf";
+	public static final String IDP_STATE = "idp";
+	public static final String AUTH_STATE = "auth";
+
 	private Context mContext;	
 
 	TextView emergencyContactsTV;
@@ -71,19 +76,15 @@ public class TouchstoneActivity extends ModuleActivity {
 	HttpResponse response;
 	HttpEntity responseEntity;
 	String responseString = "";
-	String state = "ok";
+	String state = OK_STATE;
 	HttpPost post;
 	WebView webview;
-	public static final String INITIAL_STATE = "initial";
-	public static final String WAYF_STATE = "wayf";
-	public static final String IDP_STATE = "idp";
-	public static final String AUTH_STATE = "auth";
-	public static final String FINAL_STATE = "final";
+	Document document;
 
 	URI uri = null;
 	String uriString = "";
 	public static String targetUrl = "https://stellar.mit.edu/atstellar";
-	//public static String targetUrl = "https://help.mit.edu/touchstone";
+	URI targetUri;
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstoneActivity";
 	private static final int MENU_INFO = 0;
@@ -165,31 +166,33 @@ public class TouchstoneActivity extends ModuleActivity {
 
 		client = new DefaultHttpClient();
 		
-		client.addRequestInterceptor(new HttpRequestInterceptor() {
-			@Override
-			public void process(HttpRequest request, HttpContext context)
-					throws HttpException, IOException {
-				Log.d(TAG,request.toString());
-				
-			}
-		});
-		client.setRedirectHandler(new DefaultRedirectHandler() {
+		try {
+			targetUri = new URI(targetUrl);
+		}
+		catch (URISyntaxException e) {
+			Log.d(TAG,e.getMessage());
+		}
+		
+ 		client.setRedirectHandler(new DefaultRedirectHandler() {
+			String host;
 			public URI getLocationURI(HttpResponse response, HttpContext context) {
 				Header[] locations = response.getHeaders("Location");
 				
 				if (locations.length > 0) {
 					Header location = locations[0];
 					String uriString = location.getValue();
-					
+					Log.d(TAG,"uriString from redirect = " + uriString);
 					try {
 						uri = new URI(uriString);
-						
-						if (uri.getHost().equalsIgnoreCase("wayf.mit.edu")) {
+						host = uri.getHost();
+						if (host.equalsIgnoreCase("wayf.mit.edu")) {
 							Log.d(TAG, "Redirect to WAYF detected");
 							Log.d(TAG,"rawquery = " + uri.getRawQuery());
 							state = WAYF_STATE;
 						}
-						
+						else if (host.equalsIgnoreCase(targetUri.getHost())) {
+							state = OK_STATE;
+						}
 						Log.d(TAG, "Redirect to '"+uri+"' detected");
 					} catch (URISyntaxException use) {
 						Log.e(TAG, "Invalid Location URI: "+uriString);
@@ -202,6 +205,7 @@ public class TouchstoneActivity extends ModuleActivity {
 		});
 		
 		initialGet();
+	
 		if (state == WAYF_STATE ) {
 			wayf();
 		}
@@ -214,19 +218,11 @@ public class TouchstoneActivity extends ModuleActivity {
 		if (state == AUTH_STATE) {
 			authState();
 		}
-
-		if (state == FINAL_STATE) {
-			finalState();
-		}
-
-		//		Header[] headerArray = getResponse.getAllHeaders();
-//		for (int h = 0; h < headerArray.length; h++) {
-//			Header header = (Header)headerArray[h];
-//			Log.d(TAG,"header = " + header.getName() + " value = " + header.getValue() + " " + header.toString());
 //
+//		if (state == FINAL_STATE) {
+//			finalState();
 //		}
-		
-  		      
+
 		}
 		catch (Exception e) {
 			Log.d(TAG,e.toString());
@@ -269,10 +265,6 @@ public class TouchstoneActivity extends ModuleActivity {
 		else {
 			user_idp = "https://idp.mit.edu/shibboleth";				
 		}
-//		Log.d(TAG,"selected user_idp = " + user_idp);
-//		HttpParams httpParams = post.getParams();
-//		httpParams.setParameter("user_idp",user_idp);
-//		post.setParams(httpParams);
 
 		// Add your data
 		List nameValuePairs = new ArrayList(1);
@@ -309,14 +301,12 @@ public class TouchstoneActivity extends ModuleActivity {
 			
 			Log.d(TAG,"state after WAYF post = " + state);
 			
-			List<Cookie> cookies = client.getCookieStore().getCookies();
-			Iterator<Cookie> c = cookies.iterator();
-			while (c.hasNext()) {
-				Cookie cookie = c.next();
-				Log.d(TAG,"cookie domain = " + cookie.getDomain() + " name = " + cookie.getName() + " value = " + cookie.getValue());
-			}
-
-			
+//			List<Cookie> cookies = client.getCookieStore().getCookies();
+//			Iterator<Cookie> c = cookies.iterator();
+//			while (c.hasNext()) {
+//				Cookie cookie = c.next();
+//				Log.d(TAG,"cookie domain = " + cookie.getDomain() + " name = " + cookie.getName() + " value = " + cookie.getValue());
+//			}
 		}
 		catch (IOException e) {
 			Log.d(TAG,e.getMessage());
@@ -324,17 +314,27 @@ public class TouchstoneActivity extends ModuleActivity {
 	}
 	
 	private void idp() {
-		//get the form action from the html response
-//		org.jsoup.nodes.Document doc = Jsoup.parse(responseString);
-//		Elements forms = doc.select("form#loginform");
-//		for (Element form : forms) {
-//		    Log.d(TAG,"form = " + form.text());
-//		}
+		Elements elements;
+		Element form;
+		
+		String formAction = "";
 
-		//DEBUG
-		String formAction = "https://idp.mit.edu/idp/Authn/UsernamePassword";
-		//DEBUG
+		// parse response string to html document
+		document = Jsoup.parse(responseString);
 
+		// get form action
+		elements = document.getElementsByTag("form");
+		Log.d(TAG,"number of forms in idp response = " + elements.size());
+		
+		for (int e = 0; e < elements.size(); e++) {
+			form = elements.get(e);
+			String tmpAction = form.attr("action");
+			if (tmpAction.contains("Username")) {
+				formAction = tmpAction;
+			}
+			Log.d(TAG,"action " + e + " = " + formAction);
+		}
+				
 		post = new HttpPost();
 		try {
 			uri = new URI(formAction);
@@ -364,16 +364,6 @@ public class TouchstoneActivity extends ModuleActivity {
 				state = AUTH_STATE;
 				responseString = responseContentToString(response);
 				webview.loadData(responseString, "text/html", "utf-8");
-
-				//Log.d(TAG,"final data = " + responseString);
-				
-				List<Cookie> cookies = client.getCookieStore().getCookies();
-				Iterator<Cookie> c = cookies.iterator();
-				while (c.hasNext()) {
-					Cookie cookie = c.next();
-					Log.d(TAG,"cookie domain = " + cookie.getDomain() + " name = " + cookie.getName() + " value = " + cookie.getValue());
-				}
-
 			}
 		}
 		catch (IOException e) {
@@ -392,7 +382,7 @@ public class TouchstoneActivity extends ModuleActivity {
 		//Log.d(TAG,"auth state data = " + responseString);
 		
 		// parse response string to html document
-		Document document = Jsoup.parse(responseString);
+		document = Jsoup.parse(responseString);
 
 		// get form action
 		elements = document.getElementsByTag("form");
@@ -441,33 +431,14 @@ public class TouchstoneActivity extends ModuleActivity {
 			Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == 200) {
 				Log.d(TAG, "200 code received from auth post");
-				state = FINAL_STATE;
+				Log.d(TAG,"state after auth post = " + state);
 				responseString = responseContentToString(response);
 				webview.loadData(responseString, "text/html", "utf-8");
 			}
 		}
 		catch (IOException e) {
 			Log.d(TAG,e.getMessage());
-		}
-	}
-
-	private void finalState() {
-		get = new HttpGet(targetUrl);
-
-		// Execute the GET call and obtain the response
-		
-		if (get == null) {
-			Log.d(TAG, "This shouldn't be happening!");
-		}
-		try {
-			response = client.execute(get);
-			responseString = responseContentToString(response);
-			webview.loadData(responseString, "text/html", "utf-8");
-			//Log.d(TAG,"final data = " + responseString);
-		}
-		catch (IOException e) {
-			Log.d(TAG,e.getMessage());
-		}
+		}		
 	}
 	
 	@Override
