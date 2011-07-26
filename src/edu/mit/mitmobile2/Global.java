@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +17,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.http.AndroidHttpClient;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.AndroidException;
@@ -61,6 +63,17 @@ public class Global extends Application {
 	// Facilities 
 	private static String problemType;
 	
+	// Touchstone
+	public static DefaultHttpClient client = new DefaultHttpClient();
+
+	public static DefaultHttpClient getClient() {
+		return client;
+	}
+
+	public void setClient(DefaultHttpClient client) {
+		this.client = client;
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

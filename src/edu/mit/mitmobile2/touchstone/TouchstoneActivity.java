@@ -50,6 +50,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -164,7 +165,7 @@ public class TouchstoneActivity extends ModuleActivity {
 
 		try {
 
-		client = new DefaultHttpClient();
+		client = Global.getClient();
 		
 		try {
 			targetUri = new URI(targetUrl);

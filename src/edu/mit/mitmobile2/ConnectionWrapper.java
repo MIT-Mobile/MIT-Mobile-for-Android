@@ -98,7 +98,9 @@ public class ConnectionWrapper {
 			public void run() {
 				Message message = Message.obtain();
 				
-				HttpClient httpClient = new DefaultHttpClient();
+				//HttpClient httpClient = new DefaultHttpClient();
+				HttpClient httpClient = Global.getClient();
+				
 				HttpGet httpGet = new HttpGet(url);
 				httpGet.setHeader("User-Agent", HTTP_USER_AGENT);
 				try {
