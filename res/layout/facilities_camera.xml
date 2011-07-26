@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/main_repeat"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content">
+  
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Facilites"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  
+	<!-- Take a Picture -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesTakeApictureActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Take a picture"  />
+
+</LinearLayout>

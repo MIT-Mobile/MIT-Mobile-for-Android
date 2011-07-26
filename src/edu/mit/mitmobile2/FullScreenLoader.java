@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -49,9 +50,15 @@ public class FullScreenLoader extends FrameLayout {
 	}
 	
 	public void showLoading() {
-		LoadingUIHelper.startLoadingImage(new Handler(), mBusyBox);
-		mErrorView.setVisibility(GONE);
-		mLoadingContainer.setVisibility(VISIBLE);
-		mIsLoading = true;
+		try {
+			Log.d("ZZZ","showLoading()");
+			LoadingUIHelper.startLoadingImage(new Handler(), mBusyBox);
+			mErrorView.setVisibility(GONE);
+			mLoadingContainer.setVisibility(VISIBLE);
+			mIsLoading = true;
+		}
+		catch (Exception e) {
+			Log.d("ZZZ",e.getMessage());
+		}
 	}
 }

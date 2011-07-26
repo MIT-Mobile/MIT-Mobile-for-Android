@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/facilitiesLocationLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Where is it?"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+        
+    <!-- LIST OF LOCATIONS NEAR ME -->    
+	<ListView android:id="@+id/facilitiesProblemLocationListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffff"
+        style="@style/Lists" 
+        android:visibility="gone" />        
+        
+
+</LinearLayout>
+

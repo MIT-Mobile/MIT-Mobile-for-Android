@@ -32,6 +32,7 @@ import edu.mit.mitmobile2.alerts.NotificationsHelper;
 import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
+import edu.mit.mitmobile2.facilities.FacilitiesModule;
 import edu.mit.mitmobile2.maps.MapsModule;
 import edu.mit.mitmobile2.mit150.MIT150Module;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
@@ -212,8 +213,8 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new ClassesModule(),
 			new PeopleModule(),
 			new TourModule(),
-			new MIT150Module(),
 			new EmergencyModule(),
+			new FacilitiesModule(),
 			new QRReaderModule(),
 		};
 		
@@ -391,8 +392,13 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 	
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		Log.d(TAG, "Preference changed: " + key);
+		Context mContext = this;
+		Handler uiHandler = new Handler();
 		if (key.equalsIgnoreCase(Global.MIT_MOBILE_SERVER_KEY)) {
 			Global.setMobileWebDomain(prefs.getString(Global.MIT_MOBILE_SERVER_KEY, null));
+
+			// Update the version map any time the Mobile server is changed
+			Global.getVersionInfo(mContext, uiHandler);
 			Toast.makeText(this, "Mobile Web Domain set to " + Global.getMobileWebDomain(), Toast.LENGTH_SHORT).show();
 		}
 	}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/facilitiesLocationLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Where is it?"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+	<!-- Full Screen Loader -->
+  	<edu.mit.mitmobile2.FullScreenLoader
+  		android:id="@+id/facilitiesLoader"
+  		android:background="#00ffffff"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent" />
+	  		
+ 	<AutoCompleteTextView android:id="@+id/facilitiesTextLocation"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:dropDownHeight="fill_parent"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:completionThreshold="1"
+        android:layout_margin="4dip"
+        android:hint="Search"  />
+    />      
+	        
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Use My Location -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesUseMyLocationActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Use My Location"  />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<edu.mit.mitmobile2.DividerView
+		android:id="@+id/eventsMainLoaderDivider"
+  		android:layout_width="fill_parent"
+  		android:layout_height="@dimen/dividerHeight" />   
+        
+    <!--  BROWSE FOR LOCATION  -->
+	<edu.mit.mitmobile2.SectionHeader
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Browse for location" />
+
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+        
+    <!-- LIST OF LOCATION CATEGORIES -->    
+	<ListView android:id="@+id/facilitiesProblemLocationListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffff"
+        style="@style/Lists" 
+        android:visibility="gone" />  
+        
+   	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />      
+        
+
+</LinearLayout>
+

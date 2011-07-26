@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content">
+  
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Facilites"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  
+  	<TextView 
+			android:id="@+id/facilitiesInfoString"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+        	android:paddingLeft="@dimen/horizontalPadding"
+        	android:paddingRight="@dimen/horizontalPadding"
+        	android:paddingTop="@dimen/verticalPadding"
+        	android:paddingBottom="@dimen/verticalPadding"
+        	android:text="@string/facilities_info" 
+        	style="@style/BodyText" ></TextView>
+
+</LinearLayout>

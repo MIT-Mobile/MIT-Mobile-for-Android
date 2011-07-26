@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
@@ -98,7 +99,34 @@ public class ShuttlesActivity extends ModuleActivity {
 			}
 		});
 		
+		// add the external transit links
+		mFooterView.findViewById(R.id.shuttleMbtaBusTimes).setOnClickListener(
+			new View.OnClickListener() {	
+				@Override
+				public void onClick(View v) {
+					CommonActions.viewURL(ctx, "http://www.nextbus.com/webkit");
+				}
+			}
+		);
+		mFooterView.findViewById(R.id.shuttleMbtaTrainTimes).setOnClickListener(
+			new View.OnClickListener() {	
+				@Override
+				public void onClick(View v) {
+					CommonActions.viewURL(ctx, "http://www.mbtainfo.com");
+				}
+			}
+		);
+		mFooterView.findViewById(R.id.shuttleGoogleTransit).setOnClickListener(
+			new View.OnClickListener() {	
+				@Override
+				public void onClick(View v) {
+					CommonActions.viewURL(ctx, "http://www.google.com/transit");
+				}
+			}
+		);
+		
 		routeListView.addFooterView(mFooterView);
+			
 		
 		getData(false);
 	

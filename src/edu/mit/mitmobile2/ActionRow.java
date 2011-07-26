@@ -43,7 +43,7 @@ public abstract class ActionRow extends FrameLayout {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
-		if(mOnClickListener == null) {
+		if(mOnClickListener == null || !isEnabled()) {
 			// do not handle touches for the view
 			return false;
 		}

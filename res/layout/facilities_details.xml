@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/facilitiesDetailsMainLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Details"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:fillViewport="true">
+		
+		<LinearLayout 
+			android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+			
+			<TextView 
+				android:id="@+id/facilitiesProblemString"
+				android:layout_width="fill_parent" 
+	        	android:layout_height="wrap_content"
+	        	android:textColor="#000000"
+	        	android:text="problem goes here" 
+	        	android:textSize="20dp"
+	        	android:padding="15dip"
+	        	style="@style/ContentTitle"
+	        	 />
+	        	
+	        <FrameLayout
+	            android:layout_width="fill_parent"
+	        	android:paddingLeft="15dip"
+	        	android:paddingRight="15dip"
+	            android:layout_height="150dip">
+
+				<RelativeLayout 
+	            	android:layout_width="fill_parent"
+	            	android:layout_height="fill_parent">
+	            	
+	            	<EditText 
+						android:id="@+id/problemDescription"
+						android:layout_width="fill_parent"
+            			android:layout_height="fill_parent" 
+            			android:layout_alignParentLeft="true"
+            			android:gravity="left"
+            			android:lines="5"
+            			android:hint="Problem Description (required)"
+            		/>
+            		
+            		<!-- centerCrop and padding seems to be broken
+            		    so will use a bunch of dummy views to create padding
+            		    for the imageview -->
+            		    
+            		<View
+            			android:layout_width="5dip"
+            			android:layout_height="5dip"
+            			android:layout_alignParentTop="true"
+            			android:layout_alignParentRight="true"
+            			android:id="@+id/facilitiesDetailDummyViewTopRight" />
+            			
+            		<View
+            			android:layout_width="5dip"
+            			android:layout_height="9dip"
+            			android:layout_alignParentBottom="true"
+            			android:layout_alignParentRight="true"
+            			android:id="@+id/facilitiesDetailDummyViewBottomRight" />
+            			
+	            	<ImageView
+                    	android:id="@+id/selectedImage"
+                    	android:layout_width="100dip"
+                    	android:layout_height="fill_parent"
+						android:layout_below="@id/facilitiesDetailDummyViewTopRight"
+						android:layout_toLeftOf="@id/facilitiesDetailDummyViewTopRight"
+						android:layout_above="@+id/facilitiesDetailDummyViewBottomRight"
+						android:scaleType="centerCrop"
+  		            	android:visibility="gone"/>
+	      		</RelativeLayout>
+	      	</FrameLayout>
+	      	
+	        <FrameLayout
+	            android:layout_width="fill_parent"
+	        	android:paddingLeft="15dip"
+	        	android:paddingRight="15dip"
+	            android:layout_height="50dip">
+
+				<RelativeLayout 
+	            	android:layout_width="fill_parent"
+	            	android:layout_height="fill_parent">
+	            	
+	            	<TextView
+	            		android:layout_width="wrap_content"
+	            		android:layout_height="wrap_content"
+	            		android:layout_centerVertical="true"
+	            		android:layout_alignParentLeft="true"
+	            		android:paddingRight="6dip"
+	            		android:text="Contact:"
+	            		android:id="@+id/facilitiesDetailEmailLabel"
+	            		style="@style/ContentTitle" />
+	            		
+	            	<EditText 
+						android:id="@+id/facilitiesSendAs"
+						android:layout_width="fill_parent"
+            			android:layout_height="wrap_content" 
+						android:layout_alignParentRight="true"
+						android:layout_toRightOf="@id/facilitiesDetailEmailLabel"
+						android:layout_centerVertical="true"
+						android:singleLine="true" 
+            			android:lines="1" 
+            			android:hint="Email (required)" />
+	            		
+	      		</RelativeLayout>
+	      	</FrameLayout>
+			<!-- Divider -->
+			<View
+				android:layout_width="fill_parent"
+				android:layout_height="@dimen/dividerHeight"
+				android:background="@color/dividerColor" />
+
+			<!-- Add A photo -->
+    		<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesAddAPhotoActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground" />
+            
+            <!-- Divider -->
+			<View
+					android:layout_width="fill_parent"
+					android:layout_height="@dimen/dividerHeight"
+					android:background="@color/dividerColor" />
+					
+            <!-- Submit -->
+	   		<edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesSubmitActionRow"
+	           		android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:background="@color/rowBackground"
+	                android:text="Submit"  />
+	                
+	        <!-- Divider -->
+			<View
+					android:layout_width="fill_parent"
+					android:layout_height="@dimen/dividerHeight"
+					android:background="@color/dividerColor" />
+					
+			<!-- Fill the bottom of the screen with background color -->
+			<View
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent"
+					android:background="@color/rowBackground" />
+            
+    	</LinearLayout>
+	</ScrollView>      
+</LinearLayout>
+
+

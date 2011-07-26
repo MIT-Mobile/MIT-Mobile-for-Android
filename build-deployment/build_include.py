@@ -4,26 +4,29 @@ import commands
 import sys
 import build_settings
 import time
+import platform
+import shlex
 
-VERSION_NUMBER = 6
-VERSION_NAME = "2.1"
+VERSION_NUMBER = 7
+VERSION_NAME = "2.2"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
-   # I think this function causes issues
-   # on windows will consult with seth later
-   #   print command
-   #   os.system(command)
 
-   statusoutput = commands.getstatusoutput(command)
+   # for windows (since commands module has issues on windows)
+   if platform.system() == 'Windows':
+      popenArgs = command
+   else:
+      popenArgs = shlex.split(command)
+
+   import subprocess as sub
+   p = sub.Popen(popenArgs,stdout=sub.PIPE,stderr=sub.PIPE)
+   output = p.communicate()
    if not silent:
-       print statusoutput[1]
-
-   if statusoutput[0] != 0:
-      raise Exception("Error executing shell commmand")
-
-   return statusoutput[1]
-
+      print command
+      print output[0]
+      print output[1]
+   return output[0].strip()
 
 
 # generate a source code file that contains

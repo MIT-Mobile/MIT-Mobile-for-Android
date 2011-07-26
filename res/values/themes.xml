@@ -36,7 +36,7 @@
 	<style name="ListItemPrimary">
 		<item name="android:textStyle">bold</item>
 		<item name="android:textSize">17sp</item>
-		<item name="android:textColor">#ff191919</item>
+		<item name="android:textColor">@color/list_item_primary_color</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
