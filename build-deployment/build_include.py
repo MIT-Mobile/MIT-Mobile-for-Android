@@ -133,7 +133,18 @@ def renameProjName(dir):
 						infile.write(text)
 					infile.close()
 				
-			
+		
+                        if dir.find("res/xml") != -1 and x.find("_searchable.xml") != -1:
+                                file = dir + "/" + x
+                                infile = open(file,"r")
+                                text = infile.read()
+                                infile.close()
+                                if text.find(oldProjName) != -1:
+                                    text = text.replace(oldProjName, newProjName)
+                                    infile = open(file, "w")
+                                    infile.write(text)
+                                    infile.close()
+   	
 			if dir.find("src") != -1:
 				file = dir + "/" + x
 				if os.path.isfile(file):
