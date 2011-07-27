@@ -65,7 +65,8 @@ public class Global extends Application {
 	
 	// Touchstone
 	public static DefaultHttpClient client = new DefaultHttpClient();
-
+	public static MITClient mitClient ;
+	
 	public static DefaultHttpClient getClient() {
 		return client;
 	}
@@ -78,7 +79,9 @@ public class Global extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG,"onCreate()");
-		mContext = this; 
+		mContext = this;
+		this.mitClient = new MITClient(this.mContext);
+		
 		// load Mobile Web Domain preferences
 		try {
 			prefs = PreferenceManager.getDefaultSharedPreferences(this);

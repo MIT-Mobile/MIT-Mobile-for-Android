@@ -42,6 +42,7 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -50,14 +51,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TouchstonePrefsActivity;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class TouchstoneActivity extends ModuleActivity {
+public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
 	
 
 	public static final String OK_STATE = "ok";
@@ -70,8 +73,8 @@ public class TouchstoneActivity extends ModuleActivity {
 	TextView emergencyContactsTV;
 
 	SharedPreferences pref;
-	String user = "";
-	String password = "";
+	String user;
+	String password;
 	DefaultHttpClient client;
 	HttpGet get;
 	HttpResponse response;
@@ -100,135 +103,102 @@ public class TouchstoneActivity extends ModuleActivity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
         Handler uiHandler = new Handler();
-
+        
         // get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		prefs.registerOnSharedPreferenceChangeListener(this);
 		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 
 		// open the preferences if the username and password are not defined
         if (user == null || password == null) {
         	startActivity( new Intent(this, TouchstonePrefsActivity.class) );	
+    		Global.mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));
+    		Global.mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
         }
-        
-        try {
-			createViews();
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			Log.d(TAG,e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			Log.d(TAG,e.getMessage());
-		}
-	}
-	
-/*
- 	private DefaultHttpClient createHttpClient() {
-
-		SSLSocketFactory trustedFactory = null;
-		try {
-			KeyStore trusted = KeyStore.getInstance("BKS");
-			InputStream in = this.mContext.getResources().openRawResource(R.raw.trusted_key_store);
-			try {
-				trusted.load(in, "testpass".toCharArray());
-			} 
-			catch (Exception e) {
+        else {   
+	        try {
+	        	responseString = Global.mitClient.getResponse(targetUrl);
+				createViews();
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,e.getMessage());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				Log.d(TAG,e.getMessage());
 			}
-			finally {
-				in.close();
-			}
-			
-			trustedFactory = new SSLSocketFactory(trusted);
-		} catch (Exception e) {
-			Log.d(TAG,e.toString());
-		}
-
-		if (trustedFactory != null) {
-			SchemeRegistry registry = new SchemeRegistry();
-		    registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		    registry.register(new Scheme("https", trustedFactory, 443));
-			
-		    return new DefaultHttpClient(new ThreadSafeClientConnManager(null, registry), null);
-		} else {
-			return new DefaultHttpClient();
-		}
+        }
 	}
-*/
+	
 	
 	private void createViews() throws ClientProtocolException, IOException {
 		setContentView(R.layout.touchstone_main);
 		Log.d(TAG,"createViews()");
 		 //request.setHeader("User-Agent", "set your desired User-Agent");
-
+		
 		webview = (WebView) findViewById(R.id.touchstoneWV);
-
-		try {
-
-		client = Global.getClient();
-		
-		try {
-			targetUri = new URI(targetUrl);
-		}
-		catch (URISyntaxException e) {
-			Log.d(TAG,e.getMessage());
-		}
-		
- 		client.setRedirectHandler(new DefaultRedirectHandler() {
-			String host;
-			public URI getLocationURI(HttpResponse response, HttpContext context) {
-				Header[] locations = response.getHeaders("Location");
-				
-				if (locations.length > 0) {
-					Header location = locations[0];
-					String uriString = location.getValue();
-					Log.d(TAG,"uriString from redirect = " + uriString);
-					try {
-						uri = new URI(uriString);
-						host = uri.getHost();
-						if (host.equalsIgnoreCase("wayf.mit.edu")) {
-							Log.d(TAG, "Redirect to WAYF detected");
-							Log.d(TAG,"rawquery = " + uri.getRawQuery());
-							state = WAYF_STATE;
-						}
-						else if (host.equalsIgnoreCase(targetUri.getHost())) {
-							state = OK_STATE;
-						}
-						Log.d(TAG, "Redirect to '"+uri+"' detected");
-					} catch (URISyntaxException use) {
-						Log.e(TAG, "Invalid Location URI: "+uriString);
-					}
-					
-				}
-				
-				return uri;
-			}
-		});
-		
-		initialGet();
-	
-		if (state == WAYF_STATE ) {
-			wayf();
-		}
-				
-		if (state == IDP_STATE) {
-			Log.d(TAG,"\nstate = idp");
-			idp();
-		}			
-
-		if (state == AUTH_STATE) {
-			authState();
-		}
+		webview.loadData(responseString, "text/html", "utf-8");
+//		try {
 //
-//		if (state == FINAL_STATE) {
-//			finalState();
+//		client = Global.getClient();
+//		
+//		try {
+//			targetUri = new URI(targetUrl);
 //		}
-
-		}
-		catch (Exception e) {
-			Log.d(TAG,e.toString());
-			Log.d(TAG,Log.getStackTraceString(e));
-		}
+//		catch (URISyntaxException e) {
+//			Log.d(TAG,e.getMessage());
+//		}
+//		
+// 		client.setRedirectHandler(new DefaultRedirectHandler() {
+//			String host;
+//			public URI getLocationURI(HttpResponse response, HttpContext context) {
+//				Header[] locations = response.getHeaders("Location");
+//				
+//				if (locations.length > 0) {
+//					Header location = locations[0];
+//					String uriString = location.getValue();
+//					Log.d(TAG,"uriString from redirect = " + uriString);
+//					try {
+//						uri = new URI(uriString);
+//						host = uri.getHost();
+//						if (host.equalsIgnoreCase("wayf.mit.edu")) {
+//							Log.d(TAG, "Redirect to WAYF detected");
+//							Log.d(TAG,"rawquery = " + uri.getRawQuery());
+//							state = WAYF_STATE;
+//						}
+//						else if (host.equalsIgnoreCase(targetUri.getHost())) {
+//							state = OK_STATE;
+//						}
+//						Log.d(TAG, "Redirect to '"+uri+"' detected");
+//					} catch (URISyntaxException use) {
+//						Log.e(TAG, "Invalid Location URI: "+uriString);
+//					}
+//					
+//				}
+//				
+//				return uri;
+//			}
+//		});
+//		
+//		initialGet();
+//	
+//		if (state == WAYF_STATE ) {
+//			wayf();
+//		}
+//				
+//		if (state == IDP_STATE) {
+//			Log.d(TAG,"\nstate = idp");
+//			idp();
+//		}			
+//
+//		if (state == AUTH_STATE) {
+//			authState();
+//		}
+//		}
+//		catch (Exception e) {
+//			Log.d(TAG,e.toString());
+//			Log.d(TAG,Log.getStackTraceString(e));
+//		}
 	}
 	
 	private void initialGet() {
@@ -498,5 +468,20 @@ public class TouchstoneActivity extends ModuleActivity {
 			return null;
 		}
 	}
+	
+	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+		Context mContext = this;
+		Handler uiHandler = new Handler();
+		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_USERNAME")) {
+			Global.mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));
+		}
+		
+		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_PASSWORD")) {
+			Global.mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
+		}
+		
+		Toast.makeText(this, "user set to " + Global.mitClient.getUser(), Toast.LENGTH_SHORT).show();
+	}
+
 	
 }
