@@ -7,16 +7,23 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectHandler;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.jsoup.Jsoup;
@@ -25,7 +32,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -71,9 +77,19 @@ public class MITClient extends DefaultHttpClient {
 	String responseString = "";
 	String state;
 	
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
 	public MITClient(Context context) {
 		super();		
+		Log.d(TAG,"MITClient()");
 		this.mContext = context;
+		this.restoreCookies();
 
 		// get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -83,35 +99,48 @@ public class MITClient extends DefaultHttpClient {
 		this.setRedirectHandler(new DefaultRedirectHandler() {
 			String host;
 			public URI getLocationURI(HttpResponse response, HttpContext context) {
+
+//				Header[] cookies = response.getHeaders("Cookie");
+//				if (cookies.length > 0) {
+//					for (int c = 0; c < cookies.length; c++) {
+//						Header cookie = cookies[c];
+//						Log.d(TAG,cookie.getName());
+//						Log.d(TAG,cookie.getValue());
+//					}
+//				}
+				
 				Header[] locations = response.getHeaders("Location");
 				
 				if (locations.length > 0) {
 					Header location = locations[0];
 					String uriString = location.getValue();
-					Log.d(TAG,"uriString from redirect = " + uriString);
+					//Log.d(TAG,"uriString from redirect = " + uriString);
 					try {
 						uri = new URI(uriString);
 						host = uri.getHost();
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
-							Log.d(TAG, "Redirect to WAYF detected");
-							Log.d(TAG,"rawquery = " + uri.getRawQuery());
+							//Log.d(TAG, "Redirect to WAYF detected");
+							//Log.d(TAG,"rawquery = " + uri.getRawQuery());
 							state = WAYF_STATE;
 						}
 						else if (host.equalsIgnoreCase(targetUri.getHost())) {
 							state = OK_STATE;
 						}
-						Log.d(TAG, "Redirect to '"+uri+"' detected");
+						//Log.d(TAG, "Redirect to '"+uri+"' detected");
 					} catch (URISyntaxException use) {
 						Log.e(TAG, "Invalid Location URI: "+uriString);
 					}
 					
 				}
-				
 				return uri;
 			}
 		});
+		
+		//this.addResponseInterceptor(new MITInterceptor());
+		
 	}
 
+	
 	public static String responseContentToString(HttpResponse response) {
 		try {
 		InputStream inputStream = response.getEntity().getContent();
@@ -143,7 +172,13 @@ public class MITClient extends DefaultHttpClient {
 		get = new HttpGet(targetUrl);
 		try {
 			response = this.execute(get);
+			this.saveCookies();
+
 			responseEntity = response.getEntity();
+			if (state == OK_STATE) {
+				this.responseString = responseContentToString(response);				
+			}
+			
 			if (state == WAYF_STATE ) {
 				wayf();
 			}
@@ -173,7 +208,7 @@ public class MITClient extends DefaultHttpClient {
 		post = new HttpPost();
 	
 		post.setURI(uri);
-		Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
+		//Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
 
 		String user_idp;
 
@@ -196,7 +231,8 @@ public class MITClient extends DefaultHttpClient {
 		
 		try {
 			response = this.execute(post);
-			Log.d(TAG,"status from post = " + response.getStatusLine().getStatusCode());
+			this.saveCookies();
+			//Log.d(TAG,"status from post = " + response.getStatusLine().getStatusCode());
 			
 			Header[] locations = response.getHeaders("Location");
 			if (locations.length > 0) {
@@ -215,16 +251,8 @@ public class MITClient extends DefaultHttpClient {
 			}
 	
 			responseString = responseContentToString(response);
-			//webview.loadData(responseString, "text/html", "utf-8");
 			
-			Log.d(TAG,"state after WAYF post = " + state);
-			
-	//		List<Cookie> cookies = client.getCookieStore().getCookies();
-	//		Iterator<Cookie> c = cookies.iterator();
-	//		while (c.hasNext()) {
-	//			Cookie cookie = c.next();
-	//			Log.d(TAG,"cookie domain = " + cookie.getDomain() + " name = " + cookie.getName() + " value = " + cookie.getValue());
-	//		}
+			//Log.d(TAG,"state after WAYF post = " + state);
 		}
 		catch (IOException e) {
 			Log.d(TAG,e.getMessage());
@@ -242,15 +270,14 @@ public class MITClient extends DefaultHttpClient {
 	
 		// get form action
 		elements = document.getElementsByTag("form");
-		Log.d(TAG,"number of forms in idp response = " + elements.size());
-		
+
 		for (int e = 0; e < elements.size(); e++) {
 			form = elements.get(e);
 			String tmpAction = form.attr("action");
 			if (tmpAction.contains("Username")) {
 				formAction = tmpAction;
 			}
-			Log.d(TAG,"action " + e + " = " + formAction);
+			//Log.d(TAG,"action " + e + " = " + formAction);
 		}
 				
 		post = new HttpPost();
@@ -276,12 +303,10 @@ public class MITClient extends DefaultHttpClient {
 	
 		try {
 			response = this.execute(post);
-			Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
+			this.saveCookies();
 			if (response.getStatusLine().getStatusCode() == 200) {
-				Log.d(TAG, "200 code received from idp post");
 				state = AUTH_STATE;
 				responseString = responseContentToString(response);
-				//webview.loadData(responseString, "text/html", "utf-8");
 			}
 		}
 		catch (IOException e) {
@@ -297,7 +322,6 @@ public class MITClient extends DefaultHttpClient {
 		String formAction = "";
 		String SAMLResponse = "";
 		String TARGET = "";
-		//Log.d(TAG,"auth state data = " + responseString);
 		
 		// parse response string to html document
 		document = Jsoup.parse(responseString);
@@ -319,9 +343,8 @@ public class MITClient extends DefaultHttpClient {
 			}
 		}
 	
-		Log.d(TAG,"formAction = " + formAction);
-		Log.d(TAG,"SAMLResponse = " + SAMLResponse);
-		Log.d(TAG,"TARGET = " + TARGET);
+		//Log.d(TAG,"formAction = " + formAction);
+		//Log.d(TAG,"SAMLResponse = " + SAMLResponse);
 	
 		post = new HttpPost();
 		try {
@@ -346,17 +369,80 @@ public class MITClient extends DefaultHttpClient {
 	
 		try {
 			response = this.execute(post);
-			Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
+			this.saveCookies();
+			//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == 200) {
-				Log.d(TAG, "200 code received from auth post");
-				Log.d(TAG,"state after auth post = " + state);
 				responseString = responseContentToString(response);
-				//webview.loadData(responseString, "text/html", "utf-8");
 			}
 		}
 		catch (IOException e) {
 			Log.d(TAG,e.getMessage());
 		}		
 	}
+	
+	public void debugCookies() {
+		Log.d(TAG,"debugCookies()");
+		Log.d(TAG,"cookieStore = " + this.getCookieStore());
+		List<Cookie> cookies = this.getCookieStore().getCookies();
+		Iterator<Cookie> c = cookies.iterator();
+		while (c.hasNext()) {
+			Cookie cookie = c.next();
+			Log.d(TAG,"cookie domain = " + cookie.getDomain() + " name = " + cookie.getName() + " value = " + cookie.getValue() + " expires = " + cookie.getExpiryDate());
+		}
+	}
 
+	public void saveCookies() {
+		List<Cookie> cookies = this.getCookieStore().getCookies();
+		Iterator<Cookie> c = cookies.iterator();
+		while (c.hasNext()) {
+			Cookie cookie = c.next();
+			BasicClientCookie tmpCookie = new BasicClientCookie(cookie.getName(), cookie.getValue());
+			tmpCookie.setDomain(cookie.getDomain());
+			tmpCookie.setComment(cookie.getComment());
+			tmpCookie.setExpiryDate(cookie.getExpiryDate());
+			tmpCookie.setPath(cookie.getPath());
+			tmpCookie.setVersion(cookie.getVersion());
+			Global.cookies.add(tmpCookie);
+		}		
+	}
+
+	public void restoreCookies() {
+		if (Global.cookies != null) {
+			for (int c = 0; c < Global.cookies.size(); c++) {
+				BasicClientCookie tmpCookie = (BasicClientCookie)Global.cookies.get(c);
+				this.getCookieStore().addCookie(tmpCookie);
+			}
+		}		
+	}
+
+	class MITInterceptor implements HttpResponseInterceptor {
+		
+		public MITInterceptor() {
+			super();
+			Log.d(TAG,"intercept");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+			// TODO Auto-generated method stub
+			Header[] headers = response.getHeaders("Set-Cookie");
+			for (int h = 0; h < headers.length; h++) {
+				Header header = (Header)headers[h];
+				HeaderElement[] headerElements = header.getElements();
+				for (int e = 0; e < headerElements.length; e++) {
+					HeaderElement headerElement = headerElements[e];
+					Log.d(TAG,"Header Element " + e);
+					Log.d(TAG,"name = " + headerElement.getName());
+					Log.d(TAG,"value = " + headerElement.getValue());
+					NameValuePair[] parameters = headerElement.getParameters();
+					for (int p = 0; p < parameters.length; p++) {
+						NameValuePair parameter = parameters[p];
+						Log.d(TAG,"parameter " + p + " " + parameter.getName() + " = " + parameter.getValue());
+					}
+				}
+			}
+		}
+	}
+	
 }
