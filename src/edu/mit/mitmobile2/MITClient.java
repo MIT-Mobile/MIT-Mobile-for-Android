@@ -44,7 +44,10 @@ public class MITClient extends DefaultHttpClient {
 	public static final String WAYF_STATE = "wayf";
 	public static final String IDP_STATE = "idp";
 	public static final String AUTH_STATE = "auth";
-	
+
+	// Cookies
+	public static List<Cookie> cookies = new ArrayList();
+
 	protected Context mContext;
 	SharedPreferences prefs;
 	String user;
@@ -99,15 +102,6 @@ public class MITClient extends DefaultHttpClient {
 		this.setRedirectHandler(new DefaultRedirectHandler() {
 			String host;
 			public URI getLocationURI(HttpResponse response, HttpContext context) {
-
-//				Header[] cookies = response.getHeaders("Cookie");
-//				if (cookies.length > 0) {
-//					for (int c = 0; c < cookies.length; c++) {
-//						Header cookie = cookies[c];
-//						Log.d(TAG,cookie.getName());
-//						Log.d(TAG,cookie.getValue());
-//					}
-//				}
 				
 				Header[] locations = response.getHeaders("Location");
 				
@@ -184,7 +178,6 @@ public class MITClient extends DefaultHttpClient {
 			}
 				
 			if (state == IDP_STATE) {
-				Log.d(TAG,"\nstate = idp");
 				idp();
 			}			
 	
@@ -402,14 +395,14 @@ public class MITClient extends DefaultHttpClient {
 			tmpCookie.setExpiryDate(cookie.getExpiryDate());
 			tmpCookie.setPath(cookie.getPath());
 			tmpCookie.setVersion(cookie.getVersion());
-			Global.cookies.add(tmpCookie);
+			this.cookies.add(tmpCookie);
 		}		
 	}
 
 	public void restoreCookies() {
-		if (Global.cookies != null) {
-			for (int c = 0; c < Global.cookies.size(); c++) {
-				BasicClientCookie tmpCookie = (BasicClientCookie)Global.cookies.get(c);
+		if (this.cookies != null) {
+			for (int c = 0; c < this.cookies.size(); c++) {
+				BasicClientCookie tmpCookie = (BasicClientCookie)this.cookies.get(c);
 				this.getCookieStore().addCookie(tmpCookie);
 			}
 		}		

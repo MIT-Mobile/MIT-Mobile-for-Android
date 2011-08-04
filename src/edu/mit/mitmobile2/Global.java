@@ -70,15 +70,11 @@ public class Global extends Application {
 	// Facilities 
 	private static String problemType;
 	
-	// Touchstone
-	public static List<Cookie> cookies = new ArrayList();
-	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG,"onCreate()");
 		mContext = this;
-		//this.mitClient = new MITClient(this.mContext);
 		
 		// load Mobile Web Domain preferences
 		try {
