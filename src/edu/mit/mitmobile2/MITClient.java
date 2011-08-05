@@ -17,6 +17,7 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -46,8 +47,9 @@ public class MITClient extends DefaultHttpClient {
 	public static final String AUTH_STATE = "auth";
 
 	// Cookies
-	public static List<Cookie> cookies = new ArrayList();
-
+	//public static List<Cookie> cookies = new ArrayList();
+	public static CookieStore cookieStore;
+	
 	protected Context mContext;
 	SharedPreferences prefs;
 	String user;
@@ -92,8 +94,17 @@ public class MITClient extends DefaultHttpClient {
 		super();		
 		Log.d(TAG,"MITClient()");
 		this.mContext = context;
-		this.restoreCookies();
 
+		//Log.d(TAG,"MITClient.cookieStore = " + MITClient.cookieStore);
+		if (MITClient.cookieStore == null) {
+			MITClient.cookieStore = this.getCookieStore();
+		}
+
+		this.setCookieStore(this.cookieStore);
+
+		//Log.d(TAG,"after setting cookie store");
+		//Log.d(TAG,"cookieStore = " + this.cookieStore);
+		
 		// get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
@@ -166,7 +177,6 @@ public class MITClient extends DefaultHttpClient {
 		get = new HttpGet(targetUrl);
 		try {
 			response = this.execute(get);
-			this.saveCookies();
 
 			responseEntity = response.getEntity();
 			if (state == OK_STATE) {
@@ -224,7 +234,7 @@ public class MITClient extends DefaultHttpClient {
 		
 		try {
 			response = this.execute(post);
-			this.saveCookies();
+			//this.saveCookies();
 			//Log.d(TAG,"status from post = " + response.getStatusLine().getStatusCode());
 			
 			Header[] locations = response.getHeaders("Location");
@@ -296,7 +306,7 @@ public class MITClient extends DefaultHttpClient {
 	
 		try {
 			response = this.execute(post);
-			this.saveCookies();
+			//this.saveCookies();
 			if (response.getStatusLine().getStatusCode() == 200) {
 				state = AUTH_STATE;
 				responseString = responseContentToString(response);
@@ -362,7 +372,7 @@ public class MITClient extends DefaultHttpClient {
 	
 		try {
 			response = this.execute(post);
-			this.saveCookies();
+			//this.saveCookies();
 			//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == 200) {
 				responseString = responseContentToString(response);
@@ -384,29 +394,29 @@ public class MITClient extends DefaultHttpClient {
 		}
 	}
 
-	public void saveCookies() {
-		List<Cookie> cookies = this.getCookieStore().getCookies();
-		Iterator<Cookie> c = cookies.iterator();
-		while (c.hasNext()) {
-			Cookie cookie = c.next();
-			BasicClientCookie tmpCookie = new BasicClientCookie(cookie.getName(), cookie.getValue());
-			tmpCookie.setDomain(cookie.getDomain());
-			tmpCookie.setComment(cookie.getComment());
-			tmpCookie.setExpiryDate(cookie.getExpiryDate());
-			tmpCookie.setPath(cookie.getPath());
-			tmpCookie.setVersion(cookie.getVersion());
-			this.cookies.add(tmpCookie);
-		}		
-	}
-
-	public void restoreCookies() {
-		if (this.cookies != null) {
-			for (int c = 0; c < this.cookies.size(); c++) {
-				BasicClientCookie tmpCookie = (BasicClientCookie)this.cookies.get(c);
-				this.getCookieStore().addCookie(tmpCookie);
-			}
-		}		
-	}
+//	public void saveCookies() {
+//		List<Cookie> cookies = this.getCookieStore().getCookies();
+//		Iterator<Cookie> c = cookies.iterator();
+//		while (c.hasNext()) {
+//			Cookie cookie = c.next();
+//			BasicClientCookie tmpCookie = new BasicClientCookie(cookie.getName(), cookie.getValue());
+//			tmpCookie.setDomain(cookie.getDomain());
+//			tmpCookie.setComment(cookie.getComment());
+//			tmpCookie.setExpiryDate(cookie.getExpiryDate());
+//			tmpCookie.setPath(cookie.getPath());
+//			tmpCookie.setVersion(cookie.getVersion());
+//			this.cookies.add(tmpCookie);
+//		}		
+//	}
+//
+//	public void restoreCookies() {
+//		if (this.cookies != null) {
+//			for (int c = 0; c < this.cookies.size(); c++) {
+//				BasicClientCookie tmpCookie = (BasicClientCookie)this.cookies.get(c);
+//				this.getCookieStore().addCookie(tmpCookie);
+//			}
+//		}		
+//	}
 
 	class MITInterceptor implements HttpResponseInterceptor {
 		

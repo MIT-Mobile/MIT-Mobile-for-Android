@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 
 import android.content.Context;
@@ -26,6 +29,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -35,11 +39,16 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.MITClient;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TouchstonePrefsActivity;
 import edu.mit.mitmobile2.facilities.FacilitiesActivity;
+import edu.mit.mitmobile2.news.NewsModel;
+import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
+import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
@@ -110,7 +119,24 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
         else {   
 	        try {
 	        	responseString = mitClient.getResponse(targetUrl);
-				createViews();
+//DEBUG
+//	        	MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
+//				HashMap<String, String> params = new HashMap<String, String>();
+//				api.requestRaw(targetUrl,params, new MobileWebApi.RawResponseListener(null,null) {
+//						@Override
+//						public void onResponse(InputStream stream) {
+//							String responseText = MobileWebApi.convertStreamToString(stream);
+//							Log.d(TAG,responseText);
+//						}
+//						
+//						@Override
+//						public void onError() {
+//							Log.d(TAG,"error");
+//						}
+//				});			
+//
+//	        	//DEBUG
+		    	createViews();
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				Log.d(TAG,e.getMessage());
@@ -120,24 +146,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 			}
         }
 	}
-	
-	
-//	@Override
-//	protected void onPause() {
-//		// TODO Auto-generated method stub
-//		super.onPause();
-//		Log.d(TAG,"touchstone onPause()");
-//		
-//		// store cookies
-//		List<Cookie> cookies = mitClient.getCookieStore().getCookies();
-//		Iterator c = cookies.iterator();
-//		while (c.hasNext()) {
-//			
-//		}
-//		
-//	}
-
-
+		
 	private void createViews() throws ClientProtocolException, IOException {
 		setContentView(R.layout.touchstone_main);
 		Log.d(TAG,"createViews()");

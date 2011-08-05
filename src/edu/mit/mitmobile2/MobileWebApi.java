@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 public class MobileWebApi {
 
+	private static final String TAG = "MobileWebApi";
 	public static final String BASE_PATH = "/api";
 	public static enum ResponseType {
 		JSONObject,
