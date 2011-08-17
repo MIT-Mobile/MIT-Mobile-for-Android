@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,16 +26,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.about.AboutActivity;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
 import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
+import edu.mit.mitmobile2.libraries.LibraryModule;
 import edu.mit.mitmobile2.maps.MapsModule;
-import edu.mit.mitmobile2.mit150.MIT150Module;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
 import edu.mit.mitmobile2.news.NewsListSliderActivity;
@@ -42,6 +41,7 @@ import edu.mit.mitmobile2.news.NewsModel;
 import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.people.PeopleModule;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 import edu.mit.mitmobile2.tour.TourModule;
 
@@ -216,6 +216,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new EmergencyModule(),
 			new FacilitiesModule(),
 			new QRReaderModule(),
+			new LibraryModule()
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);

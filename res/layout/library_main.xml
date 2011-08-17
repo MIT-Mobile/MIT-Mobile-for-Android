@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@color/rowBackground">
+  
+    <edu.mit.mitmobile2.TitleBar
+        android:text="Library"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+        
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/libraryAccount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Account" />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+        
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/libraryLocationHours"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Locations &amp; Hours" />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+        
+        
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/libraryAskUs"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Ask Us!" />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+    
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/libraryTellUs"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Tell Us!" />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+        
+</LinearLayout>

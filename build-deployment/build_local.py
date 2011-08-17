@@ -24,7 +24,7 @@ android_path = build_include.build_apk(tag, not fast)
 import build_settings
 
 # old path for adb
-adb_path = build_settings.android_sdk_path + "/tools/adb"
+adb_path = build_settings.android_sdk_path + "/platform-tools/adb.exe"
 if not os.path.exists(adb_path):
     adb_path = build_settings.android_sdk_path + "/platform-tools/adb"
     if not os.path.exists(adb_path):
