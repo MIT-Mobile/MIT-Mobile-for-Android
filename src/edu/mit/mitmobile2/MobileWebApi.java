@@ -11,18 +11,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
-import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
-import edu.mit.mitmobile2.about.BuildSettings;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
+import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
 
 public class MobileWebApi {
 

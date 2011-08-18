@@ -1,7 +1,10 @@
 package edu.mit.mitmobile2.libraries;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -27,7 +30,15 @@ public class LibraryActivity extends ModuleActivity {
         accountRow = (TwoLineActionRow) findViewById(R.id.libraryAccount);
         locationRow = (TwoLineActionRow) findViewById(R.id.libraryLocationHours);
         askUsRow = (TwoLineActionRow) findViewById(R.id.libraryAskUs);
-        tellUsRow = (TwoLineActionRow) findViewById(R.id.libraryTellUs);
+        tellUsRow = (TwoLineActionRow) findViewById(R.id.libraryTellUs); //librarySearch
+        
+        locationRow.setOnClickListener(new OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LibraryActivity.this, LibraryLocationAndHour.class));
+            }
+        });
     }
     
     @Override
