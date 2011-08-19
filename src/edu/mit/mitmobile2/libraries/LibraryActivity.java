@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -38,6 +39,28 @@ public class LibraryActivity extends ModuleActivity {
             public void onClick(View v) {
                 startActivity(new Intent(LibraryActivity.this, LibraryLocationAndHour.class));
             }
+        });
+        
+        // external URL buttons
+        findViewById(R.id.libraryMobileToolsRow).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				CommonActions.viewURL(LibraryActivity.this, "http://libguides.mit.edu/mobile");
+			}
+        });
+        
+        findViewById(R.id.libraryMobileNewsRow).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				CommonActions.viewURL(LibraryActivity.this, "http://libraries.mit.edu/sites/news/");
+			}
+        });
+        
+        findViewById(R.id.libraryFullWebsiteRow).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				CommonActions.viewURL(LibraryActivity.this, "http://libraries.mit.edu/");
+			}
         });
     }
     
