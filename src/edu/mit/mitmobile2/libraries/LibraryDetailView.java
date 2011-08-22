@@ -21,64 +21,71 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
-public class LibraryDetailView extends LockingScrollView implements SliderInterface {
+public class LibraryDetailView implements SliderInterface {
 
     private Activity mActivity;
     private LibraryItem mLibraryItem;
-
+    private LockingScrollView mView;
+    
     private FullScreenLoader mLoaderView;
     private TwoLineActionRow mDetailTitle;
     private TwoLineActionRow mDetailPhone;
+    private View mDetailPhoneDivider;
     private TwoLineActionRow mDetailRoom;
+    private View mDetailRoomDivider;
     private TextView mDetailInfo;
 
     public LibraryDetailView(Activity activity, LibraryItem libraryItem) {
-        super(activity);
 
         mActivity = activity;
         mLibraryItem = libraryItem;
 
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.library_detail, this);
+        mView = (LockingScrollView) inflater.inflate(R.layout.library_detail, null);
 
-        mLoaderView = (FullScreenLoader) findViewById(R.id.libraryDetailLoading);
+        mLoaderView = (FullScreenLoader) mView.findViewById(R.id.libraryDetailLoading);
 
-        mDetailTitle = (TwoLineActionRow) findViewById(R.id.libraryDetailTitle);
+        mDetailTitle = (TwoLineActionRow) mView.findViewById(R.id.libraryDetailTitle);
+        mDetailTitle.setTitle(mLibraryItem.library);
 
-        mDetailPhone = (TwoLineActionRow) findViewById(R.id.libraryDetailPhone);
+        mDetailPhone = (TwoLineActionRow) mView.findViewById(R.id.libraryDetailPhone);
         ImageView phoneImage = (ImageView) mDetailPhone.findViewById(R.id.simpleRowActionIcon);
         phoneImage.setImageResource(R.drawable.action_phone);
-        mDetailPhone.setOnClickListener(new OnClickListener() {
+        mDetailPhone.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 CommonActions.callPhone(mActivity, mLibraryItem.tel);
             }
         });
+        mDetailPhoneDivider = mView.findViewById(R.id.libraryDetailPhoneDivider);
 
-        mDetailRoom = (TwoLineActionRow) findViewById(R.id.libraryDetailRoom);
+        mDetailRoom = (TwoLineActionRow) mView.findViewById(R.id.libraryDetailRoom);
         ImageView mapImage = (ImageView) mDetailRoom.findViewById(R.id.simpleRowActionIcon);
         mapImage.setImageResource(R.drawable.action_map);
-        mDetailRoom.setOnClickListener(new OnClickListener() {
+        mDetailRoom.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 CommonActions.searchMap(mActivity, mLibraryItem.location);
             }
         });
-
-        mDetailInfo = (TextView) findViewById(R.id.libraryDetailInfo);
+        mDetailRoomDivider = mView.findViewById(R.id.libraryDetailRoomDivider);
+        
+        mDetailInfo = (TextView) mView.findViewById(R.id.libraryDetailInfo);
+        
+        
 
     }
 
     @Override
     public LockingScrollView getVerticalScrollView() {
-        return this;
+        return mView;
     }
 
     @Override
     public View getView() {
-        return this;
+        return mView;
     }
 
     @Override
@@ -93,7 +100,7 @@ public class LibraryDetailView extends LockingScrollView implements SliderInterf
         }
 
 //        mLoaderView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        mLoaderView.setVisibility(VISIBLE);
+        mLoaderView.setVisibility(View.VISIBLE);
         mLoaderView.showLoading();
         LibraryModel.fetchLibraryDetail(mLibraryItem, mActivity, new Handler() {
 
@@ -101,15 +108,17 @@ public class LibraryDetailView extends LockingScrollView implements SliderInterf
             public void handleMessage(Message message) {
 
                 if (message.arg1 == MobileWebApi.SUCCESS) {
-                    mLoaderView.setVisibility(GONE);
-                    mDetailTitle.setTitle(mLibraryItem.library);
-                    mDetailTitle.setVisibility(VISIBLE);
+                    mLoaderView.setVisibility(View.GONE);
                     mDetailPhone.setTitle(mLibraryItem.tel);
-                    mDetailPhone.setVisibility(VISIBLE);
+                    mDetailPhone.setVisibility(View.VISIBLE);
+                    mDetailPhoneDivider.setVisibility(View.VISIBLE);
+                  
                     mDetailRoom.setTitle("Room " + mLibraryItem.location);
-                    mDetailRoom.setVisibility(VISIBLE);
+                    mDetailRoom.setVisibility(View.VISIBLE);
+                    mDetailRoomDivider.setVisibility(View.VISIBLE);
+                    
                     mDetailInfo.setText(Html.fromHtml(composeDetailInfo()));
-                    mDetailInfo.setVisibility(VISIBLE);
+                    mDetailInfo.setVisibility(View.VISIBLE);
                 } else {
                     mLoaderView.showError();
                 }

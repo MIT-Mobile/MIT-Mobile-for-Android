@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <edu.mit.mitmobile2.LockingScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+            
     <LinearLayout
         android:id="@+id/libraryDetailsLinearLayout"
         android:orientation="vertical"
-        android:background="#FFFFFF"
+        android:background="@color/rowBackground"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         
         <edu.mit.mitmobile2.TwoLineActionRow
             android:id="@+id/libraryDetailTitle"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_height="wrap_content" />
             
         <edu.mit.mitmobile2.DividerView
             android:layout_width="fill_parent"
@@ -27,7 +27,9 @@
             android:layout_height="wrap_content"
             android:visibility="gone"  />
             
-                    <edu.mit.mitmobile2.DividerView
+       <edu.mit.mitmobile2.DividerView
+       		android:id="@+id/libraryDetailPhoneDivider"
+       		android:visibility="gone"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/dividerHeight" />
             
@@ -38,6 +40,8 @@
             android:visibility="gone"  />
             
         <edu.mit.mitmobile2.DividerView
+            android:id="@+id/libraryDetailRoomDivider"
+       		android:visibility="gone"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/dividerHeight" />
         
@@ -48,16 +52,18 @@
             android:paddingRight="@dimen/horizontalPadding"
             android:visibility="gone" 
             android:textColor="#000000"/>
-            
+             
         <edu.mit.mitmobile2.FullScreenLoader
             android:id="@+id/libraryDetailLoading"
             android:layout_width="fill_parent"
-            android:layout_height="300dp"
-            android:visibility="gone" />
-            
+            android:layout_height="fill_parent" 
+            android:layout_weight="1"
+            />
+        <!--  
         <edu.mit.mitmobile2.DividerView
             android:layout_width="fill_parent"
             android:layout_height="@dimen/dividerHeight" />
+        -->
             
     </LinearLayout>
 </edu.mit.mitmobile2.LockingScrollView>
