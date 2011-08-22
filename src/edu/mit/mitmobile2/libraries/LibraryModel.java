@@ -10,12 +10,10 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.Handler;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.objs.SearchResults;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 
 public class LibraryModel {
-    private static int MAX_RESULTS = 100;
-
-    public static void executeSearch(final Context context, final Handler uiHandler) {
+    public static void fetchLocationsAndHours(final Context context, final Handler uiHandler) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "locations");
@@ -30,27 +28,37 @@ public class LibraryModel {
 
             @Override
             public void onResponse(JSONArray array) {
-                ArrayList<LibraryItem> libraries = new ArrayList<LibraryItem>();
+                ArrayList<LibraryItem> libraries = LibraryParser.parseLibrary(array);
 
-                try {
-                    for (int index = 0; index < array.length(); index++) {
-                        JSONObject object = array.getJSONObject(index);
-                        LibraryItem library = new LibraryItem();
-                        library.library = object.getString("library");
-                        library.status = object.getString("status");
+//                SearchResults<LibraryItem> searchResults = new SearchResults<LibraryItem>(null, libraries);
+//                if (searchResults.getResultsList().size() >= MAX_RESULTS) {
+//                    searchResults.markAsPartial(null);
+//                }
 
-                        libraries.add(library);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                MobileWebApi.sendSuccessMessage(uiHandler, libraries);
+            }
+        });
+    }
+    
+    
+    
+    public static void fetchLibraryDetail(final LibraryItem libraryItem, final Context context, final Handler uiHandler) {
+        HashMap<String, String> searchParameters = new HashMap<String, String>();
+        searchParameters.put("module", "libraries");
+        searchParameters.put("command", "locationDetail");
+        searchParameters.put("library", libraryItem.library);
 
-                SearchResults<LibraryItem> searchResults = new SearchResults<LibraryItem>(null, libraries);
-                if (searchResults.getResultsList().size() >= MAX_RESULTS) {
-                    searchResults.markAsPartial(null);
-                }
-
-                MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+            @Override
+            public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
+                LibraryParser.parseLibraryDetail(object, libraryItem);
+                
+                MobileWebApi.sendSuccessMessage(uiHandler, null);
             }
         });
     }

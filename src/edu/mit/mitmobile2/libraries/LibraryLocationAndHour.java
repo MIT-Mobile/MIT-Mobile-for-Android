@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.objs.SearchResults;
 
 public class LibraryLocationAndHour extends ModuleActivity {
 
@@ -40,7 +40,7 @@ public class LibraryLocationAndHour extends ModuleActivity {
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
 
-        LibraryModel.executeSearch(this, uiHandler);
+        LibraryModel.fetchLocationsAndHours(this, uiHandler);
     }
 
     private Handler uiHandler = new Handler() {
@@ -50,19 +50,22 @@ public class LibraryLocationAndHour extends ModuleActivity {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
                 @SuppressWarnings("unchecked")
-                final SearchResults<LibraryItem> searchResults = (SearchResults<LibraryItem>) msg.obj;
+                final ArrayList<LibraryItem> results = (ArrayList<LibraryItem>) msg.obj;
 
-                if (searchResults.getResultsList().size() == 0) {
+                if (results.size() == 0) {
                     Toast.makeText(LibraryLocationAndHour.this, "No libraries found", Toast.LENGTH_SHORT).show();
                 }
-
-                mListView.setAdapter(new LibraryListAdapter(searchResults.getResultsList()));
+                
+                
+                LibraryListAdapter adapter = new LibraryListAdapter(results);
+                mListView.setAdapter(adapter);
+                adapter.setLookupHandler(mListView, null);
                 mListView.setVisibility(View.VISIBLE);
 
             } else if (msg.arg1 == MobileWebApi.ERROR) {
-                // TODO:
+                mLoadingView.showError();
             } else if (msg.arg1 == MobileWebApi.CANCELLED) {
-                // TODO:
+                mLoadingView.showError();
             }
         }
     };
@@ -84,8 +87,20 @@ public class LibraryLocationAndHour extends ModuleActivity {
 
     private class LibraryListAdapter extends SimpleArrayAdapter<LibraryItem> {
 
+        private List<LibraryItem> libraryItems;
+
         public LibraryListAdapter(List<LibraryItem> items) {
             super(LibraryLocationAndHour.this, items, R.layout.boring_action_row);
+            libraryItems = items;
+        }
+
+        public void setLookupHandler(ListView listView, final String extras) {
+            setOnItemClickListener(listView, new SimpleArrayAdapter.OnItemClickListener<LibraryItem>() {
+                @Override
+                public void onItemSelected(LibraryItem item) {
+                    LibraryDetailActivity.launchActivity(getContext(), libraryItems, libraryItems.indexOf(item));
+                }
+            });
         }
 
         @Override
