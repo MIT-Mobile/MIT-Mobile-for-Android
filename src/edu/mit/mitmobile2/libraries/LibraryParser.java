@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.libraries;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +56,8 @@ public class LibraryParser {
     
     private static Schedule getSchedule(JSONObject object, boolean isCurrentTerm) throws JSONException {
         Schedule schedule = new Schedule();
-        schedule.range_start = object.getJSONObject("range").getString("start");
-        schedule.range_end = object.getJSONObject("range").getString("end");
+        schedule.range_start = new Date(object.getJSONObject("range").getLong("start") * 1000);
+        schedule.range_end = new Date(object.getJSONObject("range").getLong("end") * 1000);
         schedule.name = object.getString("name");
         if(!isCurrentTerm) {
             schedule.termday = object.getString("termday");

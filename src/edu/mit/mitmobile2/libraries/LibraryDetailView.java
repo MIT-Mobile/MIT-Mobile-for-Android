@@ -9,6 +9,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -128,7 +132,7 @@ public class LibraryDetailView implements SliderInterface {
         mDetailRoom.setVisibility(View.VISIBLE);
         mDetailRoomDivider.setVisibility(View.VISIBLE);
         
-        mDetailInfo.setText(Html.fromHtml(composeDetailInfo()));
+        mDetailInfo.setText(composeDetailInfo(), TextView.BufferType.SPANNABLE);
         mDetailInfo.setVisibility(View.VISIBLE);   	
     }
     
@@ -136,29 +140,39 @@ public class LibraryDetailView implements SliderInterface {
     public void updateView() {
     }
 
-    private String composeDetailInfo() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<br /><b>Today's hours:</b>");
-        builder.append(" ");
-        builder.append(mLibraryItem.hoursToday);
-        builder.append("<br /><br />");
-        builder.append("<b>");
-        builder.append(mLibraryItem.currentTerm.name);
-        builder.append(" Hours(");
-
+    private Spannable composeDetailInfo() {
+    	
+    	SpannableStringBuilder builder = new SpannableStringBuilder();
+    	builder.append(bold("Today's Hours: "));
+    	builder.append(normal(mLibraryItem.hoursToday));
+    	builder.append("\n\n");
+    	
+    	String hoursTitle = mLibraryItem.currentTerm.name + " Hours (";
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
-        String start = formatter.format(new Date(Long.parseLong(mLibraryItem.currentTerm.range_start)));
-        builder.append(start.substring(0, start.indexOf(",")));
-        builder.append("-");
-        builder.append(formatter.format(new Date(Long.parseLong(mLibraryItem.currentTerm.range_end))));
-        builder.append("):</b><br />");
+        String start = formatter.format(mLibraryItem.currentTerm.range_start);
+        String end = formatter.format(mLibraryItem.currentTerm.range_end);
+        hoursTitle += start + "-" + end + "):";
+ 
+        builder.append(bold(hoursTitle.trim() + "\n"));
+    	
         for (String key : mLibraryItem.currentTerm.hours.keySet()) {
-            builder.append(key);
-            builder.append(" ");
-            builder.append(mLibraryItem.currentTerm.hours.get(key));
-            builder.append("<br />");
+        	String aDetailLine = key + " " + mLibraryItem.currentTerm.hours.get(key) + "\n";
+        	builder.append(normal(aDetailLine));
         }
-        return builder.toString();
+    	
+    	return builder;
+    	
     }
 
+    private Spannable bold(String text) {
+    	Spannable span = new SpannableString(text);
+    	span.setSpan(new TextAppearanceSpan(mActivity, R.style.ListItemPrimary), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	return span;
+    }
+    
+    private Spannable normal(String text) {
+    	Spannable span = new SpannableString(text);
+    	span.setSpan(new TextAppearanceSpan(mActivity, R.style.ListItemSecondary), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	return span;
+    }
 }
