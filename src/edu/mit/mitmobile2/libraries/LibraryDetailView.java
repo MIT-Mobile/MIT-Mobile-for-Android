@@ -74,8 +74,9 @@ public class LibraryDetailView implements SliderInterface {
         
         mDetailInfo = (TextView) mView.findViewById(R.id.libraryDetailInfo);
         
-        
-
+        if(mLibraryItem.isDetailLoaded) {
+        	loadDetails();
+        }
     }
 
     @Override
@@ -108,17 +109,7 @@ public class LibraryDetailView implements SliderInterface {
             public void handleMessage(Message message) {
 
                 if (message.arg1 == MobileWebApi.SUCCESS) {
-                    mLoaderView.setVisibility(View.GONE);
-                    mDetailPhone.setTitle(mLibraryItem.tel);
-                    mDetailPhone.setVisibility(View.VISIBLE);
-                    mDetailPhoneDivider.setVisibility(View.VISIBLE);
-                  
-                    mDetailRoom.setTitle("Room " + mLibraryItem.location);
-                    mDetailRoom.setVisibility(View.VISIBLE);
-                    mDetailRoomDivider.setVisibility(View.VISIBLE);
-                    
-                    mDetailInfo.setText(Html.fromHtml(composeDetailInfo()));
-                    mDetailInfo.setVisibility(View.VISIBLE);
+                    loadDetails();
                 } else {
                     mLoaderView.showError();
                 }
@@ -127,6 +118,20 @@ public class LibraryDetailView implements SliderInterface {
 
     }
 
+    private void loadDetails() {
+        mLoaderView.setVisibility(View.GONE);
+        mDetailPhone.setTitle(mLibraryItem.tel);
+        mDetailPhone.setVisibility(View.VISIBLE);
+        mDetailPhoneDivider.setVisibility(View.VISIBLE);
+      
+        mDetailRoom.setTitle("Room " + mLibraryItem.location);
+        mDetailRoom.setVisibility(View.VISIBLE);
+        mDetailRoomDivider.setVisibility(View.VISIBLE);
+        
+        mDetailInfo.setText(Html.fromHtml(composeDetailInfo()));
+        mDetailInfo.setVisibility(View.VISIBLE);   	
+    }
+    
     @Override
     public void updateView() {
     }
