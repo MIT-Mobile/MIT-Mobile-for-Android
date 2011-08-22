@@ -227,8 +227,10 @@
 	    <provider android:name=".WebImageCacheProvider" android:authorities="edu.mit.mitmobile2.WebImageCacheProvider" />   	          	           
     
 		<activity android:name=".PrefsActivity"></activity>
+        
         <activity android:name=".libraries.LibraryActivity"></activity>
         <activity android:name=".libraries.LibraryLocationAndHour"></activity>
+        <activity android:name=".libraries.LibraryDetailActivity"></activity>
 </application>
 
  		
