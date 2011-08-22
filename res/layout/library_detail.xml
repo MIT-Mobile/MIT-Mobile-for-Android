@@ -59,11 +59,6 @@
             android:layout_height="fill_parent" 
             android:layout_weight="1"
             />
-        <!--  
-        <edu.mit.mitmobile2.DividerView
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/dividerHeight" />
-        -->
             
     </LinearLayout>
 </edu.mit.mitmobile2.LockingScrollView>
