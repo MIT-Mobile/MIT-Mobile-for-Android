@@ -228,7 +228,20 @@
     
 		<activity android:name=".PrefsActivity"></activity>
         
-        <activity android:name=".libraries.LibraryActivity"></activity>
+        <activity android:name=".libraries.LibraryActivity">
+            <meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        
+        <activity android:name=".libraries.LibrarySearchActivity" 
+                  android:launchMode="singleTop"
+                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:theme="@style/PlainBackground">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>            
+            <meta-data android:name="android.app.searchable" android:resource="@xml/library_searchable" />
+        </activity>
+        <provider android:name=".libraries.LibrarySearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.libraries.SuggestionsProvider" />
         <activity android:name=".libraries.LibraryLocationAndHour"></activity>
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
 </application>

@@ -9,6 +9,7 @@ import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class LibraryActivity extends ModuleActivity {
@@ -27,6 +28,11 @@ public class LibraryActivity extends ModuleActivity {
 
     private void createViews() {
         setContentView(R.layout.library_main);
+        
+        SearchBar searchBar = (SearchBar) findViewById(R.id.librarySearchBar);
+        searchBar.setSearchHint(getString(R.string.library_search_hint));
+        searchBar.setSystemSearchInvoker(this);
+        
 
         accountRow = (TwoLineActionRow) findViewById(R.id.libraryAccount);
         locationRow = (TwoLineActionRow) findViewById(R.id.libraryLocationHours);

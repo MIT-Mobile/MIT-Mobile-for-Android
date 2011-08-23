@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.mitmobile2.libraries.BookItem.Holding;
 import edu.mit.mitmobile2.libraries.LibraryItem.Schedule;
 
 public class LibraryParser {
@@ -26,6 +27,7 @@ public class LibraryParser {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            throw new RuntimeException("Error parsing libraries");
         }
 
         return libraries;
@@ -49,7 +51,7 @@ public class LibraryParser {
             container.isDetailLoaded = true;
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error parsing library search results");
+            throw new RuntimeException("Error parsing library details");
         }
     }
     
@@ -74,7 +76,7 @@ public class LibraryParser {
         }
         
         //both JSONObject.names() and JSONObject.hourObject.keys() return data in hash order
-        //So, here I reordered the data manually.
+        //So, here I reorder the data manually.
         if(map.containsKey("Closed")) {
             String value = map.remove("Closed");
             map.put("Closed", value);
@@ -94,6 +96,81 @@ public class LibraryParser {
         }
         
         return terms;
+    }
+    
+    
+    static ArrayList<BookItem> parseBooks(JSONArray array) {
+        ArrayList<BookItem> books = new ArrayList<BookItem>();
+
+        try {
+            for (int index = 0; index < array.length(); index++) {
+                JSONObject object = array.getJSONObject(index);
+                
+                BookItem book = new BookItem();
+                book.id = object.getString("id");
+                book.title = object.getString("title");
+                book.image = object.getString("image");
+                if(object.has("author")) {
+                    book.author = getArray(object.getJSONArray("author"));
+                }
+                if(object.has("year")) {
+                    book.year = getArray(object.getJSONArray("year"));
+                }
+                if(object.has("publisher")) {
+                    book.publisher = getArray(object.getJSONArray("publisher"));
+                }
+                if(object.has("isbn")) {
+                    book.isbn = getArray(object.getJSONArray("isbn"));
+                }
+                
+                books.add(book);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error parsing book search results");
+        }
+
+        return books;
+    }
+    
+    private static ArrayList<String> getArray(JSONArray array) throws JSONException {
+        ArrayList<String> list = new ArrayList<String>();
+        for(int index1 = 0; index1 < array.length(); index1++) {
+            list.add(array.getString(index1));
+        }
+        return list; 
+    }
+    
+    static void parseBookDetail(JSONObject object, BookItem book) {
+        try {
+            book.subjects = getArray(object.getJSONArray("subject"));
+            book.lang = getArray(object.getJSONArray("lang"));
+            book.extent = getArray(object.getJSONArray("extent"));
+            book.summary = getArray(object.getJSONArray("summary"));
+            book.address = getArray(object.getJSONArray("address"));
+            book.holdings = parseHoldings(object.getJSONArray("holdings"));
+            
+            
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error parsing book details");
+        }
+    }
+    
+    private static ArrayList<Holding> parseHoldings(JSONArray array) throws JSONException {
+        ArrayList<Holding> list = new ArrayList<Holding>();
+        
+        for(int index = 0; index < array.length(); index++) {
+            JSONObject object = array.getJSONObject(index);
+            Holding holding = new Holding();
+            holding.library = object.getString("library");
+            holding.address = object.getString("address");
+            holding.url = object.getString("url");
+            
+            list.add(holding);
+        }
+        
+        return list;
     }
     
 }

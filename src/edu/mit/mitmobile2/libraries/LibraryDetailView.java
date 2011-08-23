@@ -1,14 +1,12 @@
 package edu.mit.mitmobile2.libraries;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;

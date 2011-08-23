@@ -27,6 +27,9 @@
 		<item>Humanities</item>
 	</string-array>
 	
+	<string name="library_search_hint">Search</string>
+    <string name="library_search_label">Library Search</string>
+    
 	<string name="people_search_label">Directory Search</string>
 	<string name="people_search_hint">Search</string>
 	<string name="people_search_instructions">Sample searches: \nName: \'william barton rogers\', \'rogers\' \nEmail: \'wbrogers@mit.edu\',\'wbrogers\' \nPhone: \'6172531000\',\'31000\'</string>
