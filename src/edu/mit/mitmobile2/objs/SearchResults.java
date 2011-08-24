@@ -5,6 +5,7 @@ import java.util.List;
 public class SearchResults<ResultItem> {
 	private List<ResultItem> mResultsList;
 	private String mSearchTerm;
+	private int nextIndex;
 	
 	// used if there are more total results than shown in the results Lists
 	private Integer mTotalResultsCount = null;
@@ -36,5 +37,13 @@ public class SearchResults<ResultItem> {
 	
 	public Integer totalResultsCount() {
 		return mTotalResultsCount;
+	}
+	
+	public void setNextIndex(int index) {
+	    nextIndex = index;
+	}
+	
+	public int getNextIndex() {
+	    return nextIndex;
 	}
 }

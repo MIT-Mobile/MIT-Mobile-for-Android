@@ -13,6 +13,7 @@ public class BookListAdapter extends SimpleArrayAdapter<BookItem> {
     
     public BookListAdapter(Context context, List<BookItem> items, int rowResourceId) {
         super(context, items, rowResourceId);
+        this.items = items;
     }
 
     public void setLookupHandler(ListView listView, final String extras) {
@@ -20,7 +21,7 @@ public class BookListAdapter extends SimpleArrayAdapter<BookItem> {
                 new SimpleArrayAdapter.OnItemClickListener<BookItem>() {
                     @Override
                     public void onItemSelected(BookItem item) {
-//                        PeopleDetailActivity.launchActivity(getContext(), item, viewMode, extras);
+                        BookDetailActivity.launchActivity(getContext(), items, items.indexOf(item));
                     }
                 }
         );

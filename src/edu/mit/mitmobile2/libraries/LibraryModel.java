@@ -16,7 +16,6 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.objs.SearchResults;
 
 public class LibraryModel {
-    private static int MAX_RESULTS = 100;
     public static String MODULE_LIBRARY = "libraries";
     private static HashMap<String, SearchResults<BookItem>> searchCache = new FixedCache<SearchResults<BookItem>>(10);
     
@@ -65,36 +64,54 @@ public class LibraryModel {
         });
     }
     
-    
     public static void searchBooks(final String searchTerm, final Context context, final Handler uiHandler) {
-        if (searchCache.containsKey(searchTerm)) {
-            MobileWebApi.sendSuccessMessage(uiHandler, searchCache.get(searchTerm));
-            return;
-        }
+        searchBooks(searchTerm, context, uiHandler, 0);
+    }
+    
+    public static void searchBooks(final String searchTerm, final Context context, final Handler uiHandler, int startIndex) {
+//        if (searchCache.containsKey(searchTerm)) {
+//            MobileWebApi.sendSuccessMessage(uiHandler, searchCache.get(searchTerm));
+//            return;
+//        }
         
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "search");
         searchParameters.put("module", MODULE_LIBRARY);
         searchParameters.put("q", searchTerm);
+        if(startIndex != 0) {
+            searchParameters.put("startIndex", String.valueOf(startIndex));
+        }
         
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
+        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
             new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
             
             @Override
-            public void onResponse(JSONArray array) {
-                List<BookItem> books = LibraryParser.parseBooks(array);
-                
-                SearchResults<BookItem> searchResults = new SearchResults<BookItem>(searchTerm, books);
-                if(searchResults.getResultsList().size() >= MAX_RESULTS) {
-                    searchResults.markAsPartial(null);
+            public void onResponse(JSONObject object) {
+                try {
+                    List<BookItem> books = LibraryParser.parseBooks(object.getJSONArray("items"));
+                    SearchResults<BookItem> searchResults = new SearchResults<BookItem>(searchTerm, books);
+                    
+                    searchResults.setNextIndex(0);
+                    if(object.has("nextIndex")) {
+                        int nextIndex = object.getInt("nextIndex");
+                        if(nextIndex > 0) {
+                            searchResults.markAsPartial(null);
+                        }
+                        
+                        searchResults.setNextIndex(nextIndex);
+                    } 
+                    
+                    searchCache.put(searchTerm, searchResults);
+                    
+                    MobileWebApi.sendSuccessMessage(uiHandler, searchResults);              
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Error parsing search results");
                 }
-
-                searchCache.put(searchTerm, searchResults);
                 
-                MobileWebApi.sendSuccessMessage(uiHandler, searchResults);              
             }
         });
         

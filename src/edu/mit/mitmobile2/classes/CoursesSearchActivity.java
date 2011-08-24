@@ -55,5 +55,14 @@ public class CoursesSearchActivity extends SearchActivity<CourseItem> {
 	@Override
 	protected Module getModule() {
 		return new ClassesModule();
-	}	
+	}
+
+    @Override
+    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
+    }
+
+    @Override
+    protected boolean supportsMoreResult() {
+        return false;
+    }	
 }

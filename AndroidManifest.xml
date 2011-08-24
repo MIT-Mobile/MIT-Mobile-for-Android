@@ -244,6 +244,7 @@
         <provider android:name=".libraries.LibrarySearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.libraries.SuggestionsProvider" />
         <activity android:name=".libraries.LibraryLocationAndHour"></activity>
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
+        <activity android:name=".libraries.BookDetailActivity"></activity>
 </application>
 
  		

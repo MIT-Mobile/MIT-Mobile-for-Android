@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:modolabs="http://schemas.android.com/apk/res/edu.mit.mitmobile2"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
- 	android:layout_height="fill_parent">
- 	
- 	<edu.mit.mitmobile2.TitleBar
-  		android:text="Search Results"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
-  
-  
-  	<edu.mit.mitmobile2.SearchResultsHeader
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-  		android:visibility="gone"
-  		android:id="@+id/searchResultsSummaryView" />
-		
-	<ListView android:id="@+id/searchResultsList"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:visibility="gone"
-		style="@style/Lists" />
-		
-	<edu.mit.mitmobile2.DividerView
-		android:layout_width="fill_parent"
-		android:layout_height="@dimen/dividerHeight" />
-		
-	<edu.mit.mitmobile2.FullScreenLoader
-		android:id="@+id/searchResultsLoading"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
-			
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:modolabs="http://schemas.android.com/apk/res/edu.mit.mitmobile2"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <edu.mit.mitmobile2.TitleBar
+            android:text="Search Results"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        <edu.mit.mitmobile2.SearchResultsHeader
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/searchResultsSummaryView" />
+        <ListView
+            android:id="@+id/searchResultsList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            style="@style/Lists" />
+        <edu.mit.mitmobile2.FullScreenLoader
+            android:id="@+id/searchResultsLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
+    <edu.mit.mitmobile2.DividerView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dividerHeight" />
+     <edu.mit.mitmobile2.TwoLineActionRow
+            android:id="@+id/loadMore"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
 </LinearLayout>

@@ -53,4 +53,13 @@ public class EventsSearchActivity extends SearchActivity<EventDetailsItem> {
 		return new EventsModule();
 	}
 
+    @Override
+    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
+    }
+
+    @Override
+    protected boolean supportsMoreResult() {
+        return false;
+    }
+
 }

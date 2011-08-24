@@ -48,4 +48,13 @@ public class PeopleSearchActivity extends SearchActivity<PersonItem> {
 	protected Module getModule() {
 		return new PeopleModule();
 	}
+
+    @Override
+    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
+    }
+
+    @Override
+    protected boolean supportsMoreResult() {
+        return false;
+    }
 }

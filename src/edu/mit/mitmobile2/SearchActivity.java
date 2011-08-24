@@ -16,6 +16,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -33,11 +34,15 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	protected ListView mSearchListView;
 	protected SearchResultsHeader mSearchResultsHeader;
 	protected FullScreenLoader mLoadingView;
+	protected TwoLineActionRow mLoadMore;
 	
+	private Intent mIntent;
+	private int mNexeIndex;
 	
 	protected boolean mSearching = true;
 	protected boolean mResultsDisplayed = false;
 	protected String mSearchTerm;
+	
 	
 	protected static void launchSearch(Context context, String query, Class<? extends SearchActivity<?>> searchActivity) {
 		Intent intent = new Intent(context, searchActivity);
@@ -69,6 +74,18 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 						showSummaryView(mSearchTerm, searchResults.getResultsList().size(), searchResults.isPartialResult(), searchResults.totalResultsCount());
 						mSearchListView.setAdapter(getListAdapter(searchResults));
 						mSearchListView.setVisibility(View.VISIBLE);
+						
+						mNexeIndex = searchResults.getNextIndex();
+						if(supportsMoreResult() && mNexeIndex > 0 ) {
+						    mLoadMore.setVisibility(View.VISIBLE);
+						    mLoadMore.setOnClickListener(new OnClickListener() {
+					            
+					            @Override
+					            public void onClick(View v) {
+					               doSearch(mIntent, true);
+					            }
+					        });
+						}
 				
 					} else if(msg.arg1 == MobileWebApi.ERROR) {
 						mResultsDisplayed = false;
@@ -82,18 +99,23 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		};
 	}
 	
-	private void doSearch(Intent searchIntent) {
+	private void doSearch(Intent searchIntent, boolean isContinue) {
+	    mIntent = searchIntent;
 		if(Intent.ACTION_SEARCH.equals(searchIntent.getAction())) {
 			String searchTerm = searchIntent.getStringExtra(SearchManager.QUERY);
 			
 			// save the search to the suggestions list
 			Log.d(this.getClass().toString(), getSuggestionsAuthority());
-			MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(this, getSuggestionsAuthority(), SUGGESTIONS_MODE);
-			suggestions.saveRecentQuery(searchTerm.toLowerCase(), null);
+			if(!isContinue) {
+			    MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(this, getSuggestionsAuthority(), SUGGESTIONS_MODE);
+			    suggestions.saveRecentQuery(searchTerm.toLowerCase(), null);
+			}
 			
 			// hide the list view and header view
 			mSearchListView.setVisibility(View.GONE);
 			mSearchResultsHeader.setVisibility(View.GONE);
+			mLoadMore.setOnClickListener(null);
+			mLoadMore.setVisibility(View.GONE);
 			
 			// show the search indicator
 			// do the search
@@ -103,14 +125,19 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 			mResultsDisplayed = false;
 			mSearching = true;
 			mSearchTerm = searchTerm;
-			initiateSearch(searchTerm, searchHandler(searchTerm));
+			if(isContinue) {
+			    continueSearch(searchTerm, searchHandler(searchTerm), mNexeIndex);
+			} else {
+			    initiateSearch(searchTerm, searchHandler(searchTerm));
+			}
 		}
 	}
+	
 	
 	@Override
 	public void onNewIntent(Intent newIntent) {
 		super.onNewIntent(newIntent);
-		doSearch(newIntent);
+		doSearch(newIntent, false);
 	}
 	
 	@Override
@@ -122,8 +149,10 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		mSearchListView = (ListView) findViewById(R.id.searchResultsList);
 		mSearchResultsHeader = (SearchResultsHeader) findViewById(R.id.searchResultsSummaryView);
 		mLoadingView = (FullScreenLoader) findViewById(R.id.searchResultsLoading);
+		mLoadMore = (TwoLineActionRow) findViewById(R.id.loadMore);
+		mLoadMore.setTitle("Load more...");
 		
-		doSearch(getIntent());
+		doSearch(getIntent(), false);
 	}
 	
 	private void showSummaryView(String searchTerm, int resultsCount, boolean isPartial, Integer totalResults) {
@@ -166,4 +195,10 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	abstract protected String searchItemPlural();
 	
 	abstract protected String searchItemSingular();
+	
+	abstract protected boolean  supportsMoreResult();
+	
+	abstract protected void  continueSearch(String searchTerm, Handler uiHandler, int nextIndex);
+	
+	
 }

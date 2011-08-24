@@ -11,7 +11,8 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected ArrayAdapter<BookItem> getListAdapter(SearchResults<BookItem> results) {
-        BookListAdapter recentlyViewedListAdapter = new BookListAdapter(this, results.getResultsList(), R.layout.boring_action_row);
+        BookListAdapter recentlyViewedListAdapter = new BookListAdapter(this, results.getResultsList(),
+                R.layout.boring_action_row);
         recentlyViewedListAdapter.setLookupHandler(mSearchListView, results.getSearchTerm());
         return recentlyViewedListAdapter;
     }
@@ -24,7 +25,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     @Override
     protected void initiateSearch(String searchTerm, Handler uiHandler) {
         LibraryModel.searchBooks(searchTerm, this, uiHandler);
-        
+
     }
 
     @Override
@@ -40,6 +41,16 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     @Override
     protected Module getModule() {
         return new LibraryModule();
+    }
+
+    @Override
+    protected boolean supportsMoreResult() {
+        return true;
+    }
+
+    @Override
+    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
+        LibraryModel.searchBooks(searchTerm, this, uiHandler, nextIndex);
     }
 
 }

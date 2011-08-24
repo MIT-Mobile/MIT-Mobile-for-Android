@@ -67,4 +67,14 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 	protected Module getModule() {
 		return new NewsModule();
 	}
+
+    @Override
+    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
+        
+    }
+
+    @Override
+    protected boolean supportsMoreResult() {
+        return false;
+    }
 }

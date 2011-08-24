@@ -1,0 +1,41 @@
+<edu.mit.mitmobile2.LockingScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+            
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@color/rowBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        <edu.mit.mitmobile2.TwoLineActionRow
+            android:id="@+id/bookDetailTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+            
+        <edu.mit.mitmobile2.DividerView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dividerHeight" />
+            
+        <edu.mit.mitmobile2.TwoLineActionRow
+            android:id="@+id/bookDetailAuthor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+            
+       <edu.mit.mitmobile2.DividerView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dividerHeight" />
+            
+        <edu.mit.mitmobile2.TwoLineActionRow
+            android:id="@+id/bookDetailYear"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+            
+        <edu.mit.mitmobile2.DividerView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dividerHeight" />
+            
+    </LinearLayout>
+</edu.mit.mitmobile2.LockingScrollView>
