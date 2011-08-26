@@ -13,6 +13,7 @@ import android.os.Handler;
 import edu.mit.mitmobile2.FixedCache;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.objs.SearchResults;
 
 public class LibraryModel {
@@ -117,4 +118,28 @@ public class LibraryModel {
         
         
     }
+    
+    
+    public static void fetchLinks(final Context context, final Handler uiHandler) {
+
+        HashMap<String, String> searchParameters = new HashMap<String, String>();
+        searchParameters.put("command", "links");
+        searchParameters.put("module", MODULE_LIBRARY);
+
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+        webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
+            @Override
+            public void onResponse(JSONArray array) {
+                ArrayList<LinkItem> links = LibraryParser.parseLinks(array);
+
+                MobileWebApi.sendSuccessMessage(uiHandler, links);
+            }
+        });
+    }
+    
 }

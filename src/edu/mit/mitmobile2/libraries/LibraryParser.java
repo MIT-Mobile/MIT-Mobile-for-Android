@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
+import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.libraries.LibraryItem.Schedule;
 
 public class LibraryParser {
@@ -170,6 +171,27 @@ public class LibraryParser {
             list.add(holding);
         }
         
+        return list;
+    }
+    
+    
+    static ArrayList<LinkItem> parseLinks(JSONArray array) {
+        ArrayList<LinkItem> list = new ArrayList<LinkItem>();
+        try {
+            for (int index = 0; index < array.length(); index++) {
+                LinkItem link = new LinkItem();
+                JSONObject object = array.getJSONObject(index);
+                link.title = object.getString("title");
+                link.url = object.getString("url");
+                
+                
+                list.add(link);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error parsing links");
+        }
+
         return list;
     }
     
