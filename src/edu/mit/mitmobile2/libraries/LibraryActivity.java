@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.libraries;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,16 +9,16 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchBar;
-import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class LibraryActivity extends ModuleActivity {
@@ -28,26 +27,27 @@ public class LibraryActivity extends ModuleActivity {
     private TwoLineActionRow locationRow;
     private TwoLineActionRow askUsRow;
     private TwoLineActionRow tellUsRow;
-    
-    private ListView mListView;
+
     private FullScreenLoader mLoadingView;
+    private LinearLayout mLinearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         createViews();
-        
+
         doSearch();
     }
 
     private void createViews() {
         setContentView(R.layout.library_main);
-        
+
+        mLinearLayout = (LinearLayout) findViewById(R.id.libraryMainLinearLayout);
+
         SearchBar searchBar = (SearchBar) findViewById(R.id.librarySearchBar);
         searchBar.setSearchHint(getString(R.string.library_search_hint));
         searchBar.setSystemSearchInvoker(this);
-        
 
         accountRow = (TwoLineActionRow) findViewById(R.id.libraryAccount);
         locationRow = (TwoLineActionRow) findViewById(R.id.libraryLocationHours);
@@ -79,9 +79,7 @@ public class LibraryActivity extends ModuleActivity {
             public void onClick(View v) {
             }
         });
-        
-        
-        mListView = (ListView) findViewById(R.id.listLinks);
+
         mLoadingView = (FullScreenLoader) findViewById(R.id.linkLoading);
 
     }
@@ -99,11 +97,9 @@ public class LibraryActivity extends ModuleActivity {
     @Override
     protected void prepareActivityOptionsMenu(Menu menu) {
     }
-    
-    
-    
+
     private void doSearch() {
-        mListView.setVisibility(View.GONE);
+        mLinearLayout.setVisibility(View.GONE);
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
@@ -115,6 +111,7 @@ public class LibraryActivity extends ModuleActivity {
         @Override
         public void handleMessage(Message msg) {
             mLoadingView.setVisibility(View.GONE);
+            mLinearLayout.removeAllViews();
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
                 @SuppressWarnings("unchecked")
@@ -123,51 +120,37 @@ public class LibraryActivity extends ModuleActivity {
                 if (results.size() == 0) {
                     Toast.makeText(LibraryActivity.this, "No links found", Toast.LENGTH_SHORT).show();
                 }
-                
-                
-                LinkListAdapter adapter = new LinkListAdapter(results);
-                mListView.setAdapter(adapter);
-                adapter.setLookupHandler(mListView, null);
-                mListView.setVisibility(View.VISIBLE);
+
+                if (results.size() > 0) {
+                    for (final LinkItem item : results) {
+                        TwoLineActionRow row = new TwoLineActionRow(LibraryActivity.this);
+                        row.setTitle(item.title);
+                        row.setActionIconResource(R.drawable.action_external);
+                        row.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                CommonActions.viewURL(LibraryActivity.this, item.url);
+                            }
+                        });
+
+                        mLinearLayout.addView(row);
+                        mLinearLayout.addView(new DividerView(LibraryActivity.this, null));
+                    }
+
+                    mLinearLayout.setVisibility(View.VISIBLE);
+
+                }
 
             } else {
                 mLoadingView.showError();
             }
         }
     };
-    
-    
-    private class LinkListAdapter extends SimpleArrayAdapter<LinkItem> {
 
 
-        public LinkListAdapter(List<LinkItem> items) {
-            super(LibraryActivity.this, items, R.layout.boring_action_row);
-        }
-
-        public void setLookupHandler(ListView listView, final String extras) {
-            setOnItemClickListener(listView, new SimpleArrayAdapter.OnItemClickListener<LinkItem>() {
-                @Override
-                public void onItemSelected(LinkItem item) {
-                    CommonActions.viewURL(LibraryActivity.this, item.url);
-                }
-            });
-        }
-
-        @Override
-        public void updateView(LinkItem item, View view) {
-            TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
-            twoLineActionRow.setTitle(item.title);
-            twoLineActionRow.setActionIconResource(R.drawable.action_external);
-        }
-
-    }
-
-
-    
     static class LinkItem {
         public String title;
         public String url;
     }
-    
 
 }

@@ -71,25 +71,19 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dividerHeight" />
         
-    <ListView android:id="@+id/listLinks"
+    <LinearLayout
+        android:background="@color/rowBackground"
+        android:id="@+id/libraryMainLinearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        style="@style/Lists" />
-        
-    <edu.mit.mitmobile2.DividerView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dividerHeight" />
+        android:orientation="vertical"
+        android:visibility="gone" />   
         
     <edu.mit.mitmobile2.FullScreenLoader
         android:id="@+id/linkLoading"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:visibility="gone" />
-        
-    <edu.mit.mitmobile2.DividerView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dividerHeight" />
-    	
-    
+
         
 </LinearLayout>
