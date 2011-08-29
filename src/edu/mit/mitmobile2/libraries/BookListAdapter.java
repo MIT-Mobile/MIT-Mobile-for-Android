@@ -15,23 +15,11 @@ public class BookListAdapter extends SimpleArrayAdapter<BookItem> {
         super(context, items, rowResourceId);
         this.items = items;
     }
-
-    public void setLookupHandler(ListView listView, final String extras) {
-        setOnItemClickListener(listView,
-                new SimpleArrayAdapter.OnItemClickListener<BookItem>() {
-                    @Override
-                    public void onItemSelected(BookItem item) {
-                        BookDetailActivity.launchActivity(getContext(), items, items.indexOf(item));
-                    }
-                }
-        );
-    }
     
     public void updateView(BookItem book, View view) {          
         TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
         twoLineActionRow.setTitle(book.title);
-//        
-        twoLineActionRow.setSubtitle(book.id);
+        twoLineActionRow.setSubtitle(book.getAuthorsDisplayString());
     }
 
 

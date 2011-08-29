@@ -533,7 +533,7 @@ public class NewsModel {
 			parser.parse(stream, handler);
 			SearchResults<NewsItem> results = new SearchResults<NewsItem>(searchTerm, handler.getNewsItems());
 			if(handler.getNewsItems().size() != handler.totalResults()) {
-				results.markAsPartial(handler.totalResults());
+				results.markAsPartialWithTotalCount(handler.totalResults());
 			}
 			return results;
 			

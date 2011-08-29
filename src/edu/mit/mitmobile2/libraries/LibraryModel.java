@@ -64,11 +64,7 @@ public class LibraryModel {
         });
     }
     
-    public static void searchBooks(final String searchTerm, final Context context, final Handler uiHandler) {
-        searchBooks(searchTerm, context, uiHandler, 0);
-    }
-    
-    public static void searchBooks(final String searchTerm, final Context context, final Handler uiHandler, int startIndex) {
+    public static void searchBooks(final String searchTerm, final LibrarySearchResults previousResults, final Context context, final Handler uiHandler) {
 //        if (searchCache.containsKey(searchTerm)) {
 //            MobileWebApi.sendSuccessMessage(uiHandler, searchCache.get(searchTerm));
 //            return;
@@ -78,8 +74,8 @@ public class LibraryModel {
         searchParameters.put("command", "search");
         searchParameters.put("module", MODULE_LIBRARY);
         searchParameters.put("q", searchTerm);
-        if(startIndex != 0) {
-            searchParameters.put("startIndex", String.valueOf(startIndex));
+        if(previousResults != null) {
+            searchParameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
         }
         
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
@@ -89,29 +85,28 @@ public class LibraryModel {
             new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
             
             @Override
-            public void onResponse(JSONObject object) {
-                try {
-                    List<BookItem> books = LibraryParser.parseBooks(object.getJSONArray("items"));
-                    SearchResults<BookItem> searchResults = new SearchResults<BookItem>(searchTerm, books);
-                    
-                    searchResults.setNextIndex(0);
-                    if(object.has("nextIndex")) {
-                        int nextIndex = object.getInt("nextIndex");
-                        if(nextIndex > 0) {
-                            searchResults.markAsPartial(null);
-                        }
-                        
-                        searchResults.setNextIndex(nextIndex);
-                    } 
-                    
-                    searchCache.put(searchTerm, searchResults);
-                    
-                    MobileWebApi.sendSuccessMessage(uiHandler, searchResults);              
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Error parsing search results");
+            public void onResponse(JSONObject object) throws JSONException {
+                List<BookItem> books = LibraryParser.parseBooks(object.getJSONArray("items"));
+                
+                LibrarySearchResults searchResults;
+                if(previousResults == null) {
+                	searchResults = new LibrarySearchResults(searchTerm, books);
+                } else {
+                	searchResults = previousResults;
+                	searchResults.addMoreResults(books);
                 }
                 
+             
+                if(object.has("nextIndex")) {
+                	searchResults.setNextIndex(object.getInt("nextIndex"));
+                	searchResults.markAsPartialWithUnknownTotal();                        
+                } else {
+                	searchResults.setNextIndex(null);
+                	searchResults.markAsComplete();
+                }
+                    
+                //searchCache.put(searchTerm, searchResults);    
+                MobileWebApi.sendSuccessMessage(uiHandler, searchResults);                              
             }
         });
         

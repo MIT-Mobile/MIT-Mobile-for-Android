@@ -19,6 +19,30 @@ public class BookItem {
     public List<Holding> holdings;
     
     
+    public CharSequence getAuthorsDisplayString() {
+    	if(author != null) {
+    		StringBuilder builder = new StringBuilder();
+    		for(String anAuthor : author) {
+    			builder.append(anAuthor + ", ");
+    		}
+    		return builder;
+    	} else {
+    		return null;
+    	}
+    }
+    
+    public CharSequence getYearsDisplayString() {
+    	if(year != null) {
+    		StringBuilder builder = new StringBuilder();
+    		for(String aYear : year) {
+    			builder.append(aYear + ", ");
+    		}
+    		return builder;
+    	} else {
+    		return null;
+    	}
+    }
+    
     public static class Holding {
         public String library;
         public String address;

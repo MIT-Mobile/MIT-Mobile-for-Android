@@ -73,7 +73,7 @@ public class TwoLineActionRow extends ActionRow {
 		return mTitleView.getText();
 	}
 	
-	public void setSubtitle(String subtitle) {
+	public void setSubtitle(CharSequence subtitle) {
 		if(subtitle != null) {
 			mSubtitleView.setText(subtitle);
 			mSubtitleView.setVisibility(VISIBLE);

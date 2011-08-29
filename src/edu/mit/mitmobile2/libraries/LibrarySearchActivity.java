@@ -11,10 +11,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected ArrayAdapter<BookItem> getListAdapter(SearchResults<BookItem> results) {
-        BookListAdapter recentlyViewedListAdapter = new BookListAdapter(this, results.getResultsList(),
-                R.layout.boring_action_row);
-        recentlyViewedListAdapter.setLookupHandler(mSearchListView, results.getSearchTerm());
-        return recentlyViewedListAdapter;
+        return new BookListAdapter(this, results.getResultsList(), R.layout.boring_action_row);
     }
 
     @Override
@@ -24,8 +21,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected void initiateSearch(String searchTerm, Handler uiHandler) {
-        LibraryModel.searchBooks(searchTerm, this, uiHandler);
-
+        LibraryModel.searchBooks(searchTerm, null, this, uiHandler);
     }
 
     @Override
@@ -49,8 +45,14 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     }
 
     @Override
-    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
-        LibraryModel.searchBooks(searchTerm, this, uiHandler, nextIndex);
+    protected void continueSearch(SearchResults<BookItem> previousResults, Handler uiHandler) {
+    	LibrarySearchResults libraryPreviousResults = (LibrarySearchResults) previousResults;
+        LibraryModel.searchBooks(previousResults.getSearchTerm(), libraryPreviousResults, this, uiHandler);
     }
+
+	@Override
+	protected void onItemSelected(SearchResults<BookItem> results, BookItem item) {
+		BookDetailActivity.launchActivity(this, results.getResultsList(), results.getItemPosition(item));
+	}
 
 }

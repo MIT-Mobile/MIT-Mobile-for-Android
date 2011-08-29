@@ -16,7 +16,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,18 +31,18 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	
 	protected static int SUGGESTIONS_MODE = SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES;
 	
-	protected ListView mSearchListView;
+	private ListView mSearchListView;
 	protected SearchResultsHeader mSearchResultsHeader;
 	protected FullScreenLoader mLoadingView;
 	protected TwoLineActionRow mLoadMore;
+	private static final String LOAD_MORE = "Load more";
+	private static final String LOADING = "Loading...";
 	
-	private Intent mIntent;
-	private int mNexeIndex;
 	
 	protected boolean mSearching = true;
 	protected boolean mResultsDisplayed = false;
-	protected String mSearchTerm;
-	
+	private String mSearchTerm;
+	private SearchResults<ResultItem> mSearchResults;
 	
 	protected static void launchSearch(Context context, String query, Class<? extends SearchActivity<?>> searchActivity) {
 		Intent intent = new Intent(context, searchActivity);
@@ -54,6 +54,7 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	private Handler searchHandler(final String searchTerm) {
 	
 		return new Handler() {
+			
 			@Override
 			public void handleMessage(Message msg) {
 				if(searchTerm.equals(mSearchTerm)) {
@@ -62,30 +63,25 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 			
 					if(msg.arg1 == MobileWebApi.SUCCESS) {
 						mResultsDisplayed = true;
+						
+						// use a temp variable (to allow use of @SuppressWarnings on variable)
 						@SuppressWarnings("unchecked")
-						final SearchResults<ResultItem> searchResults = (SearchResults<ResultItem>) msg.obj;
+						final SearchResults<ResultItem> tempSearchResults = (SearchResults<ResultItem>) msg.obj;
+						mSearchResults = tempSearchResults;
 				
-						if(searchResults.getResultsList().size() == 0) {
+						if(mSearchResults.getResultsList().size() == 0) {
 							resetBackToSearch();
 							Toast.makeText(SearchActivity.this, "No matches found", Toast.LENGTH_SHORT).show();
 						}
 				
-						mSearchTerm = searchResults.getSearchTerm();
-						showSummaryView(mSearchTerm, searchResults.getResultsList().size(), searchResults.isPartialResult(), searchResults.totalResultsCount());
-						mSearchListView.setAdapter(getListAdapter(searchResults));
-						mSearchListView.setVisibility(View.VISIBLE);
+						mSearchTerm = mSearchResults.getSearchTerm();
+						showSummaryView();
 						
-						mNexeIndex = searchResults.getNextIndex();
-						if(supportsMoreResult() && mNexeIndex > 0 ) {
-						    mLoadMore.setVisibility(View.VISIBLE);
-						    mLoadMore.setOnClickListener(new OnClickListener() {
-					            
-					            @Override
-					            public void onClick(View v) {
-					               doSearch(mIntent, true);
-					            }
-					        });
+						if(supportsMoreResult() && mSearchResults.isPartialResult()) {
+							mSearchListView.addFooterView(mLoadMore);
 						}
+						mSearchListView.setAdapter(getListAdapter(mSearchResults));
+						mSearchListView.setVisibility(View.VISIBLE);
 				
 					} else if(msg.arg1 == MobileWebApi.ERROR) {
 						mResultsDisplayed = false;
@@ -99,23 +95,18 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		};
 	}
 	
-	private void doSearch(Intent searchIntent, boolean isContinue) {
-	    mIntent = searchIntent;
+	private void doSearch(Intent searchIntent) {
 		if(Intent.ACTION_SEARCH.equals(searchIntent.getAction())) {
 			String searchTerm = searchIntent.getStringExtra(SearchManager.QUERY);
 			
 			// save the search to the suggestions list
 			Log.d(this.getClass().toString(), getSuggestionsAuthority());
-			if(!isContinue) {
-			    MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(this, getSuggestionsAuthority(), SUGGESTIONS_MODE);
-			    suggestions.saveRecentQuery(searchTerm.toLowerCase(), null);
-			}
+			MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(this, getSuggestionsAuthority(), SUGGESTIONS_MODE);
+			suggestions.saveRecentQuery(searchTerm.toLowerCase(), null);
 			
 			// hide the list view and header view
 			mSearchListView.setVisibility(View.GONE);
 			mSearchResultsHeader.setVisibility(View.GONE);
-			mLoadMore.setOnClickListener(null);
-			mLoadMore.setVisibility(View.GONE);
 			
 			// show the search indicator
 			// do the search
@@ -125,19 +116,33 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 			mResultsDisplayed = false;
 			mSearching = true;
 			mSearchTerm = searchTerm;
-			if(isContinue) {
-			    continueSearch(searchTerm, searchHandler(searchTerm), mNexeIndex);
-			} else {
-			    initiateSearch(searchTerm, searchHandler(searchTerm));
-			}
+			initiateSearch(searchTerm, searchHandler(searchTerm));
 		}
 	}
 	
+	private void doContinueSearch() {
+		mLoadMore.setEnabled(false);
+		mLoadMore.setTitle(LOADING);
+		
+		final SearchResults<ResultItem> currentSearchResults = mSearchResults;		
+		continueSearch(currentSearchResults, new Handler() {
+			public void handleMessage(Message msg) {
+				if(currentSearchResults == mSearchResults) {
+					mLoadMore.setEnabled(true);
+					mLoadMore.setTitle(LOAD_MORE);
+					showSummaryView();
+					if(!mSearchResults.isPartialResult()) {
+						mSearchListView.removeFooterView(mLoadMore);
+					} 
+				}
+			}
+		});
+	}
 	
 	@Override
 	public void onNewIntent(Intent newIntent) {
 		super.onNewIntent(newIntent);
-		doSearch(newIntent, false);
+		doSearch(newIntent);
 	}
 	
 	@Override
@@ -149,20 +154,34 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		mSearchListView = (ListView) findViewById(R.id.searchResultsList);
 		mSearchResultsHeader = (SearchResultsHeader) findViewById(R.id.searchResultsSummaryView);
 		mLoadingView = (FullScreenLoader) findViewById(R.id.searchResultsLoading);
-		mLoadMore = (TwoLineActionRow) findViewById(R.id.loadMore);
-		mLoadMore.setTitle("Load more...");
+		mLoadMore = new TwoLineActionRow(this);
+		mLoadMore.setTitle(LOAD_MORE);
 		
-		doSearch(getIntent(), false);
+		mSearchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(view == mLoadMore) {
+					doContinueSearch();
+				} else {
+					@SuppressWarnings("unchecked")
+					ResultItem item = (ResultItem) parent.getItemAtPosition(position);
+					SearchActivity.this.onItemSelected(mSearchResults, item);
+				}
+			}
+		});
+		
+		doSearch(getIntent());
 	}
 	
-	private void showSummaryView(String searchTerm, int resultsCount, boolean isPartial, Integer totalResults) {
+	private void showSummaryView() {
 		String summaryText;
+		int resultsCount = mSearchResults.getResultsList().size();
 		if(resultsCount == 0) {
-			summaryText = "No matches for \"" + searchTerm + "\"";
+			summaryText = "No matches for \"" + mSearchTerm + "\"";
 		} else if(resultsCount == 1) {
-			summaryText = "1 match for \""  + searchTerm + "\"";
-		} else if(!isPartial) {
-			summaryText = resultsCount + " " + searchItemPlural() + " matching \""  + searchTerm + "\"";
+			summaryText = "1 match for \""  + mSearchTerm + "\"";
+		} else if(!mSearchResults.isPartialResult()) {
+			summaryText = resultsCount + " " + searchItemPlural() + " matching \""  + mSearchTerm + "\"";
 		} else {
 			summaryText = "Many " + searchItemPlural() + " found showing " + resultsCount;
 		}
@@ -189,6 +208,16 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		return false;
 	}
 	
+	
+	protected SearchResults<ResultItem> getSearchResults() {
+		return mSearchResults;
+	}
+	
+	
+	protected ListView getListView() {
+		return mSearchListView;
+	}
+	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) { }
 	
@@ -196,9 +225,13 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	
 	abstract protected String searchItemSingular();
 	
-	abstract protected boolean  supportsMoreResult();
+	protected boolean supportsMoreResult() {
+		return false;
+	}
 	
-	abstract protected void  continueSearch(String searchTerm, Handler uiHandler, int nextIndex);
+	protected void continueSearch(SearchResults<ResultItem> previousResults, Handler uiHandler) {}
+	
+	abstract protected void onItemSelected(SearchResults<ResultItem> results, ResultItem item);
 	
 	
 }

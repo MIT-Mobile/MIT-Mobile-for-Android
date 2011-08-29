@@ -31,17 +31,8 @@ public class BookDetailView implements SliderInterface {
         mDetailYear = (TwoLineActionRow) mView.findViewById(R.id.bookDetailYear);
         
         mDetailTitle.setTitle(mBookItem.title);
-        StringBuilder builder = new StringBuilder();
-        for(String author : mBookItem.author) {
-            builder.append(author + ", ");
-        }
-        mDetailAuthor.setTitle(builder.toString());
-
-        StringBuilder builder2 = new StringBuilder();
-        for(String year : mBookItem.year) {
-            builder2.append(year + ", ");
-        }
-        mDetailYear.setTitle(builder2.toString());
+        mDetailAuthor.setTitle(mBookItem.getAuthorsDisplayString());
+        mDetailYear.setTitle(mBookItem.getYearsDisplayString());
     }
     
     

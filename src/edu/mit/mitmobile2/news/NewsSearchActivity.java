@@ -26,21 +26,8 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 	
 	@Override
 	protected ArrayAdapter<NewsItem> getListAdapter(final SearchResults<NewsItem> results) {
-		List<NewsItem> newsItems = results.getResultsList();
-
-		mSearchListView.setOnItemClickListener(
-			new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parentView, View view, int position, long id) {
-					Intent intent = new Intent(NewsSearchActivity.this, NewsDetailsActivity.class);
-					intent.putExtra(NewsDetailsActivity.KEY_POSITION, position);
-					intent.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, results.getSearchTerm());
-					startActivity(intent);
-				}
-			}
-		);
-		
-		return new NewsArrayAdapter(this, 0, newsItems, new NewsModel(this), mSearchListView);
+		List<NewsItem> newsItems = results.getResultsList();		
+		return new NewsArrayAdapter(this, 0, newsItems, new NewsModel(this), getListView());
 	}
 
 	@Override
@@ -69,12 +56,16 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 	}
 
     @Override
-    protected void continueSearch(String searchTerm, Handler uiHandler, int nextIndex) {
-        
-    }
-
-    @Override
     protected boolean supportsMoreResult() {
         return false;
     }
+
+	@Override
+	protected void onItemSelected(SearchResults<NewsItem> results, NewsItem item) {
+		Intent intent = new Intent(NewsSearchActivity.this, NewsDetailsActivity.class);
+		intent.putExtra(NewsDetailsActivity.KEY_POSITION, results.getItemPosition(item));
+		intent.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, results.getSearchTerm());
+		startActivity(intent);
+		
+	}
 }
