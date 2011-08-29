@@ -71,39 +71,19 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dividerHeight" />
         
-    <edu.mit.mitmobile2.TwoLineActionRow
-        android:id="@+id/libraryMobileToolsRow"
+    <LinearLayout
+        android:background="@color/rowBackground"
+        android:id="@+id/libraryMainLinearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Mobile tools for library research" 
-        android:src="@drawable/action_external" />
+        android:orientation="vertical"
+        android:visibility="gone" />   
         
-    <edu.mit.mitmobile2.DividerView
+    <edu.mit.mitmobile2.FullScreenLoader
+        android:id="@+id/linkLoading"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/dividerHeight" />
-        
-    <edu.mit.mitmobile2.TwoLineActionRow
-        android:id="@+id/libraryMobileNewsRow"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="MIT Libraries News" 
-        android:src="@drawable/action_external" />
-        
-    <edu.mit.mitmobile2.DividerView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dividerHeight" />
-        
-    <edu.mit.mitmobile2.TwoLineActionRow
-        android:id="@+id/libraryFullWebsiteRow"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Full MIT Libraries website" 
-        android:src="@drawable/action_external" />
-        
-    <edu.mit.mitmobile2.DividerView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dividerHeight" />
-    	
-    
+        android:layout_height="200dp"
+        android:visibility="gone" />
+
         
 </LinearLayout>
