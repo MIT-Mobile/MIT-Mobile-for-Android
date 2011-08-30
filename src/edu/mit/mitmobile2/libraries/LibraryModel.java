@@ -10,15 +10,13 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Handler;
-import edu.mit.mitmobile2.FixedCache;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
-import edu.mit.mitmobile2.objs.SearchResults;
 
 public class LibraryModel {
     public static String MODULE_LIBRARY = "libraries";
-    private static HashMap<String, SearchResults<BookItem>> searchCache = new FixedCache<SearchResults<BookItem>>(10);
+//    private static HashMap<String, SearchResults<BookItem>> searchCache = new FixedCache<SearchResults<BookItem>>(10);
     
     public static void fetchLocationsAndHours(final Context context, final Handler uiHandler) {
 
@@ -133,6 +131,32 @@ public class LibraryModel {
                 ArrayList<LinkItem> links = LibraryParser.parseLinks(array);
 
                 MobileWebApi.sendSuccessMessage(uiHandler, links);
+            }
+        });
+    }
+    
+    
+    public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status, 
+            String department, String subject, String description) {
+        
+        HashMap<String, String> searchParameters = new HashMap<String, String>();
+        searchParameters.put("command", "sendAskUsEmail");
+        searchParameters.put("topic", topic);
+        searchParameters.put("status", status);
+        searchParameters.put("department", department);
+        searchParameters.put("subject", subject);
+        searchParameters.put("description", description);
+        searchParameters.put("module", MODULE_LIBRARY);
+
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+        webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
+            @Override
+            public void onResponse(JSONArray array) {
             }
         });
     }

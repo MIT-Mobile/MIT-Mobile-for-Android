@@ -1,0 +1,25 @@
+<resources>
+    <string-array
+        name="topics">
+        <item>Select a topic area</item>
+        <item>Art, Architecture &amp; Planning</item>
+        <item>Engineering &amp; Computer Science</item>
+        <item>Humanities</item>
+        <item>Management &amp; Business</item>
+        <item>Science</item>
+        <item>Social Sciences</item>
+        <item>General</item>
+        <item>Circulation</item>
+        <item>Technical Help</item>
+    </string-array>
+    <string-array
+        name="status">
+        <item>Your status</item>
+        <item>UG</item>
+        <item>GRAD</item>
+        <item>FAC</item>
+        <item>RS</item>
+        <item>STAFF</item>
+        <item>VS</item>
+    </string-array>
+</resources>

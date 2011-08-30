@@ -245,6 +245,7 @@
         <activity android:name=".libraries.LibraryLocationAndHour"></activity>
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
         <activity android:name=".libraries.BookDetailActivity"></activity>
+        <activity android:name=".libraries.AskUsActivity"></activity>
 </application>
 
  		
