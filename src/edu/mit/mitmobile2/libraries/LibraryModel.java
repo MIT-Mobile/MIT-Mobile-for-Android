@@ -16,8 +16,10 @@ import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 
 public class LibraryModel {
     public static String MODULE_LIBRARY = "libraries";
-//    private static HashMap<String, SearchResults<BookItem>> searchCache = new FixedCache<SearchResults<BookItem>>(10);
-    
+
+    // private static HashMap<String, SearchResults<BookItem>> searchCache = new
+    // FixedCache<SearchResults<BookItem>>(10);
+
     public static void fetchLocationsAndHours(final Context context, final Handler uiHandler) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
@@ -39,9 +41,7 @@ public class LibraryModel {
             }
         });
     }
-    
-    
-    
+
     public static void fetchLibraryDetail(final LibraryItem libraryItem, final Context context, final Handler uiHandler) {
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("module", MODULE_LIBRARY);
@@ -57,62 +57,61 @@ public class LibraryModel {
             @Override
             public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
                 LibraryParser.parseLibraryDetail(object, libraryItem);
-                
+
                 MobileWebApi.sendSuccessMessage(uiHandler, null);
             }
         });
     }
-    
-    public static void searchBooks(final String searchTerm, final LibrarySearchResults previousResults, final Context context, final Handler uiHandler) {
-//        if (searchCache.containsKey(searchTerm)) {
-//            MobileWebApi.sendSuccessMessage(uiHandler, searchCache.get(searchTerm));
-//            return;
-//        }
-        
+
+    public static void searchBooks(final String searchTerm, final LibrarySearchResults previousResults,
+            final Context context, final Handler uiHandler) {
+        // if (searchCache.containsKey(searchTerm)) {
+        // MobileWebApi.sendSuccessMessage(uiHandler, searchCache.get(searchTerm));
+        // return;
+        // }
+
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "search");
         searchParameters.put("module", MODULE_LIBRARY);
         searchParameters.put("q", searchTerm);
-        if(previousResults != null) {
+        if (previousResults != null) {
             searchParameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
         }
-        
+
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
-            new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
-            
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
             @Override
             public void onResponse(JSONObject object) throws JSONException {
                 List<BookItem> books = LibraryParser.parseBooks(object.getJSONArray("items"));
-                
+
                 LibrarySearchResults searchResults;
-                if(previousResults == null) {
-                	searchResults = new LibrarySearchResults(searchTerm, books);
+                if (previousResults == null) {
+                    searchResults = new LibrarySearchResults(searchTerm, books);
                 } else {
-                	searchResults = previousResults;
-                	searchResults.addMoreResults(books);
+                    searchResults = previousResults;
+                    searchResults.addMoreResults(books);
                 }
-                
-             
-                if(object.has("nextIndex")) {
-                	searchResults.setNextIndex(object.getInt("nextIndex"));
-                	searchResults.markAsPartialWithUnknownTotal();                        
+
+                if (object.has("nextIndex")) {
+                    searchResults.setNextIndex(object.getInt("nextIndex"));
+                    searchResults.markAsPartialWithUnknownTotal();
                 } else {
-                	searchResults.setNextIndex(null);
-                	searchResults.markAsComplete();
+                    searchResults.setNextIndex(null);
+                    searchResults.markAsComplete();
                 }
-                    
-                //searchCache.put(searchTerm, searchResults);    
-                MobileWebApi.sendSuccessMessage(uiHandler, searchResults);                              
+
+                // searchCache.put(searchTerm, searchResults);
+                MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
             }
         });
-        
-        
+
     }
-    
-    
+
     public static void fetchLinks(final Context context, final Handler uiHandler) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
@@ -134,31 +133,35 @@ public class LibraryModel {
             }
         });
     }
-    
-    
-    public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status, 
-            String department, String subject, String description) {
-        
+
+    public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
+            String department, String subject, String question, String description, String askType) {
+
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "sendAskUsEmail");
         searchParameters.put("topic", topic);
         searchParameters.put("status", status);
         searchParameters.put("department", department);
         searchParameters.put("subject", subject);
+        searchParameters.put("question", question);
         searchParameters.put("description", description);
+        searchParameters.put("ask type", askType);
         searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
+        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
             @Override
-            public void onResponse(JSONArray array) {
+            public void onResponse(JSONObject object) throws JSONException {
+                if (object.has("success") && object.getBoolean("success")) {
+                    MobileWebApi.sendSuccessMessage(uiHandler, object.getJSONObject("results").getString("contents"));
+                }
             }
         });
     }
-    
+
 }

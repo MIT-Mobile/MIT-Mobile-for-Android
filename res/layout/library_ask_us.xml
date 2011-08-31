@@ -5,13 +5,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/rowBackground">
-    
     <edu.mit.mitmobile2.TitleBar
         android:text="Ask Us"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-        
     <edu.mit.mitmobile2.LockingScrollView
+        android:id="@+id/scrollView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true">
@@ -35,6 +34,14 @@
             <EditText
                 android:id="@+id/subject"
                 android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="Question:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/question"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
             <TextView
@@ -79,4 +86,17 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </edu.mit.mitmobile2.LockingScrollView>
+    
+    <TextView
+        android:id="@+id/emailContent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:visibility="gone"/>
+        
+        
+    <edu.mit.mitmobile2.FullScreenLoader
+        android:id="@+id/askUsLoading"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
 </LinearLayout>
