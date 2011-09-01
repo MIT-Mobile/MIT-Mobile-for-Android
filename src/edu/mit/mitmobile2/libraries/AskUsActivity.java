@@ -1,15 +1,19 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.Arrays;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -18,9 +22,10 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SimpleSpinnerAdapter;
 
 public class AskUsActivity extends ModuleActivity {
-
+	
     private Spinner mTopicSpinner;
     private Spinner mStatusSpinner;
 
@@ -61,55 +66,70 @@ public class AskUsActivity extends ModuleActivity {
         mEmailText = (TextView) findViewById(R.id.emailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
         
-        topicsArray = getResources().getStringArray(R.array.topics);
-        statusArray = getResources().getStringArray(R.array.status);
-        
-        ArrayAdapter<String> topicAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        for (String item : topicsArray) {
-            topicAdapter.add(item);
-        }
+        topicsArray = getResources().getStringArray(R.array.libraryTopics);
+        String topicsTitle = getResources().getString(R.string.libraryTopicsTitle);
+        SpinnerAdapter topicAdapter = new SimpleSpinnerAdapter(this, topicsTitle, Arrays.asList(topicsArray));
         mTopicSpinner.setAdapter(topicAdapter);
+        mTopicSpinner.setPrompt(topicsTitle);
+
         
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        for (String item : statusArray) {
-            statusAdapter.add(item);
-        }
+        statusArray = getResources().getStringArray(R.array.libraryStatus);
+        String statusTitle = getResources().getString(R.string.libraryStatusTitle);
+        SpinnerAdapter statusAdapter = new SimpleSpinnerAdapter(this, statusTitle, Arrays.asList(statusArray));
         mStatusSpinner.setAdapter(statusAdapter);
+        mStatusSpinner.setPrompt(statusTitle);
         
         mSubmitButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                int position = mTopicSpinner.getSelectedItemPosition();
+            	InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            	imm.hideSoftInputFromWindow(mSubmitButton.getWindowToken(), 0);
+            	
+                int position = mTopicSpinner.getSelectedItemPosition()-1;
                 String topic = null;
-                if (position <= 0) {
+                if (position < 0) {
+                	mScrollView.smoothScrollTo(0, mTopicSpinner.getTop());
+                	mTopicSpinner.performClick();
                     prompt("Please select a topic!");
+                    return;
                 } else {
                     topic = topicsArray[position];
                 }
                 
-                String subject = mSubjectText.getText().toString();
+                String subject = mSubjectText.getText().toString().trim();
                 if("".equals(subject)) {
+                	mSubjectText.requestFocus();
                     prompt("Subject is required!");
-                    mSubjectText.requestFocus();
                     return;
                 }
 
-                String question = mQuestionText.getText().toString();
+                String question = mQuestionText.getText().toString().trim();
                 if("".equals(question)) {
+                	mQuestionText.requestFocus();
                     prompt("Question is required!");
                     return;
                 }
                 
-                String description = mDetailText.getText().toString();
+                String description = mDetailText.getText().toString().trim();
                 if("".equals(description)) {
+                	mDetailText.requestFocus();
                     prompt("Description is required!");
                     return;
                 }
                 
-                position = mStatusSpinner.getSelectedItemPosition();
+                String phone = mPhoneText.getText().toString().trim();
+                if("".equals(phone)) {
+                	mPhoneText.requestFocus();
+                	prompt("Phone number is required!");
+                	return;
+                }
+                
+                position = mStatusSpinner.getSelectedItemPosition()-1;
                 String status = null;
-                if (position <= 0) {
+                if (position < 0) {
+                	mScrollView.smoothScrollTo(0, mStatusSpinner.getTop());
+                	mStatusSpinner.performClick();
                     prompt("Please select a status!");
                     return;
                 } else {
@@ -118,6 +138,7 @@ public class AskUsActivity extends ModuleActivity {
                 
                 String department = mDepartmentText.getText().toString();
                 if("".equals(department)) {
+                	mDepartmentText.requestFocus();
                     prompt("Department is required!");
                     return;
                 }

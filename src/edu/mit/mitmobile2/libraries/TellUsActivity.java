@@ -1,15 +1,19 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.Arrays;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -18,6 +22,7 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SimpleSpinnerAdapter;
 
 public class TellUsActivity extends ModuleActivity {
     
@@ -45,25 +50,26 @@ public class TellUsActivity extends ModuleActivity {
         mEmailText = (TextView) findViewById(R.id.emailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
         
-        statusArray = getResources().getStringArray(R.array.status);
-        
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        for (String item : statusArray) {
-            statusAdapter.add(item);
-        }
+        statusArray = getResources().getStringArray(R.array.libraryStatus);
+        String statusTitle = getResources().getString(R.string.libraryStatusTitle);
+        SpinnerAdapter statusAdapter = new SimpleSpinnerAdapter(this, statusTitle, Arrays.asList(statusArray));
         mStatusSpinner.setAdapter(statusAdapter);
+        mStatusSpinner.setPrompt(statusTitle);
         
         mSubmitButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                int position = mStatusSpinner.getSelectedItemPosition();
+            	InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            	imm.hideSoftInputFromWindow(mSubmitButton.getWindowToken(), 0);
+            	
+                int position = mStatusSpinner.getSelectedItemPosition()-1;
                 String status = null;
-                if(position >= 1) {
+                if(position >= 0) {
                     status = statusArray[position];
                 }
                 
-                String feedback = mFeedbackText.getText().toString();
+                String feedback = mFeedbackText.getText().toString().trim();
                 if("".equals(feedback)) {
                     Toast.makeText(TellUsActivity.this, "Department is required!", Toast.LENGTH_LONG).show();
                     return;

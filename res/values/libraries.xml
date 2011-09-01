@@ -1,7 +1,6 @@
 <resources>
-    <string-array
-        name="topics">
-        <item>Select a topic area</item>
+	<string name="libraryTopicsTitle">Select a topic area</string>
+    <string-array name="libraryTopics">
         <item>Art, Architecture &amp; Planning</item>
         <item>Engineering &amp; Computer Science</item>
         <item>Humanities</item>
@@ -12,9 +11,8 @@
         <item>Circulation</item>
         <item>Technical Help</item>
     </string-array>
-    <string-array
-        name="status">
-        <item>Your status</item>
+    <string name="libraryStatusTitle">Your status</string>
+    <string-array name="libraryStatus">
         <item>UG</item>
         <item>GRAD</item>
         <item>FAC</item>
