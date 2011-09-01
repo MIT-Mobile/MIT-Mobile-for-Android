@@ -22,14 +22,14 @@ public class LibraryModel {
 
     public static void fetchLocationsAndHours(final Context context, final Handler uiHandler) {
 
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "locations");
-        searchParameters.put("module", MODULE_LIBRARY);
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("command", "locations");
+        parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
+        webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -43,15 +43,15 @@ public class LibraryModel {
     }
 
     public static void fetchLibraryDetail(final LibraryItem libraryItem, final Context context, final Handler uiHandler) {
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("module", MODULE_LIBRARY);
-        searchParameters.put("command", "locationDetail");
-        searchParameters.put("library", libraryItem.library);
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("module", MODULE_LIBRARY);
+        parameters.put("command", "locationDetail");
+        parameters.put("library", libraryItem.library);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
             @Override
@@ -65,23 +65,19 @@ public class LibraryModel {
 
     public static void searchBooks(final String searchTerm, final LibrarySearchResults previousResults,
             final Context context, final Handler uiHandler) {
-        // if (searchCache.containsKey(searchTerm)) {
-        // MobileWebApi.sendSuccessMessage(uiHandler, searchCache.get(searchTerm));
-        // return;
-        // }
 
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "search");
-        searchParameters.put("module", MODULE_LIBRARY);
-        searchParameters.put("q", searchTerm);
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("command", "search");
+        parameters.put("module", MODULE_LIBRARY);
+        parameters.put("q", searchTerm);
         if (previousResults != null) {
-            searchParameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
+            parameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
         }
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -114,14 +110,14 @@ public class LibraryModel {
 
     public static void fetchLinks(final Context context, final Handler uiHandler) {
 
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "links");
-        searchParameters.put("module", MODULE_LIBRARY);
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("command", "links");
+        parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
+        webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -145,7 +141,7 @@ public class LibraryModel {
         searchParameters.put("subject", subject);
         searchParameters.put("question", question);
         searchParameters.put("description", description);
-        searchParameters.put("ask type", askType);
+        searchParameters.put("ask_type", askType);
         searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
