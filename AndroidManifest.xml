@@ -246,6 +246,7 @@
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
         <activity android:name=".libraries.BookDetailActivity"></activity>
         <activity android:name=".libraries.AskUsActivity"></activity>
+        <activity android:name=".libraries.TellUsActivity"></activity>
 </application>
 
  		

@@ -163,5 +163,31 @@ public class LibraryModel {
             }
         });
     }
+    
+    public static void sendTellUsInfo(final Context context, final Handler uiHandler, String status,String feedback) {
+        
+        HashMap<String, String> searchParameters = new HashMap<String, String>();
+        searchParameters.put("command", "sendTellUsEmail");
+        if(status != null && !"".equals(status)) {
+            searchParameters.put("status", status);
+        }
+        searchParameters.put("feedback", feedback);
+        searchParameters.put("module", MODULE_LIBRARY);
+        
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+            
+            @Override
+            public void onResponse(JSONObject object) throws JSONException {
+                if (object.has("success") && object.getBoolean("success")) {
+                    MobileWebApi.sendSuccessMessage(uiHandler, object.getJSONObject("results").getString("contents"));
+                }
+            }
+        });
+    }
 
 }
