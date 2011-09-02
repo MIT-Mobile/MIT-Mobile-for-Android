@@ -66,7 +66,8 @@ public class TellUsActivity extends ModuleActivity {
                 int position = mStatusSpinner.getSelectedItemPosition()-1;
                 String status = null;
                 if(position >= 0) {
-                    status = statusArray[position];
+                    String[] statusCodeArray = getResources().getStringArray(R.array.libraryStatusCode);
+                    status = statusCodeArray[position];
                 }
                 
                 String feedback = mFeedbackText.getText().toString().trim();
