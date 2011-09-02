@@ -13,6 +13,14 @@
     </string-array>
     <string name="libraryStatusTitle">Your status</string>
     <string-array name="libraryStatus">
+		<item>MIT Undergrad Student</item>
+		<item>MIT Grad Student</item>
+		<item>MIT Faculty</item>
+		<item>MIT Research Staff</item>
+		<item>MIT Staff</item>
+		<item>MIT Visitor</item>
+    </string-array>
+    <string-array name="libraryStatusCode">
         <item>UG</item>
         <item>GRAD</item>
         <item>FAC</item>
