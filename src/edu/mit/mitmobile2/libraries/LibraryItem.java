@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.libraries;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class LibraryItem {
     public String library;
@@ -24,9 +23,13 @@ public class LibraryItem {
     public static class Schedule {
         public Date range_start;
         public Date range_end;
-        public Map<String, String> hours;
+        public List<Hours> hours;
         public String name;
         public String termday;
     }
 
+    public static class Hours {
+    	public String title;
+    	public String description;
+    }
 }

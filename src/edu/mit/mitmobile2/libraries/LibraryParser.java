@@ -2,9 +2,7 @@ package edu.mit.mitmobile2.libraries;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +10,7 @@ import org.json.JSONObject;
 
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
+import edu.mit.mitmobile2.libraries.LibraryItem.Hours;
 import edu.mit.mitmobile2.libraries.LibraryItem.Schedule;
 
 public class LibraryParser {
@@ -66,25 +65,16 @@ public class LibraryParser {
             schedule.termday = object.getString("termday");
         }
         
-        JSONObject hourObject = object.getJSONObject("hours");
-        JSONArray names = hourObject.names();
-        
-        Map<String, String> map = new LinkedHashMap<String, String>();
-        for(int index = 0; index < names.length(); index++) {
-            String key = names.getString(index);
-            map.put(key, hourObject.getString(key));
-            
+        JSONArray hoursArray = object.getJSONArray("hours");
+        ArrayList<Hours> hoursList = new ArrayList<Hours>();
+        for(int index=0; index < hoursArray.length(); index++) {
+        	JSONObject hoursJson = hoursArray.getJSONObject(index);
+        	Hours hours = new Hours();
+        	hours.title = hoursJson.getString("title");
+        	hours.description = hoursJson.getString("description");
+        	hoursList.add(hours);
         }
-        
-        //both JSONObject.names() and JSONObject.hourObject.keys() return data in hash order
-        //So, here I reorder the data manually.
-        if(map.containsKey("Closed")) {
-            String value = map.remove("Closed");
-            map.put("Closed", value);
-        }
-        
-        schedule.hours = map;
-        
+        schedule.hours = hoursList;
         return schedule;
     }
     

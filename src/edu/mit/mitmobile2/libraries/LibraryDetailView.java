@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryItem.Hours;
 
 public class LibraryDetailView implements SliderInterface {
 
@@ -153,11 +154,10 @@ public class LibraryDetailView implements SliderInterface {
  
         builder.append(bold(hoursTitle.trim() + "\n"));
     	
-        for (String key : mLibraryItem.currentTerm.hours.keySet()) {
-        	String aDetailLine = key + " " + mLibraryItem.currentTerm.hours.get(key) + "\n";
+        for (Hours hours : mLibraryItem.currentTerm.hours) {
+        	String aDetailLine = hours.title + " " + hours.description + "\n";
         	builder.append(normal(aDetailLine));
-        }
-    	
+        }    	
     	return builder;
     	
     }

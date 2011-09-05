@@ -11,7 +11,6 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class BookDetailView implements SliderInterface {
 
-    private Activity mActivity;
     private BookItem mBookItem;
     private LockingScrollView mView;
     
@@ -20,7 +19,6 @@ public class BookDetailView implements SliderInterface {
     private TwoLineActionRow mDetailYear;
     
     public BookDetailView(Activity activity, BookItem bookItem) {
-        mActivity = activity;
         mBookItem = bookItem;
         
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
