@@ -58,6 +58,9 @@ public class EventsCategoryActivity extends ModuleActivity {
 			mTitleBar.setTitle("Categories");
 		} else {
 			EventCategoryItem categoryItem = EventsModel.getCategory(mCategoryId);
+			if(categoryItem == null) {
+			    finish();
+			}
 			
 			mTitleBar.setTitle(categoryItem.name);
 			

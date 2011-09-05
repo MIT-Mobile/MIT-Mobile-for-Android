@@ -133,6 +133,11 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
 		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
 		
 		RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);
+		
+		if(updatedRouteItem == null) {
+		    return;
+		}
+		
 		i.putExtra(MITMapActivity.KEY_HEADER_TITLE, updatedRouteItem.title);
 		String subtitle = updatedRouteItem.gpsActive ? GPS_ONLINE : GPS_OFFLINE;
 		i.putExtra(MITMapActivity.KEY_HEADER_SUBTITLE, subtitle);
