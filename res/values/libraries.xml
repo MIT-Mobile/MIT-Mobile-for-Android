@@ -28,4 +28,16 @@
         <item>STAFF</item>
         <item>VS</item>
     </string-array>
+    <string name="researchTopicTitle">Select a topic</string>
+    <string-array name="researchTopics">
+        <item>General</item>
+        <item>Art, Architecture Planning</item>
+        <item>Engineering &amp; Computer Science</item>
+        <item>GIS</item>
+        <item>Humanities</item>
+        <item>Management &amp; Business</item>
+        <item>Science</item>
+        <item>Social Sciences</item>
+        <item>Urban Planning</item>
+    </string-array>
 </resources>

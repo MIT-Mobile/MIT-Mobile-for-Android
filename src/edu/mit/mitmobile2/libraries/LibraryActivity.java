@@ -71,7 +71,7 @@ public class LibraryActivity extends ModuleActivity {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LibraryActivity.this, AskUsActivity.class));
+                startActivity(new Intent(LibraryActivity.this, AskUsTopActivity.class));
             }
         });
         tellUsRow.setOnClickListener(new OnClickListener() {

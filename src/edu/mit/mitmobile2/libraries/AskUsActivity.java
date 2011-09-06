@@ -133,8 +133,7 @@ public class AskUsActivity extends ModuleActivity {
                     prompt("Please select a status!");
                     return;
                 } else {
-                    String[] statusCodeArray = getResources().getStringArray(R.array.libraryStatus);
-                    status = statusCodeArray[position];
+                    status = statusArray[position];
                 }
                 
                 String department = mDepartmentText.getText().toString();
