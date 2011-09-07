@@ -190,23 +190,23 @@ public class LibraryModel {
             String timeframe, String information, String purpose, String course, String researchTopic, String status,
             String department, String phonenumber) {
 
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "sendAskUsEmail");
-        searchParameters.put("subject", topic);
-        searchParameters.put("timeframe", timeframe);
-        searchParameters.put("description", information);
-        searchParameters.put("why", purpose);
-        searchParameters.put("topic", researchTopic);
-        searchParameters.put("status", status);
-        searchParameters.put("department", department);
-        searchParameters.put("course", course);
-        searchParameters.put("ask_type", "consultation");
-        searchParameters.put("module", MODULE_LIBRARY);
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("command", "sendAskUsEmail");
+        parameters.put("subject", topic);
+        parameters.put("timeframe", timeframe);
+        parameters.put("description", information);
+        parameters.put("why", purpose);
+        parameters.put("topic", researchTopic);
+        parameters.put("status", status);
+        parameters.put("department", department);
+        parameters.put("course", course);
+        parameters.put("ask_type", "consultation");
+        parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
