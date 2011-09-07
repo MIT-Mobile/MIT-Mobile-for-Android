@@ -44,6 +44,7 @@ public class AppointmentActivity extends ModuleActivity {
     
     private String[] topicsArray;
     private String[] statusArray;
+    private String[] purposeArray;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +71,8 @@ public class AppointmentActivity extends ModuleActivity {
         mEmailText = (TextView) findViewById(R.id.appontmentEmailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.appointmentLoading);
         
-        topicsArray = getResources().getStringArray(R.array.researchTopics);
-        String topicTitle = getResources().getString(R.string.researchTopicTitle);
+        topicsArray = getResources().getStringArray(R.array.libraryResearchTopics);
+        String topicTitle = getResources().getString(R.string.libraryResearchTopicTitle);
         SpinnerAdapter topicsAdapter = new SimpleSpinnerAdapter(this, topicTitle, Arrays.asList(topicsArray));
         mTopicSpinner.setAdapter(topicsAdapter);
         mTopicSpinner.setPrompt(topicTitle);
@@ -82,6 +83,10 @@ public class AppointmentActivity extends ModuleActivity {
         SpinnerAdapter statusAdapter = new SimpleSpinnerAdapter(this, statusTitle, Arrays.asList(statusArray));
         mStatusSpinner.setAdapter(statusAdapter);
         mStatusSpinner.setPrompt(statusTitle);
+        
+        purposeArray = getResources().getStringArray(R.array.libraryResearchPurpose);
+        SpinnerAdapter purposeAdapter = new SimpleSpinnerAdapter(this, "", Arrays.asList(purposeArray));
+        mPurposeSpinner.setAdapter(purposeAdapter);
         
         mSubmitButton.setOnClickListener(new OnClickListener() {
 
@@ -106,9 +111,11 @@ public class AppointmentActivity extends ModuleActivity {
                   return;
               }
                 
-                int position = mPurposeSpinner.getSelectedItemPosition();
+                int position = mPurposeSpinner.getSelectedItemPosition()-1;
                 String purpose = "";
-                //TODO: get purpose;
+                if(position >= 0) {
+                	purpose = purposeArray[position];
+                }
                 
                 String course = mResearchCourse.getText().toString().trim();
                 
@@ -133,7 +140,8 @@ public class AppointmentActivity extends ModuleActivity {
                     prompt("Please select a status!");
                     return;
                 } else {
-                    status = statusArray[position];
+                	String[] statusCodeArray = getResources().getStringArray(R.array.libraryStatusCode);
+                    status = statusCodeArray[position];
                 }
                 
                 String department = mDepartment.getText().toString();
@@ -150,7 +158,7 @@ public class AppointmentActivity extends ModuleActivity {
                 mLoader.setVisibility(View.VISIBLE);
                 mLoader.showLoading();
                 
-                LibraryModel.sendAppointmentEmail(AppointmentActivity.this, uiHandler, topic, timeframe, information, purpose, course, researchTopic, status, department, phoneNumber, "consultation");
+                LibraryModel.sendAppointmentEmail(AppointmentActivity.this, uiHandler, topic, timeframe, information, purpose, course, researchTopic, status, department, phoneNumber);
             }
         });
         

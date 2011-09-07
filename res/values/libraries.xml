@@ -28,8 +28,8 @@
         <item>STAFF</item>
         <item>VS</item>
     </string-array>
-    <string name="researchTopicTitle">Select a topic</string>
-    <string-array name="researchTopics">
+    <string name="libraryResearchTopicTitle">Select a topic</string>
+    <string-array name="libraryResearchTopics">
         <item>General</item>
         <item>Art, Architecture Planning</item>
         <item>Engineering &amp; Computer Science</item>
@@ -39,5 +39,10 @@
         <item>Science</item>
         <item>Social Sciences</item>
         <item>Urban Planning</item>
+    </string-array>
+    <string-array name="libraryResearchPurpose">
+    	<item>Course</item>
+    	<item>Thesis</item>
+    	<item>Research</item>
     </string-array>
 </resources>

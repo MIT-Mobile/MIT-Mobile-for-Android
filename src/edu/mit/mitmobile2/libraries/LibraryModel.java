@@ -188,10 +188,9 @@ public class LibraryModel {
 
     public static void sendAppointmentEmail(final Context context, final Handler uiHandler, String topic,
             String timeframe, String information, String purpose, String course, String researchTopic, String status,
-            String department, String phonenumber, String askType) {
+            String department, String phonenumber) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
-        //TODO: what's the key for course?
         searchParameters.put("command", "sendAskUsEmail");
         searchParameters.put("subject", topic);
         searchParameters.put("timeframe", timeframe);
@@ -200,7 +199,8 @@ public class LibraryModel {
         searchParameters.put("topic", researchTopic);
         searchParameters.put("status", status);
         searchParameters.put("department", department);
-        searchParameters.put("ask_type", askType);
+        searchParameters.put("course", course);
+        searchParameters.put("ask_type", "consultation");
         searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
