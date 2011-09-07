@@ -87,6 +87,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         String problemType = Global.sharedData.getFacilitiesData().getProblemType(); 
         if(problemType == null) {
             finish();
+            return;
         }
         
         

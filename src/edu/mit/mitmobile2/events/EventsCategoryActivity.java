@@ -60,6 +60,7 @@ public class EventsCategoryActivity extends ModuleActivity {
 			EventCategoryItem categoryItem = EventsModel.getCategory(mCategoryId);
 			if(categoryItem == null) {
 			    finish();
+			    return;
 			}
 			
 			mTitleBar.setTitle(categoryItem.name);

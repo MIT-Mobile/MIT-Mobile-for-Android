@@ -47,10 +47,11 @@ public class TourSideTripActivity extends ModuleActivity {
 		String sidetripId = getIntent().getStringExtra(SIDETRIP_ID);
 		boolean isOnSite = getIntent().getBooleanExtra(IS_ON_SITE, true);
 		
+		if(TourModel.getTour() == null) {
+		    finish();   
+		    return;
+		}		
 		Site site = TourModel.getTour().getSite(siteGuid);
-		if(site == null) {
-		    finish();
-		}
 		
 		SideTrip sidetrip = site.getSideTrip(sidetripId, isOnSite);
 		

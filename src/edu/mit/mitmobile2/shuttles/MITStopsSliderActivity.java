@@ -54,6 +54,7 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
 		mStops = ShuttleModel.getRoute(routeId).stops;
 		if(mStops == null) {
 		    finish();
+		    return;
 		}
 		
 		last_pos = ShuttleModel.getStopPosition(mStops, stopId);
