@@ -17,9 +17,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 
@@ -40,10 +42,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
+import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TouchstonePrefsActivity;
+import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.facilities.FacilitiesActivity;
 import edu.mit.mitmobile2.news.NewsModel;
 import edu.mit.mitmobile2.objs.NewsItem;
@@ -78,7 +83,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 
 	URI uri = null;
 	String uriString = "";
-	public static String targetUrl = "https://stellar.mit.edu/atstellar";
+	//public static String targetUrl = "https://stellar.mit.edu/atstellar";
+	public static String targetUrl = "https://mobile-dev.mit.edu/api/index.php";
 	URI targetUri;
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstoneActivity";
@@ -96,13 +102,9 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
         Handler uiHandler = new Handler();
         
         mitClient = new MITClient(mContext);
-        // Create a local instance of cookie store
-        //CookieStore cookieStore = new BasicCookieStore();
 
         // Create local HTTP context
         HttpContext localContext = new BasicHttpContext();
-        // Bind custom cookie store to the local context
-        //localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
         
         // get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -117,38 +119,50 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
     		mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
         }
         else {   
-	        try {
-	        	responseString = mitClient.getResponse(targetUrl);
-//DEBUG
-//	        	MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
-//				HashMap<String, String> params = new HashMap<String, String>();
-//				api.requestRaw(targetUrl,params, new MobileWebApi.RawResponseListener(null,null) {
-//						@Override
-//						public void onResponse(InputStream stream) {
-//							String responseText = MobileWebApi.convertStreamToString(stream);
-//							Log.d(TAG,responseText);
-//						}
-//						
-//						@Override
-//						public void onError() {
-//							Log.d(TAG,"error");
-//						}
-//				});			
-//
-//	        	//DEBUG
-		    	createViews();
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,e.getMessage());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.d(TAG,e.getMessage());
-			}
+	        //responseString = mitClient.getResponse(targetUrl);
+
+//        	MITClient client = null;
+//        	HttpGet get = new HttpGet("https://mobile-dev.mit.edu/secure/api/index.php?module=libraries&command=loans");
+//        	HttpResponse resp = client.getResponse(get);
+//        	Log.d(TAG,responseContentToString(resp));
+        	
+        	//DEBUG
+			HashMap<String, String> params = new HashMap<String, String>();
+			params.put("module", "libraries");
+			params.put("command", "loans");
+
+        	MobileWebApi api = new MobileWebApi(false, true, "Libraries", mContext, uiHandler,HttpClientType.MIT);
+        	api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+	                new MobileWebApi.DefaultErrorListener(uiHandler),
+	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
+				@Override
+				public void onResponse(JSONObject obj) {
+
+					Log.d(TAG,"on response");
+					Log.d(TAG,"obj = " + obj);
+					try {
+						Log.d(TAG,"total = " + obj.getString("total"));
+						Log.d(TAG,"start = " + obj.getString("start"));
+						Log.d(TAG,"overdue = " + obj.getString("overdue"));
+					}
+					catch (JSONException e) {
+						Log.d(TAG,"JSONException = " + e.getMessage());
+					}
+				}
+
+				@Override
+				public void onError() {
+					// TODO Auto-generated method stub
+					super.onError();
+					Log.d(TAG,"on error: requestJSONObject");
+				}
+		});			
+
+        	//	        	//DEBUG
         }
 	}
 		
 	private void createViews() throws ClientProtocolException, IOException {
-		setContentView(R.layout.touchstone_main);
 		Log.d(TAG,"createViews()");
 		
 		webview = (WebView) findViewById(R.id.touchstoneWV);

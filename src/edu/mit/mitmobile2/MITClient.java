@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,13 +15,19 @@ import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectHandler;
@@ -110,28 +117,44 @@ public class MITClient extends DefaultHttpClient {
 		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 
+		
 		this.setRedirectHandler(new DefaultRedirectHandler() {
 			String host;
 			public URI getLocationURI(HttpResponse response, HttpContext context) {
-				
+				Log.d(TAG,"redirectHandler");
+								
 				Header[] locations = response.getHeaders("Location");
 				
 				if (locations.length > 0) {
 					Header location = locations[0];
 					String uriString = location.getValue();
-					//Log.d(TAG,"uriString from redirect = " + uriString);
+					Log.d(TAG,"uriString from redirect = " + uriString);
 					try {
 						uri = new URI(uriString);
 						host = uri.getHost();
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
-							//Log.d(TAG, "Redirect to WAYF detected");
-							//Log.d(TAG,"rawquery = " + uri.getRawQuery());
+							Log.d(TAG, "Redirect to WAYF detected");
+							Log.d(TAG,"rawquery = " + uri.getRawQuery());
 							state = WAYF_STATE;
+							Log.d(TAG,"state = " + state);
+							////////////////////////////////////////////////////////////
+							// DEBUG COOKIES
+							Header[] headers = response.getHeaders("Set-Cookie");
+							for (int h = 0; h < headers.length; h++) {
+								Header header = (Header)headers[h];
+								HeaderElement[] headerElements = header.getElements();
+								for (int e = 0; e < headerElements.length; e++) {
+									HeaderElement headerElement = headerElements[e];
+									Log.d(TAG,"Header Element " + e);
+									Log.d(TAG,"name = " + headerElement.getName());
+									Log.d(TAG,"value = " + headerElement.getValue());
+								}
+							}
+							/////////////////////////////////////////////////////////////
 						}
-						else if (host.equalsIgnoreCase(targetUri.getHost())) {
+						else {
 							state = OK_STATE;
 						}
-						//Log.d(TAG, "Redirect to '"+uri+"' detected");
 					} catch (URISyntaxException use) {
 						Log.e(TAG, "Invalid Location URI: "+uriString);
 					}
@@ -142,10 +165,10 @@ public class MITClient extends DefaultHttpClient {
 		});
 		
 		//this.addResponseInterceptor(new MITInterceptor());
+		//this.addRequestInterceptor(new MITRequestInterceptor());
 		
 	}
 
-	
 	public static String responseContentToString(HttpResponse response) {
 		try {
 		InputStream inputStream = response.getEntity().getContent();
@@ -166,46 +189,58 @@ public class MITClient extends DefaultHttpClient {
 		}
 	}
 
-	public String getResponse(String targetUrl) {
+	
+	public HttpResponse getResponse(HttpGet httpGet) {
+//		try {
+//			this.targetUri = new URI(targetUrl);
+//		}
+//		catch (URISyntaxException e) {
+//			Log.d(TAG,e.getMessage());
+//		}
+//		
+//		get = new HttpGet(targetUrl);
 		try {
-			this.targetUri = new URI(targetUrl);
-		}
-		catch (URISyntaxException e) {
-			Log.d(TAG,e.getMessage());
-		}
-		
-		get = new HttpGet(targetUrl);
-		try {
-			response = this.execute(get);
+			response = this.execute(httpGet);
 
 			responseEntity = response.getEntity();
 			if (state == OK_STATE) {
-				this.responseString = responseContentToString(response);				
+				Log.d(TAG,"ok state");
+				return response;
 			}
 			
 			if (state == WAYF_STATE ) {
+				Log.d(TAG,"wayf state");
 				wayf();
 			}
 				
 			if (state == IDP_STATE) {
+				Log.d(TAG,"idp state");
 				idp();
 			}			
 	
 			if (state == AUTH_STATE) {
+				Log.d(TAG,"auth state");
 				authState();
 			}
+		
+			if (state == OK_STATE) {
+				ok();
+				//return this.execute(httpGet);		
+			}
 			
-			return responseString;
+			//Log.d(TAG,"reponseString = " + responseContentToString(response));
+			return response;
 		}
 		catch (IOException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,"get response exception = " + e.getMessage());
 			return null;
 		}
 		
 	}
-	
+
 	private void wayf() {
 		Log.d(TAG, "wayf()");
+
 		Log.d(TAG,"post to wayf");
 		Log.d(TAG,"uri = " + uri);
 		post = new HttpPost();
@@ -252,23 +287,29 @@ public class MITClient extends DefaultHttpClient {
 			if (response.getStatusLine().getStatusCode() == 200 && !uri.getHost().equalsIgnoreCase("wayf.mit.edu")) {
 				state = IDP_STATE;
 			}
-	
-			responseString = responseContentToString(response);
+			else {
+				responseString = responseContentToString(response);
+			}
 			
+			//Log.d(TAG,"response string at end of wayf = " + responseString);
 			//Log.d(TAG,"state after WAYF post = " + state);
 		}
 		catch (IOException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,"WAYF error " + e.getMessage());
 		}
 	}
 
 	private void idp() {
+		Log.d(TAG,"idp");
 		Elements elements;
 		Element form;
 		
 		String formAction = "";
 	
 		// parse response string to html document
+		String responseString = responseContentToString(response);
+		
+		//Log.d(TAG,"response string in idp = " + responseString);
 		document = Jsoup.parse(responseString);
 	
 		// get form action
@@ -280,7 +321,7 @@ public class MITClient extends DefaultHttpClient {
 			if (tmpAction.contains("Username")) {
 				formAction = tmpAction;
 			}
-			//Log.d(TAG,"action " + e + " = " + formAction);
+			Log.d(TAG,"action " + e + " = " + formAction);
 		}
 				
 		post = new HttpPost();
@@ -292,7 +333,7 @@ public class MITClient extends DefaultHttpClient {
 		}
 		
 		post.setURI(uri);
-	
+		
 		// Add post data
 		List nameValuePairs = new ArrayList(2);
 		nameValuePairs.add(new BasicNameValuePair("j_username", user));
@@ -309,7 +350,6 @@ public class MITClient extends DefaultHttpClient {
 			//this.saveCookies();
 			if (response.getStatusLine().getStatusCode() == 200) {
 				state = AUTH_STATE;
-				responseString = responseContentToString(response);
 			}
 		}
 		catch (IOException e) {
@@ -318,6 +358,7 @@ public class MITClient extends DefaultHttpClient {
 	}
 	
 	private void authState() {
+		Log.d(TAG,"authState");
 		Elements elements;
 		Element form;
 		Element input;
@@ -327,6 +368,7 @@ public class MITClient extends DefaultHttpClient {
 		String TARGET = "";
 		
 		// parse response string to html document
+		String responseString = responseContentToString(response);
 		document = Jsoup.parse(responseString);
 	
 		// get form action
@@ -348,7 +390,8 @@ public class MITClient extends DefaultHttpClient {
 	
 		//Log.d(TAG,"formAction = " + formAction);
 		//Log.d(TAG,"SAMLResponse = " + SAMLResponse);
-	
+		Log.d(TAG,"debug cookies in auth_state");
+		debugCookies();
 		post = new HttpPost();
 		try {
 			uri = new URI(formAction);
@@ -375,12 +418,39 @@ public class MITClient extends DefaultHttpClient {
 			//this.saveCookies();
 			//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == 200) {
+				state = OK_STATE;
+				Log.d(TAG,"ok state");
+				ok();
 				responseString = responseContentToString(response);
+				Log.d(TAG,"response string from autstate = " + responseString);
 			}
 		}
 		catch (IOException e) {
 			Log.d(TAG,e.getMessage());
-		}		
+		}
+	}
+	
+	
+	// This method is a kludge. For some reason, the redirect is losing the module and command parameters even though they are visible in the shibstate cookie. For now, we'll use that cookie to redirect to the correct url
+	private void ok() {
+		List<Cookie> cookies = this.getCookieStore().getCookies();
+		Iterator<Cookie> c = cookies.iterator();
+		while (c.hasNext()) {
+			Cookie cookie = c.next();
+			String cookieName =  cookie.getName();
+			if (cookieName.contains("_shibstate")) {
+				String cookieValue = cookie.getValue();
+				Log.d(TAG,"go to " + cookieValue);
+				HttpGet httpGet = new HttpGet(URLDecoder.decode(cookieValue));
+				Log.d(TAG, "url from get = " + httpGet.getURI().toString());
+				try {
+					response = this.execute(httpGet);
+				}
+				catch (Exception e) {
+					Log.d(TAG,"execute httpGet exception = " + e.getMessage());
+				}
+			}
+		}
 	}
 	
 	public void debugCookies() {
@@ -418,6 +488,18 @@ public class MITClient extends DefaultHttpClient {
 //		}		
 //	}
 
+	class MITRequestInterceptor implements HttpRequestInterceptor {
+
+		@Override
+		public void process(HttpRequest arg0, HttpContext arg1)
+				throws HttpException, IOException {
+			// TODO Auto-generated method stub
+			Log.d(TAG,"request intercept");
+			Log.d(TAG,arg0.getRequestLine().getUri());
+		}
+		
+	}
+	
 	class MITInterceptor implements HttpResponseInterceptor {
 		
 		public MITInterceptor() {
