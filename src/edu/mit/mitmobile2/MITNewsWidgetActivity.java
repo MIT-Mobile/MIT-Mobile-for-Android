@@ -32,7 +32,11 @@ import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
+<<<<<<< HEAD
 import edu.mit.mitmobile2.libraries.LibraryModule;
+=======
+import edu.mit.mitmobile2.libraries.LibrariesModule;
+>>>>>>> touchstone
 import edu.mit.mitmobile2.maps.MapsModule;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
@@ -43,6 +47,7 @@ import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
+import edu.mit.mitmobile2.touchstone.TouchstoneModule;
 import edu.mit.mitmobile2.tour.TourModule;
 
 public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenceChangeListener {
@@ -216,7 +221,12 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new EmergencyModule(),
 			new FacilitiesModule(),
 			new QRReaderModule(),
+<<<<<<< HEAD
 			new LibraryModule()
+=======
+			new TouchstoneModule(),
+			new LibrariesModule(),
+>>>>>>> touchstone
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);
