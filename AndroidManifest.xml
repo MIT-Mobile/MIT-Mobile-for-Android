@@ -209,6 +209,9 @@
 		<activity android:name=".touchstone.TouchstoneActivity" />
 		<activity android:name=".touchstone.TouchstonePrefsActivity"></activity>
 
+		<!-- LIBRARIES -->
+		<activity android:name=".libraries.LibrariesActivity" />
+
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
 		<activity android:name=".about.AboutCreditsActivity" />
