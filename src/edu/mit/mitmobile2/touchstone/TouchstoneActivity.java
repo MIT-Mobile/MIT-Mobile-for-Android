@@ -47,7 +47,6 @@ import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TouchstonePrefsActivity;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.facilities.FacilitiesActivity;
 import edu.mit.mitmobile2.news.NewsModel;

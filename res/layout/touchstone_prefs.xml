@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/touchstonePrefsLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Touchstone Preferences"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+
+      				<TextView
+	            		android:layout_width="wrap_content"
+	            		android:layout_height="wrap_content"
+	            		android:layout_centerVertical="true"
+	            		android:layout_alignParentLeft="true"
+	            		android:paddingRight="6dip"
+	            		android:text="User Name:"
+	            		android:id="@+id/touchstoneUserNameLabel"
+	            		style="@style/ContentTitle" />
+	            		
+	            	<EditText 
+						android:id="@+id/touchstoneUsername"
+						android:layout_width="fill_parent"
+            			android:layout_alignParentLeft="true"
+            			android:singleLine="true" 
+            			android:gravity="left"
+            			android:lines="1"
+            			android:hint="username (required)"
+            		android:layout_height="wrap_content"/>
+           		
+      				<TextView
+	            		android:layout_width="wrap_content"
+	            		android:layout_height="wrap_content"
+	            		android:layout_centerVertical="true"
+	            		android:layout_alignParentLeft="true"
+	            		android:paddingRight="6dip"
+	            		android:text="Password:"
+	            		android:id="@+id/touchstonePasswordLabel"
+	            		style="@style/ContentTitle" />
+
+	            	<EditText 
+						android:id="@+id/touchstonePassword"
+						android:layout_width="fill_parent"
+            			android:layout_alignParentLeft="true"
+            			android:singleLine="true" 
+            			android:gravity="left"
+            			android:lines="1"
+            			android:hint="password (required)"
+            		android:layout_height="wrap_content"/>
+
+    	
+					<Button 
+						android:layout_height="wrap_content" 
+						android:id="@+id/touchstoneSaveButton" 
+						android:text="Save" 
+						android:layout_width="fill_parent" 
+						android:layout_alignParentLeft="true">
+					</Button>
+					
+					<Button 
+						android:layout_height="wrap_content" 
+						android:id="@+id/touchstoneCancelButton" 
+						android:text="Cancel" 
+						android:layout_width="fill_parent" 
+						android:layout_alignParentLeft="true">
+					</Button>
+    
+</LinearLayout>
+
+

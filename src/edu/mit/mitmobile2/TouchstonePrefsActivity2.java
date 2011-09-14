@@ -6,7 +6,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
-public class TouchstonePrefsActivity extends PreferenceActivity {
+public class TouchstonePrefsActivity2 extends PreferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

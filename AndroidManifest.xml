@@ -207,7 +207,7 @@
 
 		<!-- TOUCHSTONE -->
 		<activity android:name=".touchstone.TouchstoneActivity" />
-		<activity android:name=".TouchstonePrefsActivity"></activity>
+		<activity android:name=".touchstone.TouchstonePrefsActivity"></activity>
 
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />

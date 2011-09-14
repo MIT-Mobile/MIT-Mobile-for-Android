@@ -108,9 +108,6 @@ public class MITClient extends DefaultHttpClient {
 		}
 
 		this.setCookieStore(this.cookieStore);
-
-		//Log.d(TAG,"after setting cookie store");
-		//Log.d(TAG,"cookieStore = " + this.cookieStore);
 		
 		// get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -121,35 +118,35 @@ public class MITClient extends DefaultHttpClient {
 		this.setRedirectHandler(new DefaultRedirectHandler() {
 			String host;
 			public URI getLocationURI(HttpResponse response, HttpContext context) {
-				Log.d(TAG,"redirectHandler");
+				//Log.d(TAG,"redirectHandler");
 								
 				Header[] locations = response.getHeaders("Location");
 				
 				if (locations.length > 0) {
 					Header location = locations[0];
 					String uriString = location.getValue();
-					Log.d(TAG,"uriString from redirect = " + uriString);
+					//Log.d(TAG,"uriString from redirect = " + uriString);
 					try {
 						uri = new URI(uriString);
 						host = uri.getHost();
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
-							Log.d(TAG, "Redirect to WAYF detected");
-							Log.d(TAG,"rawquery = " + uri.getRawQuery());
+							//Log.d(TAG, "Redirect to WAYF detected");
+							//Log.d(TAG,"rawquery = " + uri.getRawQuery());
 							state = WAYF_STATE;
 							Log.d(TAG,"state = " + state);
 							////////////////////////////////////////////////////////////
 							// DEBUG COOKIES
-							Header[] headers = response.getHeaders("Set-Cookie");
-							for (int h = 0; h < headers.length; h++) {
-								Header header = (Header)headers[h];
-								HeaderElement[] headerElements = header.getElements();
-								for (int e = 0; e < headerElements.length; e++) {
-									HeaderElement headerElement = headerElements[e];
-									Log.d(TAG,"Header Element " + e);
-									Log.d(TAG,"name = " + headerElement.getName());
-									Log.d(TAG,"value = " + headerElement.getValue());
-								}
-							}
+//							Header[] headers = response.getHeaders("Set-Cookie");
+//							for (int h = 0; h < headers.length; h++) {
+//								Header header = (Header)headers[h];
+//								HeaderElement[] headerElements = header.getElements();
+//								for (int e = 0; e < headerElements.length; e++) {
+//									HeaderElement headerElement = headerElements[e];
+//									Log.d(TAG,"Header Element " + e);
+//									Log.d(TAG,"name = " + headerElement.getName());
+//									Log.d(TAG,"value = " + headerElement.getValue());
+//								}
+//							}
 							/////////////////////////////////////////////////////////////
 						}
 						else {
@@ -163,9 +160,6 @@ public class MITClient extends DefaultHttpClient {
 				return uri;
 			}
 		});
-		
-		//this.addResponseInterceptor(new MITInterceptor());
-		//this.addRequestInterceptor(new MITRequestInterceptor());
 		
 	}
 
@@ -191,14 +185,6 @@ public class MITClient extends DefaultHttpClient {
 
 	
 	public HttpResponse getResponse(HttpGet httpGet) {
-//		try {
-//			this.targetUri = new URI(targetUrl);
-//		}
-//		catch (URISyntaxException e) {
-//			Log.d(TAG,e.getMessage());
-//		}
-//		
-//		get = new HttpGet(targetUrl);
 		try {
 			response = this.execute(httpGet);
 
@@ -228,7 +214,6 @@ public class MITClient extends DefaultHttpClient {
 				//return this.execute(httpGet);		
 			}
 			
-			//Log.d(TAG,"reponseString = " + responseContentToString(response));
 			return response;
 		}
 		catch (IOException e) {
@@ -239,10 +224,10 @@ public class MITClient extends DefaultHttpClient {
 	}
 
 	private void wayf() {
-		Log.d(TAG, "wayf()");
+		//Log.d(TAG, "wayf()");
 
-		Log.d(TAG,"post to wayf");
-		Log.d(TAG,"uri = " + uri);
+		//Log.d(TAG,"post to wayf");
+		//Log.d(TAG,"uri = " + uri);
 		post = new HttpPost();
 	
 		post.setURI(uri);
@@ -321,7 +306,7 @@ public class MITClient extends DefaultHttpClient {
 			if (tmpAction.contains("Username")) {
 				formAction = tmpAction;
 			}
-			Log.d(TAG,"action " + e + " = " + formAction);
+			//Log.d(TAG,"action " + e + " = " + formAction);
 		}
 				
 		post = new HttpPost();
@@ -358,7 +343,7 @@ public class MITClient extends DefaultHttpClient {
 	}
 	
 	private void authState() {
-		Log.d(TAG,"authState");
+		//Log.d(TAG,"authState");
 		Elements elements;
 		Element form;
 		Element input;
@@ -390,8 +375,8 @@ public class MITClient extends DefaultHttpClient {
 	
 		//Log.d(TAG,"formAction = " + formAction);
 		//Log.d(TAG,"SAMLResponse = " + SAMLResponse);
-		Log.d(TAG,"debug cookies in auth_state");
-		debugCookies();
+		//Log.d(TAG,"debug cookies in auth_state");
+		//debugCookies();
 		post = new HttpPost();
 		try {
 			uri = new URI(formAction);
@@ -419,10 +404,10 @@ public class MITClient extends DefaultHttpClient {
 			//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == 200) {
 				state = OK_STATE;
-				Log.d(TAG,"ok state");
+				//Log.d(TAG,"ok state");
 				ok();
 				responseString = responseContentToString(response);
-				Log.d(TAG,"response string from autstate = " + responseString);
+				//Log.d(TAG,"response string from autstate = " + responseString);
 			}
 		}
 		catch (IOException e) {
