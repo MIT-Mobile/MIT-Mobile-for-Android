@@ -165,8 +165,6 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 	private void createViews() throws ClientProtocolException, IOException {
 		Log.d(TAG,"createViews()");
 		
-		webview = (WebView) findViewById(R.id.touchstoneWV);
-		webview.loadData(responseString, "text/html", "utf-8");
 	}
 	
 	@Override
