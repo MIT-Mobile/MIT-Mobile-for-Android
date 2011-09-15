@@ -210,7 +210,7 @@ public class MITClient extends DefaultHttpClient {
 			}
 		
 			if (state == OK_STATE) {
-				ok();
+				//ok();
 				//return this.execute(httpGet);		
 			}
 			
@@ -351,7 +351,7 @@ public class MITClient extends DefaultHttpClient {
 		String formAction = "";
 		String SAMLResponse = "";
 		String TARGET = "";
-		
+		String RelayState = "";
 		// parse response string to html document
 		String responseString = responseContentToString(response);
 		document = Jsoup.parse(responseString);
@@ -365,12 +365,18 @@ public class MITClient extends DefaultHttpClient {
 		elements = document.getElementsByTag("input");
 		for (int e = 0; e < elements.size(); e++) {
 			input = elements.get(e);
+			Log.d(TAG,"element name " + e + " = " + input.attr("name"));
 			if (input.attr("name").equalsIgnoreCase("SAMLResponse")) {
 				SAMLResponse = input.attr("value");
 			}
 			if (input.attr("name").equalsIgnoreCase("TARGET")) {
 				TARGET = input.attr("value");				
 			}
+
+			if (input.attr("name").equalsIgnoreCase("RelayState")) {
+				RelayState = input.attr("value");				
+			}
+
 		}
 	
 		//Log.d(TAG,"formAction = " + formAction);
@@ -391,6 +397,7 @@ public class MITClient extends DefaultHttpClient {
 		List nameValuePairs = new ArrayList(2);
 		nameValuePairs.add(new BasicNameValuePair("SAMLResponse",SAMLResponse));
 		nameValuePairs.add(new BasicNameValuePair("TARGET", TARGET));
+		nameValuePairs.add(new BasicNameValuePair("RelayState", RelayState));
 		try {
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		} catch (UnsupportedEncodingException e1) {
@@ -405,9 +412,7 @@ public class MITClient extends DefaultHttpClient {
 			if (response.getStatusLine().getStatusCode() == 200) {
 				state = OK_STATE;
 				//Log.d(TAG,"ok state");
-				ok();
-				responseString = responseContentToString(response);
-				//Log.d(TAG,"response string from autstate = " + responseString);
+				//ok();
 			}
 		}
 		catch (IOException e) {
@@ -416,27 +421,27 @@ public class MITClient extends DefaultHttpClient {
 	}
 	
 	
-	// This method is a kludge. For some reason, the redirect is losing the module and command parameters even though they are visible in the shibstate cookie. For now, we'll use that cookie to redirect to the correct url
-	private void ok() {
-		List<Cookie> cookies = this.getCookieStore().getCookies();
-		Iterator<Cookie> c = cookies.iterator();
-		while (c.hasNext()) {
-			Cookie cookie = c.next();
-			String cookieName =  cookie.getName();
-			if (cookieName.contains("_shibstate")) {
-				String cookieValue = cookie.getValue();
-				Log.d(TAG,"go to " + cookieValue);
-				HttpGet httpGet = new HttpGet(URLDecoder.decode(cookieValue));
-				Log.d(TAG, "url from get = " + httpGet.getURI().toString());
-				try {
-					response = this.execute(httpGet);
-				}
-				catch (Exception e) {
-					Log.d(TAG,"execute httpGet exception = " + e.getMessage());
-				}
-			}
-		}
-	}
+//	// This method is a kludge. For some reason, the redirect is losing the module and command parameters even though they are visible in the shibstate cookie. For now, we'll use that cookie to redirect to the correct url
+//	private void ok() {
+//		List<Cookie> cookies = this.getCookieStore().getCookies();
+//		Iterator<Cookie> c = cookies.iterator();
+//		while (c.hasNext()) {
+//			Cookie cookie = c.next();
+//			String cookieName =  cookie.getName();
+//			if (cookieName.contains("_shibstate")) {
+//				String cookieValue = cookie.getValue();
+//				Log.d(TAG,"go to " + cookieValue);
+//				HttpGet httpGet = new HttpGet(URLDecoder.decode(cookieValue));
+//				Log.d(TAG, "url from get = " + httpGet.getURI().toString());
+//				try {
+//					response = this.execute(httpGet);
+//				}
+//				catch (Exception e) {
+//					Log.d(TAG,"execute httpGet exception = " + e.getMessage());
+//				}
+//			}
+//		}
+//	}
 	
 	public void debugCookies() {
 		Log.d(TAG,"debugCookies()");
