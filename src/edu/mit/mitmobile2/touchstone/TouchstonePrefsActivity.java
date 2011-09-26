@@ -72,6 +72,11 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 
 		touchstoneUsername = (EditText)findViewById(R.id.touchstoneUsername);
 		touchstonePassword = (EditText)findViewById(R.id.touchstonePassword);
+
+		// load existing pref values
+		touchstoneUsername.setText(prefs.getString("PREF_TOUCHSTONE_USERNAME", ""));
+		touchstonePassword.setText(prefs.getString("PREF_TOUCHSTONE_PASSWORD", ""));
+
 		saveButton = (Button)findViewById(R.id.touchstoneSaveButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			

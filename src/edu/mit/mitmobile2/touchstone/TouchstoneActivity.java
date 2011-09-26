@@ -37,7 +37,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.MITClient;
@@ -64,9 +66,12 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	public static final String AUTH_STATE = "auth";
 
 	private Context mContext;	
-
-	TextView emergencyContactsTV;
-
+	private Handler uiHandler;
+		
+	Button preferencesButton;
+	Button testButton;
+	Button logoutButton;
+	
 	SharedPreferences pref;
 	String user;
 	String password;
@@ -98,11 +103,59 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        Handler uiHandler = new Handler();
-        
         mitClient = new MITClient(mContext);
 
-        // Create local HTTP context
+        createViews();
+	}
+		
+	private void createViews() {
+		Log.d(TAG,"createViews()");
+		setContentView(R.layout.touchstone_main);
+
+        uiHandler = new Handler();
+
+		testButton = (Button)findViewById(R.id.touchstoneTestButton);
+		testButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG,"click");
+				touchstoneTest();
+			}
+		});
+
+
+		preferencesButton = (Button)findViewById(R.id.touchstonePreferencesButton);
+		preferencesButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(mContext, TouchstonePrefsActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		logoutButton = (Button)findViewById(R.id.touchstoneLogoutButton);
+		logoutButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG,"logout");
+				touchstoneLogout();
+			}
+		});
+
+	}
+	
+	private void touchstoneLogout() {
+		// we should really just be clearing the touchstone cookies
+		MITClient.clearCookies();
+	}
+	
+	private void touchstoneTest() {
+    	Log.d(TAG,"touchstone");
+
+		// Create local HTTP context
         HttpContext localContext = new BasicHttpContext();
         
         // get user name and password from preferences file
@@ -118,14 +171,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
     		mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
         }
         else {   
-	        //responseString = mitClient.getResponse(targetUrl);
-
-//        	MITClient client = null;
-//        	HttpGet get = new HttpGet("https://mobile-dev.mit.edu/secure/api/index.php?module=libraries&command=loans");
-//        	HttpResponse resp = client.getResponse(get);
-//        	Log.d(TAG,responseContentToString(resp));
-        	
         	//DEBUG
+        	Log.d(TAG,"starting touchstone test");
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put("module", "libraries");
 			params.put("command", "loans");
@@ -155,17 +202,9 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 					super.onError();
 					Log.d(TAG,"on error: requestJSONObject");
 				}
-		});			
-
-        	//	        	//DEBUG
+		});	
         }
-	}
 		
-	private void createViews() throws ClientProtocolException, IOException {
-		Log.d(TAG,"createViews()");
-		
-		webview = (WebView) findViewById(R.id.touchstoneWV);
-		webview.loadData(responseString, "text/html", "utf-8");
 	}
 	
 	@Override

@@ -113,7 +113,7 @@ public class MITClient extends DefaultHttpClient {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
-
+		Log.d(TAG,"user = " + user);
 		
 		this.setRedirectHandler(new DefaultRedirectHandler() {
 			String host;
@@ -210,11 +210,13 @@ public class MITClient extends DefaultHttpClient {
 			}
 		
 			if (state == OK_STATE) {
-				//ok();
-				//return this.execute(httpGet);		
+				return response;
+			}
+			else {
+				Log.d(TAG,"final state = " + state);
+				return null;
 			}
 			
-			return response;
 		}
 		catch (IOException e) {
 			Log.d(TAG,"get response exception = " + e.getMessage());
@@ -241,7 +243,9 @@ public class MITClient extends DefaultHttpClient {
 		else {
 			user_idp = "https://idp.mit.edu/shibboleth";				
 		}
-	
+
+		Log.d(TAG,"user_idp = " + user_idp);
+		
 		// Add your data
 		List nameValuePairs = new ArrayList(1);
 		nameValuePairs.add(new BasicNameValuePair("user_idp", user_idp));
@@ -306,7 +310,10 @@ public class MITClient extends DefaultHttpClient {
 			if (tmpAction.contains("Username")) {
 				formAction = tmpAction;
 			}
-			//Log.d(TAG,"action " + e + " = " + formAction);
+			if (tmpAction.contains("UserPassword")) {
+				formAction = "https://idp.touchstonenetwork.net" + tmpAction;
+			}	
+			Log.d(TAG,"action " + e + " = " + formAction);
 		}
 				
 		post = new HttpPost();
@@ -327,23 +334,27 @@ public class MITClient extends DefaultHttpClient {
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		} catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Log.d(TAG,e1.getMessage());
+			//e1.printStackTrace();
 		}  
 	
 		try {
+			Log.d(TAG,"before post");
 			response = this.execute(post);
+			Log.d(TAG,"after post");
+			Log.d(TAG,"idp status code = " + response.getStatusLine().getStatusCode());
 			//this.saveCookies();
 			if (response.getStatusLine().getStatusCode() == 200) {
 				state = AUTH_STATE;
 			}
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			Log.d(TAG,e.getMessage());
 		}
 	}
 	
 	private void authState() {
-		//Log.d(TAG,"authState");
+		Log.d(TAG,"authState");
 		Elements elements;
 		Element form;
 		Element input;
@@ -410,6 +421,9 @@ public class MITClient extends DefaultHttpClient {
 			//this.saveCookies();
 			//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
 			if (response.getStatusLine().getStatusCode() == 200) {
+				//responseString = responseContentToString(response);
+				//Log.d(TAG,responseString);
+				//tmpResponse.
 				state = OK_STATE;
 				//Log.d(TAG,"ok state");
 				//ok();
@@ -520,4 +534,7 @@ public class MITClient extends DefaultHttpClient {
 		}
 	}
 	
+	public static void clearCookies() {
+		cookieStore = null;
+	}
 }

@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
- 	android:layout_height="wrap_content">
-  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/touchstonePrefsLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
     <edu.mit.mitmobile2.TitleBar
   		android:text="Touchstone"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
+
+
+					<Button 
+						android:layout_height="wrap_content" 
+						android:id="@+id/touchstonePreferencesButton" 
+						android:text="Preferences" 
+						android:layout_width="fill_parent" 
+						android:layout_alignParentLeft="true">
+					</Button>
+					
+					<Button 
+						android:layout_height="wrap_content" 
+						android:id="@+id/touchstoneTestButton" 
+						android:text="Test" 
+						android:layout_width="fill_parent" 
+						android:layout_alignParentLeft="true">
+					</Button>
     
-    <WebView android:id="@+id/touchstoneWV" 
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:paddingTop="@dimen/verticalPadding"
-        android:paddingBottom="@dimen/verticalPadding"
-        android:paddingLeft="@dimen/horizontalPadding"
-        android:paddingRight="@dimen/horizontalPadding" />
-        
-	<TextView android:layout_width="wrap_content" 
-	          android:layout_height="wrap_content"
-	          android:textColor="#000000"
-	          android:background="@drawable/main_repeat"
-	          android:id="@+id/touchstoneTest"
-	          android:text="touchstone_test" 
-	          style="@style/SmallPrint"
-	          android:paddingLeft="@dimen/horizontalPadding"
-        	  android:paddingRight="@dimen/horizontalPadding"
-              android:paddingTop="@dimen/verticalPadding"
-              android:paddingBottom="@dimen/verticalPadding"
-              android:scrollbars = "vertical" 
-	          android:visibility="visible"></TextView>
-			
+					<Button 
+						android:layout_height="wrap_content" 
+						android:id="@+id/touchstoneLogoutButton" 
+						android:text="Logout" 
+						android:layout_width="fill_parent" 
+						android:layout_alignParentLeft="true">
+					</Button>
+
 </LinearLayout>
+
+

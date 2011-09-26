@@ -58,6 +58,7 @@ public class LibraryActivity extends ModuleActivity {
 
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(LibraryActivity.this, LibraryYourAccount.class));
             }
         });
         locationRow.setOnClickListener(new OnClickListener() {

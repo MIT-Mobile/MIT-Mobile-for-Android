@@ -10,12 +10,17 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
+import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryModel {
     public static String MODULE_LIBRARY = "libraries";
+	public static final String TAG = "LibraryModel";
+
 
     // private static HashMap<String, SearchResults<BookItem>> searchCache = new
     // FixedCache<SearchResults<BookItem>>(10);
@@ -219,4 +224,26 @@ public class LibraryModel {
         });
     }
 
+	public static void fetchLoanDetail(final Context context, final Handler uiHandler) {
+		Log.d(TAG,"getLoanData()");
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("module", "libraries");
+		params.put("command", "loans");
+
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+    	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler),
+                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
+			@Override
+			public void onResponse(JSONObject object) throws JSONException {
+	              ArrayList<LoanListItem> loans = LibraryParser.parseLoans(object);
+	                MobileWebApi.sendSuccessMessage(uiHandler, loans);
+	        }
+    	});			
+	}
+    
 }
+
+
