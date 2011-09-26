@@ -185,7 +185,6 @@ public class AboutActivity extends ModuleActivity implements OnGesturePerformedL
 		
 		Log.d("AboutActivity","buildId = " + BuildSettings.BUILD_ID);
 		String path = dir + "/" + buildId.substring(0, 6) + ".png";
-		Log.d("Global","path = " + path);
 		File file = new File(path);
 		if (!file.exists()) {
 			for (File oldFile : dir.listFiles()) {
