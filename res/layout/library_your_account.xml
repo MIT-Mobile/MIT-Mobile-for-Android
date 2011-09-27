@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?> 
  <TabHost android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/tabHost"
@@ -21,14 +21,6 @@
     android:orientation="vertical"
     android:paddingTop="60px"
      >
-     <!-- 
-     <TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="100px" 
-    android:text="tab1"
-    android:id="@+id/txt1"
-    />    
-    -->
      </LinearLayout>
      
      <LinearLayout
@@ -38,14 +30,6 @@
     android:orientation="vertical"
     android:paddingTop="60px"
      >
-     <!--  
-     <TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="100px" 
-    android:text="This is tab 2"
-    android:id="@+id/txt2"
-    />
-   -->
      </LinearLayout>
      
       <LinearLayout
@@ -55,14 +39,6 @@
     android:orientation="vertical"
     android:paddingTop="60px"
      >
-     <!--  
-     <TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="100px" 
-    android:text="This is tab 3"
-    android:id="@+id/txt3"
-    />
-   -->
      </LinearLayout>
      </FrameLayout>
     
