@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -25,6 +27,8 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.classes.LoanData;
+import edu.mit.mitmobile2.facilities.FacilitiesDetailsActivity;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryLoans extends ModuleActivity  {
@@ -33,6 +37,16 @@ public class LibraryLoans extends ModuleActivity  {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
+    private static LoanData loanData;
+    public static LoanData getLoanData() {
+		return loanData;
+	}
+
+	public static void setLoanData(LoanData loanData) {
+		LibraryLoans.loanData = loanData;
+	}
+
+	private TextView loanStatusTV;
     Context mContext;
     
     @Override
@@ -41,7 +55,8 @@ public class LibraryLoans extends ModuleActivity  {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.library_loans);
-
+        
+        loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
         mListView = (ListView) findViewById(R.id.listLibraryLoans);
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
 
@@ -66,7 +81,10 @@ public class LibraryLoans extends ModuleActivity  {
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
                 @SuppressWarnings("unchecked")
-                final ArrayList<LoanListItem> results = (ArrayList<LoanListItem>) msg.obj;
+                LoanData loanData = (LoanData)msg.obj;
+                LibraryLoans.setLoanData((LoanData)msg.obj);
+                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanData.getNumOverdue() + " overdue.");
+                final ArrayList<LoanListItem> results = loanData.getLoans();
 
                 if (results.size() == 0) {
                     Toast.makeText(LibraryLoans.this, "No loans found", Toast.LENGTH_SHORT).show();
@@ -113,7 +131,9 @@ public class LibraryLoans extends ModuleActivity  {
                 @Override
                 public void onItemSelected(LoanListItem item) {
                     Log.d(TAG,item.getTitle() + " clicked");
-                	//LibraryDetailActivity.launchActivity(getContext(), libraryItems, libraryItems.indexOf(item));
+            		Intent intent = new Intent(mContext, LibraryLoanDetail.class);
+            		intent.putExtra("index", item.getIndex());
+    				startActivity(intent);          
                 }
             });
         }

@@ -2,10 +2,21 @@ package edu.mit.mitmobile2.objs;
 
 import java.util.Date;
 
-public class LoanListItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class LoanListItem implements Parcelable {
 	
 	// # List
-    private String loanDate;
+	private int index;
+	
+    public int getIndex() {
+		return index;
+	}
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	private String loanDate;
     public String getLoanDate() {
 		return loanDate;
 	}
@@ -152,4 +163,30 @@ public class LoanListItem {
     private String pendingFine;
     private boolean hasHold;
     private String dueText;
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub  public void writeToParcel(Parcel dest, int flags) {     
+        dest.writeString(dueDate);
+        dest.writeString(returnedDate);
+        dest.writeString(docNumber);
+        dest.writeString(material);
+        dest.writeString(subLibrary);
+        dest.writeString(barcode);
+        dest.writeString(status);
+        dest.writeString(callNo);
+        dest.writeString(author);
+        dest.writeString(year);
+        dest.writeString(title);
+        dest.writeString(imprint);
+        dest.writeString(isbnIssnDisplay);
+        dest.writeString(isbnIssnType);
+        dest.writeString(displayPendingFine);
+        dest.writeString(pendingFine);
+        dest.writeString(dueText);
+	}
 } 

@@ -9,6 +9,14 @@
         android:text="Loans"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+  
+  	<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanStatusTV"
+			style="@style/ContentTitle" />
         
     <edu.mit.mitmobile2.SectionHeader
 		android:layout_width="fill_parent"

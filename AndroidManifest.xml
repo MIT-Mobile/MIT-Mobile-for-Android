@@ -258,6 +258,7 @@
         <activity android:name=".libraries.AppointmentActivity"></activity>
         <activity android:name=".libraries.LibraryYourAccount"></activity>
         <activity android:name=".libraries.LibraryLoans"></activity>
+        <activity android:name=".libraries.LibraryLoanDetail"></activity>
         <activity android:name=".libraries.LibraryHolds"></activity>
         <activity android:name=".libraries.LibraryFines"></activity>        
 </application>

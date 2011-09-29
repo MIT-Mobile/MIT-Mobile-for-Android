@@ -14,6 +14,9 @@ import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.classes.FineData;
+import edu.mit.mitmobile2.classes.HoldData;
+import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
@@ -238,12 +241,52 @@ public class LibraryModel {
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override
 			public void onResponse(JSONObject object) throws JSONException {
-	              ArrayList<LoanListItem> loans = LibraryParser.parseLoans(object);
-	                MobileWebApi.sendSuccessMessage(uiHandler, loans);
+	              LoanData loanData = LibraryParser.parseLoans(object);
+	                MobileWebApi.sendSuccessMessage(uiHandler, loanData);
 	        }
     	});			
 	}
     
+	public static void fetchHoldDetail(final Context context, final Handler uiHandler) {
+		Log.d(TAG,"getHoldData()");
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("module", "libraries");
+		params.put("command", "holds");
+
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+    	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler),
+                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
+			@Override
+			public void onResponse(JSONObject object) throws JSONException {
+	              HoldData holdData = LibraryParser.parseHolds(object);
+	                MobileWebApi.sendSuccessMessage(uiHandler, holdData);
+	        }
+    	});			
+	}
+
+	public static void fetchFineDetail(final Context context, final Handler uiHandler) {
+		Log.d(TAG,"getFineData()");
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("module", "libraries");
+		params.put("command", "fines");
+
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+        webApi.setIsSearchQuery(true);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+    	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler),
+                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
+			@Override
+			public void onResponse(JSONObject object) throws JSONException {
+	              FineData fineData = LibraryParser.parseFines(object);
+	                MobileWebApi.sendSuccessMessage(uiHandler, fineData);
+	        }
+    	});			
+	}
+
 }
 
 
