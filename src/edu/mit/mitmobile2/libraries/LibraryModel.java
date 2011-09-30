@@ -35,7 +35,6 @@ public class LibraryModel {
         parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
@@ -57,7 +56,6 @@ public class LibraryModel {
         parameters.put("library", libraryItem.library);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
