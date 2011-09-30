@@ -217,7 +217,7 @@ public class LibraryParser {
 			
 				// Sub-library
 				item.setSubLibrary(tmpItem.optString("sub-library",""));
-	
+
 				// bar code
 				item.setBarcode(tmpItem.optString("barcode",""));
 	
@@ -245,11 +245,10 @@ public class LibraryParser {
 				// Imprint
 				item.setImprint(tmpItem.optString("imprint",""));
 	
-				// ISBN ISSN Display
-				item.setIsbnIssnDisplay(tmpItem.optString("isbn-issn-display",""));
-	
-				// ISBN ISSN Type
-				item.setIsbnIssnType(tmpItem.optString("isbn-issn-type",""));
+				// ISBN ISSN Display / Type
+				JSONObject isbn = tmpItem.getJSONObject("isbn-issn");
+				item.setIsbnIssnDisplay(isbn.optString("display",""));				
+				item.setIsbnIssnType(isbn.optString("type",""));
 	
 				// Overdue
 				item.setOverdue(tmpItem.optString("overdue","").equalsIgnoreCase("TRUE"));
@@ -267,7 +266,7 @@ public class LibraryParser {
 				item.setLongOverdue(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
 				
 				// Due Text
-				item.setDueText(tmpItem.optString("due-text",""));
+				item.setDueText(tmpItem.optString("dueText",""));
 	
 	
 				//Log.d(TAG,item.title);
