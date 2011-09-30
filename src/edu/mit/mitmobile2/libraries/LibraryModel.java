@@ -69,7 +69,7 @@ public class LibraryModel {
         });
     }
 
-    public static void searchBooks(final String searchTerm, final LibrarySearchResults previousResults,
+    public static void searchBooks(final String searchTerm, boolean showErrors, final LibrarySearchResults previousResults,
             final Context context, final Handler uiHandler) {
 
         HashMap<String, String> parameters = new HashMap<String, String>();
@@ -80,7 +80,7 @@ public class LibraryModel {
             parameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
         }
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, showErrors, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
@@ -101,7 +101,7 @@ public class LibraryModel {
 
                 if (object.has("nextIndex")) {
                     searchResults.setNextIndex(object.getInt("nextIndex"));
-                    searchResults.markAsPartialWithUnknownTotal();
+                    searchResults.markAsPartialWithTotalCount(object.getInt("totalResultsCount"));
                 } else {
                     searchResults.setNextIndex(null);
                     searchResults.markAsComplete();
