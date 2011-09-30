@@ -21,7 +21,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected void initiateSearch(String searchTerm, Handler uiHandler) {
-        LibraryModel.searchBooks(searchTerm, null, this, uiHandler);
+        LibraryModel.searchBooks(searchTerm, true, null, this, uiHandler);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override
@@ -45,9 +45,9 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     }
 
     @Override
-    protected void continueSearch(SearchResults<BookItem> previousResults, Handler uiHandler) {
+    protected void continueSearch(SearchResults<BookItem> previousResults, final Handler uiHandler) {
     	LibrarySearchResults libraryPreviousResults = (LibrarySearchResults) previousResults;
-        LibraryModel.searchBooks(previousResults.getSearchTerm(), libraryPreviousResults, this, uiHandler);
+        LibraryModel.searchBooks(previousResults.getSearchTerm(), false, libraryPreviousResults, this, uiHandler);
     }
 
 	@Override

@@ -19,7 +19,7 @@ public class LibrariesModule extends Module {
 	
 	@Override
 	public Class<? extends Activity> getModuleHomeActivity() {
-		return LibrariesActivity.class;
+		return LibraryActivity.class;
 	}
 
 	@Override
