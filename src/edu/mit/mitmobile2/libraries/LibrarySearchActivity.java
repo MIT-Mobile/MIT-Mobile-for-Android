@@ -36,7 +36,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override

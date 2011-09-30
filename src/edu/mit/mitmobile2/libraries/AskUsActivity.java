@@ -175,7 +175,7 @@ public class AskUsActivity extends ModuleActivity {
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override
