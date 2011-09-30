@@ -4,16 +4,12 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TabHost.TabSpec;
 
 public class TabConfigurator {
