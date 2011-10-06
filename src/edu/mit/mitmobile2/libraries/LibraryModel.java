@@ -17,6 +17,7 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
+import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
@@ -285,6 +286,28 @@ public class LibraryModel {
     	});			
 	}
 
+    public static void renewBook(final Context context, final Handler uiHandler,String barcode) {
+
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("command", "renewBooks");
+        parameters.put("module", MODULE_LIBRARY);
+        parameters.put("barcodes", barcode);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+        webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
+            @Override
+            public void onResponse(JSONArray array) {
+                Log.d(TAG,"renew response = " + array.toString());
+            	RenewBookResponse renewBookResponse = LibraryParser.parseRenewBookResponse(array);
+                MobileWebApi.sendSuccessMessage(uiHandler, renewBookResponse);
+            }
+        });
+    }
+
+	
 }
 
 
