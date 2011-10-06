@@ -203,7 +203,7 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 				}
 			
 				private void continueSearchFromScroll() {
-					if(mSearchResults != null) {
+					if(mSearchResults != null && mSearchResults.isPartialResult()) {
 						if(mSearchResults.getResultsList().size() - mSearchListView.getFirstVisiblePosition() <  MINIMUM_REMAINING_ROWS) {	
 							if(!mSearching) {
 								if((mLastFailedSearchTime == null) ||
