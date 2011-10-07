@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/rowBackground">
+    android:background="@drawable/main_repeat">
     <edu.mit.mitmobile2.TitleBar
         android:text="Ask Us"
         android:layout_width="fill_parent"
@@ -15,75 +15,108 @@
         android:layout_height="fill_parent"
         android:fillViewport="true">
         <LinearLayout
-            android:orientation="vertical"
+        	android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/rowBackground">
-            <TextView
-                android:text="Topic area:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <Spinner
-                android:id="@+id/topicSpinner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:text="Subject line:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/subject"
-                android:singleLine="true"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:text="Question:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/question"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:text="Detailed question:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/detailedQuestion"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:text="Your status:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <Spinner
-                android:id="@+id/statusSpinner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:text="Your department:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/department"
-                android:singleLine="true"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:text="Phone number:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/phoneNumber"
-                android:singleLine="true"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <Button
-                android:id="@+id/submit"
-                android:text="submit"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:layout_height="fill_parent">
+        	<LinearLayout
+        	    android:orientation="vertical"
+        	    android:layout_width="fill_parent"
+        	    android:layout_height="fill_parent"
+        	    android:padding="5dip" 
+        	    android:background="@color/rowBackground">
+        	    <TextView
+        	        android:text="Topic:"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        style="@style/FormLabel" 
+        	        />
+        	    <Spinner
+        	        android:id="@+id/topicSpinner"
+        	        android:layout_width="fill_parent"
+        	        android:layout_height="wrap_content" 
+        	        />
+        	    <TextView
+        	        android:text="Subject line:"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        style="@style/FormLabel"  
+        	        />
+        	    <EditText
+        	        android:id="@+id/subject"
+        	        android:singleLine="true"
+        	        android:layout_width="fill_parent"
+        	        android:layout_height="wrap_content" 
+        	        />
+           	 	<TextView
+                	android:text="Detailed question:"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	style="@style/FormLabel" 
+                	/>
+            	<EditText
+                	android:id="@+id/detailedQuestion"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content" 
+                	/>
+			</LinearLayout>
+			<View
+				android:background="@color/transparent"
+				android:layout_width="fill_parent"
+				android:layout_height="30dip" />
+			
+			<LinearLayout
+            	android:orientation="vertical"
+            	android:layout_width="fill_parent"
+            	android:layout_height="fill_parent"
+            	android:padding="5dip" 
+            	android:background="@color/rowBackground">
+		
+    	        <TextView
+        	        android:text="Status:"
+        	        android:layout_width="wrap_content"
+        	        android:layout_height="wrap_content"
+        	        style="@style/FormLabel" 
+            	    />
+            	<Spinner
+                	android:id="@+id/statusSpinner"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content" 
+                	/>
+            	<TextView
+                	android:text="Your department:"
+ 	                android:layout_width="wrap_content"
+    	            android:layout_height="wrap_content"
+     	           style="@style/FormLabel" 
+        	        />
+            	<EditText
+                	android:id="@+id/department"
+ 	                android:singleLine="true"
+    	            android:layout_width="fill_parent"
+           	        android:layout_height="wrap_content" 
+         	       />
+	            <TextView
+	                android:text="Phone number:"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                style="@style/FormLabel" 
+	                />
+	            <EditText
+    	            android:id="@+id/phoneNumber"
+        	        android:singleLine="true"
+            	    android:layout_width="fill_parent"
+                	android:layout_height="wrap_content" 
+	                android:inputType="phone"
+    	            />
+	            <Button
+    	            android:id="@+id/submit"
+        	        android:text="Submit"
+            	    android:layout_gravity="center_horizontal"
+                	android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+    	            android:paddingBottom="9dip"
+        	        style="@style/FormLabel" 
+            	    />
+	        </LinearLayout>
         </LinearLayout>
     </edu.mit.mitmobile2.LockingScrollView>
     

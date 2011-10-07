@@ -138,7 +138,7 @@ public class LibraryModel {
     }
 
     public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
-            String department, String subject, String question, String description, String askType) {
+            String department, String subject, String question, String askType) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "sendAskUsEmail");
@@ -147,7 +147,6 @@ public class LibraryModel {
         searchParameters.put("department", department);
         searchParameters.put("subject", subject);
         searchParameters.put("question", question);
-        searchParameters.put("description", description);
         searchParameters.put("ask_type", askType);
         searchParameters.put("module", MODULE_LIBRARY);
 

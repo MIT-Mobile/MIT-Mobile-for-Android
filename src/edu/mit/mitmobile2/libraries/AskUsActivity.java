@@ -32,7 +32,6 @@ public class AskUsActivity extends ModuleActivity {
     private EditText mSubjectText;
     private EditText mDetailText;
     private EditText mDepartmentText;
-    private EditText mQuestionText;
     private EditText mPhoneText;
     private Button mSubmitButton;
     
@@ -56,7 +55,6 @@ public class AskUsActivity extends ModuleActivity {
         
         mSubjectText = (EditText) findViewById(R.id.subject);
         mDetailText = (EditText) findViewById(R.id.detailedQuestion);
-        mQuestionText = (EditText) findViewById(R.id.question);
 
         mDepartmentText = (EditText) findViewById(R.id.department);
         mPhoneText = (EditText) findViewById(R.id.phoneNumber);
@@ -103,16 +101,9 @@ public class AskUsActivity extends ModuleActivity {
                     prompt("Subject is required!");
                     return;
                 }
-
-                String question = mQuestionText.getText().toString().trim();
-                if("".equals(question)) {
-                	mQuestionText.requestFocus();
-                    prompt("Question is required!");
-                    return;
-                }
                 
-                String description = mDetailText.getText().toString().trim();
-                if("".equals(description)) {
+                String question = mDetailText.getText().toString().trim();
+                if("".equals(question)) {
                 	mDetailText.requestFocus();
                     prompt("Description is required!");
                     return;
@@ -148,7 +139,7 @@ public class AskUsActivity extends ModuleActivity {
                 mLoader.setVisibility(View.VISIBLE);
                 mLoader.showLoading();
                 
-                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, description, "form");
+                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, "form");
             }
         });
         
