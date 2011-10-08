@@ -68,7 +68,7 @@ public class AppointmentActivity extends ModuleActivity {
         
         mSubmitButton = (Button) findViewById(R.id.submitAppointment);
         
-        mEmailText = (TextView) findViewById(R.id.appontmentEmailContent);
+        mEmailText = (TextView) findViewById(R.id.appointmentEmailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.appointmentLoading);
         
         topicsArray = getResources().getStringArray(R.array.libraryResearchTopics);
