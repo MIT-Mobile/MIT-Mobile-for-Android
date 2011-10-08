@@ -164,6 +164,9 @@
         android:id="@+id/appointmentEmailContent"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@color/rowBackground"
+        android:padding="10dip"
+        style="@style/BodyText"
         android:visibility="gone" />
     <edu.mit.mitmobile2.FullScreenLoader
         android:id="@+id/appointmentLoading"

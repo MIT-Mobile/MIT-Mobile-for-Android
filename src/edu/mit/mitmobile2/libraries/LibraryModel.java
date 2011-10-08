@@ -150,7 +150,7 @@ public class LibraryModel {
         searchParameters.put("ask_type", askType);
         searchParameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
@@ -176,7 +176,7 @@ public class LibraryModel {
         searchParameters.put("feedback", feedback);
         searchParameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
@@ -209,7 +209,7 @@ public class LibraryModel {
         parameters.put("ask_type", "consultation");
         parameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(

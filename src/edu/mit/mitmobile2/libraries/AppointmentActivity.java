@@ -178,6 +178,8 @@ public class AppointmentActivity extends ModuleActivity {
                 mEmailText.setText(content);
                 mEmailText.setVisibility(View.VISIBLE);
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };

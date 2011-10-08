@@ -57,7 +57,7 @@ public class AskUsActivity extends ModuleActivity {
 
         setContentView(R.layout.library_ask_us);
         
-        mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
+        mScrollView = (LockingScrollView) findViewById(R.id.askUsScrollView);
         
         mTopicSpinner = (Spinner) findViewById(R.id.topicSpinner);
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
@@ -70,7 +70,7 @@ public class AskUsActivity extends ModuleActivity {
         
         mSubmitButton = (Button) findViewById(R.id.submit);
         
-        mEmailText = (TextView) findViewById(R.id.emailContent);
+        mEmailText = (TextView) findViewById(R.id.askUsEmailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
         
         mTechHelpSection = findViewById(R.id.librariesTechHelpSection);
@@ -215,6 +215,8 @@ public class AskUsActivity extends ModuleActivity {
                 mEmailText.setText(content);
                 mEmailText.setVisibility(View.VISIBLE);
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };

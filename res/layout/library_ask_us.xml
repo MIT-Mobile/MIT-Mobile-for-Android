@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <edu.mit.mitmobile2.LockingScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/askUsScrollView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true">
@@ -201,9 +201,12 @@
     </edu.mit.mitmobile2.LockingScrollView>
     
     <TextView
-        android:id="@+id/emailContent"
+        android:id="@+id/askUsEmailContent"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" 
+        android:layout_height="fill_parent"
+        android:background="@color/rowBackground"
+        android:padding="10dip"
+        style="@style/BodyText" 
         android:visibility="gone"/>
         
         
