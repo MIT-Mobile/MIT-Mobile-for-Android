@@ -59,11 +59,91 @@
                 	android:layout_height="wrap_content" 
                 	/>
 			</LinearLayout>
+			
+			<!-- GAP -->
 			<View
 				android:background="@color/transparent"
 				android:layout_width="fill_parent"
 				android:layout_height="30dip" />
 			
+			<LinearLayout
+				android:orientation="vertical"
+            	android:layout_width="fill_parent"
+            	android:layout_height="fill_parent"
+            	android:visibility="gone"
+            	android:id="@+id/librariesTechHelpSection"
+            	>
+            
+            	<LinearLayout
+            		android:orientation="vertical"
+            		android:layout_width="fill_parent"
+            		android:layout_height="fill_parent"
+            		android:background="@color/rowBackground"
+            		android:padding="5dip"
+            		>
+ 
+     	        	<TextView
+        	        	android:text="Is this problem happening on Campus?"
+        	        	android:layout_width="wrap_content"
+        	        	android:layout_height="wrap_content"
+        	        	style="@style/FormLabel" 
+            	    	/> 
+
+					<RadioGroup
+      					android:layout_width="fill_parent"
+      					android:layout_height="wrap_content"
+      					android:id="@+id/librariesOnCampusRadioGroup"
+      					android:orientation="horizontal">
+      					<RadioButton android:id="@+id/librariesOnCampusRadioButton"
+      						android:layout_weight="1"
+          					android:layout_width="fill_parent"
+          					android:layout_height="wrap_content"
+          					style="@style/ListItemSecondary"
+          					android:text="On campus" />
+      					<RadioButton android:id="@+id/librariesOffCampusRadioButton"
+      						android:layout_weight="1"
+          					android:layout_width="fill_parent"
+          					android:layout_height="wrap_content"
+          					style="@style/ListItemSecondary"
+          					android:text="Off campus" />
+    				</RadioGroup>
+                	
+                    <TextView
+        	        	android:text="Are you using VPN"
+        	        	android:layout_width="wrap_content"
+        	        	android:layout_height="wrap_content"
+        	        	style="@style/FormLabel" 
+            	    	/> 
+            	    	
+					<RadioGroup
+      					android:layout_width="fill_parent"
+      					android:layout_height="wrap_content"
+      					android:id="@+id/librariesVPNRadioGroup"
+      					android:orientation="horizontal">
+      					<RadioButton android:id="@+id/librariesYesVPN"
+      						android:layout_weight="1"
+          					android:layout_width="fill_parent"
+          					android:layout_height="wrap_content"
+          					style="@style/ListItemSecondary"
+          					android:text="Yes" />
+      					<RadioButton android:id="@+id/librariesNoVPN"
+      						android:layout_weight="1"
+          					android:layout_width="fill_parent"
+          					android:layout_height="wrap_content"
+          					style="@style/ListItemSecondary"
+          					android:text="No" />
+    				</RadioGroup>     
+            		
+            	</LinearLayout>	
+            	
+             	<!--  GAP  -->	
+               	<View
+					android:background="@color/transparent"
+					android:layout_width="fill_parent"
+					android:layout_height="30dip" 
+					/> 		
+            	
+            </LinearLayout>				
 			<LinearLayout
             	android:orientation="vertical"
             	android:layout_width="fill_parent"

@@ -10,8 +10,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -34,6 +39,10 @@ public class AskUsActivity extends ModuleActivity {
     private EditText mDepartmentText;
     private EditText mPhoneText;
     private Button mSubmitButton;
+
+    private View mTechHelpSection;
+    private RadioGroup mOnCampusRadioGroup;
+    private RadioGroup mVPNRadioGroup;
     
     private TextView mEmailText;
     private FullScreenLoader mLoader;
@@ -64,11 +73,32 @@ public class AskUsActivity extends ModuleActivity {
         mEmailText = (TextView) findViewById(R.id.emailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
         
+        mTechHelpSection = findViewById(R.id.librariesTechHelpSection);
+        mOnCampusRadioGroup = (RadioGroup) findViewById(R.id.librariesOnCampusRadioGroup);        
+        mVPNRadioGroup = (RadioGroup) findViewById(R.id.librariesVPNRadioGroup);
+        
+        
         topicsArray = getResources().getStringArray(R.array.libraryTopics);
         String topicsTitle = getResources().getString(R.string.libraryTopicsTitle);
         SpinnerAdapter topicAdapter = new SimpleSpinnerAdapter(this, topicsTitle, Arrays.asList(topicsArray));
         mTopicSpinner.setAdapter(topicAdapter);
         mTopicSpinner.setPrompt(topicsTitle);
+        mTopicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (position == topicsArray.length) {  // this corresponds to the technical help topic
+					mTechHelpSection.setVisibility(View.VISIBLE);
+				} else {
+					mTechHelpSection.setVisibility(View.GONE);
+				}				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				mTechHelpSection.setVisibility(View.GONE);
+			}
+        });
 
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);
@@ -135,6 +165,29 @@ public class AskUsActivity extends ModuleActivity {
                     return;
                 }
                 
+                String onCampus;
+                String usingVPN;
+                boolean technicalHelp = topic.equals("Technical Help");
+                if(technicalHelp) {
+                	if(mOnCampusRadioGroup.getCheckedRadioButtonId() == -1) {
+                		// nothing selected.
+                		mOnCampusRadioGroup.requestFocus();
+                		prompt("Must select on or off campus");
+                		return;
+                	}
+                	onCampus = ((RadioButton) findViewById(mOnCampusRadioGroup.getCheckedRadioButtonId()))
+                		.getText().toString().toLowerCase();
+                	
+                	if(mVPNRadioGroup.getCheckedRadioButtonId() == -1) {
+                		mVPNRadioGroup.requestFocus();
+                		prompt("Must specify if your using VPN");
+                		return;
+                	}
+                	usingVPN = ((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
+    					.getText().toString().toLowerCase();
+                }
+                
+                
                 mScrollView.setVisibility(View.GONE);
                 mLoader.setVisibility(View.VISIBLE);
                 mLoader.showLoading();
@@ -142,6 +195,8 @@ public class AskUsActivity extends ModuleActivity {
                 LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, "form");
             }
         });
+        
+        
         
     }
 
