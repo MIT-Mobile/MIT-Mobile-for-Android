@@ -72,7 +72,7 @@ public class TellUsActivity extends ModuleActivity {
                 
                 String feedback = mFeedbackText.getText().toString().trim();
                 if("".equals(feedback)) {
-                    Toast.makeText(TellUsActivity.this, "Department is required!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TellUsActivity.this, "Description is required!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 
