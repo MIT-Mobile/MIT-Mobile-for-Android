@@ -38,6 +38,8 @@
                 android:id="@+id/feebackText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" 
+                android:minLines="5"
+                android:gravity="left|top"
                 android:inputType="textMultiLine"
                 />
             
