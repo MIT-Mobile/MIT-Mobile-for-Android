@@ -35,7 +35,6 @@
     <edu.mit.mitmobile2.TwoLineActionRow
         android:id="@+id/generalHelpItem"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="General help(617-324-2275)" />
+        android:layout_height="wrap_content" />
         
 </LinearLayout>
