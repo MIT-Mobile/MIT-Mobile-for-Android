@@ -52,7 +52,7 @@
                 	/>
                 
             	<TextView
-                	android:text="How can we help you?\nDescribe the information you've looking for a and the research you've already done."
+                	android:text="How can we help you?\nDescribe the information you're looking for and the research you've already done."
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content" 
                 	style="@style/FormLabel"
