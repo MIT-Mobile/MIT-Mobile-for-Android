@@ -23,6 +23,8 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
 public class AppointmentActivity extends ModuleActivity {
     
@@ -154,16 +156,34 @@ public class AppointmentActivity extends ModuleActivity {
                 
                 String phoneNumber = mPhoneNumber.getText().toString().trim();
                 
-                mScrollView.setVisibility(View.GONE);
-                mLoader.setVisibility(View.VISIBLE);
-                mLoader.showLoading();
+                showLoading();
                 
                 LibraryModel.sendAppointmentEmail(AppointmentActivity.this, uiHandler, topic, timeframe, information, purpose, course, researchTopic, status, department, phoneNumber);
             }
         });
         
+        showLoading();
+        VerifyUserCredentials.VerifyUserHasFormAccess(this, new VerifyUserCredentialsListener() {
+			@Override
+			public void onUserLoggedIn(UserIdentity user) {
+				showForm();
+			}
+        });
+        
     }
 
+    private void showLoading() {
+        mScrollView.setVisibility(View.GONE);
+        mLoader.setVisibility(View.VISIBLE);
+        mLoader.showLoading();
+    }
+    
+    private void showForm() {
+        mScrollView.setVisibility(View.VISIBLE);
+        mLoader.setVisibility(View.GONE);
+        mLoader.stopLoading();
+    }
+    
     private void prompt(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }

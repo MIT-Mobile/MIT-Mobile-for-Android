@@ -36,7 +36,6 @@ public class LibraryModel {
         parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -57,7 +56,6 @@ public class LibraryModel {
         parameters.put("library", libraryItem.library);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -122,8 +120,6 @@ public class LibraryModel {
         parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -151,8 +147,6 @@ public class LibraryModel {
         searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -177,8 +171,6 @@ public class LibraryModel {
         searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -210,8 +202,6 @@ public class LibraryModel {
         parameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -225,6 +215,52 @@ public class LibraryModel {
         });
     }
 
+    public static class UserIdentity {
+    	String mShibIdentity;
+    	String mUsername;
+    	boolean mIsMITIdentity;
+    	
+    	public UserIdentity(String shibIdentity, String username, boolean isMITIdentity) {
+    		mShibIdentity = shibIdentity;
+    		mUsername = username;
+    		mIsMITIdentity = isMITIdentity;
+    	}
+    	
+    	public String getShibIdentity() {
+    		return mShibIdentity;
+    	}
+    	
+    	public String getUsername() {
+    		return mUsername;
+    	}
+    	
+    	public boolean isMITIdentity() {
+    		return mIsMITIdentity;
+    	}
+    }
+    
+    public static void getUserIdentity(final Context context, final Handler uiHandler) {
+    	HashMap<String, String> parameters = new HashMap<String, String>();
+    	parameters.put("module", "libraries");
+    	parameters.put("command", "getUserIdentity");
+    	
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler, HttpClientType.MIT); 
+    	webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
+            @Override
+            public void onResponse(JSONObject object) throws JSONException {
+            	UserIdentity identity = new UserIdentity(
+            		object.getString("shib_identity"),
+            		object.getString("username"),
+            		object.getBoolean("is_mit_identity")
+            	);
+            	MobileWebApi.sendSuccessMessage(uiHandler, identity);
+            }
+        });    	
+    }
+    
 	public static void fetchLoanDetail(final Context context, final Handler uiHandler) {
 		Log.d(TAG,"getLoanData()");
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -232,8 +268,6 @@ public class LibraryModel {
 		params.put("command", "loans");
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
@@ -252,8 +286,6 @@ public class LibraryModel {
 		params.put("command", "holds");
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
@@ -272,8 +304,6 @@ public class LibraryModel {
 		params.put("command", "fines");
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-        webApi.setIsSearchQuery(true);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
@@ -292,7 +322,6 @@ public class LibraryModel {
         parameters.put("module", MODULE_LIBRARY);
         parameters.put("barcodes", barcode);
         MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {

@@ -28,6 +28,8 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
 public class AskUsActivity extends ModuleActivity {
 	
@@ -188,16 +190,32 @@ public class AskUsActivity extends ModuleActivity {
                 }
                 
                 
-                mScrollView.setVisibility(View.GONE);
-                mLoader.setVisibility(View.VISIBLE);
-                mLoader.showLoading();
+                showLoading();
                 
                 LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, "form");
             }
         });
         
+        showLoading();
+        VerifyUserCredentials.VerifyUserHasFormAccess(this, new VerifyUserCredentialsListener() {
+			@Override
+			public void onUserLoggedIn(UserIdentity user) {
+				showForm();
+			}
+        });
         
-        
+    }
+    
+    private void showForm() {
+   	 	mScrollView.setVisibility(View.VISIBLE);
+   	 	mLoader.setVisibility(View.GONE);
+   	 	mLoader.stopLoading();
+    }
+    
+    private void showLoading() {
+    	 mScrollView.setVisibility(View.GONE);
+         mLoader.setVisibility(View.VISIBLE);
+         mLoader.showLoading();
     }
 
     private void prompt(String message) {

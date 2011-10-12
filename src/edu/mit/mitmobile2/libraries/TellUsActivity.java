@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.libraries;
 
 import java.util.Arrays;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +24,13 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
 public class TellUsActivity extends ModuleActivity {
     
+	private Activity mContext;
+	
     private Spinner mStatusSpinner;
 
     private EditText mFeedbackText;
@@ -42,6 +47,8 @@ public class TellUsActivity extends ModuleActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_tell_us);
+        
+        mContext = this;
         
         mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
         mFeedbackText = (EditText) findViewById(R.id.feebackText);
@@ -84,8 +91,27 @@ public class TellUsActivity extends ModuleActivity {
             }
         });
         
+        showLoader();
+        VerifyUserCredentials.VerifyUserHasFormAccess(mContext, new VerifyUserCredentialsListener() {
+			@Override
+			public void onUserLoggedIn(UserIdentity user) {
+				showForm();
+			}
+        });
     }
 
+    
+    private void showLoader() {
+        mScrollView.setVisibility(View.GONE);
+        mLoader.setVisibility(View.VISIBLE);
+        mLoader.showLoading();
+    }
+    
+    private void showForm() {
+        mScrollView.setVisibility(View.VISIBLE);
+        mLoader.setVisibility(View.GONE);
+        mLoader.stopLoading();
+    }
     
     private Handler uiHandler = new Handler() {
         @Override
