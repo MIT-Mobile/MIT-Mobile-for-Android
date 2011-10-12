@@ -114,7 +114,7 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 		
 		// calculate today, tommorrow, and yesterday
 		String today = sDateFormat.format(new Date(mCurrentTime));
-		String tommorrow = sDateFormat.format(new Date(mCurrentTime + TWENTY_FOUR_HOURS));
+		String tomorrow = sDateFormat.format(new Date(mCurrentTime + TWENTY_FOUR_HOURS));
 		String yesterday = sDateFormat.format(new Date(mCurrentTime - TWENTY_FOUR_HOURS));
 		
 		// create views for today, and a fixed number of days in the past and future
@@ -131,8 +131,8 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 			String dayTitle = sDateFormat.format(new Date(dayTime));
 			if(dayTitle.equals(today)) {
 				dayTitle = "Today";
-			} else if(dayTitle.equals(tommorrow)) {
-				dayTitle = "Tommorrow";
+			} else if(dayTitle.equals(tomorrow)) {
+				dayTitle = "Tomorrow";
 			} else if(dayTitle.equals(yesterday)) {
 				dayTitle = "Yesterday";
 			}
