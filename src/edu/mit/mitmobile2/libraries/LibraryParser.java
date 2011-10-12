@@ -56,7 +56,10 @@ public class LibraryParser {
                 container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
             }
             if(temp.has("previous_terms")) {
-                container.previousTerms = getPreviousTerms(temp.getJSONArray("previous_terms"));
+                container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
+            }
+            if(temp.has("next_terms")) {
+                container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
             }
             
             container.isDetailLoaded = true;
@@ -89,7 +92,7 @@ public class LibraryParser {
     }
     
     
-    private static List<Schedule> getPreviousTerms(JSONArray array) throws JSONException {
+    private static List<Schedule> getTerms(JSONArray array) throws JSONException {
         ArrayList<Schedule> terms = new ArrayList<Schedule>();
         
         for(int index = 0; index < array.length(); index++) {

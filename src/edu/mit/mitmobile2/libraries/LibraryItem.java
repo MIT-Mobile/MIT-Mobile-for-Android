@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class LibraryItem {
     public String location;
     
     public Schedule currentTerm;
-    public List<Schedule> previousTerms;
+    public List<Schedule> previousTerms = Collections.emptyList();
+    public List<Schedule> nextTerms = Collections.emptyList();
     
     
     
