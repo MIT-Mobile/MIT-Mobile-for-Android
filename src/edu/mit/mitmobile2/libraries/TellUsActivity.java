@@ -47,8 +47,8 @@ public class TellUsActivity extends ModuleActivity {
         mFeedbackText = (EditText) findViewById(R.id.feebackText);
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
         mSubmitButton = (Button) findViewById(R.id.submit);
-        mEmailText = (TextView) findViewById(R.id.emailContent);
-        mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
+        mEmailText = (TextView) findViewById(R.id.tellUsEmailContent);
+        mLoader = (FullScreenLoader) findViewById(R.id.tellUsLoading);
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);
         String statusTitle = getResources().getString(R.string.libraryStatusTitle);
@@ -72,7 +72,7 @@ public class TellUsActivity extends ModuleActivity {
                 
                 String feedback = mFeedbackText.getText().toString().trim();
                 if("".equals(feedback)) {
-                    Toast.makeText(TellUsActivity.this, "Department is required!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TellUsActivity.this, "Description is required!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 
@@ -97,6 +97,8 @@ public class TellUsActivity extends ModuleActivity {
                 mEmailText.setText(content);
                 mEmailText.setVisibility(View.VISIBLE);
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };

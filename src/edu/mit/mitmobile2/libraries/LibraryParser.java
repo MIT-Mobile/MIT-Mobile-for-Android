@@ -13,11 +13,13 @@ import android.util.Log;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
+import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.libraries.LibraryItem.Hours;
 import edu.mit.mitmobile2.libraries.LibraryItem.Schedule;
 import edu.mit.mitmobile2.objs.LoanListItem;
+import edu.mit.mitmobile2.objs.RenewResponseItem;
 
 public class LibraryParser {
 
@@ -54,7 +56,10 @@ public class LibraryParser {
                 container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
             }
             if(temp.has("previous_terms")) {
-                container.previousTerms = getPreviousTerms(temp.getJSONArray("previous_terms"));
+                container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
+            }
+            if(temp.has("next_terms")) {
+                container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
             }
             
             container.isDetailLoaded = true;
@@ -87,7 +92,7 @@ public class LibraryParser {
     }
     
     
-    private static List<Schedule> getPreviousTerms(JSONArray array) throws JSONException {
+    private static List<Schedule> getTerms(JSONArray array) throws JSONException {
         ArrayList<Schedule> terms = new ArrayList<Schedule>();
         
         for(int index = 0; index < array.length(); index++) {
@@ -451,6 +456,95 @@ public class LibraryParser {
             throw new RuntimeException("Error parsing libraries");			
 		}
 		return fineData;
+    }
+
+    static RenewBookResponse parseRenewBookResponse(JSONArray array) {
+        RenewBookResponse response = new RenewBookResponse();
+
+        try {
+        	JSONObject object = array.getJSONObject(0);
+
+        	RenewResponseItem item = new RenewResponseItem();
+	
+			// Success Msg
+			item.setSuccessMsg(object.optString("success",""));
+
+			// Error Msg
+			item.setErrorMsg(object.optString("error",""));
+			
+			JSONObject detail = object.getJSONObject("details");
+
+			// Author
+			item.setAuthor(detail.optString("author",""));
+			
+			// Doc-Number
+			item.setDocNumber(detail.optString("doc-number",""));
+		
+			// Material
+			item.setMaterial(detail.optString("material",""));
+		
+			// Sub-library
+			item.setSubLibrary(detail.optString("sub-library",""));
+
+			// bar code
+			item.setBarcode(detail.optString("barcode",""));
+
+		
+			// Load Date
+			item.setLoanDate(detail.optString("loan-date",""));
+		
+			// Due Date
+			item.setDueDate(detail.optString("due-date",""));
+
+			// Returned Date
+			item.setReturnedDate(detail.optString("returned-date",""));
+
+			// Call No
+			item.setCallNo(detail.optString("call-no",""));
+
+			// Year
+			item.setYear(detail.optString("year",""));
+
+			// Title
+			item.setTitle(detail.optString("title",""));
+
+			// Imprint
+			item.setImprint(detail.optString("imprint",""));
+
+			// ISBN ISSN Display
+			item.setIsbnIssnDisplay(detail.optString("isbn-issn-display",""));
+
+			// ISBN ISSN Type
+			item.setIsbnIssnType(detail.optString("isbn-issn-type",""));
+
+			// Overdue
+			item.setOverdue(detail.optString("overdue","").equalsIgnoreCase("TRUE"));
+
+			// Long Overdue
+			item.setLongOverdue(detail.optString("long-overdue","").equalsIgnoreCase("TRUE"));
+
+			// Display Pending Fine
+			item.setDisplayPendingFine(detail.optString("display-pending-fine",""));
+			
+			// Pending Fine
+			item.setPendingFine(detail.optString("pending-fine",""));
+
+			// Has Hold
+			item.setLongOverdue(detail.optString("has-hold","").equalsIgnoreCase("TRUE"));
+			
+			// Due Text
+			item.setDueText(detail.optString("due-text",""));
+
+
+			//Log.d(TAG,item.title);
+			response.getRenewResponse().add(item);
+        }
+		catch (JSONException e) {
+            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
+            throw new RuntimeException("Error parsing libraries");			
+		}
+		return response;
     }
 
 }

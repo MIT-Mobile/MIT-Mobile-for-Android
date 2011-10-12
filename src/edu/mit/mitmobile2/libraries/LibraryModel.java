@@ -17,6 +17,7 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
+import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
@@ -137,7 +138,7 @@ public class LibraryModel {
     }
 
     public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
-            String department, String subject, String question, String description, String askType) {
+            String department, String subject, String question, String askType) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "sendAskUsEmail");
@@ -146,11 +147,10 @@ public class LibraryModel {
         searchParameters.put("department", department);
         searchParameters.put("subject", subject);
         searchParameters.put("question", question);
-        searchParameters.put("description", description);
         searchParameters.put("ask_type", askType);
         searchParameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
@@ -176,7 +176,7 @@ public class LibraryModel {
         searchParameters.put("feedback", feedback);
         searchParameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
@@ -209,7 +209,7 @@ public class LibraryModel {
         parameters.put("ask_type", "consultation");
         parameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
@@ -285,6 +285,28 @@ public class LibraryModel {
     	});			
 	}
 
+    public static void renewBook(final Context context, final Handler uiHandler,String barcode) {
+
+        HashMap<String, String> parameters = new HashMap<String, String>();
+        parameters.put("command", "renewBooks");
+        parameters.put("module", MODULE_LIBRARY);
+        parameters.put("barcodes", barcode);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+        webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
+        webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
+            @Override
+            public void onResponse(JSONArray array) {
+                Log.d(TAG,"renew response = " + array.toString());
+            	RenewBookResponse renewBookResponse = LibraryParser.parseRenewBookResponse(array);
+                MobileWebApi.sendSuccessMessage(uiHandler, renewBookResponse);
+            }
+        });
+    }
+
+	
 }
 
 

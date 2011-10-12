@@ -10,8 +10,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -32,9 +37,12 @@ public class AskUsActivity extends ModuleActivity {
     private EditText mSubjectText;
     private EditText mDetailText;
     private EditText mDepartmentText;
-    private EditText mQuestionText;
     private EditText mPhoneText;
     private Button mSubmitButton;
+
+    private View mTechHelpSection;
+    private RadioGroup mOnCampusRadioGroup;
+    private RadioGroup mVPNRadioGroup;
     
     private TextView mEmailText;
     private FullScreenLoader mLoader;
@@ -49,28 +57,48 @@ public class AskUsActivity extends ModuleActivity {
 
         setContentView(R.layout.library_ask_us);
         
-        mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
+        mScrollView = (LockingScrollView) findViewById(R.id.askUsScrollView);
         
         mTopicSpinner = (Spinner) findViewById(R.id.topicSpinner);
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
         
         mSubjectText = (EditText) findViewById(R.id.subject);
         mDetailText = (EditText) findViewById(R.id.detailedQuestion);
-        mQuestionText = (EditText) findViewById(R.id.question);
 
         mDepartmentText = (EditText) findViewById(R.id.department);
         mPhoneText = (EditText) findViewById(R.id.phoneNumber);
         
         mSubmitButton = (Button) findViewById(R.id.submit);
         
-        mEmailText = (TextView) findViewById(R.id.emailContent);
+        mEmailText = (TextView) findViewById(R.id.askUsEmailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
+        
+        mTechHelpSection = findViewById(R.id.librariesTechHelpSection);
+        mOnCampusRadioGroup = (RadioGroup) findViewById(R.id.librariesOnCampusRadioGroup);        
+        mVPNRadioGroup = (RadioGroup) findViewById(R.id.librariesVPNRadioGroup);
+        
         
         topicsArray = getResources().getStringArray(R.array.libraryTopics);
         String topicsTitle = getResources().getString(R.string.libraryTopicsTitle);
         SpinnerAdapter topicAdapter = new SimpleSpinnerAdapter(this, topicsTitle, Arrays.asList(topicsArray));
         mTopicSpinner.setAdapter(topicAdapter);
         mTopicSpinner.setPrompt(topicsTitle);
+        mTopicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (position == topicsArray.length) {  // this corresponds to the technical help topic
+					mTechHelpSection.setVisibility(View.VISIBLE);
+				} else {
+					mTechHelpSection.setVisibility(View.GONE);
+				}				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				mTechHelpSection.setVisibility(View.GONE);
+			}
+        });
 
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);
@@ -103,16 +131,9 @@ public class AskUsActivity extends ModuleActivity {
                     prompt("Subject is required!");
                     return;
                 }
-
-                String question = mQuestionText.getText().toString().trim();
-                if("".equals(question)) {
-                	mQuestionText.requestFocus();
-                    prompt("Question is required!");
-                    return;
-                }
                 
-                String description = mDetailText.getText().toString().trim();
-                if("".equals(description)) {
+                String question = mDetailText.getText().toString().trim();
+                if("".equals(question)) {
                 	mDetailText.requestFocus();
                     prompt("Description is required!");
                     return;
@@ -144,13 +165,38 @@ public class AskUsActivity extends ModuleActivity {
                     return;
                 }
                 
+                String onCampus;
+                String usingVPN;
+                boolean technicalHelp = topic.equals("Technical Help");
+                if(technicalHelp) {
+                	if(mOnCampusRadioGroup.getCheckedRadioButtonId() == -1) {
+                		// nothing selected.
+                		mOnCampusRadioGroup.requestFocus();
+                		prompt("Must select on or off campus");
+                		return;
+                	}
+                	onCampus = ((RadioButton) findViewById(mOnCampusRadioGroup.getCheckedRadioButtonId()))
+                		.getText().toString().toLowerCase();
+                	
+                	if(mVPNRadioGroup.getCheckedRadioButtonId() == -1) {
+                		mVPNRadioGroup.requestFocus();
+                		prompt("Must specify if your using VPN");
+                		return;
+                	}
+                	usingVPN = ((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
+    					.getText().toString().toLowerCase();
+                }
+                
+                
                 mScrollView.setVisibility(View.GONE);
                 mLoader.setVisibility(View.VISIBLE);
                 mLoader.showLoading();
                 
-                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, description, "form");
+                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, "form");
             }
         });
+        
+        
         
     }
 
@@ -169,6 +215,8 @@ public class AskUsActivity extends ModuleActivity {
                 mEmailText.setText(content);
                 mEmailText.setVisibility(View.VISIBLE);
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };
