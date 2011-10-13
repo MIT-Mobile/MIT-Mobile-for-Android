@@ -61,4 +61,8 @@ public class FullScreenLoader extends FrameLayout {
 			Log.d("ZZZ",e.getMessage());
 		}
 	}
+	
+	public void stopLoading() {
+		LoadingUIHelper.stopLoadingImage(new Handler(), mBusyBox);
+	}
 }

@@ -2,10 +2,12 @@ package edu.mit.mitmobile2.libraries;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.style.TextAppearanceSpan;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
+import android.widget.TextView.BufferType;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
@@ -27,9 +29,14 @@ public class AskUsTopActivity extends ModuleActivity {
         
         askUsRow = (TwoLineActionRow) findViewById(R.id.askUsItem);
         makeAppontmentRow = (TwoLineActionRow) findViewById(R.id.makeAppointmentItem);
+        
         generalHelpRow = (TwoLineActionRow) findViewById(R.id.generalHelpItem);
-        ImageView phoneImage = (ImageView) generalHelpRow.findViewById(R.id.simpleRowActionIcon);
-        phoneImage.setImageResource(R.drawable.action_phone);
+        String generalHelpTitle = "General help (617.324.2275)";
+        Spannable titleSpan = Spannable.Factory.getInstance().newSpannable(generalHelpTitle);
+        TextAppearanceSpan secondaryStyle = new TextAppearanceSpan(this, R.style.ListItemSecondary);  
+        titleSpan.setSpan(secondaryStyle, generalHelpTitle.indexOf("("), generalHelpTitle.indexOf(")")+1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);     
+        generalHelpRow.setTitle(titleSpan, BufferType.SPANNABLE);
+        generalHelpRow.setActionIconResource(R.drawable.action_phone);
         
         askUsRow.setOnClickListener(new OnClickListener() {
 

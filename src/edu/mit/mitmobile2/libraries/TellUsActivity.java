@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.libraries;
 
 import java.util.Arrays;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,9 +24,13 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
 public class TellUsActivity extends ModuleActivity {
     
+	private Activity mContext;
+	
     private Spinner mStatusSpinner;
 
     private EditText mFeedbackText;
@@ -43,12 +48,14 @@ public class TellUsActivity extends ModuleActivity {
 
         setContentView(R.layout.library_tell_us);
         
+        mContext = this;
+        
         mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
         mFeedbackText = (EditText) findViewById(R.id.feebackText);
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
         mSubmitButton = (Button) findViewById(R.id.submit);
-        mEmailText = (TextView) findViewById(R.id.emailContent);
-        mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
+        mEmailText = (TextView) findViewById(R.id.tellUsEmailContent);
+        mLoader = (FullScreenLoader) findViewById(R.id.tellUsLoading);
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);
         String statusTitle = getResources().getString(R.string.libraryStatusTitle);
@@ -72,7 +79,7 @@ public class TellUsActivity extends ModuleActivity {
                 
                 String feedback = mFeedbackText.getText().toString().trim();
                 if("".equals(feedback)) {
-                    Toast.makeText(TellUsActivity.this, "Department is required!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TellUsActivity.this, "Description is required!", Toast.LENGTH_LONG).show();
                     return;
                 }
                 
@@ -84,8 +91,27 @@ public class TellUsActivity extends ModuleActivity {
             }
         });
         
+        showLoader();
+        VerifyUserCredentials.VerifyUserHasFormAccess(mContext, new VerifyUserCredentialsListener() {
+			@Override
+			public void onUserLoggedIn(UserIdentity user) {
+				showForm();
+			}
+        });
     }
 
+    
+    private void showLoader() {
+        mScrollView.setVisibility(View.GONE);
+        mLoader.setVisibility(View.VISIBLE);
+        mLoader.showLoading();
+    }
+    
+    private void showForm() {
+        mScrollView.setVisibility(View.VISIBLE);
+        mLoader.setVisibility(View.GONE);
+        mLoader.stopLoading();
+    }
     
     private Handler uiHandler = new Handler() {
         @Override
@@ -97,6 +123,8 @@ public class TellUsActivity extends ModuleActivity {
                 mEmailText.setText(content);
                 mEmailText.setVisibility(View.VISIBLE);
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };
