@@ -23,6 +23,15 @@
      >
      </LinearLayout>
      
+      <LinearLayout
+     android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/tabFines"
+    android:orientation="vertical"
+    android:paddingTop="60px"
+     >
+     </LinearLayout>
+
      <LinearLayout
      android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -32,14 +41,6 @@
      >
      </LinearLayout>
      
-      <LinearLayout
-     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/tabFines"
-    android:orientation="vertical"
-    android:paddingTop="60px"
-     >
-     </LinearLayout>
      </FrameLayout>
     
     </TabHost>

@@ -39,7 +39,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -48,6 +52,7 @@ import android.webkit.WebView;
 public class MITClient extends DefaultHttpClient {
 
 	private static final String TAG = "MITClient";
+	public static final String PREFS_STATE = "prefs";
 	public static final String OK_STATE = "ok";
 	public static final String WAYF_STATE = "wayf";
 	public static final String IDP_STATE = "idp";
@@ -114,7 +119,7 @@ public class MITClient extends DefaultHttpClient {
 		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 		Log.d(TAG,"user = " + user);
-		
+				
 		this.setRedirectHandler(new DefaultRedirectHandler() {
 			String host;
 			public URI getLocationURI(HttpResponse response, HttpContext context) {
@@ -130,8 +135,6 @@ public class MITClient extends DefaultHttpClient {
 						uri = new URI(uriString);
 						host = uri.getHost();
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
-							//Log.d(TAG, "Redirect to WAYF detected");
-							//Log.d(TAG,"rawquery = " + uri.getRawQuery());
 							state = WAYF_STATE;
 							Log.d(TAG,"state = " + state);
 							////////////////////////////////////////////////////////////
@@ -230,6 +233,13 @@ public class MITClient extends DefaultHttpClient {
 
 		//Log.d(TAG,"post to wayf");
 		//Log.d(TAG,"uri = " + uri);
+
+		// Launch preferences activity if user or password are not set
+		if (user == null || user.length() == 0 || password == null || password.length() == 0) {
+			Intent intent = new Intent(mContext, TouchstonePrefsActivity.class);
+			((Activity) mContext).startActivityForResult(intent,1);
+		}
+		
 		post = new HttpPost();
 	
 		post.setURI(uri);

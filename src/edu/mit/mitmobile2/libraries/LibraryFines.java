@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,7 +24,8 @@ import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
-import edu.mit.mitmobile2.objs.LoanListItem;
+import edu.mit.mitmobile2.classes.LoanData;
+import edu.mit.mitmobile2.objs.FineListItem;
 
 public class LibraryFines extends ModuleActivity  {
 	
@@ -31,6 +33,16 @@ public class LibraryFines extends ModuleActivity  {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
+    static FineData fineData;
+
+    public static FineData getFineData() {
+		return fineData;
+	}
+
+	public static void setFineData(FineData fineData) {
+		LibraryFines.fineData = fineData;
+	}
+
     private TextView fineStatusTV;
     Context mContext;
     
@@ -67,11 +79,12 @@ public class LibraryFines extends ModuleActivity  {
             	Log.d(TAG,"MobileWebApi success");
                 @SuppressWarnings("unchecked")
                 FineData fineData = (FineData)msg.obj;
+                LibraryFines.setFineData((FineData)msg.obj);
                 
                 Date date = new Date();
                 fineStatusTV.setText("Balance as of " + date.toLocaleString() + ": " + fineData.getBalance() 
                 		+ " Payable at any MIT library service desk. TechCASH accepted only at Hayden Library. ");
-                final ArrayList<LoanListItem> results = fineData.getHolds();
+                final ArrayList<FineListItem> results = fineData.getFines();
 
                 if (results.size() == 0) {
                     Toast.makeText(LibraryFines.this, "No holds found", Toast.LENGTH_SHORT).show();
@@ -106,25 +119,27 @@ public class LibraryFines extends ModuleActivity  {
 
     }
 
-    private class LibraryFineAdapter extends SimpleArrayAdapter<LoanListItem> {
-        private List<LoanListItem> libraryFineItems;
-        public LibraryFineAdapter(List<LoanListItem> items) {
-            super(LibraryFines.this, items, R.layout.boring_action_row);
-            libraryFineItems = items;
+    private class LibraryFineAdapter extends SimpleArrayAdapter<FineListItem> {
+        private List<FineListItem> libraryFineItems;
+        public LibraryFineAdapter(ArrayList<FineListItem> results) {
+            super(LibraryFines.this, results, R.layout.boring_action_row);
+            libraryFineItems = results;
         }
 
         public void setLookupHandler(ListView listView, final String extras) {
-            setOnItemClickListener(listView, new SimpleArrayAdapter.OnItemClickListener<LoanListItem>() {
+            setOnItemClickListener(listView, new SimpleArrayAdapter.OnItemClickListener<FineListItem>() {
                 @Override
-                public void onItemSelected(LoanListItem item) {
+                public void onItemSelected(FineListItem item) {
                     Log.d(TAG,item.getTitle() + " clicked");
-                	//LibraryDetailActivity.launchActivity(getContext(), libraryItems, libraryItems.indexOf(item));
+            		Intent intent = new Intent(mContext, LibraryFineDetail.class);
+            		intent.putExtra("index", item.getIndex());
+    				startActivity(intent);          
                 }
             });
         }
 
         @Override
-        public void updateView(LoanListItem item, View view) {
+        public void updateView(FineListItem item, View view) {
             TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
             twoLineActionRow.setTitle(item.getTitle());
             twoLineActionRow.setSubtitle(item.getAuthor());

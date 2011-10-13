@@ -53,17 +53,16 @@ public class LibraryYourAccount extends ActivityGroup {
 		spec = tabHost.newTabSpec("Loans").setIndicator("Loans",res.getDrawable(R.drawable.ic_loans)).setContent(intent);
 		tabHost.addTab(spec);
 
-		
-		
+		//Tab Fines
+		intent = new Intent().setClass(this, LibraryFines.class);
+		spec = tabHost.newTabSpec("Fines").setIndicator("Fines",res.getDrawable(R.drawable.ic_fines)).setContent(intent);
+		tabHost.addTab(spec);
+				
 		//Tab Holds
 		intent = new Intent().setClass(this, LibraryHolds.class);
 		spec = tabHost.newTabSpec("Holds").setIndicator("Holds",res.getDrawable(R.drawable.ic_holds)).setContent(intent);
 		tabHost.addTab(spec);
 		
-		//Tab Fines
-		intent = new Intent().setClass(this, LibraryFines.class);
-		spec = tabHost.newTabSpec("Fines").setIndicator("Fines",res.getDrawable(R.drawable.ic_fines)).setContent(intent);
-		tabHost.addTab(spec);
 	}
 
 }

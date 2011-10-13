@@ -163,6 +163,7 @@ public class LoanListItem implements Parcelable {
     private String pendingFine;
     private boolean hasHold;
     private String dueText;
+    
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

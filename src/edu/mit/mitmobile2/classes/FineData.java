@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import edu.mit.mitmobile2.objs.FineListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class FineData {
 
 	private String balance;
 	private Date fineDate;
-	private ArrayList<LoanListItem> holds = new ArrayList<LoanListItem>();
+	private ArrayList<FineListItem> fines = new ArrayList<FineListItem>();
 	
-	public ArrayList<LoanListItem> getHolds() {
-		return holds;
+	public ArrayList<FineListItem> getFines() {
+		return fines;
 	}
-	public void setHolds(ArrayList<LoanListItem> holds) {
-		this.holds = holds;
+	public void setFines(ArrayList<FineListItem> fines) {
+		this.fines = fines;
 	}
 	public String getBalance() {
 		return balance;

@@ -93,8 +93,8 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 				}
 
-				Intent intent = new Intent(mContext, TouchstoneActivity.class);
-				startActivity(intent);
+				setResult(2, null);
+				finish();
 			}
 		});
 				

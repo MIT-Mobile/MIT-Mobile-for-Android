@@ -37,7 +37,8 @@ public class LibraryLoans extends ModuleActivity  {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
-    private static LoanData loanData;
+    static LoanData loanData;
+    
     public static LoanData getLoanData() {
 		return loanData;
 	}
