@@ -19,6 +19,7 @@ import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.libraries.LibraryItem.Hours;
 import edu.mit.mitmobile2.libraries.LibraryItem.Schedule;
 import edu.mit.mitmobile2.objs.FineListItem;
+import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 import edu.mit.mitmobile2.objs.RenewResponseItem;
 
@@ -291,9 +292,12 @@ public class LibraryParser {
 	        holdData.setNumReady(object.getInt("ready"));
         	JSONArray items = object.getJSONArray("items");
 			for (int l = 0; l < items.length(); l++) {
-				LoanListItem item = new LoanListItem();
+				HoldListItem item = new HoldListItem();
 				JSONObject tmpItem = items.getJSONObject(l);
 	
+				// Index
+				item.setIndex(l);
+				
 				// Author
 				item.setAuthor(tmpItem.optString("author",""));
 				
@@ -305,25 +309,16 @@ public class LibraryParser {
 			
 				// Sub-library
 				item.setSubLibrary(tmpItem.optString("sub-library",""));
-	
-				// bar code
-				item.setBarcode(tmpItem.optString("barcode",""));
-	
+		
 				// Status
 				item.setStatus(tmpItem.optString("status",""));
-			
-				// Load Date
-				item.setLoanDate(tmpItem.optString("loan-date",""));
-			
-				// Due Date
-				item.setDueDate(tmpItem.optString("due-date",""));
-	
-				// Returned Date
-				item.setReturnedDate(tmpItem.optString("returned-date",""));
-	
+				
 				// Call No
 				item.setCallNo(tmpItem.optString("call-no",""));
-	
+					
+				// Bar Code 
+				item.setBarCode(tmpItem.optString("barcode",""));
+
 				// Year
 				item.setYear(tmpItem.optString("year",""));
 	
@@ -333,30 +328,17 @@ public class LibraryParser {
 				// Imprint
 				item.setImprint(tmpItem.optString("imprint",""));
 	
-				// ISBN ISSN Display
-				item.setIsbnIssnDisplay(tmpItem.optString("isbn-issn-display",""));
-	
-				// ISBN ISSN Type
-				item.setIsbnIssnType(tmpItem.optString("isbn-issn-type",""));
-	
-				// Overdue
-				item.setOverdue(tmpItem.optString("overdue","").equalsIgnoreCase("TRUE"));
-	
-				// Long Overdue
-				item.setLongOverdue(tmpItem.optString("long-overdue","").equalsIgnoreCase("TRUE"));
-	
-				// Display Pending Fine
-				item.setDisplayPendingFine(tmpItem.optString("display-pending-fine",""));
-				
-				// Pending Fine
-				item.setPendingFine(tmpItem.optString("pending-fine",""));
-	
-				// Has Hold
-				item.setLongOverdue(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
-				
-				// Due Text
-				item.setDueText(tmpItem.optString("due-text",""));
-	
+				// Description
+				item.setDescription(tmpItem.optString("description",""));
+
+				// Pickup Locatiom
+				item.setPickupLocation(tmpItem.optString("pickup-location",""));
+
+				// End Hold Date
+				item.setEndHoldDate(tmpItem.optString("end-hold-date",""));
+
+				// Ready
+				item.setReady(tmpItem.optString("ready",""));
 	
 				//Log.d(TAG,item.title);
 				holdData.getHolds().add(item);

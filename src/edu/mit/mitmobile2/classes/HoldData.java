@@ -3,18 +3,19 @@ package edu.mit.mitmobile2.classes;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class HoldData {
 
 	private int numRequest;
 	private int numReady;
-	private ArrayList<LoanListItem> holds = new ArrayList<LoanListItem>();
+	private ArrayList<HoldListItem> holds = new ArrayList<HoldListItem>();
 	
-	public ArrayList<LoanListItem> getHolds() {
+	public ArrayList<HoldListItem> getHolds() {
 		return holds;
 	}
-	public void setHolds(ArrayList<LoanListItem> holds) {
+	public void setHolds(ArrayList<HoldListItem> holds) {
 		this.holds = holds;
 	}
 	public int getNumRequest() {

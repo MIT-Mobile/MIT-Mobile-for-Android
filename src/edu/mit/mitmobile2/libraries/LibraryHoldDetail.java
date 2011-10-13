@@ -1,6 +1,9 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.sql.Date;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,67 +20,71 @@ import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.classes.FineData;
+import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
+import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryHoldDetail extends Activity{
-	public static final String TAG = "LibraryLoanDetail";
+	public static final String TAG = "LibraryHoldDetail";
 
     Context mContext;
     private FullScreenLoader mLoadingView;
-	private TextView loanTitleTV;
-    private TextView loanAuthorTV;
-    private TextView loanCallNoTV;
-	private TextView loanLibraryTV;
-	private TextView loanISBNTV;
-	private TextView loanOverdueTV;
-	private Button loanRenewButton;
+    private TextView holdTitleTV;
+    private TextView holdAuthorTV;
+    private TextView holdCallNoTV;
+	private TextView holdLibraryTV;
+	private TextView holdISBNTV;
+	private TextView holdStatusTV;
+	private TextView holdPickupLocationTV;
     private int index;
-    
-//        Intent intent = new Intent(context, LibraryDetailActivity.class);
-//        intent.putExtra(LibraryLoanDetail.KEY_POSITION, position);
-//
-//        context.startActivity(intent);
-//    }
-    
-    @Override
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.library_loan_detail);
+        setContentView(R.layout.library_hold_detail);
         Bundle extras = getIntent().getExtras();
         index = extras.getInt("index");
-        final LoanListItem item = LibraryLoans.getLoanData().getLoans().get(index);
+        Log.d(TAG,"index = " + index);
+        final HoldListItem hold = LibraryHolds.getHoldData().getHolds().get(index);
         
-        loanTitleTV = (TextView)findViewById(R.id.loanTitleTV);
-        loanTitleTV.setText(item.getTitle());
+        holdTitleTV = (TextView)findViewById(R.id.holdTitleTV);
+        holdTitleTV.setText(hold.getTitle());
 
-        loanAuthorTV = (TextView)findViewById(R.id.loanAuthorTV);
-        loanAuthorTV.setText(item.getYear() + "; " + item.getAuthor());
+        holdAuthorTV = (TextView)findViewById(R.id.holdAuthorTV);
+        holdAuthorTV.setText(hold.getYear() + "; " + hold.getAuthor());
 
-        loanCallNoTV = (TextView)findViewById(R.id.loanCallNoTV);
-        loanCallNoTV.setText(item.getCallNo());
+        holdCallNoTV = (TextView)findViewById(R.id.holdCallNoTV);
+        holdCallNoTV.setText(hold.getCallNo());
       
-        loanLibraryTV = (TextView)findViewById(R.id.loanLibraryTV);
-        loanLibraryTV.setText(item.getSubLibrary());
+        holdLibraryTV = (TextView)findViewById(R.id.holdLibraryTV);
+        holdLibraryTV.setText(hold.getSubLibrary());
 
-        loanISBNTV = (TextView)findViewById(R.id.loanISBNTV);
-        loanISBNTV.setText(item.getIsbnIssnDisplay());
-       
-        loanOverdueTV = (TextView)findViewById(R.id.loanOverdueTV);
-        loanOverdueTV.setText(Html.fromHtml(item.getDueText()));
-        
-        mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
+        holdISBNTV = (TextView)findViewById(R.id.holdISBNTV);
+        holdISBNTV.setText(hold.getIsbnIssnDisplay());
 
-        loanRenewButton = (Button) findViewById(R.id.loanRenewButton);
-        loanRenewButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            	doSearch(item.getBarcode());
-                Log.d(TAG,"renew ");
-            }
-        });
-        
+        holdStatusTV = (TextView)findViewById(R.id.holdStatusTV);
+        holdStatusTV.setText(hold.getStatus());
+
+        holdPickupLocationTV = (TextView)findViewById(R.id.holdPickupLocationTV);
+        holdPickupLocationTV.setText("Pick up at " + hold.getPickupLocation());
+
+        //status
+        //pickuo
+//    	holdHoldDateTV = (TextView)findViewById(R.id.holdHoldDateTV);
+//        long timestamp = Long.parseLong(hold.getHoldDate()) * 1000;
+//    	java.util.Date d = new java.util.Date(timestamp);  
+//    	Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+//    	holdHoldDateTV.setText(formatter.format(d));
+//        
+//    	holdAmountOwedTV = (TextView)findViewById(R.id.holdAmountOwedTV);
+//    	holdAmountOwedTV.setText(Html.fromHtml(hold.getDisplayAmount()));
+
+    	mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
+
     }
 
     private void doSearch(String barcode) {

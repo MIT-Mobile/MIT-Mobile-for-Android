@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff" >
+  
+    <edu.mit.mitmobile2.TitleBar
+        android:text="Fines"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+  
+    <edu.mit.mitmobile2.DividerView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dividerHeight" />
+  
+  
+    <!-- TITLE -->
+  	<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingBottom="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/holdTitleTV"
+			android:text="holdTitleTV"
+			android:textColor="@color/contents_text"
+			android:textStyle="bold"
+			android:textSize="17sp"
+			android:typeface="sans" />
+			
+	<edu.mit.mitmobile2.DividerView
+			android:paddingTop="6dip"
+        	android:layout_width="fill_parent"
+        	android:layout_height="@dimen/dividerHeight" />
+		
+	<!-- Author -->			
+  	<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/holdAuthorTV"
+			android:textColor="@color/contents_text" />
+
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+    
+    		<!-- CALL # LABEL -->
+  			<TextView
+				android:layout_width="65dip"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="Call #:"
+				android:textStyle="bold"
+				android:textColor="@color/contents_text"
+				android:id="@+id/holdCallNoLabelTV" />
+
+			<!-- CALL # -->
+			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/holdCallNoTV"
+				android:textColor="@color/contents_text" />
+	</LinearLayout>
+        
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+  			<!-- LIBRARY LABEL -->
+  			<TextView
+				android:layout_width="65dip"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="Library:"
+				android:id="@+id/holdLibraryLabelTV"
+				android:textStyle="bold"
+				android:textColor="@color/contents_text" />
+				
+		  	<!-- LIBRARY -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/holdLibraryTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+  			<!-- ISBN LABEL -->
+  			<TextView
+				android:layout_width="65dip"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="ISBN:"
+				android:id="@+id/holdISBNLabelTV"
+				android:textStyle="bold"
+				android:textColor="@color/contents_text" />
+				
+		  	<!-- ISBN -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/holdISBNTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+	
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+		  	<!-- STATUS -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/holdStatusTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+		  	<!-- PICKUP LOCATION -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/holdPickupLocationTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+
+    <edu.mit.mitmobile2.FullScreenLoader
+        android:id="@+id/librarySearchLoading"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+            
+</LinearLayout>
