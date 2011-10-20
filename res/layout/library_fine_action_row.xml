@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:minHeight="@dimen/minRowHeight" >
+	
+	<!--  Fine amount, title, author, date fined --> 
+	<LinearLayout
+  			android:id="@+id/simpleRowTextContent"
+  			android:layout_alignParentLeft="true"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_gravity="center_vertical"
+  			android:orientation="vertical"
+  			android:paddingLeft="@dimen/horizontalPadding" >
+  					
+		<!-- Fine Amount -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/fineDisplayAmountTV"
+			android:paddingTop="@dimen/verticalPadding"
+			android:textSize="17sp"
+			android:typeface="sans" 
+			android:textColor="@color/contents_text" />
+
+		<!-- TITLE -->
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingBottom="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/fineTitleTV"
+			android:textColor="@color/contents_text"
+			android:textStyle="bold"
+			android:textSize="17sp"
+			android:typeface="sans" />
+				
+		<!-- Author -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/fineAuthorTV"
+			android:textColor="@color/contents_text" />
+		
+		<!-- Date Fined -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/fineFineDateTV"
+			android:textColor="@color/contents_text" />
+  		  				
+
+  	</LinearLayout>	
+  		 		
+</FrameLayout>

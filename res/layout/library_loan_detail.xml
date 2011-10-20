@@ -128,7 +128,7 @@
 			android:layout_height="wrap_content"
 			android:paddingTop="6dip"
 			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/loanOverdueTV"
+			android:id="@+id/loanStatusTV"
 			android:textColor="#ff0000" />
 
 	<Button

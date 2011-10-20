@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -419,9 +421,14 @@ public class LibraryParser {
 				item.setAmount(tmpItem.optString("amount",""));
 
 				// Fine Date
-				item.setFineDate(tmpItem.optString("fine-date",""));
-	
-				//Log.d(TAG,item.title);
+				String fineDate = tmpItem.optString("fine-date","");
+				if (fineDate.length() > 0) {
+			        long timestamp = Long.parseLong(fineDate) * 1000;
+			    	java.util.Date d = new java.util.Date(timestamp);  
+			    	Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+			    	item.setFineDate(formatter.format(d));		
+				}
+
 				fineData.getFines().add(item);
 			}
 			

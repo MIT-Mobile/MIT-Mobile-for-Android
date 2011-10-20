@@ -6,9 +6,11 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -34,6 +36,11 @@ public class LibraryFines extends ModuleActivity  {
     private ListView mListView;
     private FullScreenLoader mLoadingView;
     static FineData fineData;
+    private TextView fineStatusTV;
+    private TextView fineDisplayAmountTV;
+    private TextView fineTitleTV;
+    private TextView fineAuthorTV;
+    private TextView fineFineDateTV;
 
     public static FineData getFineData() {
 		return fineData;
@@ -43,7 +50,6 @@ public class LibraryFines extends ModuleActivity  {
 		LibraryFines.fineData = fineData;
 	}
 
-    private TextView fineStatusTV;
     Context mContext;
     
     @Override
@@ -122,7 +128,7 @@ public class LibraryFines extends ModuleActivity  {
     private class LibraryFineAdapter extends SimpleArrayAdapter<FineListItem> {
         private List<FineListItem> libraryFineItems;
         public LibraryFineAdapter(ArrayList<FineListItem> results) {
-            super(LibraryFines.this, results, R.layout.boring_action_row);
+            super(LibraryFines.this, results, R.layout.library_fine_action_row);
             libraryFineItems = results;
         }
 
@@ -140,9 +146,27 @@ public class LibraryFines extends ModuleActivity  {
 
         @Override
         public void updateView(FineListItem item, View view) {
-            TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
-            twoLineActionRow.setTitle(item.getTitle());
-            twoLineActionRow.setSubtitle(item.getAuthor());
+
+        	// Display Amount
+        	fineDisplayAmountTV = (TextView)view.findViewById(R.id.fineDisplayAmountTV);
+        	fineDisplayAmountTV.setText(item.getDisplayAmount());
+
+        	// Title
+        	fineTitleTV = (TextView)view.findViewById(R.id.fineTitleTV);
+        	fineTitleTV.setText(item.getTitle());
+        	
+        	// Year + Author
+        	fineAuthorTV = (TextView)view.findViewById(R.id.fineAuthorTV);
+        	if (!item.getAuthor().equalsIgnoreCase("") || !item.getYear().equalsIgnoreCase("")) {
+        		fineAuthorTV.setText(item.getYear() + "; " + item.getAuthor());
+        	}
+        	else {
+        		fineAuthorTV.setVisibility(View.GONE);
+        	}
+
+        	// Fine Date
+        	fineFineDateTV = (TextView)view.findViewById(R.id.fineFineDateTV);
+        	fineFineDateTV.setText("Fined " + item.getFineDate());
         }
 
     }

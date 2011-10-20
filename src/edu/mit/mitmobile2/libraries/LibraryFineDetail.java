@@ -65,10 +65,7 @@ public class LibraryFineDetail extends Activity{
         fineISBNTV.setText(fine.getIsbnIssnDisplay());
        
     	fineFineDateTV = (TextView)findViewById(R.id.fineFineDateTV);
-        long timestamp = Long.parseLong(fine.getFineDate()) * 1000;
-    	java.util.Date d = new java.util.Date(timestamp);  
-    	Format formatter = new SimpleDateFormat("MM/dd/yyyy");
-    	fineFineDateTV.setText(formatter.format(d));
+    	fineFineDateTV.setText(fine.getFineDate());
         
     	fineAmountOwedTV = (TextView)findViewById(R.id.fineAmountOwedTV);
     	fineAmountOwedTV.setText(Html.fromHtml(fine.getDisplayAmount()));

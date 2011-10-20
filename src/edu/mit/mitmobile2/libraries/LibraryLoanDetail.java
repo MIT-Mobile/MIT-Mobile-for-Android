@@ -32,7 +32,7 @@ public class LibraryLoanDetail extends Activity{
     private TextView loanCallNoTV;
 	private TextView loanLibraryTV;
 	private TextView loanISBNTV;
-	private TextView loanOverdueTV;
+	private TextView loanStatusTV;
 	private Button loanRenewButton;
     private int index;
     
@@ -66,13 +66,13 @@ public class LibraryLoanDetail extends Activity{
         loanISBNTV = (TextView)findViewById(R.id.loanISBNTV);
         loanISBNTV.setText(item.getIsbnIssnDisplay());
        
-        loanOverdueTV = (TextView)findViewById(R.id.loanOverdueTV);
-        loanOverdueTV.setText(Html.fromHtml(item.getDueText()));  
+        loanStatusTV = (TextView)findViewById(R.id.loanStatusTV);
+        loanStatusTV.setText(Html.fromHtml(item.getDueText()));  
     	if (item.isOverdue() || item.isLongOverdue()) {
-    		loanOverdueTV.setTextColor(Color.RED);
+    		loanStatusTV.setTextColor(Color.RED);
     	}
     	else {
-    		loanOverdueTV.setTextColor(R.color.contents_text);
+    		loanStatusTV.setTextColor(R.color.contents_text);
     	}
 
         
