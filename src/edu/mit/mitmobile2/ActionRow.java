@@ -10,8 +10,16 @@ import android.widget.LinearLayout;
 
 public abstract class ActionRow extends FrameLayout {	
 	private OnClickListener mOnClickListener;
+
+	// TEST
+	private int layoutId;
 	
 	protected abstract int getLayoutId();
+
+	// TEST
+	protected void setLayoutId(int mLayoutId) {
+		this.layoutId = mLayoutId;
+	}
 	
 	private Drawable mSystemSelectionDrawable;
 	private int mBackgroundResourceId;
