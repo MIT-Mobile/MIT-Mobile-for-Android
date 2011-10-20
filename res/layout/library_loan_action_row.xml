@@ -35,7 +35,6 @@
   		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
 			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/loanAuthorTV"
 			android:textColor="@color/contents_text" />
@@ -44,7 +43,6 @@
   		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
 			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/loanStatusTV"
 			android:textColor="@color/contents_text" />

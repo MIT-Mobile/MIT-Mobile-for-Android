@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,7 +67,15 @@ public class LibraryLoanDetail extends Activity{
         loanISBNTV.setText(item.getIsbnIssnDisplay());
        
         loanOverdueTV = (TextView)findViewById(R.id.loanOverdueTV);
-        loanOverdueTV.setText(Html.fromHtml(item.getDueText()));
+        loanOverdueTV.setText(Html.fromHtml(item.getDueText()));  
+    	if (item.isOverdue() || item.isLongOverdue()) {
+    		loanOverdueTV.setTextColor(Color.RED);
+    	}
+    	else {
+    		loanOverdueTV.setTextColor(R.color.contents_text);
+    	}
+
+        
         
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
 

@@ -10,9 +10,11 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -165,9 +167,12 @@ public class LibraryLoans extends ModuleActivity  {
 
         	// Status
         	loanStatusTV = (TextView)view.findViewById(R.id.loanStatusTV);
-        	loanStatusTV.setText(item.getDueText());
+        	loanStatusTV.setText(Html.fromHtml(item.getDueText()));
         	if (item.isOverdue() || item.isLongOverdue()) {
-        		loanStatusTV.setTextColor(R.color.overdue_text);
+        		loanStatusTV.setTextColor(Color.RED);
+        	}
+        	else {
+        		loanStatusTV.setTextColor(R.color.contents_text);
         	}
         }
 

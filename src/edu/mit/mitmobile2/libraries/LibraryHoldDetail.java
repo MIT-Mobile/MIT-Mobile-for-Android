@@ -72,17 +72,6 @@ public class LibraryHoldDetail extends Activity{
         holdPickupLocationTV = (TextView)findViewById(R.id.holdPickupLocationTV);
         holdPickupLocationTV.setText("Pick up at " + hold.getPickupLocation());
 
-        //status
-        //pickuo
-//    	holdHoldDateTV = (TextView)findViewById(R.id.holdHoldDateTV);
-//        long timestamp = Long.parseLong(hold.getHoldDate()) * 1000;
-//    	java.util.Date d = new java.util.Date(timestamp);  
-//    	Format formatter = new SimpleDateFormat("MM/dd/yyyy");
-//    	holdHoldDateTV.setText(formatter.format(d));
-//        
-//    	holdAmountOwedTV = (TextView)findViewById(R.id.holdAmountOwedTV);
-//    	holdAmountOwedTV.setText(Html.fromHtml(hold.getDisplayAmount()));
-
     	mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
 
     }
