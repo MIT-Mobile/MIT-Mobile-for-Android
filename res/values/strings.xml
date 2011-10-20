@@ -27,7 +27,7 @@
 		<item>Humanities</item>
 	</string-array>
 	
-	<string name="library_search_hint">Search</string>
+	<string name="library_search_hint">Search MIT\'s WorldCat</string>
     <string name="library_search_label">Library Search</string>
     
 	<string name="people_search_label">Directory Search</string>
