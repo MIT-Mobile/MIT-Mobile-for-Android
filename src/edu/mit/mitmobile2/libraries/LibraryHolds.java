@@ -18,13 +18,11 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MultiLineActionRow;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.objs.HoldListItem;
-import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryHolds extends ModuleActivity  {
 	
@@ -32,7 +30,11 @@ public class LibraryHolds extends ModuleActivity  {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
-    private TextView holdStatusTV;
+    private TextView holdTitleTV;
+	private TextView holdAuthorTV;
+	private TextView holdStatusTV;
+	private TextView holdPickupLocationTV;
+    
     Context mContext;
     
     static HoldData holdData;
@@ -59,7 +61,15 @@ public class LibraryHolds extends ModuleActivity  {
         doSearch();
     }
 
-    private void doSearch() {
+	
+    @Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+        doSearch();
+	}
+
+	private void doSearch() {
         mListView.setVisibility(View.GONE);
 
         mLoadingView.setVisibility(View.VISIBLE);
@@ -120,7 +130,7 @@ public class LibraryHolds extends ModuleActivity  {
     private class LibraryHoldAdapter extends SimpleArrayAdapter<HoldListItem> {
         private List<HoldListItem> libraryHoldItems;
         public LibraryHoldAdapter(List<HoldListItem> items) {
-            super(LibraryHolds.this, items, R.layout.boring_action_row);
+            super(LibraryHolds.this, items, R.layout.library_hold_action_row);
             libraryHoldItems = items;
         }
 
@@ -137,9 +147,46 @@ public class LibraryHolds extends ModuleActivity  {
 
         @Override
         public void updateView(HoldListItem item, View view) {
-            TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
-            twoLineActionRow.setTitle(item.getTitle());
-            twoLineActionRow.setSubtitle(item.getAuthor());
+        	Log.d(TAG,"title = " + item.getTitle());
+        	Log.d(TAG,"author = " + item.getAuthor());
+        	Log.d(TAG,"status = " + item.getStatus());
+        	Log.d(TAG,"pickup location = " + item.getPickupLocation());
+        	
+        	// Title
+        	holdTitleTV = (TextView)view.findViewById(R.id.holdTitleTV);
+
+        	if (!item.getTitle().equalsIgnoreCase("")) {
+        		holdTitleTV.setText(item.getTitle());
+        	}
+        	else {
+        		holdTitleTV.setVisibility(View.GONE);
+        	}
+        	// Year + Author
+        	holdAuthorTV = (TextView)view.findViewById(R.id.holdAuthorTV);
+        	if (!item.getAuthor().equalsIgnoreCase("")) {
+        		holdAuthorTV.setText(item.getYear() + "; " + item.getAuthor());
+        	}
+        	else {
+        		holdAuthorTV.setVisibility(View.GONE);
+        	}
+
+        	// Status
+        	holdStatusTV = (TextView)view.findViewById(R.id.holdStatusTV);
+        	if (!item.getStatus().equalsIgnoreCase("")) {
+        		holdStatusTV.setText(item.getStatus());
+        	}
+        	else {
+        		holdStatusTV.setVisibility(View.GONE);
+        	}
+
+        	// Pickup Location
+        	holdPickupLocationTV = (TextView)view.findViewById(R.id.holdPickupLocationTV);
+        	if (!item.getPickupLocation().equalsIgnoreCase("")) {
+        		holdPickupLocationTV.setText("Pick up at " + item.getPickupLocation());
+        	}
+        	else {
+        		holdPickupLocationTV.setVisibility(View.GONE);
+        	}
         }
 
     }

@@ -201,6 +201,7 @@ public class LibraryParser {
     }
   
     static LoanData parseLoans(JSONObject object) {
+    	Log.d(TAG,"parseLoans");
         LoanData loanData = new LoanData();
 
         try {
@@ -253,10 +254,12 @@ public class LibraryParser {
 				item.setImprint(tmpItem.optString("imprint",""));
 	
 				// ISBN ISSN Display / Type
-				JSONObject isbn = tmpItem.getJSONObject("isbn-issn");
-				item.setIsbnIssnDisplay(isbn.optString("display",""));				
-				item.setIsbnIssnType(isbn.optString("type",""));
-	
+				JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
+				if (isbn != null) {
+					item.setIsbnIssnDisplay(isbn.optString("display",""));				
+					item.setIsbnIssnType(isbn.optString("type",""));
+				}
+				
 				// Overdue
 				item.setOverdue(tmpItem.optString("overdue","").equalsIgnoreCase("TRUE"));
 	
@@ -281,6 +284,7 @@ public class LibraryParser {
 			}
         }
 		catch (JSONException e) {
+			Log.d(TAG,e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error parsing libraries");			
 		}
