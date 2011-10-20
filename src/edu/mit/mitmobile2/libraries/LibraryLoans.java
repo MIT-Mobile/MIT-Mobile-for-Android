@@ -37,6 +37,9 @@ public class LibraryLoans extends ModuleActivity  {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
+    private TextView loanTitleTV;
+	private TextView loanAuthorTV;
+	private TextView loanStatusTV;
     static LoanData loanData;
     
     public static LoanData getLoanData() {
@@ -47,7 +50,6 @@ public class LibraryLoans extends ModuleActivity  {
 		LibraryLoans.loanData = loanData;
 	}
 
-	private TextView loanStatusTV;
     Context mContext;
     
     @Override
@@ -123,10 +125,11 @@ public class LibraryLoans extends ModuleActivity  {
     private class LibraryLoanAdapter extends SimpleArrayAdapter<LoanListItem> {
         private List<LoanListItem> libraryLoanItems;
         public LibraryLoanAdapter(List<LoanListItem> items) {
-            super(LibraryLoans.this, items, R.layout.boring_action_row);
+            super(LibraryLoans.this, items, R.layout.library_loan_action_row);
             libraryLoanItems = items;
         }
-
+ 
+        
         public void setLookupHandler(ListView listView, final String extras) {
             setOnItemClickListener(listView, new SimpleArrayAdapter.OnItemClickListener<LoanListItem>() {
                 @Override
@@ -141,127 +144,33 @@ public class LibraryLoans extends ModuleActivity  {
 
         @Override
         public void updateView(LoanListItem item, View view) {
-            TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
-            twoLineActionRow.setTitle(item.getTitle());
-            twoLineActionRow.setSubtitle(item.getAuthor());
+        	
+        	// Title
+        	loanTitleTV = (TextView)view.findViewById(R.id.loanTitleTV);
+
+        	if (!item.getTitle().equalsIgnoreCase("")) {
+        		loanTitleTV.setText(item.getTitle());
+        	}
+        	else {
+        		loanTitleTV.setVisibility(View.GONE);
+        	}
+        	// Year + Author
+        	loanAuthorTV = (TextView)view.findViewById(R.id.loanAuthorTV);
+        	if (!item.getAuthor().equalsIgnoreCase("") || !item.getYear().equalsIgnoreCase("")) {
+        		loanAuthorTV.setText(item.getYear() + "; " + item.getAuthor());
+        	}
+        	else {
+        		loanAuthorTV.setVisibility(View.GONE);
+        	}
+
+        	// Status
+        	loanStatusTV = (TextView)view.findViewById(R.id.loanStatusTV);
+        	loanStatusTV.setText(item.getDueText());
+        	if (item.isOverdue() || item.isLongOverdue()) {
+        		loanStatusTV.setTextColor(R.color.overdue_text);
+        	}
         }
 
     }
-
-//	public void getLoanData() {
-//		HashMap<String, String> params = new HashMap<String, String>();
-//		params.put("module", "libraries");
-//		params.put("command", "loans");
-//		final ArrayList<LoanListItem> loans = new ArrayList();
-//
-//    	MobileWebApi api = new MobileWebApi(false, true, "Libraries", mContext, uiHandler,HttpClientType.MIT);
-//    	api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
-//                new MobileWebApi.DefaultErrorListener(uiHandler),
-//                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
-//			@Override
-//			public void onResponse(JSONObject obj) {
-//
-//				Log.d(TAG,"on response");
-//				Log.d(TAG,"obj = " + obj);
-//				try {
-//					Log.d(TAG,"total = " + obj.getString("total"));
-//					Log.d(TAG,"start = " + obj.getString("start"));
-//					Log.d(TAG,"overdue = " + obj.getString("overdue"));
-//					//data.setNumLoan( Integer.parseInt(obj.getString("total")));
-//					//data.setNumOverdue( Integer.parseInt(obj.getString("overdue")));
-//					
-//					// convert items into lv
-//					JSONArray items = obj.getJSONArray("items");
-//					for (int l = 0; l < items.length(); l++) {
-//						LoanListItem item = new LoanListItem();
-//						JSONObject tmpItem = items.getJSONObject(l);
-//						Log.d(TAG,l + "");
-//						Log.d(TAG,tmpItem.getString("author"));
-//
-//						// Author
-//						item.setAuthor(tmpItem.optString("author",""));
-//						
-//						// Doc-Number
-//						item.setDocNumber(tmpItem.optString("doc-number",""));
-//					
-//						// Material
-//						item.setMaterial(tmpItem.optString("material",""));
-//					
-//						// Sub-library
-//						item.setSubLibrary(tmpItem.optString("sub-library",""));
-//
-//						// bar code
-//						item.setBarcode(tmpItem.optString("barcode",""));
-//
-//						// Status
-//						item.setStatus(tmpItem.optString("status",""));
-//					
-//						// Load Date
-//						item.setLoanDate(tmpItem.optString("loan-date",""));
-//					
-//						// Due Date
-//						item.setDueDate(tmpItem.optString("due-date",""));
-//
-//						// Returned Date
-//						item.setReturnedDate(tmpItem.optString("returned-date",""));
-//
-//						// Call No
-//						item.setCallNo(tmpItem.optString("call-no",""));
-//
-//						// Year
-//						item.setYear(tmpItem.optString("year",""));
-//
-//						// Title
-//						item.setTitle(tmpItem.optString("title",""));
-//
-//						// Imprint
-//						item.setImprint(tmpItem.optString("imprint",""));
-//
-//						// ISBN ISSN Display
-//						item.setIsbnIssnDisplay(tmpItem.optString("isbn-issn-display",""));
-//
-//						// ISBN ISSN Type
-//						item.setIsbnIssnType(tmpItem.optString("isbn-issn-type",""));
-//
-//						// Overdue
-//						item.setOverdue(tmpItem.optString("overdue","").equalsIgnoreCase("TRUE"));
-//
-//						// Long Overdue
-//						item.setLongOverdue(tmpItem.optString("long-overdue","").equalsIgnoreCase("TRUE"));
-//
-//						// Display Pending Fine
-//						item.setDisplayPendingFine(tmpItem.optString("display-pending-fine",""));
-//						
-//						// Pending Fine
-//						item.setPendingFine(tmpItem.optString("pending-fine",""));
-//
-//						// Has Hold
-//						item.setLongOverdue(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
-//						
-//						// Due Text
-//						item.setDueText(tmpItem.optString("due-text",""));
-//
-//
-//						//Log.d(TAG,item.title);
-//						loans.add(item);
-//					}
-//				}
-//				catch (JSONException e) {
-//					Log.d(TAG,"JSONException = " + e.getMessage());
-//				}
-//					
-//				//loanStatus = (SectionHeader)findViewById(R.id.libraryLoanStatus);
-//				//loanStatus.setText("You have " + data.getNumLoan() + " on loan. " + data.getNumOverdue() + " overdue.");
-//			}
-//
-//			@Override
-//			public void onError() {
-//				// TODO Auto-generated method stub
-//				super.onError();
-//				Log.d(TAG,"on error: requestJSONObject");
-//			}
-//	});	
-//		
-//	}
 
 }

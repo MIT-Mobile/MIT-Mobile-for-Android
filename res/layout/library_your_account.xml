@@ -19,7 +19,6 @@
     android:layout_height="wrap_content"
     android:id="@+id/tabLoans"
     android:orientation="vertical"
-    android:paddingTop="60px"
      >
      </LinearLayout>
      
@@ -28,7 +27,6 @@
     android:layout_height="fill_parent"
     android:id="@+id/tabFines"
     android:orientation="vertical"
-    android:paddingTop="60px"
      >
      </LinearLayout>
 
@@ -37,7 +35,6 @@
     android:layout_height="fill_parent"
     android:id="@+id/tabHolds"
     android:orientation="vertical"
-    android:paddingTop="60px"
      >
      </LinearLayout>
      

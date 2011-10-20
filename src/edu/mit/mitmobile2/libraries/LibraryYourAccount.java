@@ -16,7 +16,7 @@ import edu.mit.mitmobile2.TabConfigurator;
 
 public class LibraryYourAccount extends ActivityGroup {
 
-		
+	protected TabHost tabHost;	
 	protected Activity mActivity;
 	
 		
@@ -31,12 +31,12 @@ public class LibraryYourAccount extends ActivityGroup {
 		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
 		tabHost.setup(this.getLocalActivityManager());  // NEEDED!!!
 				
-//		TabConfigurator tabConfigurator = new TabConfigurator(mActivity, tabHost);
-//		tabConfigurator.addTab("Loans", R.id.tabLoans,LibraryLoans.class);
-//		tabConfigurator.addTab("Holds", R.id.tabHolds,LibraryHolds.class);
-//		tabConfigurator.addTab("Fines", R.id.tabFines,LibraryFines.class);
-//		
-//		tabConfigurator.configureTabs();
+//				TabConfigurator tabConfigurator = new TabConfigurator(mActivity, tabHost);
+//				tabConfigurator.addTab("Loans", R.id.tabLoans,LibraryLoans.class);
+//				tabConfigurator.addTab("Holds", R.id.tabHolds,LibraryHolds.class);
+//				tabConfigurator.addTab("Fines", R.id.tabFines,LibraryFines.class);
+//				
+//				tabConfigurator.configureTabs();
 		
 		Resources res = getResources(); // Resource object to get Drawables
 		///TabHost tabHost1=(TabHost)findViewById(R.id.tabHost);
@@ -46,7 +46,6 @@ public class LibraryYourAccount extends ActivityGroup {
 		
 		Intent intent;  // Reusable Intent for each tab
 		ColorStateList colors = mActivity.getResources().getColorStateList(R.color.tab_text_color);
-		
 		
 		// Tab Loans
 		intent = new Intent().setClass(this, LibraryLoans.class);

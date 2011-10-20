@@ -201,6 +201,8 @@ public class LibraryParser {
     }
   
     static LoanData parseLoans(JSONObject object) {
+    	String overDue = "";
+    	String longOverdue = "";
     	Log.d(TAG,"parseLoans");
         LoanData loanData = new LoanData();
 
@@ -214,6 +216,7 @@ public class LibraryParser {
 	
 				// Index
 				item.setIndex(l);
+
 				// Author
 				item.setAuthor(tmpItem.optString("author",""));
 				
@@ -245,6 +248,7 @@ public class LibraryParser {
 				item.setCallNo(tmpItem.optString("call-no",""));
 	
 				// Year
+				Log.d(TAG,"year = " + tmpItem.optString("year",""));
 				item.setYear(tmpItem.optString("year",""));
 	
 				// Title
@@ -261,10 +265,14 @@ public class LibraryParser {
 				}
 				
 				// Overdue
-				item.setOverdue(tmpItem.optString("overdue","").equalsIgnoreCase("TRUE"));
-	
+				overDue = tmpItem.optString("overdue","");
+				item.setOverdue(overDue.equalsIgnoreCase("TRUE"));
+				Log.d(TAG,"overDue = " + item.isOverdue());
+				
 				// Long Overdue
-				item.setLongOverdue(tmpItem.optString("long-overdue","").equalsIgnoreCase("TRUE"));
+				longOverdue = tmpItem.optString("long-overdue","");
+				item.setLongOverdue(longOverdue.equalsIgnoreCase("TRUE"));
+				Log.d(TAG,"long overDue = " + item.isLongOverdue());
 	
 				// Display Pending Fine
 				item.setDisplayPendingFine(tmpItem.optString("display-pending-fine",""));

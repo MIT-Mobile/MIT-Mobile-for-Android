@@ -5,12 +5,11 @@
 	android:layout_height="wrap_content"
 	android:minHeight="@dimen/minRowHeight" >
 	
-	
-	<!--  content title, subtitle --> 
+	<!--  title, author, and status --> 
 	<LinearLayout
   			android:id="@+id/simpleRowTextContent"
   			android:layout_alignParentLeft="true"
-  			android:layout_width="wrap_content"
+  			android:layout_width="fill_parent"
   			android:layout_height="wrap_content"
   			android:layout_gravity="center_vertical"
   			android:orientation="vertical"
@@ -18,40 +17,38 @@
   			android:paddingTop="@dimen/verticalPadding"
   			android:paddingBottom="@dimen/verticalPadding" >
   	
-  			<TextView
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:paddingRight="30dip"
-  				android:visibility="gone"
-  				android:id="@+id/simpleRowTitle" 
-  				style="@style/ListItemPrimary" />
-  		
-  			<TextView
-  				android:layout_width="wrap_content"
-  				android:layout_height="wrap_content"
-  				android:visibility="gone"
-  				android:paddingTop="@dimen/interlinePadding"
-  				android:paddingRight="@dimen/horizontalPadding"
-  				android:id="@+id/simpleRowSubtitle" 
-  				style="@style/ListItemSecondary" />
-  				
-  	</LinearLayout>	
-  		
-	<RelativeLayout
- 		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-  		android:layout_gravity="center_vertical" >
-  
-    	<!-- icon -->  	
 
-		<ImageView
-  			android:layout_alignParentRight="true"
-  			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
-  			android:layout_centerVertical="true"
-  			android:scaleType="center"
-  			android:paddingRight="@dimen/horizontalPadding"
-  			android:id="@+id/simpleRowActionIcon"/>
-  	</RelativeLayout>
- 		
+		<!-- TITLE -->
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingBottom="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanTitleTV"
+			android:textColor="@color/contents_text"
+			android:textStyle="bold"
+			android:textSize="17sp"
+			android:typeface="sans" />
+				
+		<!-- Author -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanAuthorTV"
+			android:textColor="@color/contents_text" />
+		
+		<!-- STATUS -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanStatusTV"
+			android:textColor="@color/contents_text" />
+  		  				
+  	</LinearLayout>	
+  		 		
 </FrameLayout>
