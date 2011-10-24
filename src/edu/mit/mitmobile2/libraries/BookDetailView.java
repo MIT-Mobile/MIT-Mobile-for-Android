@@ -16,7 +16,7 @@ public class BookDetailView implements SliderInterface {
     
     private TwoLineActionRow mDetailTitle;
     private TwoLineActionRow mDetailAuthor;
-    private TwoLineActionRow mDetailYear;
+    //private TwoLineActionRow mDetailYear;
     
     public BookDetailView(Activity activity, BookItem bookItem) {
         mBookItem = bookItem;
@@ -26,11 +26,11 @@ public class BookDetailView implements SliderInterface {
         
         mDetailTitle = (TwoLineActionRow) mView.findViewById(R.id.bookDetailTitle);
         mDetailAuthor = (TwoLineActionRow) mView.findViewById(R.id.bookDetailAuthor);
-        mDetailYear = (TwoLineActionRow) mView.findViewById(R.id.bookDetailYear);
+        //mDetailYear = (TwoLineActionRow) mView.findViewById(R.id.bookDetailYear);
         
         mDetailTitle.setTitle(mBookItem.title);
         mDetailAuthor.setTitle(mBookItem.getAuthorsDisplayString());
-        mDetailYear.setTitle(mBookItem.getYearsDisplayString());
+        //mDetailYear.setTitle(mBookItem.getYearsDisplayString());
     }
     
     
