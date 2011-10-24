@@ -144,7 +144,7 @@ public class LibraryDetailView implements SliderInterface {
     	
     	SpannableStringBuilder builder = new SpannableStringBuilder();
     	builder.append(bold("Today's Hours: "));
-    	builder.append(normal(mLibraryItem.hoursToday));
+    	builder.append(bodyText(mLibraryItem.hoursToday));
     	builder.append("\n\n");
     	
     	addTermContent(builder, mLibraryItem.currentTerm);
@@ -163,7 +163,7 @@ public class LibraryDetailView implements SliderInterface {
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
         String start = formatter.format(termItem.range_start);
         String end = formatter.format(termItem.range_end);
-        hoursTitle += start + "-" + end + "):";
+        hoursTitle += start + "-" + end + ")";
  
         builder.append(bold(hoursTitle.trim() + "\n"));
     	
@@ -183,6 +183,12 @@ public class LibraryDetailView implements SliderInterface {
     private Spannable normal(String text) {
     	Spannable span = new SpannableString(text);
     	span.setSpan(new TextAppearanceSpan(mActivity, R.style.ListItemSecondary), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	return span;
+    }
+    
+    private Spannable bodyText(String text) {
+    	Spannable span = new SpannableString(text);
+    	span.setSpan(new TextAppearanceSpan(mActivity, R.style.BodyText), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     	return span;
     }
 }
