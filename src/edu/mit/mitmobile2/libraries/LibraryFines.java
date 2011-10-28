@@ -36,6 +36,7 @@ public class LibraryFines extends ModuleActivity  {
     private ListView mListView;
     private FullScreenLoader mLoadingView;
     static FineData fineData;
+    private View mFineResults;
     private TextView fineStatusTV;
     private TextView fineDisplayAmountTV;
     private TextView fineTitleTV;
@@ -60,6 +61,7 @@ public class LibraryFines extends ModuleActivity  {
         setContentView(R.layout.library_fines);
         
         fineStatusTV = (TextView) findViewById(R.id.fineStatusTV);
+        mFineResults = (View) findViewById(R.id.fineResults);
         mListView = (ListView) findViewById(R.id.listLibraryFines);
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
 
@@ -67,8 +69,7 @@ public class LibraryFines extends ModuleActivity  {
     }
 
     private void doSearch() {
-        mListView.setVisibility(View.GONE);
-
+    	mFineResults.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
 
@@ -100,7 +101,7 @@ public class LibraryFines extends ModuleActivity  {
                 LibraryFineAdapter adapter = new LibraryFineAdapter(results);
                 mListView.setAdapter(adapter);
                 adapter.setLookupHandler(mListView, null);
-                mListView.setVisibility(View.VISIBLE);
+            	mFineResults.setVisibility(View.VISIBLE);
 
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();

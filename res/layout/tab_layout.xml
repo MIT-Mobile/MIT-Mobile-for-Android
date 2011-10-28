@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <TabHost android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
 		android:id="@+id/tabHost"
     	android:fillViewport="true"
-		xmlns:android="http://schemas.android.com/apk/res/android"	
->
+		xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="5dp">
+        android:layout_height="fill_parent" >
+        
+        <edu.mit.mitmobile2.TitleBar
+        android:text="Your Account"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+        
         <TabWidget
 			android:id="@android:id/tabs"
             android:layout_width="fill_parent"

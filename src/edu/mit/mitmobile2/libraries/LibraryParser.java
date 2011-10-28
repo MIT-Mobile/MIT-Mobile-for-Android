@@ -305,9 +305,10 @@ public class LibraryParser {
         HoldData holdData = new HoldData();
 
         try {
-	        holdData.setNumRequest(object.getInt("total"));
-	        holdData.setNumReady(object.getInt("ready"));
-        	JSONArray items = object.getJSONArray("items");
+	        holdData.setNumRequest(object.optInt("total",0));
+	        holdData.setNumReady(object.optInt("ready",0));
+        	Log.d(TAG,"num request = " + holdData.getNumRequest() + " num ready = " + holdData.getNumReady());
+	        JSONArray items = object.getJSONArray("items");
 			for (int l = 0; l < items.length(); l++) {
 				HoldListItem item = new HoldListItem();
 				JSONObject tmpItem = items.getJSONObject(l);

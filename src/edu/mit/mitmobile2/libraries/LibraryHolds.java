@@ -29,6 +29,7 @@ public class LibraryHolds extends ModuleActivity  {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
+    private View mHoldResults;
     private TextView holdTitleTV;
 	private TextView holdAuthorTV;
 	private TextView holdStatusTV;
@@ -54,6 +55,7 @@ public class LibraryHolds extends ModuleActivity  {
         setContentView(R.layout.library_holds);
         
         holdStatusTV = (TextView) findViewById(R.id.holdStatusTV);
+        mHoldResults = (View) findViewById(R.id.holdResults);
         mListView = (ListView) findViewById(R.id.listLibraryHolds);
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
 
@@ -69,8 +71,7 @@ public class LibraryHolds extends ModuleActivity  {
 	}
 
 	private void doSearch() {
-        mListView.setVisibility(View.GONE);
-
+        mHoldResults.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
 
@@ -88,8 +89,7 @@ public class LibraryHolds extends ModuleActivity  {
                 @SuppressWarnings("unchecked")
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryHolds.setHoldData((HoldData)msg.obj);
-
-                
+             
                 holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests." + holdData.getNumReady() + " for pickup.");
                 final ArrayList<HoldListItem> results = holdData.getHolds();
 
@@ -101,8 +101,7 @@ public class LibraryHolds extends ModuleActivity  {
                 LibraryHoldAdapter adapter = new LibraryHoldAdapter(results);
                 mListView.setAdapter(adapter);
                 adapter.setLookupHandler(mListView, null);
-                mListView.setVisibility(View.VISIBLE);
-
+                mHoldResults.setVisibility(View.VISIBLE);
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
             } else if (msg.arg1 == MobileWebApi.CANCELLED) {

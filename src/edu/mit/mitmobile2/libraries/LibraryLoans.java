@@ -37,6 +37,7 @@ public class LibraryLoans extends ModuleActivity  {
 	
 	public static final String TAG = "LibraryLoans";
 
+	private View mLoanResults;
     private ListView mListView;
     private FullScreenLoader mLoadingView;
     private TextView loanTitleTV;
@@ -61,6 +62,7 @@ public class LibraryLoans extends ModuleActivity  {
         mContext = this;
         setContentView(R.layout.library_loans);
         
+    	mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
         mListView = (ListView) findViewById(R.id.listLibraryLoans);
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
@@ -69,11 +71,9 @@ public class LibraryLoans extends ModuleActivity  {
     }
 
     private void doSearch() {
-        mListView.setVisibility(View.GONE);
-
+        mLoanResults.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
-
         LibraryModel.fetchLoanDetail(this, uiHandler);
     }
 
@@ -99,8 +99,7 @@ public class LibraryLoans extends ModuleActivity  {
                 LibraryLoanAdapter adapter = new LibraryLoanAdapter(results);
                 mListView.setAdapter(adapter);
                 adapter.setLookupHandler(mListView, null);
-                mListView.setVisibility(View.VISIBLE);
-
+                mLoanResults.setVisibility(View.VISIBLE);
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
             } else if (msg.arg1 == MobileWebApi.CANCELLED) {
