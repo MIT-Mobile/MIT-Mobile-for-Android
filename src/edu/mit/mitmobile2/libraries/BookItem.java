@@ -20,17 +20,23 @@ public class BookItem {
     
     
     public CharSequence getAuthorsDisplayString() {
-    	if(author != null) {
+    	if (author != null) {
     		StringBuilder builder = new StringBuilder();
-    		for(String anAuthor : author) {
-    			builder.append(anAuthor + ", ");
+    		if (year != null && year.size() > 0) {
+    			builder.append(this.year.get(0) + "; ");
+    		}
+    		for (int i = 0; i < author.size(); i++) {
+    			if (i > 0) {
+    				builder.append(", ");
+    			}
+    			builder.append(author.get(i));
     		}
     		return builder;
     	} else {
     		return null;
     	}
     }
-    
+    /*
     public CharSequence getYearsDisplayString() {
     	if(year != null) {
     		StringBuilder builder = new StringBuilder();
@@ -42,7 +48,7 @@ public class BookItem {
     		return null;
     	}
     }
-    
+    */
     public static class Holding {
         public String library;
         public String address;
