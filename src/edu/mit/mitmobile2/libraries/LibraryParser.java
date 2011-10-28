@@ -375,6 +375,7 @@ public class LibraryParser {
 	        fineData.setBalance(object.getString("balance"));
 	        //fineData.setFineDate(new Date(object.getInt("fine-date")));
 	      JSONArray items = object.getJSONArray("items");
+	      Log.d(TAG,"number of fines = " + items.length());
 			for (int l = 0; l < items.length(); l++) {
 				FineListItem item = new FineListItem();
 				JSONObject tmpItem = items.getJSONObject(l);
@@ -410,10 +411,13 @@ public class LibraryParser {
 				item.setImprint(tmpItem.optString("imprint",""));
 	
 				// ISBN ISSN Display / Type
-				JSONObject isbn = tmpItem.getJSONObject("isbn-issn");
-				item.setIsbnIssnDisplay(isbn.optString("display",""));				
-				item.setIsbnIssnType(isbn.optString("type",""));
-	
+				JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
+				Log.d(TAG,"isbn = " + isbn);
+				if (isbn != null) {
+					item.setIsbnIssnDisplay(isbn.optString("display",""));				
+					item.setIsbnIssnType(isbn.optString("type",""));
+				}
+				
 				// Display Amount
 				item.setDisplayAmount(tmpItem.optString("display-amount",""));
 

@@ -2,66 +2,83 @@ package edu.mit.mitmobile2.libraries;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
+import android.widget.TabWidget;
+import android.widget.TextView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TabActivityConfigurator;
 import edu.mit.mitmobile2.TabConfigurator;
 
 public class LibraryYourAccount extends ActivityGroup {
 
+	private static final String TAG = "LibraryYourAccount"; 
 	protected TabHost tabHost;	
-	protected Activity mActivity;
-	
-		
-	private int ADD_NEW_TAB = Menu.FIRST;
-	
+	protected Activity mActivity;		
+	protected int ADD_NEW_TAB = Menu.FIRST;
+	protected TabHost.TabSpec spec;
+	protected int displayWidth;
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		mActivity = this;
-		setContentView(R.layout.library_your_account);
+		setContentView(R.layout.tab_layout);
 
-		TabHost tabHost=(TabHost)findViewById(R.id.tabHost);
+
+		tabHost = (TabHost)findViewById(R.id.tabHost);  
 		tabHost.setup(this.getLocalActivityManager());  // NEEDED!!!
-				
-//				TabConfigurator tabConfigurator = new TabConfigurator(mActivity, tabHost);
-//				tabConfigurator.addTab("Loans", R.id.tabLoans,LibraryLoans.class);
-//				tabConfigurator.addTab("Holds", R.id.tabHolds,LibraryHolds.class);
-//				tabConfigurator.addTab("Fines", R.id.tabFines,LibraryFines.class);
-//				
-//				tabConfigurator.configureTabs();
 		
-		Resources res = getResources(); // Resource object to get Drawables
-		///TabHost tabHost1=(TabHost)findViewById(R.id.tabHost);
-		tabHost.setup(this.getLocalActivityManager());
-		TabHost.TabSpec spec = tabHost.newTabSpec("");  // Resusable TabSpec for each tab
+		TabActivityConfigurator tabConfigurator = new TabActivityConfigurator(mActivity, tabHost);
+		tabConfigurator.addTab("Loans", LibraryLoans.class);
+		tabConfigurator.addTab("Fines", LibraryFines.class);
+		tabConfigurator.addTab("Holds", LibraryHolds.class);
 		
-		
-		Intent intent;  // Reusable Intent for each tab
-		ColorStateList colors = mActivity.getResources().getColorStateList(R.color.tab_text_color);
-		
-		// Tab Loans
-		intent = new Intent().setClass(this, LibraryLoans.class);
-		spec = tabHost.newTabSpec("Loans").setIndicator("Loans",res.getDrawable(R.drawable.ic_loans)).setContent(intent);
-		tabHost.addTab(spec);
+		tabConfigurator.configureTabs();
 
-		//Tab Fines
-		intent = new Intent().setClass(this, LibraryFines.class);
-		spec = tabHost.newTabSpec("Fines").setIndicator("Fines",res.getDrawable(R.drawable.ic_fines)).setContent(intent);
-		tabHost.addTab(spec);
-				
-		//Tab Holds
-		intent = new Intent().setClass(this, LibraryHolds.class);
-		spec = tabHost.newTabSpec("Holds").setIndicator("Holds",res.getDrawable(R.drawable.ic_holds)).setContent(intent);
-		tabHost.addTab(spec);
+		
 		
 	}
 
+	private void addTab(String label, int drawableId, Class className) {
+		Intent intent = new Intent(this, className);
+		
+		LinearLayout indicatorView = new LinearLayout(mActivity);
+		indicatorView.setLayoutParams(new LayoutParams((int)(displayWidth / 3), 72));
+		indicatorView.setBackgroundResource(R.drawable.tab_background);
+		indicatorView.setGravity(Gravity.CENTER);
+		TextView textView = new TextView(mActivity);
+		textView.setLayoutParams(new LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)));
+		textView.setText(label);
+		ColorStateList colors = mActivity.getResources().getColorStateList(R.color.tab_text_color);
+		textView.setTextColor(colors);
+		textView.setTextSize(mActivity.getResources().getDimensionPixelSize(R.dimen.tabTextSize));
+		textView.setTypeface(Typeface.SANS_SERIF);
+		indicatorView.addView(textView);		 
+		spec.setIndicator(indicatorView);
+		spec.setContent(intent);
+		tabHost.addTab(spec);
+		}
+	
+	
+//	private static View createTabView(final Context context, final String text) {
+//		View view = LayoutInflater.from(context).inflate(R.layout.tab_loans, null);
+//		//TextView tv = (TextView) view.findViewById(R.id.tabsText);
+//		//tv.setText(text);
+//		return view;
+//	}
 }

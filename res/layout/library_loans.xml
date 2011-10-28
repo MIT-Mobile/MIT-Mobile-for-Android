@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="#ffFFFF00"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -10,27 +11,35 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
   
-  	<TextView
+  	<FrameLayout 
+  		android:id="@+id/libraryLoansResult"
+  		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#ff00FF00"
+  	>
+	  	<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/loanStatusTV"
+				style="@style/ContentTitle" />
+	        
+	    <edu.mit.mitmobile2.SectionHeader
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/loanStatusTV"
-			style="@style/ContentTitle" />
-        
-    <edu.mit.mitmobile2.SectionHeader
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text="Loans" />
-        
-    <ListView android:id="@+id/listLibraryLoans"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        style="@style/Lists" />
-        
-    <edu.mit.mitmobile2.DividerView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dividerHeight" />
+			android:text="Loans" />
+	        
+	    <ListView android:id="@+id/listLibraryLoans"
+	        android:layout_width="wrap_content"
+	        android:layout_height="fill_parent"
+	        style="@style/Lists" />
+	        
+	    <edu.mit.mitmobile2.DividerView
+	        android:layout_width="fill_parent"
+	        android:layout_height="@dimen/dividerHeight" />
+
+  	</FrameLayout>
         
     <edu.mit.mitmobile2.FullScreenLoader
         android:id="@+id/librarySearchLoading"
