@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:minHeight="@dimen/minRowHeight" >
+	
+	<!--  title, author, and status --> 
+	<LinearLayout
+  			android:id="@+id/simpleRowTextContent"
+  			android:layout_alignParentLeft="true"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_gravity="center_vertical"
+  			android:orientation="vertical"
+  			android:paddingLeft="@dimen/horizontalPadding"
+  			android:paddingTop="@dimen/verticalPadding"
+  			>
+  	
+
+		<!-- TITLE -->
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingBottom="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanTitleTV"
+			android:textColor="@color/contents_text"
+			android:textStyle="bold"
+			android:textSize="17sp"
+			android:typeface="sans" />
+				
+		<!-- Author -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanAuthorTV"
+			android:textColor="@color/contents_text" />
+		
+		<!-- STATUS -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/loanStatusTV"
+			android:textColor="@color/contents_text" />
+  		  				
+  	</LinearLayout>	
+  		 		
+</FrameLayout>

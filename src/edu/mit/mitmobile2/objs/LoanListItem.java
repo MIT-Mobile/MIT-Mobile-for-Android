@@ -163,11 +163,18 @@ public class LoanListItem implements Parcelable {
     private String pendingFine;
     private boolean hasHold;
     private String dueText;
+    private boolean renewBook = false;
     
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	public boolean isRenewBook() {
+		return renewBook;
+	}
+	public void setRenewBook(boolean renewBook) {
+		this.renewBook = renewBook;
 	}
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {

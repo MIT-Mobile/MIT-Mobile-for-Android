@@ -12,12 +12,6 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent">
 
-			
-		<LinearLayout
-	    	android:orientation="horizontal"
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content">
-
 			<Button
 					android:id="@+id/loanRenewBooksButton"
 					android:paddingTop="6dip"
@@ -26,35 +20,6 @@
 					android:layout_gravity="center"
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content"/>			
-
-			<Button
-					android:id="@+id/loanRenewSelectedBooksButton"
-					android:paddingTop="6dip"
-					android:text="Renew"
-					android:visibility="gone"
-					android:layout_gravity="center"
-					android:layout_width="wrap_content" 
-					android:layout_height="wrap_content"/>			
-
-			<Button
-					android:id="@+id/loanCancelRenewBooksButton"
-					android:paddingTop="6dip"
-					android:text="Cancel"
-					android:visibility="gone"
-					android:layout_gravity="center"
-					android:layout_width="wrap_content" 
-					android:layout_height="wrap_content"/>			
-					
-			<Button
-					android:id="@+id/loanDoneButton"
-					android:paddingTop="6dip"
-					android:text="Cancel"
-					android:visibility="gone"
-					android:layout_gravity="center"
-					android:layout_width="wrap_content" 
-					android:layout_height="wrap_content"/>			
-					
-			</LinearLayout>
 
 		  	<TextView
 					android:layout_width="fill_parent"

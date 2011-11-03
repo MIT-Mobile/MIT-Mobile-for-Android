@@ -9,6 +9,7 @@ public class RenewResponseItem implements Parcelable {
 
 	private String errorMsg;
 	private String successMsg;
+	private String reply;
 	private String loanDate;
 	private String dueDate;
 	private String returnedDate;
@@ -43,6 +44,12 @@ public class RenewResponseItem implements Parcelable {
 	}
 	public void setSuccessMsg(String successMsg) {
 		this.successMsg = successMsg;
+	}
+	public String getReply() {
+		return reply;
+	}
+	public void setReply(String reply) {
+		this.reply = reply;
 	}
 	public String getLoanDate() {
 		return loanDate;
