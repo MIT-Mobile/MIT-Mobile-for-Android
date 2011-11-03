@@ -99,6 +99,8 @@ public class LibraryActivity extends ModuleActivity {
 
     @Override
     protected void prepareActivityOptionsMenu(Menu menu) {
+		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
+		.setIcon(R.drawable.menu_search);
     }
 
     private void doSearch() {
