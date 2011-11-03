@@ -19,11 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.MITNewsWidgetActivity;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
@@ -35,7 +38,9 @@ public class TellUsActivity extends ModuleActivity {
 
     private EditText mFeedbackText;
     private Button mSubmitButton;
-    private TextView mEmailText;
+    private View mThankYouView;
+    private TwoLineActionRow mContentResult;
+    private TwoLineActionRow mGoHomeButton;
     
     private FullScreenLoader mLoader;
     private LockingScrollView mScrollView;
@@ -54,8 +59,16 @@ public class TellUsActivity extends ModuleActivity {
         mFeedbackText = (EditText) findViewById(R.id.feebackText);
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
         mSubmitButton = (Button) findViewById(R.id.submit);
-        mEmailText = (TextView) findViewById(R.id.tellUsEmailContent);
         mLoader = (FullScreenLoader) findViewById(R.id.tellUsLoading);
+        mThankYouView = findViewById(R.id.libraryTellUsThankYou);
+        mContentResult = (TwoLineActionRow) findViewById(R.id.librariesThankYouContentActionRow);
+        mGoHomeButton = (TwoLineActionRow) findViewById(R.id.librariesThankYouReturnHome);
+        mGoHomeButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MITNewsWidgetActivity.goHome(mContext);
+			}
+		});
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);
         String statusTitle = getResources().getString(R.string.libraryStatusTitle);
@@ -119,9 +132,9 @@ public class TellUsActivity extends ModuleActivity {
             mLoader.setVisibility(View.GONE);
             
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                String content = (String)msg.obj;
-                mEmailText.setText(content);
-                mEmailText.setVisibility(View.VISIBLE);
+                FormResult result = (FormResult)msg.obj;
+                mThankYouView.setVisibility(View.VISIBLE);
+                mContentResult.setTitle(result.getFeedbackString());
                 
             } else {
             	mScrollView.setVisibility(View.VISIBLE);
