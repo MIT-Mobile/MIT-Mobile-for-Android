@@ -452,81 +452,91 @@ public class LibraryParser {
 
         try {
         	JSONObject object = array.getJSONObject(0);
-
+        	Log.d(TAG,"1");
         	RenewResponseItem item = new RenewResponseItem();
+        	Log.d(TAG,"2");
 	
 				// Success Msg
 				item.setSuccessMsg(object.optString("success",""));
+	        	Log.d(TAG,"3");
 
 				// Error Msg
 				item.setErrorMsg(object.optString("error",""));
 				
-				JSONObject detail = object.getJSONObject("detail");
+				// Reply
+				item.setReply(object.optString("reply",""));
+
+				// DETAILS
+				JSONObject details = object.optJSONObject("details");
 
 				// Author
-				item.setAuthor(detail.optString("author",""));
+				item.setAuthor(details.optString("author",""));
 				
 				// Doc-Number
-				item.setDocNumber(detail.optString("doc-number",""));
+				item.setDocNumber(details.optString("doc-number",""));
 			
 				// Material
-				item.setMaterial(detail.optString("material",""));
+				item.setMaterial(details.optString("material",""));
 			
 				// Sub-library
-				item.setSubLibrary(detail.optString("sub-library",""));
+				item.setSubLibrary(details.optString("sub-library",""));
 	
 				// bar code
-				item.setBarcode(detail.optString("barcode",""));
+				item.setBarcode(details.optString("barcode",""));
 	
 			
 				// Load Date
-				item.setLoanDate(detail.optString("loan-date",""));
+				item.setLoanDate(details.optString("loan-date",""));
 			
 				// Due Date
-				item.setDueDate(detail.optString("due-date",""));
+				item.setDueDate(details.optString("due-date",""));
 	
 				// Returned Date
-				item.setReturnedDate(detail.optString("returned-date",""));
+				item.setReturnedDate(details.optString("returned-date",""));
 	
 				// Call No
-				item.setCallNo(detail.optString("call-no",""));
+				item.setCallNo(details.optString("call-no",""));
 	
 				// Year
-				item.setYear(detail.optString("year",""));
+				item.setYear(details.optString("year",""));
 	
 				// Title
-				item.setTitle(detail.optString("title",""));
+				item.setTitle(details.optString("title",""));
 	
 				// Imprint
-				item.setImprint(detail.optString("imprint",""));
+				item.setImprint(details.optString("imprint",""));
 	
-				// ISBN ISSN Display
-				item.setIsbnIssnDisplay(detail.optString("isbn-issn-display",""));
-	
-				// ISBN ISSN Type
-				item.setIsbnIssnType(detail.optString("isbn-issn-type",""));
-	
+				// ISBN ISSN Display and Type
+				JSONObject isbn = details.optJSONObject("isbn-issn");
+				if (isbn != null) {
+					item.setIsbnIssnDisplay(isbn.optString("display",""));
+					item.setIsbnIssnType(isbn.optString("type",""));					
+				}
+				
 				// Overdue
-				item.setOverdue(detail.optString("overdue","").equalsIgnoreCase("TRUE"));
+				item.setOverdue(details.optString("overdue","").equalsIgnoreCase("TRUE"));
 	
 				// Long Overdue
-				item.setLongOverdue(detail.optString("long-overdue","").equalsIgnoreCase("TRUE"));
+				item.setLongOverdue(details.optString("long-overdue","").equalsIgnoreCase("TRUE"));
 	
 				// Display Pending Fine
-				item.setDisplayPendingFine(detail.optString("display-pending-fine",""));
+				item.setDisplayPendingFine(details.optString("display-pending-fine",""));
 				
 				// Pending Fine
-				item.setPendingFine(detail.optString("pending-fine",""));
+				item.setPendingFine(details.optString("pending-fine",""));
 	
 				// Has Hold
-				item.setLongOverdue(detail.optString("has-hold","").equalsIgnoreCase("TRUE"));
+				item.setLongOverdue(details.optString("has-hold","").equalsIgnoreCase("TRUE"));
 				
 				// Due Text
-				item.setDueText(detail.optString("due-text",""));
+				item.setDueText(details.optString("due-text",""));
 	
-	
+	        	Log.d(TAG,"4");
+
 				//Log.d(TAG,item.title);
 				response.getRenewResponse().add(item);
+	        	Log.d(TAG,"5");
+
         }
 		catch (JSONException e) {
             e.printStackTrace();

@@ -157,7 +157,6 @@ public class MobileWebApi {
 		uiHandler.sendMessage(message);
 	}
 	
-	
 	// the most common type of behavior need for handling network errors
 	// either ignore it, or let the UI thread know about it
 	public static class DefaultErrorListener implements ErrorResponseListener {

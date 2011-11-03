@@ -37,7 +37,7 @@ public class LibraryYourAccount extends ActivityGroup {
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		mActivity = this;
-		setContentView(R.layout.tab_layout);
+		setContentView(R.layout.your_account_tab_layout);
 
 
 		tabHost = (TabHost)findViewById(R.id.tabHost);  

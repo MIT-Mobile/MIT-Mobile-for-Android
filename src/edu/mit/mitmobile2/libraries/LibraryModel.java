@@ -303,7 +303,6 @@ public class LibraryModel {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "libraries");
 		params.put("command", "loans");
-		params.put("limit", "100"); // The API currently returns 3 rows if no limit is specified, this should be changed in the API
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
@@ -357,7 +356,7 @@ public class LibraryModel {
 
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("command", "renewBooks");
-        parameters.put("module", MODULE_LIBRARY);
+        parameters.put("module", "libraries");
         parameters.put("barcodes", barcode);
         MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
         webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
