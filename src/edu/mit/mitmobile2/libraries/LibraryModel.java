@@ -160,6 +160,43 @@ public class LibraryModel {
         });
     }
 
+    public static class FormResult {
+    	private String mEmailContent;
+    	private String mThankYouText;
+    	private String mContactAddress;
+    	
+    	public static FormResult factory(JSONObject json) throws JSONException {
+    		JSONObject results = json.getJSONObject("results");
+    		return new FormResult(
+    				results.getString("contents"),
+    				results.getString("thank_you_text"),
+    				results.getString("email")
+    		);
+    	}
+    	
+    	public FormResult(String emailContent, String thankYouText, String contactAddress) {
+    		mEmailContent = emailContent;
+        	mThankYouText = thankYouText;
+        	mContactAddress = contactAddress;
+    	}
+    	
+    	public String getContent() {
+    		return mEmailContent;
+    	}
+    	
+    	public String getContactAddress() {
+    		return mContactAddress;
+    	}
+    	
+    	public String getThankYouText() {
+    		return mThankYouText;
+    	}
+    	
+    	public String getFeedbackString() {
+    		return mThankYouText + "\n\nYou will be contacted at " + mContactAddress + ".";
+    	}
+    }
+    
     public static void sendTellUsInfo(final Context context, final Handler uiHandler, String status, String feedback) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
@@ -178,7 +215,7 @@ public class LibraryModel {
             @Override
             public void onResponse(JSONObject object) throws JSONException {
                 if (object.has("success") && object.getBoolean("success")) {
-                    MobileWebApi.sendSuccessMessage(uiHandler, object.getJSONObject("results").getString("contents"));
+                    MobileWebApi.sendSuccessMessage(uiHandler, FormResult.factory(object));
                 }
             }
         });
