@@ -451,92 +451,86 @@ public class LibraryParser {
         RenewBookResponse response = new RenewBookResponse();
 
         try {
-        	JSONObject object = array.getJSONObject(0);
-        	Log.d(TAG,"1");
-        	RenewResponseItem item = new RenewResponseItem();
-        	Log.d(TAG,"2");
+        	for (int i = 0; i < array.length(); i++) {
+	        	JSONObject object = array.getJSONObject(i);
+	        	RenewResponseItem item = new RenewResponseItem();
+		
+					// Success Msg
+					item.setSuccessMsg(object.optString("success",""));
 	
-				// Success Msg
-				item.setSuccessMsg(object.optString("success",""));
-	        	Log.d(TAG,"3");
-
-				// Error Msg
-				item.setErrorMsg(object.optString("error",""));
+					// Error Msg
+					item.setErrorMsg(object.optString("error",""));
+					
+					// Reply
+					item.setReply(object.optString("reply",""));
+	
+					// DETAILS
+					JSONObject details = object.optJSONObject("details");
+	
+					// Author
+					item.setAuthor(details.optString("author",""));
+					
+					// Doc-Number
+					item.setDocNumber(details.optString("doc-number",""));
 				
-				// Reply
-				item.setReply(object.optString("reply",""));
-
-				// DETAILS
-				JSONObject details = object.optJSONObject("details");
-
-				// Author
-				item.setAuthor(details.optString("author",""));
+					// Material
+					item.setMaterial(details.optString("material",""));
 				
-				// Doc-Number
-				item.setDocNumber(details.optString("doc-number",""));
+					// Sub-library
+					item.setSubLibrary(details.optString("sub-library",""));
+		
+					// bar code
+					item.setBarcode(details.optString("barcode",""));
+					
+					// Load Date
+					item.setLoanDate(details.optString("loan-date",""));
+				
+					// Due Date
+					item.setDueDate(details.optString("due-date",""));
+		
+					// Returned Date
+					item.setReturnedDate(details.optString("returned-date",""));
+		
+					// Call No
+					item.setCallNo(details.optString("call-no",""));
+		
+					// Year
+					item.setYear(details.optString("year",""));
+		
+					// Title
+					item.setTitle(details.optString("title",""));
+		
+					// Imprint
+					item.setImprint(details.optString("imprint",""));
+		
+					// ISBN ISSN Display and Type
+					JSONObject isbn = details.optJSONObject("isbn-issn");
+					if (isbn != null) {
+						item.setIsbnIssnDisplay(isbn.optString("display",""));
+						item.setIsbnIssnType(isbn.optString("type",""));					
+					}
+					
+					// Overdue
+					item.setOverdue(details.optString("overdue","").equalsIgnoreCase("TRUE"));
+		
+					// Long Overdue
+					item.setLongOverdue(details.optString("long-overdue","").equalsIgnoreCase("TRUE"));
+		
+					// Display Pending Fine
+					item.setDisplayPendingFine(details.optString("display-pending-fine",""));
+					
+					// Pending Fine
+					item.setPendingFine(details.optString("pending-fine",""));
+		
+					// Has Hold
+					item.setLongOverdue(details.optString("has-hold","").equalsIgnoreCase("TRUE"));
+					
+					// Due Text
+					item.setDueText(details.optString("dueText",""));
 			
-				// Material
-				item.setMaterial(details.optString("material",""));
-			
-				// Sub-library
-				item.setSubLibrary(details.optString("sub-library",""));
-	
-				// bar code
-				item.setBarcode(details.optString("barcode",""));
-	
-			
-				// Load Date
-				item.setLoanDate(details.optString("loan-date",""));
-			
-				// Due Date
-				item.setDueDate(details.optString("due-date",""));
-	
-				// Returned Date
-				item.setReturnedDate(details.optString("returned-date",""));
-	
-				// Call No
-				item.setCallNo(details.optString("call-no",""));
-	
-				// Year
-				item.setYear(details.optString("year",""));
-	
-				// Title
-				item.setTitle(details.optString("title",""));
-	
-				// Imprint
-				item.setImprint(details.optString("imprint",""));
-	
-				// ISBN ISSN Display and Type
-				JSONObject isbn = details.optJSONObject("isbn-issn");
-				if (isbn != null) {
-					item.setIsbnIssnDisplay(isbn.optString("display",""));
-					item.setIsbnIssnType(isbn.optString("type",""));					
-				}
-				
-				// Overdue
-				item.setOverdue(details.optString("overdue","").equalsIgnoreCase("TRUE"));
-	
-				// Long Overdue
-				item.setLongOverdue(details.optString("long-overdue","").equalsIgnoreCase("TRUE"));
-	
-				// Display Pending Fine
-				item.setDisplayPendingFine(details.optString("display-pending-fine",""));
-				
-				// Pending Fine
-				item.setPendingFine(details.optString("pending-fine",""));
-	
-				// Has Hold
-				item.setLongOverdue(details.optString("has-hold","").equalsIgnoreCase("TRUE"));
-				
-				// Due Text
-				item.setDueText(details.optString("due-text",""));
-	
-	        	Log.d(TAG,"4");
-
-				//Log.d(TAG,item.title);
-				response.getRenewResponse().add(item);
-	        	Log.d(TAG,"5");
-
+					//Log.d(TAG,item.title);
+					response.getRenewResponse().add(item);
+        	}
         }
 		catch (JSONException e) {
             e.printStackTrace();

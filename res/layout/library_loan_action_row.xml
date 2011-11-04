@@ -18,6 +18,7 @@
 	  		android:layout_height="wrap_content"		
 	  		android:visibility="gone"
 	  		android:focusable="false"
+	  		android:clickable="false"
 			android:checked="false" />
 						
 		<!--  title, author, and status --> 

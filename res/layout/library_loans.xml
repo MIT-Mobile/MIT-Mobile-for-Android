@@ -23,8 +23,8 @@
 					android:paddingTop="6dip"
 					android:text="Renew Books"
 					android:visibility="visible"
-					android:layout_gravity="center"
-					android:layout_width="fill_parent" 
+					android:layout_gravity="right"
+					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"/>			
 
 			<Button
@@ -32,7 +32,7 @@
 					android:paddingTop="6dip"
 					android:text="Renew"
 					android:visibility="gone"
-					android:layout_gravity="center"
+					android:layout_gravity="right"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"/>			
 
@@ -41,16 +41,16 @@
 					android:paddingTop="6dip"
 					android:text="Cancel"
 					android:visibility="gone"
-					android:layout_gravity="center"
+					android:layout_gravity="right"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"/>			
 					
 			<Button
 					android:id="@+id/loanDoneButton"
 					android:paddingTop="6dip"
-					android:text="Cancel"
+					android:text="Done"
 					android:visibility="gone"
-					android:layout_gravity="center"
+					android:layout_gravity="right"
 					android:layout_width="wrap_content" 
 					android:layout_height="wrap_content"/>			
 					
@@ -62,12 +62,10 @@
 					android:paddingTop="6dip"
 					android:paddingLeft="@dimen/horizontalPadding"
 					android:id="@+id/loanStatusTV"
+					android:background="@drawable/main_repeat"
 					style="@style/LibraryStatus" />
-		        
-		    <edu.mit.mitmobile2.SectionHeader
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="Loans" />
+					
+		    <ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>		
 		        
 		    <ListView android:id="@+id/listLibraryLoans"
 		        android:layout_width="wrap_content"

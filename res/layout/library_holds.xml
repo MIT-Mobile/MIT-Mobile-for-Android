@@ -18,13 +18,11 @@
 					android:paddingTop="6dip"
 					android:paddingLeft="@dimen/horizontalPadding"
 					android:id="@+id/holdStatusTV"
-					style="@style/LibraryStatus" />
-		        
-		    <edu.mit.mitmobile2.SectionHeader
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="Holds" />
-		        
+					android:background="@drawable/main_repeat"
+					style="@style/LibraryStatus" />		        
+
+		    <ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>		
+	        
 		    <ListView android:id="@+id/listLibraryHolds"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"

@@ -68,7 +68,6 @@ public class TabActivityConfigurator {
 			textView.setTextSize(mActivity.getResources().getDimensionPixelSize(R.dimen.tabTextSize));
 			textView.setTypeface(Typeface.SANS_SERIF);
 			indicatorView.addView(textView);
-			
 			TabSpec tabSpec = mTabHost.newTabSpec(tabName);
 			tabSpec.setIndicator(indicatorView);
 			mIntent = new Intent().setClass(mActivity, mTabActivities.get(i));

@@ -13,6 +13,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -44,13 +46,18 @@ public class LibraryLoans extends ModuleActivity  {
 	private Button loanRenewBooksButton;
 	private Button loanRenewSelectedBooksButton;
 	private Button loanCancelRenewBooksButton;
+	private Button loanDoneButton;
+	
 	private CheckBox cb;
 	static LoanData loanData;
+    LibraryLoanAdapter libraryLoanAdapter;
+
 	private static String REPLY_OK = "ok";
-	
-	// we need a separate success code for renew books since it is called in the same activity as fetchLoans
-	public static int RENEW_BOOK_SUCCESS = 100;
-	
+	private static int mode = 1;  // determines whether the activity is in "loan" mode or "renew" mode
+
+	public static final int LOAN_MODE = 1;
+	public static final int RENEW_MODE = 2;
+		
     public static LoanData getLoanData() {
 		return loanData;
 	}
@@ -59,7 +66,15 @@ public class LibraryLoans extends ModuleActivity  {
 		LibraryLoans.loanData = loanData;
 	}
 
-    Context mContext;
+	public static int getMode() {
+		return mode;
+	}
+
+	public static void setMode(int mode) {
+		LibraryLoans.mode = mode;
+	}
+
+	Context mContext;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +93,7 @@ public class LibraryLoans extends ModuleActivity  {
         loanRenewBooksButton = (Button)findViewById(R.id.loanRenewBooksButton);
         loanRenewSelectedBooksButton = (Button)findViewById(R.id.loanRenewSelectedBooksButton);
         loanCancelRenewBooksButton = (Button)findViewById(R.id.loanCancelRenewBooksButton);
+        loanDoneButton = (Button)findViewById(R.id.loanDoneButton);
 
         loanRenewBooksButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -104,6 +120,25 @@ public class LibraryLoans extends ModuleActivity  {
 			}
 		});
 
+        loanDoneButton.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				LibraryLoans.setMode(LibraryLoans.LOAN_MODE);
+				Intent intent = new Intent(mContext, LibraryYourAccount.class);
+    			startActivity(intent);			}
+		});
+
+        
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"view clicked = " + arg1.getClass());
+			}
+        });
+        
         doSearch();
     }
 
@@ -126,27 +161,40 @@ public class LibraryLoans extends ModuleActivity  {
     }
     
     private void showHideRenewBooks() {
-    	if (loanRenewBooksButton.getVisibility() == View.VISIBLE) {
+    	int currentMode = LibraryLoans.getMode();
+    	Log.d(TAG,"currentMode = " + currentMode);
+    	
+    	if (currentMode == LibraryLoans.LOAN_MODE) {
 			loanRenewBooksButton.setVisibility(View.GONE);
 			loanRenewSelectedBooksButton.setVisibility(View.VISIBLE);
 			loanCancelRenewBooksButton.setVisibility(View.VISIBLE); 
+			/*
 			for(int i = 0; i < mListView.getChildCount(); i++) {
 				Log.d(TAG,"index = " + i);
 				View lView = (View) mListView.getChildAt(i);
 				cb = (CheckBox)lView.findViewById(R.id.renewBookCheckbox);
-				cb.setVisibility(View.VISIBLE);			} 			
+				cb.setVisibility(View.VISIBLE);			
+			}
+			*/
+			LibraryLoans.setMode(LibraryLoans.RENEW_MODE);
     	}
     	else {
 			loanRenewBooksButton.setVisibility(View.VISIBLE);
 			loanRenewSelectedBooksButton.setVisibility(View.GONE);
 			loanCancelRenewBooksButton.setVisibility(View.GONE);
+			/*
 			for(int i = 0; i < mListView.getChildCount(); i++) {
 				View lView = (View) mListView.getChildAt(i);
 				cb = (CheckBox)lView.findViewById(R.id.renewBookCheckbox);
 				cb.setVisibility(View.GONE);
-			} 			
+			}
+			*/
+			LibraryLoans.setMode(LibraryLoans.LOAN_MODE);
     	}
+    	Log.d(TAG,"mode now = " + LibraryLoans.getMode());
+		libraryLoanAdapter.notifyDataSetChanged();
     }
+
     private void doSearch() {
         mLoanResults.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
@@ -173,9 +221,9 @@ public class LibraryLoans extends ModuleActivity  {
                 }
                 
                 
-                LibraryLoanAdapter adapter = new LibraryLoanAdapter(results);
-                mListView.setAdapter(adapter);
-                adapter.setLookupHandler(mListView, null);
+                libraryLoanAdapter  = new LibraryLoanAdapter(results);
+                mListView.setAdapter(libraryLoanAdapter);
+                libraryLoanAdapter.setLookupHandler(mListView, null);
                 mLoanResults.setVisibility(View.VISIBLE);
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {
@@ -208,9 +256,6 @@ public class LibraryLoans extends ModuleActivity  {
             	int numSuccess = 0;
             	int numErrors = 0;
 
-            	// Initially set allBooksRenewed to true, assumeing all selected books have been renewed
-            	// show a single success message if all books have been renewed, show a global error plus individual errors if some books could not be renewed
-            	boolean allBooksRenewed = true;
             	numBooks = renewBookResponse.getRenewResponse().size();
             	Log.d(TAG,"numBooks = " + numBooks);
             	for (int b = 0; b < numBooks; b++) {
@@ -222,34 +267,27 @@ public class LibraryLoans extends ModuleActivity  {
             			numSuccess++;
             		}
             		if (book.getErrorMsg().length() > 0) {
-            			allBooksRenewed = false;
             			numErrors++;
             		}
             	}
 
-            	Log.d(TAG,"allBooksRenewed = " + allBooksRenewed);
-            	// If all books renewed, refresh the loan list
-            	if (allBooksRenewed) {
-            		doSearch();
-            	}
-            	else {
-                	loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
-                    loanStatusTV.setText(numErrors + " items(s) could not be renewed");            		
-                    loanStatusTV.setTextColor(Color.RED);
-                    
-                    loanRenewBooksButton = (Button) findViewById(R.id.loanRenewBooksButton);
-                    loanRenewBooksButton.setVisibility(View.GONE);
-                    
-                    loanRenewSelectedBooksButton = (Button) findViewById(R.id.loanRenewSelectedBooksButton);
-                    loanRenewSelectedBooksButton.setVisibility(View.GONE);
-                    
-                    loanCancelRenewBooksButton = (Button) findViewById(R.id.loanCancelRenewBooksButton);
-                    loanCancelRenewBooksButton.setVisibility(View.GONE);
+            	loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
+                loanStatusTV.setText(numErrors + " items(s) could not be renewed");            		
+                loanStatusTV.setTextColor(Color.RED);
+                
+                loanRenewBooksButton = (Button) findViewById(R.id.loanRenewBooksButton);
+                loanRenewBooksButton.setVisibility(View.GONE);
+                
+                loanRenewSelectedBooksButton = (Button) findViewById(R.id.loanRenewSelectedBooksButton);
+                loanRenewSelectedBooksButton.setVisibility(View.GONE);
+                
+                loanCancelRenewBooksButton = (Button) findViewById(R.id.loanCancelRenewBooksButton);
+                loanCancelRenewBooksButton.setVisibility(View.GONE);
 
-                    mLoanResults.setVisibility(View.VISIBLE);
-                    
-            	}
+                loanDoneButton = (Button) findViewById(R.id.loanDoneButton);
+                loanDoneButton.setVisibility(View.VISIBLE);
 
+                mLoanResults.setVisibility(View.VISIBLE);
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
@@ -285,19 +323,30 @@ public class LibraryLoans extends ModuleActivity  {
         
         public void setLookupHandler(ListView listView, final String extras) {
             setOnItemClickListener(listView, new SimpleArrayAdapter.OnItemClickListener<LoanListItem>() {
-                @Override
+            	@Override
                 public void onItemSelected(LoanListItem item) {
+            		//
                     Log.d(TAG,item.getTitle() + " clicked");
-            		Intent intent = new Intent(mContext, LibraryLoanDetail.class);
-            		intent.putExtra("index", item.getIndex());
-    				startActivity(intent);          
+            		if (LibraryLoans.getMode() == LibraryLoans.LOAN_MODE) {
+            			Intent intent = new Intent(mContext, LibraryLoanDetail.class);
+            			intent.putExtra("index", item.getIndex());
+            			startActivity(intent);
+            		}
+            		else {
+            			// renew mode, toggle checkbox
+            			boolean renewBook = ((LoanListItem)loanData.getLoans().get(item.getIndex())).isRenewBook();
+            			((LoanListItem)loanData.getLoans().get(item.getIndex())).setRenewBook(!renewBook);
+            			//libraryLoanAdapter  = new LibraryLoanAdapter(loanData.getLoans());
+            			libraryLoanAdapter.notifyDataSetChanged();
+            		}
                 }
             });
         }
 
-        @Override
+		@Override
         public void updateView(LoanListItem item, View view) {
         	        	
+        	Log.d(TAG,"update view " + item.getIndex());
         	// Title
         	loanTitleTV = (TextView)view.findViewById(R.id.loanTitleTV);
 
@@ -329,16 +378,23 @@ public class LibraryLoans extends ModuleActivity  {
         	// Renew Book Checkbox
         	cb  = (CheckBox)view.findViewById(R.id.renewBookCheckbox);
         	cb.setTag(item.getIndex());
-        	cb.setOnCheckedChangeListener(new OnCheckedChangeListener()
-        	{
-        	    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-        	    {
-        	    	int b = Integer.parseInt(buttonView.getTag().toString());
-    	        	LoanListItem book = LibraryLoans.getLoanData().getLoans().get(b);
-    	        	book.setRenewBook(isChecked);
-        	        Log.d(TAG,"renew book " + b + " set to " + isChecked);
-        	    }
-        	}); 
+        	
+        	// Check the box if renewBook is true in the corresponding item
+        	if (((LoanListItem)loanData.getLoans().get(item.getIndex())).isRenewBook()) {
+        		cb.setChecked(true);
+        	}
+        	else {
+        		cb.setChecked(false);        		
+        	}
+        	
+        	Log.d(TAG,"update view - loan mode = " + LibraryLoans.getMode());
+        	if (LibraryLoans.getMode() == LibraryLoans.RENEW_MODE) {
+        		cb.setVisibility(View.VISIBLE);
+        	}
+        	else {
+        		cb.setVisibility(View.GONE);        		
+        	}
+        	
         }
     }
 
@@ -395,5 +451,4 @@ public class LibraryLoans extends ModuleActivity  {
         }
     }
 
-    
 }
