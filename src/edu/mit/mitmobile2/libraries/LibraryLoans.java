@@ -13,13 +13,17 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -37,6 +41,7 @@ public class LibraryLoans extends ModuleActivity  {
 	
 	public static final String TAG = "LibraryLoans";
 
+	private View tabs;
 	private View mLoanResults;
     private ListView mListView;
     private FullScreenLoader mLoadingView;
@@ -84,7 +89,7 @@ public class LibraryLoans extends ModuleActivity  {
 
         setContentView(R.layout.library_loans);
         
-    	mLoanResults = (View) findViewById(R.id.loanResults);
+        mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
         mListView = (ListView) findViewById(R.id.listLibraryLoans);
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
@@ -162,33 +167,29 @@ public class LibraryLoans extends ModuleActivity  {
     
     private void showHideRenewBooks() {
     	int currentMode = LibraryLoans.getMode();
+	    loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
+
     	Log.d(TAG,"currentMode = " + currentMode);
     	
     	if (currentMode == LibraryLoans.LOAN_MODE) {
-			loanRenewBooksButton.setVisibility(View.GONE);
+    		loanStatusTV.setVisibility(View.GONE);
+    		loanRenewBooksButton.setVisibility(View.GONE);
 			loanRenewSelectedBooksButton.setVisibility(View.VISIBLE);
 			loanCancelRenewBooksButton.setVisibility(View.VISIBLE); 
-			/*
-			for(int i = 0; i < mListView.getChildCount(); i++) {
-				Log.d(TAG,"index = " + i);
-				View lView = (View) mListView.getChildAt(i);
-				cb = (CheckBox)lView.findViewById(R.id.renewBookCheckbox);
-				cb.setVisibility(View.VISIBLE);			
-			}
-			*/
+			
+			// Hide tabs
+			LinearLayout yourAccountTabLayout;
+			yourAccountTabLayout = (LinearLayout) findViewById(R.id.yourAccountTabLayout);
+			yourAccountTabLayout.setVisibility(ViewGroup.GONE);
+			
+			
 			LibraryLoans.setMode(LibraryLoans.RENEW_MODE);
     	}
     	else {
-			loanRenewBooksButton.setVisibility(View.VISIBLE);
+    		loanStatusTV.setVisibility(View.VISIBLE);
+    		loanRenewBooksButton.setVisibility(View.VISIBLE);
 			loanRenewSelectedBooksButton.setVisibility(View.GONE);
 			loanCancelRenewBooksButton.setVisibility(View.GONE);
-			/*
-			for(int i = 0; i < mListView.getChildCount(); i++) {
-				View lView = (View) mListView.getChildAt(i);
-				cb = (CheckBox)lView.findViewById(R.id.renewBookCheckbox);
-				cb.setVisibility(View.GONE);
-			}
-			*/
 			LibraryLoans.setMode(LibraryLoans.LOAN_MODE);
     	}
     	Log.d(TAG,"mode now = " + LibraryLoans.getMode());
