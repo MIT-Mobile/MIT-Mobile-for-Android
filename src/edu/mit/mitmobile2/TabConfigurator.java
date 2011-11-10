@@ -56,7 +56,7 @@ public class TabConfigurator {
 			// could not get the builtin tab dividers to display
 			LinearLayout indicatorView = new LinearLayout(mActivity);
 			indicatorView.setLayoutParams(new LayoutParams(tabWidth, height));
-			indicatorView.setBackgroundResource(R.drawable.tab_background);
+			indicatorView.setBackgroundResource(R.drawable.tab2_background);
 			indicatorView.setGravity(Gravity.CENTER);
 			TextView textView = new TextView(mActivity);
 			textView.setLayoutParams(new LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)));

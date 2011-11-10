@@ -15,14 +15,36 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/dividerHeight" />
   
-  
-  	<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/renewMessageTV"
-			android:textColor="#ff0000" />
+ 
+		<!-- Renew Button Row -->
+		<LinearLayout
+	  			android:id="@+id/renewButtonRow"
+	  			android:layout_alignParentLeft="true"
+	  			android:background="@drawable/main_repeat"				  			
+	  			android:layout_width="fill_parent"
+	  			android:layout_height="wrap_content"
+	  			android:layout_gravity="center_vertical"
+	  			android:orientation="horizontal"
+	  			android:paddingLeft="@dimen/horizontalPadding"
+	  			android:paddingTop="@dimen/verticalPadding"
+	  			android:paddingBottom="@dimen/verticalPadding" >
+
+		  	<TextView
+					android:layout_width="200dip"
+					android:layout_height="wrap_content"
+					android:paddingTop="6dip"
+					android:paddingLeft="@dimen/horizontalPadding"
+					android:id="@+id/renewMessageTV"
+					android:textColor="#ff0000" />
+
+			<Button
+					android:id="@+id/renewDoneButton"
+					android:text="Done"
+					android:layout_width="80dip" 
+					android:layout_height="wrap_content"/>			
+
+		</LinearLayout>
+
 
   	<TextView
 			android:layout_width="fill_parent"
@@ -59,10 +81,4 @@
 			android:id="@+id/renewOverdueTV"
 			android:textColor="#ff0000" />
 
-    <edu.mit.mitmobile2.FullScreenLoader
-        android:id="@+id/librarySearchLoading"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-            
 </LinearLayout>

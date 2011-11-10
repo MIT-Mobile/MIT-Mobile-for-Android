@@ -40,57 +40,108 @@
 	    			android:layout_width="fill_parent"
 	    			android:layout_height="fill_parent">
 
+					<!-- Loans Button Row -->
 					<LinearLayout
-				    	android:id="@+id/loansButtonRow"
-				    	android:orientation="horizontal"
-				    	android:layout_width="fill_parent"
-				    	android:background="@drawable/main_repeat"
-				    	android:layout_gravity="right"
-				    	android:layout_height="wrap_content">
+				  			android:id="@+id/loansButtonRow"
+				  			android:layout_alignParentLeft="true"
+				  			android:background="@drawable/main_repeat"				  			
+				  			android:layout_width="fill_parent"
+				  			android:layout_height="wrap_content"
+				  			android:layout_gravity="center_vertical"
+				  			android:orientation="horizontal"
+				  			android:paddingLeft="@dimen/horizontalPadding"
+				  			android:paddingTop="@dimen/verticalPadding"
+				  			android:paddingBottom="@dimen/verticalPadding" >
 
 					  	<TextView
-								android:layout_width="240dip"
+								android:layout_width="220dip"
 								android:layout_height="wrap_content"
 								android:layout_alignParentLeft="true"
-								android:paddingTop="6dip"
+								android:layout_gravity="center_vertical"
 								android:paddingLeft="@dimen/horizontalPadding"
 								android:id="@+id/loanStatusTV"
 								android:text="You have 1 book on loan"
 								style="@style/LibraryStatus" />
-
+								
 						<Button
-								android:id="@+id/loanRenewSelectedBooksButton"
-								android:paddingTop="6dip"
+								android:id="@+id/loanRenewBooksButton"
 								android:text="Renew"
-								android:visibility="gone"
-								android:layout_gravity="right"
+								android:layout_alignParentRight="true"
 								android:layout_width="80dip" 
-								android:layout_height="wrap_content"/>			
-			
+								android:layout_height="wrap_content"/>											
+								
+					</LinearLayout>
+					
+					<!-- Renew Button Row -->
+					<LinearLayout
+				  			android:id="@+id/renewButtonRow"
+				  			android:visibility="gone"
+				  			android:layout_alignParentLeft="true"
+				  			android:background="@drawable/main_repeat"				  			
+				  			android:layout_width="fill_parent"
+				  			android:layout_height="wrap_content"
+				  			android:layout_gravity="center_vertical"
+				  			android:orientation="horizontal"
+				  			android:paddingLeft="@dimen/horizontalPadding"
+				  			android:paddingTop="@dimen/verticalPadding"
+				  			android:paddingBottom="@dimen/verticalPadding" >
+
 						<Button
 								android:id="@+id/loanCancelRenewBooksButton"
 								android:paddingTop="6dip"
 								android:text="Cancel"
-								android:visibility="gone"
+								android:layout_gravity="left"
+								android:layout_width="80dip" 
+								android:layout_height="wrap_content"/>
+
+					  	<TextView
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:layout_centerInParent="true"
+								android:paddingLeft="@dimen/horizontalPadding"
+								android:id="@+id/loanRenewTV"
+								android:text="Renew"
+								style="@style/ContentTitle" />
+
+						<Button
+								android:id="@+id/loanRenewSelectedBooksButton"
+								android:text="Renew"
 								android:layout_gravity="right"
 								android:layout_width="80dip" 
 								android:layout_height="wrap_content"/>			
-								
+					</LinearLayout>
+											
+					<!-- Done Button Row -->
+					<LinearLayout
+				  			android:id="@+id/doneButtonRow"
+				  			android:layout_alignParentLeft="true"
+				  			android:background="@drawable/main_repeat"				  			
+				  			android:visibility="gone"
+				  			android:layout_width="fill_parent"
+				  			android:layout_height="wrap_content"
+				  			android:layout_gravity="center_vertical"
+				  			android:orientation="horizontal"
+				  			android:paddingLeft="@dimen/horizontalPadding"
+				  			android:paddingTop="@dimen/verticalPadding"
+				  			android:paddingBottom="@dimen/verticalPadding" >
+
+					  	<TextView
+								android:layout_width="220dip"
+								android:layout_height="wrap_content"
+								android:layout_alignParentLeft="true"
+								android:layout_gravity="center_vertical"
+								android:paddingLeft="@dimen/horizontalPadding"
+								android:id="@+id/renewStatusTV"
+								android:text=""
+								style="@style/LibraryStatus" />
+
 						<Button
 								android:id="@+id/loanDoneButton"
 								android:paddingTop="6dip"
 								android:text="Done"
-								android:visibility="gone"
 								android:layout_width="80dip" 
 								android:layout_height="wrap_content"/>			
 			
-						<Button
-								android:id="@+id/loanRenewBooksButton"
-								android:text="Renew"
-								android:visibility="visible"
-								android:layout_alignParentRight="true"
-								android:layout_width="80dip" 
-								android:layout_height="wrap_content"/>											
 					</LinearLayout>
 					
 		    		<ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>		

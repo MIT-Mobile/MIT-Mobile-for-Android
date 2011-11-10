@@ -13,6 +13,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -34,6 +35,7 @@ public class LibraryLoanDetail extends Activity{
 	private TextView loanISBNTV;
 	private TextView loanStatusTV;
 	private Button loanRenewButton;
+	private LinearLayout loanDetailLayout;
     private int index;
     
 //        Intent intent = new Intent(context, LibraryDetailActivity.class);
@@ -49,8 +51,9 @@ public class LibraryLoanDetail extends Activity{
         setContentView(R.layout.library_loan_detail);
         Bundle extras = getIntent().getExtras();
         index = extras.getInt("index");
-        final LoanListItem item = LibraryLoans.getLoanData().getLoans().get(index);
+        final LoanListItem item = LibraryYourAccount.getLoanData().getLoans().get(index);
         
+        loanDetailLayout = (LinearLayout)findViewById(R.id.loandDetailLayout);
         loanTitleTV = (TextView)findViewById(R.id.loanTitleTV);
         loanTitleTV.setText(item.getTitle());
 
@@ -77,21 +80,21 @@ public class LibraryLoanDetail extends Activity{
 
         
         
-        mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
+        mLoadingView = (FullScreenLoader) findViewById(R.id.loanDetailLoading);
 
         loanRenewButton = (Button) findViewById(R.id.loanRenewButton);
         loanRenewButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-            	doSearch(item.getBarcode());
+            	renewBook(item.getBarcode());
                 Log.d(TAG,"renew ");
             }
         });
         
     }
 
-    private void doSearch(String barcode) {
-
-        mLoadingView.setVisibility(View.VISIBLE);
+    private void renewBook(String barcode) {
+    	loanDetailLayout.setVisibility(View.GONE);
+    	mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
 
         LibraryModel.renewBook(this, uiHandler,barcode);

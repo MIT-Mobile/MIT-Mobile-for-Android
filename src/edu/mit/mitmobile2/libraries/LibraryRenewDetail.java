@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,8 @@ public class LibraryRenewDetail extends Activity{
     private TextView renewAuthorTV;
 	private TextView renewOverdueTV;
 	private TextView renewMessageTV;
+	private Button renewDoneButton;
+	
     private int index;
     private String errorMsg = "";
     private String successMsg = "";
@@ -42,14 +45,9 @@ public class LibraryRenewDetail extends Activity{
         successMsg = extras.getString("successMsg");
         errorMsg = extras.getString("errorMsg");
         
-        Log.d(TAG,"# items = " + LibraryLoans.getLoanData().getLoans().size());
-        Log.d(TAG,"index = " + index);
-        LoanListItem item = LibraryLoans.getLoanData().getLoans().get(index);
-        Log.d(TAG,"item = " + item);
-        Log.d(TAG,"title = " + item.getTitle());
+        LoanListItem item = LibraryYourAccount.getLoanData().getLoans().get(index);
         
         renewTitleTV = (TextView)findViewById(R.id.renewTitleTV);
-        Log.d(TAG,"renewTitleTV = " + renewTitleTV);
         renewTitleTV.setText(item.getTitle());
 
         renewAuthorTV = (TextView)findViewById(R.id.renewAuthorTV);
@@ -66,7 +64,17 @@ public class LibraryRenewDetail extends Activity{
         	renewMessageTV.setText(successMsg);
         	renewMessageTV.setTextColor(R.color.result_text);
         }
-        mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
+        
+        renewDoneButton  = (Button)findViewById(R.id.renewDoneButton);
+		renewDoneButton.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(mContext, LibraryYourAccount.class);
+				startActivity(intent);
+			}
+		});
+
+        //mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
 
         
     }
