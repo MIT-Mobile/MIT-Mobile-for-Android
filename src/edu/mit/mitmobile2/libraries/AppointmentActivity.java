@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.libraries;
 import java.util.Arrays;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,8 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
@@ -40,7 +43,9 @@ public class AppointmentActivity extends ModuleActivity {
     private EditText mPhoneNumber;
     private Button mSubmitButton;
     
-    private TextView mEmailText;
+    private TwoLineActionRow mContentResult;
+    private TwoLineActionRow mGoHomeButton;
+    private View mThankYouView;
     private FullScreenLoader mLoader;
     private LockingScrollView mScrollView;
     
@@ -48,11 +53,15 @@ public class AppointmentActivity extends ModuleActivity {
     private String[] statusArray;
     private String[] purposeArray;
     
+    private Context mContext;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_appointment);
+        
+        mContext = this;
         
         mScrollView = (LockingScrollView) findViewById(R.id.appointmentScrollView);
         
@@ -70,7 +79,18 @@ public class AppointmentActivity extends ModuleActivity {
         
         mSubmitButton = (Button) findViewById(R.id.submitAppointment);
         
-        mEmailText = (TextView) findViewById(R.id.appointmentEmailContent);
+        mThankYouView = findViewById(R.id.libraryAppointmentThankYou);
+        mContentResult = (TwoLineActionRow) findViewById(R.id.librariesThankYouContentActionRow);
+        mGoHomeButton = (TwoLineActionRow) findViewById(R.id.librariesThankYouReturnHome);
+        mGoHomeButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+		    public void onClick(View v) {
+				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		    }
+		});
+        
         mLoader = (FullScreenLoader) findViewById(R.id.appointmentLoading);
         
         topicsArray = getResources().getStringArray(R.array.libraryResearchTopics);
@@ -194,9 +214,9 @@ public class AppointmentActivity extends ModuleActivity {
             mLoader.setVisibility(View.GONE);
             
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                String content = (String)msg.obj;
-                mEmailText.setText(content);
-                mEmailText.setVisibility(View.VISIBLE);
+                FormResult result = (FormResult)msg.obj;
+                mThankYouView.setVisibility(View.VISIBLE);
+                mContentResult.setTitle(result.getFeedbackString());
                 
             } else {
             	mScrollView.setVisibility(View.VISIBLE);
