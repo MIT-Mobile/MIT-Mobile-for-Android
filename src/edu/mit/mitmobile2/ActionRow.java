@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -22,7 +23,8 @@ public abstract class ActionRow extends FrameLayout {
 	}
 	
 	private Drawable mSystemSelectionDrawable;
-	private int mBackgroundResourceId;
+	private int mBackgroundResourceId = -1;
+	private Integer mBackgroundColor;
 	
 	
 	public ActionRow(Context context, AttributeSet attrs) {
@@ -32,7 +34,12 @@ public abstract class ActionRow extends FrameLayout {
 
 		mBackgroundResourceId = attrs.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "background", -1);
 		if(mBackgroundResourceId == -1) {
-			mBackgroundResourceId = R.color.rowBackground;
+			String colorString = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "background");
+			if(colorString != null) {
+				mBackgroundColor = Color.parseColor(colorString);
+			} else {
+				mBackgroundResourceId = R.color.rowBackground;
+			}
 		}
 	}
 
@@ -66,7 +73,11 @@ public abstract class ActionRow extends FrameLayout {
 		}
 		
 		if(event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-			setBackgroundResource(mBackgroundResourceId);
+			if (mBackgroundColor != null) {
+				setBackgroundColor(mBackgroundColor);
+			} else {
+				setBackgroundResource(mBackgroundResourceId);
+			}
 			setPressed(false);
 		}
 		
