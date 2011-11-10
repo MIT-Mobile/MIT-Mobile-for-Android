@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -65,9 +66,11 @@ public class TellUsActivity extends ModuleActivity {
         mGoHomeButton = (TwoLineActionRow) findViewById(R.id.librariesThankYouReturnHome);
         mGoHomeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				MITNewsWidgetActivity.goHome(mContext);
-			}
+		    public void onClick(View v) {
+				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		    }
 		});
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);

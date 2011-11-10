@@ -160,14 +160,13 @@
         	</LinearLayout>
     	</LinearLayout>
     </edu.mit.mitmobile2.LockingScrollView>
-    <TextView
-        android:id="@+id/appointmentEmailContent"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/rowBackground"
-        android:padding="10dip"
-        style="@style/BodyText"
-        android:visibility="gone" />
+    
+    <include
+        layout="@layout/library_form_thank_you"
+        android:id="@+id/libraryAppointmentThankYou"
+        android:visibility="gone" 
+        />
+        
     <edu.mit.mitmobile2.FullScreenLoader
         android:id="@+id/appointmentLoading"
         android:layout_width="fill_parent"

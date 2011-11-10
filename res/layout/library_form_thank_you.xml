@@ -4,8 +4,7 @@
     android:id="@+id/librariesFormThankYou"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fillViewport="true"
-    android:background="@color/rowBackground"
+    
     >
     
     <LinearLayout
@@ -17,6 +16,7 @@
     	<edu.mit.mitmobile2.TwoLineActionRow
     		android:layout_width="fill_parent"
     		android:layout_height="wrap_content"
+    		android:background="@color/rowBackground"
     		android:id="@+id/librariesThankYouContentActionRow"
     		/>
     	
@@ -26,10 +26,18 @@
     		android:background="@color/dividerColor"
     		/>
     	
+    	<View
+    		android:layout_width="fill_parent"
+    		android:layout_height="30dip"
+    		android:background="@drawable/main_repeat"
+    		/>
+    		
     	<edu.mit.mitmobile2.TwoLineActionRow
-    		android:text="Return home"
+    		android:text="Return Libaries home"
     		android:layout_width="fill_parent"
     		android:layout_height="wrap_content"
+    		android:background="#990000"
+    		android:textColor="#FFFFFF"
     		android:id="@+id/librariesThankYouReturnHome"
     		/>	    	
     		

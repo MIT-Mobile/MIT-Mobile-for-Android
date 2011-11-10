@@ -246,7 +246,7 @@ public class LibraryModel {
             @Override
             public void onResponse(JSONObject object) throws JSONException {
                 if (object.has("success") && object.getBoolean("success")) {
-                    MobileWebApi.sendSuccessMessage(uiHandler, object.getJSONObject("results").getString("contents"));
+                    MobileWebApi.sendSuccessMessage(uiHandler, FormResult.factory(object));
                 }
             }
         });
