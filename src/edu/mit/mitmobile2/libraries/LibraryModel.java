@@ -289,13 +289,14 @@ public class LibraryModel {
             @Override
             public void onResponse(JSONObject object) throws JSONException {
             	UserIdentity identity = new UserIdentity(
-            		object.getString("shib_identity"),
-            		object.getString("username"),
-            		object.getBoolean("is_mit_identity")
+            		object.optString("shib_identity"),
+            		object.optString("username"),
+            		object.optBoolean("is_mit_identity")
             	);
             	MobileWebApi.sendSuccessMessage(uiHandler, identity);
             }
-        });    	
+            
+         });    	
     }
     
 	public static void fetchLoanDetail(final Context context, final Handler uiHandler) {
@@ -373,6 +374,7 @@ public class LibraryModel {
     }
 
 	
+    
 }
 
 

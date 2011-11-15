@@ -54,6 +54,7 @@ public class MobileWebApi {
 	public final static String NETWORK_ERROR = "There was a problem connecting to the network.";
 	public final static String SERVER_ERROR = "There was a problem connecting to the server.";
 	public final static String SEARCH_ERROR_MESSAGE = "There was a problem loading the search results. Please try again.";
+	public final static String TOUCHSTONE_ERROR = "There was a problem logging on to Touchstone. Please try again with the correct username and password.";
 	
 	final static String GENERIC_MESSAGE =  "Loading...";
 	final static String SEARCH_MESSAGE = "Searching...";

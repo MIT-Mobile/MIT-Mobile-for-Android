@@ -224,6 +224,9 @@ public class LibraryYourAccount extends Activity {
 			@Override
 			public void onClick(View v) {
 				showHideRenewBooks();
+				for (int l = 0; l < LibraryYourAccount.getLoanData().getLoans().size(); l++) {
+					
+				}
 				//Intent intent = new Intent(mContext, LibraryRenewBooks.class);
 				//startActivity(intent);
 			}

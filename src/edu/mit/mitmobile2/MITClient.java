@@ -57,6 +57,10 @@ public class MITClient extends DefaultHttpClient {
 	public static final String WAYF_STATE = "wayf";
 	public static final String IDP_STATE = "idp";
 	public static final String AUTH_STATE = "auth";
+	public static final String ERROR_STATE = "error";	
+	public static final String AUTH_ERROR_KERBEROS = "Error: Please enter a valid username and password"; // error message from invalid kerberos login
+	public static final String AUTH_ERROR_CAMS = "Error: Enter your email address and password"; // error message from invaid cams login
+	
 
 	// Cookies
 	//public static List<Cookie> cookies = new ArrayList();
@@ -375,72 +379,78 @@ public class MITClient extends DefaultHttpClient {
 		String RelayState = "";
 		// parse response string to html document
 		String responseString = responseContentToString(response);
-		document = Jsoup.parse(responseString);
-	
-		// get form action
-		elements = document.getElementsByTag("form");
-		form = elements.get(0);
-		formAction = form.attr("action");
-	
-		// get SAMLResponse
-		elements = document.getElementsByTag("input");
-		for (int e = 0; e < elements.size(); e++) {
-			input = elements.get(e);
-			Log.d(TAG,"element name " + e + " = " + input.attr("name"));
-			if (input.attr("name").equalsIgnoreCase("SAMLResponse")) {
-				SAMLResponse = input.attr("value");
-			}
-			if (input.attr("name").equalsIgnoreCase("TARGET")) {
-				TARGET = input.attr("value");				
-			}
-
-			if (input.attr("name").equalsIgnoreCase("RelayState")) {
-				RelayState = input.attr("value");				
-			}
-
-		}
-	
-		//Log.d(TAG,"formAction = " + formAction);
-		//Log.d(TAG,"SAMLResponse = " + SAMLResponse);
-		//Log.d(TAG,"debug cookies in auth_state");
-		//debugCookies();
-		post = new HttpPost();
-		try {
-			uri = new URI(formAction);
-		}
-		catch (URISyntaxException e) {
-			Log.d(TAG,"idp exception = " + e.getMessage());
-		}
 		
-		post.setURI(uri);
-	
-		// Add post data
-		List nameValuePairs = new ArrayList(2);
-		nameValuePairs.add(new BasicNameValuePair("SAMLResponse",SAMLResponse));
-		nameValuePairs.add(new BasicNameValuePair("TARGET", TARGET));
-		nameValuePairs.add(new BasicNameValuePair("RelayState", RelayState));
-		try {
-			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}  
-	
-		try {
-			response = this.execute(post);
-			//this.saveCookies();
-			//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
-			if (response.getStatusLine().getStatusCode() == 200) {
-				//responseString = responseContentToString(response);
-				//Log.d(TAG,responseString);
-				//tmpResponse.
-				state = OK_STATE;
-				//Log.d(TAG,"ok state");
-				//ok();
-			}
+
+		// Check for an error message in the response string
+		if (responseString.contains(AUTH_ERROR_CAMS) || responseString.contains(AUTH_ERROR_KERBEROS)) {
+			state = ERROR_STATE;
+			Log.d(TAG,"login error");
+			return;
 		}
-		catch (IOException e) {
-			Log.d(TAG,e.getMessage());
+		else {
+			document = Jsoup.parse(responseString);
+		
+			// get form action
+			elements = document.getElementsByTag("form");
+			form = elements.get(0);
+			formAction = form.attr("action");
+		
+			// get SAMLResponse
+			elements = document.getElementsByTag("input");
+			for (int e = 0; e < elements.size(); e++) {
+				input = elements.get(e);
+				Log.d(TAG,"element name " + e + " = " + input.attr("name"));
+				if (input.attr("name").equalsIgnoreCase("SAMLResponse")) {
+					SAMLResponse = input.attr("value");
+				}
+				if (input.attr("name").equalsIgnoreCase("TARGET")) {
+					TARGET = input.attr("value");				
+				}
+	
+				if (input.attr("name").equalsIgnoreCase("RelayState")) {
+					RelayState = input.attr("value");				
+				}
+	
+			}
+
+			post = new HttpPost();
+			try {
+				uri = new URI(formAction);
+			}
+			catch (URISyntaxException e) {
+				Log.d(TAG,"idp exception = " + e.getMessage());
+			}
+			
+			post.setURI(uri);
+		
+			// Add post data
+			List nameValuePairs = new ArrayList(2);
+			nameValuePairs.add(new BasicNameValuePair("SAMLResponse",SAMLResponse));
+			nameValuePairs.add(new BasicNameValuePair("TARGET", TARGET));
+			nameValuePairs.add(new BasicNameValuePair("RelayState", RelayState));
+			try {
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}  
+		
+			try {
+				response = this.execute(post);
+				//this.saveCookies();
+				//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
+				if (response.getStatusLine().getStatusCode() == 200) {
+					//responseString = responseContentToString(response);
+					//Log.d(TAG,responseString);
+					//tmpResponse.
+					state = OK_STATE;
+					//Log.d(TAG,"ok state");
+					//ok();
+				}
+			}
+			catch (IOException e) {
+				Log.d(TAG,e.getMessage());
+			}
 		}
 	}
 	

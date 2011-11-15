@@ -34,6 +34,11 @@ public class MITConnectionWrapper extends ConnectionWrapper {
 		Log.d(TAG,"httpGet = " + httpGet.getURI());
 		try {
 			response = mitClient.getResponse(httpGet);
+			//DEBUG
+			if (mitClient.state.equalsIgnoreCase(MITClient.ERROR_STATE)) {
+				Log.d(TAG,"Error state in getResponse");
+			}
+			//DEBUG
 			//Log.d(TAG,"response = " + response);
 		}
 		catch (Exception e) {

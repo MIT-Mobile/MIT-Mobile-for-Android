@@ -24,7 +24,8 @@ public class ConnectionWrapper {
 	public static enum ErrorType {
 		Network,
 		Server,
-		Timeout
+		Timeout,
+		Touchstone
 	};
 	
 	private static final String HTTP_USER_AGENT = 

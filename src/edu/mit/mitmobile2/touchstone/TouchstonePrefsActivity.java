@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -21,12 +22,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.libraries.LibraryModel;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
@@ -42,9 +48,15 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 	Document document;
 	EditText touchstoneUsername;
 	EditText touchstonePassword;
-	Button saveButton;
 	Button cancelButton;
-	
+	Button doneButton;
+	Button loginButton;
+	CheckBox rememberLoginCB; 
+	TextView mError;
+    private LinearLayout touchstoneContents;
+	private FullScreenLoader touchstoneLoadingView;
+
+    
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstonePrefsActivity";
 	private static final int MENU_INFO = 0;
@@ -77,8 +89,16 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 		touchstoneUsername.setText(prefs.getString("PREF_TOUCHSTONE_USERNAME", ""));
 		touchstonePassword.setText(prefs.getString("PREF_TOUCHSTONE_PASSWORD", ""));
 
-		saveButton = (Button)findViewById(R.id.touchstoneSaveButton);
-		saveButton.setOnClickListener(new View.OnClickListener() {
+		doneButton = (Button)findViewById(R.id.touchstoneDoneButton);
+		cancelButton = (Button)findViewById(R.id.touchstoneCancelButton);
+		loginButton = (Button)findViewById(R.id.touchstoneLoginButton);
+		rememberLoginCB =(CheckBox)findViewById(R.id.rememberLoginCB);
+
+	    touchstoneLoadingView = (FullScreenLoader)findViewById(R.id.touchstoneLoadingView);
+	    mError = (TextView)touchstoneLoadingView.findViewById(R.id.fullScreenLoadingErrorTV); 
+	    touchstoneContents = (LinearLayout)findViewById(R.id.touchstoneContents);
+	    
+		doneButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -98,8 +118,52 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 			}
 		});
 				
+		cancelButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		loginButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				touchstoneLoadingView.setVisibility(View.VISIBLE);
+				touchstoneContents.setVisibility(View.GONE);
+				touchstoneLoadingView.showLoading();
+				LibraryModel.getUserIdentity(mContext, loginUiHandler);
+			}
+		});
+
 	}
 	
+	
+    private Handler loginUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"handleMessage");
+			touchstoneContents.setVisibility(View.VISIBLE);
+        	touchstoneLoadingView.setVisibility(View.GONE);
+
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	Log.d(TAG,"MobileWebApi success");
+                @SuppressWarnings("unchecked")
+            	UserIdentity identity = (UserIdentity)msg.obj;
+                Log.d(TAG,"identity = " + identity.getUsername());
+            } 
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+            	Log.d(TAG,"show login error");
+            	mError.setText("Error logging into Touchstone");
+            	touchstoneLoadingView.showError();
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+            	touchstoneLoadingView.showError();
+            }
+        }
+    };
+ 
 	@Override
 	protected Module getModule() {
 		return null;
