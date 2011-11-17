@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.libraries;
 import java.util.Arrays;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,6 +29,8 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
@@ -46,18 +49,24 @@ public class AskUsActivity extends ModuleActivity {
     private RadioGroup mOnCampusRadioGroup;
     private RadioGroup mVPNRadioGroup;
     
-    private TextView mEmailText;
+	private View mThankYouView;
+	private TwoLineActionRow mContentResult;
+	private TwoLineActionRow mGoHomeButton;
+
     private FullScreenLoader mLoader;
     private LockingScrollView mScrollView;
 
     private String[] topicsArray;
     private String[] statusArray;
-
+	private Context mContext;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_ask_us);
+        
+        mContext = this;
         
         mScrollView = (LockingScrollView) findViewById(R.id.askUsScrollView);
         
@@ -72,7 +81,18 @@ public class AskUsActivity extends ModuleActivity {
         
         mSubmitButton = (Button) findViewById(R.id.submit);
         
-        mEmailText = (TextView) findViewById(R.id.askUsEmailContent);
+        mThankYouView = findViewById(R.id.libraryAskUsThankYou);
+        mContentResult = (TwoLineActionRow) findViewById(R.id.librariesThankYouContentActionRow);
+        mGoHomeButton = (TwoLineActionRow) findViewById(R.id.librariesThankYouReturnHome);
+        mGoHomeButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+		    public void onClick(View v) {
+				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		    }
+		});
+        
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
         
         mTechHelpSection = findViewById(R.id.librariesTechHelpSection);
@@ -229,9 +249,9 @@ public class AskUsActivity extends ModuleActivity {
             mLoader.setVisibility(View.GONE);
             
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                String content = (String)msg.obj;
-                mEmailText.setText(content);
-                mEmailText.setVisibility(View.VISIBLE);
+                FormResult result = (FormResult)msg.obj;
+                mThankYouView.setVisibility(View.VISIBLE);
+                mContentResult.setTitle(result.getFeedbackString());
                 
             } else {
             	mScrollView.setVisibility(View.VISIBLE);

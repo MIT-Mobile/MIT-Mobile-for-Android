@@ -133,33 +133,6 @@ public class LibraryModel {
         });
     }
 
-    public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
-            String department, String subject, String question, String askType) {
-
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "sendAskUsEmail");
-        searchParameters.put("topic", topic);
-        searchParameters.put("status", status);
-        searchParameters.put("department", department);
-        searchParameters.put("subject", subject);
-        searchParameters.put("question", question);
-        searchParameters.put("ask_type", askType);
-        searchParameters.put("module", MODULE_LIBRARY);
-
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
-                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
-                        uiHandler)) {
-
-            @Override
-            public void onResponse(JSONObject object) throws JSONException {
-                if (object.has("success") && object.getBoolean("success")) {
-                    MobileWebApi.sendSuccessMessage(uiHandler, object.getJSONObject("results").getString("contents"));
-                }
-            }
-        });
-    }
-
     public static class FormResult {
     	private String mEmailContent;
     	private String mThankYouText;
@@ -195,6 +168,33 @@ public class LibraryModel {
     	public String getFeedbackString() {
     		return mThankYouText + "\n\nYou will be contacted at " + mContactAddress + ".";
     	}
+    }
+
+    public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
+            String department, String subject, String question, String askType) {
+
+        HashMap<String, String> searchParameters = new HashMap<String, String>();
+        searchParameters.put("command", "sendAskUsEmail");
+        searchParameters.put("topic", topic);
+        searchParameters.put("status", status);
+        searchParameters.put("department", department);
+        searchParameters.put("subject", subject);
+        searchParameters.put("question", question);
+        searchParameters.put("ask_type", askType);
+        searchParameters.put("module", MODULE_LIBRARY);
+
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
+        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+                        uiHandler)) {
+
+            @Override
+            public void onResponse(JSONObject object) throws JSONException {
+                if (object.has("success") && object.getBoolean("success")) {
+                    MobileWebApi.sendSuccessMessage(uiHandler, FormResult.factory(object));
+                }
+            }
+        });
     }
     
     public static void sendTellUsInfo(final Context context, final Handler uiHandler, String status, String feedback) {
