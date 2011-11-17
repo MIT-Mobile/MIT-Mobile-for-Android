@@ -44,6 +44,7 @@ import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 import edu.mit.mitmobile2.touchstone.TouchstoneModule;
+import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
 import edu.mit.mitmobile2.tour.TourModule;
 
 public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenceChangeListener {
@@ -52,6 +53,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 	
 	private static final int ABOUT_MENU_ID = 0;
 	private static final int MOBILE_WEB_MENU_ID = 1;
+	private static final int TOUCHSTONE_MENU_ID = 2;
 
 	Context ctx;
 	
@@ -218,7 +220,6 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new FacilitiesModule(),
 			new QRReaderModule(),
 			new LibrariesModule(),
-			new TouchstoneModule(),
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);
@@ -368,6 +369,9 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		menu.add(0, MOBILE_WEB_MENU_ID, 0, "Mobile Web")
 			.setIcon(R.drawable.menu_mobile_web);
 		
+		menu.add(0, TOUCHSTONE_MENU_ID, 0, "Touchstone")
+		.setIcon(R.drawable.menu_mobile_web);
+
 		return true;
 	}
 	
@@ -381,6 +385,10 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 				return true;
 			case MOBILE_WEB_MENU_ID:
 				CommonActions.viewURL(ctx, "http://" + Global.getMobileWebDomain() + "/");
+				return true;
+			case TOUCHSTONE_MENU_ID:
+				intent = new Intent(ctx, TouchstonePrefsActivity.class);
+				startActivity(intent);
 				return true;
 		}
 

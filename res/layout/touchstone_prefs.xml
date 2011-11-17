@@ -3,73 +3,112 @@
     android:id="@+id/touchstonePrefsLayout"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent" >
     
     <edu.mit.mitmobile2.TitleBar
-  		android:text="Touchstone Preferences"
+  		android:text="MIT Touchstone"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
 
-
-      				<TextView
-	            		android:layout_width="wrap_content"
-	            		android:layout_height="wrap_content"
-	            		android:layout_centerVertical="true"
-	            		android:layout_alignParentLeft="true"
-	            		android:paddingRight="6dip"
-	            		android:text="User Name:"
-	            		android:id="@+id/touchstoneUserNameLabel"
-	            		style="@style/ContentTitle" />
-	            		
-	            	<EditText 
-						android:id="@+id/touchstoneUsername"
-						android:layout_width="fill_parent"
-            			android:layout_alignParentLeft="true"
-            			android:singleLine="true" 
-            			android:gravity="left"
-            			android:lines="1"
-            			android:hint="username (required)"
-            		android:layout_height="wrap_content"/>
-           		
-      				<TextView
-	            		android:layout_width="wrap_content"
-	            		android:layout_height="wrap_content"
-	            		android:layout_centerVertical="true"
-	            		android:layout_alignParentLeft="true"
-	            		android:paddingRight="6dip"
-	            		android:text="Password:"
-	            		android:id="@+id/touchstonePasswordLabel"
-	            		style="@style/ContentTitle" />
-
-	            	<EditText 
-						android:id="@+id/touchstonePassword"
-						android:layout_width="fill_parent"
-            			android:layout_alignParentLeft="true"
-            			android:singleLine="true" 
-            			android:gravity="left"
-            			android:lines="1"
-            			android:hint="password (required)"
-            			android:password="true"
-            		android:layout_height="wrap_content"/>
-
-    	
-					<Button 
-						android:layout_height="wrap_content" 
-						android:id="@+id/touchstoneSaveButton" 
-						android:text="Save" 
-						android:layout_width="fill_parent" 
-						android:layout_alignParentLeft="true">
-					</Button>
-					
-					<Button 
-						android:layout_height="wrap_content" 
-						android:id="@+id/touchstoneCancelButton" 
-						android:text="Cancel" 
-						android:layout_width="fill_parent" 
-						android:layout_alignParentLeft="true">
-					</Button>
-    
+	<LinearLayout
+		android:id="@+id/touchstoneContents"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	   	android:paddingLeft="@dimen/horizontalPadding"
+	   	android:paddingRight="@dimen/horizontalPadding"
+		android:paddingTop="@dimen/verticalPadding"
+		android:paddingBottom="@dimen/verticalPadding" >
+	
+		<!-- Button Row -->
+		<RelativeLayout 
+		    android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content" >
+	
+			<!-- Cancel -->
+			<Button 
+				android:layout_height="wrap_content" 
+				android:layout_width="80dip" 
+				android:id="@+id/touchstoneCancelButton" 
+				android:text="Cancel" 
+				android:layout_alignParentLeft="true" />
+	
+			<!-- Done -->
+			<Button 
+				android:layout_height="wrap_content" 
+				android:layout_width="80dip" 
+				android:id="@+id/touchstoneDoneButton" 
+				android:text="Done" 
+				android:layout_alignParentRight="true" />
+	
+		</RelativeLayout>
+		
+		<!-- User Name -->
+		<EditText 
+			android:id="@+id/touchstoneUsername"
+			android:layout_width="fill_parent"
+	       	android:layout_alignParentLeft="true"
+	       	android:singleLine="true" 
+	       	android:gravity="left"
+	       	android:lines="1"
+	       	android:hint="username (required)"
+	       	android:layout_height="wrap_content"/>
+	        		
+		<!-- Password -->
+		<EditText 
+			android:id="@+id/touchstonePassword"
+			android:layout_width="fill_parent"
+	        android:layout_alignParentLeft="true"
+	        android:singleLine="true" 
+	        android:gravity="left"
+	        android:lines="1"
+	        android:hint="password (required)"
+	        android:password="true"
+	        android:layout_height="wrap_content"/>
+	
+		<!-- Remember Login Row -->
+		<RelativeLayout 
+		    android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content" >
+	
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content" 
+	    		android:layout_centerInParent="true" >
+	    		
+	    		<TextView 
+	    			android:text="Remember login" 
+	    			android:textColor="@color/contents_text"
+	    			android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content">    
+	    		</TextView>
+	    		
+	    		<CheckBox 
+	    			android:id="@+id/rememberLoginCB" 
+	    			android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content">    
+	    		</CheckBox>
+	    	</LinearLayout>
+			
+		</RelativeLayout>
+	
+		<Button 
+			android:layout_height="wrap_content" 
+			android:id="@+id/touchstoneLoginButton" 
+			android:text="Login" 
+			android:layout_width="fill_parent" 
+			android:layout_alignParentLeft="true">
+		</Button>
+		
+	</LinearLayout>
+	
+	<edu.mit.mitmobile2.FullScreenLoader
+   		android:id="@+id/touchstoneLoadingView"
+   		android:layout_width="fill_parent"
+   		android:layout_height="fill_parent"
+   		android:visibility="gone" />				    
+	
 </LinearLayout>
 
 

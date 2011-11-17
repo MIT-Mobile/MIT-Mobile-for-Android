@@ -56,9 +56,14 @@ public class LibraryYourAccount extends Activity {
 	private View mLoanResults;
     private ListView loanListView;
     private FullScreenLoader loanLoadingView;
+    private LinearLayout loansButtonRow;
+    private LinearLayout renewButtonRow;
+    private LinearLayout doneButtonRow;
     private TextView loanTitleTV;
 	private TextView loanAuthorTV;
 	private TextView loanStatusTV;
+	private TextView loanRenewTV;
+	private TextView renewStatusTV;
 	private Button loanRenewBooksButton;
 	private Button loanRenewSelectedBooksButton;
 	private Button loanCancelRenewBooksButton;
@@ -137,9 +142,14 @@ public class LibraryYourAccount extends Activity {
 	private void setUpViews() {
         mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
+        renewStatusTV = (TextView) findViewById(R.id.renewStatusTV);
         loanListView = (ListView) findViewById(R.id.listLibraryLoans);
+        loanRenewTV = (TextView) findViewById(R.id.loanRenewTV);
         loanLoadingView = (FullScreenLoader) findViewById(R.id.libraryLoanLoading);
-
+        loansButtonRow = (LinearLayout) findViewById(R.id.loansButtonRow);
+        renewButtonRow = (LinearLayout) findViewById(R.id.renewButtonRow);
+        doneButtonRow = (LinearLayout) findViewById(R.id.doneButtonRow);
+        
         fineStatusTV = (TextView) findViewById(R.id.fineStatusTV);
         mFineResults = (View) findViewById(R.id.fineResults);
         fineListView = (ListView) findViewById(R.id.listLibraryFines);
@@ -214,6 +224,9 @@ public class LibraryYourAccount extends Activity {
 			@Override
 			public void onClick(View v) {
 				showHideRenewBooks();
+				for (int l = 0; l < LibraryYourAccount.getLoanData().getLoans().size(); l++) {
+					
+				}
 				//Intent intent = new Intent(mContext, LibraryRenewBooks.class);
 				//startActivity(intent);
 			}
@@ -238,26 +251,20 @@ public class LibraryYourAccount extends Activity {
 	
     private void showHideRenewBooks() {
     	int currentMode = LibraryYourAccount.getMode();
-	    loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
 
     	Log.d(TAG,"currentMode = " + currentMode);
     	
     	if (currentMode == LibraryYourAccount.LOAN_MODE) {
-    		loanStatusTV.setVisibility(View.GONE);
-    		loanRenewBooksButton.setVisibility(View.GONE);
-			loanRenewSelectedBooksButton.setVisibility(View.VISIBLE);
-			loanCancelRenewBooksButton.setVisibility(View.VISIBLE); 
-			
+    		loansButtonRow.setVisibility(View.GONE);
+    		renewButtonRow.setVisibility(View.VISIBLE);
 			// Hide tabs
 			tabHost.getTabWidget().setVisibility(View.GONE);
 
 			LibraryYourAccount.setMode(LibraryYourAccount.RENEW_MODE);
     	}
     	else {
-    		loanStatusTV.setVisibility(View.VISIBLE);
-    		loanRenewBooksButton.setVisibility(View.VISIBLE);
-			loanRenewSelectedBooksButton.setVisibility(View.GONE);
-			loanCancelRenewBooksButton.setVisibility(View.GONE);
+    		loansButtonRow.setVisibility(View.VISIBLE);
+    		renewButtonRow.setVisibility(View.GONE);
 			
 			// Show Tabs
 			tabHost.getTabWidget().setVisibility(View.VISIBLE);
@@ -380,23 +387,13 @@ public class LibraryYourAccount extends Activity {
             		}
             	}
 
-            	loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
-                loanStatusTV.setVisibility(View.VISIBLE);
-            	loanStatusTV.setText(numErrors + " items(s) could not be renewed");            		
-                loanStatusTV.setTextColor(Color.RED);
-                
-                loanRenewBooksButton = (Button) findViewById(R.id.loanRenewBooksButton);
-                loanRenewBooksButton.setVisibility(View.GONE);
-                
-                loanRenewSelectedBooksButton = (Button) findViewById(R.id.loanRenewSelectedBooksButton);
-                loanRenewSelectedBooksButton.setVisibility(View.GONE);
-                
-                loanCancelRenewBooksButton = (Button) findViewById(R.id.loanCancelRenewBooksButton);
-                loanCancelRenewBooksButton.setVisibility(View.GONE);
+            	renewStatusTV = (TextView) findViewById(R.id.renewStatusTV);
+            	renewStatusTV.setVisibility(View.VISIBLE);
+            	renewStatusTV.setText(numErrors + " items(s) could not be renewed");            		
+            	renewStatusTV.setTextColor(Color.RED);
 
-                loanDoneButton = (Button) findViewById(R.id.loanDoneButton);
-                loanDoneButton.setVisibility(View.VISIBLE);
-
+            	renewButtonRow.setVisibility(View.GONE);
+            	doneButtonRow.setVisibility(View.VISIBLE);
                 mLoanResults.setVisibility(View.VISIBLE);
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {
