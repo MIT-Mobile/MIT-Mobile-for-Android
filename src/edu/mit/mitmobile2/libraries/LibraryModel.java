@@ -170,7 +170,7 @@ public class LibraryModel {
     }
 
     public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
-            String department, String subject, String question, String askType) {
+            String department, String subject, String question, String phone, String usingVPN, String onCampus, String askType) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
         searchParameters.put("command", "sendAskUsEmail");
@@ -181,6 +181,15 @@ public class LibraryModel {
         searchParameters.put("question", question);
         searchParameters.put("ask_type", askType);
         searchParameters.put("module", MODULE_LIBRARY);
+        if (phone != null) {
+        	searchParameters.put("phone", phone);
+        }
+        if (usingVPN != null) {
+        	searchParameters.put("vpn", usingVPN);
+        }
+        if (onCampus != null) {
+        	searchParameters.put("on_campus", onCampus);
+        }
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(

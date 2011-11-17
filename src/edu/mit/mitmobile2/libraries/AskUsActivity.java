@@ -160,8 +160,8 @@ public class AskUsActivity extends ModuleActivity {
                 String department = mDepartmentText.getText().toString().trim();
                 
                 boolean technicalHelp = topic.equals("Technical Help");
-                String onCampus;
-                String usingVPN;
+                String onCampus = null;
+                String usingVPN = null;
                 if(technicalHelp) {
                 	if(mOnCampusRadioGroup.getCheckedRadioButtonId() == -1) {
                 		// nothing selected.
@@ -177,14 +177,14 @@ public class AskUsActivity extends ModuleActivity {
                 		prompt("Must specify if your using VPN");
                 		return;
                 	}
-                	usingVPN =((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
+                	usingVPN = ((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
     					.getText().toString().toLowerCase();
                 }
                 
                 
                 showLoading();
                 
-                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, "form");
+                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, phone, usingVPN, onCampus, "form");
             }
         });
         
@@ -239,7 +239,7 @@ public class AskUsActivity extends ModuleActivity {
     		}
     	}
     	
-    	EditText[] editTexts = new EditText[] {mSubjectText, mDetailText, mPhoneText, mDepartmentText};
+    	EditText[] editTexts = new EditText[] {mSubjectText, mDetailText, mDepartmentText};
     	for (int i=0; i < editTexts.length; i++) {
     		if (editTexts[i].getText().toString().trim().length() == 0) {
     			return false;
