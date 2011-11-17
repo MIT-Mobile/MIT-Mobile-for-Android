@@ -17,10 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -187,8 +185,6 @@ public class AskUsActivity extends ModuleActivity {
                     return;
                 }
                 
-                String onCampus;
-                String usingVPN;
                 boolean technicalHelp = topic.equals("Technical Help");
                 if(technicalHelp) {
                 	if(mOnCampusRadioGroup.getCheckedRadioButtonId() == -1) {
@@ -197,7 +193,7 @@ public class AskUsActivity extends ModuleActivity {
                 		prompt("Must select on or off campus");
                 		return;
                 	}
-                	onCampus = ((RadioButton) findViewById(mOnCampusRadioGroup.getCheckedRadioButtonId()))
+                	((RadioButton) findViewById(mOnCampusRadioGroup.getCheckedRadioButtonId()))
                 		.getText().toString().toLowerCase();
                 	
                 	if(mVPNRadioGroup.getCheckedRadioButtonId() == -1) {
@@ -205,7 +201,7 @@ public class AskUsActivity extends ModuleActivity {
                 		prompt("Must specify if your using VPN");
                 		return;
                 	}
-                	usingVPN = ((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
+                	((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
     					.getText().toString().toLowerCase();
                 }
                 

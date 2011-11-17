@@ -19,7 +19,6 @@ import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
-import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryModel {
     public static String MODULE_LIBRARY = "libraries";
