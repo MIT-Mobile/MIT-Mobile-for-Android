@@ -119,7 +119,6 @@ public class TellUsActivity extends ModuleActivity {
 				showForm();
 			}
         });
-        showForm();
     }
 
     TextWatcher mUpdateSubmitButtonTextWatcher = new TextWatcher() {
