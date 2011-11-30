@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,8 +58,13 @@ public class TellUsActivity extends ModuleActivity {
         
         mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
         mFeedbackText = (EditText) findViewById(R.id.feebackText);
+        mFeedbackText.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
+        
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
+        
         mSubmitButton = (Button) findViewById(R.id.submit);
+        mSubmitButton.setEnabled(false);
+        
         mLoader = (FullScreenLoader) findViewById(R.id.tellUsLoading);
         mThankYouView = findViewById(R.id.libraryTellUsThankYou);
         mContentResult = (TwoLineActionRow) findViewById(R.id.librariesThankYouContentActionRow);
@@ -112,8 +119,22 @@ public class TellUsActivity extends ModuleActivity {
 				showForm();
 			}
         });
+        showForm();
     }
 
+    TextWatcher mUpdateSubmitButtonTextWatcher = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            String feedback = mFeedbackText.getText().toString().trim();
+            mSubmitButton.setEnabled((feedback.length() > 0));
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    };
     
     private void showLoader() {
         mScrollView.setVisibility(View.GONE);
