@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
+import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -42,6 +43,7 @@ public class TellUsActivity extends ModuleActivity {
     private View mThankYouView;
     private TwoLineActionRow mContentResult;
     private TwoLineActionRow mGoHomeButton;
+    private TwoLineActionRow mSuggestPurchaseButton;
     
     private FullScreenLoader mLoader;
     private LockingScrollView mScrollView;
@@ -57,6 +59,15 @@ public class TellUsActivity extends ModuleActivity {
         mContext = this;
         
         mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
+        
+        mSuggestPurchaseButton = (TwoLineActionRow) findViewById(R.id.libraryTellUsSuggestPurchase);
+        mSuggestPurchaseButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				CommonActions.viewURL(mContext, "http://libraries.mit.edu/suggest-purchase");
+			}
+        });
+        
         mFeedbackText = (EditText) findViewById(R.id.feebackText);
         mFeedbackText.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
         
