@@ -18,6 +18,12 @@
         	android:layout_width="fill_parent"
         	android:layout_height="wrap_content">
         	
+        	<edu.mit.mitmobile2.SectionHeader
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:text="Research Info"
+            	/>
+        	
         	<LinearLayout
             	android:orientation="vertical"
             	android:layout_width="fill_parent"
@@ -98,12 +104,11 @@
                 	android:layout_height="wrap_content" />
           </LinearLayout>
           
-          <!--  GAP  -->	
-          <View
-				android:background="@color/transparent"
-				android:layout_width="fill_parent"
-				android:layout_height="30dip" 
-				/> 	
+            <edu.mit.mitmobile2.SectionHeader
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:text="Personal Info"
+            	/>
           
           <LinearLayout
           	android:layout_width="fill_parent"
