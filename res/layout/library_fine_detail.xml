@@ -20,7 +20,6 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:paddingTop="6dip"
-			android:paddingBottom="6dip"
 			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/fineTitleTV"
 			android:text="fineTitleTV"
@@ -28,45 +27,13 @@
 			android:textStyle="bold"
 			android:textSize="17sp"
 			android:typeface="sans" />
-			
-	<edu.mit.mitmobile2.DividerView
-			android:paddingTop="6dip"
-        	android:layout_width="fill_parent"
-        	android:layout_height="@dimen/dividerHeight" />
-				
+							
   	<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
 			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/fineAuthorTV"
 			android:textColor="@color/contents_text" />
-
-	<LinearLayout
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:orientation="horizontal" >
-    
-    		<!-- CALL # LABEL -->
-  			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
-				android:paddingLeft="@dimen/horizontalPadding"
-				android:text="Call #:"
-				android:textStyle="bold"
-				android:textColor="@color/contents_text"
-				android:id="@+id/fineCallNoLabelTV" />
-
-			<!-- CALL # -->
-			<TextView
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
-				android:paddingLeft="@dimen/horizontalPadding"
-				android:id="@+id/fineCallNoTV"
-				android:textColor="@color/contents_text" />
-	</LinearLayout>
         
 	<LinearLayout
     		android:layout_width="fill_parent"
@@ -77,19 +44,15 @@
   			<TextView
 				android:layout_width="65dip"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
 				android:paddingLeft="@dimen/horizontalPadding"
 				android:text="Library:"
 				android:id="@+id/fineLibraryLabelTV"
-				android:textStyle="bold"
 				android:textColor="@color/contents_text" />
 				
 		  	<!-- LIBRARY -->
   			<TextView
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
-				android:paddingLeft="@dimen/horizontalPadding"
 				android:id="@+id/fineLibraryTV"
 				android:textColor="@color/contents_text" />
 				
@@ -102,21 +65,17 @@
 
   			<!-- ISBN LABEL -->
   			<TextView
-				android:layout_width="65dip"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
 				android:paddingLeft="@dimen/horizontalPadding"
-				android:text="ISBN:"
+				android:text="ISBN: "
 				android:id="@+id/fineISBNLabelTV"
-				android:textStyle="bold"
 				android:textColor="@color/contents_text" />
 				
 		  	<!-- ISBN -->
   			<TextView
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
-				android:paddingLeft="@dimen/horizontalPadding"
 				android:id="@+id/fineISBNTV"
 				android:textColor="@color/contents_text" />
 				
@@ -129,21 +88,17 @@
 
   			<!-- FINE DATE LABEL -->
   			<TextView
-				android:layout_width="120dip"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
 				android:paddingLeft="@dimen/horizontalPadding"
-				android:text="Fine date:"
+				android:text="Fine date: "
 				android:id="@+id/fineFineDateLabelTV"
-				android:textStyle="bold"
 				android:textColor="@color/contents_text" />
 				
 		  	<!-- FINE DATE -->
   			<TextView
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
-				android:paddingLeft="@dimen/horizontalPadding"
 				android:id="@+id/fineFineDateTV"
 				android:textColor="@color/contents_text" />
 				
@@ -156,23 +111,19 @@
 
   			<!-- AMOUNT OWED LABEL -->
   			<TextView
-				android:layout_width="120dip"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
 				android:paddingLeft="@dimen/horizontalPadding"
-				android:text="Amount owed:"
+				android:text="Amount owed: "
 				android:id="@+id/fineAmountOwedLabelTV"
-				android:textStyle="bold"
 				android:textColor="@color/contents_text" />
 				
 		  	<!-- AMOUNT OWED -->
   			<TextView
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:paddingTop="6dip"
-				android:paddingLeft="@dimen/horizontalPadding"
 				android:id="@+id/fineAmountOwedTV"
-				android:textColor="@color/contents_text" />
+				android:textColor="#FFFF0000" />
 				
 	</LinearLayout>
 

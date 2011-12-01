@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
@@ -108,6 +109,11 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 					prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", touchstoneUsername.getEditableText().toString());
 					prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", touchstonePassword.getEditableText().toString());
 					prefsEditor.commit();
+					
+					// if the remember checkbox is unchecked, clear the touchstone cookies
+					if (!rememberLoginCB.isChecked()) {
+						MITClient.cookieStore = null;
+					}
 				}
 				catch (RuntimeException e) {
 					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());

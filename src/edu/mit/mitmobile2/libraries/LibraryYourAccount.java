@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
@@ -57,11 +61,12 @@ public class LibraryYourAccount extends Activity {
     private ListView loanListView;
     private FullScreenLoader loanLoadingView;
     private LinearLayout loansButtonRow;
-    private LinearLayout renewButtonRow;
+    private RelativeLayout renewButtonRow;
     private LinearLayout doneButtonRow;
     private TextView loanTitleTV;
 	private TextView loanAuthorTV;
 	private TextView loanStatusTV;
+	private ImageView loanStatusIcon;
 	private TextView loanRenewTV;
 	private TextView renewStatusTV;
 	private Button loanRenewBooksButton;
@@ -83,6 +88,7 @@ public class LibraryYourAccount extends Activity {
     // Fine Properties
     static FineData fineData;
     private View mFineResults;
+    private TextView fineBalanceTV;
     private TextView fineStatusTV;
     private TextView fineDisplayAmountTV;
     private TextView fineTitleTV;
@@ -99,6 +105,8 @@ public class LibraryYourAccount extends Activity {
 	private TextView holdAuthorTV;
 	private TextView holdStatusTV;
 	private TextView holdPickupLocationTV;
+	private ImageView holdStatusIcon;
+
 	static HoldData holdData;
 	 
 	// Getters and Setters
@@ -147,9 +155,10 @@ public class LibraryYourAccount extends Activity {
         loanRenewTV = (TextView) findViewById(R.id.loanRenewTV);
         loanLoadingView = (FullScreenLoader) findViewById(R.id.libraryLoanLoading);
         loansButtonRow = (LinearLayout) findViewById(R.id.loansButtonRow);
-        renewButtonRow = (LinearLayout) findViewById(R.id.renewButtonRow);
+        renewButtonRow = (RelativeLayout) findViewById(R.id.renewButtonRow);
         doneButtonRow = (LinearLayout) findViewById(R.id.doneButtonRow);
         
+        fineBalanceTV = (TextView) findViewById(R.id.fineBalanceTV);
         fineStatusTV = (TextView) findViewById(R.id.fineStatusTV);
         mFineResults = (View) findViewById(R.id.fineResults);
         fineListView = (ListView) findViewById(R.id.listLibraryFines);
@@ -332,7 +341,7 @@ public class LibraryYourAccount extends Activity {
                 @SuppressWarnings("unchecked")
                 LoanData loanData = (LoanData)msg.obj;
                 LibraryYourAccount.setLoanData((LoanData)msg.obj);
-                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanData.getNumOverdue() + " overdue.");
+                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan.\n" + loanData.getNumOverdue() + " overdue.");
                 final ArrayList<LoanListItem> results = loanData.getLoans();
 
                 if (results.size() == 0) {
@@ -418,8 +427,9 @@ public class LibraryYourAccount extends Activity {
                 LibraryFines.setFineData((FineData)msg.obj);
                 
                 Date date = new Date();
-                fineStatusTV.setText("Balance as of " + date.toLocaleString() + ": " + fineData.getBalance() 
-                		+ " Payable at any MIT library service desk. TechCASH accepted only at Hayden Library. ");
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                fineBalanceTV.setText("Balance as of " + dateFormat.format(date) + ": " + fineData.getBalance()); 
+                fineStatusTV.setText("Payable at any MIT library service desk.\nTechCASH accepted only at Hayden Library.");
                 final ArrayList<FineListItem> results = fineData.getFines();
 
                 if (results.size() == 0) {
@@ -451,7 +461,7 @@ public class LibraryYourAccount extends Activity {
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryYourAccount.setHoldData((HoldData)msg.obj);
              
-                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests." + holdData.getNumReady() + " for pickup.");
+                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests.\n" + holdData.getNumReady() + " for pickup.");
                 final ArrayList<HoldListItem> results = holdData.getHolds();
 
                 if (results.size() == 0) {
@@ -528,14 +538,23 @@ public class LibraryYourAccount extends Activity {
         		loanAuthorTV.setVisibility(View.GONE);
         	}
 
-        	// Status
+        	// Status + Icon
         	loanStatusTV = (TextView)view.findViewById(R.id.loanStatusTV);
-        	loanStatusTV.setText(Html.fromHtml(item.getDueText()));
+        	loanStatusIcon = (ImageView)view.findViewById(R.id.loanStatusIcon);
+        	String statusText = "";
+        	if (item.isHasHold()) {
+        		statusText = "Item has holds\n"; 
+        	}
+        	statusText += Html.fromHtml(item.getDueText());
+        	loanStatusTV.setText(statusText);
         	if (item.isOverdue() || item.isLongOverdue()) {
         		loanStatusTV.setTextColor(Color.RED);
+        		loanStatusIcon.setImageResource(R.drawable.status_alert);
+        		loanStatusIcon.setVisibility(View.VISIBLE);
         	}
         	else {
         		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusIcon.setVisibility(View.GONE);
         	}
         	
         	// Renew Book Checkbox
@@ -654,8 +673,11 @@ public class LibraryYourAccount extends Activity {
         		holdAuthorTV.setVisibility(View.GONE);
         	}
 
+        	// Status Icon
+    		holdStatusIcon = (ImageView)view.findViewById(R.id.holdStatusIcon);
+    	
         	// Status
-        	holdStatusTV = (TextView)view.findViewById(R.id.holdStatusTV);
+    		holdStatusTV = (TextView)view.findViewById(R.id.holdStatusTV);
         	if (!item.getStatus().equalsIgnoreCase("")) {
         		holdStatusTV.setText(item.getStatus());
         	}
@@ -670,6 +692,22 @@ public class LibraryYourAccount extends Activity {
         	}
         	else {
         		holdPickupLocationTV.setVisibility(View.GONE);
+        	}
+        	
+        	// Set color and icon based on Status value
+        	if (item.getReady().equalsIgnoreCase("TRUE")) {
+        		Log.d(TAG,"ready for " + item.getTitle() + " = " + item.getReady());
+        		holdStatusIcon.setVisibility(View.VISIBLE);
+        		holdStatusTV.setTextColor(R.color.hold_ready_text);
+        		holdPickupLocationTV.setTextColor(R.color.hold_ready_text);
+        		Log.d(TAG,"setting status to green, " + R.color.hold_ready_text);
+        		Log.d(TAG,"holdStatusTV = " + holdStatusTV.getCurrentTextColor());
+        	}
+        	else {
+        		holdStatusIcon.setVisibility(View.GONE);        		
+        		holdStatusTV.setTextColor(Color.BLACK);
+        		holdPickupLocationTV.setTextColor(Color.BLACK);
+        		Log.d(TAG,"setting status to black, " + Color.BLACK);
         	}
         }
 
@@ -716,13 +754,17 @@ public class LibraryYourAccount extends Activity {
         	}
 
         	// Status
+        	loanStatusIcon = (ImageView)view.findViewById(R.id.loanStatusIcon);
+        	loanStatusIcon.setImageResource(R.drawable.status_alert);
         	loanStatusTV = (TextView)view.findViewById(R.id.loanStatusTV);
         	loanStatusTV.setText(Html.fromHtml(item.getDueText()));
         	if (item.isOverdue() || item.isLongOverdue()) {
         		loanStatusTV.setTextColor(Color.RED);
+        		loanStatusIcon.setVisibility(View.VISIBLE);
         	}
         	else {
         		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusIcon.setVisibility(View.GONE);
         	}
         	
         }

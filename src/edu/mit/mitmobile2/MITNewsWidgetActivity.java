@@ -53,7 +53,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 	
 	private static final int ABOUT_MENU_ID = 0;
 	private static final int MOBILE_WEB_MENU_ID = 1;
-	private static final int TOUCHSTONE_MENU_ID = 2;
+	private static final int SETTINGS_MENU_ID = 2;
 
 	Context ctx;
 	
@@ -369,8 +369,8 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		menu.add(0, MOBILE_WEB_MENU_ID, 0, "Mobile Web")
 			.setIcon(R.drawable.menu_mobile_web);
 		
-		menu.add(0, TOUCHSTONE_MENU_ID, 0, "Touchstone")
-		.setIcon(R.drawable.menu_mobile_web);
+		menu.add(0, SETTINGS_MENU_ID, 0, "Settings")
+		.setIcon(R.drawable.menu_settings);
 
 		return true;
 	}
@@ -386,7 +386,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			case MOBILE_WEB_MENU_ID:
 				CommonActions.viewURL(ctx, "http://" + Global.getMobileWebDomain() + "/");
 				return true;
-			case TOUCHSTONE_MENU_ID:
+			case SETTINGS_MENU_ID:
 				intent = new Intent(ctx, TouchstonePrefsActivity.class);
 				startActivity(intent);
 				return true;

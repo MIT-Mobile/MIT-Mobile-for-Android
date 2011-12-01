@@ -283,7 +283,7 @@ public class LibraryParser {
 				item.setPendingFine(tmpItem.optString("pending-fine",""));
 	
 				// Has Hold
-				item.setLongOverdue(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
+				item.setHasHold(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
 				
 				// Due Text
 				item.setDueText(tmpItem.optString("dueText",""));

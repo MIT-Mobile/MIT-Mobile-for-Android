@@ -312,7 +312,7 @@ public class MobileWebApi {
 
 			@Override
 			public void onError(final ErrorType error) {
-
+				Log.d(TAG,"requestResponse onError = " + error);
 				if(responseListener.wasRequestCancelled()) {
 					// nothing to handle request was cancelled
 					return;

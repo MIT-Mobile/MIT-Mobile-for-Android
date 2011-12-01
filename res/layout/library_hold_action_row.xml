@@ -22,9 +22,6 @@
 		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingBottom="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/holdTitleTV"
 			android:textColor="@color/contents_text"
 			android:textStyle="bold"
@@ -35,28 +32,41 @@
   		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/holdAuthorTV"
 			android:textColor="@color/contents_text" />
 		
-		<!-- STATUS -->			
-  		<TextView
+		<!--  Status and Pickup Info -->
+		<LinearLayout
+			android:orientation="horizontal" 
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/holdStatusTV"
-			android:textColor="@color/contents_text" />
+  			android:layout_height="wrap_content" >
+
+			<ImageView 
+				android:id="@+id/holdStatusIcon"
+				android:src="@drawable/status_ready"
+				android:layout_width="20dip"
+				android:layout_height="wrap_content" />
+
+			<LinearLayout
+				android:orientation="vertical" 
+				android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content" >
+
+				<!-- STATUS -->			
+	  			<TextView
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/holdStatusTV" />
   		  				
-		<!-- PICKUP -->			
-  		<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/holdPickupLocationTV"
-			android:textColor="@color/contents_text" />
+				<!-- PICKUP -->			
+  				<TextView
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/holdPickupLocationTV" />
+			</LinearLayout>
+		
+		</LinearLayout>		
+			
 
   	</LinearLayout>	
   		 		

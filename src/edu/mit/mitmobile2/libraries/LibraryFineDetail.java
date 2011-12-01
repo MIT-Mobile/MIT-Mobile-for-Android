@@ -55,8 +55,8 @@ public class LibraryFineDetail extends Activity{
         fineAuthorTV = (TextView)findViewById(R.id.fineAuthorTV);
         fineAuthorTV.setText(fine.getYear() + "; " + fine.getAuthor());
 
-        fineCallNoTV = (TextView)findViewById(R.id.fineCallNoTV);
-        fineCallNoTV.setText(fine.getCallNo());
+        //fineCallNoTV = (TextView)findViewById(R.id.fineCallNoTV);
+        //fineCallNoTV.setText(fine.getCallNo());
       
         fineLibraryTV = (TextView)findViewById(R.id.fineLibraryTV);
         fineLibraryTV.setText(fine.getSubLibrary());

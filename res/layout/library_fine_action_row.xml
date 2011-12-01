@@ -5,33 +5,28 @@
 	android:layout_height="wrap_content"
 	android:minHeight="@dimen/minRowHeight" >
 	
+	<RelativeLayout 			
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	>
+	
 	<!--  Fine amount, title, author, date fined --> 
 	<LinearLayout
   			android:id="@+id/simpleRowTextContent"
   			android:layout_alignParentLeft="true"
-  			android:layout_width="fill_parent"
+  			android:layout_width="250dip"
   			android:layout_height="wrap_content"
   			android:layout_gravity="center_vertical"
-  			android:orientation="vertical"
-  			android:paddingLeft="@dimen/horizontalPadding" >
-  					
-		<!-- Fine Amount -->			
-  		<TextView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/fineDisplayAmountTV"
+  			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
 			android:paddingTop="@dimen/verticalPadding"
-			android:textSize="17sp"
-			android:typeface="sans" 
-			android:textColor="@color/contents_text" />
-
+			android:paddingBottom="@dimen/verticalPadding"
+  			android:orientation="vertical" >
+  					
 		<!-- TITLE -->
 		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingBottom="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/fineTitleTV"
 			android:textColor="@color/contents_text"
 			android:textStyle="bold"
@@ -42,19 +37,30 @@
   		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/fineAuthorTV"
 			android:textColor="@color/contents_text" />
 		
 		<!-- Date Fined -->			
+		<!--  This field isn't in the mock-up, hiding it for now -->
   		<TextView
+			android:visibility="gone"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingLeft="@dimen/horizontalPadding"
 			android:id="@+id/fineFineDateTV"
 			android:textColor="@color/contents_text" />
   		  				
-
   	</LinearLayout>	
+
+		<!-- Fine Amount -->			
+  		<TextView
+  			android:layout_alignParentRight="true"
+			android:layout_width="70dip"
+			android:layout_height="wrap_content"
+			android:id="@+id/fineDisplayAmountTV"
+			android:textSize="17sp"
+			android:typeface="sans"
+			android:textColor="#FFFF0000" />
+
+	</RelativeLayout>
   		 		
 </FrameLayout>

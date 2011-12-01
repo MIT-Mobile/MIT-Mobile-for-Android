@@ -39,14 +39,27 @@
 			android:id="@+id/loanAuthorTV"
 			android:textColor="@color/contents_text" />
 		
-		<!-- STATUS -->			
-  		<TextView
+		<!-- STATUS -->
+		<LinearLayout
+			android:orientation="horizontal"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:id="@+id/loanStatusTV"
-			android:textColor="@color/contents_text" />
-  		  				
+			android:layout_height="wrap_content" >
+
+			<ImageView 
+				android:id="@+id/loanStatusIcon"
+				android:src="@drawable/status_alert"
+				android:layout_width="20dip"
+				android:layout_height="wrap_content"
+				/>
+
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:id="@+id/loanStatusTV"
+				android:textColor="@color/contents_text" />
+		</LinearLayout>
+		  		  				
   	</LinearLayout>	
   		 		
 </FrameLayout>

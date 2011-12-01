@@ -3,26 +3,9 @@ package edu.mit.mitmobile2.touchstone;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 
 import android.content.Context;
@@ -34,64 +17,46 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import edu.mit.mitmobile2.MITClient;
+import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
-import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.facilities.FacilitiesActivity;
-import edu.mit.mitmobile2.news.NewsModel;
-import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
-import edu.mit.mitmobile2.objs.FacilitiesItem.LocationCategoryRecord;
+import edu.mit.mitmobile2.libraries.LibraryModel;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
 	
-
-	public static final String OK_STATE = "ok";
-	public static final String WAYF_STATE = "wayf";
-	public static final String IDP_STATE = "idp";
-	public static final String AUTH_STATE = "auth";
-
 	private Context mContext;	
-	private Handler uiHandler;
-		
-	Button preferencesButton;
-	Button testButton;
-	Button logoutButton;
-	
+
 	SharedPreferences pref;
 	String user;
 	String password;
-	MITClient mitClient;
-	HttpGet get;
-	HttpResponse response;
-	HttpEntity responseEntity;
-	String responseString = "";
-	String state = OK_STATE;
-	HttpPost post;
 	WebView webview;
 	Document document;
+	EditText touchstoneUsername;
+	EditText touchstonePassword;
+	Button cancelButton;
+	Button doneButton;
+	Button loginButton;
+	CheckBox rememberLoginCB; 
+	TextView mError;
+    private LinearLayout touchstoneContents;
+	private FullScreenLoader touchstoneLoadingView;
 
-	URI uri = null;
-	String uriString = "";
-	//public static String targetUrl = "https://stellar.mit.edu/atstellar";
-	public static String targetUrl = "https://mobile-dev.mit.edu/api/index.php";
-	URI targetUri;
+    
 	public static SharedPreferences prefs;
-	public static final String TAG = "TouchstoneActivity";
+	public static final String TAG = "TouchstonePrefsActivity";
 	private static final int MENU_INFO = 0;
 	private static final int MENU_PREFS = 1;
 	
@@ -103,110 +68,100 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        mitClient = new MITClient(mContext);
+        Handler uiHandler = new Handler();
 
         createViews();
 	}
 		
 	private void createViews() {
 		Log.d(TAG,"createViews()");
-		setContentView(R.layout.touchstone_main);
+		setContentView(R.layout.touchstone_prefs);
 
-        uiHandler = new Handler();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		final SharedPreferences.Editor prefsEditor = prefs.edit();
 
-		testButton = (Button)findViewById(R.id.touchstoneTestButton);
-		testButton.setOnClickListener(new View.OnClickListener() {
+		touchstoneUsername = (EditText)findViewById(R.id.touchstoneUsername);
+		touchstonePassword = (EditText)findViewById(R.id.touchstonePassword);
+
+		// load existing pref values
+		touchstoneUsername.setText(prefs.getString("PREF_TOUCHSTONE_USERNAME", ""));
+		touchstonePassword.setText(prefs.getString("PREF_TOUCHSTONE_PASSWORD", ""));
+
+		doneButton = (Button)findViewById(R.id.touchstoneDoneButton);
+		cancelButton = (Button)findViewById(R.id.touchstoneCancelButton);
+		loginButton = (Button)findViewById(R.id.touchstoneLoginButton);
+		rememberLoginCB =(CheckBox)findViewById(R.id.rememberLoginCB);
+
+	    touchstoneLoadingView = (FullScreenLoader)findViewById(R.id.touchstoneLoadingView);
+	    mError = (TextView)touchstoneLoadingView.findViewById(R.id.fullScreenLoadingErrorTV); 
+	    touchstoneContents = (LinearLayout)findViewById(R.id.touchstoneContents);
+	    
+		doneButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG,"click");
-				touchstoneTest();
-			}
-		});
-
-
-		preferencesButton = (Button)findViewById(R.id.touchstonePreferencesButton);
-		preferencesButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mContext, TouchstonePrefsActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		logoutButton = (Button)findViewById(R.id.touchstoneLogoutButton);
-		logoutButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.d(TAG,"logout");
-				touchstoneLogout();
-			}
-		});
-
-	}
-	
-	private void touchstoneLogout() {
-		// we should really just be clearing the touchstone cookies
-		MITClient.clearCookies();
-	}
-	
-	private void touchstoneTest() {
-    	Log.d(TAG,"touchstone");
-
-		// Create local HTTP context
-        HttpContext localContext = new BasicHttpContext();
-        
-        // get user name and password from preferences file
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		prefs.registerOnSharedPreferenceChangeListener(this);
-		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
-		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
-
-		// open the preferences if the username and password are not defined
-        if (user == null || password == null) {
-        	startActivity( new Intent(this, TouchstonePrefsActivity.class) );	
-    		mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));
-    		mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
-        }
-        else {   
-        	//DEBUG
-        	Log.d(TAG,"starting touchstone test");
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "libraries");
-			params.put("command", "loans");
-
-        	MobileWebApi api = new MobileWebApi(false, true, "Libraries", mContext, uiHandler,HttpClientType.MIT);
-        	api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
-	                new MobileWebApi.DefaultErrorListener(uiHandler),
-	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
-				@Override
-				public void onResponse(JSONObject obj) {
-
-					Log.d(TAG,"on response");
-					Log.d(TAG,"obj = " + obj);
-					try {
-						Log.d(TAG,"total = " + obj.getString("total"));
-						Log.d(TAG,"start = " + obj.getString("start"));
-						Log.d(TAG,"overdue = " + obj.getString("overdue"));
-					}
-					catch (JSONException e) {
-						Log.d(TAG,"JSONException = " + e.getMessage());
-					}
+				try {
+					Log.d(TAG,"username = " + touchstoneUsername.getEditableText().toString());
+					Log.d(TAG,"password = " + touchstonePassword.getEditableText().toString());
+					prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", touchstoneUsername.getEditableText().toString());
+					prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", touchstonePassword.getEditableText().toString());
+					prefsEditor.commit();
+				}
+				catch (RuntimeException e) {
+					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 				}
 
-				@Override
-				public void onError() {
-					// TODO Auto-generated method stub
-					super.onError();
-					Log.d(TAG,"on error: requestJSONObject");
-				}
-		});	
-        }
-		
+				setResult(2, null);
+				finish();
+			}
+		});
+				
+		cancelButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		loginButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				touchstoneLoadingView.setVisibility(View.VISIBLE);
+				touchstoneContents.setVisibility(View.GONE);
+				touchstoneLoadingView.showLoading();
+				LibraryModel.getUserIdentity(mContext, loginUiHandler);
+			}
+		});
+
 	}
 	
+	
+    private Handler loginUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"handleMessage");
+			touchstoneContents.setVisibility(View.VISIBLE);
+        	touchstoneLoadingView.setVisibility(View.GONE);
+
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	Log.d(TAG,"MobileWebApi success");
+                @SuppressWarnings("unchecked")
+            	UserIdentity identity = (UserIdentity)msg.obj;
+                Log.d(TAG,"identity = " + identity.getUsername());
+            } 
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+            	Log.d(TAG,"show login error");
+            	mError.setText("Error logging into Touchstone");
+            	touchstoneLoadingView.showError();
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+            	touchstoneLoadingView.showError();
+            }
+        }
+    };
+ 
 	@Override
 	protected Module getModule() {
 		return null;
@@ -265,17 +220,17 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	}
 	
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		Context mContext = this;
-		Handler uiHandler = new Handler();
-		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_USERNAME")) {
-			mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));
-		}
-		
-		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_PASSWORD")) {
-			mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
-		}
-		
-		Toast.makeText(this, "user set to " + mitClient.getUser(), Toast.LENGTH_SHORT).show();
+//		Context mContext = this;
+//		Handler uiHandler = new Handler();
+//		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_USERNAME")) {
+//			mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));
+//		}
+//		
+//		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_PASSWORD")) {
+//			mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
+//		}
+//		
+//		Toast.makeText(this, "user set to " + mitClient.getUser(), Toast.LENGTH_SHORT).show();
 	}
 
 }
