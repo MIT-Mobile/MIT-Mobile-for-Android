@@ -58,13 +58,7 @@
                 	android:layout_width="fill_parent"
                 	android:layout_height="wrap_content" 
                 	/>
-			</LinearLayout>
-			
-			<!-- GAP -->
-			<View
-				android:background="@color/transparent"
-				android:layout_width="fill_parent"
-				android:layout_height="30dip" />
+			</LinearLayout>		
 			
 			<LinearLayout
 				android:orientation="vertical"
@@ -73,6 +67,12 @@
             	android:visibility="gone"
             	android:id="@+id/librariesTechHelpSection"
             	>
+            	
+            	<edu.mit.mitmobile2.SectionHeader
+            		android:layout_width="fill_parent"
+            		android:layout_height="wrap_content"
+            		android:text="Technical Help"
+            		/>	
             
             	<LinearLayout
             		android:orientation="vertical"
@@ -134,22 +134,22 @@
           					android:text="No" />
     				</RadioGroup>     
             		
-            	</LinearLayout>	
+            	</LinearLayout>	            	
+            </LinearLayout>		
             	
-             	<!--  GAP  -->	
-               	<View
-					android:background="@color/transparent"
-					android:layout_width="fill_parent"
-					android:layout_height="30dip" 
-					/> 		
+            <edu.mit.mitmobile2.SectionHeader
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:text="Personal Info"
+            	/>		
             	
-            </LinearLayout>				
 			<LinearLayout
             	android:orientation="vertical"
             	android:layout_width="fill_parent"
             	android:layout_height="fill_parent"
             	android:padding="5dip" 
             	android:background="@color/rowBackground">
+            	
 		
     	        <TextView
         	        android:text="Status:"
