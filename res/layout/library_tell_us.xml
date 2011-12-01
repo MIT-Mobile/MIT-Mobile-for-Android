@@ -77,7 +77,7 @@
 			<View
 				android:layout_width="fill_parent"
 				android:layout_height="@dimen/dividerHeight"
-				android:background="@color/dividerColor"" />
+				android:background="@color/dividerColor" />
 				
          	<edu.mit.mitmobile2.TwoLineActionRow
          		android:id="@+id/libraryTellUsSuggestPurchase"
