@@ -54,7 +54,8 @@
 		<!-- Fine Amount -->			
   		<TextView
   			android:layout_alignParentRight="true"
-			android:layout_width="70dip"
+  			android:paddingRight="@dimen/horizontalPadding"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/fineDisplayAmountTV"
 			android:textSize="17sp"

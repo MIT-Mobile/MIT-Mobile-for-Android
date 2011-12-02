@@ -44,7 +44,7 @@
 					<LinearLayout
 				  			android:id="@+id/loansButtonRow"
 				  			android:layout_alignParentLeft="true"
-				  			android:background="@drawable/main_repeat"				  			
+				  			android:background="@drawable/tab_header"				  			
 				  			android:layout_width="fill_parent"
 				  			android:layout_height="wrap_content"
 				  			android:layout_gravity="center_vertical"
@@ -76,7 +76,7 @@
 				  			android:visibility="gone"
 				  			android:paddingLeft="@dimen/horizontalPadding"
 							android:paddingRight="@dimen/horizontalPadding"
-				  			android:background="@drawable/main_repeat"				  			
+							android:background="@drawable/tab_header"				  			
 				  			android:layout_width="fill_parent"
 				  			android:layout_height="wrap_content"				  		
 				  	>
@@ -105,34 +105,83 @@
 					</RelativeLayout>
 											
 					<!-- Done Button Row -->
-					<LinearLayout
+					<RelativeLayout
 				  			android:id="@+id/doneButtonRow"
 				  			android:paddingLeft="@dimen/horizontalPadding"
 							android:paddingRight="@dimen/horizontalPadding"
 				  			android:layout_alignParentLeft="true"
-				  			android:background="@drawable/main_repeat"				  			
+				  			android:background="@drawable/tab_header"				  			
 				  			android:visibility="gone"
 				  			android:layout_width="fill_parent"
 				  			android:layout_height="wrap_content"
 				  			android:layout_gravity="center_vertical"
 				  			android:orientation="horizontal" >
 
-					  	<TextView
-								android:layout_width="220dip"
-								android:layout_height="wrap_content"
-								android:layout_alignParentLeft="true"
-								android:layout_gravity="center_vertical"
-								android:id="@+id/renewStatusTV"
-								android:text=""
-								style="@style/LibraryStatus" />
+						<!--  Success and Errors from renew operation -->
+						<LinearLayout 
+							android:id="@+id/renewStatus" 
+							android:layout_width="fill_parent"
+				  			android:layout_height="wrap_content"
+							android:orientation="vertical" >
 
+							<!--  Error Status -->
+							<LinearLayout 
+								android:id="@+id/renewStatusError" 
+								android:layout_width="fill_parent"
+					  			android:layout_height="wrap_content"
+								android:orientation="horizontal" >
+
+								<ImageView 
+									android:id="@+id/renewStatusErrorIcon"
+									android:src="@drawable/status_error"
+									android:layout_gravity="center_vertical"
+									android:layout_width="20dip"
+					  				android:layout_height="wrap_content" />
+
+						  		<TextView
+						  			android:layout_gravity="center_vertical"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_alignParentLeft="true"
+									android:id="@+id/renewStatusErrorTV"
+									android:text=""
+									style="@style/LibraryStatus" />
+							</LinearLayout>
+							
+							<!--  Success Status -->
+							<LinearLayout 
+								android:id="@+id/renewStatusSuccess" 
+								android:layout_width="fill_parent"
+					  			android:layout_height="wrap_content"
+								android:orientation="horizontal" >
+
+								<ImageView 
+									android:id="@+id/renewStatusSuccessIcon"
+									android:src="@drawable/status_ok"
+									android:layout_gravity="center_vertical"
+									android:layout_width="20dip"
+					  				android:layout_height="wrap_content" />
+
+						  		<TextView
+						  			android:layout_gravity="center_vertical"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:layout_alignParentLeft="true"
+									android:id="@+id/renewStatusSuccessTV"
+									android:text="success"
+									style="@style/LibraryStatus" />
+							</LinearLayout>
+							
+						</LinearLayout>
+				
 						<Button
 								android:id="@+id/loanDoneButton"
 								android:text="Done"
-								android:layout_width="80dip" 
+								android:layout_alignParentRight="true"
+								android:layout_width="wrap_content" 
 								android:layout_height="wrap_content"/>			
 			
-					</LinearLayout>
+					</RelativeLayout>
 					
 		    		<ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>		
 		        
@@ -167,21 +216,17 @@
 					    android:orientation="vertical"
 					    android:layout_width="fill_parent"
 					    android:layout_height="wrap_content"
-					    android:background="@drawable/main_repeat" >
-
+				  		android:background="@drawable/tab_header" >	
+				  		
 					  	<TextView
 								android:layout_width="fill_parent"
 								android:layout_height="wrap_content"
-								android:paddingLeft="@dimen/horizontalPadding"
-								android:paddingRight="@dimen/horizontalPadding"
 								android:id="@+id/fineBalanceTV"
 								style="@style/FineBalance" />
 	
 					  	<TextView
 								android:layout_width="fill_parent"
 								android:layout_height="wrap_content"
-								android:paddingLeft="@dimen/horizontalPadding"
-								android:paddingRight="@dimen/horizontalPadding"
 								android:id="@+id/fineStatusTV"
 								style="@style/LibraryStatus" />
 
@@ -221,7 +266,7 @@
 						android:layout_height="wrap_content"
 						android:id="@+id/holdStatusTV"
 						android:paddingLeft="@dimen/horizontalPadding"
-						android:background="@drawable/main_repeat"
+						android:background="@drawable/tab_header"				  			
 						style="@style/LibraryStatus" />		        
 
 				    <ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>		

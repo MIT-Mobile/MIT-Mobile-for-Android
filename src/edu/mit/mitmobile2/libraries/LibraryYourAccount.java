@@ -62,13 +62,15 @@ public class LibraryYourAccount extends Activity {
     private FullScreenLoader loanLoadingView;
     private LinearLayout loansButtonRow;
     private RelativeLayout renewButtonRow;
-    private LinearLayout doneButtonRow;
+    private RelativeLayout doneButtonRow;
     private TextView loanTitleTV;
 	private TextView loanAuthorTV;
 	private TextView loanStatusTV;
 	private ImageView loanStatusIcon;
-	private TextView loanRenewTV;
-	private TextView renewStatusTV;
+	private LinearLayout renewStatusError;
+	private LinearLayout renewStatusSuccess;
+	private TextView renewStatusErrorTV;
+	private TextView renewStatusSuccessTV;
 	private Button loanRenewBooksButton;
 	private Button loanRenewSelectedBooksButton;
 	private Button loanCancelRenewBooksButton;
@@ -150,13 +152,15 @@ public class LibraryYourAccount extends Activity {
 	private void setUpViews() {
         mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
-        renewStatusTV = (TextView) findViewById(R.id.renewStatusTV);
+        renewStatusError = (LinearLayout) findViewById(R.id.renewStatusError);
+        renewStatusSuccess = (LinearLayout) findViewById(R.id.renewStatusSuccess);
+        renewStatusErrorTV = (TextView) findViewById(R.id.renewStatusErrorTV);
+        renewStatusSuccessTV = (TextView) findViewById(R.id.renewStatusSuccessTV);
         loanListView = (ListView) findViewById(R.id.listLibraryLoans);
-        loanRenewTV = (TextView) findViewById(R.id.loanRenewTV);
         loanLoadingView = (FullScreenLoader) findViewById(R.id.libraryLoanLoading);
         loansButtonRow = (LinearLayout) findViewById(R.id.loansButtonRow);
         renewButtonRow = (RelativeLayout) findViewById(R.id.renewButtonRow);
-        doneButtonRow = (LinearLayout) findViewById(R.id.doneButtonRow);
+        doneButtonRow = (RelativeLayout) findViewById(R.id.doneButtonRow);
         
         fineBalanceTV = (TextView) findViewById(R.id.fineBalanceTV);
         fineStatusTV = (TextView) findViewById(R.id.fineStatusTV);
@@ -395,12 +399,35 @@ public class LibraryYourAccount extends Activity {
             			numErrors++;
             		}
             	}
+            	
+            	// Set renew errors messages
+            	if (numErrors > 0) {
+            		renewStatusError.setVisibility(View.VISIBLE);
+                	if (numErrors > 1) {
+                    	renewStatusErrorTV.setText(numErrors + " items could not be renewed");            		            		
+                	}
+                	else {
+                    	renewStatusErrorTV.setText(numErrors + " item could not be renewed");            		            		            		
+                	}
+            	}
+            	else {
+            		renewStatusError.setVisibility(View.GONE);            		
+            	}
 
-            	renewStatusTV = (TextView) findViewById(R.id.renewStatusTV);
-            	renewStatusTV.setVisibility(View.VISIBLE);
-            	renewStatusTV.setText(numErrors + " items(s) could not be renewed");            		
-            	renewStatusTV.setTextColor(Color.RED);
-
+            	// Set renew success messages
+               	if (numSuccess > 0) {
+            		renewStatusSuccess.setVisibility(View.VISIBLE);
+                	if (numSuccess > 1) {
+                    	renewStatusSuccessTV.setText(numSuccess + " items were renewed");            		            		
+                	}
+                	else {
+                    	renewStatusSuccessTV.setText(numSuccess + " item was renewed");            		            		            		
+                	}
+            	}
+               	else {
+            		renewStatusSuccess.setVisibility(View.GONE);               		
+               	}
+               	
             	renewButtonRow.setVisibility(View.GONE);
             	doneButtonRow.setVisibility(View.VISIBLE);
                 mLoanResults.setVisibility(View.VISIBLE);
@@ -461,7 +488,7 @@ public class LibraryYourAccount extends Activity {
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryYourAccount.setHoldData((HoldData)msg.obj);
              
-                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests.\n" + holdData.getNumReady() + " for pickup.");
+                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests.\n" + holdData.getNumReady() + " ready for pickup.");
                 final ArrayList<HoldListItem> results = holdData.getHolds();
 
                 if (results.size() == 0) {
