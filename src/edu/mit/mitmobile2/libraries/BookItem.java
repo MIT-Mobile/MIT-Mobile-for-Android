@@ -14,9 +14,13 @@ public class BookItem {
     public List<String> subjects;
     public List<String> lang;
     public List<String> extent;
+    public List<String> format;
     public List<String> summary;
+    public List<String> editions;
     public List<String> address;
     public List<Holding> holdings;
+    
+    public boolean detailsLoaded = false;
     
     
     public CharSequence getAuthorsDisplayString() {

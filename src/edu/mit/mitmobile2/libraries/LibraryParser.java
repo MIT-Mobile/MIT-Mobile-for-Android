@@ -119,16 +119,16 @@ public class LibraryParser {
                 book.title = object.getString("title");
                 book.image = object.getString("image");
                 if(object.has("author")) {
-                    book.author = getArray(object.getJSONArray("author"));
+                    book.author = getArray(object, "author");
                 }
                 if(object.has("year")) {
-                    book.year = getArray(object.getJSONArray("year"));
+                    book.year = getArray(object, "year");
                 }
                 if(object.has("publisher")) {
-                    book.publisher = getArray(object.getJSONArray("publisher"));
+                    book.publisher = getArray(object, "publisher");
                 }
                 if(object.has("isbn")) {
-                    book.isbn = getArray(object.getJSONArray("isbn"));
+                    book.isbn = getArray(object, "isbn");
                 }
                 
                 books.add(book);
@@ -141,7 +141,8 @@ public class LibraryParser {
         return books;
     }
     
-    private static ArrayList<String> getArray(JSONArray array) throws JSONException {
+    private static ArrayList<String> getArray(JSONObject object, String field) throws JSONException {
+    	JSONArray array = object.getJSONArray(field);
         ArrayList<String> list = new ArrayList<String>();
         for(int index1 = 0; index1 < array.length(); index1++) {
             list.add(array.getString(index1));
@@ -149,20 +150,24 @@ public class LibraryParser {
         return list; 
     }
     
-    static void parseBookDetail(JSONObject object, BookItem book) {
-        try {
-            book.subjects = getArray(object.getJSONArray("subject"));
-            book.lang = getArray(object.getJSONArray("lang"));
-            book.extent = getArray(object.getJSONArray("extent"));
-            book.summary = getArray(object.getJSONArray("summary"));
-            book.address = getArray(object.getJSONArray("address"));
+    private static ArrayList<String> getOptArray(JSONObject object, String field) throws JSONException {
+    	if (object.has(field)) {
+    		return getArray(object, field);
+    	} else {
+    		return null;
+    	}
+    }
+    
+    static void parseBookDetail(JSONObject object, BookItem book) throws JSONException {
+            book.subjects = getOptArray(object, "subject");
+            book.lang = getOptArray(object, "lang");
+            book.extent = getOptArray(object, "extent");
+            book.format = getOptArray(object, "format");
+            book.summary = getOptArray(object, "summary");
+            book.address = getOptArray(object, "address");
+            book.editions = getOptArray(object, "edition");
             book.holdings = parseHoldings(object.getJSONArray("holdings"));
-            
-            
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error parsing book details");
-        }
+            book.detailsLoaded = true;
     }
     
     private static ArrayList<Holding> parseHoldings(JSONArray array) throws JSONException {
