@@ -38,5 +38,23 @@
 				/>
             
     	</LinearLayout>
+        		   	
+    	<LinearLayout
+    		android:id="@+id/libraryWorldCatDetailsExtraItems"
+    		android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:background="@color/rowBackground"
+        	android:orientation="vertical"
+         	>
+         
+            <edu.mit.mitmobile2.TwoLineActionRow
+         		android:id="@+id/libraryWorldCatEmailCitationsButton"
+         		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:text="Email &amp; Cite Item"
+        		android:src="@drawable/action_email"
+        		/>
+         
+         </LinearLayout>
     </LinearLayout>
 </edu.mit.mitmobile2.LockingScrollView>

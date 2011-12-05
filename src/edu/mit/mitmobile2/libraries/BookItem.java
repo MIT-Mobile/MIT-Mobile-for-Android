@@ -1,6 +1,9 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BookItem {
     public String id;
@@ -22,6 +25,7 @@ public class BookItem {
     
     public boolean detailsLoaded = false;
     
+    public final static String MITLibrariesOCLCCode = "MYG";   
     
     public CharSequence getAuthorsDisplayString() {
     	if (author != null) {
@@ -53,10 +57,70 @@ public class BookItem {
     	}
     }
     */
+    
+    public List<Holding> getHoldingsByOCLCCode(String code) {
+    	ArrayList<Holding> filteredHoldings = new ArrayList<Holding>();
+    	for(Holding holding : holdings) {
+    		if (holding.code.equals(code)){
+    			filteredHoldings.add(holding);
+    		}
+    	}
+    	return filteredHoldings;
+    }
+    
     public static class Holding {
         public String library;
         public String address;
         public String url;
+        public String code;
+        public int count;
+        private ArrayList<Availability> mAvailibitity = new ArrayList<Availability>();
+        
+        public void addAvailibility(boolean available, String callNumber, String location, String status) {
+        	mAvailibitity.add(new Availability(available, callNumber, location, status));
+        }
+        
+        public List<Availability> getAvailabitity() {
+        	return mAvailibitity;
+        }
+        
+        public class Availability {
+        	boolean available;
+        	String callNumber;
+        	String location;
+        	String status;
+        	
+        	public Availability(boolean available, String callNumber, String location, String status) {
+        		this.available = available;
+        		this.callNumber = callNumber;
+        		this.location = location;
+        		this.status = status;
+        	}
+        }
+        
+        public class AvailableCount {
+        	int available = 0;
+        	int total = 0;
+        }
+        
+        public Map<String, AvailableCount> getAvailabilityCounts() {
+        	HashMap<String, AvailableCount> counts = new HashMap<String, AvailableCount>();
+        	
+        	for (Availability availability : mAvailibitity) {        		
+        		AvailableCount availableCount = null;
+        		if (!counts.containsKey(availability.location)) {
+        			availableCount = new AvailableCount();
+        			counts.put(availability.location, availableCount);
+        		} else {
+        			availableCount = counts.get(availability.location);
+        		}
+        		availableCount.total += 1;
+        		if (availability.available) {
+        			availableCount.available += 1;
+        		}
+        	}
+        	return counts;
+        }
     }
     
 }

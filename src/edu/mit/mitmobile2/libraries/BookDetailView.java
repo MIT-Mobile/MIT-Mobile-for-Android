@@ -1,6 +1,9 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,13 +15,21 @@ import android.text.SpannableStringBuilder;
 import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SectionHeader;
+import edu.mit.mitmobile2.SectionHeader.Prominence;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.BookItem.Holding;
+import edu.mit.mitmobile2.libraries.BookItem.Holding.AvailableCount;
 
 public class BookDetailView implements SliderInterface {
 
@@ -35,7 +46,9 @@ public class BookDetailView implements SliderInterface {
     private DetailsLoadingStatus mLoadingStatus;
     private FullScreenLoader mFullScreenLoader;
     private TextView mTitleTextView;
-    private LinearLayout mDetaisLinearLayout;
+    private LinearLayout mDetailsLinearLayout;
+    private LinearLayout  mExtraItemsLayout;
+    private View mEmailCitationButton;
     
     public BookDetailView(Activity activity, BookItem bookItem) {
     	mActivity = activity;
@@ -46,7 +59,9 @@ public class BookDetailView implements SliderInterface {
     
         mFullScreenLoader = (FullScreenLoader) mView.findViewById(R.id.libraryWorldCatBookDetailLoader);
         mTitleTextView = (TextView) mView.findViewById(R.id.libraryWorldCatBookDetailsTitle);
-        mDetaisLinearLayout = (LinearLayout) mView.findViewById(R.id.libraryWorldCatBookDetailLL);
+        mDetailsLinearLayout = (LinearLayout) mView.findViewById(R.id.libraryWorldCatBookDetailLL);
+        mExtraItemsLayout = (LinearLayout) mView.findViewById(R.id.libraryWorldCatDetailsExtraItems);
+        mEmailCitationButton = mView.findViewById(R.id.libraryWorldCatEmailCitationsButton);
         
         mLoadingStatus = DetailsLoadingStatus.NotLoaded;
         
@@ -74,6 +89,7 @@ public class BookDetailView implements SliderInterface {
     	if (mLoadingStatus != DetailsLoadingStatus.Loaded) {
     		if (mBookItem.detailsLoaded) {
     			showBookDetails();
+    			mLoadingStatus = DetailsLoadingStatus.Loaded;
     		} else if (mLoadingStatus != DetailsLoadingStatus.Loading) {
     			mFullScreenLoader.showLoading();
     			mLoadingStatus = DetailsLoadingStatus.Loading;
@@ -119,6 +135,53 @@ public class BookDetailView implements SliderInterface {
     	if (mBookItem.isbn != null) {
     		addRow("ISBN", join(" : ", mBookItem.isbn));
     	}
+    	
+    	mEmailCitationButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				CommonActions.composeEmail(mActivity, null, mBookItem.title, mBookItem.getAuthorsDisplayString().toString());
+			}
+    	});
+    	
+    	final List<Holding> mitHoldings = mBookItem.getHoldingsByOCLCCode(BookItem.MITLibrariesOCLCCode);
+    	if (mitHoldings.size() > 0) {
+    		mExtraItemsLayout.addView(new SectionHeader(mActivity, "MIT Libraries", Prominence.SECONDARY));
+
+    		TwoLineActionRow requestItem = new TwoLineActionRow(mActivity);
+    		requestItem.setTitle("RequestItem");
+    		requestItem.setActionIconResource(R.drawable.action_external);
+    		requestItem.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					CommonActions.viewURL(mActivity, mitHoldings.get(0).url);
+				}
+    		});
+    		
+    		mExtraItemsLayout.addView(requestItem);
+
+    		for (Holding aMitHolding : mitHoldings) {
+    			Map<String, AvailableCount> holdingCounts = aMitHolding.getAvailabilityCounts();
+    			ArrayList<String> locations = new ArrayList<String>(holdingCounts.keySet());
+    			Collections.sort(locations);
+    			for (String location : locations) {	
+    				AvailableCount availableCount = holdingCounts.get(location);
+    				
+    				mExtraItemsLayout.addView(new DividerView(mActivity, null));
+    				TwoLineActionRow availabilityRow = new TwoLineActionRow(mActivity);
+    				availabilityRow.setTitle(location);
+    				availabilityRow.setSubtitle("" + availableCount.available + " of " + availableCount.total + " available");
+    				mExtraItemsLayout.addView(availabilityRow);
+    			}
+    		}
+    	}
+    	
+    	int otherHoldingsCount = mBookItem.holdings.size() - mitHoldings.size();
+    	if (otherHoldingsCount > 0) {
+    		mExtraItemsLayout.addView(new SectionHeader(mActivity, "Boston Library Consortium", Prominence.SECONDARY));
+			TwoLineActionRow blcHoldingsRow = new TwoLineActionRow(mActivity);
+			blcHoldingsRow.setTitle("View Holdings");
+			mExtraItemsLayout.addView(blcHoldingsRow);
+    	}
     }
 
     
@@ -141,7 +204,7 @@ public class BookDetailView implements SliderInterface {
     	textView.setPadding(0, 0, 0, padding);
     	textView.setText(span);
     	
-    	mDetaisLinearLayout.addView(textView);
+    	mDetailsLinearLayout.addView(textView);
     }
     
     private String join(String delimiter, List<String> parts) {

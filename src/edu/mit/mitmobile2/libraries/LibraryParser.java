@@ -178,7 +178,22 @@ public class LibraryParser {
             Holding holding = new Holding();
             holding.library = object.getString("library");
             holding.address = object.getString("address");
-            holding.url = object.getString("url");
+            holding.url = object.optString("url");
+            holding.code = object.getString("code");
+            holding.count = object.getInt("count");
+            
+            JSONArray availabilityArray = object.optJSONArray("availability");
+            if (availabilityArray != null) {
+            	for(int i = 0; i < availabilityArray.length(); i++) {
+            		JSONObject availabilityObject = availabilityArray.getJSONObject(i);            		
+            		holding.addAvailibility(
+            			availabilityObject.getBoolean("available"),
+            			availabilityObject.getString("call-no"),
+            			availabilityObject.getString("location"),
+            			availabilityObject.getString("status")
+            		);
+            	}
+            }
             
             list.add(holding);
         }
