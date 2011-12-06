@@ -157,7 +157,7 @@ public class BookDetailView implements SliderInterface {
     		mExtraItemsLayout.addView(new SectionHeader(mActivity, "MIT Libraries", Prominence.SECONDARY));
 
     		TwoLineActionRow requestItem = new TwoLineActionRow(mActivity);
-    		requestItem.setTitle("RequestItem");
+    		requestItem.setTitle("Request Item");
     		requestItem.setActionIconResource(R.drawable.action_external);
     		requestItem.setOnClickListener(new OnClickListener() {
 				@Override
