@@ -61,7 +61,7 @@ public class TwoLineActionRow extends ActionRow {
 	
 	public void setTitle(CharSequence title, TextView.BufferType bufferType) {
 		if(title != null) {
-			mTitleView.setText(title);
+			mTitleView.setText(title, bufferType);
 			mTitleView.setVisibility(VISIBLE);
 		} else {
 			mTitleView.setVisibility(GONE);
