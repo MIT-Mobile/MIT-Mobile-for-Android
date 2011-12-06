@@ -82,7 +82,7 @@
          		android:id="@+id/libraryTellUsSuggestPurchase"
          		android:layout_width="fill_parent"
             	android:layout_height="wrap_content"  
-            	android:text="Suggest Purchase Form"
+            	android:text="Suggested Purchase Form"
             	android:background="@color/rowBackground"
             	android:src="@drawable/action_external"
             	/>
