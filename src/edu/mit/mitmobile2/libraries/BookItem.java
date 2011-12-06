@@ -99,27 +99,34 @@ public class BookItem {
         	}
         }
         
-        public class AvailableCount {
+        public class Availabilitys {
         	int available = 0;
         	int total = 0;
+        	ArrayList<Availability> books = new ArrayList<Availability>();
+        	
+        	public List<Availability> getBooks() {
+        		return books;
+        	}
         }
         
-        public Map<String, AvailableCount> getAvailabilityCounts() {
-        	HashMap<String, AvailableCount> counts = new HashMap<String, AvailableCount>();
+        public Map<String, Availabilitys> getAvailabilitys() {
+        	HashMap<String, Availabilitys> counts = new HashMap<String, Availabilitys>();
         	
         	for (Availability availability : mAvailibitity) {        		
-        		AvailableCount availableCount = null;
+        		Availabilitys availablitys = null;
         		if (!counts.containsKey(availability.location)) {
-        			availableCount = new AvailableCount();
-        			counts.put(availability.location, availableCount);
+        			availablitys = new Availabilitys();
+        			counts.put(availability.location, availablitys);
         		} else {
-        			availableCount = counts.get(availability.location);
+        			availablitys = counts.get(availability.location);
         		}
-        		availableCount.total += 1;
+        		availablitys.total += 1;
         		if (availability.available) {
-        			availableCount.available += 1;
+        			availablitys.available += 1;
         		}
+        		availablitys.books.add(availability);
         	}
+        	
         	return counts;
         }
     }

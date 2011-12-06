@@ -29,7 +29,7 @@ import edu.mit.mitmobile2.SectionHeader.Prominence;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
-import edu.mit.mitmobile2.libraries.BookItem.Holding.AvailableCount;
+import edu.mit.mitmobile2.libraries.BookItem.Holding.Availabilitys;
 
 public class BookDetailView implements SliderInterface {
 
@@ -160,16 +160,27 @@ public class BookDetailView implements SliderInterface {
     		mExtraItemsLayout.addView(requestItem);
 
     		for (Holding aMitHolding : mitHoldings) {
-    			Map<String, AvailableCount> holdingCounts = aMitHolding.getAvailabilityCounts();
-    			ArrayList<String> locations = new ArrayList<String>(holdingCounts.keySet());
+    			final Map<String, Availabilitys> availabilitiesByLibrary = aMitHolding.getAvailabilitys();
+    			final ArrayList<String> locations = new ArrayList<String>(availabilitiesByLibrary.keySet());
     			Collections.sort(locations);
-    			for (String location : locations) {	
-    				AvailableCount availableCount = holdingCounts.get(location);
+    			for (int i = 0; i < locations.size(); i++) {
+    				final int index = i;
+    				String location = locations.get(i);
+    				Availabilitys availablitys = availabilitiesByLibrary.get(location);    	
     				
     				mExtraItemsLayout.addView(new DividerView(mActivity, null));
+    				
     				TwoLineActionRow availabilityRow = new TwoLineActionRow(mActivity);
     				availabilityRow.setTitle(location);
-    				availabilityRow.setSubtitle("" + availableCount.available + " of " + availableCount.total + " available");
+    				availabilityRow.setSubtitle("" + availablitys.available + " of " + availablitys.total + " available");
+    				
+    				availabilityRow.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View view) {
+							LibrariesHoldingsSliderActivity.launch(mActivity, availabilitiesByLibrary, locations, index);
+						}
+    				});
+    				
     				mExtraItemsLayout.addView(availabilityRow);
     			}
     		}

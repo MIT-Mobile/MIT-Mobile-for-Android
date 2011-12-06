@@ -253,6 +253,7 @@
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
         <activity android:name=".libraries.BookDetailActivity"></activity>
         <activity android:name=".libraries.LibraryBLCHoldingsActivity"></activity>
+        <activity android:name=".libraries.LibrariesHoldingsSliderActivity"></activity>
         
         <activity android:name=".libraries.AskUsActivity" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".libraries.TellUsActivity" android:windowSoftInputMode="stateHidden"></activity>
