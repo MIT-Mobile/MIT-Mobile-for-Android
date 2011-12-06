@@ -7,8 +7,11 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.Spannable.Factory;
 import android.text.SpannableStringBuilder;
@@ -139,7 +142,13 @@ public class BookDetailView implements SliderInterface {
     	mEmailCitationButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				CommonActions.composeEmail(mActivity, null, mBookItem.title, mBookItem.getAuthorsDisplayString().toString());
+				Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
+				intent.putExtra(Intent.EXTRA_SUBJECT, mBookItem.title);
+				intent.putExtra(
+						Intent.EXTRA_TEXT,
+						Html.fromHtml(mBookItem.emailAndCiteMessage)
+				);
+				mActivity.startActivity(intent);
 			}
     	});
     	
