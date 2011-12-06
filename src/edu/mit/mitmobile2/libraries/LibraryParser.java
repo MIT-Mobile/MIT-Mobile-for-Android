@@ -159,6 +159,7 @@ public class LibraryParser {
     }
     
     static void parseBookDetail(JSONObject object, BookItem book) throws JSONException {
+            book.url = object.getString("url");
             book.subjects = getOptArray(object, "subject");
             book.lang = getOptArray(object, "lang");
             book.extent = getOptArray(object, "extent");

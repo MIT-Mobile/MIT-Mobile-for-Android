@@ -14,6 +14,7 @@ public class BookItem {
     public List<String> publisher;
     public List<String> isbn;
     
+    public String url;
     public List<String> subjects;
     public List<String> lang;
     public List<String> extent;

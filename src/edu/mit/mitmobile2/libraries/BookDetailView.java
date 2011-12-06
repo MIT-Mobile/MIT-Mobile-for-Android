@@ -180,6 +180,12 @@ public class BookDetailView implements SliderInterface {
     		mExtraItemsLayout.addView(new SectionHeader(mActivity, "Boston Library Consortium", Prominence.SECONDARY));
 			TwoLineActionRow blcHoldingsRow = new TwoLineActionRow(mActivity);
 			blcHoldingsRow.setTitle("View Holdings");
+			blcHoldingsRow.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					LibraryBLCHoldingsActivity.launch(mActivity, mBookItem);
+				}
+			});
 			mExtraItemsLayout.addView(blcHoldingsRow);
     	}
     }
