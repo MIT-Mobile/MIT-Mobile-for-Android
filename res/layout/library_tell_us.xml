@@ -52,12 +52,11 @@
             
             	<Button
                 	android:id="@+id/submit"
-                	android:text="submit"
+                	android:text="Submit"
                 	android:layout_gravity="center_horizontal"
                 	android:layout_width="wrap_content"
                 	android:layout_height="wrap_content"
                 	android:paddingBottom="9dip"
-        	    	style="@style/FormLabel" 
         	    	/>
        		</LinearLayout>
         
@@ -66,7 +65,7 @@
             	android:layout_height="wrap_content" 
             	android:gravity="center_horizontal"
             	android:paddingTop="@dimen/verticalPadding"
-				android:paddingBottom="@dimen/verticalPadding"
+				android:paddingBottom="17dip"
 				android:paddingLeft="@dimen/horizontalPadding"
 				android:paddingRight="@dimen/horizontalPadding"
             	android:text="Please let us know your thoughts for improving our services. We'd also appreciate hearing what you like about our current services."
@@ -83,7 +82,7 @@
          		android:id="@+id/libraryTellUsSuggestPurchase"
          		android:layout_width="fill_parent"
             	android:layout_height="wrap_content"  
-            	android:text="Suggest Purchase Form"
+            	android:text="Suggested Purchase Form"
             	android:background="@color/rowBackground"
             	android:src="@drawable/action_external"
             	/>

@@ -46,6 +46,7 @@ public abstract class ActionRow extends FrameLayout {
 	public ActionRow(Context context) {
 		super(context);
 		initHelper(context);
+		mBackgroundResourceId = R.color.rowBackground;
 	}
 	
 	private void initHelper(Context context) {

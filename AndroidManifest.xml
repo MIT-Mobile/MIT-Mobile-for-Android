@@ -238,7 +238,7 @@
     
 		<activity android:name=".PrefsActivity"></activity>
         
-        <activity android:name=".libraries.LibraryActivity">
+        <activity android:name=".libraries.LibraryActivity" android:screenOrientation="portrait">
             <meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
         </activity>
         
@@ -254,7 +254,16 @@
         <provider android:name=".libraries.LibrarySearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.libraries.SuggestionsProvider" />
         <activity android:name=".libraries.LibraryLocationAndHour"></activity>
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
-        <activity android:name=".libraries.BookDetailActivity"></activity>
+        <activity android:name=".libraries.BookDetailActivity">
+      		<meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        <activity android:name=".libraries.LibraryBLCHoldingsActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        <activity android:name=".libraries.LibrariesHoldingsSliderActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        
         <activity android:name=".libraries.AskUsActivity" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".libraries.TellUsActivity" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".libraries.AskUsTopActivity"></activity>

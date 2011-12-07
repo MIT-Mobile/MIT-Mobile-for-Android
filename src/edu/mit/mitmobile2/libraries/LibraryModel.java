@@ -13,7 +13,11 @@ import android.os.Handler;
 import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
+import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.MobileWebApi.DefaultCancelRequestListener;
+import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
+
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
@@ -110,6 +114,24 @@ public class LibraryModel {
             }
         });
 
+    }
+    
+    public static void fetchWorldCatBookDetails(final BookItem book, Context context, final Handler uiHandler) {
+    	HashMap<String, String> parameters = new HashMap<String, String>();
+    	parameters.put("command", "detail");
+    	parameters.put("module", MODULE_LIBRARY);
+    	parameters.put("id", book.id);
+    	
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Book Details", context, uiHandler);
+    	webApi.requestJSONObject(parameters, new JSONObjectResponseListener(
+    		new DefaultErrorListener(uiHandler), new DefaultCancelRequestListener(uiHandler)) {
+				@Override
+				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
+					LibraryParser.parseBookDetail(object, book);
+					MobileWebApi.sendSuccessMessage(uiHandler);
+				}
+    		}
+    	);
     }
 
     public static void fetchLinks(final Context context, final Handler uiHandler) {
