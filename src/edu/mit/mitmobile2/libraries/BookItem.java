@@ -30,22 +30,22 @@ public class BookItem {
     public final static String MITLibrariesOCLCCode = "MYG";   
     
     public CharSequence getAuthorsDisplayString() {
+    	StringBuilder builder = new StringBuilder();
+    	if (year != null && year.size() > 0) {
+    		builder.append(this.year.get(0) + "; ");
+    	}
     	if (author != null) {
-    		StringBuilder builder = new StringBuilder();
-    		if (year != null && year.size() > 0) {
-    			builder.append(this.year.get(0) + "; ");
-    		}
     		for (int i = 0; i < author.size(); i++) {
     			if (i > 0) {
     				builder.append(", ");
     			}
+    		
     			builder.append(author.get(i));
     		}
-    		return builder;
-    	} else {
-    		return null;
     	}
+    	return builder;
     }
+    
     /*
     public CharSequence getYearsDisplayString() {
     	if(year != null) {
