@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
@@ -41,7 +44,7 @@ import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 import edu.mit.mitmobile2.objs.RenewResponseItem;
 
-public class LibraryYourAccount extends Activity {
+public class LibraryYourAccount extends ModuleActivity {
 
 	private static final String TAG = "LibraryYourAccount"; 
 	private static final int LOANS_TAB = 0;
@@ -84,6 +87,7 @@ public class LibraryYourAccount extends Activity {
 	private CheckBox cb;
 
 	static LoanData loanData;
+	private boolean loggedIn = false ;
 	
 	LibraryLoanAdapter libraryLoanAdapter;
 
@@ -309,6 +313,11 @@ public class LibraryYourAccount extends Activity {
 	
 	// TAB LOADING METHODS
 	public void loadLoans() {
+			//if (!loggedIn) {
+			//	Log.d(TAG,"before log in");
+			//	LibraryModel.getUserIdentity(mActivity, loginUiHandler);
+			//	Log.d(TAG,"after log in");
+			//}
 	        mLoanResults.setVisibility(View.GONE);
 	        loanLoadingView.setVisibility(View.VISIBLE);
 	        loanLoadingView.showLoading();
@@ -334,7 +343,7 @@ public class LibraryYourAccount extends Activity {
 
 	
 	// UI HANDLERS
-    private Handler loansUiHandler = new Handler() {
+	private Handler loansUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
         	Log.d(TAG,"handleMessage");
@@ -796,6 +805,25 @@ public class LibraryYourAccount extends Activity {
         	
         }
     }
+
+
+	@Override
+	protected Module getModule() {
+		// TODO Auto-generated method stub
+		return new LibrariesModule();
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
 
     // END ARRAY ADAPTERS
 }
