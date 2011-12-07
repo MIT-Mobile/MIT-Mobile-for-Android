@@ -235,7 +235,7 @@
     
 		<activity android:name=".PrefsActivity"></activity>
         
-        <activity android:name=".libraries.LibraryActivity">
+        <activity android:name=".libraries.LibraryActivity" android:screenOrientation="portrait">
             <meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
         </activity>
         
