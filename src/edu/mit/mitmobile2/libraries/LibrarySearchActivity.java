@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.libraries;
 import android.os.Handler;
 import android.widget.ArrayAdapter;
 import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.SearchResults;
 
@@ -11,7 +10,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected ArrayAdapter<BookItem> getListAdapter(SearchResults<BookItem> results) {
-        return new BookListAdapter(this, results.getResultsList(), R.layout.boring_action_row);
+        return new BookListAdapter(this, results.getResultsList());
     }
 
     @Override
