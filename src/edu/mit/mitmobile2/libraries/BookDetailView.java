@@ -127,7 +127,11 @@ public class BookDetailView implements SliderInterface {
     		addRow("Summary", join(" ", mBookItem.summary));
     	}
     	if (mBookItem.publisher != null) {
-    		addRow("Publisher", join("", mBookItem.address) + " " + join("", mBookItem.publisher));
+    		String address = "";
+    		if (mBookItem.address != null) {
+    			address = join("", mBookItem.address) + " ";
+    		}
+    		addRow("Publisher", address + join("", mBookItem.publisher));
     	}
     	if (mBookItem.editions != null) {
     		addRow("Edition", join(", ", mBookItem.editions));
