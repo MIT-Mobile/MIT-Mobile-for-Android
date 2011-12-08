@@ -7,9 +7,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -39,14 +43,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
+import edu.mit.mitmobile2.touchstone.TouchstoneActivity;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 
 public class MITClient extends DefaultHttpClient {
@@ -60,8 +68,17 @@ public class MITClient extends DefaultHttpClient {
 	public static final String ERROR_STATE = "error";	
 	public static final String AUTH_ERROR_KERBEROS = "Error: Please enter a valid username and password"; // error message from invalid kerberos login
 	public static final String AUTH_ERROR_CAMS = "Error: Enter your email address and password"; // error message from invaid cams login
-	
 
+	public static final String TOUCHSTONE_REQUEST = "TOUCHSTONE_REQUEST";
+	public static final String TOUCHSTONE_LOGIN = "TOUCHSTONE_LOGIN";    
+	public static final String TOUCHSTONE_CANCEL = "TOUCHSTONE_CANCEL";    
+	
+	HttpGet mHttpGet;
+	
+	// Hashmap for keeping track of the status of requests made by the HttpClient 
+	// because this is not an activity, there is no context for startActivityForResult or UI handlers
+	public static Map requestMap = new HashMap();
+	
 	// Cookies
 	//public static List<Cookie> cookies = new ArrayList();
 	public static CookieStore cookieStore;
@@ -120,7 +137,7 @@ public class MITClient extends DefaultHttpClient {
 		
 		// get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
+		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 		Log.d(TAG,"user = " + user);
 				
@@ -193,6 +210,7 @@ public class MITClient extends DefaultHttpClient {
 	
 	public HttpResponse getResponse(HttpGet httpGet) {
 		try {
+			this.mHttpGet = httpGet;
 			response = this.execute(httpGet);
 
 			responseEntity = response.getEntity();
@@ -237,25 +255,56 @@ public class MITClient extends DefaultHttpClient {
 
 		//Log.d(TAG,"post to wayf");
 		//Log.d(TAG,"uri = " + uri);
-
+		
 		// Launch preferences activity if user or password are not set
 		if (user == null || user.length() == 0 || password == null || password.length() == 0) {
-			Intent intent = new Intent(mContext, TouchstonePrefsActivity.class);
-			((Activity) mContext).startActivityForResult(intent,1);
+			String requestKey = System.currentTimeMillis()/1000 + "";
+			Log.d(TAG,"requestKey = " + requestKey);
+			requestMap.put(requestKey, TOUCHSTONE_REQUEST);
+			Intent touchstoneIntent = new Intent(mContext, TouchstoneActivity.class);
+			touchstoneIntent.putExtra("requestKey",requestKey);
+			((Activity) mContext).startActivity(touchstoneIntent);
+		
+			Log.d(TAG,"requestKey " + requestKey + " value = " + MITClient.requestMap.get(requestKey));
+			while (MITClient.requestMap.get(requestKey) == TOUCHSTONE_REQUEST) {
+			    // do stuff
+			    // don't burn the CPU
+			    try {
+			    	Log.d(TAG,"requestMap " + requestKey + " = " + requestMap.get(requestKey));
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			// get user name and password when returning from touchstone screen
+			if (MITClient.requestMap.get(requestKey) == TOUCHSTONE_LOGIN) {
+				user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
+				password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
+			}
+		
 		}
+		Log.d("MITClient","after start intent");
+
 		
 		post = new HttpPost();
 	
 		post.setURI(uri);
-		//Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
+		Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
 
 		String user_idp;
-
-		if (user.contains("@")) {
+		Log.d(TAG,"user = " + user);
+		if (user.contains("@") && !user.contains("@MIT.EDU")) {
 			user_idp = "https://idp.touchstonenetwork.net/shibboleth-idp";
 		}
 		else {
 			user_idp = "https://idp.mit.edu/shibboleth";				
+			// remove "@MIT.EDU from user name
+			if (user.contains("@MIT.EDU")) {
+				user = user.substring(0,user.length() - 8);
+				Log.d(TAG,"user = " + user);
+			}
 		}
 
 		Log.d(TAG,"user_idp = " + user_idp);
@@ -385,6 +434,7 @@ public class MITClient extends DefaultHttpClient {
 		if (responseString.contains(AUTH_ERROR_CAMS) || responseString.contains(AUTH_ERROR_KERBEROS)) {
 			state = ERROR_STATE;
 			Log.d(TAG,"login error");
+			Log.d(TAG,responseString);
 			return;
 		}
 		else {
@@ -557,4 +607,5 @@ public class MITClient extends DefaultHttpClient {
 	public static void clearCookies() {
 		cookieStore = null;
 	}
+	
 }

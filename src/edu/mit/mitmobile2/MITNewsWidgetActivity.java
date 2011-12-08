@@ -42,6 +42,7 @@ import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
+import edu.mit.mitmobile2.settings.MITSettingsActivity;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 import edu.mit.mitmobile2.touchstone.TouchstoneModule;
 import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
@@ -387,7 +388,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 				CommonActions.viewURL(ctx, "http://" + Global.getMobileWebDomain() + "/");
 				return true;
 			case SETTINGS_MENU_ID:
-				intent = new Intent(ctx, TouchstonePrefsActivity.class);
+				intent = new Intent(ctx, MITSettingsActivity.class);
 				startActivity(intent);
 				return true;
 		}

@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
@@ -34,7 +35,6 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.LibraryModel;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
-//public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
 public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
 	
 	private Context mContext;	
@@ -56,9 +56,11 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 
     
 	public static SharedPreferences prefs;
-	public static final String TAG = "TouchstonePrefsActivity";
+	public static final String TAG = "TouchstoneActivity";
 	private static final int MENU_INFO = 0;
 	private static final int MENU_PREFS = 1;
+	
+	Bundle extras;
 	
 	/**
 	 * @throws IOException 
@@ -75,8 +77,11 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		
 	private void createViews() {
 		Log.d(TAG,"createViews()");
-		setContentView(R.layout.touchstone_prefs);
+		setContentView(R.layout.touchstone_login);
 
+		extras = getIntent().getExtras();
+		String key = "";
+		key = (String)extras.getString(key);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		final SharedPreferences.Editor prefsEditor = prefs.edit();
 
@@ -110,8 +115,9 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 				catch (RuntimeException e) {
 					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 				}
-
-				setResult(2, null);
+				
+				String requestKey = extras.getString("requestKey");
+				MITClient.requestMap.put(requestKey, MITClient.TOUCHSTONE_LOGIN);
 				finish();
 			}
 		});

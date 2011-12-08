@@ -205,6 +205,9 @@
 		<activity android:name=".facilities.FacilitiesLeasedBuildingActivity" />
 		<activity android:name=".facilities.FacilitiesUploadSuccessModuleActivity" />
 
+		<!-- SETTINGS -->
+		<activity android:name=".settings.MITSettingsActivity" />
+
 		<!-- TOUCHSTONE -->
 		<activity android:name=".touchstone.TouchstoneActivity" />
 		<activity android:name=".touchstone.TouchstonePrefsActivity"></activity>

@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.jsoup.nodes.Document;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -119,7 +120,11 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 				}
 
-				setResult(2, null);
+
+				Intent resultIntent = new Intent();
+				resultIntent.putExtra("msg","ok");
+				setResult(Activity.RESULT_OK, resultIntent);
+				Log.d("MITClient","finish()");
 				finish();
 			}
 		});
