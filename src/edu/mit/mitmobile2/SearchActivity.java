@@ -229,7 +229,9 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		} else if(resultsCount == 1) {
 			summaryText = "1 match for \""  + mSearchTerm + "\"";
 		} else if(!mSearchResults.isPartialResult()) {
-			summaryText = resultsCount + " " + searchItemPlural() + " matching \""  + mSearchTerm + "\"";
+			summaryText = resultsCount + " results";
+		} else if (supportsMoreResult()) {
+			summaryText = mSearchResults.totalResultsCount() + " results";
 		} else {
 			if(mSearchResults.totalResultsCount() != null) {
 				// total known
