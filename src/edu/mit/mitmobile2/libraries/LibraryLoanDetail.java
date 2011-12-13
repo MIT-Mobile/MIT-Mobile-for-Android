@@ -13,12 +13,14 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
@@ -28,11 +30,13 @@ public class LibraryLoanDetail extends Activity{
 
     Context mContext;
     private FullScreenLoader mLoadingView;
+    private TitleBar loanTitleBar;
 	private TextView loanTitleTV;
     private TextView loanAuthorTV;
     private TextView loanCallNoTV;
 	private TextView loanLibraryTV;
 	private TextView loanISBNTV;
+	private ImageView loanStatusIconIV;
 	private TextView loanStatusTV;
 	private Button loanRenewButton;
 	private LinearLayout loanDetailLayout;
@@ -48,41 +52,49 @@ public class LibraryLoanDetail extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.library_loan_detail);
+        setContentView(R.layout.library_barton_book_detail);
         Bundle extras = getIntent().getExtras();
         index = extras.getInt("index");
         final LoanListItem item = LibraryYourAccount.getLoanData().getLoans().get(index);
         
-        loanDetailLayout = (LinearLayout)findViewById(R.id.loandDetailLayout);
-        loanTitleTV = (TextView)findViewById(R.id.loanTitleTV);
+        loanTitleBar = (TitleBar)findViewById(R.id.libraryBartonDetailTitleBar);
+        loanTitleBar.setTitle("Loan");
+        
+        loanDetailLayout = (LinearLayout)findViewById(R.id.libraryBartonDetailLayout);
+        loanTitleTV = (TextView)findViewById(R.id.libraryBartonDetailTitleTV);
         loanTitleTV.setText(item.getTitle());
 
-        loanAuthorTV = (TextView)findViewById(R.id.loanAuthorTV);
+        loanAuthorTV = (TextView)findViewById(R.id.libraryBartonDetailAuthorTV);
         loanAuthorTV.setText(item.getYear() + "; " + item.getAuthor());
 
-        loanCallNoTV = (TextView)findViewById(R.id.loanCallNoTV);
+        loanCallNoTV = (TextView)findViewById(R.id.libraryBartonDetailCallNoTV);
         loanCallNoTV.setText(item.getCallNo());
       
-        loanLibraryTV = (TextView)findViewById(R.id.loanLibraryTV);
+        loanLibraryTV = (TextView)findViewById(R.id.libraryBartonDetailLibraryTV);
         loanLibraryTV.setText(item.getSubLibrary());
 
-        loanISBNTV = (TextView)findViewById(R.id.loanISBNTV);
+        loanISBNTV = (TextView)findViewById(R.id.libraryBartonDetailISBNTV);
         loanISBNTV.setText(item.getIsbnIssnDisplay());
        
-        loanStatusTV = (TextView)findViewById(R.id.loanStatusTV);
-        loanStatusTV.setText(Html.fromHtml(item.getDueText()));  
+        findViewById(R.id.libraryBartonDetailStatusRow).setVisibility(View.VISIBLE);
+        loanStatusIconIV = (ImageView)findViewById(R.id.libraryBartonDetailStatusIcon);
+        loanStatusTV = (TextView)findViewById(R.id.libraryBartonDetailStatusTV);
+        loanStatusTV.setText(Html.fromHtml(item.getDueText())); 
     	if (item.isOverdue() || item.isLongOverdue()) {
     		loanStatusTV.setTextColor(Color.RED);
+    		loanStatusIconIV.setImageDrawable(getResources().getDrawable(R.drawable.status_alert));
     	}
     	else {
     		loanStatusTV.setTextColor(R.color.contents_text);
+    		loanStatusIconIV.setVisibility(View.GONE);
     	}
 
         
         
-        mLoadingView = (FullScreenLoader) findViewById(R.id.loanDetailLoading);
+        mLoadingView = (FullScreenLoader) findViewById(R.id.libraryBartonDetailDetailLoading);
 
-        loanRenewButton = (Button) findViewById(R.id.loanRenewButton);
+        loanRenewButton = (Button) findViewById(R.id.libraryBartonDetailRenewButton);
+        loanRenewButton.setVisibility(View.VISIBLE);
         loanRenewButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	renewBook(item.getBarcode());

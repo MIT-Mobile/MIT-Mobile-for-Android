@@ -560,7 +560,7 @@ public class LibraryYourAccount extends ModuleActivity {
         	loanTitleTV = (TextView)view.findViewById(R.id.loanTitleTV);
 
         	if (!item.getTitle().equalsIgnoreCase("")) {
-        		loanTitleTV.setText(item.getTitle());
+        		loanTitleTV.setText(item.getTitle().substring(0, 8));
         	}
         	else {
         		loanTitleTV.setVisibility(View.GONE);
@@ -716,6 +716,7 @@ public class LibraryYourAccount extends ModuleActivity {
     		holdStatusTV = (TextView)view.findViewById(R.id.holdStatusTV);
         	if (!item.getStatus().equalsIgnoreCase("")) {
         		holdStatusTV.setText(item.getStatus());
+        		holdStatusTV.setVisibility(View.VISIBLE);
         	}
         	else {
         		holdStatusTV.setVisibility(View.GONE);
@@ -725,6 +726,7 @@ public class LibraryYourAccount extends ModuleActivity {
         	holdPickupLocationTV = (TextView)view.findViewById(R.id.holdPickupLocationTV);
         	if (!item.getPickupLocation().equalsIgnoreCase("")) {
         		holdPickupLocationTV.setText("Pick up at " + item.getPickupLocation());
+        		holdPickupLocationTV.setVisibility(View.VISIBLE);
         	}
         	else {
         		holdPickupLocationTV.setVisibility(View.GONE);
@@ -737,6 +739,7 @@ public class LibraryYourAccount extends ModuleActivity {
         		int holdReadyTextColor = getResources().getColor(R.color.hold_ready_text);
         		holdStatusTV.setTextColor(holdReadyTextColor);
         		holdPickupLocationTV.setTextColor(holdReadyTextColor);
+        		holdPickupLocationTV.setVisibility(View.VISIBLE);
         		Log.d(TAG,"setting status to green, " + R.color.hold_ready_text);
         		Log.d(TAG,"holdStatusTV = " + holdStatusTV.getCurrentTextColor());
         	}
@@ -744,6 +747,7 @@ public class LibraryYourAccount extends ModuleActivity {
         		holdStatusIcon.setVisibility(View.GONE);        		
         		holdStatusTV.setTextColor(Color.BLACK);
         		holdPickupLocationTV.setTextColor(Color.BLACK);
+        		holdPickupLocationTV.setVisibility(View.GONE);
         		Log.d(TAG,"setting status to black, " + Color.BLACK);
         	}
         }
