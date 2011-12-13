@@ -56,13 +56,14 @@
 		<!-- Fine Amount -->			
   		<TextView
   			android:layout_alignParentRight="true"
+  			android:paddingTop="@dimen/verticalPadding"
   			android:paddingRight="@dimen/horizontalPadding"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/fineDisplayAmountTV"
 			android:textSize="17sp"
 			android:typeface="sans"
-			android:textColor="#FFFF0000" />
+			android:textColor="#FF000000" />
 
 	</RelativeLayout>
   		 		

@@ -734,8 +734,9 @@ public class LibraryYourAccount extends ModuleActivity {
         	if (item.getReady().equalsIgnoreCase("TRUE")) {
         		Log.d(TAG,"ready for " + item.getTitle() + " = " + item.getReady());
         		holdStatusIcon.setVisibility(View.VISIBLE);
-        		holdStatusTV.setTextColor(R.color.hold_ready_text);
-        		holdPickupLocationTV.setTextColor(R.color.hold_ready_text);
+        		int holdReadyTextColor = getResources().getColor(R.color.hold_ready_text);
+        		holdStatusTV.setTextColor(holdReadyTextColor);
+        		holdPickupLocationTV.setTextColor(holdReadyTextColor);
         		Log.d(TAG,"setting status to green, " + R.color.hold_ready_text);
         		Log.d(TAG,"holdStatusTV = " + holdStatusTV.getCurrentTextColor());
         	}
