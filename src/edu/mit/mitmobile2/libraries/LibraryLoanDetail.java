@@ -85,7 +85,7 @@ public class LibraryLoanDetail extends Activity{
     		loanStatusIconIV.setImageDrawable(getResources().getDrawable(R.drawable.status_alert));
     	}
     	else {
-    		loanStatusTV.setTextColor(R.color.contents_text);
+    		loanStatusTV.setTextColor(Color.BLACK);
     		loanStatusIconIV.setVisibility(View.GONE);
     	}
 

@@ -27,6 +27,7 @@
 				android:paddingTop="6dip"
 				android:paddingBottom="6dip"
 				android:paddingLeft="@dimen/horizontalPadding"
+				android:paddingRight="@dimen/horizontalPadding"
 				android:id="@+id/libraryBartonDetailTitleTV"
 				android:textColor="@color/contents_text"
 				android:textStyle="bold"
@@ -176,7 +177,7 @@
 				android:paddingTop="6dip"
 				android:paddingLeft="5dip"
 				android:id="@+id/libraryBartonDetailAmountOwedTV"
-				android:textColor="#FFFF0000" />
+				android:textColor="@color/contents_text"  />
 				
 		</LinearLayout>
 
