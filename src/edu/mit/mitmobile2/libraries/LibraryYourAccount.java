@@ -560,7 +560,7 @@ public class LibraryYourAccount extends ModuleActivity {
         	loanTitleTV = (TextView)view.findViewById(R.id.loanTitleTV);
 
         	if (!item.getTitle().equalsIgnoreCase("")) {
-        		loanTitleTV.setText(item.getTitle().substring(0, 8));
+        		loanTitleTV.setText(item.getTitle());
         	}
         	else {
         		loanTitleTV.setVisibility(View.GONE);
