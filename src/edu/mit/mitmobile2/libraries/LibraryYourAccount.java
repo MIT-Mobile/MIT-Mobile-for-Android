@@ -63,7 +63,7 @@ public class LibraryYourAccount extends ModuleActivity {
 	private View mLoanResults;
     private ListView loanListView;
     private FullScreenLoader loanLoadingView;
-    private LinearLayout loansButtonRow;
+    private RelativeLayout loansButtonRow;
     private RelativeLayout renewButtonRow;
     private RelativeLayout doneButtonRow;
     private TextView loanTitleTV;
@@ -162,7 +162,7 @@ public class LibraryYourAccount extends ModuleActivity {
         renewStatusSuccessTV = (TextView) findViewById(R.id.renewStatusSuccessTV);
         loanListView = (ListView) findViewById(R.id.listLibraryLoans);
         loanLoadingView = (FullScreenLoader) findViewById(R.id.libraryLoanLoading);
-        loansButtonRow = (LinearLayout) findViewById(R.id.loansButtonRow);
+        loansButtonRow = (RelativeLayout) findViewById(R.id.loansButtonRow);
         renewButtonRow = (RelativeLayout) findViewById(R.id.renewButtonRow);
         doneButtonRow = (RelativeLayout) findViewById(R.id.doneButtonRow);
         
@@ -589,7 +589,7 @@ public class LibraryYourAccount extends ModuleActivity {
         		loanStatusIcon.setVisibility(View.VISIBLE);
         	}
         	else {
-        		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusTV.setTextColor(getResources().getColor(R.color.libraries_gray));
         		loanStatusIcon.setVisibility(View.GONE);
         	}
         	
