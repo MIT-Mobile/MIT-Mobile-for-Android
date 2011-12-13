@@ -38,7 +38,9 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/fineAuthorTV"
-			android:textColor="@color/contents_text" />
+			android:singleLine="true"
+			android:ellipsize="end"
+			android:textColor="@color/libraries_gray" />
 		
 		<!-- Date Fined -->			
 		<!--  This field isn't in the mock-up, hiding it for now -->
