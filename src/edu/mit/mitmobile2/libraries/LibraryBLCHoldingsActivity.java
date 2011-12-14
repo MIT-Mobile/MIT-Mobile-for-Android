@@ -14,6 +14,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SectionHeader;
+import edu.mit.mitmobile2.SectionHeader.Prominence;
 import edu.mit.mitmobile2.SmallActivityCache;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
@@ -68,7 +69,7 @@ public class LibraryBLCHoldingsActivity extends ModuleActivity {
 			}
 		});
 		
-		mBLCHoldingsLayout.addView(new SectionHeader(this, "Owned by"));
+		mBLCHoldingsLayout.addView(new SectionHeader(this, "Owned by", Prominence.SECONDARY));
 		for (Holding holding : book.holdings) {
 			if (!holding.code.equals(BookItem.MITLibrariesOCLCCode)) {
 				mBLCHoldingsLayout.addView(new DividerView(this, null));
