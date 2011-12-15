@@ -32,15 +32,7 @@
 				android:id="@+id/touchstoneCancelButton" 
 				android:text="Cancel" 
 				android:layout_alignParentLeft="true" />
-	
-			<!-- Done -->
-			<Button 
-				android:layout_height="wrap_content" 
-				android:layout_width="wrap_content" 
-				android:id="@+id/touchstoneDoneButton" 
-				android:text="Done" 
-				android:layout_alignParentRight="true" />
-	
+		
 		</RelativeLayout>
 	
 		<!-- User Name -->
@@ -66,6 +58,40 @@
 	        android:password="true"
 	        android:layout_height="wrap_content"/>
 				
+		<Button 
+			android:layout_height="wrap_content" 
+			android:id="@+id/touchstoneLoginButton" 
+			android:text="Login" 
+			android:layout_width="fill_parent" 
+			android:layout_alignParentLeft="true">
+		</Button>
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+    		android:layout_height="wrap_content" >
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:layout_alignParentLeft="true" >
+	    		
+	    		<TextView 
+	    			android:text="Remember login" 
+	    			android:textColor="@color/contents_text"
+	    			android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content">    
+	    		</TextView>
+	    		
+	    		<CheckBox 
+	    			android:id="@+id/rememberLoginCB" 
+	    			android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content"
+	    			android:checked="true" >    
+	    		</CheckBox>
+	    	</LinearLayout>
+		</RelativeLayout>
+	
 	</LinearLayout>
 	
 	<edu.mit.mitmobile2.FullScreenLoader
