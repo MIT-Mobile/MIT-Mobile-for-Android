@@ -10,10 +10,39 @@
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
 
+	<TextView 
+			android:id="@+id/touchstoneSettingsTitle"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+        	android:paddingLeft="@dimen/horizontalPadding"
+        	android:paddingRight="@dimen/horizontalPadding"
+        	android:paddingTop="@dimen/verticalPadding"
+        	android:paddingBottom="@dimen/verticalPadding"
+        	android:text="MIT Touchstone" 
+        	android:textSize="24dip" 
+        	android:textColor="#ff000000"
+        	android:textStyle="bold">
+    </TextView>
+        	
 	<Button
-		android:text="Touchstone"
+		android:text="Touchstone Settings"
 		android:id="@+id/touchstoneSettingsButton"
 		android:layout_width="fill_parent"
+		android:gravity="left"
   		android:layout_height="wrap_content" />
+
+	<TextView 
+			android:id="@+id/touchstoneSettingsInfo"
+			android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content"
+        	android:paddingLeft="@dimen/horizontalPadding"
+        	android:paddingRight="@dimen/horizontalPadding"
+        	android:paddingTop="@dimen/verticalPadding"
+        	android:paddingBottom="@dimen/verticalPadding"
+        	android:gravity="center"
+        	android:textColor="#ff000000"
+        	android:text="Touchstone is MIT's single sign-on authentication service." >
+        	
+    </TextView>
 
 </LinearLayout>

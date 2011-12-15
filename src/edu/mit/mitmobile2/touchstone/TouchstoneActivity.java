@@ -42,12 +42,10 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	SharedPreferences pref;
 	String user;
 	String password;
-	WebView webview;
 	Document document;
 	EditText touchstoneUsername;
 	EditText touchstonePassword;
 	Button cancelButton;
-	Button doneButton;
 	Button loginButton;
 	CheckBox rememberLoginCB; 
 	TextView mError;
@@ -92,7 +90,6 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		touchstoneUsername.setText(prefs.getString("PREF_TOUCHSTONE_USERNAME", ""));
 		touchstonePassword.setText(prefs.getString("PREF_TOUCHSTONE_PASSWORD", ""));
 
-		doneButton = (Button)findViewById(R.id.touchstoneDoneButton);
 		cancelButton = (Button)findViewById(R.id.touchstoneCancelButton);
 		loginButton = (Button)findViewById(R.id.touchstoneLoginButton);
 		rememberLoginCB =(CheckBox)findViewById(R.id.rememberLoginCB);
@@ -101,7 +98,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	    mError = (TextView)touchstoneLoadingView.findViewById(R.id.fullScreenLoadingErrorTV); 
 	    touchstoneContents = (LinearLayout)findViewById(R.id.touchstoneContents);
 	    
-		doneButton.setOnClickListener(new View.OnClickListener() {
+	    loginButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -110,6 +107,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 					Log.d(TAG,"password = " + touchstonePassword.getEditableText().toString());
 					prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", touchstoneUsername.getEditableText().toString());
 					prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", touchstonePassword.getEditableText().toString());
+					prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", rememberLoginCB.isChecked());
 					prefsEditor.commit();
 				}
 				catch (RuntimeException e) {
@@ -127,17 +125,6 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 			@Override
 			public void onClick(View v) {
 				finish();
-			}
-		});
-
-		loginButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				touchstoneLoadingView.setVisibility(View.VISIBLE);
-				touchstoneContents.setVisibility(View.GONE);
-				touchstoneLoadingView.showLoading();
-				LibraryModel.getUserIdentity(mContext, loginUiHandler);
 			}
 		});
 

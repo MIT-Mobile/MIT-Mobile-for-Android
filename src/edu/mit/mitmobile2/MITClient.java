@@ -69,10 +69,13 @@ public class MITClient extends DefaultHttpClient {
 	public static final String AUTH_ERROR_KERBEROS = "Error: Please enter a valid username and password"; // error message from invalid kerberos login
 	public static final String AUTH_ERROR_CAMS = "Error: Enter your email address and password"; // error message from invaid cams login
 
+	public static SharedPreferences prefs;
 	public static final String TOUCHSTONE_REQUEST = "TOUCHSTONE_REQUEST";
 	public static final String TOUCHSTONE_LOGIN = "TOUCHSTONE_LOGIN";    
 	public static final String TOUCHSTONE_CANCEL = "TOUCHSTONE_CANCEL";    
-	
+
+	final SharedPreferences.Editor prefsEditor;
+
 	HttpGet mHttpGet;
 	
 	// Hashmap for keeping track of the status of requests made by the HttpClient 
@@ -84,7 +87,6 @@ public class MITClient extends DefaultHttpClient {
 	public static CookieStore cookieStore;
 	
 	protected Context mContext;
-	SharedPreferences prefs;
 	String user;
 	public String getUser() {
 		return user;
@@ -103,6 +105,7 @@ public class MITClient extends DefaultHttpClient {
 	}
 
 	String password;
+	boolean rememberLogin;
 	URI uri;
 	URI targetUri;
 	String uriString;
@@ -136,9 +139,11 @@ public class MITClient extends DefaultHttpClient {
 		this.setCookieStore(this.cookieStore);
 		
 		// get user name and password from preferences file
-		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+		prefsEditor = prefs.edit();
 		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
+		rememberLogin = prefs.getBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
 		Log.d(TAG,"user = " + user);
 				
 		this.setRedirectHandler(new DefaultRedirectHandler() {
@@ -502,30 +507,15 @@ public class MITClient extends DefaultHttpClient {
 				Log.d(TAG,e.getMessage());
 			}
 		}
+		
+		// Clear user name and password is rememberLogin is false
+		if (!rememberLogin) {
+			prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", null);
+			prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", null);
+			prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);	
+		}
 	}
 	
-	
-//	// This method is a kludge. For some reason, the redirect is losing the module and command parameters even though they are visible in the shibstate cookie. For now, we'll use that cookie to redirect to the correct url
-//	private void ok() {
-//		List<Cookie> cookies = this.getCookieStore().getCookies();
-//		Iterator<Cookie> c = cookies.iterator();
-//		while (c.hasNext()) {
-//			Cookie cookie = c.next();
-//			String cookieName =  cookie.getName();
-//			if (cookieName.contains("_shibstate")) {
-//				String cookieValue = cookie.getValue();
-//				Log.d(TAG,"go to " + cookieValue);
-//				HttpGet httpGet = new HttpGet(URLDecoder.decode(cookieValue));
-//				Log.d(TAG, "url from get = " + httpGet.getURI().toString());
-//				try {
-//					response = this.execute(httpGet);
-//				}
-//				catch (Exception e) {
-//					Log.d(TAG,"execute httpGet exception = " + e.getMessage());
-//				}
-//			}
-//		}
-//	}
 	
 	public void debugCookies() {
 		Log.d(TAG,"debugCookies()");
@@ -537,30 +527,6 @@ public class MITClient extends DefaultHttpClient {
 			Log.d(TAG,"cookie domain = " + cookie.getDomain() + " name = " + cookie.getName() + " value = " + cookie.getValue() + " expires = " + cookie.getExpiryDate());
 		}
 	}
-
-//	public void saveCookies() {
-//		List<Cookie> cookies = this.getCookieStore().getCookies();
-//		Iterator<Cookie> c = cookies.iterator();
-//		while (c.hasNext()) {
-//			Cookie cookie = c.next();
-//			BasicClientCookie tmpCookie = new BasicClientCookie(cookie.getName(), cookie.getValue());
-//			tmpCookie.setDomain(cookie.getDomain());
-//			tmpCookie.setComment(cookie.getComment());
-//			tmpCookie.setExpiryDate(cookie.getExpiryDate());
-//			tmpCookie.setPath(cookie.getPath());
-//			tmpCookie.setVersion(cookie.getVersion());
-//			this.cookies.add(tmpCookie);
-//		}		
-//	}
-//
-//	public void restoreCookies() {
-//		if (this.cookies != null) {
-//			for (int c = 0; c < this.cookies.size(); c++) {
-//				BasicClientCookie tmpCookie = (BasicClientCookie)this.cookies.get(c);
-//				this.getCookieStore().addCookie(tmpCookie);
-//			}
-//		}		
-//	}
 
 	class MITRequestInterceptor implements HttpRequestInterceptor {
 
