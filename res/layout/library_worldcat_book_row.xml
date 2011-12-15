@@ -24,7 +24,7 @@
   				android:paddingTop="@dimen/interlinePadding"
   				android:paddingRight="@dimen/horizontalPadding"
   				android:id="@+id/libraryWorldCatBookRowSubtitle"
-  				android:maxLines="2"
+  				android:singleLine="true"
   				android:ellipsize="end" 
   				style="@style/ListItemSecondary" />
   				

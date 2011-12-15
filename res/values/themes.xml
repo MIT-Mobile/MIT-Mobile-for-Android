@@ -140,6 +140,13 @@
 		<item name="android:typeface">sans</item>
 	</style>
 
+	<style name="LibraryFineStatus">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/libraries_gray</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
 	<style name="FineBalance">
 		<item name="android:textStyle">bold</item>
 		<item name="android:textSize">16sp</item>

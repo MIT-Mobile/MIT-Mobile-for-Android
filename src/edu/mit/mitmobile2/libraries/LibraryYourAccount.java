@@ -63,7 +63,7 @@ public class LibraryYourAccount extends ModuleActivity {
 	private View mLoanResults;
     private ListView loanListView;
     private FullScreenLoader loanLoadingView;
-    private LinearLayout loansButtonRow;
+    private RelativeLayout loansButtonRow;
     private RelativeLayout renewButtonRow;
     private RelativeLayout doneButtonRow;
     private TextView loanTitleTV;
@@ -162,7 +162,7 @@ public class LibraryYourAccount extends ModuleActivity {
         renewStatusSuccessTV = (TextView) findViewById(R.id.renewStatusSuccessTV);
         loanListView = (ListView) findViewById(R.id.listLibraryLoans);
         loanLoadingView = (FullScreenLoader) findViewById(R.id.libraryLoanLoading);
-        loansButtonRow = (LinearLayout) findViewById(R.id.loansButtonRow);
+        loansButtonRow = (RelativeLayout) findViewById(R.id.loansButtonRow);
         renewButtonRow = (RelativeLayout) findViewById(R.id.renewButtonRow);
         doneButtonRow = (RelativeLayout) findViewById(R.id.doneButtonRow);
         
@@ -589,7 +589,7 @@ public class LibraryYourAccount extends ModuleActivity {
         		loanStatusIcon.setVisibility(View.VISIBLE);
         	}
         	else {
-        		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusTV.setTextColor(getResources().getColor(R.color.libraries_gray));
         		loanStatusIcon.setVisibility(View.GONE);
         	}
         	
@@ -716,6 +716,7 @@ public class LibraryYourAccount extends ModuleActivity {
     		holdStatusTV = (TextView)view.findViewById(R.id.holdStatusTV);
         	if (!item.getStatus().equalsIgnoreCase("")) {
         		holdStatusTV.setText(item.getStatus());
+        		holdStatusTV.setVisibility(View.VISIBLE);
         	}
         	else {
         		holdStatusTV.setVisibility(View.GONE);
@@ -725,6 +726,7 @@ public class LibraryYourAccount extends ModuleActivity {
         	holdPickupLocationTV = (TextView)view.findViewById(R.id.holdPickupLocationTV);
         	if (!item.getPickupLocation().equalsIgnoreCase("")) {
         		holdPickupLocationTV.setText("Pick up at " + item.getPickupLocation());
+        		holdPickupLocationTV.setVisibility(View.VISIBLE);
         	}
         	else {
         		holdPickupLocationTV.setVisibility(View.GONE);
@@ -734,8 +736,10 @@ public class LibraryYourAccount extends ModuleActivity {
         	if (item.getReady().equalsIgnoreCase("TRUE")) {
         		Log.d(TAG,"ready for " + item.getTitle() + " = " + item.getReady());
         		holdStatusIcon.setVisibility(View.VISIBLE);
-        		holdStatusTV.setTextColor(R.color.hold_ready_text);
-        		holdPickupLocationTV.setTextColor(R.color.hold_ready_text);
+        		int holdReadyTextColor = getResources().getColor(R.color.hold_ready_text);
+        		holdStatusTV.setTextColor(holdReadyTextColor);
+        		holdPickupLocationTV.setTextColor(holdReadyTextColor);
+        		holdPickupLocationTV.setVisibility(View.VISIBLE);
         		Log.d(TAG,"setting status to green, " + R.color.hold_ready_text);
         		Log.d(TAG,"holdStatusTV = " + holdStatusTV.getCurrentTextColor());
         	}
@@ -743,6 +747,7 @@ public class LibraryYourAccount extends ModuleActivity {
         		holdStatusIcon.setVisibility(View.GONE);        		
         		holdStatusTV.setTextColor(Color.BLACK);
         		holdPickupLocationTV.setTextColor(Color.BLACK);
+        		holdPickupLocationTV.setVisibility(View.GONE);
         		Log.d(TAG,"setting status to black, " + Color.BLACK);
         	}
         }

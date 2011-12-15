@@ -20,6 +20,7 @@ import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.FineListItem;
@@ -30,6 +31,7 @@ public class LibraryFineDetail extends Activity{
 
     Context mContext;
     private FullScreenLoader mLoadingView;
+    private TitleBar fineTitleBar;
 	private TextView fineTitleTV;
     private TextView fineAuthorTV;
     private TextView fineCallNoTV;
@@ -43,31 +45,36 @@ public class LibraryFineDetail extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.library_fine_detail);
+        setContentView(R.layout.library_barton_book_detail);
         Bundle extras = getIntent().getExtras();
         index = extras.getInt("index");
         Log.d(TAG,"index = " + index);
         final FineListItem fine = LibraryFines.getFineData().getFines().get(index);
         
-        fineTitleTV = (TextView)findViewById(R.id.fineTitleTV);
+        fineTitleBar = (TitleBar)findViewById(R.id.libraryBartonDetailTitleBar);
+        fineTitleBar.setTitle("Fine");
+        
+        fineTitleTV = (TextView)findViewById(R.id.libraryBartonDetailTitleTV);
         fineTitleTV.setText(fine.getTitle());
 
-        fineAuthorTV = (TextView)findViewById(R.id.fineAuthorTV);
+        fineAuthorTV = (TextView)findViewById(R.id.libraryBartonDetailAuthorTV);
         fineAuthorTV.setText(fine.getYear() + "; " + fine.getAuthor());
 
-        //fineCallNoTV = (TextView)findViewById(R.id.fineCallNoTV);
-        //fineCallNoTV.setText(fine.getCallNo());
+        fineCallNoTV = (TextView)findViewById(R.id.libraryBartonDetailCallNoTV);
+        fineCallNoTV.setText(fine.getCallNo());
       
-        fineLibraryTV = (TextView)findViewById(R.id.fineLibraryTV);
+        fineLibraryTV = (TextView)findViewById(R.id.libraryBartonDetailLibraryTV);
         fineLibraryTV.setText(fine.getSubLibrary());
 
-        fineISBNTV = (TextView)findViewById(R.id.fineISBNTV);
+        fineISBNTV = (TextView)findViewById(R.id.libraryBartonDetailISBNTV);
         fineISBNTV.setText(fine.getIsbnIssnDisplay());
        
-    	fineFineDateTV = (TextView)findViewById(R.id.fineFineDateTV);
+        findViewById(R.id.libraryBartonDetailFineDateRow).setVisibility(View.VISIBLE);
+    	fineFineDateTV = (TextView)findViewById(R.id.libraryBartonDetailFineDateTV);
     	fineFineDateTV.setText(fine.getFineDate());
         
-    	fineAmountOwedTV = (TextView)findViewById(R.id.fineAmountOwedTV);
+    	findViewById(R.id.libraryBartonDetailAmountOwedRow).setVisibility(View.VISIBLE);
+    	fineAmountOwedTV = (TextView)findViewById(R.id.libraryBartonDetailAmountOwedTV);
     	fineAmountOwedTV.setText(Html.fromHtml(fine.getDisplayAmount()));
 
     	mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);

@@ -15,7 +15,7 @@
  limitations under the License.
  -->
 <resources>
-  <color name="hold_ready_text">#ffff0000</color>
+  <color name="hold_ready_text">#007f00</color>
   <color name="contents_text">#ff000000</color>
   <color name="encode_view">#ffffffff</color>
   <color name="help_button_view">#ffcccccc</color>
@@ -41,4 +41,5 @@
   <color name="viewfinder_laser">#ffff0000</color>
   <color name="viewfinder_mask">#60000000</color>
   <color name="overdue_text">#ff990000</color>
+  <color name="libraries_gray">#404649</color>
 </resources>

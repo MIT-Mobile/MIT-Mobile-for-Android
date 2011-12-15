@@ -36,8 +36,10 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:paddingLeft="@dimen/horizontalPadding"
+			android:singleLine="true"
+			android:ellipsize="end"
 			android:id="@+id/loanAuthorTV"
-			android:textColor="@color/contents_text" />
+			android:textColor="@color/libraries_gray" />
 		
 		<!-- STATUS -->
 		<LinearLayout

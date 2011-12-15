@@ -367,6 +367,14 @@ public class LibraryParser {
 	
 				// Imprint
 				item.setImprint(tmpItem.optString("imprint",""));
+				
+				// ISBN ISSN Display / Type
+				JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
+				Log.d(TAG,"isbn = " + isbn);
+				if (isbn != null) {
+					item.setIsbnIssnDisplay(isbn.optString("display",""));				
+					item.setIsbnIssnType(isbn.optString("type",""));
+				}
 	
 				// Description
 				item.setDescription(tmpItem.optString("description",""));
