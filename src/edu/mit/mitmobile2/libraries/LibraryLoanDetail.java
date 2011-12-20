@@ -130,6 +130,8 @@ public class LibraryLoanDetail extends Activity{
         		intent.putExtra("successMsg",response.getRenewResponse().get(0).getSuccessMsg());
         		intent.putExtra("errorMsg", response.getRenewResponse().get(0).getErrorMsg());
         		startActivity(intent);          
+        		
+        		finish();
             	///////////////////
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
