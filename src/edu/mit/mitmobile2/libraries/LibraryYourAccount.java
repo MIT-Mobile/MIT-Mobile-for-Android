@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -87,7 +85,6 @@ public class LibraryYourAccount extends ModuleActivity {
 	private CheckBox cb;
 
 	static LoanData loanData;
-	private boolean loggedIn = false ;
 	
 	LibraryLoanAdapter libraryLoanAdapter;
 
@@ -351,7 +348,7 @@ public class LibraryYourAccount extends ModuleActivity {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+
                 LoanData loanData = (LoanData)msg.obj;
                 LibraryYourAccount.setLoanData((LoanData)msg.obj);
                 loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan.\n" + loanData.getNumOverdue() + " overdue.");
@@ -383,7 +380,7 @@ public class LibraryYourAccount extends ModuleActivity {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+
             	RenewBookResponse renewBookResponse = (RenewBookResponse)msg.obj;
                 final ArrayList<RenewResponseItem> results = renewBookResponse.getRenewResponse();
                 LibraryRenewBookAdapter adapter = new LibraryRenewBookAdapter(results);
@@ -412,12 +409,7 @@ public class LibraryYourAccount extends ModuleActivity {
             	// Set renew errors messages
             	if (numErrors > 0) {
             		renewStatusError.setVisibility(View.VISIBLE);
-                	if (numErrors > 1) {
-                    	renewStatusErrorTV.setText(numErrors + " items could not be renewed");            		            		
-                	}
-                	else {
-                    	renewStatusErrorTV.setText(numErrors + " item could not be renewed");            		            		            		
-                	}
+                	renewStatusErrorTV.setText(numErrors + " could not be renewed");            		            		
             	}
             	else {
             		renewStatusError.setVisibility(View.GONE);            		
@@ -458,7 +450,7 @@ public class LibraryYourAccount extends ModuleActivity {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+
                 FineData fineData = (FineData)msg.obj;
                 LibraryFines.setFineData((FineData)msg.obj);
                 
@@ -493,7 +485,7 @@ public class LibraryYourAccount extends ModuleActivity {
             holdLoadingView.setVisibility(View.GONE);
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                @SuppressWarnings("unchecked")
+
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryYourAccount.setHoldData((HoldData)msg.obj);
              
@@ -523,10 +515,9 @@ public class LibraryYourAccount extends ModuleActivity {
     
     // LIBRARY LOANS ADAPTER
     private class LibraryLoanAdapter extends SimpleArrayAdapter<LoanListItem> {
-        private List<LoanListItem> libraryLoanItems;
+
         public LibraryLoanAdapter(List<LoanListItem> items) {
             super(LibraryYourAccount.this, items, R.layout.library_loan_action_row);
-            libraryLoanItems = items;
         }
  
         
@@ -619,10 +610,9 @@ public class LibraryYourAccount extends ModuleActivity {
 
     // LibraryFineAdapter
     private class LibraryFineAdapter extends SimpleArrayAdapter<FineListItem> {
-        private List<FineListItem> libraryFineItems;
+
         public LibraryFineAdapter(ArrayList<FineListItem> results) {
             super(LibraryYourAccount.this, results, R.layout.library_fine_action_row);
-            libraryFineItems = results;
         }
 
         public void setLookupHandler(ListView listView, final String extras) {
@@ -667,10 +657,9 @@ public class LibraryYourAccount extends ModuleActivity {
     
     // LIBRARY HOLD ADAPTER
     private class LibraryHoldAdapter extends SimpleArrayAdapter<HoldListItem> {
-        private List<HoldListItem> libraryHoldItems;
+
         public LibraryHoldAdapter(List<HoldListItem> items) {
             super(LibraryYourAccount.this, items, R.layout.library_hold_action_row);
-            libraryHoldItems = items;
         }
 
         public void setLookupHandler(ListView listView, final String extras) {
@@ -757,10 +746,8 @@ public class LibraryYourAccount extends ModuleActivity {
     
     // Library Renew Book Adapter
     private class LibraryRenewBookAdapter extends SimpleArrayAdapter<RenewResponseItem> {
-        private List<RenewResponseItem> libraryRenewItems;
         public LibraryRenewBookAdapter(List<RenewResponseItem> items) {
             super(LibraryYourAccount.this, items, R.layout.library_loan_action_row);
-            libraryRenewItems = items;
         }
  
         
