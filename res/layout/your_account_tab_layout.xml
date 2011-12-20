@@ -55,7 +55,7 @@
 						<Button
 								android:id="@+id/loanRenewBooksButton"
 								android:background="@drawable/tab2_summary_button"
-								android:text="Renew Books"
+								android:text="Renew Books..."
 								android:paddingLeft="@dimen/horizontalPadding"
 								android:paddingRight="@dimen/horizontalPadding"
 								android:layout_alignParentRight="true"
