@@ -33,6 +33,7 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
@@ -50,6 +51,7 @@ public class LibraryYourAccount extends ModuleActivity {
 	private static final int HOLDS_TAB = 2;
 	private int currentTab = 0;
 	
+	protected TitleBar mTitleBar;
 	protected TabHost tabHost;	
 	protected Activity mActivity;		
 	protected int ADD_NEW_TAB = Menu.FIRST;
@@ -151,6 +153,9 @@ public class LibraryYourAccount extends ModuleActivity {
 
 	// SET UP VIEWS
 	private void setUpViews() {
+		mTitleBar = (TitleBar) findViewById(R.id.librariesYourAccountTitleBar);
+		mTitleBar.setTitle("Your Account");
+		
         mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
         renewStatusError = (LinearLayout) findViewById(R.id.renewStatusError);
@@ -273,7 +278,8 @@ public class LibraryYourAccount extends ModuleActivity {
     		renewButtonRow.setVisibility(View.VISIBLE);
 			// Hide tabs
 			tabHost.getTabWidget().setVisibility(View.GONE);
-
+			mTitleBar.setTitle("Renew");
+			
 			LibraryYourAccount.setMode(LibraryYourAccount.RENEW_MODE);
     	}
     	else {
@@ -282,7 +288,8 @@ public class LibraryYourAccount extends ModuleActivity {
 			
 			// Show Tabs
 			tabHost.getTabWidget().setVisibility(View.VISIBLE);
-
+			mTitleBar.setTitle("Your Account");
+			
 			LibraryYourAccount.setMode(LibraryYourAccount.LOAN_MODE);
     	}
     	Log.d(TAG,"mode now = " + LibraryYourAccount.getMode());
