@@ -227,11 +227,15 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		if(resultsCount == 0) {
 			summaryText = "No matches for \"" + mSearchTerm + "\"";
 		} else if(resultsCount == 1) {
-			summaryText = "1 match for \""  + mSearchTerm + "\"";
-		} else if(!mSearchResults.isPartialResult()) {
-			summaryText = resultsCount + " results";
-		} else if (supportsMoreResult()) {
-			summaryText = mSearchResults.totalResultsCount() + " results";
+			summaryText = "1 result";
+		} else if(!mSearchResults.isPartialResult() || supportsMoreResult()) {
+			String totalCount;
+			if (mSearchResults.totalResultsCount() != null) {
+				totalCount = "" + mSearchResults.totalResultsCount();
+			} else {
+				totalCount = "" + mSearchResults.getResultsList().size();
+			}
+			summaryText = totalCount + " results";
 		} else {
 			if(mSearchResults.totalResultsCount() != null) {
 				// total known
