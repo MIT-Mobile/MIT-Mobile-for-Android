@@ -366,7 +366,13 @@ public class LibraryYourAccount extends ModuleActivity {
 
                 LoanData loanData = (LoanData)msg.obj;
                 LibraryYourAccount.setLoanData((LoanData)msg.obj);
-                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan.\n" + loanData.getNumOverdue() + " overdue.");
+                String loanOverdueText = "";
+                if (loanData.getNumOverdue() == 1) {
+                	loanOverdueText = "\n" + loanData.getNumOverdue() + " is overdue.";
+                } else {
+                	loanOverdueText = "\n" + loanData.getNumOverdue() + " are overdue.";
+                }
+                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanOverdueText);
                 final ArrayList<LoanListItem> results = loanData.getLoans();
 
                 if (results.size() == 0) {
@@ -505,7 +511,13 @@ public class LibraryYourAccount extends ModuleActivity {
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryYourAccount.setHoldData((HoldData)msg.obj);
              
-                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests.\n" + holdData.getNumReady() + " ready for pickup.");
+                String holdReadyString = "";
+                if (holdData.getNumReady() == 1) {
+                	holdReadyString = "\n" + holdData.getNumReady() + " is ready for pickup.";
+                } else {
+                	holdReadyString = "\n" + holdData.getNumReady() + " are ready for pickup.";
+                }
+                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests." + holdReadyString);
                 final ArrayList<HoldListItem> results = holdData.getHolds();
 
                 if (results.size() == 0) {
