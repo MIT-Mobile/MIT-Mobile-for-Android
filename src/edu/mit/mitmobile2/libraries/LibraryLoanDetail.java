@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.libraries;
 
-import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,12 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
@@ -79,7 +76,14 @@ public class LibraryLoanDetail extends Activity{
         findViewById(R.id.libraryBartonDetailStatusRow).setVisibility(View.VISIBLE);
         loanStatusIconIV = (ImageView)findViewById(R.id.libraryBartonDetailStatusIcon);
         loanStatusTV = (TextView)findViewById(R.id.libraryBartonDetailStatusTV);
-        loanStatusTV.setText(Html.fromHtml(item.getDueText())); 
+        
+        String statusText = "";
+        if (item.isHasHold()) {
+            statusText = "Item has holds\n";
+        }
+        statusText += Html.fromHtml(item.getDueText());
+        
+        loanStatusTV.setText(statusText); 
     	if (item.isOverdue() || item.isLongOverdue()) {
     		loanStatusTV.setTextColor(Color.RED);
     		loanStatusIconIV.setImageDrawable(getResources().getDrawable(R.drawable.status_alert));
