@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -83,6 +84,7 @@ public class LibraryYourAccount extends ModuleActivity {
 
 	public static final int LOAN_MODE = 1;
 	public static final int RENEW_MODE = 2;
+	public static final int RENEW_RESULTS_MODE = 3;
 
 	private CheckBox cb;
 
@@ -144,6 +146,7 @@ public class LibraryYourAccount extends ModuleActivity {
 		super.onCreate(icicle);
 		mActivity = this;
 		setContentView(R.layout.your_account_tab_layout);
+		setMode(LibraryYourAccount.LOAN_MODE);
 		
 		setUpViews();
 		setUpButtons();
@@ -261,9 +264,8 @@ public class LibraryYourAccount extends ModuleActivity {
         loanDoneButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				LibraryYourAccount.setMode(LibraryYourAccount.LOAN_MODE);
-				Intent intent = new Intent(mActivity, LibraryYourAccount.class);
-    			startActivity(intent);			}
+				showHideRenewBooks();			
+    		}
 		});
 		
 	}
@@ -283,12 +285,18 @@ public class LibraryYourAccount extends ModuleActivity {
 			LibraryYourAccount.setMode(LibraryYourAccount.RENEW_MODE);
     	}
     	else {
-    		loansButtonRow.setVisibility(View.VISIBLE);
+    		doneButtonRow.setVisibility(View.GONE);
     		renewButtonRow.setVisibility(View.GONE);
+    		loansButtonRow.setVisibility(View.VISIBLE);
 			
 			// Show Tabs
 			tabHost.getTabWidget().setVisibility(View.VISIBLE);
 			mTitleBar.setTitle("Your Account");
+			
+			if (currentMode == LibraryYourAccount.RENEW_RESULTS_MODE) {
+				loanListView.setAdapter(libraryLoanAdapter);
+				libraryLoanAdapter.setLookupHandler(loanListView, null);
+			}
 			
 			LibraryYourAccount.setMode(LibraryYourAccount.LOAN_MODE);
     	}
@@ -384,6 +392,7 @@ public class LibraryYourAccount extends ModuleActivity {
         public void handleMessage(Message msg) {
         	Log.d(TAG,"handleMessage");
             loanLoadingView.setVisibility(View.GONE);
+            setMode(RENEW_RESULTS_MODE);
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
@@ -806,6 +815,18 @@ public class LibraryYourAccount extends ModuleActivity {
     }
 
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if (getMode() == RENEW_MODE || getMode() == RENEW_RESULTS_MODE) {
+    		if (loanLoadingView.getVisibility() == View.GONE) {
+    			showHideRenewBooks();
+    		}
+    		return true;
+    	}
+    	
+    	return super.onKeyDown(keyCode, event);
+    }
+    
 	@Override
 	protected Module getModule() {
 		// TODO Auto-generated method stub
