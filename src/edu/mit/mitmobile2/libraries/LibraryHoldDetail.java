@@ -85,6 +85,7 @@ public class LibraryHoldDetail extends Activity{
         } else {
         	holdStatusIconIV.setVisibility(View.GONE);
         	holdStatusTV.setText(hold.getStatus());
+        	holdStatusTV.setTextColor(getResources().getColor(R.color.libraries_gray));
         }
 
     	mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);

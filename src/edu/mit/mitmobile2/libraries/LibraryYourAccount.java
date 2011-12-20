@@ -750,10 +750,9 @@ public class LibraryYourAccount extends ModuleActivity {
         	}
         	else {
         		holdStatusIcon.setVisibility(View.GONE);        		
-        		holdStatusTV.setTextColor(Color.BLACK);
-        		holdPickupLocationTV.setTextColor(Color.BLACK);
+        		holdStatusTV.setTextColor(getResources().getColor(R.color.libraries_gray));
+        		holdPickupLocationTV.setTextColor(getResources().getColor(R.color.libraries_gray));
         		holdPickupLocationTV.setVisibility(View.GONE);
-        		Log.d(TAG,"setting status to black, " + Color.BLACK);
         	}
         }
 
