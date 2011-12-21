@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,12 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
-public class LibraryLoanDetail extends Activity{
+public class LibraryLoanDetail extends ModuleActivity{
 	public static final String TAG = "LibraryLoanDetail";
 
     Context mContext;
@@ -144,4 +147,21 @@ public class LibraryLoanDetail extends Activity{
             }
         }
     };
+
+	@Override
+	protected Module getModule() {
+		return new LibrariesModule();
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
 }
