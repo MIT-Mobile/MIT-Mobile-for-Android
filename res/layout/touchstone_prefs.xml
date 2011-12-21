@@ -90,7 +90,6 @@
 		        	android:paddingRight="@dimen/horizontalPadding"
 		        	android:paddingTop="@dimen/verticalPadding"
 		        	android:paddingBottom="@dimen/verticalPadding"
-		        	android:gravity="center"
 		        	android:textColor="#ff000000"
 		        	android:text="A lock icon appears next to the services requiring authentication.
 		        	              Use your MIT Kerberos username or Touchstone Collaboration Accountis to log in." >        	

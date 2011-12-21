@@ -342,7 +342,12 @@ public class LibraryModel {
 			@Override
 			public void onResponse(JSONObject object) throws JSONException {
 	              LoanData loanData = LibraryParser.parseLoans(object);
+	              if (loanData.isRequestCancelled()) {
+		                MobileWebApi.sendCancelMessage(uiHandler);	            	  
+	              }
+	              else {
 	                MobileWebApi.sendSuccessMessage(uiHandler, loanData);
+	              } 	               
 	        }
     	});			
 	}

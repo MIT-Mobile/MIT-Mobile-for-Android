@@ -389,7 +389,7 @@ public class LibraryYourAccount extends ModuleActivity {
                 loanLoadingView.showError();
             } 
             else if (msg.arg1 == MobileWebApi.CANCELLED) {
-                loanLoadingView.showError();
+                finishActivity(0);
             }
         }
     };

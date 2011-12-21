@@ -148,7 +148,10 @@ public class MITClient extends DefaultHttpClient {
 		// get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		prefsEditor = prefs.edit();
-		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
+		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
+		if (user != null) {
+			user = user.toUpperCase();
+		}
 		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 		rememberLogin = prefs.getBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
 		Log.d(TAG,"user = " + user);
@@ -241,7 +244,9 @@ public class MITClient extends DefaultHttpClient {
 			if (state == AUTH_ERROR_STATE) {
 				Log.d(TAG,"auth error state");
 				authError();
-				//response.setEntity(new MITErrorEntity());
+			}
+
+			if (state == CANCELLED_STATE) {
 				//return response;
 			}
 
@@ -621,6 +626,7 @@ public class MITClient extends DefaultHttpClient {
 			MITHttpEntity entity = new MITHttpEntity();
 			entity.setContent(MITHttpEntity.JSON_CANCEL);
 			response.setEntity(entity);
+			state = CANCELLED_STATE;
 		}
 		
 	}

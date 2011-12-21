@@ -236,7 +236,7 @@ public class LibraryParser {
         try {
         	// "{\"result\":\"AUTH_ERROR\"
         	if (object.optString("result").equalsIgnoreCase(MITClient.TOUCHSTONE_CANCEL)) {
-        		Log.d(TAG,"AUTH_ERROR JSON");
+        		loanData.setRequestCancelled(true);
         	}
         	else {
 		        loanData.setNumLoan(object.getInt("total"));
