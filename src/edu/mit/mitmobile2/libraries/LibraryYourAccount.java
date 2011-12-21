@@ -254,6 +254,7 @@ public class LibraryYourAccount extends ModuleActivity {
 			}
 		});
 
+        loanRenewSelectedBooksButton.setEnabled(false);
         loanRenewSelectedBooksButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
@@ -565,6 +566,18 @@ public class LibraryYourAccount extends ModuleActivity {
             			boolean renewBook = ((LoanListItem)loanData.getLoans().get(item.getIndex())).isRenewBook();
             			((LoanListItem)loanData.getLoans().get(item.getIndex())).setRenewBook(!renewBook);
             			//libraryLoanAdapter  = new LibraryLoanAdapter(loanData.getLoans());
+            			
+            			// enable/disable renew butto
+            			boolean anyChecked = false;
+            	    	for (int i = 0; i < LibraryYourAccount.getLoanData().getLoans().size(); i++) {
+            	    		LoanListItem book =  LibraryYourAccount.getLoanData().getLoans().get(i);
+            	    		if (book.isRenewBook()) {
+            	    			anyChecked = true;
+            	    			break;
+            	    		}
+            	    	}
+            	    	loanRenewSelectedBooksButton.setEnabled(anyChecked);
+            	    	
             			libraryLoanAdapter.notifyDataSetChanged();
             		}
                 }
