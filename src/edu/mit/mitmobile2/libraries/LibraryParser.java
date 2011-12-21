@@ -12,6 +12,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import edu.mit.mitmobile2.MITClient;
+import edu.mit.mitmobile2.MITErrorEntity;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
@@ -230,90 +232,97 @@ public class LibraryParser {
     	Log.d(TAG,"parseLoans");
         LoanData loanData = new LoanData();
 
+        
         try {
-	        loanData.setNumLoan(object.getInt("total"));
-	        loanData.setNumOverdue(object.getInt("overdue"));
-        	JSONArray items = object.getJSONArray("items");
-			for (int l = 0; l < items.length(); l++) {
-				LoanListItem item = new LoanListItem();
-				JSONObject tmpItem = items.getJSONObject(l);
+        	// "{\"result\":\"AUTH_ERROR\"
+        	if (object.optString("result").equalsIgnoreCase("AUTH_ERROR")) {
+        		Log.d(TAG,"AUTH_ERROR JSON");
+        	}
+        	else {
+		        loanData.setNumLoan(object.getInt("total"));
+		        loanData.setNumOverdue(object.getInt("overdue"));
+	        	JSONArray items = object.getJSONArray("items");
+				for (int l = 0; l < items.length(); l++) {
+					LoanListItem item = new LoanListItem();
+					JSONObject tmpItem = items.getJSONObject(l);
+		
+					// Index
+					item.setIndex(l);
 	
-				// Index
-				item.setIndex(l);
-
-				// Author
-				item.setAuthor(tmpItem.optString("author",""));
+					// Author
+					item.setAuthor(tmpItem.optString("author",""));
+					
+					// Doc-Number
+					item.setDocNumber(tmpItem.optString("doc-number",""));
 				
-				// Doc-Number
-				item.setDocNumber(tmpItem.optString("doc-number",""));
-			
-				// Material
-				item.setMaterial(tmpItem.optString("material",""));
-			
-				// Sub-library
-				item.setSubLibrary(tmpItem.optString("sub-library",""));
-
-				// bar code
-				item.setBarcode(tmpItem.optString("barcode",""));
+					// Material
+					item.setMaterial(tmpItem.optString("material",""));
+				
+					// Sub-library
+					item.setSubLibrary(tmpItem.optString("sub-library",""));
 	
-				// Status
-				item.setStatus(tmpItem.optString("status",""));
-			
-				// Load Date
-				item.setLoanDate(tmpItem.optString("loan-date",""));
-			
-				// Due Date
-				item.setDueDate(tmpItem.optString("due-date",""));
-	
-				// Returned Date
-				item.setReturnedDate(tmpItem.optString("returned-date",""));
-	
-				// Call No
-				item.setCallNo(tmpItem.optString("call-no",""));
-	
-				// Year
-				Log.d(TAG,"year = " + tmpItem.optString("year",""));
-				item.setYear(tmpItem.optString("year",""));
-	
-				// Title
-				item.setTitle(tmpItem.optString("title",""));
-	
-				// Imprint
-				item.setImprint(tmpItem.optString("imprint",""));
-	
-				// ISBN ISSN Display / Type
-				JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
-				if (isbn != null) {
-					item.setIsbnIssnDisplay(isbn.optString("display",""));				
-					item.setIsbnIssnType(isbn.optString("type",""));
+					// bar code
+					item.setBarcode(tmpItem.optString("barcode",""));
+		
+					// Status
+					item.setStatus(tmpItem.optString("status",""));
+				
+					// Load Date
+					item.setLoanDate(tmpItem.optString("loan-date",""));
+				
+					// Due Date
+					item.setDueDate(tmpItem.optString("due-date",""));
+		
+					// Returned Date
+					item.setReturnedDate(tmpItem.optString("returned-date",""));
+		
+					// Call No
+					item.setCallNo(tmpItem.optString("call-no",""));
+		
+					// Year
+					Log.d(TAG,"year = " + tmpItem.optString("year",""));
+					item.setYear(tmpItem.optString("year",""));
+		
+					// Title
+					item.setTitle(tmpItem.optString("title",""));
+		
+					// Imprint
+					item.setImprint(tmpItem.optString("imprint",""));
+		
+					// ISBN ISSN Display / Type
+					JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
+					if (isbn != null) {
+						item.setIsbnIssnDisplay(isbn.optString("display",""));				
+						item.setIsbnIssnType(isbn.optString("type",""));
+					}
+					
+					// Overdue
+					overDue = tmpItem.optString("overdue","");
+					item.setOverdue(overDue.equalsIgnoreCase("TRUE"));
+					Log.d(TAG,"overDue = " + item.isOverdue());
+					
+					// Long Overdue
+					longOverdue = tmpItem.optString("long-overdue","");
+					item.setLongOverdue(longOverdue.equalsIgnoreCase("TRUE"));
+					Log.d(TAG,"long overDue = " + item.isLongOverdue());
+		
+					// Display Pending Fine
+					item.setDisplayPendingFine(tmpItem.optString("display-pending-fine",""));
+					
+					// Pending Fine
+					item.setPendingFine(tmpItem.optString("pending-fine",""));
+		
+					// Has Hold
+					item.setHasHold(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
+					
+					// Due Text
+					item.setDueText(tmpItem.optString("dueText",""));
+		
+		
+					//Log.d(TAG,item.title);
+					loanData.getLoans().add(item);
 				}
-				
-				// Overdue
-				overDue = tmpItem.optString("overdue","");
-				item.setOverdue(overDue.equalsIgnoreCase("TRUE"));
-				Log.d(TAG,"overDue = " + item.isOverdue());
-				
-				// Long Overdue
-				longOverdue = tmpItem.optString("long-overdue","");
-				item.setLongOverdue(longOverdue.equalsIgnoreCase("TRUE"));
-				Log.d(TAG,"long overDue = " + item.isLongOverdue());
-	
-				// Display Pending Fine
-				item.setDisplayPendingFine(tmpItem.optString("display-pending-fine",""));
-				
-				// Pending Fine
-				item.setPendingFine(tmpItem.optString("pending-fine",""));
-	
-				// Has Hold
-				item.setHasHold(tmpItem.optString("has-hold","").equalsIgnoreCase("TRUE"));
-				
-				// Due Text
-				item.setDueText(tmpItem.optString("dueText",""));
-	
-	
-				//Log.d(TAG,item.title);
-				loanData.getLoans().add(item);
-			}
+        	}
         }
 		catch (JSONException e) {
 			Log.d(TAG,e.getMessage());

@@ -52,8 +52,7 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 	EditText touchstonePassword;
 	Button cancelButton;
 	Button doneButton;
-	Button loginButton;
-	CheckBox rememberLoginCB; 
+	Button touchstoneLogoutButton;
 	TextView mError;
     private LinearLayout touchstoneContents;
 	private FullScreenLoader touchstoneLoadingView;
@@ -93,9 +92,15 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 
 		doneButton = (Button)findViewById(R.id.touchstoneDoneButton);
 		cancelButton = (Button)findViewById(R.id.touchstoneCancelButton);
-		loginButton = (Button)findViewById(R.id.touchstoneLoginButton);
-		rememberLoginCB =(CheckBox)findViewById(R.id.rememberLoginCB);
 
+		touchstoneLogoutButton = (Button)findViewById(R.id.touchstoneLogoutButton);
+		if (MITClient.cookieStore == null) {
+			touchstoneLogoutButton.setEnabled(false);
+		}
+		else {
+			touchstoneLogoutButton.setEnabled(true);			
+		}
+		
 	    touchstoneLoadingView = (FullScreenLoader)findViewById(R.id.touchstoneLoadingView);
 	    mError = (TextView)touchstoneLoadingView.findViewById(R.id.fullScreenLoadingErrorTV); 
 	    touchstoneContents = (LinearLayout)findViewById(R.id.touchstoneContents);
@@ -112,9 +117,9 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 					prefsEditor.commit();
 					
 					// if the remember checkbox is unchecked, clear the touchstone cookies
-					if (!rememberLoginCB.isChecked()) {
-						MITClient.cookieStore = null;
-					}
+					//if (!rememberLoginCB.isChecked()) {
+					//	MITClient.cookieStore = null;
+					//}
 				}
 				catch (RuntimeException e) {
 					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
@@ -137,14 +142,16 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 			}
 		});
 
-		loginButton.setOnClickListener(new View.OnClickListener() {
+		touchstoneLogoutButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				touchstoneLoadingView.setVisibility(View.VISIBLE);
-				touchstoneContents.setVisibility(View.GONE);
-				touchstoneLoadingView.showLoading();
-				LibraryModel.getUserIdentity(mContext, loginUiHandler);
+				MITClient.cookieStore = null;
+				v.setEnabled(false);
+				//touchstoneLoadingView.setVisibility(View.VISIBLE);
+				//touchstoneContents.setVisibility(View.GONE);
+				//touchstoneLoadingView.showLoading();
+				//LibraryModel.getUserIdentity(mContext, loginUiHandler);
 			}
 		});
 

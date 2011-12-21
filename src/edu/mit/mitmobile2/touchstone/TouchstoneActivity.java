@@ -8,7 +8,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.jsoup.nodes.Document;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -53,6 +55,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	private FullScreenLoader touchstoneLoadingView;
 
     
+	AlertDialog alert;
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstoneActivity";
 	private static final int MENU_INFO = 0;
@@ -70,7 +73,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		mContext = this;
         Handler uiHandler = new Handler();
 
-        createViews();
+        createViews(); 
 	}
 		
 	private void createViews() {
@@ -80,6 +83,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		extras = getIntent().getExtras();
 		String key = "";
 		key = (String)extras.getString(key);
+
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		final SharedPreferences.Editor prefsEditor = prefs.edit();
 
@@ -127,9 +131,27 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 				finish();
 			}
 		});
-
+		
+		// Dialog for invalid username or password
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Please enter a valid username and password")
+		       .setCancelable(false)
+		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                Log.d(TAG,"finish");
+		           }
+		       });
+		alert = builder.create();
+		// End Create Dialog
+		
+		// display the alert dialog if in the auth_error_state
+		String touchstoneState = extras.getString("touchstoneState");
+		Log.d(TAG,"touchstoneState = " + touchstoneState);
+		if (touchstoneState != null && touchstoneState.equalsIgnoreCase(MITClient.AUTH_ERROR_STATE)) {
+			alert.show();
+		}
+		
 	}
-	
 	
     private Handler loginUiHandler = new Handler() {
         @Override

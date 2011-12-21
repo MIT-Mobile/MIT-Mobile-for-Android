@@ -51,7 +51,7 @@
 	       	android:singleLine="true" 
 	       	android:gravity="left"
 	       	android:lines="1"
-	       	android:hint="username (required)"
+	       	android:hint="username or email"
 	       	android:layout_height="wrap_content"/>
 	        		
 		<!-- Password -->
@@ -62,7 +62,7 @@
 	        android:singleLine="true" 
 	        android:gravity="left"
 	        android:lines="1"
-	        android:hint="password (required)"
+	        android:hint="password"
 	        android:password="true"
 	        android:layout_height="wrap_content"/>
 	
@@ -77,27 +77,33 @@
 	    		android:layout_height="wrap_content" 
 	    		android:layout_centerInParent="true" >
 	    		
-	    		<TextView 
-	    			android:text="Remember login" 
-	    			android:textColor="@color/contents_text"
-	    			android:layout_width="wrap_content"
-	    			android:layout_height="wrap_content">    
-	    		</TextView>
-	    		
-	    		<CheckBox 
-	    			android:id="@+id/rememberLoginCB" 
-	    			android:layout_width="wrap_content"
-	    			android:layout_height="wrap_content"
-	    			android:checked="true" >    
-	    		</CheckBox>
+				<ImageView 
+					android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content" 
+	    			android:src="@drawable/action_secure"
+	    			/>
+				<TextView 
+					android:id="@+id/touchstoneSettingsInfo"
+					android:layout_width="wrap_content" 
+			        android:layout_height="wrap_content"
+		        	android:paddingLeft="@dimen/horizontalPadding"
+		        	android:paddingRight="@dimen/horizontalPadding"
+		        	android:paddingTop="@dimen/verticalPadding"
+		        	android:paddingBottom="@dimen/verticalPadding"
+		        	android:gravity="center"
+		        	android:textColor="#ff000000"
+		        	android:text="A lock icon appears next to the services requiring authentication.
+		        	              Use your MIT Kerberos username or Touchstone Collaboration Accountis to log in." >        	
+    			</TextView>
+				
 	    	</LinearLayout>
 			
 		</RelativeLayout>
 	
 		<Button 
 			android:layout_height="wrap_content" 
-			android:id="@+id/touchstoneLoginButton" 
-			android:text="Login" 
+			android:id="@+id/touchstoneLogoutButton" 
+			android:text="Log out of Touchstone" 
 			android:layout_width="fill_parent" 
 			android:layout_alignParentLeft="true">
 		</Button>
