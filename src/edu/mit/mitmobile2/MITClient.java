@@ -93,25 +93,10 @@ public class MITClient extends DefaultHttpClient {
 	public static CookieStore cookieStore;
 	
 	protected Context mContext;
-	String user;
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	String password;
+	
+	private static String user;
+	private static String password;
+	
 	boolean rememberLogin;
 	URI uri;
 	//URI targetUri;
@@ -148,11 +133,8 @@ public class MITClient extends DefaultHttpClient {
 		// get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		prefsEditor = prefs.edit();
-		user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
-		if (user != null) {
-			user = user.toUpperCase();
-		}
-		password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
+		MITClient.user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null);
+		MITClient.password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 		rememberLogin = prefs.getBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
 		Log.d(TAG,"user = " + user);
 				
@@ -222,7 +204,7 @@ public class MITClient extends DefaultHttpClient {
 			responseEntity = response.getEntity();
 			
 			if (state == OK_STATE) {
-				Log.d(TAG,"ok state");
+				saveLogin();
 				return response;
 			}
 			
@@ -251,9 +233,10 @@ public class MITClient extends DefaultHttpClient {
 			}
 
 			if (state == OK_STATE) {
+				saveLogin();
 				return response;
-			}	
-			
+			}
+
 			return null;
 		}
 		catch (IOException e) {
@@ -264,10 +247,6 @@ public class MITClient extends DefaultHttpClient {
 	}
 
 	private void wayf() {
-		//Log.d(TAG, "wayf()");
-
-		//Log.d(TAG,"post to wayf");
-		//Log.d(TAG,"uri = " + uri);
 		
 		// Launch preferences activity if user or password are not set
 		if (user == null || user.length() == 0 || password == null || password.length() == 0) {
@@ -279,7 +258,6 @@ public class MITClient extends DefaultHttpClient {
 			((Activity) mContext).startActivity(touchstoneIntent);
 		
 			Log.d(TAG,"requestKey " + requestKey + " value = " + MITClient.requestMap.get(requestKey));
-			//while (MITClient.requestMap.get(requestKey) == TOUCHSTONE_REQUEST) {
 			while( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST) ) {
 				// do stuff
 			    // don't burn the CPU
@@ -291,14 +269,7 @@ public class MITClient extends DefaultHttpClient {
 					e.printStackTrace();
 				}
 			}
-			
-			// get user name and password when returning from touchstone screen
-			//if (MITClient.requestMap.get(requestKey) == TOUCHSTONE_LOGIN) {
-			if ( ((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN)) {
-				user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
-				password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
-			}
-		
+					
 		}
 		Log.d("MITClient","after start intent");
 
@@ -309,14 +280,15 @@ public class MITClient extends DefaultHttpClient {
 		Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
 
 		String user_idp;
+		String tmpUser = user.toUpperCase();
 		Log.d(TAG,"user = " + user);
-		if (user.contains("@") && !user.contains("@MIT.EDU")) {
+		if (tmpUser.contains("@") && !tmpUser.contains("@MIT.EDU")) {
 			user_idp = "https://idp.touchstonenetwork.net/shibboleth-idp";
 		}
 		else {
 			user_idp = "https://idp.mit.edu/shibboleth";				
 			// remove "@MIT.EDU from user name
-			if (user.contains("@MIT.EDU")) {
+			if (tmpUser.contains("@MIT.EDU")) {
 				user = user.substring(0,user.length() - 8);
 				Log.d(TAG,"user = " + user);
 			}
@@ -336,8 +308,6 @@ public class MITClient extends DefaultHttpClient {
 		
 		try {
 			response = this.execute(post);
-			//this.saveCookies();
-			//Log.d(TAG,"status from post = " + response.getStatusLine().getStatusCode());
 			
 			Header[] locations = response.getHeaders("Location");
 			if (locations.length > 0) {
@@ -449,8 +419,6 @@ public class MITClient extends DefaultHttpClient {
 		if (responseString.contains(AUTH_ERROR_CAMS) || responseString.contains(AUTH_ERROR_KERBEROS)) {
 			state = AUTH_ERROR_STATE;
 			Log.d(TAG,"login error");
-			//Log.d(TAG,responseString);
-			//response.setEntity(new MITErrorEntity());
 		}
 		else {
 			document = Jsoup.parse(responseString);
@@ -519,6 +487,7 @@ public class MITClient extends DefaultHttpClient {
 		}
 		
 		// Clear user name and password is rememberLogin is false
+		Log.d(TAG,"state for rememberLogin = " + state);
 		if (!rememberLogin) {
 			prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", null);
 			prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", null);
@@ -587,7 +556,6 @@ public class MITClient extends DefaultHttpClient {
 	private void authError() {
 		Log.d(TAG,"authError()");
 
-		//MITClient.requestMap.put(requestKey,TOUCHSTONE_REQUEST);
 		MITClientData clientData = (MITClientData)MITClient.requestMap.get(requestKey);
 		clientData.setTouchstoneState(TOUCHSTONE_REQUEST);
 		Intent touchstoneIntent = new Intent(mContext, TouchstoneActivity.class);
@@ -610,13 +578,6 @@ public class MITClient extends DefaultHttpClient {
 			}
 		}
 		
-		// get user name and password when returning from touchstone screen
-		//if (MITClient.requestMap.get(requestKey).equals(TOUCHSTONE_LOGIN)) {
-		if ( clientData.getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN))  {
-			user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
-			password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
-		}
-
 		// If the touchstone request was not cancelled, retry the login
 		if (!clientData.getTouchstoneState().equals(TOUCHSTONE_CANCEL)) {
 	        // retry login
@@ -634,5 +595,28 @@ public class MITClient extends DefaultHttpClient {
 	private void cancelRequest() {
 		Log.d(TAG,"request cancelled");
 	}
-	
+
+	public static String getUser() {
+		return user;
+	}
+
+	public static void setUser(String user) {
+		MITClient.user = user;
+	}
+
+	public static String getPassword() {
+		return password;
+	}
+
+	public static void setPassword(String password) {
+		MITClient.password = password;
+	}
+
+	public void saveLogin() {
+		if (rememberLogin) {
+			prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", MITClient.getUser());
+			prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", MITClient.getPassword());
+			prefsEditor.commit();
+		}
+	}
 }
