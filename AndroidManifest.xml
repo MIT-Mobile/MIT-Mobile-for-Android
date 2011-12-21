@@ -268,7 +268,7 @@
         <activity android:name=".libraries.TellUsActivity" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".libraries.AskUsTopActivity"></activity>
         <activity android:name=".libraries.AppointmentActivity" android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".libraries.LibraryYourAccount"></activity>
+        <activity android:name=".libraries.LibraryYourAccount" android:screenOrientation="portrait"></activity>
         <activity android:name=".libraries.LibraryLoans"></activity>
         <activity android:name=".libraries.LibraryLoanDetail"></activity>
         <activity android:name=".libraries.LibraryRenewBooks"></activity>
