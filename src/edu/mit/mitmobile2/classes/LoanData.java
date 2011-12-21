@@ -10,6 +10,7 @@ public class LoanData {
 	private int numLoan;
 	private int numOverdue;
 	private ArrayList<LoanListItem> loans = new ArrayList<LoanListItem>();
+	private boolean requestCancelled;
 	
 	public ArrayList<LoanListItem> getLoans() {
 		return loans;
@@ -28,6 +29,12 @@ public class LoanData {
 	}
 	public void setNumOverdue(int numOverdue) {
 		this.numOverdue = numOverdue;
+	}
+	public boolean isRequestCancelled() {
+		return requestCancelled;
+	}
+	public void setRequestCancelled(boolean requestCancelled) {
+		this.requestCancelled = requestCancelled;
 	}
 	
 	

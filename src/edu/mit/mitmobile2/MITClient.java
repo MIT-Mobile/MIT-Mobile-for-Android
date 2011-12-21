@@ -68,7 +68,8 @@ public class MITClient extends DefaultHttpClient {
 	public static final String IDP_STATE = "idp";
 	public static final String AUTH_STATE = "auth";
 	public static final String ERROR_STATE = "error";	
-	public static final String AUTH_ERROR_STATE = "auth_error";		
+	public static final String AUTH_ERROR_STATE = "auth_error";
+	public static final String CANCELLED_STATE = "cancelled";	
 	public static final String AUTH_ERROR_KERBEROS = "Error: Please enter a valid username and password"; // error message from invalid kerberos login
 	public static final String AUTH_ERROR_CAMS = "Error: Enter your email address and password"; // error message from invaid cams login
 	
@@ -81,6 +82,7 @@ public class MITClient extends DefaultHttpClient {
 
 	HttpGet mHttpGet;
 	String requestKey;
+	URI targetUri;
 	
 	// Hashmap for keeping track of the status of requests made by the HttpClient 
 	// because this is not an activity, there is no context for startActivityForResult or UI handlers
@@ -112,7 +114,7 @@ public class MITClient extends DefaultHttpClient {
 	String password;
 	boolean rememberLogin;
 	URI uri;
-	URI targetUri;
+	//URI targetUri;
 	String uriString;
 	HttpGet get;
 	HttpResponse response;
@@ -168,20 +170,6 @@ public class MITClient extends DefaultHttpClient {
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
 							state = WAYF_STATE;
 							Log.d(TAG,"state = " + state);
-							////////////////////////////////////////////////////////////
-							// DEBUG COOKIES
-//							Header[] headers = response.getHeaders("Set-Cookie");
-//							for (int h = 0; h < headers.length; h++) {
-//								Header header = (Header)headers[h];
-//								HeaderElement[] headerElements = header.getElements();
-//								for (int e = 0; e < headerElements.length; e++) {
-//									HeaderElement headerElement = headerElements[e];
-//									Log.d(TAG,"Header Element " + e);
-//									Log.d(TAG,"name = " + headerElement.getName());
-//									Log.d(TAG,"value = " + headerElement.getValue());
-//								}
-//							}
-							/////////////////////////////////////////////////////////////
 						}
 						else {
 							state = OK_STATE;
@@ -222,6 +210,11 @@ public class MITClient extends DefaultHttpClient {
 		try {
 			this.mHttpGet = httpGet;
 			this.targetUri = httpGet.getURI();
+			MITClientData clientData = new MITClientData();
+			clientData.setTargetUri(this.targetUri);
+			requestKey = System.currentTimeMillis()/1000 + "";
+			Log.d(TAG,"requestKey " + requestKey + " created");
+			requestMap.put(requestKey, clientData);
 			response = this.execute(httpGet);
 			responseEntity = response.getEntity();
 			
@@ -273,16 +266,17 @@ public class MITClient extends DefaultHttpClient {
 		
 		// Launch preferences activity if user or password are not set
 		if (user == null || user.length() == 0 || password == null || password.length() == 0) {
-			requestKey = System.currentTimeMillis()/1000 + "";
+			//requestKey = System.currentTimeMillis()/1000 + "";
 			Log.d(TAG,"requestKey = " + requestKey);
-			requestMap.put(requestKey, TOUCHSTONE_REQUEST);
+			((MITClientData)requestMap.get(requestKey)).setTouchstoneState(TOUCHSTONE_REQUEST);
 			Intent touchstoneIntent = new Intent(mContext, TouchstoneActivity.class);
 			touchstoneIntent.putExtra("requestKey",requestKey);
 			((Activity) mContext).startActivity(touchstoneIntent);
 		
 			Log.d(TAG,"requestKey " + requestKey + " value = " + MITClient.requestMap.get(requestKey));
-			while (MITClient.requestMap.get(requestKey) == TOUCHSTONE_REQUEST) {
-			    // do stuff
+			//while (MITClient.requestMap.get(requestKey) == TOUCHSTONE_REQUEST) {
+			while( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST) ) {
+				// do stuff
 			    // don't burn the CPU
 			    try {
 			    	Log.d(TAG,"requestMap " + requestKey + " = " + requestMap.get(requestKey));
@@ -294,7 +288,8 @@ public class MITClient extends DefaultHttpClient {
 			}
 			
 			// get user name and password when returning from touchstone screen
-			if (MITClient.requestMap.get(requestKey) == TOUCHSTONE_LOGIN) {
+			//if (MITClient.requestMap.get(requestKey) == TOUCHSTONE_LOGIN) {
+			if ( ((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN)) {
 				user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
 				password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 			}
@@ -449,8 +444,8 @@ public class MITClient extends DefaultHttpClient {
 		if (responseString.contains(AUTH_ERROR_CAMS) || responseString.contains(AUTH_ERROR_KERBEROS)) {
 			state = AUTH_ERROR_STATE;
 			Log.d(TAG,"login error");
-			Log.d(TAG,responseString);
-			response.setEntity(new MITErrorEntity());
+			//Log.d(TAG,responseString);
+			//response.setEntity(new MITErrorEntity());
 		}
 		else {
 			document = Jsoup.parse(responseString);
@@ -587,8 +582,9 @@ public class MITClient extends DefaultHttpClient {
 	private void authError() {
 		Log.d(TAG,"authError()");
 
-		MITClient.requestMap.put(requestKey,TOUCHSTONE_REQUEST);
-
+		//MITClient.requestMap.put(requestKey,TOUCHSTONE_REQUEST);
+		MITClientData clientData = (MITClientData)MITClient.requestMap.get(requestKey);
+		clientData.setTouchstoneState(TOUCHSTONE_REQUEST);
 		Intent touchstoneIntent = new Intent(mContext, TouchstoneActivity.class);
 		touchstoneIntent.putExtra("requestKey",requestKey);
 		touchstoneIntent.putExtra("touchstoneState",AUTH_ERROR_STATE);
@@ -596,8 +592,9 @@ public class MITClient extends DefaultHttpClient {
 		((Activity) mContext).startActivity(touchstoneIntent);
 	
 		Log.d(TAG,"Sending auth error state to touchstone" + requestKey);
-		while (MITClient.requestMap.get(requestKey) == TOUCHSTONE_REQUEST) {
-		    // do stuff
+		//while (MITClient.requestMap.get(requestKey) == TOUCHSTONE_REQUEST) {
+		while (	clientData.getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST)) {
+			// do stuff
 		    // don't burn the CPU
 		    try {
 		    	Log.d(TAG,"requestMap " + requestKey + " = " + requestMap.get(requestKey));
@@ -609,15 +606,27 @@ public class MITClient extends DefaultHttpClient {
 		}
 		
 		// get user name and password when returning from touchstone screen
-		if (MITClient.requestMap.get(requestKey) == TOUCHSTONE_LOGIN) {
+		//if (MITClient.requestMap.get(requestKey).equals(TOUCHSTONE_LOGIN)) {
+		if ( ((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN))  {
 			user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
 			password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 		}
 
-        // retry login
-		response = getResponse(new HttpGet(targetUri));
+		// If the touchstone request was not cancelled, retry the login
+		if (!MITClient.requestMap.get(requestKey).equals(TOUCHSTONE_CANCEL)) {
+	        // retry login
+			response = getResponse(new HttpGet(targetUri));
+		}
+		else {
+			MITHttpEntity entity = new MITHttpEntity();
+			entity.setContent(MITHttpEntity.JSON_CANCEL);
+			response.setEntity(entity);
+		}
 		
 	}
 
+	private void cancelRequest() {
+		Log.d(TAG,"request cancelled");
+	}
 	
 }

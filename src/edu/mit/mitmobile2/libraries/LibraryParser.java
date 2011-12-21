@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import edu.mit.mitmobile2.MITClient;
-import edu.mit.mitmobile2.MITErrorEntity;
+import edu.mit.mitmobile2.MITHttpEntity;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
@@ -235,7 +235,7 @@ public class LibraryParser {
         
         try {
         	// "{\"result\":\"AUTH_ERROR\"
-        	if (object.optString("result").equalsIgnoreCase("AUTH_ERROR")) {
+        	if (object.optString("result").equalsIgnoreCase(MITClient.TOUCHSTONE_CANCEL)) {
         		Log.d(TAG,"AUTH_ERROR JSON");
         	}
         	else {

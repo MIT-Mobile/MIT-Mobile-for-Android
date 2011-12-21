@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITClient;
+import edu.mit.mitmobile2.MITClientData;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
@@ -119,7 +120,9 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 				}
 				
 				String requestKey = extras.getString("requestKey");
-				MITClient.requestMap.put(requestKey, MITClient.TOUCHSTONE_LOGIN);
+				//MITClient.requestMap.put(requestKey, MITClient.TOUCHSTONE_LOGIN);
+				MITClientData clientData = (MITClientData)MITClient.requestMap.get(requestKey);
+				clientData.setTouchstoneState(MITClient.TOUCHSTONE_LOGIN);
 				finish();
 			}
 		});
@@ -128,6 +131,9 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 			
 			@Override
 			public void onClick(View v) {
+				String requestKey = extras.getString("requestKey");
+				//MITClient.requestMap.put(requestKey, MITClient.TOUCHSTONE_CANCEL);
+				((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
 				finish();
 			}
 		});

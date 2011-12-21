@@ -51,7 +51,7 @@
 	       	android:singleLine="true" 
 	       	android:gravity="left"
 	       	android:lines="1"
-	       	android:hint="username or email"
+	       	android:hint="Username or Email"
 	       	android:layout_height="wrap_content"/>
 	        		
 		<!-- Password -->
@@ -62,7 +62,7 @@
 	        android:singleLine="true" 
 	        android:gravity="left"
 	        android:lines="1"
-	        android:hint="password"
+	        android:hint="Password"
 	        android:password="true"
 	        android:layout_height="wrap_content"/>
 	

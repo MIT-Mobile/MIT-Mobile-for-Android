@@ -13,6 +13,7 @@ import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.util.AndroidException;
 import android.util.Log;
 
 public class MITConnectionWrapper extends ConnectionWrapper {
@@ -36,19 +37,20 @@ public class MITConnectionWrapper extends ConnectionWrapper {
 			Log.d(TAG,"before get response");
 			response = mitClient.getResponse(httpGet);
 			//DEBUG
-			if (mitClient.state.equalsIgnoreCase(MITClient.ERROR_STATE)) {
-				Log.d(TAG,"Error state in getResponse");
-			}
-			if (mitClient.state.equalsIgnoreCase(MITClient.AUTH_ERROR_STATE)) {
-				Log.d(TAG,"Auth Error state in getResponse");
-			}
+			//if (mitClient.state.equalsIgnoreCase(MITClient.ERROR_STATE)) {
+			//	Log.d(TAG,"Error state in getResponse");
+		//	}
+		//	if (mitClient.state.equalsIgnoreCase(MITClient.AUTH_ERROR_STATE)) {
+		//		Log.d(TAG,"Auth Error state in getResponse");
+		//	}
 
 			Log.d(TAG,"after get response");
 			//DEBUG
 			//Log.d(TAG,"response = " + response);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,e.getStackTrace().toString());
+			//Log.d(TAG,e.getMessage());
 		}
 		return response;
 	}

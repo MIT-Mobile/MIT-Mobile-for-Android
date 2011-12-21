@@ -43,7 +43,7 @@
 	       	android:singleLine="true" 
 	       	android:gravity="left"
 	       	android:lines="1"
-	       	android:hint="username (required)"
+	       	android:hint="Username or Email"
 	       	android:layout_height="wrap_content"/>
 	        		
 		<!-- Password -->
@@ -54,14 +54,14 @@
 	        android:singleLine="true" 
 	        android:gravity="left"
 	        android:lines="1"
-	        android:hint="password (required)"
+	        android:hint="Password"
 	        android:password="true"
 	        android:layout_height="wrap_content"/>
 				
 		<Button 
 			android:layout_height="wrap_content" 
 			android:id="@+id/touchstoneLoginButton" 
-			android:text="Login" 
+			android:text="Log In" 
 			android:layout_width="fill_parent" 
 			android:layout_alignParentLeft="true">
 		</Button>
@@ -77,7 +77,7 @@
 	    		android:layout_alignParentLeft="true" >
 	    		
 	    		<TextView 
-	    			android:text="Remember login" 
+	    			android:text="Remember Login" 
 	    			android:textColor="@color/contents_text"
 	    			android:layout_width="wrap_content"
 	    			android:layout_height="wrap_content">    
