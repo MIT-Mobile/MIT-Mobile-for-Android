@@ -841,11 +841,13 @@ public class LibraryYourAccount extends ModuleActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-    	if (getMode() == RENEW_MODE || getMode() == RENEW_RESULTS_MODE) {
-    		if (loanLoadingView.getVisibility() == View.GONE) {
-    			showHideRenewBooks();
+    	if (keyCode == KeyEvent.KEYCODE_BACK) {
+    		if (getMode() == RENEW_MODE || getMode() == RENEW_RESULTS_MODE) {
+    			if (loanLoadingView.getVisibility() == View.GONE) {
+    				showHideRenewBooks();
+    			}
+    			return true;
     		}
-    		return true;
     	}
     	
     	return super.onKeyDown(keyCode, event);
