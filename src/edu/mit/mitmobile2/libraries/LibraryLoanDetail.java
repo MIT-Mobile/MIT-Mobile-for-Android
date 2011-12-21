@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.libraries;
 
-import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,21 +10,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
-public class LibraryLoanDetail extends Activity{
+public class LibraryLoanDetail extends ModuleActivity{
 	public static final String TAG = "LibraryLoanDetail";
 
     Context mContext;
@@ -79,7 +79,14 @@ public class LibraryLoanDetail extends Activity{
         findViewById(R.id.libraryBartonDetailStatusRow).setVisibility(View.VISIBLE);
         loanStatusIconIV = (ImageView)findViewById(R.id.libraryBartonDetailStatusIcon);
         loanStatusTV = (TextView)findViewById(R.id.libraryBartonDetailStatusTV);
-        loanStatusTV.setText(Html.fromHtml(item.getDueText())); 
+        
+        String statusText = "";
+        if (item.isHasHold()) {
+            statusText = "Item has holds\n";
+        }
+        statusText += Html.fromHtml(item.getDueText());
+        
+        loanStatusTV.setText(statusText); 
     	if (item.isOverdue() || item.isLongOverdue()) {
     		loanStatusTV.setTextColor(Color.RED);
     		loanStatusIconIV.setImageDrawable(getResources().getDrawable(R.drawable.status_alert));
@@ -130,6 +137,8 @@ public class LibraryLoanDetail extends Activity{
         		intent.putExtra("successMsg",response.getRenewResponse().get(0).getSuccessMsg());
         		intent.putExtra("errorMsg", response.getRenewResponse().get(0).getErrorMsg());
         		startActivity(intent);          
+        		
+        		finish();
             	///////////////////
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
@@ -138,4 +147,21 @@ public class LibraryLoanDetail extends Activity{
             }
         }
     };
+
+	@Override
+	protected Module getModule() {
+		return new LibrariesModule();
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
 }

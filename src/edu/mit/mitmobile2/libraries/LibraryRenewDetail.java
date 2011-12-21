@@ -1,27 +1,26 @@
 package edu.mit.mitmobile2.libraries;
 
-import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
-public class LibraryRenewDetail extends Activity{
+public class LibraryRenewDetail extends ModuleActivity{
 	public static final String TAG = "LibraryRenewDetail";
 
     Context mContext;
@@ -58,7 +57,7 @@ public class LibraryRenewDetail extends Activity{
         
         renewMessageTV = (TextView)findViewById(R.id.renewMessageTV);
         if (errorMsg.length() > 0) {
-        	renewMessageTV.setText("1 item could not be renewed.");
+        	renewMessageTV.setText("1 could not be renewed.");
         }
         else {
         	renewMessageTV.setText(successMsg);
@@ -69,8 +68,7 @@ public class LibraryRenewDetail extends Activity{
 		renewDoneButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, LibraryYourAccount.class);
-				startActivity(intent);
+				finish();
 			}
 		});
 
@@ -106,4 +104,20 @@ public class LibraryRenewDetail extends Activity{
             }
         }
     };
+	@Override
+	protected Module getModule() {
+		return new LibrariesModule();
+	}
+
+	@Override
+	public boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
 }

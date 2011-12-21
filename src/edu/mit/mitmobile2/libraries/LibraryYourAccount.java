@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,9 +14,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -35,6 +34,7 @@ import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;
@@ -52,6 +52,7 @@ public class LibraryYourAccount extends ModuleActivity {
 	private static final int HOLDS_TAB = 2;
 	private int currentTab = 0;
 	
+	protected TitleBar mTitleBar;
 	protected TabHost tabHost;	
 	protected Activity mActivity;		
 	protected int ADD_NEW_TAB = Menu.FIRST;
@@ -83,11 +84,11 @@ public class LibraryYourAccount extends ModuleActivity {
 
 	public static final int LOAN_MODE = 1;
 	public static final int RENEW_MODE = 2;
+	public static final int RENEW_RESULTS_MODE = 3;
 
 	private CheckBox cb;
 
 	static LoanData loanData;
-	private boolean loggedIn = false ;
 	
 	LibraryLoanAdapter libraryLoanAdapter;
 
@@ -145,6 +146,7 @@ public class LibraryYourAccount extends ModuleActivity {
 		super.onCreate(icicle);
 		mActivity = this;
 		setContentView(R.layout.your_account_tab_layout);
+		setMode(LibraryYourAccount.LOAN_MODE);
 		
 		setUpViews();
 		setUpButtons();
@@ -154,6 +156,9 @@ public class LibraryYourAccount extends ModuleActivity {
 
 	// SET UP VIEWS
 	private void setUpViews() {
+		mTitleBar = (TitleBar) findViewById(R.id.librariesYourAccountTitleBar);
+		mTitleBar.setTitle("Your Account");
+		
         mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
         renewStatusError = (LinearLayout) findViewById(R.id.renewStatusError);
@@ -249,6 +254,7 @@ public class LibraryYourAccount extends ModuleActivity {
 			}
 		});
 
+        loanRenewSelectedBooksButton.setEnabled(false);
         loanRenewSelectedBooksButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
@@ -259,9 +265,8 @@ public class LibraryYourAccount extends ModuleActivity {
         loanDoneButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				LibraryYourAccount.setMode(LibraryYourAccount.LOAN_MODE);
-				Intent intent = new Intent(mActivity, LibraryYourAccount.class);
-    			startActivity(intent);			}
+				showHideRenewBooks();			
+    		}
 		});
 		
 	}
@@ -276,16 +281,24 @@ public class LibraryYourAccount extends ModuleActivity {
     		renewButtonRow.setVisibility(View.VISIBLE);
 			// Hide tabs
 			tabHost.getTabWidget().setVisibility(View.GONE);
-
+			mTitleBar.setTitle("Renew");
+			
 			LibraryYourAccount.setMode(LibraryYourAccount.RENEW_MODE);
     	}
     	else {
-    		loansButtonRow.setVisibility(View.VISIBLE);
+    		doneButtonRow.setVisibility(View.GONE);
     		renewButtonRow.setVisibility(View.GONE);
+    		loansButtonRow.setVisibility(View.VISIBLE);
 			
 			// Show Tabs
 			tabHost.getTabWidget().setVisibility(View.VISIBLE);
-
+			mTitleBar.setTitle("Your Account");
+			
+			if (currentMode == LibraryYourAccount.RENEW_RESULTS_MODE) {
+				loanListView.setAdapter(libraryLoanAdapter);
+				libraryLoanAdapter.setLookupHandler(loanListView, null);
+			}
+			
 			LibraryYourAccount.setMode(LibraryYourAccount.LOAN_MODE);
     	}
     	Log.d(TAG,"mode now = " + LibraryYourAccount.getMode());
@@ -351,10 +364,16 @@ public class LibraryYourAccount extends ModuleActivity {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+
                 LoanData loanData = (LoanData)msg.obj;
                 LibraryYourAccount.setLoanData((LoanData)msg.obj);
-                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan.\n" + loanData.getNumOverdue() + " overdue.");
+                String loanOverdueText = "";
+                if (loanData.getNumOverdue() == 1) {
+                	loanOverdueText = "\n" + loanData.getNumOverdue() + " is overdue.";
+                } else {
+                	loanOverdueText = "\n" + loanData.getNumOverdue() + " are overdue.";
+                }
+                loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanOverdueText);
                 final ArrayList<LoanListItem> results = loanData.getLoans();
 
                 if (results.size() == 0) {
@@ -380,10 +399,11 @@ public class LibraryYourAccount extends ModuleActivity {
         public void handleMessage(Message msg) {
         	Log.d(TAG,"handleMessage");
             loanLoadingView.setVisibility(View.GONE);
+            setMode(RENEW_RESULTS_MODE);
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+
             	RenewBookResponse renewBookResponse = (RenewBookResponse)msg.obj;
                 final ArrayList<RenewResponseItem> results = renewBookResponse.getRenewResponse();
                 LibraryRenewBookAdapter adapter = new LibraryRenewBookAdapter(results);
@@ -412,12 +432,7 @@ public class LibraryYourAccount extends ModuleActivity {
             	// Set renew errors messages
             	if (numErrors > 0) {
             		renewStatusError.setVisibility(View.VISIBLE);
-                	if (numErrors > 1) {
-                    	renewStatusErrorTV.setText(numErrors + " items could not be renewed");            		            		
-                	}
-                	else {
-                    	renewStatusErrorTV.setText(numErrors + " item could not be renewed");            		            		            		
-                	}
+                	renewStatusErrorTV.setText(numErrors + " could not be renewed");            		            		
             	}
             	else {
             		renewStatusError.setVisibility(View.GONE);            		
@@ -458,7 +473,7 @@ public class LibraryYourAccount extends ModuleActivity {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+
                 FineData fineData = (FineData)msg.obj;
                 LibraryFines.setFineData((FineData)msg.obj);
                 
@@ -493,11 +508,17 @@ public class LibraryYourAccount extends ModuleActivity {
             holdLoadingView.setVisibility(View.GONE);
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                @SuppressWarnings("unchecked")
+
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryYourAccount.setHoldData((HoldData)msg.obj);
              
-                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests.\n" + holdData.getNumReady() + " ready for pickup.");
+                String holdReadyString = "";
+                if (holdData.getNumReady() == 1) {
+                	holdReadyString = "\n" + holdData.getNumReady() + " is ready for pickup.";
+                } else {
+                	holdReadyString = "\n" + holdData.getNumReady() + " are ready for pickup.";
+                }
+                holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests." + holdReadyString);
                 final ArrayList<HoldListItem> results = holdData.getHolds();
 
                 if (results.size() == 0) {
@@ -523,10 +544,9 @@ public class LibraryYourAccount extends ModuleActivity {
     
     // LIBRARY LOANS ADAPTER
     private class LibraryLoanAdapter extends SimpleArrayAdapter<LoanListItem> {
-        private List<LoanListItem> libraryLoanItems;
+
         public LibraryLoanAdapter(List<LoanListItem> items) {
             super(LibraryYourAccount.this, items, R.layout.library_loan_action_row);
-            libraryLoanItems = items;
         }
  
         
@@ -546,6 +566,18 @@ public class LibraryYourAccount extends ModuleActivity {
             			boolean renewBook = ((LoanListItem)loanData.getLoans().get(item.getIndex())).isRenewBook();
             			((LoanListItem)loanData.getLoans().get(item.getIndex())).setRenewBook(!renewBook);
             			//libraryLoanAdapter  = new LibraryLoanAdapter(loanData.getLoans());
+            			
+            			// enable/disable renew butto
+            			boolean anyChecked = false;
+            	    	for (int i = 0; i < LibraryYourAccount.getLoanData().getLoans().size(); i++) {
+            	    		LoanListItem book =  LibraryYourAccount.getLoanData().getLoans().get(i);
+            	    		if (book.isRenewBook()) {
+            	    			anyChecked = true;
+            	    			break;
+            	    		}
+            	    	}
+            	    	loanRenewSelectedBooksButton.setEnabled(anyChecked);
+            	    	
             			libraryLoanAdapter.notifyDataSetChanged();
             		}
                 }
@@ -619,10 +651,9 @@ public class LibraryYourAccount extends ModuleActivity {
 
     // LibraryFineAdapter
     private class LibraryFineAdapter extends SimpleArrayAdapter<FineListItem> {
-        private List<FineListItem> libraryFineItems;
+
         public LibraryFineAdapter(ArrayList<FineListItem> results) {
             super(LibraryYourAccount.this, results, R.layout.library_fine_action_row);
-            libraryFineItems = results;
         }
 
         public void setLookupHandler(ListView listView, final String extras) {
@@ -667,10 +698,9 @@ public class LibraryYourAccount extends ModuleActivity {
     
     // LIBRARY HOLD ADAPTER
     private class LibraryHoldAdapter extends SimpleArrayAdapter<HoldListItem> {
-        private List<HoldListItem> libraryHoldItems;
+
         public LibraryHoldAdapter(List<HoldListItem> items) {
             super(LibraryYourAccount.this, items, R.layout.library_hold_action_row);
-            libraryHoldItems = items;
         }
 
         public void setLookupHandler(ListView listView, final String extras) {
@@ -745,10 +775,9 @@ public class LibraryYourAccount extends ModuleActivity {
         	}
         	else {
         		holdStatusIcon.setVisibility(View.GONE);        		
-        		holdStatusTV.setTextColor(Color.BLACK);
-        		holdPickupLocationTV.setTextColor(Color.BLACK);
+        		holdStatusTV.setTextColor(getResources().getColor(R.color.libraries_gray));
+        		holdPickupLocationTV.setTextColor(getResources().getColor(R.color.libraries_gray));
         		holdPickupLocationTV.setVisibility(View.GONE);
-        		Log.d(TAG,"setting status to black, " + Color.BLACK);
         	}
         }
 
@@ -757,10 +786,8 @@ public class LibraryYourAccount extends ModuleActivity {
     
     // Library Renew Book Adapter
     private class LibraryRenewBookAdapter extends SimpleArrayAdapter<RenewResponseItem> {
-        private List<RenewResponseItem> libraryRenewItems;
         public LibraryRenewBookAdapter(List<RenewResponseItem> items) {
             super(LibraryYourAccount.this, items, R.layout.library_loan_action_row);
-            libraryRenewItems = items;
         }
  
         
@@ -812,6 +839,20 @@ public class LibraryYourAccount extends ModuleActivity {
     }
 
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    	if (keyCode == KeyEvent.KEYCODE_BACK) {
+    		if (getMode() == RENEW_MODE || getMode() == RENEW_RESULTS_MODE) {
+    			if (loanLoadingView.getVisibility() == View.GONE) {
+    				showHideRenewBooks();
+    			}
+    			return true;
+    		}
+    	}
+    	
+    	return super.onKeyDown(keyCode, event);
+    }
+    
 	@Override
 	protected Module getModule() {
 		// TODO Auto-generated method stub

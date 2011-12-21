@@ -13,6 +13,7 @@
         android:layout_height="fill_parent" >
         
         <edu.mit.mitmobile2.TitleBar
+        android:id="@+id/librariesYourAccountTitleBar"
         android:text="Your Account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
@@ -55,7 +56,7 @@
 						<Button
 								android:id="@+id/loanRenewBooksButton"
 								android:background="@drawable/tab2_summary_button"
-								android:text="Renew Books"
+								android:text="Renew Books..."
 								android:paddingLeft="@dimen/horizontalPadding"
 								android:paddingRight="@dimen/horizontalPadding"
 								android:layout_alignParentRight="true"
@@ -94,14 +95,6 @@
 								android:layout_alignParentLeft="true"
 								android:layout_width="wrap_content" 
 								android:layout_height="wrap_content"/>
-
-					  	<TextView
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_centerInParent="true"
-								android:id="@+id/loanRenewTV"
-								android:text="Renew"
-								style="@style/ContentTitle" />
 
 						<Button
 								android:id="@+id/loanRenewSelectedBooksButton"
@@ -187,6 +180,7 @@
 						<Button
 								android:id="@+id/loanDoneButton"
 								android:text="Done"
+								android:background="@drawable/tab2_summary_button"
 								android:layout_alignParentRight="true"
 								android:layout_width="wrap_content" 
 								android:layout_height="wrap_content"/>			
