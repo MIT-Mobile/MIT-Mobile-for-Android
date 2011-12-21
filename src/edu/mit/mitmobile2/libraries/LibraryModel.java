@@ -365,7 +365,12 @@ public class LibraryModel {
 			@Override
 			public void onResponse(JSONObject object) throws JSONException {
 	              HoldData holdData = LibraryParser.parseHolds(object);
+	              if (holdData.isRequestCancelled()) {
+		                MobileWebApi.sendCancelMessage(uiHandler);	            	  
+	              }
+	              else {
 	                MobileWebApi.sendSuccessMessage(uiHandler, holdData);
+	              } 	               
 	        }
     	});			
 	}
@@ -383,7 +388,12 @@ public class LibraryModel {
 			@Override
 			public void onResponse(JSONObject object) throws JSONException {
 	              FineData fineData = LibraryParser.parseFines(object);
+	              if (fineData.isRequestCancelled()) {
+		                MobileWebApi.sendCancelMessage(uiHandler);	            	  
+	              }
+	              else {
 	                MobileWebApi.sendSuccessMessage(uiHandler, fineData);
+	              } 	               
 	        }
     	});			
 	}

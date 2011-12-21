@@ -231,10 +231,7 @@ public class LibraryParser {
     	String longOverdue = "";
     	Log.d(TAG,"parseLoans");
         LoanData loanData = new LoanData();
-
-        
         try {
-        	// "{\"result\":\"AUTH_ERROR\"
         	if (object.optString("result").equalsIgnoreCase(MITClient.TOUCHSTONE_CANCEL)) {
         		loanData.setRequestCancelled(true);
         	}
@@ -336,70 +333,75 @@ public class LibraryParser {
         HoldData holdData = new HoldData();
 
         try {
-	        holdData.setNumRequest(object.optInt("total",0));
-	        holdData.setNumReady(object.optInt("ready",0));
-        	Log.d(TAG,"num request = " + holdData.getNumRequest() + " num ready = " + holdData.getNumReady());
-	        JSONArray items = object.getJSONArray("items");
-			for (int l = 0; l < items.length(); l++) {
-				HoldListItem item = new HoldListItem();
-				JSONObject tmpItem = items.getJSONObject(l);
-	
-				// Index
-				item.setIndex(l);
-				
-				// Author
-				item.setAuthor(tmpItem.optString("author",""));
-				
-				// Doc-Number
-				item.setDocNumber(tmpItem.optString("doc-number",""));
-			
-				// Material
-				item.setMaterial(tmpItem.optString("material",""));
-			
-				// Sub-library
-				item.setSubLibrary(tmpItem.optString("sub-library",""));
+        	if (object.optString("result").equalsIgnoreCase(MITClient.TOUCHSTONE_CANCEL)) {
+        		holdData.setRequestCancelled(true);
+        	}
+        	else {
+	        	holdData.setNumRequest(object.optInt("total",0));
+		        holdData.setNumReady(object.optInt("ready",0));
+	        	Log.d(TAG,"num request = " + holdData.getNumRequest() + " num ready = " + holdData.getNumReady());
+		        JSONArray items = object.getJSONArray("items");
+				for (int l = 0; l < items.length(); l++) {
+					HoldListItem item = new HoldListItem();
+					JSONObject tmpItem = items.getJSONObject(l);
 		
-				// Status
-				item.setStatus(tmpItem.optString("status",""));
-				
-				// Call No
-				item.setCallNo(tmpItem.optString("call-no",""));
+					// Index
+					item.setIndex(l);
 					
-				// Bar Code 
-				item.setBarCode(tmpItem.optString("barcode",""));
-
-				// Year
-				item.setYear(tmpItem.optString("year",""));
-	
-				// Title
-				item.setTitle(tmpItem.optString("title",""));
-	
-				// Imprint
-				item.setImprint(tmpItem.optString("imprint",""));
+					// Author
+					item.setAuthor(tmpItem.optString("author",""));
+					
+					// Doc-Number
+					item.setDocNumber(tmpItem.optString("doc-number",""));
 				
-				// ISBN ISSN Display / Type
-				JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
-				Log.d(TAG,"isbn = " + isbn);
-				if (isbn != null) {
-					item.setIsbnIssnDisplay(isbn.optString("display",""));				
-					item.setIsbnIssnType(isbn.optString("type",""));
+					// Material
+					item.setMaterial(tmpItem.optString("material",""));
+				
+					// Sub-library
+					item.setSubLibrary(tmpItem.optString("sub-library",""));
+			
+					// Status
+					item.setStatus(tmpItem.optString("status",""));
+					
+					// Call No
+					item.setCallNo(tmpItem.optString("call-no",""));
+						
+					// Bar Code 
+					item.setBarCode(tmpItem.optString("barcode",""));
+	
+					// Year
+					item.setYear(tmpItem.optString("year",""));
+		
+					// Title
+					item.setTitle(tmpItem.optString("title",""));
+		
+					// Imprint
+					item.setImprint(tmpItem.optString("imprint",""));
+					
+					// ISBN ISSN Display / Type
+					JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
+					Log.d(TAG,"isbn = " + isbn);
+					if (isbn != null) {
+						item.setIsbnIssnDisplay(isbn.optString("display",""));				
+						item.setIsbnIssnType(isbn.optString("type",""));
+					}
+		
+					// Description
+					item.setDescription(tmpItem.optString("description",""));
+	
+					// Pickup Locatiom
+					item.setPickupLocation(tmpItem.optString("pickup-location",""));
+	
+					// End Hold Date
+					item.setEndHoldDate(tmpItem.optString("end-hold-date",""));
+	
+					// Ready
+					item.setReady(tmpItem.optString("ready",""));
+		
+					//Log.d(TAG,item.title);
+					holdData.getHolds().add(item);
 				}
-	
-				// Description
-				item.setDescription(tmpItem.optString("description",""));
-
-				// Pickup Locatiom
-				item.setPickupLocation(tmpItem.optString("pickup-location",""));
-
-				// End Hold Date
-				item.setEndHoldDate(tmpItem.optString("end-hold-date",""));
-
-				// Ready
-				item.setReady(tmpItem.optString("ready",""));
-	
-				//Log.d(TAG,item.title);
-				holdData.getHolds().add(item);
-			}
+        	}
         }
 		catch (JSONException e) {
             e.printStackTrace();
@@ -412,71 +414,77 @@ public class LibraryParser {
         FineData fineData = new FineData();
 
         try {
-	        fineData.setBalance(object.getString("balance"));
-	        //fineData.setFineDate(new Date(object.getInt("fine-date")));
-	      JSONArray items = object.getJSONArray("items");
-	      Log.d(TAG,"number of fines = " + items.length());
-			for (int l = 0; l < items.length(); l++) {
-				FineListItem item = new FineListItem();
-				JSONObject tmpItem = items.getJSONObject(l);
+        	if (object.optString("result").equalsIgnoreCase(MITClient.TOUCHSTONE_CANCEL)) {
+        		fineData.setRequestCancelled(true);
+        	}
+        	else {
 	
-				// Index
-				item.setIndex(l);
-				
-				// Author
-				item.setAuthor(tmpItem.optString("author",""));
-				
-				// Doc-Number
-				item.setDocNumber(tmpItem.optString("doc-number",""));
-			
-				// Material
-				item.setMaterial(tmpItem.optString("material",""));
-			
-				// Sub-library
-				item.setSubLibrary(tmpItem.optString("sub-library",""));
+	        	fineData.setBalance(object.getString("balance"));
+		        //fineData.setFineDate(new Date(object.getInt("fine-date")));
+		      JSONArray items = object.getJSONArray("items");
+		      Log.d(TAG,"number of fines = " + items.length());
+				for (int l = 0; l < items.length(); l++) {
+					FineListItem item = new FineListItem();
+					JSONObject tmpItem = items.getJSONObject(l);
 		
-				// Status
-				item.setStatus(tmpItem.optString("status",""));
+					// Index
+					item.setIndex(l);
+					
+					// Author
+					item.setAuthor(tmpItem.optString("author",""));
+					
+					// Doc-Number
+					item.setDocNumber(tmpItem.optString("doc-number",""));
 				
-				// Call No
-				item.setCallNo(tmpItem.optString("call-no",""));
-	
-				// Year
-				item.setYear(tmpItem.optString("year",""));
-	
-				// Title
-				item.setTitle(tmpItem.optString("title",""));
-	
-				// Imprint
-				item.setImprint(tmpItem.optString("imprint",""));
-	
-				// ISBN ISSN Display / Type
-				JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
-				Log.d(TAG,"isbn = " + isbn);
-				if (isbn != null) {
-					item.setIsbnIssnDisplay(isbn.optString("display",""));				
-					item.setIsbnIssnType(isbn.optString("type",""));
-				}
+					// Material
+					item.setMaterial(tmpItem.optString("material",""));
 				
-				// Display Amount
-				item.setDisplayAmount(tmpItem.optString("display-amount",""));
-
-				// Amount
-				item.setAmount(tmpItem.optString("amount",""));
-
-				// Fine Date
-				String fineDate = tmpItem.optString("fine-date","");
-				if (fineDate.length() > 0) {
-			        long timestamp = Long.parseLong(fineDate) * 1000;
-			    	java.util.Date d = new java.util.Date(timestamp);  
-			    	Format formatter = new SimpleDateFormat("MM/dd/yyyy");
-			    	item.setFineDate(formatter.format(d));		
-				}
-
-				fineData.getFines().add(item);
-			}
+					// Sub-library
+					item.setSubLibrary(tmpItem.optString("sub-library",""));
 			
-			Log.d(TAG,"size of fines = " + fineData.getFines().size());
+					// Status
+					item.setStatus(tmpItem.optString("status",""));
+					
+					// Call No
+					item.setCallNo(tmpItem.optString("call-no",""));
+		
+					// Year
+					item.setYear(tmpItem.optString("year",""));
+		
+					// Title
+					item.setTitle(tmpItem.optString("title",""));
+		
+					// Imprint
+					item.setImprint(tmpItem.optString("imprint",""));
+		
+					// ISBN ISSN Display / Type
+					JSONObject isbn = tmpItem.optJSONObject("isbn-issn");
+					Log.d(TAG,"isbn = " + isbn);
+					if (isbn != null) {
+						item.setIsbnIssnDisplay(isbn.optString("display",""));				
+						item.setIsbnIssnType(isbn.optString("type",""));
+					}
+					
+					// Display Amount
+					item.setDisplayAmount(tmpItem.optString("display-amount",""));
+	
+					// Amount
+					item.setAmount(tmpItem.optString("amount",""));
+	
+					// Fine Date
+					String fineDate = tmpItem.optString("fine-date","");
+					if (fineDate.length() > 0) {
+				        long timestamp = Long.parseLong(fineDate) * 1000;
+				    	java.util.Date d = new java.util.Date(timestamp);  
+				    	Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+				    	item.setFineDate(formatter.format(d));		
+					}
+	
+					fineData.getFines().add(item);
+				}
+				
+				Log.d(TAG,"size of fines = " + fineData.getFines().size());
+        	}
         }
 		catch (JSONException e) {
             e.printStackTrace();

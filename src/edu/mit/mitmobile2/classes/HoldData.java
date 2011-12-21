@@ -11,6 +11,7 @@ public class HoldData {
 	private int numRequest;
 	private int numReady;
 	private ArrayList<HoldListItem> holds = new ArrayList<HoldListItem>();
+	private boolean requestCancelled;
 	
 	public ArrayList<HoldListItem> getHolds() {
 		return holds;
@@ -29,6 +30,12 @@ public class HoldData {
 	}
 	public void setNumReady(int numReady) {
 		this.numReady = numReady;
+	}
+	public boolean isRequestCancelled() {
+		return requestCancelled;
+	}
+	public void setRequestCancelled(boolean requestCancelled) {
+		this.requestCancelled = requestCancelled;
 	}
 	
 	

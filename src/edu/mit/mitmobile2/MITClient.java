@@ -247,7 +247,7 @@ public class MITClient extends DefaultHttpClient {
 			}
 
 			if (state == CANCELLED_STATE) {
-				//return response;
+				return response;
 			}
 
 			if (state == OK_STATE) {
@@ -612,13 +612,13 @@ public class MITClient extends DefaultHttpClient {
 		
 		// get user name and password when returning from touchstone screen
 		//if (MITClient.requestMap.get(requestKey).equals(TOUCHSTONE_LOGIN)) {
-		if ( ((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN))  {
+		if ( clientData.getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN))  {
 			user = prefs.getString("PREF_TOUCHSTONE_USERNAME", null).toUpperCase();
 			password = prefs.getString("PREF_TOUCHSTONE_PASSWORD", null);
 		}
 
 		// If the touchstone request was not cancelled, retry the login
-		if (!MITClient.requestMap.get(requestKey).equals(TOUCHSTONE_CANCEL)) {
+		if (!clientData.getTouchstoneState().equals(TOUCHSTONE_CANCEL)) {
 	        // retry login
 			response = getResponse(new HttpGet(targetUri));
 		}

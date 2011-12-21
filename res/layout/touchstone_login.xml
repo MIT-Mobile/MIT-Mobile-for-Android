@@ -19,22 +19,7 @@
 	   	android:paddingRight="@dimen/horizontalPadding"
 		android:paddingTop="@dimen/verticalPadding"
 		android:paddingBottom="@dimen/verticalPadding" >
-	
-			<!-- Button Row -->
-		<RelativeLayout 
-		    android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content" >
-	
-			<!-- Cancel -->
-			<Button 
-				android:layout_height="wrap_content" 
-				android:layout_width="wrap_content" 
-				android:id="@+id/touchstoneCancelButton" 
-				android:text="Cancel" 
-				android:layout_alignParentLeft="true" />
-		
-		</RelativeLayout>
-	
+			
 		<!-- User Name -->
 		<EditText 
 			android:id="@+id/touchstoneUsername"

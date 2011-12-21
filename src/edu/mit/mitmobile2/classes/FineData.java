@@ -12,6 +12,7 @@ public class FineData {
 	private String balance;
 	private Date fineDate;
 	private ArrayList<FineListItem> fines = new ArrayList<FineListItem>();
+	private boolean requestCancelled;
 	
 	public ArrayList<FineListItem> getFines() {
 		return fines;
@@ -30,6 +31,12 @@ public class FineData {
 	}
 	public void setFineDate(Date fineDate) {
 		this.fineDate = fineDate;
+	}
+	public boolean isRequestCancelled() {
+		return requestCancelled;
+	}
+	public void setRequestCancelled(boolean requestCancelled) {
+		this.requestCancelled = requestCancelled;
 	}
 	
 }

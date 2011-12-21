@@ -48,7 +48,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	Document document;
 	EditText touchstoneUsername;
 	EditText touchstonePassword;
-	Button cancelButton;
+	//Button cancelButton;
 	Button loginButton;
 	CheckBox rememberLoginCB; 
 	TextView mError;
@@ -95,7 +95,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		touchstoneUsername.setText(prefs.getString("PREF_TOUCHSTONE_USERNAME", ""));
 		touchstonePassword.setText(prefs.getString("PREF_TOUCHSTONE_PASSWORD", ""));
 
-		cancelButton = (Button)findViewById(R.id.touchstoneCancelButton);
+		//cancelButton = (Button)findViewById(R.id.touchstoneCancelButton);
 		loginButton = (Button)findViewById(R.id.touchstoneLoginButton);
 		rememberLoginCB =(CheckBox)findViewById(R.id.rememberLoginCB);
 
@@ -126,18 +126,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 				finish();
 			}
 		});
-				
-		cancelButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String requestKey = extras.getString("requestKey");
-				//MITClient.requestMap.put(requestKey, MITClient.TOUCHSTONE_CANCEL);
-				((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
-				finish();
-			}
-		});
-		
+						
 		// Dialog for invalid username or password
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Please enter a valid username and password")
@@ -241,17 +230,14 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	}
 	
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-//		Context mContext = this;
-//		Handler uiHandler = new Handler();
-//		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_USERNAME")) {
-//			mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));
-//		}
-//		
-//		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_PASSWORD")) {
-//			mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
-//		}
-//		
-//		Toast.makeText(this, "user set to " + mitClient.getUser(), Toast.LENGTH_SHORT).show();
+	}
+
+	
+	@Override
+	public void onBackPressed() {
+		String requestKey = extras.getString("requestKey");
+		((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
+		finish();
 	}
 
 }
