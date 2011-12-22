@@ -14,6 +14,7 @@
   			android:layout_gravity="center_vertical"
   			android:orientation="vertical"
   			android:paddingLeft="@dimen/horizontalPadding"
+  			android:paddingRight="@dimen/horizontalPadding"
   			android:paddingTop="@dimen/verticalPadding"
   			android:paddingBottom="@dimen/verticalPadding" >
   	
