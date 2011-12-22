@@ -60,7 +60,7 @@ public class LibraryRenewDetail extends ModuleActivity{
         	renewMessageTV.setText("1 could not be renewed.");
         }
         else {
-        	renewMessageTV.setText(successMsg);
+        	renewMessageTV.setText("1 renewed successfully!");
         	renewMessageTV.setTextColor(R.color.result_text);
         }
         
