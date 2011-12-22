@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +56,7 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 	Button doneButton;
 	Button touchstoneLogoutButton;
 	TextView mError;
+	private boolean credentialsChanged;
     private LinearLayout touchstoneContents;
 	private FullScreenLoader touchstoneLoadingView;
 
@@ -104,8 +107,26 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 	    touchstoneLoadingView = (FullScreenLoader)findViewById(R.id.touchstoneLoadingView);
 	    mError = (TextView)touchstoneLoadingView.findViewById(R.id.fullScreenLoadingErrorTV); 
 	    touchstoneContents = (LinearLayout)findViewById(R.id.touchstoneContents);
+
+	    touchstoneUsername.addTextChangedListener(new TextWatcher(){
+	        public void afterTextChanged(Editable s) {
+	        	 credentialsChanged = true;
+	        	 Log.d(TAG,"credentials changed");
+	        }
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    });
 	    
-		doneButton.setOnClickListener(new View.OnClickListener() {
+	    touchstonePassword.addTextChangedListener(new TextWatcher(){
+	        public void afterTextChanged(Editable s) {
+	        	 credentialsChanged = true;
+	        }
+	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	    });
+
+	    
+	    doneButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -115,11 +136,9 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 					prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", touchstoneUsername.getEditableText().toString());
 					prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", touchstonePassword.getEditableText().toString());
 					prefsEditor.commit();
-					
-					// if the remember checkbox is unchecked, clear the touchstone cookies
-					//if (!rememberLoginCB.isChecked()) {
-					//	MITClient.cookieStore = null;
-					//}
+					if (credentialsChanged) {
+						MITClient.cookieStore = null;
+					}
 				}
 				catch (RuntimeException e) {
 					Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
@@ -148,10 +167,6 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 			public void onClick(View v) {
 				MITClient.cookieStore = null;
 				v.setEnabled(false);
-				//touchstoneLoadingView.setVisibility(View.VISIBLE);
-				//touchstoneContents.setVisibility(View.GONE);
-				//touchstoneLoadingView.showLoading();
-				//LibraryModel.getUserIdentity(mContext, loginUiHandler);
 			}
 		});
 
