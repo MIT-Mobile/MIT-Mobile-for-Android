@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
 
 public class MITSettingsActivity extends Activity {
@@ -16,7 +17,7 @@ public class MITSettingsActivity extends Activity {
 	private Context mContext;			
 	
 	public static final String TAG = "MITSettingsActivity";
-	Button touchstoneSettingsButton;
+	TwoLineActionRow touchstoneSettingsButton;
 	
 	/****************************************************/
 	@Override
@@ -29,7 +30,7 @@ public class MITSettingsActivity extends Activity {
 		// Set Up Buttons
 		
 		// TOuchstone
-		touchstoneSettingsButton = (Button)findViewById(R.id.touchstoneSettingsButton);
+		touchstoneSettingsButton = (TwoLineActionRow)findViewById(R.id.touchstoneSettingsButton);
 
 		touchstoneSettingsButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
