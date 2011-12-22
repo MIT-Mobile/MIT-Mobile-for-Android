@@ -4,7 +4,7 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:background="@color/rowBackground">
+  android:background="@drawable/main_repeat" >         	
   
     <edu.mit.mitmobile2.TitleBar
   		android:text="Settings"
@@ -20,7 +20,8 @@
    <edu.mit.mitmobile2.TwoLineActionRow
         android:id="@+id/touchstoneSettingsButton"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content"      
+  		android:background="@color/rowBackground"
         android:text="Touchstone Settings" />
 
 	<!-- Divider -->
@@ -41,11 +42,5 @@
         	android:text="Touchstone is MIT's single sign-on authentication service." 
           	android:background="@drawable/main_repeat"          	
           	style="@style/Byline" />		
-
-	<!-- Divider -->
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="@dimen/dividerHeight"
-		android:background="@color/dividerColor" />
 
 </LinearLayout>
