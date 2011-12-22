@@ -249,7 +249,7 @@ public class MITClient extends DefaultHttpClient {
 	private void wayf() {
 		
 		// Launch preferences activity if user or password are not set
-		if (user == null || user.length() == 0 || password == null || password.length() == 0) {
+		if (MITClient.user == null || MITClient.user.length() == 0 || MITClient.password == null || MITClient.password.length() == 0) {
 			//requestKey = System.currentTimeMillis()/1000 + "";
 			Log.d(TAG,"requestKey = " + requestKey);
 			((MITClientData)requestMap.get(requestKey)).setTouchstoneState(TOUCHSTONE_REQUEST);
@@ -613,6 +613,7 @@ public class MITClient extends DefaultHttpClient {
 	}
 
 	public void saveLogin() {
+		rememberLogin = prefs.getBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
 		if (rememberLogin) {
 			prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", MITClient.getUser());
 			prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", MITClient.getPassword());

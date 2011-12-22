@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
@@ -375,10 +374,6 @@ public class LibraryYourAccount extends ModuleActivity {
                 }
                 loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanOverdueText);
                 final ArrayList<LoanListItem> results = loanData.getLoans();
-
-                if (results.size() == 0) {
-                    Toast.makeText(LibraryYourAccount.this, "No loans found", Toast.LENGTH_SHORT).show();
-                }
                 
                 libraryLoanAdapter  = new LibraryLoanAdapter(results);
                 loanListView.setAdapter(libraryLoanAdapter);
@@ -482,11 +477,6 @@ public class LibraryYourAccount extends ModuleActivity {
                 fineBalanceTV.setText("Balance as of " + dateFormat.format(date) + ": " + fineData.getBalance()); 
                 fineStatusTV.setText("Payable at any MIT library service desk.\nTechCASH accepted only at Hayden Library.");
                 final ArrayList<FineListItem> results = fineData.getFines();
-
-                if (results.size() == 0) {
-                    Toast.makeText(LibraryYourAccount.this, "No holds found", Toast.LENGTH_SHORT).show();
-                }
-                
                 
                 LibraryFineAdapter adapter = new LibraryFineAdapter(results);
                 fineListView.setAdapter(adapter);
@@ -521,11 +511,6 @@ public class LibraryYourAccount extends ModuleActivity {
                 holdStatusTV.setText("You have " + holdData.getNumRequest() + " hold requests." + holdReadyString);
                 final ArrayList<HoldListItem> results = holdData.getHolds();
 
-                if (results.size() == 0) {
-                    Toast.makeText(LibraryYourAccount.this, "No holds found", Toast.LENGTH_SHORT).show();
-                }
-                
-                
                 LibraryHoldAdapter adapter = new LibraryHoldAdapter(results);
                 holdListView.setAdapter(adapter);
                 adapter.setLookupHandler(holdListView, null);

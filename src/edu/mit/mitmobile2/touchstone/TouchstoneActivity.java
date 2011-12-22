@@ -108,12 +108,14 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 			@Override
 			public void onClick(View v) {
 				String requestKey = extras.getString("requestKey");
-				// store updated name and password in the mitclient fields
 				MITClient.setUser(touchstoneUsername.getEditableText().toString());
 				MITClient.setPassword(touchstonePassword.getEditableText().toString());
-				Log.d(TAG,"user before login = " + MITClient.getUser());
 				MITClientData clientData = (MITClientData)MITClient.requestMap.get(requestKey);
 				clientData.setTouchstoneState(MITClient.TOUCHSTONE_LOGIN);
+
+				// Store remember password setting
+				prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", rememberLoginCB.isChecked());
+				prefsEditor.commit();
 				finish();
 			}
 		});
