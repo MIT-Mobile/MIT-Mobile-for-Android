@@ -227,10 +227,17 @@ public class LibraryParser {
     }
   
     static LoanData parseLoans(JSONObject object) {
+    	Log.d(TAG,"parseLonas()");
     	String overDue = "";
     	String longOverdue = "";
     	Log.d(TAG,"parseLoans");
         LoanData loanData = new LoanData();
+        try {
+			Log.d(TAG,object.toString(1));
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         try {
         	if (object.optString("result").equalsIgnoreCase(MITClient.TOUCHSTONE_CANCEL)) {
         		loanData.setRequestCancelled(true);

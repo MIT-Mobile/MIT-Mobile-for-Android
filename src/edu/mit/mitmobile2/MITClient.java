@@ -25,6 +25,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.ResponseHandler;
@@ -229,6 +230,11 @@ public class MITClient extends DefaultHttpClient {
 			}
 
 			if (state == CANCELLED_STATE) {
+				Log.d(TAG,"status in cancelled state = " + response.getStatusLine().getStatusCode());
+				MITHttpEntity entity = new MITHttpEntity();
+				entity.setContent(MITHttpEntity.JSON_CANCEL);
+				response.setStatusCode(200);
+				response.setEntity(entity);
 				return response;
 			}
 
@@ -273,69 +279,75 @@ public class MITClient extends DefaultHttpClient {
 		}
 		Log.d("MITClient","after start intent");
 
-		
-		post = new HttpPost();
-	
-		post.setURI(uri);
-		Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
-
-		String user_idp;
-		String tmpUser = user.toUpperCase();
-		Log.d(TAG,"user = " + user);
-		if (tmpUser.contains("@") && !tmpUser.contains("@MIT.EDU")) {
-			user_idp = "https://idp.touchstonenetwork.net/shibboleth-idp";
-		}
-		else {
-			user_idp = "https://idp.mit.edu/shibboleth";				
-			// remove "@MIT.EDU from user name
-			if (tmpUser.contains("@MIT.EDU")) {
-				user = user.substring(0,user.length() - 8);
-				Log.d(TAG,"user = " + user);
-			}
-		}
-
-		Log.d(TAG,"user_idp = " + user_idp);
-		
-		// Add your data
-		List nameValuePairs = new ArrayList(1);
-		nameValuePairs.add(new BasicNameValuePair("user_idp", user_idp));
-		try {
-			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}  
-		
-		try {
-			response = this.execute(post);
+		if ( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN) ) {
+			post = new HttpPost();
 			
-			Header[] locations = response.getHeaders("Location");
-			if (locations.length > 0) {
-				Header location = locations[0];
-				uriString = location.getValue();				
-				try {
-					uri = new URI(uriString);
-				}
-				catch (URISyntaxException e) {
-					
-				}				
-			}
-			
-			if (response.getStatusLine().getStatusCode() == 200 && !uri.getHost().equalsIgnoreCase("wayf.mit.edu")) {
-				state = IDP_STATE;
+			post.setURI(uri);
+			Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
+
+			String user_idp;
+			String tmpUser = user.toUpperCase();
+			Log.d(TAG,"user = " + user);
+			if (tmpUser.contains("@") && !tmpUser.contains("@MIT.EDU")) {
+				user_idp = "https://idp.touchstonenetwork.net/shibboleth-idp";
 			}
 			else {
-				responseString = responseContentToString(response);
+				user_idp = "https://idp.mit.edu/shibboleth";				
+				// remove "@MIT.EDU from user name
+				if (tmpUser.contains("@MIT.EDU")) {
+					user = user.substring(0,user.length() - 8);
+					Log.d(TAG,"user = " + user);
+				}
+			}
+
+			Log.d(TAG,"user_idp = " + user_idp);
+			
+			// Add your data
+			List nameValuePairs = new ArrayList(1);
+			nameValuePairs.add(new BasicNameValuePair("user_idp", user_idp));
+			try {
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}  
+			
+			try {
+				response = this.execute(post);
+				
+				Header[] locations = response.getHeaders("Location");
+				if (locations.length > 0) {
+					Header location = locations[0];
+					uriString = location.getValue();				
+					try {
+						uri = new URI(uriString);
+					}
+					catch (URISyntaxException e) {
+						
+					}				
+				}
+				
+				if (response.getStatusLine().getStatusCode() == 200 && !uri.getHost().equalsIgnoreCase("wayf.mit.edu")) {
+					state = IDP_STATE;
+				}
+				else {
+					responseString = responseContentToString(response);
+				}
+				
+				//Log.d(TAG,"response string at end of wayf = " + responseString);
+				//Log.d(TAG,"state after WAYF post = " + state);
+			}
+			catch (IOException e) {
+				Log.d(TAG,"WAYF error " + e.getMessage());
 			}
 			
-			//Log.d(TAG,"response string at end of wayf = " + responseString);
-			//Log.d(TAG,"state after WAYF post = " + state);
 		}
-		catch (IOException e) {
-			Log.d(TAG,"WAYF error " + e.getMessage());
+		
+		else {
+			state = CANCELLED_STATE;
 		}
 	}
-
+	
 	private void idp() {
 		Log.d(TAG,"idp");
 		Elements elements;
@@ -584,9 +596,6 @@ public class MITClient extends DefaultHttpClient {
 			response = getResponse(new HttpGet(targetUri));
 		}
 		else {
-			MITHttpEntity entity = new MITHttpEntity();
-			entity.setContent(MITHttpEntity.JSON_CANCEL);
-			response.setEntity(entity);
 			state = CANCELLED_STATE;
 		}
 		

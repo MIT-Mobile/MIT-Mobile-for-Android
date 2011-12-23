@@ -36,14 +36,6 @@ public class MITConnectionWrapper extends ConnectionWrapper {
 		try {
 			Log.d(TAG,"before get response");
 			response = mitClient.getResponse(httpGet);
-			//DEBUG
-			//if (mitClient.state.equalsIgnoreCase(MITClient.ERROR_STATE)) {
-			//	Log.d(TAG,"Error state in getResponse");
-		//	}
-		//	if (mitClient.state.equalsIgnoreCase(MITClient.AUTH_ERROR_STATE)) {
-		//		Log.d(TAG,"Auth Error state in getResponse");
-		//	}
-
 			Log.d(TAG,"after get response");
 			//DEBUG
 			//Log.d(TAG,"response = " + response);

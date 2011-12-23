@@ -231,6 +231,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	@Override
 	public void onBackPressed() {
 		String requestKey = extras.getString("requestKey");
+		Log.d(TAG,"cancelling request " + requestKey);
 		((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
 		finish();
 	}

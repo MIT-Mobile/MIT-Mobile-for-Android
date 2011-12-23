@@ -341,7 +341,8 @@ public class LibraryModel {
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override
 			public void onResponse(JSONObject object) throws JSONException {
-	              LoanData loanData = LibraryParser.parseLoans(object);
+	            Log.d(TAG,"onResponse()");  
+				LoanData loanData = LibraryParser.parseLoans(object);
 	              if (loanData.isRequestCancelled()) {
 		                MobileWebApi.sendCancelMessage(uiHandler);	            	  
 	              }
@@ -349,6 +350,14 @@ public class LibraryModel {
 	                MobileWebApi.sendSuccessMessage(uiHandler, loanData);
 	              } 	               
 	        }
+
+			@Override
+			public void onError() {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"onError()");
+			}
+			
+			
     	});			
 	}
     
