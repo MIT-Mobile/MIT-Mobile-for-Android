@@ -51,12 +51,23 @@
 			android:layout_alignParentLeft="true">
 		</Button>
 
-		<TextView 
-   			android:text="Log in with your MIT Kerberos username or Touchstone Collaboration Account to continue." 
-   			android:textColor="@color/contents_text"
-   			android:layout_width="wrap_content"
-   			android:layout_height="wrap_content">    
-   		</TextView>
+		<RelativeLayout
+			android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" >
+		
+			<TextView 
+	   			android:text="Log in with your MIT Kerberos username or Touchstone Collaboration Account to continue." 
+	   			android:textColor="@color/contents_text"
+	   			android:layout_width="wrap_content"
+	   			android:layout_centerHorizontal="true"
+	   			android:gravity="center"
+	   			android:paddingLeft="@dimen/horizontalPadding"
+		   	    android:paddingRight="@dimen/horizontalPadding"
+			    android:paddingTop="@dimen/verticalPadding"
+			    android:paddingBottom="@dimen/verticalPadding" 
+	   			android:layout_height="wrap_content">    
+	   		</TextView>
+		</RelativeLayout>
 	    		
 		<RelativeLayout
 			android:layout_width="fill_parent"
