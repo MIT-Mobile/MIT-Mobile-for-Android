@@ -93,8 +93,7 @@
 		        	android:paddingTop="@dimen/verticalPadding"
 		        	android:paddingBottom="@dimen/verticalPadding"
 		        	android:textColor="#ff000000"
-		        	android:text="A lock icon appears next to the services requiring authentication.
-		        	              Use your MIT Kerberos username or Touchstone Collaboration Accountis to log in." >        	
+		        	android:text="A lock icon appears next to services requiring authentication. Use your MIT Kerberos username or Touchstone Collaboration Account to log in." >        	
     			</TextView>
 				
 	    	</LinearLayout>
