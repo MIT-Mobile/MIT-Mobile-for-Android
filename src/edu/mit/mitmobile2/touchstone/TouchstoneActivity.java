@@ -174,9 +174,10 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		return false;
+		return true;
 	}
 
+	/*
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_INFO:
@@ -191,17 +192,19 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	*/
 	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) { 
+		/*
 		menu.add(0, MENU_INFO, Menu.NONE, "Info")
 		  .setIcon(R.drawable.menu_about);
 		
 		menu.add(1, MENU_PREFS, Menu.NONE, "Prefs")
 		  .setIcon(R.drawable.main_repeat);
-
+		 */
 	}
-
+    
 
 	
 	public static String responseContentToString(HttpResponse response) {
