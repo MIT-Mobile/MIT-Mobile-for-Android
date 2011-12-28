@@ -369,10 +369,11 @@ public class LibraryYourAccount extends ModuleActivity {
                 String loanOverdueText = "";
                 if (loanData.getNumOverdue() == 1) {
                 	loanOverdueText = "\n" + loanData.getNumOverdue() + " is overdue.";
-                } else {
+                } else if (loanData.getNumOverdue() > 1){
                 	loanOverdueText = "\n" + loanData.getNumOverdue() + " are overdue.";
                 }
                 loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanOverdueText);
+                loanRenewBooksButton.setEnabled(loanData.getNumLoan() > 0);
                 final ArrayList<LoanListItem> results = loanData.getLoans();
                 
                 libraryLoanAdapter  = new LibraryLoanAdapter(results);
