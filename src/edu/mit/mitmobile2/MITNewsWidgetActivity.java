@@ -44,8 +44,6 @@ import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.settings.MITSettingsActivity;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
-import edu.mit.mitmobile2.touchstone.TouchstoneModule;
-import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
 import edu.mit.mitmobile2.tour.TourModule;
 
 public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenceChangeListener {
