@@ -277,9 +277,10 @@ public class MITClient extends DefaultHttpClient {
 			}
 					
 		}
-		Log.d("MITClient","after start intent");
-
-		if ( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN) ) {
+		Log.d(TAG,"request key in wayf = " + requestKey);
+		MITClientData clientData = (MITClientData)MITClient.requestMap.get(requestKey);
+		Log.d(TAG,"touchstone state = " + clientData.getTouchstoneState());
+		if ( clientData.getTouchstoneState() == null || clientData.getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN) ) {
 			post = new HttpPost();
 			
 			post.setURI(uri);
