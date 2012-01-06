@@ -53,6 +53,11 @@ public class MITCoursesDetailsSliderActivity extends SliderActivity {
         	//mStartPosition = CoursesDataModel.getPosition(courses, extras.getString(SUBJECT_MASTER_ID_KEY)); // FIXME courses is null so Exception
         }
 
+        if (courses == null) {
+        	finish();
+        	return;
+        }
+        
 		setTitle("MIT Course Details");
 		
     	mStartPosition = CoursesDataModel.getPosition(courses, extras.getString(SUBJECT_MASTER_ID_KEY));
