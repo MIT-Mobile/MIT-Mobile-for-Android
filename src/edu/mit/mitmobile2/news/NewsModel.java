@@ -482,8 +482,12 @@ public class NewsModel {
 				@Override
 				public void onResponse(InputStream stream) {
 					SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
-					searchCache.put(searchTerm, results);
-					MobileWebApi.sendSuccessMessage(uiHandler, results);
+					if (results != null) {
+						searchCache.put(searchTerm, results);
+						MobileWebApi.sendSuccessMessage(uiHandler, results);
+					} else {
+						MobileWebApi.sendErrorMessage(uiHandler);
+					}
 				}
 			}
 		);
