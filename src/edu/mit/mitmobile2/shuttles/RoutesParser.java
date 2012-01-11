@@ -8,14 +8,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.JSONParser;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Loc;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
 
-public class RoutesParser extends JSONParser{
+public class RoutesParser {
 
 	public RouteItem ri;
 	
@@ -26,7 +24,7 @@ public class RoutesParser extends JSONParser{
 	}
 	
 	
-	static List<RouteItem> routesParser(JSONArray jsonArray)
+	static List<RouteItem> routesParser(JSONArray jsonArray) throws JSONException
 	{
 		ArrayList<RouteItem> items = new ArrayList<RouteItem>();
 		for(int index=0; index < jsonArray.length(); index++) {
@@ -42,9 +40,7 @@ public class RoutesParser extends JSONParser{
 		return items;
 	}
 
-	static RouteItem parseJSONRouteObject(JSONObject jItem){
-        
-        try {
+	static RouteItem parseJSONRouteObject(JSONObject jItem) throws JSONException{
 		
             RouteItem routeItem = new RouteItem();
             routeItem.route_id = jItem.getString("route_id");
@@ -76,14 +72,10 @@ public class RoutesParser extends JSONParser{
 	        
 	        return routeItem;
 	        
-    	} catch (JSONException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
 	}
 	
-	static List<Stops> parseJSONStopsArray(JSONObject jsonObject) {		
-		try {
+	static List<Stops> parseJSONStopsArray(JSONObject jsonObject) throws JSONException {		
+		
 			ArrayList<Stops> stops = new ArrayList<Stops>();
 			JSONArray jStops = jsonObject.getJSONArray("stops");
 			int now = jsonObject.getInt("now");
@@ -144,18 +136,6 @@ public class RoutesParser extends JSONParser{
 			}
 			*/
 			return stops;
-		} catch (JSONException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error while parsing List of shuttle stops");
-		}
   
-	}
-
-
-	@Override
-	protected void parseObj() {
-		
-		ri = parseJSONRouteObject(jItem);
-		
 	}
 }

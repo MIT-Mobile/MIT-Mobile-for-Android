@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -150,7 +151,7 @@ public class ShuttleModel {
 		webApi.requestJSONArray(BASE_PATH, routesParameters,
 			new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {			
 				@Override
-				public void onResponse(JSONArray array) {
+				public void onResponse(JSONArray array) throws JSONException {
 					routes = new ArrayList<RouteItem>();
 					routes.addAll(RoutesParser.routesParser(array));
 					lastRouteFetchTime = System.currentTimeMillis();
@@ -184,7 +185,7 @@ public class ShuttleModel {
 		webApi.requestJSONObject(BASE_PATH, routeInfoParameters, 
 			new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {					
 				@Override
-				public void onResponse(JSONObject object) {
+				public void onResponse(JSONObject object) throws JSONException {
 					updateRouteItem(RoutesParser.parseJSONRouteObject(object));
 					MobileWebApi.sendSuccessMessage(uiHandler);
 				}
@@ -201,7 +202,7 @@ public class ShuttleModel {
 		webApi.requestJSONObject(stopInfoParameters, new MobileWebApi.JSONObjectResponseListener(null, null) {
 			
 			@Override
-			public void onResponse(JSONObject object) {
+			public void onResponse(JSONObject object) throws JSONException {
 				stops.put(stopId, RoutesParser.parseJSONStopsArray(object));
 				MobileWebApi.sendSuccessMessage(handler);
 			}
