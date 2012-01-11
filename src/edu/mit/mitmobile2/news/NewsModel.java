@@ -482,8 +482,12 @@ public class NewsModel {
 				@Override
 				public void onResponse(InputStream stream) {
 					SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
-					searchCache.put(searchTerm, results);
-					MobileWebApi.sendSuccessMessage(uiHandler, results);
+					if (results != null) {
+						searchCache.put(searchTerm, results);
+						MobileWebApi.sendSuccessMessage(uiHandler, results);
+					} else {
+						MobileWebApi.sendErrorMessage(uiHandler);
+					}
 				}
 			}
 		);
@@ -533,7 +537,7 @@ public class NewsModel {
 			parser.parse(stream, handler);
 			SearchResults<NewsItem> results = new SearchResults<NewsItem>(searchTerm, handler.getNewsItems());
 			if(handler.getNewsItems().size() != handler.totalResults()) {
-				results.markAsPartial(handler.totalResults());
+				results.markAsPartialWithTotalCount(handler.totalResults());
 			}
 			return results;
 			

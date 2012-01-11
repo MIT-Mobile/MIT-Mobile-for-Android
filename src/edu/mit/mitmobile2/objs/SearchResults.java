@@ -1,9 +1,10 @@
 package edu.mit.mitmobile2.objs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResults<ResultItem> {
-	private List<ResultItem> mResultsList;
+	private ArrayList<ResultItem> mResultsList = new ArrayList<ResultItem>();
 	private String mSearchTerm;
 	
 	// used if there are more total results than shown in the results Lists
@@ -13,11 +14,20 @@ public class SearchResults<ResultItem> {
 	private boolean mIsPartialResult = false;
 	
 	public SearchResults(String searchTerm, List<ResultItem> resultsList) {
-		mResultsList = resultsList;
+		mResultsList.addAll(resultsList);
 		mSearchTerm = searchTerm;
 	}
 
-	public void markAsPartial(Integer totalResultsCount) {
+	public void markAsComplete() {
+		mIsPartialResult = false;
+	}
+	
+	public void markAsPartialWithUnknownTotal() {
+		mTotalResultsCount = null;
+		mIsPartialResult = true;
+	}
+	
+	public void markAsPartialWithTotalCount(Integer totalResultsCount) {
 		mTotalResultsCount = totalResultsCount;
 		mIsPartialResult = true;
 	}
@@ -36,5 +46,13 @@ public class SearchResults<ResultItem> {
 	
 	public Integer totalResultsCount() {
 		return mTotalResultsCount;
+	}
+	
+	public int getItemPosition(ResultItem item) {
+		return mResultsList.indexOf(item);
+	}
+	
+	public void addMoreResults(List<ResultItem> moreResults) {
+		mResultsList.addAll(moreResults);
 	}
 }

@@ -12,4 +12,4 @@ build_tag = "development"
 
 #release_project_name = "" #name of the project when released
 
-#source_project_name = "" #name of project in source code
+#source_project_name = "edu.mit.mitmobile2" #name of project in source code

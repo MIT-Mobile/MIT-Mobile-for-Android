@@ -38,6 +38,11 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
         
     	setTitle("MIT Routes");
     	
+    	if(!ShuttleModel.routesLoaded()) {
+    		finish();
+    		return;
+    	}
+    	
     	createViews();
     	
     	setOnPositionChangedListener(this);
@@ -66,8 +71,6 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
     void createViews() {
 
     	RoutesAsyncListView cv;
-    	
-    	// TODO get ALL data ONCE from above layer?
     	
     	for (int x=0; x < ShuttleModel.getSortedRoutes().size(); x++) {
 
@@ -133,6 +136,7 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
 		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
 		
 		RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);
+		
 		i.putExtra(MITMapActivity.KEY_HEADER_TITLE, updatedRouteItem.title);
 		String subtitle = updatedRouteItem.gpsActive ? GPS_ONLINE : GPS_OFFLINE;
 		i.putExtra(MITMapActivity.KEY_HEADER_SUBTITLE, subtitle);

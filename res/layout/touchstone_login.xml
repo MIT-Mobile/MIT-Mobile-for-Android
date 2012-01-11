@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/touchstonePrefsLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="MIT Touchstone"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+	<LinearLayout
+		android:id="@+id/touchstoneContents"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	   	android:paddingLeft="@dimen/horizontalPadding"
+	   	android:paddingRight="@dimen/horizontalPadding"
+		android:paddingTop="@dimen/verticalPadding"
+		android:paddingBottom="@dimen/verticalPadding" >
+			
+		<!-- User Name -->
+		<EditText 
+			android:id="@+id/touchstoneUsername"
+			android:layout_width="fill_parent"
+	       	android:layout_alignParentLeft="true"
+	       	android:singleLine="true" 
+	       	android:gravity="left"
+	       	android:lines="1"
+	       	android:hint="Username or Email"
+	       	android:layout_height="wrap_content"/>
+	        		
+		<!-- Password -->
+		<EditText 
+			android:id="@+id/touchstonePassword"
+			android:layout_width="fill_parent"
+	        android:layout_alignParentLeft="true"
+	        android:singleLine="true" 
+	        android:gravity="left"
+	        android:lines="1"
+	        android:hint="Password"
+	        android:password="true"
+	        android:layout_height="wrap_content"/>
+				
+		<Button 
+			android:layout_height="wrap_content" 
+			android:id="@+id/touchstoneLoginButton" 
+			android:text="Log In" 
+			android:layout_width="fill_parent" 
+			android:layout_alignParentLeft="true">
+		</Button>
+
+		<RelativeLayout
+			android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" >
+		
+			<TextView 
+	   			android:text="Log in with your MIT Kerberos username or Touchstone Collaboration Account to continue." 
+	   			android:textColor="@color/contents_text"
+	   			android:layout_width="wrap_content"
+	   			android:layout_centerHorizontal="true"
+	   			android:gravity="center"
+	   			android:paddingLeft="@dimen/horizontalPadding"
+		   	    android:paddingRight="@dimen/horizontalPadding"
+			    android:paddingTop="@dimen/verticalPadding"
+			    android:paddingBottom="@dimen/verticalPadding" 
+	   			android:layout_height="wrap_content">    
+	   		</TextView>
+		</RelativeLayout>
+	    		
+		<RelativeLayout
+			android:layout_width="fill_parent"
+    		android:layout_height="wrap_content" >
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+	    		android:layout_height="wrap_content"
+	    		android:layout_centerInParent="true">
+	    		
+	    		<TextView 
+	    			android:text="Remember Login" 
+	    			android:textColor="@color/contents_text"
+	    			android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content">    
+	    		</TextView>
+	    		
+	    		<CheckBox 
+	    			android:id="@+id/rememberLoginCB" 
+	    			android:layout_width="wrap_content"
+	    			android:layout_height="wrap_content"
+	    			android:checked="true" >    
+	    		</CheckBox>
+	    	</LinearLayout>
+		</RelativeLayout>
+	
+	</LinearLayout>
+	
+	<edu.mit.mitmobile2.FullScreenLoader
+   		android:id="@+id/touchstoneLoadingView"
+   		android:layout_width="fill_parent"
+   		android:layout_height="fill_parent"
+   		android:visibility="gone" />				    
+	
+</LinearLayout>
+
+

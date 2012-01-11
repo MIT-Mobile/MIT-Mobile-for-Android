@@ -6,12 +6,10 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.view.Gravity;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TabHost.TabSpec;
 
 public class TabConfigurator {
@@ -53,19 +51,15 @@ public class TabConfigurator {
 			String tabName = mTabNames.get(i);
 			
 			// create the content view for the tab
-			// we use framelayout as wrapper view (this is a work around for some strange bug
+			// we use linearlayout as wrapper view (this is a work around for some strange bug
 			// with using 9-patch backgrounds).  In turn we use 9-patch backgrounds because
 			// could not get the builtin tab dividers to display
-			FrameLayout indicatorView = new FrameLayout(mActivity);
+			LinearLayout indicatorView = new LinearLayout(mActivity);
 			indicatorView.setLayoutParams(new LayoutParams(tabWidth, height));
-			ImageView background = new ImageView(mActivity);
-			background.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-			background.setScaleType(ScaleType.FIT_XY);
-			background.setImageResource(R.drawable.tab_background);
-			indicatorView.addView(background);
+			indicatorView.setBackgroundResource(R.drawable.tab2_background);
+			indicatorView.setGravity(Gravity.CENTER);
 			TextView textView = new TextView(mActivity);
-			textView.setLayoutParams(new LayoutParams(new LayoutParams(width, height)));
-			textView.setGravity(Gravity.CENTER);
+			textView.setLayoutParams(new LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)));
 			textView.setText(tabName);
 			ColorStateList colors = mActivity.getResources().getColorStateList(R.color.tab_text_color);
 			textView.setTextColor(colors);

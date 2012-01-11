@@ -85,6 +85,11 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);
         String problemString = "I am reporting a problem";
         String problemType = Global.sharedData.getFacilitiesData().getProblemType(); 
+        if(problemType == null) {
+            finish();
+            return;
+        }
+        
         
         if (problemType.equalsIgnoreCase("Other") == false) {
         	problemString += " with a " + problemType.toLowerCase();

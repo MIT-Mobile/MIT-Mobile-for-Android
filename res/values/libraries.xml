@@ -1,0 +1,48 @@
+<resources>
+	<string name="libraryTopicsTitle">Select a topic area</string>
+    <string-array name="libraryTopics">
+        <item>Art, Architecture &amp; Planning</item>
+        <item>Engineering &amp; Computer Science</item>
+        <item>Humanities</item>
+        <item>Management &amp; Business</item>
+        <item>Science</item>
+        <item>Social Sciences</item>
+        <item>General</item>
+        <item>Circulation</item>
+        <item>Technical Help</item>
+    </string-array>
+    <string name="libraryStatusTitle">Your status</string>
+    <string-array name="libraryStatus">
+		<item>MIT Undergrad Student</item>
+		<item>MIT Grad Student</item>
+		<item>MIT Faculty</item>
+		<item>MIT Research Staff</item>
+		<item>MIT Staff</item>
+		<item>MIT Visitor</item>
+    </string-array>
+    <string-array name="libraryStatusCode">
+        <item>UG</item>
+        <item>GRAD</item>
+        <item>FAC</item>
+        <item>RS</item>
+        <item>STAFF</item>
+        <item>VS</item>
+    </string-array>
+    <string name="libraryResearchTopicTitle">Select a topic</string>
+    <string-array name="libraryResearchTopics">
+        <item>General</item>
+        <item>Art, Architecture Planning</item>
+        <item>Engineering &amp; Computer Science</item>
+        <item>GIS</item>
+        <item>Humanities</item>
+        <item>Management &amp; Business</item>
+        <item>Science</item>
+        <item>Social Sciences</item>
+        <item>Urban Planning</item>
+    </string-array>
+    <string-array name="libraryResearchPurpose">
+    	<item>Course</item>
+    	<item>Thesis</item>
+    	<item>Research</item>
+    </string-array>
+</resources>

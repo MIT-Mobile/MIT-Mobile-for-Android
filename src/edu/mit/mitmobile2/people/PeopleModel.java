@@ -42,7 +42,7 @@ public class PeopleModel {
 				
 				SearchResults<PersonItem> searchResults = new SearchResults<PersonItem>(searchTerm, people);
 				if(searchResults.getResultsList().size() >= MAX_RESULTS) {
-					searchResults.markAsPartial(null);
+					searchResults.markAsPartialWithUnknownTotal();
 				}
 
 				searchCache.put(searchTerm, searchResults);

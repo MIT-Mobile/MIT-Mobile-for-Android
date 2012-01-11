@@ -61,6 +61,15 @@
 		<item name="android:typeface">sans</item>
 	</style>
 	
+	<style name="FormLabel">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">17sp</item>
+		<item name="android:textColor">#ff333333</item>
+		<item name="android:typeface">sans</item>
+		<item name="android:paddingTop">3dip</item>
+		<item name="android:paddingBottom">5dip</item>
+	</style>
+	
 	<!--  content styles -->
 	<style name="ContentTitle">
 		<item name="android:textStyle">normal</item>
@@ -90,6 +99,13 @@
 		<item name="android:typeface">sans</item>
 	</style>
 	
+	<style name="BoldBodyText">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#ff202020</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
 	<style name="BodyText">
 		<item name="android:textStyle">normal</item>
 		<item name="android:textSize">15sp</item>
@@ -114,6 +130,28 @@
 	<style name="BoldRed">
 	    <item name="android:textColor">#ff990000</item>
 	    <item name="android:textStyle">bold</item>
+	</style>
+
+	<!-- library status -->
+	<style name="LibraryStatus">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">#ff000000</item>
+		<item name="android:typeface">sans</item>
+	</style>
+
+	<style name="LibraryFineStatus">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/libraries_gray</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="FineBalance">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">#ff000000</item>
+		<item name="android:typeface">sans</item>
 	</style>
 	
 </resources>

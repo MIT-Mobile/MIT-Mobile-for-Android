@@ -183,7 +183,6 @@ public class AboutActivity extends ModuleActivity implements OnGesturePerformedL
 		if (!dir.exists())
 			dir.mkdir();
 		
-		Log.d("AboutActivity","buildId = " + BuildSettings.BUILD_ID);
 		String path = dir + "/" + buildId.substring(0, 6) + ".png";
 		File file = new File(path);
 		if (!file.exists()) {

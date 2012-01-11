@@ -1,14 +1,19 @@
 package edu.mit.mitmobile2;
 
 import java.io.BufferedReader;
+
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,16 +21,20 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.http.AndroidHttpClient;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.AndroidException;
 import android.util.Log;
+import android.webkit.CookieManager;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.classes.SharedData;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.MITCookieStore;
+import org.apache.http.cookie.Cookie;
 
 public class Global extends Application {
 
@@ -65,7 +74,8 @@ public class Global extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Log.d(TAG,"onCreate()");
-		mContext = this; 
+		mContext = this;
+		
 		// load Mobile Web Domain preferences
 		try {
 			prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -74,18 +84,18 @@ public class Global extends Application {
 		catch (RuntimeException e) {
 			Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 		}
-		// if the mobile server is not defined in the prefernces, default it to the value in the BuildSettings.java file
+		// if the mobile server is not defined in the preferences, default it to the value in the BuildSettings.java file
 		if (Global.getMobileWebDomain() == null) {
 			Global.setMobileWebDomain(Global.DEFAULT_MIT_MOBILE_SERVER);
 		}
-		
 		res = this.getResources();
 		
 		Handler uiHandler = new Handler();
 
+		// Read in version information for data files on mobile server
+		// this version info is used to determine if the local database is out of date with the server and needs to be updated
 		Global.getVersionInfo(mContext, uiHandler);
 
-		//Global.updateData(mContext, uiHandler);
 	}
 
 	// Maps related:

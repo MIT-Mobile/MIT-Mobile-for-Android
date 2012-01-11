@@ -53,8 +53,11 @@ public class CoursesDataModel {
 	static private HashMap<String,CourseItem> details_cache = new HashMap<String,CourseItem>();  // TODO combine with subjects_cache
 	
 	/*********************************/
-	public static ArrayList<CourseItem> getFavoritesList() {
+	public static ArrayList<CourseItem> getFavoritesList(Context context) {
 		
+		if (myCourses == null) {
+			getMyStellar(context);
+		}
 		Collection<CourseItem> c = myCourses.values();
 		
 		ArrayList<CourseItem> favs = new ArrayList<CourseItem>( c );

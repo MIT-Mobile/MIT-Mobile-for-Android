@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 import edu.mit.mitmobile2.about.BuildSettings;
 
 import android.content.Context;
@@ -22,7 +24,8 @@ public class ConnectionWrapper {
 	public static enum ErrorType {
 		Network,
 		Server,
-		Timeout
+		Timeout,
+		Touchstone
 	};
 	
 	private static final String HTTP_USER_AGENT = 
@@ -33,6 +36,8 @@ public class ConnectionWrapper {
 	
 	static final String TAG = "ConnectionWrapper";
 	
+	public HttpClientType httpClientType;
+
 	public static interface ConnectionInterface {
 		void onResponse(InputStream stream);
 		
@@ -43,6 +48,7 @@ public class ConnectionWrapper {
 	
 	public ConnectionWrapper(Context context) {
 		mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		this.httpClientType = HttpClientType.Default;
 	}
 	
 	/*
@@ -50,6 +56,7 @@ public class ConnectionWrapper {
 	 * if it has a network conenction before making the network request
 	 */
 	public ConnectionWrapper() {
+		this.httpClientType = HttpClientType.Default;
 		mConnectivityManager = null;
 	}
 	
@@ -78,38 +85,73 @@ public class ConnectionWrapper {
 			asynchronous(url, new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
+					Log.d(TAG,"openURL - asynchronous");
+
 					if(msg.arg1 == CONNECTION_ERROR) {
+						Log.d(TAG,"CONNECTION ERROR");
 						callback.onError((ErrorType) msg.obj);
 					} else if(msg.arg1 == CONNECTION_RESPONSE) {
+						Log.d(TAG,"ON RESPONSE");
+						Log.d(TAG,"msg = " + msg.obj.getClass());
+						InputStream i = (InputStream)msg.obj;
+						//Log.d(TAG,"stream = " + MobileWebApi.convertStreamToString(i));						
 						callback.onResponse((InputStream) msg.obj);
 					}
 				}
+				
 			});
 		} else {
 			synchronous(url, callback);
+			Log.d(TAG,"openURL - synchronous");
 		}
 		
 		return true;
 	}
 	
-	private static void asynchronous(final String url, final Handler threadHandler) {
+	public HttpResponse httpClientResponse(HttpGet httpGet) throws ClientProtocolException, IOException {
+		Log.d(TAG,"httpClientResponse from ConnectionWrapper");
+		HttpClient httpClient = new DefaultHttpClient();
+		Log.d(TAG,"1");
+		try {
+			HttpResponse response = httpClient.execute(httpGet);
+			return response;
+		}
+		catch (IOException e) {
+			Log.d(TAG,"IOException = " + e.getMessage());
+			return null;
+		}
+	}
+	
+	private void asynchronous(final String url, final Handler threadHandler) {
 		new Thread() {
 			@Override
 			public void run() {
+				Log.d(TAG,"asynchronous url = " + url);
 				Message message = Message.obtain();
 				
-				HttpClient httpClient = new DefaultHttpClient();
 				HttpGet httpGet = new HttpGet(url);
 				httpGet.setHeader("User-Agent", HTTP_USER_AGENT);
 				try {
-					HttpResponse response = httpClient.execute(httpGet);
-					if(response.getStatusLine().getStatusCode() == 200) {
-						InputStream stream = response.getEntity().getContent();
-						message.arg1 = CONNECTION_RESPONSE;
-						message.obj = stream;						
-					} else {
-						message.arg1 = CONNECTION_ERROR;
-						message.obj = ErrorType.Server;
+					//HttpResponse response = httpClient.execute(httpGet);
+					HttpResponse response = httpClientResponse(httpGet);
+					//Log.d(TAG,"response = " + response);
+					//Log.d(TAG,"status code = " + response.getStatusLine().getStatusCode());
+					//Log.d(TAG,"url = " + httpGet.getURI().toURL().toString());
+					if (response != null) {
+						Log.d(TAG,"response not null");
+						Log.d(TAG,"status code == " +  response.getStatusLine().getStatusCode());
+						if(response.getStatusLine().getStatusCode() == 200) {
+							InputStream stream = response.getEntity().getContent();
+							message.arg1 = CONNECTION_RESPONSE;
+							message.obj = stream;						
+						} else {
+							Log.d(TAG,"status code before error = " + response.getStatusLine().getStatusCode());
+							message.arg1 = CONNECTION_ERROR;
+							message.obj = ErrorType.Server;
+						}
+					}
+					else {
+						//Log.d(TAG,"response is null");
 					}
 				} catch (IOException e) {
 					message.arg1 = CONNECTION_ERROR;

@@ -14,17 +14,7 @@ import edu.mit.mitmobile2.objs.SearchResults;
 public class EventsSearchActivity extends SearchActivity<EventDetailsItem> {
 
 	@Override
-	protected ArrayAdapter<EventDetailsItem> getListAdapter(final SearchResults<EventDetailsItem> results) {
-		mSearchListView.setOnItemClickListener(		
-			new AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> adapterView, View row, int position, long arg3) {
-					EventDetailsItem event = (EventDetailsItem) adapterView.getItemAtPosition(position);
-					MITEventsSliderActivity.launchSearchResults(EventsSearchActivity.this, event.id, results.getSearchTerm());
-				}
-			}
-		);
-		
+	protected ArrayAdapter<EventDetailsItem> getListAdapter(final SearchResults<EventDetailsItem> results) {		
 		return new EventsArrayAdapter(this, R.layout.events_row, 0, results.getResultsList(), EventDetailsItem.SHORT_DAY_TIME);
 	}
 
@@ -53,4 +43,8 @@ public class EventsSearchActivity extends SearchActivity<EventDetailsItem> {
 		return new EventsModule();
 	}
 
+	@Override
+	protected void onItemSelected(SearchResults<EventDetailsItem> results, EventDetailsItem event) {
+		MITEventsSliderActivity.launchSearchResults(EventsSearchActivity.this, event.id, results.getSearchTerm());		
+	}
 }

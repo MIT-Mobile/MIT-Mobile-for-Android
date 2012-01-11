@@ -24,9 +24,7 @@ public class PeopleSearchActivity extends SearchActivity<PersonItem> {
 
 	@Override
 	protected ArrayAdapter<PersonItem> getListAdapter(SearchResults<PersonItem> results) {
-		PeopleListAdapter recentlyViewedListAdapter = new PeopleListAdapter(this, results.getResultsList(), R.layout.boring_action_row);
-		recentlyViewedListAdapter.setLookupHandler(mSearchListView, PersonDetailViewMode.SEARCH, results.getSearchTerm());
-		return recentlyViewedListAdapter;
+		return new PeopleListAdapter(this, results.getResultsList(), R.layout.boring_action_row);
 	}
 
 	@Override
@@ -47,5 +45,15 @@ public class PeopleSearchActivity extends SearchActivity<PersonItem> {
 	@Override
 	protected Module getModule() {
 		return new PeopleModule();
+	}
+
+    @Override
+    protected boolean supportsMoreResult() {
+        return false;
+    }
+
+	@Override
+	protected void onItemSelected(SearchResults<PersonItem> searchResults, PersonItem item) {
+		PeopleDetailActivity.launchActivity(this, item, PersonDetailViewMode.SEARCH, searchResults.getSearchTerm());		
 	}
 }

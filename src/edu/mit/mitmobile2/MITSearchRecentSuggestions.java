@@ -123,6 +123,7 @@ public class MITSearchRecentSuggestions extends SearchRecentSuggestions {
         mContext = context;
         mAuthority = new String(authority);
         mSuggestionsUri = Uri.parse("content://" + mAuthority + "/" + TABLE_NAME);
+        Log.d(TAG, mSuggestionsUri.toString());
         
         if (mTwoLineDisplay) {
             mQueriesProjection = MIT_QUERIES_PROJECTION_2LINE;

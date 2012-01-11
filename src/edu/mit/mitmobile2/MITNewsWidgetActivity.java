@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,16 +26,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import edu.mit.mitmobile2.qrreader.QRReaderModule;
 import edu.mit.mitmobile2.about.AboutActivity;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
 import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
+import edu.mit.mitmobile2.libraries.LibrariesModule;
 import edu.mit.mitmobile2.maps.MapsModule;
-import edu.mit.mitmobile2.mit150.MIT150Module;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
 import edu.mit.mitmobile2.news.NewsListSliderActivity;
@@ -42,6 +41,8 @@ import edu.mit.mitmobile2.news.NewsModel;
 import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.people.PeopleModule;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
+import edu.mit.mitmobile2.settings.MITSettingsActivity;
 import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 import edu.mit.mitmobile2.tour.TourModule;
 
@@ -51,6 +52,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 	
 	private static final int ABOUT_MENU_ID = 0;
 	private static final int MOBILE_WEB_MENU_ID = 1;
+	private static final int SETTINGS_MENU_ID = 2;
 
 	Context ctx;
 	
@@ -214,6 +216,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new PeopleModule(),
 			new TourModule(),
 			new EmergencyModule(),
+			new LibrariesModule(),
 			new FacilitiesModule(),
 			new QRReaderModule(),
 		};
@@ -365,6 +368,9 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		menu.add(0, MOBILE_WEB_MENU_ID, 0, "Mobile Web")
 			.setIcon(R.drawable.menu_mobile_web);
 		
+		menu.add(0, SETTINGS_MENU_ID, 0, "Settings")
+		.setIcon(R.drawable.menu_settings);
+
 		return true;
 	}
 	
@@ -378,6 +384,10 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 				return true;
 			case MOBILE_WEB_MENU_ID:
 				CommonActions.viewURL(ctx, "http://" + Global.getMobileWebDomain() + "/");
+				return true;
+			case SETTINGS_MENU_ID:
+				intent = new Intent(ctx, MITSettingsActivity.class);
+				startActivity(intent);
 				return true;
 		}
 

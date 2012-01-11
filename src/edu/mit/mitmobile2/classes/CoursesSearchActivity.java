@@ -20,15 +20,6 @@ public class CoursesSearchActivity extends SearchActivity<CourseItem> {
 	protected ArrayAdapter<CourseItem> getListAdapter(final SearchResults<CourseItem> results) {
 		final CoursesArrayAdapter adapter = new CoursesArrayAdapter(this, R.layout.courses_row, results.getResultsList());
 		adapter.setUseLongFormat(true);
-		mSearchListView.setOnItemClickListener(
-				new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {		
-						CourseItem item = adapter.getItem(position);
-						MITCoursesDetailsSliderActivity.launchActivity(CoursesSearchActivity.this, item, true, results.getSearchTerm());
-					}
-				}
-			);
 		return adapter;
 	}
 
@@ -55,5 +46,10 @@ public class CoursesSearchActivity extends SearchActivity<CourseItem> {
 	@Override
 	protected Module getModule() {
 		return new ClassesModule();
-	}	
+	}
+
+	@Override
+	protected void onItemSelected(SearchResults<CourseItem> results, CourseItem item) {
+		MITCoursesDetailsSliderActivity.launchActivity(CoursesSearchActivity.this, item, true, results.getSearchTerm());	
+	}
 }

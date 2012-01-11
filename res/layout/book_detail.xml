@@ -1,0 +1,60 @@
+<edu.mit.mitmobile2.LockingScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true" >
+            
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >	
+        
+		<edu.mit.mitmobile2.FullScreenLoader
+			android:id="@+id/libraryWorldCatBookDetailLoader"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			/>
+
+    	<LinearLayout
+    		android:id="@+id/libraryWorldCatBookDetailLL"
+        	android:orientation="vertical"
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+        	>
+        			
+			<TextView
+				android:id="@+id/libraryWorldCatBookDetailsTitle"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="@dimen/verticalPadding"
+				android:paddingBottom="@dimen/verticalPadding"
+				android:textStyle="bold"
+				android:textSize="19sp"
+				android:textColor="#ff000000"
+				android:typeface="sans"
+				/>
+            
+    	</LinearLayout>
+        		   	
+    	<LinearLayout
+    		android:id="@+id/libraryWorldCatDetailsExtraItems"
+    		android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:background="@color/rowBackground"
+        	android:orientation="vertical"
+         	>
+         
+            <edu.mit.mitmobile2.TwoLineActionRow
+         		android:id="@+id/libraryWorldCatEmailCitationsButton"
+         		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:text="Email &amp; Cite Item"
+        		android:src="@drawable/action_email"
+        		/>
+         
+         </LinearLayout>
+    </LinearLayout>
+</edu.mit.mitmobile2.LockingScrollView>

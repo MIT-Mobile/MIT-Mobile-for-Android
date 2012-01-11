@@ -16,6 +16,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,14 +33,21 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	
 	protected static int SUGGESTIONS_MODE = SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES;
 	
-	protected ListView mSearchListView;
+	private ListView mSearchListView;
 	protected SearchResultsHeader mSearchResultsHeader;
 	protected FullScreenLoader mLoadingView;
+	protected TwoLineActionRow mLoadMore;
+	private static final String LOAD_MORE = "Load more";
+	private static final String LOADING = "Loading...";
+	private static final String TRY_AGAIN = "Loading Fail (Try Again)";
 	
 	
 	protected boolean mSearching = true;
+	private Long mLastFailedSearchTime = null;
+	private final static long MINIMUM_TRY_AGAIN_WAIT = 5000; // 5 seconds
 	protected boolean mResultsDisplayed = false;
-	protected String mSearchTerm;
+	private String mSearchTerm;
+	private SearchResults<ResultItem> mSearchResults;
 	
 	protected static void launchSearch(Context context, String query, Class<? extends SearchActivity<?>> searchActivity) {
 		Intent intent = new Intent(context, searchActivity);
@@ -49,6 +59,7 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	private Handler searchHandler(final String searchTerm) {
 	
 		return new Handler() {
+			
 			@Override
 			public void handleMessage(Message msg) {
 				if(searchTerm.equals(mSearchTerm)) {
@@ -57,17 +68,24 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 			
 					if(msg.arg1 == MobileWebApi.SUCCESS) {
 						mResultsDisplayed = true;
+						
+						// use a temp variable (to allow use of @SuppressWarnings on variable)
 						@SuppressWarnings("unchecked")
-						final SearchResults<ResultItem> searchResults = (SearchResults<ResultItem>) msg.obj;
+						final SearchResults<ResultItem> tempSearchResults = (SearchResults<ResultItem>) msg.obj;
+						mSearchResults = tempSearchResults;
 				
-						if(searchResults.getResultsList().size() == 0) {
+						if(mSearchResults.getResultsList().size() == 0) {
 							resetBackToSearch();
 							Toast.makeText(SearchActivity.this, "No matches found", Toast.LENGTH_SHORT).show();
 						}
 				
-						mSearchTerm = searchResults.getSearchTerm();
-						showSummaryView(mSearchTerm, searchResults.getResultsList().size(), searchResults.isPartialResult(), searchResults.totalResultsCount());
-						mSearchListView.setAdapter(getListAdapter(searchResults));
+						mSearchTerm = mSearchResults.getSearchTerm();
+						showSummaryView();
+						
+						if(supportsMoreResult() && mSearchResults.isPartialResult()) {
+							mSearchListView.addFooterView(mLoadMore);
+						}
+						mSearchListView.setAdapter(getListAdapter(mSearchResults));
 						mSearchListView.setVisibility(View.VISIBLE);
 				
 					} else if(msg.arg1 == MobileWebApi.ERROR) {
@@ -107,6 +125,37 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		}
 	}
 	
+	private void doContinueSearch() {
+		mLoadMore.setEnabled(false);
+		mLoadMore.setTitle(LOADING);
+		mSearching = true;
+		mLastFailedSearchTime = null;
+		
+		final SearchResults<ResultItem> currentSearchResults = mSearchResults;		
+		continueSearch(currentSearchResults, new Handler() {
+			public void handleMessage(Message msg) {
+				if(currentSearchResults == mSearchResults) {
+					mLoadMore.setEnabled(true);
+					if (msg.arg1 == MobileWebApi.SUCCESS) {
+						mLoadMore.setTitle(LOAD_MORE);
+						showSummaryView();
+						if(!mSearchResults.isPartialResult()) {
+							mSearchListView.removeFooterView(mLoadMore);
+						}
+					} else {
+						mLoadMore.setTitle(TRY_AGAIN);
+						mLastFailedSearchTime = System.currentTimeMillis();
+					}
+					// the list views are not properly responding to data being changed.
+					// requesting layout seems to fix this (my only guess is the special
+					// magic used for footerViews is buggy
+					mSearching = false;
+					mSearchListView.requestLayout();
+				}
+			}
+		});
+	}
+	
 	@Override
 	public void onNewIntent(Intent newIntent) {
 		super.onNewIntent(newIntent);
@@ -122,20 +171,80 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		mSearchListView = (ListView) findViewById(R.id.searchResultsList);
 		mSearchResultsHeader = (SearchResultsHeader) findViewById(R.id.searchResultsSummaryView);
 		mLoadingView = (FullScreenLoader) findViewById(R.id.searchResultsLoading);
+		mLoadMore = new TwoLineActionRow(this);
+		mLoadMore.setTitle(LOAD_MORE);
+		
+		mSearchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(view == mLoadMore) {
+					doContinueSearch();
+				} else {
+					@SuppressWarnings("unchecked")
+					ResultItem item = (ResultItem) parent.getItemAtPosition(position);
+					SearchActivity.this.onItemSelected(mSearchResults, item);
+				}
+			}
+		});
+		
+		// add a scroll listener to retrieve more results prememptively
+		if(supportsMoreResult()) {
+			mSearchListView.setOnScrollListener(new OnScrollListener() { 
+				private static final int MINIMUM_REMAINING_ROWS = 10;
+			
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+					continueSearchFromScroll();		
+				}
+
+				@Override
+				public void onScrollStateChanged(AbsListView view, int scrollState) {
+					continueSearchFromScroll();
+				}
+			
+				private void continueSearchFromScroll() {
+					if(mSearchResults != null && mSearchResults.isPartialResult()) {
+						if(mSearchResults.getResultsList().size() - mSearchListView.getFirstVisiblePosition() <  MINIMUM_REMAINING_ROWS) {	
+							if(!mSearching) {
+								if((mLastFailedSearchTime == null) ||
+										(mLastFailedSearchTime - System.currentTimeMillis() > MINIMUM_TRY_AGAIN_WAIT)) {
+								
+									doContinueSearch();
+								}
+							}
+						}
+					}
+				}
+			});
+		}
 		
 		doSearch(getIntent());
 	}
 	
-	private void showSummaryView(String searchTerm, int resultsCount, boolean isPartial, Integer totalResults) {
+	private void showSummaryView() {
 		String summaryText;
+		int resultsCount = mSearchResults.getResultsList().size();
 		if(resultsCount == 0) {
-			summaryText = "No matches for \"" + searchTerm + "\"";
+			summaryText = "No matches for \"" + mSearchTerm + "\"";
 		} else if(resultsCount == 1) {
-			summaryText = "1 match for \""  + searchTerm + "\"";
-		} else if(!isPartial) {
-			summaryText = resultsCount + " " + searchItemPlural() + " matching \""  + searchTerm + "\"";
+			summaryText = "1 result";
+		} else if(!mSearchResults.isPartialResult() || supportsMoreResult()) {
+			String totalCount;
+			if (mSearchResults.totalResultsCount() != null) {
+				totalCount = "" + mSearchResults.totalResultsCount();
+			} else {
+				totalCount = "" + mSearchResults.getResultsList().size();
+			}
+			summaryText = totalCount + " results";
 		} else {
-			summaryText = "Many " + searchItemPlural() + " found showing " + resultsCount;
+			if(mSearchResults.totalResultsCount() != null) {
+				// total known
+				summaryText = mSearchResults.totalResultsCount() + " ";
+			} else {
+				// total unknown
+				summaryText = "Many ";
+			}
+			summaryText += searchItemPlural() + " found showing " + resultsCount;
 		}
 		
 		mSearchResultsHeader.setText(summaryText);
@@ -160,10 +269,30 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		return false;
 	}
 	
+	
+	protected SearchResults<ResultItem> getSearchResults() {
+		return mSearchResults;
+	}
+	
+	
+	protected ListView getListView() {
+		return mSearchListView;
+	}
+	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) { }
 	
 	abstract protected String searchItemPlural();
 	
 	abstract protected String searchItemSingular();
+	
+	protected boolean supportsMoreResult() {
+		return false;
+	}
+	
+	protected void continueSearch(SearchResults<ResultItem> previousResults, Handler uiHandler) {}
+	
+	abstract protected void onItemSelected(SearchResults<ResultItem> results, ResultItem item);
+	
+	
 }

@@ -37,6 +37,10 @@ public class ShuttleModel {
 	
 	static private HashMap<String, List<Stops>> stops = new HashMap<String, List<Stops>>();
 	
+	public static boolean routesLoaded() {
+		return (routes != null && routes.size() > 0);
+	}
+	
 	private static List<RouteItem> getRoutes() {
 		if(routes != null) {
 			return routes;

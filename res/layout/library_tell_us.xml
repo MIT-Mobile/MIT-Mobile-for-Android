@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <edu.mit.mitmobile2.TitleBar
+        android:text="Tell Us"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <edu.mit.mitmobile2.LockingScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+   
+        <LinearLayout
+       	    android:orientation="vertical"
+       	    android:layout_width="fill_parent"
+       	    android:layout_height="fill_parent"
+       	    >
+       	            
+        	<LinearLayout
+        	    android:orientation="vertical"
+        	    android:layout_width="fill_parent"
+        	    android:layout_height="fill_parent"
+        	    android:padding="5dip"
+        	    android:background="@color/rowBackground">
+            	<TextView
+                	android:text="Status:"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content" 
+                	style="@style/FormLabel" 
+                	/>
+            	<Spinner
+                	android:id="@+id/statusSpinner"
+                	android:layout_width="fill_parent"
+                	android:layout_height="wrap_content" />
+            	<TextView
+            	    android:text="Feedback:"
+            	    android:layout_width="wrap_content"
+            	    android:layout_height="wrap_content" 
+            	    style="@style/FormLabel" 
+            	    />
+            	<EditText
+            	    android:id="@+id/feebackText"
+            	    android:layout_width="fill_parent"
+            	    android:layout_height="wrap_content" 
+            	    android:minLines="5"
+            	    android:gravity="left|top"
+            	    android:inputType="textMultiLine"
+            	    />
+            
+            	<Button
+                	android:id="@+id/submit"
+                	android:text="Submit"
+                	android:layout_gravity="center_horizontal"
+                	android:layout_width="wrap_content"
+                	android:layout_height="wrap_content"
+                	android:paddingBottom="9dip"
+        	    	/>
+       		</LinearLayout>
+        
+        	<TextView
+        		android:layout_width="fill_parent"
+            	android:layout_height="wrap_content" 
+            	android:gravity="center_horizontal"
+            	android:paddingTop="@dimen/verticalPadding"
+				android:paddingBottom="17dip"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:paddingRight="@dimen/horizontalPadding"
+            	android:text="Please let us know your thoughts for improving our services. We'd also appreciate hearing what you like about our current services."
+           		style="@style/Byline"
+            	/>
+            
+        	<!-- Divider -->
+			<View
+				android:layout_width="fill_parent"
+				android:layout_height="@dimen/dividerHeight"
+				android:background="@color/dividerColor" />
+				
+         	<edu.mit.mitmobile2.TwoLineActionRow
+         		android:id="@+id/libraryTellUsSuggestPurchase"
+         		android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"  
+            	android:text="Suggested Purchase Form"
+            	android:background="@color/rowBackground"
+            	android:src="@drawable/action_external"
+            	/>
+            
+        	<!-- Divider -->
+			<View
+				android:layout_width="fill_parent"
+				android:layout_height="@dimen/dividerHeight"
+				android:background="@color/dividerColor" />
+			
+        	<TextView
+        		android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"
+            	android:paddingTop="@dimen/verticalPadding"
+				android:paddingBottom="@dimen/verticalPadding"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:paddingRight="@dimen/horizontalPadding" 
+				android:gravity="center_horizontal"
+            	android:text="If you would like to suggest a purchase for our collections, please see the Suggested Purchase form."
+           		style="@style/Byline"
+            	/>		
+    	</LinearLayout>	
+    </edu.mit.mitmobile2.LockingScrollView>
+    
+    <include
+        layout="@layout/library_form_thank_you"
+        android:id="@+id/libraryTellUsThankYou"
+        android:visibility="gone" 
+        />
+        
+        
+    <edu.mit.mitmobile2.FullScreenLoader
+        android:id="@+id/tellUsLoading"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+</LinearLayout>

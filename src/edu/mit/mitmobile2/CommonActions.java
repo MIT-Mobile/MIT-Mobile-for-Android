@@ -76,15 +76,38 @@ public class CommonActions {
 		viewURL(context, "mailto:" + email);
 	}
 	
-	public static void composeEmail(Context context, String email, String subject) {
+	public static void composeEmail(Context context, String email, String subject, String body) {
 		try {
-			String subjectEncoded = URLEncoder.encode(subject, "UTF-8");
-			subjectEncoded = subjectEncoded.replace("+", "%20");
-			viewURL(context, "mailto:" + email + "?subject=" + subjectEncoded);
+			String url = "mailto:";
+			if (email != null) {
+				url += email;
+			}
+			url += "?";
+			
+			if (subject != null) {			
+				String subjectEncoded = URLEncoder.encode(subject, "UTF-8");
+				subjectEncoded = subjectEncoded.replace("+", "%20");
+				url += "subject=" + subjectEncoded;
+			}
+			
+			if (body != null) {
+				if (subject != null) {
+					url += "&";
+				}
+				String bodyEncoded = URLEncoder.encode(body, "UTF-8");
+				bodyEncoded = bodyEncoded.replace("+", "%20");
+				url += "body=" + bodyEncoded;
+			}
+			
+			viewURL(context, url);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void composeEmail(Context context, String email, String subject) {
+		composeEmail(context, email, subject, null);
 	}
 	
 	public static void searchMap(Context context, String mapQuery) {

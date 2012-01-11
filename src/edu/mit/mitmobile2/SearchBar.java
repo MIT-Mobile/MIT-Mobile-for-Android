@@ -16,6 +16,8 @@ public class SearchBar extends LinearLayout {
 	ImageButton mSearchButton;
 	TextView mSearchHintTV;
 	
+	private static final String NAMESPACE = "http://schemas.android.com/apk/res/android";
+
 	public SearchBar(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 		
@@ -26,6 +28,11 @@ public class SearchBar extends LinearLayout {
 		mSearchBox.setFocusableInTouchMode(true);
 		mSearchButton = (ImageButton) findViewById(R.id.searchButton);
 		mSearchHintTV = (TextView) findViewById(R.id.searchBoxHint);
+		
+		if(attributeSet != null) {
+			String hintText = attributeSet.getAttributeValue(NAMESPACE, "hint");
+			setSearchHint(hintText);
+		}
 	}
 	
 	public static interface OnInitiateSearchListener {
