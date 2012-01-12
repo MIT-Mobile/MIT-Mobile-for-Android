@@ -17,6 +17,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import edu.mit.mitmobile2.ConnectionWrapper;
@@ -381,6 +383,11 @@ public class NewsModel {
 							// not in db, so must retreive from network
 				
 							HttpClient httpclient = new DefaultHttpClient();
+							
+							// explicitly set buffer size for httpClient
+							HttpParams httpParameters = httpclient.getParams();
+							HttpConnectionParams.setSocketBufferSize(httpParameters, 8192);
+
 							HttpGet httpget = new HttpGet(newsItem.thumbURL); 
 							HttpResponse response;
 		        
