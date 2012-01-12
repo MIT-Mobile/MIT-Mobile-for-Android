@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.events;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -11,6 +10,7 @@ import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -79,6 +79,11 @@ public class EventsSimpleCategoryActivity extends ModuleActivity {
 	
 	private void startLoadingCategories() {
 		mEventType = EventsModel.getEventType(mSourceId);
+		if (mEventType == null) {
+			mLoadingView.showError();
+			Toast.makeText(this, "Calendar for category not found", Toast.LENGTH_LONG);
+			return;
+		}
 		mSourceName = mEventType.getShortName();
 		mTitleBar.setTitle(mSourceName);
 		EventsModel.fetchCategories(this, mEventType, handleCategories());
