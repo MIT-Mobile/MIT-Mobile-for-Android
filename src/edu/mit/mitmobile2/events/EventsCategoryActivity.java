@@ -54,8 +54,14 @@ public class EventsCategoryActivity extends ModuleActivity {
 		
 		
 		if(!mIsSubcategory) {
-			EventsModel.fetchCategories(this, handleCategories());
-			mTitleBar.setTitle("Categories");
+			if (EventsModel.categoriesAvailable()) {
+				EventsModel.fetchCategories(this, handleCategories());
+				mTitleBar.setTitle("Categories");
+			} else {
+				// activity will need to gracefully exist
+				finish();
+				return;
+			}
 		} else {
 			EventCategoryItem categoryItem = EventsModel.getCategory(mCategoryId);
 			if(categoryItem == null) {

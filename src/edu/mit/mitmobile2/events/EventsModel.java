@@ -269,6 +269,10 @@ public class EventsModel {
 	 */
 	private static HashMap<String, List<EventCategoryItem>> sCategories = new HashMap<String, List<EventCategoryItem>>();
 	
+	public static boolean categoriesAvailable() {
+		return (getEventType("Events") != null);
+	}
+	
 	public static void fetchCategories(Context context, Handler uiHandler) {
 		fetchCategories(context, getEventType("Events"), uiHandler);
 	}
