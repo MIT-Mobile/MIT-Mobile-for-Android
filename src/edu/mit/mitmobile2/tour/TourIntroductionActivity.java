@@ -24,11 +24,7 @@ public class TourIntroductionActivity extends ModuleActivity {
 		
 		setContentView(R.layout.boring_activity_layout);
 		
-		if(TourModel.getTour() == null) {
-		    finish();   
-		    return;
-		}
-		TourHeader header = TourModel.getTour().getHeader();
+		TourHeader header = TourModel.getTour(this).getHeader();
 		
 		TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
 		titleBar.setTitle(header.getTitle());

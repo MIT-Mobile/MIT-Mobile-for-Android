@@ -67,7 +67,7 @@ public class TourStopSliderActivity extends SliderActivity {
 	protected void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		
-		mTour = TourModel.getTour();	
+		mTour = TourModel.getTour(this);	
 		
 		if(getIntent().hasExtra(BEGIN_GUID_KEY)) {
 			String startLocationGuid = getIntent().getStringExtra(BEGIN_GUID_KEY);		
