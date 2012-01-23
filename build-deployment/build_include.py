@@ -40,6 +40,7 @@ def write_build_settings(build_settings_dictionary):
 
          public class BuildSettings {
               public final static String BUILD_ID = "%(build_id)s";
+              public final static String BUILD_GIT_DESCRIBE = "%(build_git_describe)s";
               public final static String BUILDER = "%(builder)s";
               public final static String BUILD_SOURCE = "%(build_source)s";
               public final static String TAG = %(tag_literal)s;
@@ -167,7 +168,8 @@ def build_source(builder, tag, fresh_repository):
    inital_cwd = os.getcwd()
    print inital_cwd
    if not tag:
-      build_id = shell("git rev-parse HEAD", True)     
+      build_id = shell("git rev-parse HEAD", True)
+      build_git_describe = shell("git describe", True)     
       build_source = "local code"
 
       # only want to do project renaming if release_project_name is set
@@ -222,11 +224,13 @@ def build_source(builder, tag, fresh_repository):
          os.chdir(tmp_tag_path)
          shell("git checkout " + tag)
          build_id = shell("git rev-parse HEAD", True)
+         build_git_describe = shell("git describe", True)
          build_source = "repository"
       else:
          # shell("git pull", False)
          shell("git checkout %s" % tag, False)
-         build_id = shell("git rev-parse HEAD", True)     
+         build_id = shell("git rev-parse HEAD", True)    
+         build_git_describe = shell("git describe", True)
          build_source = "local code"
       
    if tag:
@@ -247,6 +251,7 @@ def build_source(builder, tag, fresh_repository):
    write_local_properties(build_settings.android_sdk_path)
    write_build_settings({
        "build_id" : build_id,
+       "build_git_describe" : build_git_describe,
        "build_source" : build_source,
        "builder" : builder,
        "tag_literal" : tag_literal,
