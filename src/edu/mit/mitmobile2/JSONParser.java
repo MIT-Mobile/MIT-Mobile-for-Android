@@ -26,8 +26,7 @@ public abstract class JSONParser  {
 	
 	private static final String TAG = "JSONParser";
 
-	private static final String HTTP_USER_AGENT = 
-		"MIT Mobile " + BuildSettings.VERSION_NAME + " for Android";
+	private static final String HTTP_USER_AGENT = UserAgent.get();
 	
 	public boolean expectingObject = false;
 	
