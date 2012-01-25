@@ -21,18 +21,20 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.ModoLog;
 import edu.mit.mitmobile2.about.BuildSettings;
@@ -58,7 +60,7 @@ public class MapTilesManager {
 	private String retlastUpdatedStr;
 	
     private final Map<String, SoftReference<Bitmap>> imagesMap;
-    private final SmallBitmapCache imagesMapStrongRefs = SmallBitmapCache.getInstance();
+    private SmallBitmapCache imagesMapStrongRefs;
     
     private final Map<String, Boolean> pendingImages;
     private final HashMap<String,Object> badMap;
@@ -82,6 +84,8 @@ public class MapTilesManager {
 	private BitmapFactory.Options mBitmapOptions;
 		
     public MapTilesManager(MITMapView mv, Context ctx) {
+    	imagesMapStrongRefs = SmallBitmapCache.getInstance(ctx);
+    	
     	mBitmapOptions = new BitmapFactory.Options();
     	mBitmapOptions.inPurgeable = true;
     	
@@ -682,18 +686,28 @@ public class MapTilesManager {
 	
 	private static class SmallBitmapCache extends LinkedHashMap<String, Bitmap> {
 		private static final long serialVersionUID = 1L;
-		protected static final int MAX_ENTRIES = 15;
+		protected static int MAX_ENTRIES;
 		
 		private static int sReferenceCount = 0;
 		private static SmallBitmapCache sInstance = null;
 		
-		public static SmallBitmapCache getInstance() {
+		public static SmallBitmapCache getInstance(Context context) {
 			sReferenceCount++;
 			
 			if(sInstance != null) {
 				return sInstance;
 			} else {
 				sInstance = new SmallBitmapCache();
+				ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+				Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+				int w = display.getWidth();
+				int h = display.getHeight();
+				int tiles = (int) (Math.ceil(((double) w) / MITMapView.IMAGE_TILE_SIZE) * Math.ceil(((double) h) / MITMapView.IMAGE_TILE_SIZE));   
+				int memoryLimit = activityManager.getMemoryClass();
+				
+				MAX_ENTRIES = Math.min(memoryLimit * 2 / 3, tiles * 2);
+
 				return sInstance;
 			}
 		}
