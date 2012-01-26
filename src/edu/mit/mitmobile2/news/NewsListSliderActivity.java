@@ -145,6 +145,12 @@ public class NewsListSliderActivity extends SliderActivity {
 					
 					if(msg.arg1 == NewsModel.FETCH_SUCCESSFUL) {
 						// update the UI
+						if (mNewsCursor.isClosed()) {
+							mNewsListView.removeFooterView(mFooterView);
+							mNewsCursor = null;
+							initalizeCursorAdapter();
+						}
+						
 						freezeScroll();
 						mNewsCursor.requery();
 						unfreezeScroll();
