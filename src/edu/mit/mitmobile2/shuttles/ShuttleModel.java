@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,8 @@ import android.os.Handler;
 import android.util.Log;
 
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.alerts.C2DMReceiver;
+import edu.mit.mitmobile2.alerts.C2DMReceiver.Device;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
@@ -319,5 +322,42 @@ public class ShuttleModel {
 		
 		
 	}
+    
+    enum SubscriptionType {
+    	SUBSCRIBE,
+    	UNSUBSCRIBE
+    }
+    
+    public static void subscribeForShuttleStop(Context context, SubscriptionType subscriptionType, String stopID, String routeID, Long time, final Handler uiHandler) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+		params.put("command", subscriptionType.toString().toLowerCase(Locale.US));
+		
+		// device parameters
+		Device device = C2DMReceiver.getDevice(context);
+		params.put("device_id", Long.toString(device.getDeviceId()));
+		params.put("pass_key", Long.toString(device.getPassKey()));		
+		params.put("device_type", "android");
+		
+		params.put("route", routeID);
+		params.put("stop", stopID);
+		if (time != null) {
+			params.put("time", Long.toString(time / 1000));
+		}
+		
+		MobileWebApi webApi = new MobileWebApi(false, true, "Shuttle Alert", context, uiHandler);
+		webApi.requestJSONObject(BASE_PATH, params, 
+			new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {					
+				@Override
+				public void onResponse(JSONObject object) throws JSONException {
+					if (object.has("success")) {
+						MobileWebApi.sendSuccessMessage(uiHandler);
+					} else {
+						MobileWebApi.sendErrorMessage(uiHandler);
+					}
+				}
+			}
+		);
+    }
 	
 }

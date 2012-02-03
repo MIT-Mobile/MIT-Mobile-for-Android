@@ -93,9 +93,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 		
 	}
 	
-	private final String PREFERENCES = "DeviceRegistration";
-	private final String DEVICE_ID_KEY = "device_id";
-	private final String DEVICE_PASS_KEY = "pass_key";
+	private final static String PREFERENCES = "DeviceRegistration";
+	private final static String DEVICE_ID_KEY = "device_id";
+	private final static String DEVICE_PASS_KEY = "pass_key";
 	
 	private void registerDevice(Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -147,6 +147,33 @@ public class C2DMReceiver extends BroadcastReceiver {
 				}
 			});		
 		}
+	}
+	
+	static public class Device {
+		private long mDeviceId;
+		private long mPassKey;
+	
+		Device(long deviceId, long passKey) {
+			mDeviceId = deviceId;
+			mPassKey = passKey;
+		}
+		
+		public long getDeviceId() {
+			return mDeviceId;
+		}
+		
+		public long getPassKey() {
+			return mPassKey;
+		}
+	}
+	
+	public static Device getDevice(Context context) {
+		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		
+		return new Device(
+			preferences.getLong(DEVICE_ID_KEY, -1),
+			preferences.getLong(DEVICE_PASS_KEY, 0)
+		);
 	}
 	
 }
