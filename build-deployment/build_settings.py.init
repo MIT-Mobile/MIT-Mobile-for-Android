@@ -10,6 +10,7 @@ verbose_logging = True
 
 build_tag = "development"
 
+c2dm_sender = ""
 #release_project_name = "" #name of the project when released
 
 #source_project_name = "edu.mit.mitmobile2" #name of project in source code

@@ -64,7 +64,7 @@ public class NotificationService extends Service {
     		
     		if (action.equals(NotificationsAlarmReceiver.ACTION_ALARM_EMERGENCY)) {
     			icon = R.drawable.alert_emergency;
-    			checkEmergency();
+    			//checkEmergency();
     		} else if (action.equals(NotificationsAlarmReceiver.ACTION_ALARM_CLASS)) {
     			icon = R.drawable.alert_stellar;
     			checkClass();

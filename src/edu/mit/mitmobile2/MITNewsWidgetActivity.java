@@ -100,7 +100,6 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		
 		getData();
 		
-		NotificationsHelper.setupAlarmData(getApplicationContext());
 	}
 
 	/****************************************************/

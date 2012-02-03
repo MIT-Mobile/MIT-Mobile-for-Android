@@ -24,14 +24,12 @@ public abstract class SimpleArrayAdapter<T> extends ArrayAdapter<T> {
 	
 	@Override 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.d("Global","mRowResourceId = " + mRowResourceId);
 		if(convertView == null) {
 			LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflator.inflate(mRowResourceId, null);
 		}
 		
 		final T item = getItem(position);
-		Log.d("Global","class of convertView = " + convertView.getClass());
 		updateView(item, convertView);
 		
 		return convertView;
