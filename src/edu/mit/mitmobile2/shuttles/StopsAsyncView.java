@@ -444,7 +444,6 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 			subscription = SubscriptionType.SUBSCRIBE;
 		}
 		
-		//ShuttleModel.saveAlerts(top.pref,MITStopsSliderActivity.alertIdx);  // TODO better?
 
 		ShuttleModel.subscribeForShuttleStop(ctx, subscription, si.id, p.route_id, alertTime, 
 			new Handler() {
