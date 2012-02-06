@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -24,17 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.LoaderBar;
-import edu.mit.mitmobile2.LoadingUIHelper;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.alerts.NotificationsAlarmReceiver;
 import edu.mit.mitmobile2.objs.Predicted;
-import edu.mit.mitmobile2.objs.Predicted.AlertStatus;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
-import edu.mit.mitmobile2.shuttles.ShuttleModel.SubscriptionType;
 import edu.mit.mitmobile2.shuttles.ShuttleRouteArrayAdapter.SectionListItemView;
 
 
@@ -176,20 +177,11 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 								
 								if (s.showAlert) {
 								    routeIV.setVisibility(View.VISIBLE);
-								    switch (s.alertStatus) {
-								    	case SET:
-								    		routeIV.setImageResource(R.drawable.shuttle_alert_toggle_on);
-								    		break;
-								    	case UNSET:
-								    		routeIV.setImageResource(R.drawable.shuttle_alert_toggle_off);
-								    		break;
-								    	case UNKNOWN:
-								    		Drawable busyBox = getResources().getDrawable(R.drawable.busybox);
-								    		routeIV.setImageDrawable(busyBox);
-								    		LoadingUIHelper.startLoadingImage(new Handler(), routeIV);
-								    		break;
-								    }
-
+									if (s.alertSet) {
+										routeIV.setImageResource(R.drawable.shuttle_alert_toggle_on);
+									} else {
+										routeIV.setImageResource(R.drawable.shuttle_alert_toggle_off);
+									}
 								} else {
 									    routeIV.setVisibility(View.INVISIBLE);
 								}
@@ -284,20 +276,20 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	    				pi.next = s.now + p.longValue();
 	    				pi.stop_id = s.id;
 	    				pi.route_id = s.route_id;
-	    				pi.alertStatus = AlertStatus.UNSET;
+	    				pi.alertSet = false;
 	    				pi.showAlert = true;
 	    				predictions.add(pi);
 
 	    				// Alert time passed?
 	    				if (((pi.next*1000)>alert_time)&&(!found_alert)) {
 	    					found_alert = true;
-	    					prev_pi.alertStatus = AlertStatus.SET;
+	    					prev_pi.alertSet = true;
 	    					alert_pis.put(s.route_id, prev_pi);
 	    				}
 	    				prev_pi = pi;
 	    			}
 	    			if (!found_alert) {
-	    				prev_pi.alertStatus = AlertStatus.SET;
+	    				prev_pi.alertSet = true;
 	    				alert_pis.put(s.route_id, prev_pi);
 	    			}
 	    			
@@ -413,126 +405,169 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	
 	/****************************************************/
 
-	boolean mIsCurrentSubscribingAlert = false;
 	@Override
-	 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {		
-		final ListView l = (ListView) parent;		
-		final Predicted p = (Predicted) l.getItemAtPosition(position);		
+	 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-		// early exits
+		
+		ListView l = (ListView) parent;
+
+		//ShuttleRouteArrayAdapter sa = (ShuttleRouteArrayAdapter) l.getAdapter();
+		
+		Predicted p = (Predicted) l.getItemAtPosition(position);
+		
+		
+		Predicted alert_pi = alert_pis.get(p.route_id);
+		
+
 		long curTime = System.currentTimeMillis();
+		
 		if ((p.next*1000)<(curTime+5*60*1000)) return;
+			 
 		
-		if (mIsCurrentSubscribingAlert) {
-			return;
-		}
-		mIsCurrentSubscribingAlert = true;
-		
-		
-		final Long alertTime;
-		if (p.alertStatus == AlertStatus.UNSET) {
-			alertTime = new Long(p.next*1000);
-		} else {
-			alertTime = null;
-		}
+		AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Service.ALARM_SERVICE);
 
 		
-		final SubscriptionType subscription;
-		if (p.alertStatus == AlertStatus.SET) {
-			subscription = SubscriptionType.UNSUBSCRIBE;
-		} else {
-			subscription = SubscriptionType.SUBSCRIBE;
-		}
+		// Three cases:
+		//
+		// - setting new, no previous
+		// - setting new, clear different previous
+		// - clearing previous
 		
+		
+		// Is there an existing alert?
+		HashMap<String,Long> routes_times = MITStopsSliderActivity.alertIdx.get(si.id);
+		Long alertTime = null;
+		if (routes_times==null) {
+			routes_times = new HashMap<String,Long>();
+			MITStopsSliderActivity.alertIdx.put(si.id, routes_times);
+		} else {
+			alertTime = routes_times.get(p.route_id);
+		}
 
-		ShuttleModel.subscribeForShuttleStop(ctx, subscription, si.id, p.route_id, alertTime, 
-			new Handler() {
-				@Override
-				public void handleMessage(Message msg) {
-					if (msg.arg1 == MobileWebApi.SUCCESS) {
-						if (subscription == SubscriptionType.SUBSCRIBE) {
-							p.alertStatus = AlertStatus.SET;
-						} else {
-							p.alertStatus = AlertStatus.UNSET;
-						}
-						updateShuttleAlertsData(p, alertTime);
-					} else {
-						// error case assume failure
-						// reverting back to previous state
-						if (subscription == SubscriptionType.SUBSCRIBE) {
-							p.alertStatus = AlertStatus.UNSET;
-						} else {
-							p.alertStatus = AlertStatus.SET;
-						}						
-					}
-					mIsCurrentSubscribingAlert = false;
-					adapter.notifyDataSetChanged();
-					l.postInvalidate();
-				}
+		 
+		if (alertTime!=null) {
+			
+			// Yes - remove previous alert 
+			routes_times.remove(p.route_id);
+			if (routes_times.isEmpty()) {
+				MITStopsSliderActivity.alertIdx.remove(si.id);
 			}
-		);
-				
+			
+			if (alert_pi!=null) {
+				// Cancel (needs to match previous one)
+				Intent i = new Intent(ctx, NotificationsAlarmReceiver.class);
+				i.setAction(NotificationsAlarmReceiver.ACTION_ALARM_SHUTTLE);
+				Uri data = Uri.parse(alert_pi.stop_id + alert_pi.route_id);
+				i.setData(data);
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, i, 0);
+				alarmManager.cancel(pendingIntent);
+
+	    		Log.d("StopsAsyncView", "shuttle-alerts: cancel: " + alert_pi.stop_id + " " + alert_pi.route_id);
+	    		
+				if (p!=alert_pi) alert_pi.alertSet = false;
+				alert_pi = null;
+				alert_pis.put(p.route_id, null);
+			}
+			
+		}
 		
-		adapter.notifyDataSetChanged();
+		//
+		// >>>>>> Alert times holds EXACT alert times while we schedule Alarms slightly in advance of this
+		//
 		
-		p.alertStatus = AlertStatus.UNKNOWN;
+	
+		// Cancel or Schedule alarm?
+		if (p.alertSet) {
+			/*
+			alert_pi = null;
+			
+			// Cancel (needs to match previous one)
+			Intent i = new Intent(ctx, NotificationsAlarmReceiver.class);
+			i.setAction(NotificationsAlarmReceiver.ACTION_ALARM_SHUTTLE);
+			Uri data = Uri.parse(p.stop_id + p.route_id);
+			i.setData(data);
+			
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, i, 0);
+			alarmManager.cancel(pendingIntent);
+			*/
+		} else {
+
+			// Schedule new alert
+
+			alert_pi = p;
+			alert_pis.put(p.route_id, p);
+			
+			long wakeTime;
+			long busTime = p.next*1000;  
+			long diff = busTime - curTime;
+
+			// add to map
+			alertTime = new Long(busTime);
+			routes_times.put(p.route_id, alertTime);
+			MITStopsSliderActivity.alertIdx.put(si.id,routes_times);
+			
+			// set wakeup time
+			if (diff<5*60*1000) {
+				// ignore if under 5 mins...
+				return;
+			} else if (diff<30*60*1000) {
+				wakeTime = busTime - 5*60*1000;  // wake up 5 mins before...
+			} else {
+				wakeTime = busTime - 20*60*1000;  // wake up 20 mins before...
+			}
+			
+			if (Global.DEBUG) {
+				wakeTime = curTime + 30*1000;  // TODO DEBUG
+				//busTime = curTime + 30*1000;
+				busTime = curTime + 7*60*1000;
+			}
+			
+			String title = si.title;
+		 	if (title==null) {
+		 		title = "unknown stop";
+		 	}
+		 	
+		 	
+		 	// FIXME need to differentiate alarms
+
+    		Log.d("StopsAsyncView", "shuttle-alerts: set: " + alert_pi.stop_id + " @ " + alert_pi.route_id);
+    		
+			Intent i = new Intent(ctx, NotificationsAlarmReceiver.class);
+			i.setAction(NotificationsAlarmReceiver.ACTION_ALARM_SHUTTLE);
+			
+			Uri data = Uri.parse(p.stop_id + p.route_id);
+			i.setData(data);
+
+			i.putExtra(ShuttleModel.KEY_STOP_TITLE, title);
+			i.putExtra(ShuttleModel.KEY_STOP_ID, p.stop_id);
+			i.putExtra(ShuttleModel.KEY_ROUTE_ID, p.route_id);
+			i.putExtra(ShuttleModel.KEY_TIME, busTime);
+			
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, 0, i, 0);
+			alarmManager.set(AlarmManager.RTC_WAKEUP,  wakeTime, pendingIntent);
+			
+		}
+
+		p.alertSet = !p.alertSet;
+		
+		//l.invalidate();
 		l.postInvalidate();
 		
-	}
+		/*
+		// TODO checks
+		int count = l.getCount();
+		int num_set = 0;
+		for (int i=0; i<count; i++) {
+			p = (Predicted) l.getItemAtPosition(i);
+			if (p.alertSet) num_set++;
+			if (num_set>1) Log.e("StopsAsyncView", "StopsAsyncView: too many alerts i=" + i);
+		}
+		*/
+		ShuttleModel.saveAlerts(top.pref,MITStopsSliderActivity.alertIdx);  // TODO better?
 
-	private void updateShuttleAlertsData(Predicted p, Long newAlertTime) {
-			// Three cases:
-			//
-			// - setting new, no previous
-			// - setting new, clear different previous
-			// - clearing previous
+		adapter.notifyDataSetChanged();
+		//sa.notifyDataSetChanged();
 		
-			// Is there an existing alert?
-			Predicted alert_pi = alert_pis.get(p.route_id);
-			
-			HashMap<String,Long> routes_times = MITStopsSliderActivity.alertIdx.get(si.id);
-			Long previousAlertTime = null;
-			if (routes_times==null) {
-				routes_times = new HashMap<String,Long>();
-				MITStopsSliderActivity.alertIdx.put(si.id, routes_times);
-			} else {
-				previousAlertTime = routes_times.get(p.route_id);
-			}
-
-			 
-			if (previousAlertTime!=null) {
-				
-				// Yes - remove previous alert 
-				routes_times.remove(p.route_id);
-				if (routes_times.isEmpty()) {
-					MITStopsSliderActivity.alertIdx.remove(si.id);
-				}
-				
-				if (alert_pi!=null) {	    		
-					if (p!=alert_pi) alert_pi.alertStatus = AlertStatus.UNSET;
-					alert_pi = null;
-					alert_pis.put(p.route_id, null);
-				}
-				
-			}	
-			
-			// add a new alert
-			if (p.alertStatus == AlertStatus.SET) {
-
-				if (newAlertTime == null) {
-					throw new RuntimeException("Alert time not set, although status is set");
-				}
-				
-				// Schedule new alert
-				alert_pi = p;
-				alert_pis.put(p.route_id, p);
-			
-				// add to map
-				routes_times.put(p.route_id, newAlertTime);
-				MITStopsSliderActivity.alertIdx.put(si.id, routes_times);
-			}
-			
-			ShuttleModel.saveAlerts(top.pref, MITStopsSliderActivity.alertIdx);
 	}
 
 	@Override

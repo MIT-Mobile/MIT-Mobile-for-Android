@@ -4,18 +4,12 @@ public class Predicted {
 	
 	public long next;
 	
-	public AlertStatus alertStatus = AlertStatus.UNSET;
+	public boolean alertSet = false;
 	
 	public String route_id;
 	public String stop_id;
 
 	public boolean showAlert = true;
-	
-	public enum AlertStatus {
-		SET,
-		UNSET,
-		UNKNOWN,
-	}
 	
 	
 }
