@@ -5,6 +5,7 @@ import java.util.Date;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.classes.CoursesDataModel.SubscriptionType;
 import edu.mit.mitmobile2.objs.CourseItem;
 
 public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
@@ -115,11 +117,13 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
 
 	static final int MENU_MY_STELLAR = MENU_LAST + 1;
 	
+	SubscriptionType mSubscriptionType;
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
 		if(item.getItemId() == MENU_MY_STELLAR) {
-			CoursesDataModel.setAlarm(this, mCourseItem);
+			MITCoursesDetailsSliderActivity.showSubscriptionToast(this, mSubscriptionType);
+			CoursesDataModel.subscribeForCourse(this, mCourseItem, mSubscriptionType, new Handler());
 			return true;
 		}
 		
@@ -134,9 +138,11 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
 		if(CoursesDataModel.myCourses.containsKey(mMasterId)) {
 			menuTitle = "Remove from My Stellar";
 			menuIconId = R.drawable.menu_remove_bookmark;
+			mSubscriptionType = SubscriptionType.UNSUBSCRIBE;
 		} else {
 			menuTitle = "Add to My Stellar";
 			menuIconId = R.drawable.menu_add_bookmark;
+			mSubscriptionType = SubscriptionType.SUBSCRIBE;
 		}
 		
 		menu.add(0, MENU_MY_STELLAR, Menu.NONE, menuTitle)

@@ -37,6 +37,7 @@ public class CourseItem {
 	public List<CourseTime> times = new ArrayList<CourseTime>();;
 	public Staff staff = new Staff();;
 	public String term;
+	private String termId;
 	
 	// # Checksum
 	//command: subjectList
@@ -50,13 +51,13 @@ public class CourseItem {
 	//id: subjectId
 	public List<Announcement> announcements = new ArrayList<Announcement>();
 	public java.util.Date lastViewed;
-	public long last_announcement = 0;
 	public boolean read = true;
 	
 	//public boolean alarmSet = false;
 
 	public void setTerm(String in) {
 		
+		this.termId = in;
 		this.term = in;  // default
 		if (in.length()==4) {
 			String season = in.substring(0, 2);
@@ -74,6 +75,10 @@ public class CourseItem {
 			}
 		}
 		
+	}
+	
+	public String getTermId() {
+		return termId;
 	}
 	
 	// # Search

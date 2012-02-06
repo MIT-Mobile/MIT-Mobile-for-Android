@@ -97,7 +97,8 @@ public class CourseDetailsView implements SliderInterface {
 			public void run() {
 				CourseItem c = CoursesDataModel.getDetails(mCourseItem.masterId);
 				if(c != null) {
-					updateUI(c);
+					mCourseItem = c;
+					updateUI(mCourseItem);
 				} else {
 					mLoader.showError();
 				}
@@ -274,6 +275,9 @@ public class CourseDetailsView implements SliderInterface {
 		
 	}
 	
+	public CourseItem getCourse() {
+		return mCourseItem;
+	}
 	/****************************************************/
 	
 

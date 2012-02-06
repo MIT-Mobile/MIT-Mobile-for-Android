@@ -20,17 +20,11 @@ import android.text.Spanned;
 import android.util.Log;
 
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.JSONParser;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.classes.CourseSubjectParser;
-import edu.mit.mitmobile2.classes.CoursesDataModel;
-import edu.mit.mitmobile2.classes.CoursesTopActivity;
 import edu.mit.mitmobile2.emergency.EmergencyActivity;
 import edu.mit.mitmobile2.emergency.EmergencyParser;
-import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.EmergencyItem;
 import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.objs.CourseItem.Announcement;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 import edu.mit.mitmobile2.shuttles.RoutesParser;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
@@ -62,13 +56,7 @@ public class NotificationService extends Service {
     		
     		if (action==null) return;
     		
-    		if (action.equals(NotificationsAlarmReceiver.ACTION_ALARM_EMERGENCY)) {
-    			icon = R.drawable.alert_emergency;
-    			//checkEmergency();
-    		} else if (action.equals(NotificationsAlarmReceiver.ACTION_ALARM_CLASS)) {
-    			icon = R.drawable.alert_stellar;
-    			checkClass();
-    		} else if (action.equals(NotificationsAlarmReceiver.ACTION_ALARM_SHUTTLE)) {
+    		if (action.equals(NotificationsAlarmReceiver.ACTION_ALARM_SHUTTLE)) {
     			icon = R.drawable.alert_shuttles;
     			checkStop();
     		}
@@ -157,91 +145,7 @@ public class NotificationService extends Service {
 			e.printStackTrace();
 		}
 	}
-	/******************************************************************/
-	protected void checkClass() {
 
-		pref = getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_WORLD_READABLE + Context.MODE_WORLD_WRITEABLE); 
-		
-		// Get list of watched classes...
-	    String alarms  = pref.getString(CoursesDataModel.PREF_KEY_STELLAR_IDS, null);
-	    String updates = pref.getString(CoursesDataModel.PREF_KEY_STELLAR_LAST_UPDATES, null);
-	    String reads = pref.getString(CoursesDataModel.PREF_KEY_STELLAR_READ, null);
-
-		Log.d("NotificationService","stellar-alert: checkClass-> enter");
-	    
-		if (alarms!=null) {
-
-			Log.d("NotificationService","stellar-alert: checkClass-> alarms exist");
-		    
-			String[] class_alarms = alarms.split("###");
-			final String[] last_updates = updates.split("###");
-			final String[] class_reads = reads.split("###");
-			
-			for (int x=0; x<class_alarms.length; x++) {
-				
-				String s = class_alarms[x];
-				final String lu = last_updates[x];
-				final int index = x;
-				
-				// Check each class ...
-				final JSONParser cp = new CourseSubjectParser(false,true);
-				String u = cp.getBaseUrl()+"&command=subjectInfo&id="+s;
-				cp.getJSON(u, true);
-				
-				if (cp.items.size()<1) {
-					Log.e("NotificationService","stellar-alert: checkClass-> no data");
-					continue;
-				}
-				CourseItem ci = (CourseItem) cp.items.get(0);
-				
-				// For each Announcement...
-				long last_changed = Long.valueOf(lu);
-				boolean updated = false;
-				for (Announcement a : ci.announcements) {
-					if (a.unixtime>last_changed) {
-						updated = true;
-						last_changed = a.unixtime;
-						last_updates[index] = String.valueOf(last_changed);
-						class_reads[index] = String.valueOf(false);
-					}
-				}
-				if (updated) {
-					String title = ci.masterId + " Announcement";
-					String text = ci.announcements.get(0).text;
-					Log.d("NotificationService","stellar-alert: class-> " + ci.masterId + " : " + ci.title);
-					notifyUser(title, title, text, CoursesTopActivity.class, x);
-				}
-				
-				
-			}  // for each class...
-
-			SharedPreferences.Editor editor = pref.edit();
-			
-			// Save updated announcement times
-			String concat = "";
-			for (int x=0; x<last_updates.length; x++) {
-				concat += last_updates[x] + "###";
-			}
-			editor.putString(CoursesDataModel.PREF_KEY_STELLAR_LAST_UPDATES, concat);  
-			
-			// Save read flag
-			concat = "";
-			for (int x=0; x<class_reads.length; x++) {
-				concat += class_reads[x] + "###";
-			}
-			editor.putString(CoursesDataModel.PREF_KEY_STELLAR_READ, concat);  
-			 
-			boolean success = editor.commit();
-			if (!success) {
-				Log.e("NotificationService","stellar-alert: save-> failed commit");
-			}
-			
-			stopSelf();
-			
-		}
-		
-		
-	}
 	/******************************************************************/
 	protected void checkStop() {
 
@@ -265,6 +169,7 @@ public class NotificationService extends Service {
 			StopsParser sp = new StopsParser();
 			RoutesParser rp = new RoutesParser();
 			sp.getJSON(rp.getBaseUrl()+"?command=stopInfo&id="+stop_id,true);
+			@SuppressWarnings("unchecked")
 			ArrayList<Stops> sss = (ArrayList<Stops>) sp.items;
 			
 			if (sss.isEmpty()) {

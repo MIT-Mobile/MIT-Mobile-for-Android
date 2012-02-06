@@ -1,17 +1,21 @@
 package edu.mit.mitmobile2.classes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.classes.CoursesDataModel.SubscriptionType;
 import edu.mit.mitmobile2.objs.CourseItem;
 
 public class MITCoursesDetailsSliderActivity extends SliderActivity {
@@ -80,6 +84,8 @@ public class MITCoursesDetailsSliderActivity extends SliderActivity {
 		context.startActivity(intent);
 	}
 	/****************************************************/
+	
+	ArrayList<CourseDetailsView> mCourseDetailsViews = new ArrayList<CourseDetailsView>();
     void createViews() {
 
     	CourseDetailsView cv;
@@ -92,18 +98,38 @@ public class MITCoursesDetailsSliderActivity extends SliderActivity {
     		
     		addScreen(cv, ci.title, "Class Info");   
     		
+    		mCourseDetailsViews.add(cv);
+    		
     	}
     	
     	setPosition(mStartPosition);
     	
     }
+    
+    
+    public static void showSubscriptionToast(Context context, SubscriptionType subscriptionType) {
+		String userNotice = null;
+		switch (subscriptionType) {
+			case SUBSCRIBE:
+				userNotice = "Subscribing for notices";
+				break;
+			case UNSUBSCRIBE:
+				userNotice = "removing notices";
+				break;
+		}  
+		
+		Toast.makeText(context, userNotice, Toast.LENGTH_SHORT).show();
+    }
+    
+    SubscriptionType mCurrentSubscriptionType;
+    CourseItem mCurrentCourse;
 	/****************************************************/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		if(item.getItemId() == MENU_MY_STELLAR) {
-			CourseItem course = courses.get(getPosition());
-			CoursesDataModel.setAlarm(this, course);
+			showSubscriptionToast(this, mCurrentSubscriptionType);
+			CoursesDataModel.subscribeForCourse(this, mCurrentCourse, mCurrentSubscriptionType, new Handler());
 			return true;
 		}
 		
@@ -115,13 +141,15 @@ public class MITCoursesDetailsSliderActivity extends SliderActivity {
 		
 		String menuTitle;
 		int menuIconId;
-		CourseItem course = courses.get(getPosition());
-		if(CoursesDataModel.myCourses.containsKey(course.masterId)) {
+		mCurrentCourse = mCourseDetailsViews.get(getPosition()).getCourse();
+		if(CoursesDataModel.myCourses.containsKey(mCurrentCourse.masterId)) {
 			menuTitle = "Remove";
 			menuIconId = R.drawable.menu_remove_bookmark;
+			mCurrentSubscriptionType = SubscriptionType.UNSUBSCRIBE;
 		} else {
 			menuTitle = "Add to My Stellar";
 			menuIconId = R.drawable.menu_add_bookmark;
+			mCurrentSubscriptionType = SubscriptionType.SUBSCRIBE;
 		}
 		
 		menu.add(0, MENU_MY_STELLAR, Menu.NONE, menuTitle)

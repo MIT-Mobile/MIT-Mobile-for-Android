@@ -10,6 +10,7 @@ import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
 import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.classes.CoursesNoticeListener;
 import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 import android.app.Notification;
@@ -30,12 +31,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 		
 		protected void notifyUser(Context context, String statusBarText, String alarmTitle,
 				String alarmText, int iconResID, Class<?> classname) {
+		
+			Intent startIntent = new Intent(context, classname);		
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, startIntent, 0);
+			
+			notifyUser(context, statusBarText, alarmTitle, alarmText, iconResID, pendingIntent);
+		}
+		
+		
+		protected void notifyUser(Context context, String statusBarText, String alarmTitle,
+				String alarmText, int iconResID, PendingIntent pendingIntent ) {
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			
-			Intent startIntent = new Intent(context, classname);
-			
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, startIntent, 0);
 			
 			long curTime = System.currentTimeMillis();
 			
@@ -81,8 +88,14 @@ public class C2DMReceiver extends BroadcastReceiver {
 				NoticeListener noticeListener = null;
 				if (tag.startsWith("emergencyinfo:")) {
 					noticeListener = new EmergencyInfoNoticeListener();
+				} else if (tag.startsWith("stellar:")) {
+					noticeListener = new CoursesNoticeListener();
 				}
-				noticeListener.onReceivedNotice(context, payloadObject);
+				if (noticeListener != null) {
+					noticeListener.onReceivedNotice(context, payloadObject);
+				} else {
+					Log.d("C2DMReceiver", "Could not find a target for notification with tag=" + tag);
+				}
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
