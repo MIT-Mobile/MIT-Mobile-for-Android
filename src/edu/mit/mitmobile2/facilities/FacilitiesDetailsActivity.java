@@ -70,14 +70,31 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	private Uri mCapturedImageUri;
 	private Uri mSelectedImageUri;
 	
+	private static final String CAPTURED_IMAGE_URL_KEY = "captured_image_url_key";
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);  
+        
+        // recover the image url used for captured photos.
+        if (savedInstanceState != null) {
+        	String capturedImageUri = savedInstanceState.getString(CAPTURED_IMAGE_URL_KEY);
+        	if (capturedImageUri != null) {
+        		mCapturedImageUri = Uri.parse(capturedImageUri);
+        	}
+        }
+        
         this.mContext = this;
         createViews();
 	}
 
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(CAPTURED_IMAGE_URL_KEY, mCapturedImageUri.toString());
+	}
+	
 	public void createViews() {
         setContentView(R.layout.facilities_details);        
     	
