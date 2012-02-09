@@ -12,6 +12,7 @@ import android.widget.Button;
 import edu.mit.mitmobile2.MITNewsWidgetActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.maps.ArcGISActivity;
 import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
 
 public class MITSettingsActivity extends Activity {
@@ -21,6 +22,7 @@ public class MITSettingsActivity extends Activity {
 	
 	public static final String TAG = "MITSettingsActivity";
 	TwoLineActionRow touchstoneSettingsButton;
+	TwoLineActionRow arcgisTestButton;
 	
 	/****************************************************/
 	@Override
@@ -42,6 +44,19 @@ public class MITSettingsActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		// ArcGIS Test
+		arcgisTestButton = (TwoLineActionRow)findViewById(R.id.arcgisTestButton);
+
+		arcgisTestButton.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(mContext, ArcGISActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		
 		
 	}
 	

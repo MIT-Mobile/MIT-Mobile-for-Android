@@ -43,4 +43,11 @@
           	android:background="@drawable/main_repeat"          	
           	style="@style/Byline" />		
 
+   <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/arcgisTestButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"      
+  		android:background="@color/rowBackground"
+        android:text="ArcGIS Test" />
+
 </LinearLayout>
