@@ -2,10 +2,13 @@ package edu.mit.mitmobile2.alerts;
 
 import java.util.HashMap;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
@@ -162,6 +165,39 @@ public class C2DMReceiver extends BroadcastReceiver {
 		}
 	}
 	
+	public static void markNotificationAsRead(Context context, String tag) {
+		JSONStringer encoder = new JSONStringer();
+		try {
+			encoder.array();
+			encoder.value(tag);
+			encoder.endArray();
+		} catch (JSONException e) {
+			e.printStackTrace();
+			Log.e("C2DMReceiver", "Failed to encode tag=" + tag);
+		}
+
+		Device device = getDevice(context);
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("module", "push");
+		params.put("command", "markNotificationsAsRead");
+		params.put("tags", encoder.toString());
+		params.put("device_type", "android");
+		params.put("app_id", BuildSettings.release_project_name);	
+		params.put("device_id", Long.toString(device.mDeviceId));
+		params.put("pass_key", Long.toString(device.mPassKey));
+		
+		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
+		api.requestJSONArray(params, new JSONArrayResponseListener(
+				new IgnoreErrorListener(), null)  {
+
+					@Override
+					public void onResponse(JSONArray array)
+							throws ServerResponseException, JSONException {						
+					}
+		});
+		
+	}
 	static public class Device {
 		private long mDeviceId;
 		private long mPassKey;

@@ -29,6 +29,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.alerts.C2DMReceiver;
 import edu.mit.mitmobile2.objs.EmergencyItem;
 import edu.mit.mitmobile2.objs.EmergencyItem.Contact;
 
@@ -172,6 +173,9 @@ public class EmergencyActivity extends ModuleActivity {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				EmergencyParser.fetchContacts(mContext, uiHandler);
+				
+				// mark emergency as read
+				C2DMReceiver.markNotificationAsRead(mContext, "emergencyinfo:");
 			}
 		};
 		
