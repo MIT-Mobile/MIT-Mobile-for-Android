@@ -25,7 +25,7 @@ public class CoursesNoticeListener extends NoticeListener {
 			intent.putExtra(MITCoursesDetailsSliderActivity.MY_STELLAR_KEY, true);
 			intent.putExtra(MITCoursesDetailsSliderActivity.SUBJECT_MASTER_ID_KEY, courseID); 
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
 			notifyUser(context, title, title, message, R.drawable.alert_stellar, pendingIntent);
 		} catch (JSONException e) {
