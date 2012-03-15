@@ -1,0 +1,3 @@
+[submodule "jni/find-text-libs"]
+	path = jni/find-text-libs
+	url = git://github.com/MIT-Mobile/door-sign-reader.git
