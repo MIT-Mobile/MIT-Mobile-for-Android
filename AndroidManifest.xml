@@ -10,7 +10,15 @@
                  android:debuggable="true" 
                  android:theme="@style/Main">
     
-
+        <activity android:name=".MITNewsWidgetActivity"
+        		  android:screenOrientation="portrait"
+       			  android:alwaysRetainTaskState="true"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 	
 		<activity android:name="com.google.zxing.client.android.CaptureActivity"
@@ -271,7 +279,8 @@
         <activity android:name=".libraries.LibraryFines"></activity>        
         <activity android:name=".libraries.LibraryFineDetail"></activity>
         
-         <activity android:name=".ocr.OCRActivity"
+                
+        <activity android:name=".ocr.OCRActivity"
         		  android:screenOrientation="landscape">
         </activity>
         
