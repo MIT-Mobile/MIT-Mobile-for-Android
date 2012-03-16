@@ -46,18 +46,14 @@ JNIEXPORT jobjectArray JNICALL Java_edu_mit_mitmobile2_ocr_TextFinder_findTextIm
     list<RegionBounds> bounds;
     findTextCandidates(reduced, dest, bounds);
 
-    LOGD("xxx");
     jclass boundsCls = env->FindClass("edu/mit/mitmobile2/ocr/RegionBounds");
     if (boundsCls == NULL) return NULL;
 
-    LOGD("yyyy");
     jobjectArray jboundsArray = env->NewObjectArray(bounds.size(), boundsCls, NULL);
     if (jboundsArray == NULL) return NULL;
 
-    LOGD("2222");
     jmethodID boundsInitID = env->GetMethodID(boundsCls, "<init>", "(IIII)V");
 
-    LOGD("3333");
     list<RegionBounds>::iterator boundsIter;
     int i = 0;
     for (boundsIter = bounds.begin(); boundsIter != bounds.end(); boundsIter++, i++) {
@@ -65,8 +61,6 @@ JNIEXPORT jobjectArray JNICALL Java_edu_mit_mitmobile2_ocr_TextFinder_findTextIm
         jobject jbounds = env->NewObject(boundsCls, boundsInitID, bounds.left, bounds.top, bounds.right, bounds.bottom); 
         env->SetObjectArrayElement(jboundsArray, i, jbounds);
     }
-    
-    LOGD("zzz");
     
     if ((ret = AndroidBitmap_lockPixels(env, bitmap, &pixels)) < 0) {
         LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
