@@ -77,7 +77,6 @@ JNIEXPORT jobjectArray JNICALL Java_edu_mit_mitmobile2_ocr_TextFinder_findTextIm
             pixelBytes += 4;
         }
     }
-    LOGD("AAAA");
     
     AndroidBitmap_unlockPixels(env, bitmap);
     env->ReleaseByteArrayElements(yuv, _yuv, 0);
