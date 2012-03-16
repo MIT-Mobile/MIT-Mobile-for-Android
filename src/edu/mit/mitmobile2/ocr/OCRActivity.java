@@ -122,6 +122,7 @@ public class OCRActivity extends Activity implements SurfaceHolder.Callback, Pre
                 final TessBaseAPI tessBaseApi = new TessBaseAPI();
                 tessBaseApi.init(getFilesDir() + "/", "eng");
                 tessBaseApi.setDebug(true);
+                tessBaseApi.setPageSegMode(TessBaseAPI.PSM_SINGLE_LINE);
                 
                 Looper.prepare();
                 mImageHandler = new Handler() {
@@ -255,11 +256,9 @@ public class OCRActivity extends Activity implements SurfaceHolder.Callback, Pre
     @Override
     public void onPreviewFrame(byte[] imageBytes, Camera camera) {
         
-        /*
-        if (mJoltTotal > 3.0e-6) {
+        if (mJoltTotal > 1.0e-5) {
             return;
         }
-        */
         
         if (mPreviewImageHolder.isEmpty()) {
             Parameters params = camera.getParameters();
@@ -271,7 +270,6 @@ public class OCRActivity extends Activity implements SurfaceHolder.Callback, Pre
                 startImageHandler();
                 Message msg = Message.obtain();
                 msg.arg1 = PROCESS_IMAGE;
-                Log.d("Jolt", "about to save photo");
                 mImageHandler.sendMessage(msg);
                 
             } catch (InterruptedException e) {
@@ -308,9 +306,6 @@ public class OCRActivity extends Activity implements SurfaceHolder.Callback, Pre
         mJoltZ = (event.values[2] - mGravityZ) / deltaT;
         
         mJoltTotal = Math.sqrt(mJoltX*mJoltX + mJoltY*mJoltY + mJoltZ*mJoltZ);
-        if (mJoltTotal <= 3.0e-6) {
-            Log.d("Jolt", "" + mJoltTotal);
-        }
         mGravityX = event.values[0];
         mGravityY = event.values[1];
         mGravityZ = event.values[2];
