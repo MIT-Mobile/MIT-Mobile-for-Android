@@ -83,6 +83,7 @@ public class OCRActivity extends Activity implements SurfaceHolder.Callback, Pre
         if (mSurfaceView == null) {
             mSurfaceView = (SurfaceView) findViewById(R.id.ocrSurfaceView);
             mHolder = mSurfaceView.getHolder();
+            mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
             mHolder.addCallback(this);
         }
         
@@ -226,11 +227,17 @@ public class OCRActivity extends Activity implements SurfaceHolder.Callback, Pre
         List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
 
         // You need to choose the most appropriate previewSize for your app
-        Camera.Size previewSize = previewSizes.get(0);// .... select one of previewSizes here
+        Camera.Size previewSize = null;
+        for (Camera.Size size : previewSizes) {
+        	previewSize = size;
+        	if (size.width < 800) {
+        		break;
+        	}
+        }
         parameters.setPreviewSize(previewSize.width, previewSize.height);
         mCamera.setParameters(parameters);
-        mCamera.startPreview();
         mCamera.setPreviewCallback(this);
+        mCamera.startPreview();
         
     }
 
