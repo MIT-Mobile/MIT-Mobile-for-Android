@@ -2,8 +2,7 @@
 <launchConfiguration type="org.eclipse.ant.AntBuilderLaunchConfigurationType">
 <booleanAttribute key="org.eclipse.ant.ui.ATTR_TARGETS_UPDATED" value="true"/>
 <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="false"/>
-<booleanAttribute key="org.eclipse.debug.core.ATTR_REFRESH_RECURSIVE" value="false"/>
-<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;resources&gt;&#10;&lt;item path=&quot;/MITApp/res/values/build_settings_resource.xml&quot; type=&quot;1&quot;/&gt;&#10;&lt;item path=&quot;/MITApp/src/edu/mit/mitmobile2/about/BuildSettings.java&quot; type=&quot;1&quot;/&gt;&#10;&lt;/resources&gt;}"/>
+<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/MITApp/generate_build_settings.xml"/>
 </listAttribute>
@@ -14,8 +13,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MITApp"/>
-<booleanAttribute key="org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED" value="true"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_BUILD_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;resources&gt;&#10;&lt;item path=&quot;/MITApp/build-deployment/build_settings.py&quot; type=&quot;1&quot;/&gt;&#10;&lt;/resources&gt;}"/>
+<booleanAttribute key="org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED" value="false"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/MITApp/generate_build_settings.xml}"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_RUN_BUILD_KINDS" value="full,incremental,"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>

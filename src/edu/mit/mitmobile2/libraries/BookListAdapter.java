@@ -4,19 +4,21 @@ import java.util.List;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.TextView;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class BookListAdapter extends SimpleArrayAdapter<BookItem> {
     
-    public BookListAdapter(Context context, List<BookItem> items, int rowResourceId) {
-        super(context, items, rowResourceId);
+    public BookListAdapter(Context context, List<BookItem> items) {
+        super(context, items, R.layout.library_worldcat_book_row);
     }
     
     public void updateView(BookItem book, View view) {          
-        TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
-        twoLineActionRow.setTitle(book.title);
-        twoLineActionRow.setSubtitle(book.getAuthorsDisplayString());
+    	TextView titleView = (TextView) view.findViewById(R.id.libraryWorldCatBookRowTitle);
+    	TextView subtitleView = (TextView) view.findViewById(R.id.libraryWorldCatBookRowSubtitle);
+    	titleView.setText(book.title);
+    	subtitleView.setText(book.getAuthorsDisplayString());
     }
 
 

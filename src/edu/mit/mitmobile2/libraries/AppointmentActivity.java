@@ -3,19 +3,21 @@ package edu.mit.mitmobile2.libraries;
 import java.util.Arrays;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -23,6 +25,10 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
 public class AppointmentActivity extends ModuleActivity {
     
@@ -38,7 +44,9 @@ public class AppointmentActivity extends ModuleActivity {
     private EditText mPhoneNumber;
     private Button mSubmitButton;
     
-    private TextView mEmailText;
+    private TwoLineActionRow mContentResult;
+    private TwoLineActionRow mGoHomeButton;
+    private View mThankYouView;
     private FullScreenLoader mLoader;
     private LockingScrollView mScrollView;
     
@@ -46,29 +54,56 @@ public class AppointmentActivity extends ModuleActivity {
     private String[] statusArray;
     private String[] purposeArray;
     
+    private Context mContext;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_appointment);
         
+        mContext = this;
+        
         mScrollView = (LockingScrollView) findViewById(R.id.appointmentScrollView);
         
         mPurposeSpinner = (Spinner) findViewById(R.id.purposeSpinner);
+        
         mTopicSpinner = (Spinner) findViewById(R.id.discussTopic);
+        mTopicSpinner.setOnItemSelectedListener(mUpdateSubmitSpinnerListener);
+        
         mStatusSpinner = (Spinner) findViewById(R.id.appointmentStatusSpinner);
+        mStatusSpinner.setOnItemSelectedListener(mUpdateSubmitSpinnerListener);
         
         mResearchTopic = (EditText) findViewById(R.id.researchTopic);
+        mResearchTopic.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
+  
         mResearchTimeframe = (EditText) findViewById(R.id.researchTimeframe);
+        
         mResearchInfo = (EditText) findViewById(R.id.researchInfo);
+        mResearchInfo.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
+        
         mResearchCourse = (EditText) findViewById(R.id.whichCourse);
 
         mDepartment = (EditText) findViewById(R.id.appointmentDepartment);
+        mDepartment.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
+        
         mPhoneNumber = (EditText) findViewById(R.id.appointmentPhoneNumber);
         
         mSubmitButton = (Button) findViewById(R.id.submitAppointment);
+        mSubmitButton.setEnabled(false);
         
-        mEmailText = (TextView) findViewById(R.id.appontmentEmailContent);
+        mThankYouView = findViewById(R.id.libraryAppointmentThankYou);
+        mContentResult = (TwoLineActionRow) findViewById(R.id.librariesThankYouContentActionRow);
+        mGoHomeButton = (TwoLineActionRow) findViewById(R.id.librariesThankYouReturnHome);
+        mGoHomeButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+		    public void onClick(View v) {
+				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		    }
+		});
+        
         mLoader = (FullScreenLoader) findViewById(R.id.appointmentLoading);
         
         topicsArray = getResources().getStringArray(R.array.libraryResearchTopics);
@@ -91,81 +126,108 @@ public class AppointmentActivity extends ModuleActivity {
         mSubmitButton.setOnClickListener(new OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mSubmitButton.getWindowToken(), 0);
-                
+            public void onClick(View v) {                
                 String topic = mResearchTopic.getText().toString().trim();
-                if("".equals(topic)) {
-                    mResearchTopic.requestFocus();
-                  prompt("Topic is required!");
-                  return;
-              }
-                
-                String timeframe = mResearchTimeframe.getText().toString().trim();
-                
+                String timeframe = mResearchTimeframe.getText().toString().trim();                
                 String information = mResearchInfo.getText().toString().trim();
-                if("".equals(information)) {
-                    mResearchInfo.requestFocus();
-                  prompt("Research information is required!");
-                  return;
-              }
                 
                 int position = mPurposeSpinner.getSelectedItemPosition()-1;
                 String purpose = "";
                 if(position >= 0) {
                 	purpose = purposeArray[position];
-                }
-                
+                }                
                 String course = mResearchCourse.getText().toString().trim();
                 
                 
                 
                 position = mTopicSpinner.getSelectedItemPosition()-1;
                 String researchTopic = null;
-                if (position < 0) {
-                    mScrollView.smoothScrollTo(0, mTopicSpinner.getTop());
-                    mTopicSpinner.performClick();
-                    prompt("Please select a topic!");
-                    return;
-                } else {
-                    researchTopic = topicsArray[position];
+                if (position >= 0) {
+                	researchTopic = topicsArray[position];
                 }
                 
                 position = mStatusSpinner.getSelectedItemPosition()-1;
                 String status = null;
-                if (position < 0) {
-                    mScrollView.smoothScrollTo(0, mStatusSpinner.getTop());
-                    mStatusSpinner.performClick();
-                    prompt("Please select a status!");
-                    return;
-                } else {
+                if (position >= 0) {
                 	String[] statusCodeArray = getResources().getStringArray(R.array.libraryStatusCode);
                     status = statusCodeArray[position];
                 }
                 
-                String department = mDepartment.getText().toString();
-                if("".equals(department)) {
-                    mDepartment.requestFocus();
-                    prompt("Department is required!");
-                    return;
-                }
-                
+                String department = mDepartment.getText().toString();                
                 
                 String phoneNumber = mPhoneNumber.getText().toString().trim();
                 
-                mScrollView.setVisibility(View.GONE);
-                mLoader.setVisibility(View.VISIBLE);
-                mLoader.showLoading();
+                showLoading();
                 
                 LibraryModel.sendAppointmentEmail(AppointmentActivity.this, uiHandler, topic, timeframe, information, purpose, course, researchTopic, status, department, phoneNumber);
             }
         });
         
+        showLoading();
+
+        VerifyUserCredentials.VerifyUserHasFormAccess(this, new VerifyUserCredentialsListener() {
+			@Override
+			public void onUserLoggedIn(UserIdentity user) {
+				showForm();
+			}
+        });
+        
     }
 
-    private void prompt(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    TextWatcher mUpdateSubmitButtonTextWatcher = new TextWatcher() {
+		@Override
+		public void afterTextChanged(Editable s) {
+			mSubmitButton.setEnabled(formValidates());
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    	
+    };
+    
+    OnItemSelectedListener mUpdateSubmitSpinnerListener = new OnItemSelectedListener() {
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View row, int position, long id) {
+			mSubmitButton.setEnabled(formValidates());
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent) { }
+		
+    };
+    
+    private boolean formValidates() {
+    	Spinner[] spinners = new Spinner[] {mTopicSpinner, mStatusSpinner};
+    	for (int i=0; i < spinners.length; i++) {
+    		if (spinners[i].getSelectedItemPosition() < 1) {
+    			return false;
+    		}
+    	}
+    	
+    	EditText[] editTexts = new EditText[] {mResearchTopic, mResearchInfo, mDepartment};
+    	for (int i=0; i < editTexts.length; i++) {
+    		if (editTexts[i].getText().toString().trim().length() == 0) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
+    
+    private void showLoading() {
+        mScrollView.setVisibility(View.GONE);
+        mLoader.setVisibility(View.VISIBLE);
+        mLoader.showLoading();
+    }
+    
+    private void showForm() {
+        mScrollView.setVisibility(View.VISIBLE);
+        mLoader.setVisibility(View.GONE);
+        mLoader.stopLoading();
     }
     
     private Handler uiHandler = new Handler() {
@@ -174,17 +236,19 @@ public class AppointmentActivity extends ModuleActivity {
             mLoader.setVisibility(View.GONE);
             
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                String content = (String)msg.obj;
-                mEmailText.setText(content);
-                mEmailText.setVisibility(View.VISIBLE);
+                FormResult result = (FormResult)msg.obj;
+                mThankYouView.setVisibility(View.VISIBLE);
+                mContentResult.setTitle(result.getFeedbackString());
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override

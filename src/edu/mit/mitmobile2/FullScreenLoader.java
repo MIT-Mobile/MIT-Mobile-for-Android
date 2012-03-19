@@ -51,7 +51,6 @@ public class FullScreenLoader extends FrameLayout {
 	
 	public void showLoading() {
 		try {
-			Log.d("ZZZ","showLoading()");
 			LoadingUIHelper.startLoadingImage(new Handler(), mBusyBox);
 			mErrorView.setVisibility(GONE);
 			mLoadingContainer.setVisibility(VISIBLE);
@@ -60,5 +59,9 @@ public class FullScreenLoader extends FrameLayout {
 		catch (Exception e) {
 			Log.d("ZZZ",e.getMessage());
 		}
+	}
+	
+	public void stopLoading() {
+		LoadingUIHelper.stopLoadingImage(new Handler(), mBusyBox);
 	}
 }

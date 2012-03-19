@@ -86,6 +86,12 @@ public class PeopleDetailActivity extends SliderActivity {
 				people = PeopleModel.getRecentlyViewed(this);
 			}
 		
+			// check if results flushed from memory
+			if (people == null) {
+				finish();
+				return;
+			}
+			
 			final String uid = extras.getString(UID_KEY);
 			
 			setPeople(people, uid); 

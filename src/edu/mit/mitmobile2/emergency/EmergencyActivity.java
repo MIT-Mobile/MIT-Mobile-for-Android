@@ -15,12 +15,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -85,7 +82,7 @@ public class EmergencyActivity extends ModuleActivity {
 			html = emergencyItem.text;
 		}
 		
-		mEmergencyMsgTV.loadData(html, "text/html", "utf-8");
+		mEmergencyMsgTV.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
 	}
 	
 	private void updateView() {

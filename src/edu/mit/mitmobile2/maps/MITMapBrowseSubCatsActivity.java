@@ -45,6 +45,12 @@ public class MITMapBrowseSubCatsActivity extends ModuleActivity {
         } 
         
         mSubCats = Global.curSubCats;
+        
+        if (mSubCats == null) {
+        	// categories flushed from memory
+        	finish();
+        	return;
+        }
 	    
         createView();
 		

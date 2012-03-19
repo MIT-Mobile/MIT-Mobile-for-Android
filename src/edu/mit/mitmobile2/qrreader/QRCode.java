@@ -44,7 +44,10 @@ public class QRCode implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mUrl);
-		dest.writeParcelable(mBitmap, flags);
+		int height = mBitmap.getHeight();
+		int width = mBitmap.getWidth();
+		Bitmap scaledBitmap = Bitmap.createScaledBitmap(mBitmap, width/2, height/2, true);
+		dest.writeParcelable(scaledBitmap, flags);
 		dest.writeLong(mDate.getTime());
 	}
 	

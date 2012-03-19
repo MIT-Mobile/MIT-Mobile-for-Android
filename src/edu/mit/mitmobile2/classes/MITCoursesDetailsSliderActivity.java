@@ -48,11 +48,16 @@ public class MITCoursesDetailsSliderActivity extends SliderActivity {
         		courses = CoursesDataModel.executeLocalSearch(searchTerms);
         	}
         	if(extras.containsKey(MY_STELLAR_KEY)) {
-        		courses = CoursesDataModel.getFavoritesList();
+        		courses = CoursesDataModel.getFavoritesList(this);
         	}
         	//mStartPosition = CoursesDataModel.getPosition(courses, extras.getString(SUBJECT_MASTER_ID_KEY)); // FIXME courses is null so Exception
         }
 
+        if (courses == null) {
+        	finish();
+        	return;
+        }
+        
 		setTitle("MIT Course Details");
 		
     	mStartPosition = CoursesDataModel.getPosition(courses, extras.getString(SUBJECT_MASTER_ID_KEY));

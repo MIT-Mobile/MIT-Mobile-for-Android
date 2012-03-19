@@ -28,7 +28,8 @@ public class MITCoursesSubjectsSliderActivity extends SliderActivity {
 
         course_ids = CoursesDataModel.getCourseIds();
         if (course_ids==null) {
-        	throw new RuntimeException("no course ids");
+        	finish();
+        	return;
         }
         
         

@@ -64,7 +64,7 @@ public class LibraryDetailActivity extends SliderActivity {
     
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override

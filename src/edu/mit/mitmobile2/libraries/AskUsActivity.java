@@ -3,18 +3,25 @@ package edu.mit.mitmobile2.libraries;
 import java.util.Arrays;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -23,6 +30,10 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
 public class AskUsActivity extends ModuleActivity {
 	
@@ -32,45 +43,94 @@ public class AskUsActivity extends ModuleActivity {
     private EditText mSubjectText;
     private EditText mDetailText;
     private EditText mDepartmentText;
-    private EditText mQuestionText;
     private EditText mPhoneText;
     private Button mSubmitButton;
+
+    private View mTechHelpSection;
+    private RadioGroup mOnCampusRadioGroup;
+    private RadioGroup mVPNRadioGroup;
     
-    private TextView mEmailText;
+	private View mThankYouView;
+	private TwoLineActionRow mContentResult;
+	private TwoLineActionRow mGoHomeButton;
+
     private FullScreenLoader mLoader;
     private LockingScrollView mScrollView;
 
     private String[] topicsArray;
     private String[] statusArray;
-
+	private Context mContext;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_ask_us);
         
-        mScrollView = (LockingScrollView) findViewById(R.id.scrollView);
+        mContext = this;
+        
+        mScrollView = (LockingScrollView) findViewById(R.id.askUsScrollView);
         
         mTopicSpinner = (Spinner) findViewById(R.id.topicSpinner);
+        mTopicSpinner.setOnItemSelectedListener(mUpdateSubmitSpinnerListener);
         mStatusSpinner = (Spinner) findViewById(R.id.statusSpinner);
+        mStatusSpinner.setOnItemSelectedListener(mUpdateSubmitSpinnerListener);
         
         mSubjectText = (EditText) findViewById(R.id.subject);
+        mSubjectText.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
         mDetailText = (EditText) findViewById(R.id.detailedQuestion);
-        mQuestionText = (EditText) findViewById(R.id.question);
+        mDetailText.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
 
         mDepartmentText = (EditText) findViewById(R.id.department);
+        mDepartmentText.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
         mPhoneText = (EditText) findViewById(R.id.phoneNumber);
+        mPhoneText.addTextChangedListener(mUpdateSubmitButtonTextWatcher);
         
         mSubmitButton = (Button) findViewById(R.id.submit);
+        mSubmitButton.setEnabled(false);
         
-        mEmailText = (TextView) findViewById(R.id.emailContent);
+        mThankYouView = findViewById(R.id.libraryAskUsThankYou);
+        mContentResult = (TwoLineActionRow) findViewById(R.id.librariesThankYouContentActionRow);
+        mGoHomeButton = (TwoLineActionRow) findViewById(R.id.librariesThankYouReturnHome);
+        mGoHomeButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+		    public void onClick(View v) {
+				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+		    }
+		});
+        
         mLoader = (FullScreenLoader) findViewById(R.id.askUsLoading);
+        
+        mTechHelpSection = findViewById(R.id.librariesTechHelpSection);
+        mOnCampusRadioGroup = (RadioGroup) findViewById(R.id.librariesOnCampusRadioGroup); 
+        mOnCampusRadioGroup.setOnCheckedChangeListener(mUpdateSubmitCheckedChangeListener);
+        mVPNRadioGroup = (RadioGroup) findViewById(R.id.librariesVPNRadioGroup);
+        mVPNRadioGroup.setOnCheckedChangeListener(mUpdateSubmitCheckedChangeListener);
+        
         
         topicsArray = getResources().getStringArray(R.array.libraryTopics);
         String topicsTitle = getResources().getString(R.string.libraryTopicsTitle);
         SpinnerAdapter topicAdapter = new SimpleSpinnerAdapter(this, topicsTitle, Arrays.asList(topicsArray));
         mTopicSpinner.setAdapter(topicAdapter);
         mTopicSpinner.setPrompt(topicsTitle);
+        mTopicSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (position == topicsArray.length) {  // this corresponds to the technical help topic
+					mTechHelpSection.setVisibility(View.VISIBLE);
+				} else {
+					mTechHelpSection.setVisibility(View.GONE);
+				}				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				mTechHelpSection.setVisibility(View.GONE);
+			}
+        });
 
         
         statusArray = getResources().getStringArray(R.array.libraryStatus);
@@ -87,71 +147,131 @@ public class AskUsActivity extends ModuleActivity {
             	imm.hideSoftInputFromWindow(mSubmitButton.getWindowToken(), 0);
             	
                 int position = mTopicSpinner.getSelectedItemPosition()-1;
-                String topic = null;
-                if (position < 0) {
-                	mScrollView.smoothScrollTo(0, mTopicSpinner.getTop());
-                	mTopicSpinner.performClick();
-                    prompt("Please select a topic!");
-                    return;
-                } else {
-                    topic = topicsArray[position];
-                }
+                String topic = topicsArray[position];
                 
-                String subject = mSubjectText.getText().toString().trim();
-                if("".equals(subject)) {
-                	mSubjectText.requestFocus();
-                    prompt("Subject is required!");
-                    return;
-                }
-
-                String question = mQuestionText.getText().toString().trim();
-                if("".equals(question)) {
-                	mQuestionText.requestFocus();
-                    prompt("Question is required!");
-                    return;
-                }
-                
-                String description = mDetailText.getText().toString().trim();
-                if("".equals(description)) {
-                	mDetailText.requestFocus();
-                    prompt("Description is required!");
-                    return;
-                }
-                
+                String subject = mSubjectText.getText().toString().trim();                
+                String question = mDetailText.getText().toString().trim();                
                 String phone = mPhoneText.getText().toString().trim();
-                if("".equals(phone)) {
-                	mPhoneText.requestFocus();
-                	prompt("Phone number is required!");
-                	return;
-                }
                 
                 position = mStatusSpinner.getSelectedItemPosition()-1;
-                String status = null;
-                if (position < 0) {
-                	mScrollView.smoothScrollTo(0, mStatusSpinner.getTop());
-                	mStatusSpinner.performClick();
-                    prompt("Please select a status!");
-                    return;
-                } else {
-                	String[] statusCodeArray = getResources().getStringArray(R.array.libraryStatusCode);
-                    status = statusCodeArray[position];
+                String[] statusCodeArray = getResources().getStringArray(R.array.libraryStatusCode);
+                String status = statusCodeArray[position];
+                
+                String department = mDepartmentText.getText().toString().trim();
+                
+                boolean technicalHelp = topic.equals("Technical Help");
+                String onCampus = null;
+                String usingVPN = null;
+                if(technicalHelp) {
+                	if(mOnCampusRadioGroup.getCheckedRadioButtonId() == -1) {
+                		// nothing selected.
+                		mOnCampusRadioGroup.requestFocus();
+                		prompt("Must select on or off campus");
+                		return;
+                	}
+                	onCampus = ((RadioButton) findViewById(mOnCampusRadioGroup.getCheckedRadioButtonId()))
+                		.getText().toString().toLowerCase();
+                	
+                	if(mVPNRadioGroup.getCheckedRadioButtonId() == -1) {
+                		mVPNRadioGroup.requestFocus();
+                		prompt("Must specify if your using VPN");
+                		return;
+                	}
+                	usingVPN = ((RadioButton) findViewById(mVPNRadioGroup.getCheckedRadioButtonId()))
+    					.getText().toString().toLowerCase();
                 }
                 
-                String department = mDepartmentText.getText().toString();
-                if("".equals(department)) {
-                	mDepartmentText.requestFocus();
-                    prompt("Department is required!");
-                    return;
-                }
                 
-                mScrollView.setVisibility(View.GONE);
-                mLoader.setVisibility(View.VISIBLE);
-                mLoader.showLoading();
+                showLoading();
                 
-                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, description, "form");
+                LibraryModel.sendAskUsInfo(AskUsActivity.this, uiHandler, topic, status, department, subject, question, phone, usingVPN, onCampus, "form");
             }
         });
         
+        showLoading();
+        VerifyUserCredentials.VerifyUserHasFormAccess(this, new VerifyUserCredentialsListener() {
+			@Override
+			public void onUserLoggedIn(UserIdentity user) {
+				showForm();
+			}
+        });
+        
+    }
+    
+    TextWatcher mUpdateSubmitButtonTextWatcher = new TextWatcher() {
+		@Override
+		public void afterTextChanged(Editable s) {
+			mSubmitButton.setEnabled(formValidates());
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) { }
+    	
+    };
+    
+    OnItemSelectedListener mUpdateSubmitSpinnerListener = new OnItemSelectedListener() {
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View row, int position, long id) {
+			mSubmitButton.setEnabled(formValidates());
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent) { }
+		
+    };
+    
+    OnCheckedChangeListener mUpdateSubmitCheckedChangeListener = new OnCheckedChangeListener() {
+		@Override
+		public void onCheckedChanged(RadioGroup radioGroup, int position) {
+			mSubmitButton.setEnabled(formValidates());
+		}	
+    };
+    
+    private boolean formValidates() {
+    	Spinner[] spinners = new Spinner[] {mTopicSpinner, mStatusSpinner};
+    	for (int i=0; i < spinners.length; i++) {
+    		if (spinners[i].getSelectedItemPosition() < 1) {
+    			return false;
+    		}
+    	}
+    	
+    	EditText[] editTexts = new EditText[] {mSubjectText, mDetailText, mDepartmentText};
+    	for (int i=0; i < editTexts.length; i++) {
+    		if (editTexts[i].getText().toString().trim().length() == 0) {
+    			return false;
+    		}
+    	}
+    	
+    	
+    	int position = mTopicSpinner.getSelectedItemPosition()-1;
+    	String topic = topicsArray[position];    	
+        boolean technicalHelp = topic.equals("Technical Help");
+        if(technicalHelp) {
+        	if(mOnCampusRadioGroup.getCheckedRadioButtonId() == -1) {
+        		return false;
+        	}        	
+        	if(mVPNRadioGroup.getCheckedRadioButtonId() == -1) {
+        		return false;
+        	}
+        }
+        
+        return true;
+    }
+    
+    private void showForm() {
+   	 	mScrollView.setVisibility(View.VISIBLE);
+   	 	mLoader.setVisibility(View.GONE);
+   	 	mLoader.stopLoading();
+    }
+    
+    private void showLoading() {
+    	 mScrollView.setVisibility(View.GONE);
+         mLoader.setVisibility(View.VISIBLE);
+         mLoader.showLoading();
     }
 
     private void prompt(String message) {
@@ -165,17 +285,19 @@ public class AskUsActivity extends ModuleActivity {
             mLoader.setVisibility(View.GONE);
             
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-                String content = (String)msg.obj;
-                mEmailText.setText(content);
-                mEmailText.setVisibility(View.VISIBLE);
+                FormResult result = (FormResult)msg.obj;
+                mThankYouView.setVisibility(View.VISIBLE);
+                mContentResult.setTitle(result.getFeedbackString());
                 
+            } else {
+            	mScrollView.setVisibility(View.VISIBLE);
             }
         }
     };
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override

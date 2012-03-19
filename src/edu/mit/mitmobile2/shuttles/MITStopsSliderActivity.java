@@ -16,6 +16,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
+import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 public class MITStopsSliderActivity extends SliderActivity implements OnPositionChangedListener {
@@ -51,11 +52,13 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
         	stopId = extras.getString(ShuttleModel.KEY_STOP_ID);
         }
         
-		mStops = ShuttleModel.getRoute(routeId).stops;
-		if(mStops == null) {
+        RouteItem route = ShuttleModel.getRoute(routeId);
+        if (route == null) {
 		    finish();
 		    return;
-		}
+        }        
+		mStops = ShuttleModel.getRoute(routeId).stops;
+
 		
 		last_pos = ShuttleModel.getStopPosition(mStops, stopId);
        

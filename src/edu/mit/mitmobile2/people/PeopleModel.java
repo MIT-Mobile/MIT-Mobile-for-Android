@@ -54,7 +54,11 @@ public class PeopleModel {
 	}
 	
 	public static List<PersonItem>executeLocalSearch(String searchTerms) {
-		return searchCache.get(searchTerms).getResultsList();
+		SearchResults<PersonItem> searchResults = searchCache.get(searchTerms);
+		if (searchResults != null) {
+			return searchResults.getResultsList();
+		}
+		return null;
 	}
 	
 	public static int getPosition(List<PersonItem> people, String uid) {

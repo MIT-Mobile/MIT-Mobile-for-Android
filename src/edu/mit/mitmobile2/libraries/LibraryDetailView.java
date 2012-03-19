@@ -23,6 +23,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.libraries.LibraryItem.Hours;
+import edu.mit.mitmobile2.libraries.LibraryItem.Schedule;
 
 public class LibraryDetailView implements SliderInterface {
 
@@ -143,25 +144,36 @@ public class LibraryDetailView implements SliderInterface {
     	
     	SpannableStringBuilder builder = new SpannableStringBuilder();
     	builder.append(bold("Today's Hours: "));
-    	builder.append(normal(mLibraryItem.hoursToday));
+    	builder.append(bodyText(mLibraryItem.hoursToday));
     	builder.append("\n\n");
     	
-    	String hoursTitle = mLibraryItem.currentTerm.name + " Hours (";
-        DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
-        String start = formatter.format(mLibraryItem.currentTerm.range_start);
-        String end = formatter.format(mLibraryItem.currentTerm.range_end);
-        hoursTitle += start + "-" + end + "):";
- 
-        builder.append(bold(hoursTitle.trim() + "\n"));
-    	
-        for (Hours hours : mLibraryItem.currentTerm.hours) {
-        	String aDetailLine = hours.title + " " + hours.description + "\n";
-        	builder.append(normal(aDetailLine));
-        }    	
+    	addTermContent(builder, mLibraryItem.currentTerm);
+    	for (Schedule term : mLibraryItem.previousTerms) {
+    		addTermContent(builder, term);
+    	}
+    	for (Schedule term : mLibraryItem.nextTerms) {
+    		addTermContent(builder, term);
+    	}
     	return builder;
     	
     }
 
+    private void addTermContent(SpannableStringBuilder builder, Schedule termItem) {
+    	String hoursTitle = termItem.name + " Hours (";
+        DateFormat formatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+        String start = formatter.format(termItem.range_start);
+        String end = formatter.format(termItem.range_end);
+        hoursTitle += start + "-" + end + ")";
+ 
+        builder.append(bold(hoursTitle.trim() + "\n"));
+    	
+        for (Hours hours : termItem.hours) {
+        	String aDetailLine = hours.title + " " + hours.description + "\n";
+        	builder.append(normal(aDetailLine));
+        }
+        builder.append("\n");
+    }
+    
     private Spannable bold(String text) {
     	Spannable span = new SpannableString(text);
     	span.setSpan(new TextAppearanceSpan(mActivity, R.style.ListItemPrimary), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -171,6 +183,12 @@ public class LibraryDetailView implements SliderInterface {
     private Spannable normal(String text) {
     	Spannable span = new SpannableString(text);
     	span.setSpan(new TextAppearanceSpan(mActivity, R.style.ListItemSecondary), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	return span;
+    }
+    
+    private Spannable bodyText(String text) {
+    	Spannable span = new SpannableString(text);
+    	span.setSpan(new TextAppearanceSpan(mActivity, R.style.BodyText), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     	return span;
     }
 }

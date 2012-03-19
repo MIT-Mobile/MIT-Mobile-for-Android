@@ -62,6 +62,12 @@ public class NewsDetailsActivity extends SliderActivity {
 		mNewsModel = new NewsModel(this);		
 		initalizeNewsList();
 
+		if (mNewsItems == null || mNewsItems.size() == 0) {
+			// gracefull exit
+			finish();
+			return;
+		}
+		
 		new Handler().postDelayed(
 			new Runnable() {
 				@Override

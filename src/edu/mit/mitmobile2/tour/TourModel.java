@@ -28,7 +28,22 @@ public class TourModel {
 	private static String TOUR_GUID = "mit150";
 	
 	private static Tour sTour;
+	
 	public static Tour getTour() {
+		return sTour;
+	}
+	
+	/*
+	 * Get tour fallback on db if not avaiable in memory
+	 */
+	public static Tour getTour(Context context) {
+		if (sTour == null) {
+			// retrieve tour from DB
+			TourDB tourDB = TourDB.getInstance(context);
+			List<TourHeader> tourHeaders = tourDB.retrieveTourHeaders();
+			sTour = new Tour(tourHeaders.get(0));
+			tourDB.populateTourDetails(sTour);
+		}
 		return sTour;
 	}
 	

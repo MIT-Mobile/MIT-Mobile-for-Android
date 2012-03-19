@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="#ffFFFFFF"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:id="@+id/holdResults"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent">
+
+		  	<TextView
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:paddingTop="6dip"
+					android:paddingLeft="@dimen/horizontalPadding"
+					android:id="@+id/holdStatusTV"
+					android:background="@drawable/main_repeat"
+					style="@style/LibraryStatus" />		        
+
+		    <ImageView 	android:src="@drawable/divider" android:layout_width="fill_parent" android:layout_height="wrap_content"/>		
+	        
+		    <ListView android:id="@+id/listLibraryHolds"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        style="@style/Lists" />
+		</LinearLayout>
+	        
+		<edu.mit.mitmobile2.FullScreenLoader
+        	android:id="@+id/librarySearchLoading"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:visibility="gone" />
+                    
+</LinearLayout>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="edu.mit.mitmobile2"
-      android:versionCode="@integer/versionNumber"
-      android:versionName="@string/versionName">
+      android:versionCode="10"
+      android:installLocation="auto"
+      android:versionName="2.3.1">
     <application android:label="@string/app_name" 
     			 android:name=".Global"
                  android:icon="@drawable/mit_mobile_icon" 
@@ -205,6 +206,16 @@
 		<activity android:name=".facilities.FacilitiesLeasedBuildingActivity" />
 		<activity android:name=".facilities.FacilitiesUploadSuccessModuleActivity" />
 
+		<!-- SETTINGS -->
+		<activity android:name=".settings.MITSettingsActivity" />
+
+		<!-- TOUCHSTONE -->
+		<activity android:name=".touchstone.TouchstoneActivity" />
+		<activity android:name=".touchstone.TouchstonePrefsActivity"></activity>
+
+		<!-- LIBRARIES -->
+		<activity android:name=".libraries.LibrariesActivity" />
+
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
 		<activity android:name=".about.AboutCreditsActivity" />
@@ -228,7 +239,7 @@
     
 		<activity android:name=".PrefsActivity"></activity>
         
-        <activity android:name=".libraries.LibraryActivity">
+        <activity android:name=".libraries.LibraryActivity" android:screenOrientation="portrait">
             <meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
         </activity>
         
@@ -244,11 +255,30 @@
         <provider android:name=".libraries.LibrarySearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.libraries.SuggestionsProvider" />
         <activity android:name=".libraries.LibraryLocationAndHour"></activity>
         <activity android:name=".libraries.LibraryDetailActivity"></activity>
-        <activity android:name=".libraries.BookDetailActivity"></activity>
-        <activity android:name=".libraries.AskUsActivity"></activity>
-        <activity android:name=".libraries.TellUsActivity"></activity>
+        <activity android:name=".libraries.BookDetailActivity">
+      		<meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        <activity android:name=".libraries.LibraryBLCHoldingsActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        <activity android:name=".libraries.LibrariesHoldingsSliderActivity">
+        	<meta-data android:name="android.app.default_searchable" android:value=".libraries.LibrarySearchActivity" />
+        </activity>
+        
+        <activity android:name=".libraries.AskUsActivity" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".libraries.TellUsActivity" android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".libraries.AskUsTopActivity"></activity>
-        <activity android:name=".libraries.AppointmentActivity"></activity>
+        <activity android:name=".libraries.AppointmentActivity" android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".libraries.LibraryYourAccount" android:screenOrientation="portrait"></activity>
+        <activity android:name=".libraries.LibraryLoans"></activity>
+        <activity android:name=".libraries.LibraryLoanDetail"></activity>
+        <activity android:name=".libraries.LibraryRenewBooks"></activity>
+        <activity android:name=".libraries.LibraryRenewDetail"></activity>
+        <activity android:name=".libraries.LibraryHolds"></activity>
+        <activity android:name=".libraries.LibraryHoldDetail"></activity>
+        <activity android:name=".libraries.LibraryFines"></activity>        
+        <activity android:name=".libraries.LibraryFineDetail"></activity>
+        
 </application>
 
  		
@@ -266,4 +296,7 @@
 <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
 <uses-permission android:name="android.permission.WRITE_CALENDAR"></uses-permission>
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+
+<uses-feature android:name="android.hardware.telephony" android:required="false"/>
+
 </manifest> 

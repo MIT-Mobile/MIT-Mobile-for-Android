@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,9 +23,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.tour.Tour;
-import edu.mit.mitmobile2.tour.TourMapActivity;
-import edu.mit.mitmobile2.tour.TourModel;
 
 public class QRReaderMainActivity extends ModuleActivity {
 

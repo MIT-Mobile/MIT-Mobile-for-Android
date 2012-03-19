@@ -12,7 +12,7 @@
 		<condition property="isUnixLike">
 			<or>
 				<os family="unix"/>
-				<os family="mac"/>
+      		<os family="mac"/>
 			</or>
   		</condition>
 

@@ -58,6 +58,7 @@ public class LibraryActivity extends ModuleActivity {
 
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(LibraryActivity.this, LibraryYourAccount.class));
             }
         });
         locationRow.setOnClickListener(new OnClickListener() {
@@ -88,7 +89,7 @@ public class LibraryActivity extends ModuleActivity {
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override
@@ -98,6 +99,8 @@ public class LibraryActivity extends ModuleActivity {
 
     @Override
     protected void prepareActivityOptionsMenu(Menu menu) {
+		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
+		.setIcon(R.drawable.menu_search);
     }
 
     private void doSearch() {

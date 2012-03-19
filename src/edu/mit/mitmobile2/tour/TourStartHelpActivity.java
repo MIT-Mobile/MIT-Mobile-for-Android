@@ -27,7 +27,7 @@ public class TourStartHelpActivity extends ModuleActivity {
 	@Override
 	protected void onCreate(Bundle saveInstance) {
 		super.onCreate(saveInstance);
-		final Tour tour = TourModel.getTour();
+		final Tour tour = TourModel.getTour(this);
 		
 		setContentView(R.layout.boring_activity_layout);
 		TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);

@@ -16,6 +16,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -37,9 +39,12 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	protected TwoLineActionRow mLoadMore;
 	private static final String LOAD_MORE = "Load more";
 	private static final String LOADING = "Loading...";
+	private static final String TRY_AGAIN = "Loading Fail (Try Again)";
 	
 	
 	protected boolean mSearching = true;
+	private Long mLastFailedSearchTime = null;
+	private final static long MINIMUM_TRY_AGAIN_WAIT = 5000; // 5 seconds
 	protected boolean mResultsDisplayed = false;
 	private String mSearchTerm;
 	private SearchResults<ResultItem> mSearchResults;
@@ -123,17 +128,29 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	private void doContinueSearch() {
 		mLoadMore.setEnabled(false);
 		mLoadMore.setTitle(LOADING);
+		mSearching = true;
+		mLastFailedSearchTime = null;
 		
 		final SearchResults<ResultItem> currentSearchResults = mSearchResults;		
 		continueSearch(currentSearchResults, new Handler() {
 			public void handleMessage(Message msg) {
 				if(currentSearchResults == mSearchResults) {
 					mLoadMore.setEnabled(true);
-					mLoadMore.setTitle(LOAD_MORE);
-					showSummaryView();
-					if(!mSearchResults.isPartialResult()) {
-						mSearchListView.removeFooterView(mLoadMore);
-					} 
+					if (msg.arg1 == MobileWebApi.SUCCESS) {
+						mLoadMore.setTitle(LOAD_MORE);
+						showSummaryView();
+						if(!mSearchResults.isPartialResult()) {
+							mSearchListView.removeFooterView(mLoadMore);
+						}
+					} else {
+						mLoadMore.setTitle(TRY_AGAIN);
+						mLastFailedSearchTime = System.currentTimeMillis();
+					}
+					// the list views are not properly responding to data being changed.
+					// requesting layout seems to fix this (my only guess is the special
+					// magic used for footerViews is buggy
+					mSearching = false;
+					mSearchListView.requestLayout();
 				}
 			}
 		});
@@ -170,6 +187,37 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 			}
 		});
 		
+		// add a scroll listener to retrieve more results prememptively
+		if(supportsMoreResult()) {
+			mSearchListView.setOnScrollListener(new OnScrollListener() { 
+				private static final int MINIMUM_REMAINING_ROWS = 10;
+			
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+					continueSearchFromScroll();		
+				}
+
+				@Override
+				public void onScrollStateChanged(AbsListView view, int scrollState) {
+					continueSearchFromScroll();
+				}
+			
+				private void continueSearchFromScroll() {
+					if(mSearchResults != null && mSearchResults.isPartialResult()) {
+						if(mSearchResults.getResultsList().size() - mSearchListView.getFirstVisiblePosition() <  MINIMUM_REMAINING_ROWS) {	
+							if(!mSearching) {
+								if((mLastFailedSearchTime == null) ||
+										(mLastFailedSearchTime - System.currentTimeMillis() > MINIMUM_TRY_AGAIN_WAIT)) {
+								
+									doContinueSearch();
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+		
 		doSearch(getIntent());
 	}
 	
@@ -179,11 +227,24 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 		if(resultsCount == 0) {
 			summaryText = "No matches for \"" + mSearchTerm + "\"";
 		} else if(resultsCount == 1) {
-			summaryText = "1 match for \""  + mSearchTerm + "\"";
-		} else if(!mSearchResults.isPartialResult()) {
-			summaryText = resultsCount + " " + searchItemPlural() + " matching \""  + mSearchTerm + "\"";
+			summaryText = "1 result";
+		} else if(!mSearchResults.isPartialResult() || supportsMoreResult()) {
+			String totalCount;
+			if (mSearchResults.totalResultsCount() != null) {
+				totalCount = "" + mSearchResults.totalResultsCount();
+			} else {
+				totalCount = "" + mSearchResults.getResultsList().size();
+			}
+			summaryText = totalCount + " results";
 		} else {
-			summaryText = "Many " + searchItemPlural() + " found showing " + resultsCount;
+			if(mSearchResults.totalResultsCount() != null) {
+				// total known
+				summaryText = mSearchResults.totalResultsCount() + " ";
+			} else {
+				// total unknown
+				summaryText = "Many ";
+			}
+			summaryText += searchItemPlural() + " found showing " + resultsCount;
 		}
 		
 		mSearchResultsHeader.setText(summaryText);

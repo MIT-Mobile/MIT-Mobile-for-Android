@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:minHeight="@dimen/minRowHeight" >
+	
+	<RelativeLayout 			
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	>
+	
+	<!--  Fine amount, title, author, date fined --> 
+	<LinearLayout
+  			android:id="@+id/simpleRowTextContent"
+  			android:layout_alignParentLeft="true"
+  			android:layout_width="250dip"
+  			android:layout_height="wrap_content"
+  			android:layout_gravity="center_vertical"
+  			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+			android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
+  			android:orientation="vertical" >
+  					
+		<!-- TITLE -->
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/fineTitleTV"
+			android:textColor="@color/contents_text"
+			android:textStyle="bold"
+			android:textSize="17sp"
+			android:typeface="sans" />
+				
+		<!-- Author -->			
+  		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/fineAuthorTV"
+			android:singleLine="true"
+			android:ellipsize="end"
+			android:textColor="@color/libraries_gray" />
+		
+		<!-- Date Fined -->			
+		<!--  This field isn't in the mock-up, hiding it for now -->
+  		<TextView
+			android:visibility="gone"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/fineFineDateTV"
+			android:textColor="@color/contents_text" />
+  		  				
+  	</LinearLayout>	
+
+		<!-- Fine Amount -->			
+  		<TextView
+  			android:layout_alignParentRight="true"
+  			android:paddingTop="@dimen/verticalPadding"
+  			android:paddingRight="@dimen/horizontalPadding"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/fineDisplayAmountTV"
+			android:textSize="17sp"
+			android:typeface="sans"
+			android:textColor="#FF000000" />
+
+	</RelativeLayout>
+  		 		
+</FrameLayout>

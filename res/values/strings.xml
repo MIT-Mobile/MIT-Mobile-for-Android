@@ -27,7 +27,7 @@
 		<item>Humanities</item>
 	</string-array>
 	
-	<string name="library_search_hint">Search</string>
+	<string name="library_search_hint">Search MIT\'s WorldCat</string>
     <string name="library_search_label">Library Search</string>
     
 	<string name="people_search_label">Directory Search</string>
@@ -87,5 +87,11 @@ MIT\&apos;s commitment to innovation has led to a host of scientific breakthroug
         <item>mobile-stage.mit.edu</item>
         <item>m.mit.edu</item>
     </string-array>	
+
+	<!--  TOUCHSTONE -->
+    <string name="pref_touchstone_password_summary">Password for your touchstone account</string>
+    <string name="pref_touchstone_password_title">Password</string>
+    <string name="pref_touchstone_username_summary">User name for touchstone account</string>
+    <string name="pref_touchstone_username_title">User Name</string>
 
 </resources>

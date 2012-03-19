@@ -143,7 +143,7 @@ public class CoursesTopActivity extends ModuleActivity {
 	}
 	
 	protected void refreshMyStellarList() {
-		final ArrayList<CourseItem> myStellar = CoursesDataModel.getFavoritesList();
+		final ArrayList<CourseItem> myStellar = CoursesDataModel.getFavoritesList(this);
 		mMyStellarLL.removeAllViews();
 		if(myStellar.size() > 0) {
 			mMyStellarLL.addView(new SectionHeader(this, "My Stellar"));

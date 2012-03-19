@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.libraries;
 import android.os.Handler;
 import android.widget.ArrayAdapter;
 import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.SearchResults;
 
@@ -11,7 +10,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected ArrayAdapter<BookItem> getListAdapter(SearchResults<BookItem> results) {
-        return new BookListAdapter(this, results.getResultsList(), R.layout.boring_action_row);
+        return new BookListAdapter(this, results.getResultsList());
     }
 
     @Override
@@ -21,7 +20,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected void initiateSearch(String searchTerm, Handler uiHandler) {
-        LibraryModel.searchBooks(searchTerm, null, this, uiHandler);
+        LibraryModel.searchBooks(searchTerm, true, null, this, uiHandler);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 
     @Override
     protected Module getModule() {
-        return new LibraryModule();
+        return new LibrariesModule();
     }
 
     @Override
@@ -45,9 +44,9 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     }
 
     @Override
-    protected void continueSearch(SearchResults<BookItem> previousResults, Handler uiHandler) {
+    protected void continueSearch(SearchResults<BookItem> previousResults, final Handler uiHandler) {
     	LibrarySearchResults libraryPreviousResults = (LibrarySearchResults) previousResults;
-        LibraryModel.searchBooks(previousResults.getSearchTerm(), libraryPreviousResults, this, uiHandler);
+        LibraryModel.searchBooks(previousResults.getSearchTerm(), false, libraryPreviousResults, this, uiHandler);
     }
 
 	@Override

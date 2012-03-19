@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:layout_gravity="center_vertical" 
-	android:minHeight="@dimen/minRowHeight" >
-	
-  
-    	<!--  content title, subtitle, icon -->
-    	
-  		<LinearLayout
-  			android:layout_alignParentLeft="true"
-  			android:layout_width="fill_parent"
-  			android:layout_height="wrap_content"
-  			android:orientation="vertical"
-  			android:paddingLeft="@dimen/horizontalPadding"
-  			android:paddingTop="@dimen/verticalPadding"
-  			android:paddingBottom="@dimen/verticalPadding" >
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_alignParentLeft="true"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:layout_gravity="center_vertical" 
+  android:orientation="vertical"
+  android:minHeight="@dimen/minRowHeight" 
+  android:paddingLeft="@dimen/horizontalPadding"
+  android:paddingTop="@dimen/verticalPadding"
+  android:paddingBottom="@dimen/verticalPadding" >
   	
   			<!-- top line -->
   			<TextView
@@ -51,6 +44,4 @@
   				
   			</RelativeLayout>
   				
-  		</LinearLayout>	
- 		
-</FrameLayout>
+</LinearLayout>
