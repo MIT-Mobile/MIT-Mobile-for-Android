@@ -1,17 +1,7 @@
 package edu.mit.mitmobile2.people;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.HighlightEffects;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
-import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.emergency.EmergencyContactsActivity;
-import edu.mit.mitmobile2.objs.PersonItem;
-import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.CusMenuItem;
+import edu.mit.mitmobile2.HighlightEffects;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SearchBar;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.emergency.EmergencyContactsActivity;
+import edu.mit.mitmobile2.objs.PersonItem;
+import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
-public class PeopleActivity extends ModuleActivity {
+public class PeopleActivity extends NewModuleActivity {
 	
 	private SearchBar mSearchBar;
 	private ListView mRecentlyViewed;
@@ -55,8 +57,6 @@ public class PeopleActivity extends ModuleActivity {
 		mSearchBar.setSearchHint(getString(R.string.people_search_hint));
 		mSearchBar.setSystemSearchInvoker(this);
 		
-		
-
 		mRecentlyViewed = (ListView) findViewById(R.id.peopleRecentlyViewed);
 		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -151,5 +151,32 @@ public class PeopleActivity extends ModuleActivity {
 	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new PeopleModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void initTitleBar() {
+		// TODO Auto-generated method stub
+		List<CusMenuItem> primaryItems = new ArrayList<CusMenuItem>();
+		primaryItems.add(new CusMenuItem(1, "", R.drawable.titlebar_action_icon));
+		primaryItems.add(new CusMenuItem(2, "", R.drawable.titlebar_action_icon));
+		addPrimaryMenuItem(primaryItems);
 	}
 }

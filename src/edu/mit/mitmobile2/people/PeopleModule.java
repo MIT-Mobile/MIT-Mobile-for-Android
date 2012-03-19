@@ -1,11 +1,10 @@
 package edu.mit.mitmobile2.people;
 
 import android.app.Activity;
-
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
-public class PeopleModule extends Module {
+public class PeopleModule extends NewModule {
 
 	@Override
 	public String getLongName() {
@@ -35,5 +34,17 @@ public class PeopleModule extends Module {
 	@Override
 	public int getHomeIconResourceId() {
 		return R.drawable.home_people;
+	}
+
+	@Override
+	protected int getPrimaryOptions() {
+		// TODO Auto-generated method stub
+		return R.drawable.home_people;
+	}
+
+	@Override
+	protected String getSecondaryOptions() {
+		// TODO Auto-generated method stub
+		return "People";
 	}
 }
