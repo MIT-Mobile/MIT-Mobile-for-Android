@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="titleBarPrimaryItemWidth">30dip</dimen>
+	<dimen name="titleBarOverflowItemWidth">30dip</dimen>
+	<dimen name="titleBarPadding">5dip</dimen>
+</resources>

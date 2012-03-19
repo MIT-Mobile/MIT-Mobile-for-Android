@@ -5,7 +5,7 @@
     android:orientation="vertical" 
     android:id="@+id/newModuleMain">
 	
-    <edu.mit.mitmobile2.MitTitleBar
+    <edu.mit.mitmobile2.MITTitleBar
         android:id="@+id/mitTitleBar"
         android:layout_width="fill_parent"
     	android:layout_height="wrap_content"/>

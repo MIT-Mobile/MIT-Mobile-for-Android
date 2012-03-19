@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.people;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.CusMenuItem;
 import edu.mit.mitmobile2.HighlightEffects;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
@@ -166,17 +164,8 @@ public class PeopleActivity extends NewModuleActivity {
 	}
 
 	@Override
-	protected void onOptionSelected(int id) {
+	protected void onOptionSelected(String id) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	protected void initTitleBar() {
-		// TODO Auto-generated method stub
-		List<CusMenuItem> primaryItems = new ArrayList<CusMenuItem>();
-		primaryItems.add(new CusMenuItem(1, "", R.drawable.titlebar_action_icon));
-		primaryItems.add(new CusMenuItem(2, "", R.drawable.titlebar_action_icon));
-		addPrimaryMenuItem(primaryItems);
 	}
 }

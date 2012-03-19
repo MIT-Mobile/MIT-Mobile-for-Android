@@ -2,24 +2,24 @@ package edu.mit.mitmobile2;
 
 import android.graphics.drawable.Drawable;
 
-public class CusMenuItem {
+public class MITMenuItem {
 
     private Drawable icon;
     private String title;
-    private int id;
+    private String id;
     private int iconResId;
 
-    public CusMenuItem(int id, String title) {
+    public MITMenuItem(String id, String title) {
     	this.id = id;
     	this.title = title;
     }
     
-    public CusMenuItem(int id, String title, Drawable icon) {
+    public MITMenuItem(String id, String title, Drawable icon) {
     	this(id, title);
     	this.icon = icon;
     }
     
-    public CusMenuItem(int id, String title, int iconResId) {
+    public MITMenuItem(String id, String title, int iconResId) {
     	this(id, title);
     	this.iconResId = iconResId;
     }
@@ -32,7 +32,7 @@ public class CusMenuItem {
     	return this.title;
     }
     
-    public int getId() {
+    public String getId() {
     	return this.id;
     }
 

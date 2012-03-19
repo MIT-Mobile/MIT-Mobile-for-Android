@@ -18,7 +18,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class CusPopupMenu {
+public class MITPopupMenu {
 
     private View mRoot;
     private View mAnchorView;
@@ -29,14 +29,14 @@ public class CusPopupMenu {
     private Context mContext;
     private LayoutInflater mInflater;
 
-    private ArrayList<CusMenuItem> mMenuItems;
-    private OnCusMenuItemSelected mMenuSelecterListener;
-    private static final String TAG = "CusPopupMenu";
+    private ArrayList<MITMenuItem> mMenuItems;
+    private OnMITMenuItemSelected mMenuSelecterListener;
+    private static final String TAG = "MITPopupMenu";
     
-    public CusPopupMenu(View anchor) {
+    public MITPopupMenu(View anchor) {
         mAnchorView = anchor;
         mContext = anchor.getContext();
-        mMenuItems = new ArrayList<CusMenuItem>();
+        mMenuItems = new ArrayList<MITMenuItem>();
         initViews();
         initWindow();
         
@@ -57,7 +57,7 @@ public class CusPopupMenu {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                    CusPopupMenu.this.mWindow.dismiss();
+                    MITPopupMenu.this.mWindow.dismiss();
                     return true;
                 }
                 return false;
@@ -73,12 +73,17 @@ public class CusPopupMenu {
         
         mWindow.setContentView(mRoot);
     }
-
-    public void addMenuItem(CusMenuItem item) {
+    
+    public void addMenuItem(MITMenuItem item) {
         mMenuItems.add(item);
     }
     
-    public void setMenuItemSelectedListener(OnCusMenuItemSelected listener) {
+
+    public void clearMenuItems() {
+    	mMenuItems.clear();
+    }
+    
+    public void setMenuItemSelectedListener(OnMITMenuItemSelected listener) {
     	mMenuSelecterListener = listener;
     }
 
@@ -87,7 +92,7 @@ public class CusPopupMenu {
     		Log.w(TAG, "You don't have any menu items yet!");
     		return;
     	}
-        initMenuList();
+        refreshMenuList();
         int availableHeight = 0;
         int[] location = new int[2];
         int screenHeight = mWindowManager.getDefaultDisplay().getHeight();
@@ -116,10 +121,10 @@ public class CusPopupMenu {
         mWindow.showAtLocation(this.mAnchorView, Gravity.NO_GRAVITY, location[0], yPos);
     }
 
-    private void initMenuList() {
+    public void refreshMenuList() {
     	mMenuList.removeAllViews();
         
-    	for (CusMenuItem item : mMenuItems) {
+    	for (MITMenuItem item : mMenuItems) {
         	View view = getMenuItem(item);
 
             view.setFocusable(true);
@@ -130,7 +135,7 @@ public class CusPopupMenu {
         mMenuList.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
     
-    private View getMenuItem(final CusMenuItem item) {
+    private View getMenuItem(final MITMenuItem item) {
         LinearLayout container = (LinearLayout) mInflater.inflate(R.layout.popup_menu_item_layout, null);
         TextView text = (TextView) container.findViewById(R.id.title);
         
@@ -148,7 +153,7 @@ public class CusPopupMenu {
 				if (null != mMenuSelecterListener) {
 					mMenuSelecterListener.onOptionItemSelected(item.getId());
 				}
-				CusPopupMenu.this.mWindow.dismiss();
+				MITPopupMenu.this.mWindow.dismiss();
 			}
 		});
         return container;

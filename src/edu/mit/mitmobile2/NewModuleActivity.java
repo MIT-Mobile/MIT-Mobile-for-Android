@@ -8,80 +8,79 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
 
 public abstract class NewModuleActivity extends ModuleActivity {
 
-	private MitTitleBar mTitleBar;
+	private MITTitleBar mTitleBar;
 	
 	protected abstract NewModule getNewModule();
 	protected abstract boolean isScrollable();
-	protected abstract void onOptionSelected(int id);
+	protected abstract void onOptionSelected(String optionId);
+
 	
 	/**
 	 * Use it to add TitleBar items by use {@link NewModuleActivity#addPrimaryMenuItem(List)
 	 * , NewModuleActivity#addSecondaryMenuItem(List)}}
 	 */
-	protected abstract void initTitleBar();
+	protected void initTitleBar() {
+		List<MITMenuItem> primaryItems = getPrimaryMenuItems();
+		if (primaryItems != null) {
+			for (MITMenuItem item : primaryItems) {
+				mTitleBar.addPrimaryItem(item);
+			}
+		}
+		List<MITMenuItem> secondaryItems = getSecondaryMenuItems();
+		if (secondaryItems != null) {
+			for (MITMenuItem item : secondaryItems) {
+				mTitleBar.addPrimaryItem(item);
+			}
+		}
+	}
+
+	// default implementation for primary, and secondary menu items.
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		return getNewModule().getPrimaryOptions();
+	}
+	
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+		return null;
+	}
+
 	
 	@Override
 	public void setContentView(int layoutResID) {
 		// TODO Auto-generated method stub
 		super.setContentView(R.layout.new_module_main);
 		LinearLayout mainLayout = (LinearLayout) findViewById(R.id.newModuleMain);
-		mTitleBar = (MitTitleBar) findViewById(R.id.mitTitleBar);
+		mTitleBar = (MITTitleBar) findViewById(R.id.mitTitleBar);
 		initViews();
 		initTitleBar();
-		mTitleBar.configureTitleBar();
+		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(layoutResID, null);
 		mainLayout.addView(view);
 	}
 	
 	private void initViews() {
-		mTitleBar.setOnTitleBarClick(new OnCusMenuItemSelected() {
+		mTitleBar.setOnTitleBarListener(new OnMITTitleBarListener() {
 			@Override
-			public void onOptionItemSelected(int optionId) {
-				// TODO Auto-generated method stub
-				switch (optionId) {
-				case MitTitleBar.MENU_HOME:
-					MITNewsWidgetActivity.goHome(NewModuleActivity.this);
-					break;
-				case MitTitleBar.MENU_MODULE_HOME:
-					Intent intent = new Intent(NewModuleActivity.this, getModule().getModuleHomeActivity());
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-					break;
-				default:
-					onOptionSelected(optionId);
-					break;
-				}
+			public void onOptionItemSelected(String optionId) {
+				onOptionSelected(optionId);
+			}
+
+			@Override
+			public void onHomeSelected() {
+				MITNewsWidgetActivity.goHome(NewModuleActivity.this);				
+			}
+
+			@Override
+			public void onModuleHomeSelected() {
+				Intent intent = new Intent(NewModuleActivity.this, getModule().getModuleHomeActivity());
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
 			}
 		});
-		mTitleBar.setTextForModuleBtn(getNewModule().getSecondaryOptions());
-	}
-	
-	protected void addPrimaryMenuItem(List<CusMenuItem> menuItems) {
-		if (isItemListNull(menuItems)) {
-			return;
-		}
-		for (CusMenuItem item : menuItems) {
-			mTitleBar.addPrimaryItem(item);
-		}
-	}
-	
-	protected void addSecondaryMenuItem(List<CusMenuItem> menuItems) {
-		if (isItemListNull(menuItems)) {
-			return;
-		}
-		for (CusMenuItem item : menuItems) {
-			mTitleBar.addSecondaryItem(item);
-		}
-	}
-	
-	private boolean isItemListNull(List<CusMenuItem> menuItems) {
-		if (null == menuItems || menuItems.isEmpty()) {
-			return true;
-		}
-		return false;
+		mTitleBar.setTextForModuleBtn(getNewModule().getShortName());
 	}
 }
