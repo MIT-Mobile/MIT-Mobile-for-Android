@@ -36,7 +36,7 @@ import edu.mit.mitmobile2.libraries.LibrariesModule;
 import edu.mit.mitmobile2.maps.MapsModule;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
-import edu.mit.mitmobile2.news.NewsListSliderActivity;
+import edu.mit.mitmobile2.news.NewsListActivity;
 import edu.mit.mitmobile2.news.NewsModel;
 import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.objs.NewsItem;
@@ -200,7 +200,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		View.OnClickListener moreTopNewsClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(ctx, NewsListSliderActivity.class);
+				Intent intent = new Intent(ctx, NewsListActivity.class);
 				ctx.startActivity(intent);				
 			}
 		};

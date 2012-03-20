@@ -1,5 +1,5 @@
 package edu.mit.mitmobile2;
 
-public interface OnMITMenuItemSelected {
+public interface OnMITMenuItemListener {
 	void onOptionItemSelected(String optionId);
 }

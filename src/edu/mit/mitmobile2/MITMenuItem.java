@@ -1,6 +1,10 @@
 package edu.mit.mitmobile2;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 
 public class MITMenuItem {
 
@@ -46,5 +50,20 @@ public class MITMenuItem {
     
     public int getIconResId() {
     	return iconResId;
+    }
+    
+    public View getView(Context context) {
+    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    	ImageView img = (ImageView) inflater.inflate(R.layout.titlebar_menu_item, null);
+
+    	Drawable icon = getIcon();
+    
+    	if (getIconResId() != 0) {
+    		img.setImageResource(getIconResId());
+    	} else if (icon != null) {
+    		img.setImageDrawable(icon);
+    	}
+    	
+    	return img;
     }
 }

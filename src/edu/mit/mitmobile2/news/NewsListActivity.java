@@ -3,10 +3,12 @@ package edu.mit.mitmobile2.news;
 import java.util.Date;
 import java.util.HashMap;
 
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
 import edu.mit.mitmobile2.HighlightEffects;
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
@@ -29,7 +31,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class NewsListSliderActivity extends SliderActivity {
+public class NewsListActivity extends CategoryNewModuleActivity {
 	
 	final static int MAX_STORIES = 200;
 	final static String LOAD_MORE_ARTICLES = "Load 10 more articles...";
@@ -62,18 +64,13 @@ public class NewsListSliderActivity extends SliderActivity {
 		
 		mNewsModel = new NewsModel(this);
 		
-		setJumpTitle("Categories", R.drawable.menu_browse);
-		
 		createView();
 	}
 	/****************************************************/
 	void createView() {
 		for(int i = 0; i < NewsModel.category_ids.length; i++) {
-			addScreen(new NewsListSliderInterface(NewsModel.category_ids[i]), NewsModel.category_titles[i], NewsModel.category_titles[i]);
-		}
-		
-		setPosition(0);		
-		
+			addCategory(new NewsListSliderInterface(NewsModel.category_ids[i]), NewsModel.category_titles[i], NewsModel.category_titles[i]);
+		}		
 	}
 	
 	@Override
@@ -151,9 +148,7 @@ public class NewsListSliderActivity extends SliderActivity {
 							initalizeCursorAdapter();
 						}
 						
-						freezeScroll();
 						mNewsCursor.requery();
-						unfreezeScroll();
 					
 						mNewsCursor.moveToLast();
 						int newLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
@@ -231,7 +226,7 @@ public class NewsListSliderActivity extends SliderActivity {
 		private void initalizeCursorAdapter() {
 			if(mNewsCursor == null) {
 				// create a footer row (that allows for asking more articles)
-				Context context = NewsListSliderActivity.this;
+				Context context = NewsListActivity.this;
 
 				mFooterView = new TwoLineActionRow(context);
 				mFooterView.setTitle(LOAD_MORE_ARTICLES);
@@ -256,12 +251,10 @@ public class NewsListSliderActivity extends SliderActivity {
 			}
 		}
 	}
-
-	static final int MENU_NEWSBOOKMARKS = MENU_LAST + 1;
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+		/*
 		if(item.getItemId() == MENU_NEWSBOOKMARKS) {
 			Intent intent = new Intent(this, NewsBookmarksActivity.class);
 			startActivity(intent);
@@ -269,12 +262,10 @@ public class NewsListSliderActivity extends SliderActivity {
 		} 
 		
 		return super.onOptionsItemSelected(item);
+		*/
+		return false;
 	}
 	
-	@Override
-	protected Module getModule() {
-		return new NewsModule();
-	}
 	
 	@Override
 	public boolean isModuleHomeActivity() {
@@ -283,11 +274,31 @@ public class NewsListSliderActivity extends SliderActivity {
 	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) {
-		prepareJumpOptionsMenu(menu);
-		
+		/*
 		menu.add(0, MENU_NEWSBOOKMARKS, Menu.NONE, "Bookmarks")
 			.setIcon(R.drawable.menu_bookmarks);
 		menu.add(0, MENU_SEARCH, Menu.NONE, "Search")
 			.setIcon(R.drawable.menu_search);
+		*/
+	}
+	
+	@Override
+	protected NewModule getModule() {
+		return getNewModule();
+	}
+	
+	@Override
+	protected NewModule getNewModule() {
+		return new NewsModule();
+	}
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

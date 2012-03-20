@@ -3,10 +3,11 @@ package edu.mit.mitmobile2;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,15 +27,9 @@ public class MITTitleBar extends LinearLayout {
 	private OnMITTitleBarListener mClickListener;
 	private MITPopupMenu mPopoverMenu;
 	
+	private MITSecondaryTitleBar mSecondaryTitleBar;
+	
 	private int primaryItemsShowing = 0;
-	
-	public static final int SUB_SLIDER_TITLE_BAR = 1;
-	
-	/**
-	 * Want to make the id can not be used.
-	 */
-	public static final int MENU_HOME = 1024;
-	public static final int MENU_MODULE_HOME = 1025;
 	
 	public MITTitleBar(Context context) {
 		this(context, null);
@@ -48,6 +43,7 @@ public class MITTitleBar extends LinearLayout {
 		
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mContainer = (LinearLayout) mInflater.inflate(R.layout.mit_title_bar, this);
+		mContainer.setOrientation(LinearLayout.VERTICAL);
 		mHomeBtn = (ImageView) mContainer.findViewById(R.id.titleHomeBtn);
 		mModuleHomeBtn = (TextView) mContainer.findViewById(R.id.titleModuleHomeBtn);
 		mPrimaryList = (LinearLayout) mContainer.findViewById(R.id.titlePrimaryList);
@@ -144,18 +140,10 @@ public class MITTitleBar extends LinearLayout {
 	 * @param item it must not be null.
 	 * @return View appears on the menu.
 	 */
-	private View getMenuItem(final MITMenuItem item) {
-		ImageView img = (ImageView) mInflater.inflate(R.layout.titlebar_menu_item, null);
-
-		Drawable icon = item.getIcon();
-        
-		if (item.getIconResId() != 0) {
-			img.setImageResource(item.getIconResId());
-		} else if (icon != null) {
-			img.setImageDrawable(icon);
-		}
+	public View getMenuItem(final MITMenuItem item) {
+		View view = item.getView(getContext());
 		
-		img.setOnClickListener(new OnClickListener() {
+		view.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -164,7 +152,7 @@ public class MITTitleBar extends LinearLayout {
 				}
 			}
 		});
-		return img;
+		return view;
 	}
 	
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -235,21 +223,20 @@ public class MITTitleBar extends LinearLayout {
 		}
 	}
 	
-	public static MITSubSliderTitleBar createSliderTitleBar(Context context) {
-		return new MITSubSliderTitleBar(context);
+	
+	/*
+	 * This should only be called once
+	 */
+	public void addSecondaryBar(MITSecondaryTitleBar view) {
+		mSecondaryTitleBar = view;
+		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
-	public static MITSubCategoryTitleBar createCategoryTitleBar(Context context) {
-		return new MITSubCategoryTitleBar(context);
+	public MITSecondaryTitleBar getSecondaryTitleBar() {
+		return mSecondaryTitleBar;
 	}
 	
-	protected void addSubTitleBar(View view) {
-		if (null != view) {
-			mContainer.addView(view);
-		}
-	}
-	
-	public static interface OnMITTitleBarListener extends OnMITMenuItemSelected {
+	public static interface OnMITTitleBarListener extends OnMITMenuItemListener {
 		public void onHomeSelected();
 		public void onModuleHomeSelected();
 	}

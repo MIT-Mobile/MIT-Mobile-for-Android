@@ -154,7 +154,7 @@
 			<meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
 		</activity>
 
-		<activity android:name=".news.NewsListSliderActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+		<activity android:name=".news.NewsListActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
 			<meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
 		</activity>
 		<activity android:name=".news.NewsSearchActivity" 

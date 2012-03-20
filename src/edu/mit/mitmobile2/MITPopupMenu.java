@@ -31,7 +31,7 @@ public class MITPopupMenu {
     private LayoutInflater mInflater;
 
     private ArrayList<MITMenuItem> mMenuItems;
-    private OnMITMenuItemSelected mMenuSelecterListener;
+    private OnMITMenuItemListener mMenuSelecterListener;
     private static final String TAG = "MITPopupMenu";
     
     public MITPopupMenu(View anchor) {
@@ -86,7 +86,7 @@ public class MITPopupMenu {
     	mMenuItems.clear();
     }
     
-    public void setMenuItemSelectedListener(OnMITMenuItemSelected listener) {
+    public void setMenuItemSelectedListener(OnMITMenuItemListener listener) {
     	mMenuSelecterListener = listener;
     }
 
