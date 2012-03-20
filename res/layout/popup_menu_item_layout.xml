@@ -2,12 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="vertical" >
-    <TextView
-        android:id="@+id/title"
-        android:background="@android:drawable/list_selector_background"
-        android:layout_gravity="center_horizontal"
+    android:orientation="horizontal" >
+    
+    <ImageView
+        android:id="@+id/popup_menuitem_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/titleBarPadding"
+        android:paddingRight="@dimen/titleBarPadding"
+        android:layout_gravity="center_vertical"/>
+    
+    <TextView
+        android:id="@+id/popup_menuitem_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/titleBarPadding"
+        android:paddingRight="@dimen/titleBarPadding"
+        android:layout_gravity="center_vertical"
+        android:background="@android:drawable/list_selector_background"/>
 </LinearLayout>

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -77,6 +76,13 @@ public class MITTitleBar extends RelativeLayout {
 	
 	public void setTextForModuleBtn(String text) {
 		mModuleHomeBtn.setText(text);
+	}
+	
+	public void setClickableForModuleBtn(boolean isClickable) {
+		if (!isClickable) {
+			mModuleHomeBtn.setBackgroundResource(R.drawable.titlebar_action_module_background);
+		}
+		mModuleHomeBtn.setClickable(!isClickable);
 	}
 	
 	/**
@@ -168,9 +174,9 @@ public class MITTitleBar extends RelativeLayout {
 
 
 	    int primaryItemWidth = getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPrimaryItemWidth);
-	    primaryItemWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding);
+	    primaryItemWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding) * 2;
 	    int overflowButtonWidth = getContext().getResources().getDimensionPixelSize(R.dimen.titleBarOverflowItemWidth);
-	    overflowButtonWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding);
+	    overflowButtonWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding) * 2;
 	    
 		if (!mSecondaryItems.isEmpty()) {
 			availableWidth -= overflowButtonWidth;

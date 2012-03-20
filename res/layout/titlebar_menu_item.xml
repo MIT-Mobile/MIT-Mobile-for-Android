@@ -4,5 +4,7 @@
     	android:layout_width="@dimen/titleBarPrimaryItemWidth"
     	android:layout_height="fill_parent"
         android:paddingRight="@dimen/titleBarPadding"
+        android:paddingLeft="@dimen/titleBarPadding"
+        android:background="@android:drawable/list_selector_background"
         android:scaleType="center"
         />

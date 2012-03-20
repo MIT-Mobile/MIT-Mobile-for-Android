@@ -82,5 +82,6 @@ public abstract class NewModuleActivity extends ModuleActivity {
 			}
 		});
 		mTitleBar.setTextForModuleBtn(getNewModule().getShortName());
+		mTitleBar.setClickableForModuleBtn(isModuleHomeActivity());
 	}
 }

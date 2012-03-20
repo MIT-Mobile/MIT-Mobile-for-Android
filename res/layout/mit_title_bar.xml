@@ -15,6 +15,7 @@
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="5dip"
 	        android:paddingRight="5dip"
+	        android:background="@android:drawable/list_selector_background"
 	        android:layout_gravity="center_vertical|center_horizontal"
 	        android:src="@drawable/titlebar_action_home"/>
 	    
@@ -24,6 +25,7 @@
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="5dip"
 	        android:paddingRight="5dip"
+	        android:gravity="center_vertical|center_horizontal"
 	        android:layout_gravity="center_vertical|center_horizontal"/>
     </LinearLayout>
     	
@@ -36,6 +38,7 @@
         	android:layout_width="@dimen/titleBarOverflowItemWidth"
         	android:layout_height="wrap_content"
         	android:padding="@dimen/titleBarPadding"
+        	android:background="@android:drawable/list_selector_background"
         	android:layout_gravity="center_vertical|center_horizontal"
         	android:src="@drawable/popup_menu_anchor"/>
     </LinearLayout>

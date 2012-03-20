@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -137,7 +138,16 @@ public class MITPopupMenu {
     
     private View getMenuItem(final MITMenuItem item) {
         LinearLayout container = (LinearLayout) mInflater.inflate(R.layout.popup_menu_item_layout, null);
-        TextView text = (TextView) container.findViewById(R.id.title);
+        ImageView image = (ImageView) container.findViewById(R.id.popup_menuitem_image);
+        TextView text = (TextView) container.findViewById(R.id.popup_menuitem_title);
+        
+        if (item.getIcon() != null) {
+        	image.setImageDrawable(item.getIcon());
+        } else if (item.getIconResId() != 0) {
+        	image.setImageResource(item.getIconResId());
+        } else {
+        	image.setVisibility(View.GONE);
+        }
         
         String title = item.getTitle();
         if (title != null) {
