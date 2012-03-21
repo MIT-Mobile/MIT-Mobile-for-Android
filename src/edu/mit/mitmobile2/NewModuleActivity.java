@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,7 +104,7 @@ public abstract class NewModuleActivity extends Activity {
 		List<MITMenuItem> secondaryItems = getSecondaryMenuItems();
 		if (secondaryItems != null) {
 			for (MITMenuItem item : secondaryItems) {
-				mTitleBar.addPrimaryItem(item);
+				mTitleBar.addSecondaryItem(item);
 			}
 		}
 	}
@@ -114,7 +115,7 @@ public abstract class NewModuleActivity extends Activity {
 	}
 	
 	protected List<MITMenuItem> getSecondaryMenuItems() {
-		return null;
+		return getNewModule().getSecondaryOptions();
 	}
 
 	
@@ -150,7 +151,9 @@ public abstract class NewModuleActivity extends Activity {
 		mTitleBar.setOnTitleBarListener(new OnMITTitleBarListener() {
 			@Override
 			public void onOptionItemSelected(String optionId) {
-				onOptionSelected(optionId);
+				if (!getNewModule().onItemSelected(NewModuleActivity.this, optionId)) {
+					onOptionSelected(optionId);
+				}
 			}
 
 			@Override
@@ -168,4 +171,13 @@ public abstract class NewModuleActivity extends Activity {
 		mTitleBar.setTextForModuleBtn(getNewModule().getShortName());
 		mTitleBar.setClickableForModuleBtn(isModuleHomeActivity());
 	}
+	
+	@Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+        		mTitleBar.showOverflowMenu();
+        		return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 }
