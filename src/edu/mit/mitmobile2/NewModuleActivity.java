@@ -17,7 +17,8 @@ public abstract class NewModuleActivity extends ModuleActivity {
 	protected abstract NewModule getNewModule();
 	protected abstract boolean isScrollable();
 	protected abstract void onOptionSelected(String optionId);
-
+	
+	protected abstract View createSubTitleBar(); 
 	
 	/**
 	 * Use it to add TitleBar items by use {@link NewModuleActivity#addPrimaryMenuItem(List)
@@ -56,6 +57,7 @@ public abstract class NewModuleActivity extends ModuleActivity {
 		mTitleBar = (MITTitleBar) findViewById(R.id.mitTitleBar);
 		initViews();
 		initTitleBar();
+		mainLayout.addView(createSubTitleBar());
 		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(layoutResID, null);

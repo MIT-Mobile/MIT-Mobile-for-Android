@@ -9,12 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MITTitleBar extends RelativeLayout {
+public class MITTitleBar extends LinearLayout {
 
-	private RelativeLayout mContainer;
+	private LinearLayout mContainer;
 	private ImageView mHomeBtn;
 	private TextView mModuleHomeBtn;
 	private ImageView mOverflowBtn;
@@ -28,6 +27,8 @@ public class MITTitleBar extends RelativeLayout {
 	private MITPopupMenu mPopoverMenu;
 	
 	private int primaryItemsShowing = 0;
+	
+	public static final int SUB_SLIDER_TITLE_BAR = 1;
 	
 	/**
 	 * Want to make the id can not be used.
@@ -46,7 +47,7 @@ public class MITTitleBar extends RelativeLayout {
 		mSecondaryItems = new ArrayList<MITMenuItem>();
 		
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mContainer = (RelativeLayout) mInflater.inflate(R.layout.mit_title_bar, this);
+		mContainer = (LinearLayout) mInflater.inflate(R.layout.mit_title_bar, this);
 		mHomeBtn = (ImageView) mContainer.findViewById(R.id.titleHomeBtn);
 		mModuleHomeBtn = (TextView) mContainer.findViewById(R.id.titleModuleHomeBtn);
 		mPrimaryList = (LinearLayout) mContainer.findViewById(R.id.titlePrimaryList);
@@ -231,6 +232,20 @@ public class MITTitleBar extends RelativeLayout {
 			mPopoverMenu.refreshMenuList();
 		} else {
 			mOverflowBtn.setVisibility(View.GONE);
+		}
+	}
+	
+	public static MITSubSliderTitleBar createSliderTitleBar(Context context) {
+		return new MITSubSliderTitleBar(context);
+	}
+	
+	public static MITSubCategoryTitleBar createCategoryTitleBar(Context context) {
+		return new MITSubCategoryTitleBar(context);
+	}
+	
+	protected void addSubTitleBar(View view) {
+		if (null != view) {
+			mContainer.addView(view);
 		}
 	}
 	

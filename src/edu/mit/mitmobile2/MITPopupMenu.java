@@ -76,7 +76,9 @@ public class MITPopupMenu {
     }
     
     public void addMenuItem(MITMenuItem item) {
-        mMenuItems.add(item);
+    	if (null != item) {
+    		mMenuItems.add(item);
+    	}
     }
     
 

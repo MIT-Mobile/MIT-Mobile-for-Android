@@ -13,11 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.HighlightEffects;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITSubCategoryTitleBar;
+import edu.mit.mitmobile2.MITTitleBar;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.OnMITMenuItemSelected;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
@@ -167,5 +172,22 @@ public class PeopleActivity extends NewModuleActivity {
 	protected void onOptionSelected(String id) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected View createSubTitleBar() {
+		// TODO Auto-generated method stub
+		MITSubCategoryTitleBar subTitleBar = MITTitleBar.createCategoryTitleBar(this);
+		subTitleBar.addPopUpMenuItems(new MITMenuItem("y", "Browse", R.drawable.titlebar_action_icon));
+		subTitleBar.addPopUpMenuItems(new MITMenuItem("x", "Browse", R.drawable.titlebar_action_icon));
+		subTitleBar.addPopUpMenuItems(new MITMenuItem("z", "Browse", R.drawable.titlebar_action_icon));
+		subTitleBar.setOnMenuItemClicked(new OnMITMenuItemSelected() {
+			@Override
+			public void onOptionItemSelected(String optionId) {
+				// TODO Auto-generated method stub
+				Toast.makeText(PeopleActivity.this, optionId, Toast.LENGTH_SHORT).show();
+			}
+		});
+		return subTitleBar;
 	}
 }
