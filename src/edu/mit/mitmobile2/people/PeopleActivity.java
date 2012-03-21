@@ -146,11 +146,6 @@ public class PeopleActivity extends NewModuleActivity {
 	}
 
 	@Override
-	protected Module getModule() {
-		return new PeopleModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}

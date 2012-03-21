@@ -283,11 +283,6 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 	}
 	
 	@Override
-	protected NewModule getModule() {
-		return getNewModule();
-	}
-	
-	@Override
 	protected NewModule getNewModule() {
 		return new NewsModule();
 	}
