@@ -235,6 +235,10 @@ public class MITTitleBar extends LinearLayout {
 		return mSecondaryTitleBar;
 	}
 	
+	public void addSliderBar(MITSubSliderTitleBar view) {
+		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+	}
+	
 	public static interface OnMITTitleBarListener extends OnMITMenuItemListener {
 		public void onHomeSelected();
 		public void onModuleHomeSelected();

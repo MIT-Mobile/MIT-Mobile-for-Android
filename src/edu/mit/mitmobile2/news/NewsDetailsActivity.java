@@ -3,27 +3,23 @@ package edu.mit.mitmobile2.news;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.IdEncoder;
-import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
-import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.objs.NewsItem;
-
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.IdEncoder;
+import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.objs.NewsItem;
 
-public class NewsDetailsActivity extends SliderActivity {
+public class NewsDetailsActivity extends SliderNewModuleActivity {
 	
 	static final int MENU_BOOKMARKED = MENU_LAST + 1;
 	static final int MENU_SHARE = MENU_BOOKMARKED + 1;
@@ -221,12 +217,25 @@ public class NewsDetailsActivity extends SliderActivity {
 	}
 
 	@Override
-	protected Module getModule() {
+	public boolean isModuleHomeActivity() {
+		return false;
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
 		return new NewsModule();
 	}
 
 	@Override
-	public boolean isModuleHomeActivity() {
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }
