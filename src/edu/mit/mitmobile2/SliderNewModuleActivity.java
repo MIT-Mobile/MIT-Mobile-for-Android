@@ -14,7 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import edu.mit.mitmobile2.MITSubSliderTitleBar.OnSlideToListener;
+import edu.mit.mitmobile2.MITSliderSecondaryTitleBar.OnSlideToListener;
 
 public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	public static final String KEY_POSITION = "start_position";
@@ -32,7 +32,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	protected ImageView overlayLeftIV,overlayRightIV;
 	protected TextView overlayTitleTV;
 	
-	private MITSubSliderTitleBar mSliderTitleBar;
+	private MITSliderSecondaryTitleBar mSliderTitleBar;
 	protected SliderView mSliderView;
 	
 	public Boolean mWasRotated;
@@ -101,7 +101,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.new_slider);
-        mSliderTitleBar = new MITSubSliderTitleBar(this);
+        mSliderTitleBar = new MITSliderSecondaryTitleBar(this);
         getTitleBar().addSecondaryBar(mSliderTitleBar);
         
         mSliderView = (SliderView) findViewById(R.id.newsliderMainContent);

@@ -7,17 +7,17 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MITSubSliderTitleBar extends RelativeLayout {
+public class MITSliderSecondaryTitleBar extends RelativeLayout {
 
 	private TextView mTitle;
 	private TextView mPrevious;
 	private TextView mNext;
 	
-	public MITSubSliderTitleBar(Context context) {
+	public MITSliderSecondaryTitleBar(Context context) {
 		this(context, null);
 	}
 	
-	public MITSubSliderTitleBar(Context context, AttributeSet attrs) {
+	public MITSliderSecondaryTitleBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
