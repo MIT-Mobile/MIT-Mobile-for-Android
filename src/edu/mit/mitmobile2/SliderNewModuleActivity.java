@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
@@ -24,7 +23,6 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	
 	protected Context ctx;
 
-	private ArrayList<String> jumpTitles = new ArrayList<String>();
 	private ArrayList<String> headerTitles = new ArrayList<String>();
 	
 	protected GestureDetector mFlingDetector;
@@ -37,63 +35,9 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	
 	public Boolean mWasRotated;
 	
-	private String mJumpTitle = null;
-	private int mJumpMenuIconId = -1;
-	
-	static final int SCROLL_DURATION_PER_SCREEN = 250;
-	static final int SCROLL_MAX_DURATION = 2500;
 	
 	private SliderView.OnPositionChangedListener mSliderActivityPositionChangedListener = null;
 	
-	public void setJumpTitle(String jumpTitle, int jumpMenuIconId) {
-		mJumpTitle = jumpTitle;
-		mJumpMenuIconId = jumpMenuIconId;
-	}
-	
-	/*
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-			case MENU_JUMP: 
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				
-				if(!mSliderView.isAnimatingScroll()) {
-					
-					builder.setTitle(mJumpTitle);
-					
-					String[] titlesArray = new String[jumpTitles.size()];
-					jumpTitles.toArray(titlesArray);
-					
-					builder.setItems(titlesArray, new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int item) {
-							mSliderView.snapToPosition(item);
-						}
-					});
-					
-					AlertDialog alert = builder.create();
-					alert.show();
-					alert.getListView().setSelection(mSliderView.getPosition());
-					
-				} else {
-					builder.setTitle("Too Fast!");
-					builder.setMessage("Please wait for quick jump to complete first.");
-					builder.setNeutralButton("OK", null);
-					builder.create().show();
-				}
-				return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	protected void prepareJumpOptionsMenu(Menu menu) {
-		if(mJumpTitle != null && mSliderView.getScreenCount() > 1) {
-			menu.add(MENU_MAIN_GROUP, MENU_JUMP, Menu.NONE, mJumpTitle)
-				.setIcon(mJumpMenuIconId);
-		}
-	}
-	*/
 	
 	/****************************************************/
     @Override
@@ -194,9 +138,6 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	}
 	
 	protected void addScreen(SliderInterface sliderInterface, String jumpTitle, String headerTitle) {
-		Log.d(TAG,"jumpTitle = " + jumpTitle);
-		Log.d(TAG,"headerTitle = " + headerTitle);
-		jumpTitles.add(jumpTitle);
 		headerTitles.add(headerTitle);
 		mSliderView.addScreen(sliderInterface);
 		
