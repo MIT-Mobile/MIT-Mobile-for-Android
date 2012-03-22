@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 public class MITSubSliderTitleBar extends RelativeLayout {
 
+	private TextView mTitle;
 	private TextView mPrevious;
 	private TextView mNext;
 	
@@ -21,6 +22,8 @@ public class MITSubSliderTitleBar extends RelativeLayout {
 		// TODO Auto-generated constructor stub
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		RelativeLayout container = (RelativeLayout) inflater.inflate(R.layout.mit_sub_slider_title_bar, this);
+		
+		mTitle = (TextView) container.findViewById(R.id.subSliderTitleBarTitleText);
 		mPrevious = (TextView) container.findViewById(R.id.subSliderTitleBarLeftArrow);
 		mNext = (TextView) container.findViewById(R.id.subSliderTitleBarRightArrow);
 	}
@@ -49,6 +52,10 @@ public class MITSubSliderTitleBar extends RelativeLayout {
 	
 	public void enableNextButton(boolean enabled) {
 		mNext.setEnabled(enabled);
+	}
+	
+	public void setTitle(String title) {
+		mTitle.setText(title);
 	}
 	
 	public static interface OnSlideToListener {

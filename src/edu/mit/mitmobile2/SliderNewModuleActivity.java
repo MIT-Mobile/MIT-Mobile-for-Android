@@ -123,6 +123,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 			public void onPositionChanged(int newPosition, int oldPosition) {
 				mSliderTitleBar.enablePreviousButton(!mSliderView.isAtBeginning());
 				mSliderTitleBar.enableNextButton(!mSliderView.isAtEnd());
+				mSliderTitleBar.setTitle(headerTitles.get(newPosition));
 				
 				if(mSliderActivityPositionChangedListener != null) {
 					mSliderActivityPositionChangedListener.onPositionChanged(newPosition, oldPosition);
