@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 
 import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
@@ -39,6 +39,27 @@ public class NewsModule extends NewModule {
 
 	@Override
 	protected List<MITMenuItem> getPrimaryOptions() {
-		return new ArrayList<MITMenuItem>();
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menuitem_search));
+		return items;
+	}
+
+	@Override
+	protected List<MITMenuItem> getSecondaryOptions() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("bookmarks", "Bookmarks"));
+		return items;
+	}
+
+	@Override
+	protected boolean onItemSelected(Activity activity, String id) {
+		if(id.equals("bookmarks")) {
+			Intent intent = new Intent(activity, NewsBookmarksActivity.class);
+			activity.startActivity(intent);
+			return true;
+		} else if(id.equals("search")) {
+			activity.onSearchRequested();
+		}
+		return false;
 	}
 }

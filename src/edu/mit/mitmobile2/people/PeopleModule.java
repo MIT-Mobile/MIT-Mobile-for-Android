@@ -55,4 +55,16 @@ public class PeopleModule extends NewModule {
 		return items;
 	}
 
+	@Override
+	protected List<MITMenuItem> getSecondaryOptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean onItemSelected(Activity activity, String id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

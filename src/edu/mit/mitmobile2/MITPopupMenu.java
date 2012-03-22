@@ -140,6 +140,7 @@ public class MITPopupMenu {
     
     private View getMenuItem(final MITMenuItem item) {
         LinearLayout container = (LinearLayout) mInflater.inflate(R.layout.popup_menu_item_layout, null);
+        LinearLayout wrapper = (LinearLayout) container.findViewById(R.id.popup_menu_item_wrapper);
         ImageView image = (ImageView) container.findViewById(R.id.popup_menuitem_image);
         TextView text = (TextView) container.findViewById(R.id.popup_menuitem_title);
         
@@ -158,7 +159,7 @@ public class MITPopupMenu {
             text.setVisibility(View.GONE);
         }
         
-        text.setOnClickListener(new OnClickListener() {
+        wrapper.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub

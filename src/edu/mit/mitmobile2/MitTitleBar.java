@@ -114,6 +114,19 @@ public class MITTitleBar extends LinearLayout {
 				mPopoverMenu.show();
 			}
 		});
+		mPopoverMenu.setMenuItemSelectedListener(new OnMITMenuItemListener() {
+
+			@Override
+			public void onOptionItemSelected(String optionId) {
+				mClickListener.onOptionItemSelected(optionId);
+			}
+		});	
+	}
+	
+	public void showOverflowMenu() {
+		if (mOverflowBtn.getVisibility() == View.VISIBLE) {
+			mPopoverMenu.show();
+		}
 	}
 	
 	/**
@@ -212,9 +225,9 @@ public class MITTitleBar extends LinearLayout {
 				for (int j = primaryItemsShowing; j < mPrimaryItems.size(); j++) {
 					mPopoverMenu.addMenuItem(mPrimaryItems.get(j));
 				}
-				for (MITMenuItem item : mSecondaryItems) {
-					mPopoverMenu.addMenuItem(item);
-				}
+			}
+			for (MITMenuItem item : mSecondaryItems) {
+				mPopoverMenu.addMenuItem(item);
 			}
 			mPopoverMenu.refreshMenuList();
 		} else {
