@@ -115,7 +115,7 @@ public abstract class NewModuleActivity extends Activity {
 			}
 		});
 		mTitleBar.setTextForModuleBtn(getNewModule().getShortName());
-		mTitleBar.setClickableForModuleBtn(isModuleHomeActivity());
+		mTitleBar.setModuleButtonEnabled(!isModuleHomeActivity());
 	}
 	
 	@Override

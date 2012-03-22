@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,11 +73,11 @@ public class MITTitleBar extends LinearLayout {
 		mModuleHomeBtn.setText(text);
 	}
 	
-	public void setClickableForModuleBtn(boolean isClickable) {
-		if (!isClickable) {
+	public void setModuleButtonEnabled(boolean enabled) {
+		if (enabled) {
 			mModuleHomeBtn.setBackgroundResource(R.drawable.titlebar_action_module_background);
 		}
-		mModuleHomeBtn.setClickable(!isClickable);
+		mModuleHomeBtn.setClickable(enabled);
 	}
 	
 	/**
