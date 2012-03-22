@@ -7,22 +7,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderNewModuleActivity;
 import edu.mit.mitmobile2.objs.NewsItem;
 
 public class NewsDetailsActivity extends SliderNewModuleActivity {
 	
-	static final int MENU_BOOKMARKED = MENU_LAST + 1;
-	static final int MENU_SHARE = MENU_BOOKMARKED + 1;
 	static final String TAG = "NewsDetailsActivity";
 	
 	public static final String CATEGORY_ID_KEY = "category_id";
@@ -136,6 +129,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 		setPosition(mStartPosition);
 	}
 	
+	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
@@ -152,26 +146,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 		
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {		
-		String menuTitle;
-		int menuIconId;
-		NewsItem newsItem = mNewsItems.get(getPosition());
-		if(mNewsModel.isBookmarked(newsItem)) {
-			menuTitle = "Remove Bookmark";
-			menuIconId = R.drawable.menu_remove_bookmark;
-			
-		} else {
-			menuTitle = "Add Bookmark";
-			menuIconId = R.drawable.menu_add_bookmark;
-		}
-		
-		menu.add(0, MENU_BOOKMARKED, Menu.NONE, menuTitle)
-			.setIcon(menuIconId);
-		menu.add(0, MENU_SHARE, Menu.NONE, "Share")
-			.setIcon(R.drawable.menu_share);
-	}	
+	*/
 	
 	private class NewsDetailsScreen implements SliderInterface {
 

@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
@@ -26,19 +24,6 @@ public abstract class NewModuleActivity extends Activity {
 	protected abstract boolean isScrollable();
 	protected abstract void onOptionSelected(String optionId);
 	protected abstract boolean isModuleHomeActivity();
-	protected abstract void prepareActivityOptionsMenu(Menu menu);
-	
-	protected static final int MENU_MAIN_GROUP = 0;
-	protected static final int MENU_HOME = Menu.FIRST;
-	protected static final int MENU_MODULE_HOME = MENU_HOME + 1;
-	protected static final int MENU_SEARCH = MENU_MODULE_HOME + 1;
-	protected static final String MENU_SEARCH_TITLE = "Search";
-	
-	
-	
-	public String getMobileWebDomain() {
-		return app.getMobileWebDomain();
-	}
 	
 	protected MITTitleBar getTitleBar() {
 		return mTitleBar;
@@ -50,45 +35,6 @@ public abstract class NewModuleActivity extends Activity {
 		app = (Global)getApplication();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-			case MENU_HOME: 
-				MITNewsWidgetActivity.goHome(this);
-				return true;
-		
-			case MENU_MODULE_HOME:
-				Intent intent = new Intent(this, getNewModule().getModuleHomeActivity());
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				return true;
-				
-			case MENU_SEARCH:
-				onSearchRequested();
-				return true;
-		}
-			
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		
-		menu.clear();
-		
-		menu.add(MENU_MAIN_GROUP, MENU_HOME, Menu.NONE, "Home")
-			.setIcon(R.drawable.menu_home);
-		if(!isModuleHomeActivity()) {
-			menu.add(MENU_MAIN_GROUP, MENU_MODULE_HOME, Menu.NONE, getNewModule().getMenuOptionTitle())
-				.setIcon(getNewModule().getMenuIconResourceId());
-		}
-		
-		
-		prepareActivityOptionsMenu(menu);
-		
-		return super.onPrepareOptionsMenu(menu);
-	}
 	
 	/**
 	 * Use it to add TitleBar items by use {@link NewModuleActivity#addPrimaryMenuItem(List)

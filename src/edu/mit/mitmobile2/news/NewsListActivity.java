@@ -273,16 +273,6 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 	}
 	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		/*
-		menu.add(0, MENU_NEWSBOOKMARKS, Menu.NONE, "Bookmarks")
-			.setIcon(R.drawable.menu_bookmarks);
-		menu.add(0, MENU_SEARCH, Menu.NONE, "Search")
-			.setIcon(R.drawable.menu_search);
-		*/
-	}
-	
-	@Override
 	protected NewModule getNewModule() {
 		return new NewsModule();
 	}

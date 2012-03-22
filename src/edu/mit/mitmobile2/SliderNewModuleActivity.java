@@ -44,9 +44,6 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	private String mJumpTitle = null;
 	private int mJumpMenuIconId = -1;
 	
-	static final int MENU_JUMP = MENU_SEARCH+1;
-	protected final static int MENU_LAST = MENU_JUMP+1;
-	
 	static final int SCROLL_DURATION_PER_SCREEN = 250;
 	static final int SCROLL_MAX_DURATION = 2500;
 	
@@ -57,6 +54,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 		mJumpMenuIconId = jumpMenuIconId;
 	}
 	
+	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
@@ -99,6 +97,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 				.setIcon(mJumpMenuIconId);
 		}
 	}
+	*/
 	
 	/****************************************************/
     @Override

@@ -8,20 +8,13 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.HighlightEffects;
-import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.MITPopupSecondaryTitleBar;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
@@ -36,8 +29,6 @@ public class PeopleActivity extends NewModuleActivity {
 	private View mRecentlyViewedListViewHeader;
 	private View mRecentlyViewedSectionHeader;
 	private List<PersonItem> mRecents;
-
-	private static final int MENU_CLEAR_RECENTS = MENU_SEARCH + 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +113,7 @@ public class PeopleActivity extends NewModuleActivity {
 		recentlyViewedListAdapter.setLookupHandler(mRecentlyViewed, PersonDetailViewMode.RECENT, null);
 	}
 	
+	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -133,17 +125,7 @@ public class PeopleActivity extends NewModuleActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		if (mRecents.size() > 0) {
-			menu.add(0, MENU_CLEAR_RECENTS, Menu.NONE, "Clear Recents")
-				.setIcon(R.drawable.menu_clear_recent);
-		}
-		
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-			.setIcon(R.drawable.menu_search);
-	}
+	*/
 
 	@Override
 	public boolean isModuleHomeActivity() {
