@@ -2,9 +2,7 @@ package edu.mit.mitmobile2;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,8 +11,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -106,7 +102,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.new_slider);
         mSliderTitleBar = new MITSubSliderTitleBar(this);
-        getTitleBar().addSliderBar(mSliderTitleBar);
+        getTitleBar().addSecondaryBar(mSliderTitleBar);
         
         mSliderView = (SliderView) findViewById(R.id.newsliderMainContent);
         

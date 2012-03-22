@@ -26,8 +26,6 @@ public class MITTitleBar extends LinearLayout {
 	private OnMITTitleBarListener mClickListener;
 	private MITPopupMenu mPopoverMenu;
 	
-	private MITSecondaryTitleBar mSecondaryTitleBar;
-	
 	private int primaryItemsShowing = 0;
 	
 	public MITTitleBar(Context context) {
@@ -239,16 +237,7 @@ public class MITTitleBar extends LinearLayout {
 	/*
 	 * This should only be called once
 	 */
-	public void addSecondaryBar(MITSecondaryTitleBar view) {
-		mSecondaryTitleBar = view;
-		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-	}
-	
-	public MITSecondaryTitleBar getSecondaryTitleBar() {
-		return mSecondaryTitleBar;
-	}
-	
-	public void addSliderBar(MITSubSliderTitleBar view) {
+	public void addSecondaryBar(View view) {
 		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
