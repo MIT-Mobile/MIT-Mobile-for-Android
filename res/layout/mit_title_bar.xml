@@ -6,10 +6,12 @@
 	<RelativeLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="40dip"
-	    android:background="#FF000000">
+	    android:background="#FF000000"
+	    >
 	    
 	    <LinearLayout 
 	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"
 	        android:layout_width="wrap_content"
 	        android:layout_height="fill_parent"
 	    	android:orientation="horizontal">
@@ -26,7 +28,7 @@
 		    <TextView android:id="@+id/titleModuleHomeBtn"
 		        android:layout_toRightOf="@id/titleHomeBtn"
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_height="30dip"
 		        android:paddingLeft="5dip"
 		        android:paddingRight="5dip"
 		        android:gravity="center_vertical|center_horizontal"

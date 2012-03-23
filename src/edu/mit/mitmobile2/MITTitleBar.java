@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,6 @@ public class MITTitleBar extends LinearLayout {
 	private LayoutInflater mInflater;
 	private OnMITTitleBarListener mClickListener;
 	private MITPopupMenu mPopoverMenu;
-	
-	private MITSecondaryTitleBar mSecondaryTitleBar;
 	
 	private int primaryItemsShowing = 0;
 	
@@ -74,11 +73,11 @@ public class MITTitleBar extends LinearLayout {
 		mModuleHomeBtn.setText(text);
 	}
 	
-	public void setClickableForModuleBtn(boolean isClickable) {
-		if (!isClickable) {
+	public void setModuleButtonEnabled(boolean enabled) {
+		if (enabled) {
 			mModuleHomeBtn.setBackgroundResource(R.drawable.titlebar_action_module_background);
 		}
-		mModuleHomeBtn.setClickable(!isClickable);
+		mModuleHomeBtn.setClickable(enabled);
 	}
 	
 	/**
@@ -239,16 +238,7 @@ public class MITTitleBar extends LinearLayout {
 	/*
 	 * This should only be called once
 	 */
-	public void addSecondaryBar(MITSecondaryTitleBar view) {
-		mSecondaryTitleBar = view;
-		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-	}
-	
-	public MITSecondaryTitleBar getSecondaryTitleBar() {
-		return mSecondaryTitleBar;
-	}
-	
-	public void addSliderBar(MITSubSliderTitleBar view) {
+	public void addSecondaryBar(View view) {
 		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
