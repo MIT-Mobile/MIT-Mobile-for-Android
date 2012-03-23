@@ -62,5 +62,11 @@ public class MITSubSliderTitleBar extends RelativeLayout {
 		public void onSlideToPrevious();
 		
 		public void onSlideToNext();
+	}
+
+	public void showPreviousNext() {
+		// TODO Auto-generated method stub
+		mPrevious.setVisibility(VISIBLE);
+		mNext.setVisibility(VISIBLE);
 	}	
 }

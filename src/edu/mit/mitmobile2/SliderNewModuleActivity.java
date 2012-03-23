@@ -205,7 +205,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 		mSliderView.addScreen(sliderInterface);
 		
 		if(mSliderView.getScreenCount() > 1) {
-//			mSliderTitleBar.showArrows();
+			mSliderTitleBar.showPreviousNext();
 		}
 	}
 	
