@@ -99,13 +99,16 @@ public class MITPopupMenu {
         int availableHeight = 0;
         int[] location = new int[2];
         int screenHeight = mWindowManager.getDefaultDisplay().getHeight();
+        int screenWidth = mWindowManager.getDefaultDisplay().getWidth();
         
         mAnchorView.getLocationOnScreen(location);
+        
+        int xPos = location[0];
         int yPos = location[1];
         
         //Not sure does it work well on different device.
         //Cause the screenHeight maybe different..
-        if (screenHeight / 2 > location[1]) {
+        if (screenHeight / 2 > yPos) {
         	availableHeight = screenHeight - yPos - mAnchorView.getHeight();
         	yPos += mAnchorView.getHeight();
         } else {
@@ -116,12 +119,18 @@ public class MITPopupMenu {
         	}
         }
         
+        if (screenWidth / 2 >  xPos) {
+        	xPos += AttributesParser.parseDimension("6dip", mContext);
+        } else {
+        	xPos = screenWidth - mMenuList.getMeasuredWidth() - AttributesParser.parseDimension("6dip", mContext);
+        }
+        
         if (mMenuList.getMeasuredHeight() > availableHeight) {
         	mWindow.setHeight(availableHeight);
         } else {
         	mWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         }
-        mWindow.showAtLocation(this.mAnchorView, Gravity.NO_GRAVITY, location[0], yPos);
+        mWindow.showAtLocation(this.mAnchorView, Gravity.NO_GRAVITY, xPos, yPos);
     }
 
     public void refreshMenuList() {
