@@ -4,7 +4,7 @@
   	android:layout_height="30dip"
   	android:orientation="horizontal"
   	android:background="@drawable/title_secondary_bar_background">
-  				    
+  		
     <FrameLayout 
 		android:id="@+id/secondaryTitleBarAnchorView"
         android:layout_height="fill_parent"
@@ -25,8 +25,8 @@
    			android:visibility="gone"
         	android:id="@+id/secondaryTitleBarPlainTitle"
   			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
-  			android:layout_gravity="center_vertical"
+  			android:layout_height="fill_parent"
+  			android:gravity="center_vertical"
   			android:paddingLeft="5dip"
   			/>
   	

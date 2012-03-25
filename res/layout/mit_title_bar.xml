@@ -37,6 +37,7 @@
 	    	
 	    <LinearLayout android:id="@+id/titlePrimaryList"
 	        android:layout_alignParentRight="true"
+	        android:orientation="horizontal"
 	    	android:layout_width="wrap_content"
 	    	android:layout_height="fill_parent">
 		    

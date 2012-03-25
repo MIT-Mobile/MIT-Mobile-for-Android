@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderNewModuleActivity;
@@ -25,6 +26,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 	boolean mBookmarks = false;
 	int mCategoryId = -1;
 	String mSearchTerm = null;
+	MITPlainSecondaryTitleBar mSecondaryTitleBar;
 	
 	Context ctx;
 	private int mStartPosition;
@@ -47,7 +49,11 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 		} else if(extras.containsKey(BOOKMARKS_KEY)) {
 			mBookmarks = true;
 		}
-
+ 
+		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
+		mSecondaryTitleBar.setTitle(newsCategoryTitle());
+		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
+		
 		mNewsModel = new NewsModel(this);		
 		initalizeNewsList();
 
@@ -68,6 +74,18 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 		);
 	}
 
+	private String newsCategoryTitle() {
+		if(mCategoryId >= 0) {
+			NewsModel newsModel = new NewsModel(this);
+			return newsModel.getCategoryTitle(mCategoryId);
+		} else if (mSearchTerm != null) {
+			return "Search Results";
+		} else if (mBookmarks) {
+			return "Bookmarks";
+		}
+		return null;
+	}
+	
 	@Override
 	protected void onDestroy() {
 		mNewsItems = null;
@@ -190,7 +208,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 			}
 		}
 	}
-
+	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;

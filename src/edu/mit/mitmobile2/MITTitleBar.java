@@ -3,7 +3,6 @@ package edu.mit.mitmobile2;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -236,9 +235,13 @@ public class MITTitleBar extends LinearLayout {
 	
 	
 	/*
-	 * This should only be called once
+	 * These add bar methods should only be called once
 	 */
 	public void addSecondaryBar(View view) {
+		mContainer.addView(view, 1, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+	}
+	
+	public void addSliderBar(View view) {
 		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
