@@ -10,16 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.objs.CourseItem;
 
@@ -85,10 +83,10 @@ public class CourseSubjectView implements SliderInterface, OnItemClickListener, 
 				loader.setVisibility(View.GONE);
 				lv_subjects.setVisibility(View.VISIBLE);
 				
-				SliderActivity sliderActivity = (SliderActivity) mContext;
-				sliderActivity.freezeScroll();
+//				SliderActivity sliderActivity = (SliderActivity) mContext;
+//				sliderActivity.freezeScroll();
 				lv_subjects.setAdapter(caa);
-				sliderActivity.unfreezeScroll();
+//				sliderActivity.unfreezeScroll();
 
 				lv_subjects.setOnItemClickListener(CourseSubjectView.this);
 				//lv_subjects.setOnLongClickListener(CourseSubjectView.this);  // TODO

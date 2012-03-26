@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
-import android.view.Menu;
 import android.widget.Toast;
-
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.objs.CourseListItem;
 
-public class MITCoursesListsSliderActivity extends SliderActivity {
+public class MITCoursesListsSliderActivity extends CategoryNewModuleActivity {
 
 	int group;
 	
@@ -63,7 +60,7 @@ public class MITCoursesListsSliderActivity extends SliderActivity {
     	List<CourseListItem> unsorted_courses = CoursesDataModel.getList();
         
     	if (unsorted_courses==null) {
-        	Toast.makeText(ctx, "Sorry, network error, try again later.", Toast.LENGTH_LONG).show();
+        	Toast.makeText(MITCoursesListsSliderActivity.this, "Sorry, network error, try again later.", Toast.LENGTH_LONG).show();
     		return;
     	}
     	
@@ -103,23 +100,28 @@ public class MITCoursesListsSliderActivity extends SliderActivity {
     	
     	for (int x=0; x<4; x++) {
     		cv = new CourseListView(this,x,courses[x],titles[x]);
-    		addScreen(cv, titles[x], titles[x]);
+    		addCategory(cv, titles[x], titles[x]);
     	}
-    	setPosition(group);   	
+    	onOptionItemSelected(titles[group]);
     }
 	
-	@Override
-	protected Module getModule() {
-		return new ClassesModule();
-	}
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-		  .setIcon(R.drawable.menu_search);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ClassesModule();
+	}
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
 	}
 }

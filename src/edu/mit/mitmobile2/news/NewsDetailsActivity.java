@@ -97,14 +97,9 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 				NewsItem newsItem = mNewsItems.get(getPosition());
 				if(optionId.equals(MENU_BOOKMARKED)) {			
 					// toggle bookmark status
+					updateBookmarkMenuItem();
 					mNewsModel.setStoryBookmarkStatus(newsItem, !mNewsModel.isBookmarked(newsItem));
 					
-					if (mBookmarkMenuItem.getIconResId() == R.drawable.menu_remove_bookmark) {
-						mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
-					} else {
-						mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
-					}
-					mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
 				} else if(optionId == MENU_SHARE) {
 					String url  = "http://" + app.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(newsItem.story_id);
 					CommonActions.shareCustomContent(NewsDetailsActivity.this, newsItem.title, newsItem.description, url);
@@ -112,6 +107,15 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 			}
 		});
 		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
+	}
+	
+	private void updateBookmarkMenuItem() {
+		if (mBookmarkMenuItem.getIconResId() == R.drawable.menu_remove_bookmark) {
+			mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
+		} else {
+			mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
+		}
+		mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
 	}
 
 	private String newsCategoryTitle() {
@@ -229,6 +233,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity {
 		public void onSelected() {
 			// TODO Auto-generated method stub
 			NewsItem newsItem = mNewsItems.get(getPosition());
+			
 			if (mNewsModel.isBookmarked(newsItem)) {
 				mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
 			} else {

@@ -1,11 +1,14 @@
 package edu.mit.mitmobile2.classes;
 
-import android.app.Activity;
+import java.util.ArrayList;
+import java.util.List;
 
-import edu.mit.mitmobile2.Module;
+import android.app.Activity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
-public class ClassesModule extends Module {
+public class ClassesModule extends NewModule {
 
 	@Override
 	public String getLongName() {
@@ -30,5 +33,28 @@ public class ClassesModule extends Module {
 	@Override
 	public int getHomeIconResourceId() {
 		return R.drawable.home_stellar;
+	}
+
+	@Override
+	protected List<MITMenuItem> getPrimaryOptions() {
+		// TODO Auto-generated method stub
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menuitem_search));
+		return items;
+	}
+
+	@Override
+	protected List<MITMenuItem> getSecondaryOptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean onItemSelected(Activity activity, String id) {
+		// TODO Auto-generated method stub
+		if (id.equals("search")) {
+			activity.onSearchRequested();
+		}
+		return false;
 	}
 }

@@ -6,25 +6,28 @@ import java.util.Date;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.SliderNewModuleActivity;
 import edu.mit.mitmobile2.objs.CourseItem;
 
-public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
+public class MITCoursesAnnouncementsSliderActivity extends SliderNewModuleActivity {
 	
 	final static String KEY_SUBJECT_MASTER_ID = "master_id";
+	
 	String mMasterId;
 	CourseItem mCourseItem;
-
+	
+	MITMenuItem mBookmarkMenuItem;
+	MITPlainSecondaryTitleBar mSecondaryTitleBar;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -35,8 +38,8 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
     	mCourseItem = CoursesDataModel.getDetails(mMasterId);
     	
     	createViews();
-
 	}
+    
     
     private void createViews() {
     	for(int i = 0; i < mCourseItem.announcements.size(); i++) {
@@ -78,7 +81,6 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
 		@Override
 		public void onSelected() {
 			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
@@ -104,43 +106,25 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderActivity {
     }
     
 	@Override
-	protected Module getModule() {
-		return new ClassesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	static final int MENU_MY_STELLAR = MENU_LAST + 1;
-	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		if(item.getItemId() == MENU_MY_STELLAR) {
-			CoursesDataModel.setAlarm(this, mCourseItem);
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ClassesModule();
 	}
-	
+
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		String menuTitle;
-		int menuIconId;
-		
-		if(CoursesDataModel.myCourses.containsKey(mMasterId)) {
-			menuTitle = "Remove from My Stellar";
-			menuIconId = R.drawable.menu_remove_bookmark;
-		} else {
-			menuTitle = "Add to My Stellar";
-			menuIconId = R.drawable.menu_add_bookmark;
-		}
-		
-		menu.add(0, MENU_MY_STELLAR, Menu.NONE, menuTitle)
-			.setIcon(menuIconId);
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
 		
 	}
 	

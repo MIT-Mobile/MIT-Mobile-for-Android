@@ -9,17 +9,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
-
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.SliderNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.CourseItem;
@@ -28,7 +29,7 @@ import edu.mit.mitmobile2.people.PeopleSearchActivity;
 
 public class CourseDetailsView implements SliderInterface {
 
-	protected SliderActivity mActivity;
+	protected SliderNewModuleActivity mActivity;
 	protected CourseItem mCourseItem;
 	
 	protected LockingScrollView mView;
@@ -39,12 +40,13 @@ public class CourseDetailsView implements SliderInterface {
 	
 	protected FullScreenLoader mLoader;
 	
+	private ImageView mBookmarkBtn;
 	/***************************************************/
 	public CourseDetailsView(Context context, CourseItem course) {
 		
 		mCourseItem = course;
 		
-		mActivity = (SliderActivity) context;
+		mActivity = (SliderNewModuleActivity) context;
 		
 	}
 	
@@ -55,6 +57,16 @@ public class CourseDetailsView implements SliderInterface {
 		mView = (LockingScrollView) vi.inflate(R.layout.courses_details, null);
 		
 		mLoader = (FullScreenLoader) mView.findViewById(R.id.coursesDetailsLoader);
+		mBookmarkBtn = (ImageView) mView.findViewById(R.id.coursesDetailsBookmarkBtn);
+		
+		mBookmarkBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				CoursesDataModel.setAlarm(mActivity, mCourseItem);
+				updateBookmarkBtn();
+			}
+		});
 		
 		updateHeader(mCourseItem);		
 
@@ -69,6 +81,16 @@ public class CourseDetailsView implements SliderInterface {
 		tabConfigurator.configureTabs();
 		
 		return mView;
+	}
+	
+	private void updateBookmarkBtn() {
+		int resId = R.drawable.menu_add_bookmark;
+		if (CoursesDataModel.myCourses.containsKey(mCourseItem.masterId)) {
+			resId = R.drawable.menu_remove_bookmark;
+		} else {
+			resId = R.drawable.menu_add_bookmark;
+		}
+		mBookmarkBtn.setImageResource(resId);
 	}
 
 	private void updateHeader(CourseItem courseItem) {
@@ -86,6 +108,7 @@ public class CourseDetailsView implements SliderInterface {
 	/****************************************************/
 	@Override
 	public void onSelected() {
+		updateBookmarkBtn();
 		if(mHasBeenSelected) {
 			// only load up data for the class once
 			return;

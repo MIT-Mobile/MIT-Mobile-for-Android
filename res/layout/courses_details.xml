@@ -23,13 +23,19 @@
 
 	
 		<TextView android:id="@+id/coursesDetailsTimeTV"
-
 			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
 			android:paddingLeft="@dimen/horizontalPadding"
-			android:paddingBottom="16dip"
 			style="@style/Deck" />	
-
+		
+		<ImageView
+			android:id="@+id/coursesDetailsBookmarkBtn"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingBottom="16dip"/>
+		
 		<TabHost
 			android:visibility="gone"
 			android:background="@color/rowBackground" 

@@ -8,13 +8,11 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.objs.CourseListItem;
 
@@ -69,7 +67,7 @@ public class CourseListView extends LinearLayout implements SliderInterface, OnI
 		
 		Intent i = new Intent(a, MITCoursesSubjectsSliderActivity.class);
 		//i.putExtra(MITCoursesSubjectsSliderActivity.KEY_COURSE_ID, position);
-		i.putExtra(SliderActivity.KEY_POSITION, position);
+		i.putExtra(MITCoursesSubjectsSliderActivity.KEY_POSITION, position);
 		a.startActivity(i);
 		
 	}

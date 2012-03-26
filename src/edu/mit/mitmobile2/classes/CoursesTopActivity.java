@@ -7,23 +7,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.CourseItem;
 
-public class CoursesTopActivity extends ModuleActivity {
+public class CoursesTopActivity extends NewModuleActivity {
 
 	CoursesArrayAdapter caa;
 	
@@ -169,19 +167,26 @@ public class CoursesTopActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
-		return new ClassesModule();
-	}
-	
-	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-			.setIcon(R.drawable.menu_search);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ClassesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

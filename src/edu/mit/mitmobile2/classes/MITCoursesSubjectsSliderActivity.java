@@ -3,16 +3,16 @@ package edu.mit.mitmobile2.classes;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.view.Menu;
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
+import edu.mit.mitmobile2.NewModule;
 
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
-
-public class MITCoursesSubjectsSliderActivity extends SliderActivity {
+public class MITCoursesSubjectsSliderActivity extends CategoryNewModuleActivity {
 
 	private ArrayList<String> course_ids = new ArrayList<String>();  // TODO hashMap
 	
+	public static final String KEY_POSITION = "key_position";
+	
+	int position;
 	MITCoursesSubjectsSliderActivity self;
 	
 	/****************************************************/
@@ -23,7 +23,7 @@ public class MITCoursesSubjectsSliderActivity extends SliderActivity {
 
     	Bundle extras = getIntent().getExtras();
         if (extras!=null){
-        	//curCourseId = extras.getString(KEY_COURSE_ID);
+        	position = extras.getInt(KEY_POSITION, 0);
         }
 
         course_ids = CoursesDataModel.getCourseIds();
@@ -48,28 +48,30 @@ public class MITCoursesSubjectsSliderActivity extends SliderActivity {
     		String courseId = course_ids.get(x);
     		
     		cv = new CourseSubjectView(this, courseId);
-
-    		addScreen(cv, courseId, "Course " + courseId);    
-    		
+    		addCategory(cv, courseId, "Course " + courseId);
     	}
-    	
-		setPosition(getPositionValue());
-    	
+    	onOptionItemSelected(course_ids.get(position));
     }	 
 
-	@Override
-	protected Module getModule() {
-		return new ClassesModule();
-	}
-	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
+	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SEARCH, Menu.NONE, "Search")
-		  .setIcon(R.drawable.menu_search);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ClassesModule();
+	}
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
