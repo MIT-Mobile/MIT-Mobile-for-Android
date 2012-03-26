@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.emergency;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -42,10 +41,7 @@ public class EmergencyModule extends NewModule {
 
 	@Override
 	protected List<MITMenuItem> getPrimaryOptions() {
-		// TODO Auto-generated method stub
-		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
-		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));
-		return menuItems;
+		return null;
 	}
 
 	@Override

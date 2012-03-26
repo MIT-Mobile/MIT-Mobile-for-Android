@@ -1,7 +1,9 @@
 package edu.mit.mitmobile2.emergency;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -185,6 +188,13 @@ public class EmergencyActivity extends NewModuleActivity {
 		};
 
 		EmergencyParser.refreshStatus(this, handler);
+	}
+	
+	// default implementation for primary, and secondary menu items.
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
+		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));
+		return menuItems;
 	}
 	
 	@Override
