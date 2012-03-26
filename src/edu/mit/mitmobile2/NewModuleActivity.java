@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
 
@@ -79,7 +80,7 @@ public abstract class NewModuleActivity extends Activity {
 		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mContentView = inflater.inflate(layoutResID, null);
-		mMainLayout.addView(mContentView);
+		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 	
 	protected void setContentView(View view, boolean fullRefresh) {
@@ -90,7 +91,7 @@ public abstract class NewModuleActivity extends Activity {
 			mMainLayout.removeViewAt(mMainLayout.getChildCount()-1);
 		}
 		mContentView = view;
-		mMainLayout.addView(view);
+		mMainLayout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 	
 	private void initViews() {
