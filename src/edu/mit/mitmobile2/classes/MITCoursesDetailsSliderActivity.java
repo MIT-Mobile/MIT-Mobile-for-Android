@@ -88,7 +88,7 @@ public class MITCoursesDetailsSliderActivity extends SliderNewModuleActivity {
     		CourseItem ci = courses.get(x);
     		
     		cv = new CourseDetailsView(this,ci);
-    		addScreen(cv, ci.title, "Class Info");   
+    		addScreen(cv, ci.title, "" + (x+1) + " of " + courses.size());   
     	}
     	
     	setPosition(mStartPosition);

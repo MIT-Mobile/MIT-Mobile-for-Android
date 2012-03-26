@@ -45,7 +45,7 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderNewModuleActivi
     	for(int i = 0; i < mCourseItem.announcements.size(); i++) {
     		CourseItem.Announcement announcement = mCourseItem.announcements.get(i);
     		SliderInterface announcementView = new CoursesAnnouncementView(this, announcement);
-    		addScreen(announcementView, "Announcement: " + Integer.toString(i+1), "Announcements");
+    		addScreen(announcementView, "", "" + (i+1) + " of " + mCourseItem.announcements.size());
     	}
     	
     	setPosition(getPositionValue());
