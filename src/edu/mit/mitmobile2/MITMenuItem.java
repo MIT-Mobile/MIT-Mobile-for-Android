@@ -48,6 +48,10 @@ public class MITMenuItem {
         return this.icon;
     }
     
+    public void setIconResId(int resId) {
+    	this.iconResId = resId;
+    }
+    
     public int getIconResId() {
     	return iconResId;
     }

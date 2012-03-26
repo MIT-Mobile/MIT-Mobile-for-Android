@@ -1,15 +1,21 @@
 package edu.mit.mitmobile2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 abstract public class MITSecondaryTitleBar extends LinearLayout {
 
 	protected LinearLayout mContainer;
 	protected LinearLayout mSecondaryActionItemsLL;
+	
+	private List<MITMenuItem> mMenuItems;
 	
 	private OnMITMenuItemListener mMenuListener;
 	
@@ -24,7 +30,8 @@ abstract public class MITSecondaryTitleBar extends LinearLayout {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mContainer = (LinearLayout) inflater.inflate(R.layout.mit_secondary_title_bar, this);
 		mSecondaryActionItemsLL = (LinearLayout) findViewById(R.id.secondaryTitleBarActionItems);
-	
+		
+		mMenuItems = new ArrayList<MITMenuItem>();
 	}
 	
 	public void setOnMITMenuItemListener(OnMITMenuItemListener listener) {
@@ -37,6 +44,7 @@ abstract public class MITSecondaryTitleBar extends LinearLayout {
 	 * @return View appears on the menu.
 	 */
 	public void addMenuItem(final MITMenuItem item) {
+		mMenuItems.add(item);
 		View view = item.getView(getContext());
 		
         view.setFocusable(true);
@@ -53,5 +61,18 @@ abstract public class MITSecondaryTitleBar extends LinearLayout {
 				}
 			}
 		});		
+	}
+	
+	public void updateMenuItem(MITMenuItem item) {
+		int position = mMenuItems.indexOf(item);
+		ImageView view = (ImageView) mSecondaryActionItemsLL.getChildAt(position);
+		view.setImageResource(item.getIconResId());
+	}
+	
+	public void removeMenuItem(MITMenuItem item) {
+		int position = mMenuItems.indexOf(item);
+		if (mSecondaryActionItemsLL.getChildCount() > 0 && position > -1) {
+			mSecondaryActionItemsLL.removeViewAt(position);
+		}
 	}
 }

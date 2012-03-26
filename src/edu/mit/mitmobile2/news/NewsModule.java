@@ -55,6 +55,7 @@ public class NewsModule extends NewModule {
 	protected boolean onItemSelected(Activity activity, String id) {
 		if(id.equals("bookmarks")) {
 			Intent intent = new Intent(activity, NewsBookmarksActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			activity.startActivity(intent);
 			return true;
 		} else if(id.equals("search")) {
