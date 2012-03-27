@@ -12,28 +12,24 @@ import android.text.Spannable;
 import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SectionHeader;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.shuttles.ShuttleRouteArrayAdapter.SectionListItemView;
 
-public class ShuttlesActivity extends ModuleActivity {
+public class ShuttlesActivity extends NewModuleActivity {
 	
 	Context ctx;
 	
@@ -126,7 +122,6 @@ public class ShuttlesActivity extends ModuleActivity {
 		);
 		
 		routeListView.addFooterView(mFooterView);
-			
 		
 		getData(false);
 	
@@ -177,7 +172,7 @@ public class ShuttlesActivity extends ModuleActivity {
 				Integer routeInt = (Integer) view.getTag();
 				
 				Intent i = new Intent(ctx, MITRoutesSliderActivity.class);
-				i.putExtra(SliderActivity.KEY_POSITION, routeInt);
+				i.putExtra(MITRoutesSliderActivity.KEY_POSITION, routeInt);
 					
 				startActivity(i);
 			}
@@ -188,8 +183,6 @@ public class ShuttlesActivity extends ModuleActivity {
 	}
 	/****************************************************/
 	protected void getData(boolean forceRefresh) {
-
-		
 		shuttleRouteLoader.setVisibility(View.VISIBLE);
 		shuttleRouteLoader.showLoading();
 		routeListView.setVisibility(View.GONE);
@@ -212,30 +205,25 @@ public class ShuttlesActivity extends ModuleActivity {
 	/****************************************************/
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_REFRESH: 
-			getData(true);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	@Override
-	protected Module getModule() {
-		return new ShuttlesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
 	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_REFRESH, Menu.NONE, "Refresh")
-		  .setIcon(R.drawable.menu_refresh);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ShuttlesModule();
 	}
-    
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		if (optionId.equals("refresh")) {
+			getData(true);
+		}
+	}
 }
