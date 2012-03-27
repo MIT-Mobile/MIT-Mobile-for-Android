@@ -56,7 +56,7 @@ public class FacilitiesModule extends NewModule {
 	}
 
 	@Override
-	protected boolean onItemSelected(Activity activity, String id) {
+	public boolean onItemSelected(Activity activity, String id) {
 		// TODO Auto-generated method stub
 		if (id.equals("menu_info")) {
 			Intent intent = new Intent(activity, FacilitiesInfoActivity.class);					

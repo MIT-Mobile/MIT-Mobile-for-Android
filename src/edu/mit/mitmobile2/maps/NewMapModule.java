@@ -24,7 +24,7 @@ public class NewMapModule extends NewModule {
 	}
 
 	@Override
-	protected boolean onItemSelected(Activity activity, String id) {
+	public boolean onItemSelected(Activity activity, String id) {
 		if (id.equals("browse")) {
 			// implement browse here
 			return true;

@@ -120,18 +120,7 @@ public class QRReaderMainActivity extends NewModuleActivity {
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
-
-	private static final String MENU_QR_HELP = "about";
-	private final static int DIALOG_QR_HELP = 1;
 	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case DIALOG_QR_HELP:
-			return CaptureActivity.helpDialog(this);
-		}
-		return null;
-	}
 	private static class QRCodeArrayAdapter extends SimpleArrayAdapter<QRCode> {
 
 		public QRCodeArrayAdapter(Context context, List<QRCode> items) {
@@ -149,14 +138,6 @@ public class QRReaderMainActivity extends NewModuleActivity {
 			barcodeSubtitle.setText(DateStrings.agoString(item.getDate()));
 		}
 	}
-	
-	@Override
-	protected List<MITMenuItem> getPrimaryMenuItems() {
-		// TODO Auto-generated method stub
-		List<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
-		menuItems.add(new MITMenuItem(MENU_QR_HELP, "", R.drawable.menu_about));
-		return menuItems;
-	}
 
 	@Override
 	protected NewModule getNewModule() {
@@ -173,8 +154,6 @@ public class QRReaderMainActivity extends NewModuleActivity {
 	@Override
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
-		if (optionId.equals(MENU_QR_HELP)) {
-			showDialog(DIALOG_QR_HELP);
-		}
+		
 	}
 }

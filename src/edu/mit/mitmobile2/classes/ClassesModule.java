@@ -50,7 +50,7 @@ public class ClassesModule extends NewModule {
 	}
 
 	@Override
-	protected boolean onItemSelected(Activity activity, String id) {
+	public boolean onItemSelected(Activity activity, String id) {
 		// TODO Auto-generated method stub
 		if (id.equals("search")) {
 			activity.onSearchRequested();

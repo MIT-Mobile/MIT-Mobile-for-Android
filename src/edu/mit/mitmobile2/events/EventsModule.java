@@ -94,7 +94,7 @@ public class EventsModule extends NewModule {
 	}
 
 	@Override
-	protected boolean onItemSelected(Activity activity, String id) {
+	public boolean onItemSelected(Activity activity, String id) {
 		// TODO Auto-generated method stub
 		return false;
 	}

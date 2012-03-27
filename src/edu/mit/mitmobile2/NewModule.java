@@ -10,5 +10,5 @@ public abstract class NewModule extends Module {
 	
 	public abstract List<MITMenuItem> getSecondaryOptions();
 	
-	protected abstract boolean onItemSelected(Activity activity, String id);
+	public abstract boolean onItemSelected(Activity activity, String id);
 }

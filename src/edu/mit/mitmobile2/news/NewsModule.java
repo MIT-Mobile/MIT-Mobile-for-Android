@@ -52,7 +52,7 @@ public class NewsModule extends NewModule {
 	}
 
 	@Override
-	protected boolean onItemSelected(Activity activity, String id) {
+	public boolean onItemSelected(Activity activity, String id) {
 		if(id.equals("bookmarks")) {
 			Intent intent = new Intent(activity, NewsBookmarksActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

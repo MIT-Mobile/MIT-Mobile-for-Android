@@ -16,7 +16,13 @@
 
 package com.google.zxing.client.android;
 
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITNewsWidgetActivity;
+import edu.mit.mitmobile2.MITTitleBar;
+import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -75,7 +81,7 @@ import android.widget.TextView;
  *  written by Daniel Switkin which in turn was based on the CameraPreview
  *  example in the Android SDK.
  *
- * @author ian.gavalakis@modolabs.com 
+ * @author modified by MIT Mobile
  */
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
@@ -165,11 +171,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   public void onCreate(Bundle icicle) {
     super.onCreate(icicle);
 
+    ctx = this;
+    
     Window window = getWindow();
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.capture);
-
-    ctx = this;
+    MITTitleBar titleBar = (MITTitleBar) findViewById(R.id.qrCaptureTitleBar);
+    initMitTitleBar(titleBar);
     
     CameraManager.init(getApplication());
     viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
@@ -635,5 +643,34 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
   public void drawViewfinder() {
     viewfinderView.drawViewfinder();
+  }
+  
+  private void initMitTitleBar(MITTitleBar titleBar) {
+      final NewModule qrModule = new QRReaderModule();
+      titleBar.setTextForModuleBtn("QR Reader");
+      titleBar.setTextForModuleBtn("QR Reader");
+      titleBar.setModuleButtonEnabled(true);
+      for (MITMenuItem item : qrModule.getPrimaryOptions()) {
+	  titleBar.addPrimaryItem(item);
+      }
+	  
+      titleBar.setOnTitleBarListener(new OnMITTitleBarListener() {
+	  @Override
+	  public void onOptionItemSelected(String optionId) {
+	      qrModule.onItemSelected((Activity) ctx, optionId);
+	  }
+	  
+	  @Override
+	  public void onHomeSelected() {
+	      MITNewsWidgetActivity.goHome(ctx);
+	  }
+
+	  @Override
+	  public void onModuleHomeSelected() {
+	      Intent intent = new Intent(ctx, qrModule.getModuleHomeActivity());
+	      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	      startActivity(intent);
+	  }
+      });
   }
 }

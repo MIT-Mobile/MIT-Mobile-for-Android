@@ -37,10 +37,10 @@
       android:background="@color/transparent"/>
 
 
-  	<edu.mit.mitmobile2.TitleBar
-  		android:text="Scan QR"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
+    <edu.mit.mitmobile2.MITTitleBar
+        android:id="@+id/qrCaptureTitleBar"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"/>
   		
   <LinearLayout android:id="@+id/result_view"
                 android:orientation="vertical"
