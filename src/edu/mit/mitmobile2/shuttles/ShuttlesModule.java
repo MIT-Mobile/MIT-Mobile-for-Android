@@ -35,13 +35,13 @@ public class ShuttlesModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getPrimaryOptions() {
+	public List<MITMenuItem> getPrimaryOptions() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected List<MITMenuItem> getSecondaryOptions() {
+	public List<MITMenuItem> getSecondaryOptions() {
 		// TODO Auto-generated method stub
 		return null;
 	}

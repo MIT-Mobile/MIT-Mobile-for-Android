@@ -42,7 +42,7 @@ public class FacilitiesModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getPrimaryOptions() {
+	public List<MITMenuItem> getPrimaryOptions() {
 		// TODO Auto-generated method stub
 		List<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
 		menuItems.add(new MITMenuItem("menu_info", "", R.drawable.menu_about));
@@ -50,7 +50,7 @@ public class FacilitiesModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getSecondaryOptions() {
+	public List<MITMenuItem> getSecondaryOptions() {
 		// TODO Auto-generated method stub
 		return null;
 	}
