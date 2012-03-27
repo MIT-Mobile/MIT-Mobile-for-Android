@@ -70,6 +70,14 @@
         </activity>
 		<provider android:name=".maps.MapsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.maps.SuggestionsProvider" />
         
+        
+        <activity android:name=".maps.NewMapActivity">
+        	<intent-filter>
+				<action android:name="android.intent.action.SEARCH"/>
+			</intent-filter>
+			<meta-data android:name="android.app.searchable" android:resource="@xml/maps_searchable" />
+		</activity>
+		
         <activity android:name=".events.EventsTopActivity">
         	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
         </activity>

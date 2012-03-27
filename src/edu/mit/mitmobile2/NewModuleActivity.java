@@ -27,6 +27,9 @@ public abstract class NewModuleActivity extends Activity {
 	protected abstract boolean isModuleHomeActivity();
 	
 	protected MITTitleBar getTitleBar() {
+		if (mTitleBar == null) {
+			throw new RuntimeException("getTitleBar() can not be called before setContentView()");
+		}
 		return mTitleBar;
 	}
 	

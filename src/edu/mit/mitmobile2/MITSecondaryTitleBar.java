@@ -46,6 +46,7 @@ abstract public class MITSecondaryTitleBar extends LinearLayout {
 	public void addMenuItem(final MITMenuItem item) {
 		mMenuItems.add(item);
 		View view = item.getView(getContext());
+		view.setTag(item.getId());
 		
         view.setFocusable(true);
         view.setClickable(true);
@@ -64,15 +65,17 @@ abstract public class MITSecondaryTitleBar extends LinearLayout {
 	}
 	
 	public void updateMenuItem(MITMenuItem item) {
-		int position = mMenuItems.indexOf(item);
-		ImageView view = (ImageView) mSecondaryActionItemsLL.getChildAt(position);
+		ImageView view = (ImageView) mSecondaryActionItemsLL.findViewWithTag(item.getId());
 		view.setImageResource(item.getIconResId());
 	}
 	
 	public void removeMenuItem(MITMenuItem item) {
-		int position = mMenuItems.indexOf(item);
-		if (mSecondaryActionItemsLL.getChildCount() > 0 && position > -1) {
-			mSecondaryActionItemsLL.removeViewAt(position);
-		}
+		ImageView view = (ImageView) mSecondaryActionItemsLL.findViewWithTag(item.getId());
+		mSecondaryActionItemsLL.removeView(view);
+	}
+	
+	public void addActionView(View view) {
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
+		mSecondaryActionItemsLL.addView(view, layoutParams);
 	}
 }

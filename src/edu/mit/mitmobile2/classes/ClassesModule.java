@@ -36,7 +36,7 @@ public class ClassesModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getPrimaryOptions() {
+	public List<MITMenuItem> getPrimaryOptions() {
 		// TODO Auto-generated method stub
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
 		items.add(new MITMenuItem("search", "Search", R.drawable.menuitem_search));
@@ -44,7 +44,7 @@ public class ClassesModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getSecondaryOptions() {
+	public List<MITMenuItem> getSecondaryOptions() {
 		// TODO Auto-generated method stub
 		return null;
 	}

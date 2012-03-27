@@ -38,14 +38,14 @@ public class NewsModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getPrimaryOptions() {
+	public List<MITMenuItem> getPrimaryOptions() {
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
 		items.add(new MITMenuItem("search", "Search", R.drawable.menuitem_search));
 		return items;
 	}
 
 	@Override
-	protected List<MITMenuItem> getSecondaryOptions() {
+	public List<MITMenuItem> getSecondaryOptions() {
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
 		items.add(new MITMenuItem("bookmarks", "Bookmarks"));
 		return items;

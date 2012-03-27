@@ -40,12 +40,12 @@ public class EmergencyModule extends NewModule {
 	}
 
 	@Override
-	protected List<MITMenuItem> getPrimaryOptions() {
+	public List<MITMenuItem> getPrimaryOptions() {
 		return null;
 	}
 
 	@Override
-	protected List<MITMenuItem> getSecondaryOptions() {
+	public List<MITMenuItem> getSecondaryOptions() {
 		// TODO Auto-generated method stub
 		return null;
 	}

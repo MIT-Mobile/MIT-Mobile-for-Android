@@ -34,6 +34,7 @@ import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
 import edu.mit.mitmobile2.libraries.LibrariesModule;
 import edu.mit.mitmobile2.maps.MapsModule;
+import edu.mit.mitmobile2.maps.NewMapModule;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
 import edu.mit.mitmobile2.news.NewsListActivity;
@@ -210,7 +211,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		Module[] modules = new Module[] {
 			new NewsModule(),
 			new ShuttlesModule(),
-			new MapsModule(),
+			new NewMapModule(),
 			new EventsModule(),
 			new ClassesModule(),
 			new PeopleModule(),

@@ -6,9 +6,9 @@ import android.app.Activity;
 
 
 public abstract class NewModule extends Module {
-	protected abstract List<MITMenuItem> getPrimaryOptions();
+	public abstract List<MITMenuItem> getPrimaryOptions();
 	
-	protected abstract List<MITMenuItem> getSecondaryOptions();
+	public abstract List<MITMenuItem> getSecondaryOptions();
 	
 	protected abstract boolean onItemSelected(Activity activity, String id);
 }
