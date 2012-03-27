@@ -4,11 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="Where is it?"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
 
  	<AutoCompleteTextView android:id="@+id/facilitiesTextLocation"
         android:layout_width="fill_parent" 
