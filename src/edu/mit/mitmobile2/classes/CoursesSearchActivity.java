@@ -1,18 +1,12 @@
 package edu.mit.mitmobile2.classes;
 
-import edu.mit.mitmobile2.Module;
+import android.os.Handler;
+import android.widget.ArrayAdapter;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.SearchResults;
-import edu.mit.mitmobile2.classes.MITCoursesDetailsSliderActivity;
-import edu.mit.mitmobile2.classes.CoursesDataModel;
-import edu.mit.mitmobile2.classes.CourseSearchSuggestionsProvider;
-
-import android.os.Handler;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 public class CoursesSearchActivity extends SearchActivity<CourseItem> {
 
@@ -44,12 +38,25 @@ public class CoursesSearchActivity extends SearchActivity<CourseItem> {
 	}
 
 	@Override
-	protected Module getModule() {
+	protected void onItemSelected(SearchResults<CourseItem> results, CourseItem item) {
+		MITCoursesDetailsSliderActivity.launchActivity(CoursesSearchActivity.this, item, true, results.getSearchTerm());	
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
 		return new ClassesModule();
 	}
 
 	@Override
-	protected void onItemSelected(SearchResults<CourseItem> results, CourseItem item) {
-		MITCoursesDetailsSliderActivity.launchActivity(CoursesSearchActivity.this, item, true, results.getSearchTerm());	
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

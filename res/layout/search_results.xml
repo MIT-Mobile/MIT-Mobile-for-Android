@@ -10,10 +10,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
-        <edu.mit.mitmobile2.TitleBar
-            android:text="Search Results"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
         <edu.mit.mitmobile2.SearchResultsHeader
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -3,13 +3,12 @@ package edu.mit.mitmobile2.people;
 import android.content.Context;
 import android.os.Handler;
 import android.widget.ArrayAdapter;
-
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.PersonItem;
-import edu.mit.mitmobile2.objs.SearchResults;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
+import edu.mit.mitmobile2.objs.SearchResults;
 
 public class PeopleSearchActivity extends SearchActivity<PersonItem> {
 	
@@ -42,11 +41,6 @@ public class PeopleSearchActivity extends SearchActivity<PersonItem> {
 		return "person";
 	}
 
-	@Override
-	protected Module getModule() {
-		return new PeopleModule();
-	}
-
     @Override
     protected boolean supportsMoreResult() {
         return false;
@@ -55,5 +49,23 @@ public class PeopleSearchActivity extends SearchActivity<PersonItem> {
 	@Override
 	protected void onItemSelected(SearchResults<PersonItem> searchResults, PersonItem item) {
 		PeopleDetailActivity.launchActivity(this, item, PersonDetailViewMode.SEARCH, searchResults.getSearchTerm());		
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new PeopleModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

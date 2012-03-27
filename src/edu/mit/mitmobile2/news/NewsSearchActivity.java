@@ -5,11 +5,8 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.SearchResults;
@@ -50,11 +47,6 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 		return "story";
 	}
 
-	@Override
-	protected Module getModule() {
-		return new NewsModule();
-	}
-
     @Override
     protected boolean supportsMoreResult() {
         return false;
@@ -66,6 +58,24 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 		intent.putExtra(NewsDetailsActivity.KEY_POSITION, results.getItemPosition(item));
 		intent.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, results.getSearchTerm());
 		startActivity(intent);
+		
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new NewsModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
 		
 	}
 }

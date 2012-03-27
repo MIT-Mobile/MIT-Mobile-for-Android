@@ -1,11 +1,5 @@
 package edu.mit.mitmobile2;
 
-import edu.mit.mitmobile2.MobileWebApi;
-
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.objs.SearchResults;
-
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -22,8 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import edu.mit.mitmobile2.objs.SearchResults;
 
-public abstract class SearchActivity<ResultItem> extends ModuleActivity {
+public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 	
 	public static final String EXTRA_AUTHORITY = "authority";
 	
@@ -278,9 +272,6 @@ public abstract class SearchActivity<ResultItem> extends ModuleActivity {
 	protected ListView getListView() {
 		return mSearchListView;
 	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { }
 	
 	abstract protected String searchItemPlural();
 	

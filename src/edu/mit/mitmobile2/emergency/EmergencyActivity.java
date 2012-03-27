@@ -12,8 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
@@ -22,18 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.EmergencyItem;
 import edu.mit.mitmobile2.objs.EmergencyItem.Contact;
 
 
-public class EmergencyActivity extends ModuleActivity {
+public class EmergencyActivity extends NewModuleActivity {
 
 	private ListView mListView;
 
@@ -47,8 +44,6 @@ public class EmergencyActivity extends ModuleActivity {
 	static EmergencyItem emergencyItem;
 	
 	static String PREF_KEY_EMERGENCY_TEXT = "emergency_text";
-	
-	static final int MENU_REFRESH = MENU_SEARCH + 1;
 	
 	/****************************************************/
 	@Override
@@ -193,29 +188,27 @@ public class EmergencyActivity extends ModuleActivity {
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_REFRESH:
-			refresh();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	protected Module getModule() {
-		return new EmergencyModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		menu.add(0, MENU_REFRESH, Menu.NONE, "Refresh")
-		  .setIcon(R.drawable.menu_refresh);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new EmergencyModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		if (optionId.equals("refresh")) {
+			refresh();
+		}
 	}
 }

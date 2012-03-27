@@ -2,7 +2,7 @@ package edu.mit.mitmobile2.libraries;
 
 import android.os.Handler;
 import android.widget.ArrayAdapter;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.SearchResults;
 
@@ -34,11 +34,6 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     }
 
     @Override
-    protected Module getModule() {
-        return new LibrariesModule();
-    }
-
-    @Override
     protected boolean supportsMoreResult() {
         return true;
     }
@@ -52,6 +47,24 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 	@Override
 	protected void onItemSelected(SearchResults<BookItem> results, BookItem item) {
 		BookDetailActivity.launchActivity(this, results.getResultsList(), results.getItemPosition(item));
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new LibrariesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
