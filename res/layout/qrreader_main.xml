@@ -1,89 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content">
-  
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="QR Reader"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-<!--  copied for qr_dialog with tweaks --> 		
-<LinearLayout
-  android:id="@+id/qrreaderHelpView"
-  android:orientation="vertical"
-  android:paddingLeft="@dimen/horizontalPadding"
-  android:paddingRight="@dimen/horizontalPadding"
-  android:paddingTop="@dimen/verticalPadding"
-  android:paddingBottom="@dimen/verticalPadding"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content">
-   
-	<RelativeLayout
-		  android:orientation="horizontal"
-		  android:layout_width="fill_parent"
-		  android:layout_height="wrap_content">
-  
-  		<ImageView
-	  	  android:src="@drawable/sample_qr"
-	  	  android:scaleType="fitXY"
-		  android:padding="4dp" 
-		  android:id="@+id/qrreaderHelpIV"
-		  android:layout_alignParentRight="true"
-		  android:layout_width="90dp"
-		  android:layout_height="90dp"/>
-		  
+    <ImageView 
+        android:id="@+id/qrreaderScanButton"
+        android:layout_marginTop="@dimen/verticalPadding"
+	  	android:layout_marginBottom="@dimen/verticalPadding"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/menu_camera"
+        android:background="@android:drawable/btn_default"
+        android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+    
+    <LinearLayout
+	  android:id="@+id/qrreaderHelpView"
+	  android:orientation="vertical"
+	  android:paddingLeft="@dimen/horizontalPadding"
+	  android:paddingRight="@dimen/horizontalPadding"
+	  android:paddingTop="@dimen/verticalPadding"
+	  android:paddingBottom="@dimen/verticalPadding"
+	  android:layout_width="fill_parent"
+	  android:layout_height="wrap_content">
+	   
+		<RelativeLayout
+			  android:orientation="horizontal"
+			  android:layout_width="fill_parent"
+			  android:layout_height="wrap_content">
+	  
+	  		<ImageView
+		  	  android:src="@drawable/sample_qr"
+		  	  android:scaleType="fitXY"
+			  android:padding="4dp" 
+			  android:id="@+id/qrreaderHelpIV"
+			  android:layout_alignParentRight="true"
+			  android:layout_width="90dp"
+			  android:layout_height="90dp"/>
+			  
+			<TextView
+				android:layout_toLeftOf="@id/qrreaderHelpIV"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:padding="2dp" style="@style/BodyText" 
+				android:text="QR codes, similar to barcodes, are two-dimensional data matrices used to encode URLs and other data." /> 
+		</RelativeLayout>
+	
 		<TextView
-			android:layout_toLeftOf="@id/qrreaderHelpIV"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_height="wrap_content" 
 			android:padding="2dp" style="@style/BodyText" 
-			android:text="QR codes, similar to barcodes, are two-dimensional data matrices used to encode URLs and other data." /> 
-	</RelativeLayout>
-
-	<TextView
-		android:layout_width="fill_parent" android:layout_height="wrap_content" 
-		android:padding="2dp" style="@style/BodyText" 
-		android:text="Tap the button below to begin scanning a QR code."
-		/>
-
-</LinearLayout>
-  		
- 		
-  	<RelativeLayout
-  		android:layout_width="fill_parent"
-  		android:layout_height="fill_parent" >
-
-		<LinearLayout
-			android:orientation="vertical"
-			android:id="@+id/qrreaderMainButtons"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-  			android:layout_alignParentRight="true"
-  			android:layout_alignParentBottom="true">
-			
-			<edu.mit.mitmobile2.DividerView
-  				android:layout_width="fill_parent"
-  				android:layout_height="@dimen/dividerHeight" />
-  		
-  			<edu.mit.mitmobile2.TwoLineActionRow
-  				android:id="@+id/qrreaderScanButton"
-  				android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:background="@color/rowBackground"
-  				android:text="Scan QR Code" />
-  		</LinearLayout>
-  		
-  		<ListView
+			android:text="Tap the button below to begin scanning a QR code."/>
+	</LinearLayout>
+	
+    <ListView
   			android:id="@+id/qrreaderMainHistoryLV"
-  			android:layout_alignParentTop="true"
-  			android:layout_above="@id/qrreaderMainButtons"
   			android:layout_width="fill_parent"
-  			android:layout_height="wrap_content"
+  			android:layout_height="fill_parent"
  			android:visibility="gone"
- 			style="@style/Lists" />
- 			
-  	</RelativeLayout>
+ 			style="@style/Lists" />    
 </LinearLayout>
