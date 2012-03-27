@@ -4,22 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class FacilitiesProblemTypeActivity extends ModuleActivity {
+public class FacilitiesProblemTypeActivity extends NewModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
-	private static final int MENU_INFO = 0;
 
 	private Context mContext;	
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
@@ -35,7 +33,10 @@ public class FacilitiesProblemTypeActivity extends ModuleActivity {
 	public void createViews() {
 	
         setContentView(R.layout.facilities_problem_type);
-
+        MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
+		titlebar.setTitle("What is it?");
+		getTitleBar().addSecondaryBar(titlebar);
+        
 		ProblemTypeAdapter adapter = new ProblemTypeAdapter(FacilitiesProblemTypeActivity.this, db.getProblemTypeCursor());
 		ListView listView = (ListView) findViewById(R.id.facilitiesProblemTypeListView);
 		listView.setAdapter(adapter);
@@ -57,28 +58,26 @@ public class FacilitiesProblemTypeActivity extends ModuleActivity {
 	}	
 
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 	

@@ -3,18 +3,18 @@ package edu.mit.mitmobile2.facilities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
-public class FacilitiesLeasedBuildingActivity extends ModuleActivity {
+public class FacilitiesLeasedBuildingActivity extends NewModuleActivity {
 
 	private final static String CONTACT_EMAIL_KEY = "contact_email";
 	private final static String CONTACT_NAME_KEY = "contact_name";
@@ -43,6 +43,10 @@ public class FacilitiesLeasedBuildingActivity extends ModuleActivity {
 		mPhone = getIntent().getStringExtra(CONTACT_PHONE_KEY);
 		
 		setContentView(R.layout.facilities_leased_building);
+		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
+		titlebar.setTitle("Where is it?");
+		getTitleBar().addSecondaryBar(titlebar);
+		
 		String message = "The Department of Facilities is not responsible for the maintenance of";
 		message += " " + Global.sharedData.getFacilitiesData().getBuildingNumber();
 		message += " - " + Global.sharedData.getFacilitiesData().getLocationName() + ". ";
@@ -83,17 +87,25 @@ public class FacilitiesLeasedBuildingActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
 		
 	}
 

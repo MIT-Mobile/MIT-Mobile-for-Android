@@ -9,12 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SpecialActions;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
-public class QRReaderDetailActivity extends ModuleActivity {
+public class QRReaderDetailActivity extends NewModuleActivity {
 
 	public static void launch(Context context, QRCode qrcode) {
 		Intent intent = new Intent(context, QRReaderDetailActivity.class);
@@ -63,17 +64,24 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
-		return new QRReaderModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new QRReaderModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		
 	}

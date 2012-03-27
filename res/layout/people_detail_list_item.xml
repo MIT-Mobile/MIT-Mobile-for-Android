@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/horizontalPadding"
+	android:paddingRight="@dimen/horizontalPadding"
+    android:orientation="vertical" >
+    
+	<TextView 
+	    android:id="@+id/peopleDetailListItemTitle"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    style="@style/Caption"/>
+	
+	<edu.mit.mitmobile2.DividerView
+	    android:layout_width="match_parent"
+	    android:layout_height="@dimen/dividerHeight"/>
+	
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="30dip">
+	    
+	    <TextView 
+	      	android:id="@+id/peopleDetailListItemContent"
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	        android:layout_centerVertical="true"
+	    	style="@style/BodyText"/>
+	    
+	    <LinearLayout 
+	        android:id="@+id/peopleDetailListItemIconLayout"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_centerVertical="true"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="15dip"
+	        android:visibility="gone"
+	    	android:orientation="horizontal">
+	    	
+	    	<ImageView 
+	    	    android:src="@color/dividerColor"
+	    	    android:layout_marginRight="@dimen/horizontalPadding"
+	    	    android:layout_width="@dimen/dividerHeight"
+	    	    android:layout_height="fill_parent"/>
+	    	
+	    	<ImageView 
+	    	    android:id="@+id/peopleDetailListItemIcon"
+	    	    android:src="@drawable/action_email"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"/>
+	    </LinearLayout>
+	</RelativeLayout>
+</LinearLayout>

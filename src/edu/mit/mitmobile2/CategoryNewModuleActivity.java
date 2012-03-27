@@ -53,11 +53,18 @@ public abstract class CategoryNewModuleActivity extends NewModuleActivity implem
 		setContentView(view, false);
 	}
 
+	protected ScreenInterface getCategory(String optionId) {
+		return mScreenInterfaces.get(optionId);
+	}
 
+	protected ScreenInterface getCurrentCategory() {
+		return mCurrentScreenInterface;
+	}
 	@Override
 	public void onOptionItemSelected(String optionId) {
 		loadScreen(optionId);
 		mCurrentScreenInterface.updateView();
 		mCurrentScreenInterface.onSelected();
 	}
+	
 }

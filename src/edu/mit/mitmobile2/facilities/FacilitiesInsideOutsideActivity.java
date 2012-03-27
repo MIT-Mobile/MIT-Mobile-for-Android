@@ -1,27 +1,23 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class FacilitiesInsideOutsideActivity extends ModuleActivity {
+public class FacilitiesInsideOutsideActivity extends NewModuleActivity {
 
 	// this is a test 
 	private Button reportButton;
@@ -37,7 +33,6 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 	
 	
 	public static final String TAG = "FacilitiesInsideOutsideActivity";
-	private static final int MENU_INFO = 0;
 
 	/****************************************************/
 	@Override
@@ -52,7 +47,10 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 
 	private void createViews() {
 		setContentView(R.layout.facilities_inside_outside);
-
+		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
+		titlebar.setTitle("Facilites");
+		getTitleBar().addSecondaryBar(titlebar);
+		
 		// Inside
 		TwoLineActionRow insideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesInsideLocationActionRow);
 		insideLocationActionRow.setOnClickListener(new View.OnClickListener() {
@@ -82,28 +80,26 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

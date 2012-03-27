@@ -7,11 +7,6 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="Shuttles"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
-	 	
     <TextView android:text="Select a shuttle to view the full schedule and realtime map locations."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
