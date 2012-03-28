@@ -166,10 +166,7 @@ public class FacilitiesUseMyLocationActivity extends NewModuleActivity {
 		TitleBar titleBar = (TitleBar) findViewById(R.id.boringListTitleBar);
 		titleBar.setVisibility(View.GONE);
 		
-		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Nearby Locations");
-		getTitleBar().addSecondaryBar(titlebar);
-
+		addSecondaryTitle("Nearby Locations");
 		
 		mLoader = (FullScreenLoader) findViewById(R.id.boringListLoader);
 		mLoader.showLoading();

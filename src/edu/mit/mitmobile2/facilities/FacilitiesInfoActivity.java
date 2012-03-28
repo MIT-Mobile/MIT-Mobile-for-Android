@@ -28,9 +28,7 @@ public class FacilitiesInfoActivity extends NewModuleActivity {
 
 	private void createViews() {
 		setContentView(R.layout.facilities_info);
-		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Facilites");
-		getTitleBar().addSecondaryBar(titlebar);
+		addSecondaryTitle("Facilities");
 	}
 
 	@Override

@@ -14,11 +14,13 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
-public class LibraryLocationAndHour extends ModuleActivity {
+public class LibraryLocationAndHour extends NewModuleActivity {
 
     private ListView mListView;
     private FullScreenLoader mLoadingView;
@@ -30,11 +32,13 @@ public class LibraryLocationAndHour extends ModuleActivity {
 
         mListView = (ListView) findViewById(R.id.listLibraryLocation);
         mLoadingView = (FullScreenLoader) findViewById(R.id.librarySearchLoading);
-
-        doSearch();
+        
+        addSecondaryTitle("Locations & Hours");        
+        
+        doFetch();
     }
 
-    private void doSearch() {
+    private void doFetch() {
         mListView.setVisibility(View.GONE);
 
         mLoadingView.setVisibility(View.VISIBLE);
@@ -71,18 +75,13 @@ public class LibraryLocationAndHour extends ModuleActivity {
     };
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
     @Override
     public boolean isModuleHomeActivity() {
         return false;
-    }
-
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-
     }
 
     private class LibraryListAdapter extends SimpleArrayAdapter<LibraryItem> {
@@ -110,6 +109,17 @@ public class LibraryLocationAndHour extends ModuleActivity {
             twoLineActionRow.setSubtitle(item.status);
         }
 
+    }
+
+    @Override
+    protected boolean isScrollable() {
+	return false;
+    }
+
+    @Override
+    protected void onOptionSelected(String optionId) {
+	// TODO Auto-generated method stub
+	
     }
 
 }

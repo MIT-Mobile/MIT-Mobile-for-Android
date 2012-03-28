@@ -44,9 +44,7 @@ public class FacilitiesLocationsForCategoryActivity extends NewModuleActivity {
 	public void createViews() {
         setContentView(R.layout.facilities_locations_for_category);
         
-        MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Where is it?");
-		getTitleBar().addSecondaryBar(titlebar);
+        	addSecondaryTitle("Where is it?");
         // Set up locations for selected category
 		final FacilitiesDB db = FacilitiesDB.getInstance(this);
 		LocationAdapter adapter = new LocationAdapter(this, db.getLocationCategoryCursor());

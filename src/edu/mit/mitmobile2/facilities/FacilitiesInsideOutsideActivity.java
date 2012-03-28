@@ -47,9 +47,7 @@ public class FacilitiesInsideOutsideActivity extends NewModuleActivity {
 
 	private void createViews() {
 		setContentView(R.layout.facilities_inside_outside);
-		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Facilites");
-		getTitleBar().addSecondaryBar(titlebar);
+		addSecondaryTitle("Facilities");
 		
 		// Inside
 		TwoLineActionRow insideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesInsideLocationActionRow);

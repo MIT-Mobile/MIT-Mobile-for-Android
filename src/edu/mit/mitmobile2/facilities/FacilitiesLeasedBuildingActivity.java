@@ -43,9 +43,7 @@ public class FacilitiesLeasedBuildingActivity extends NewModuleActivity {
 		mPhone = getIntent().getStringExtra(CONTACT_PHONE_KEY);
 		
 		setContentView(R.layout.facilities_leased_building);
-		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Where is it?");
-		getTitleBar().addSecondaryBar(titlebar);
+		addSecondaryTitle("Where is it?");
 		
 		String message = "The Department of Facilities is not responsible for the maintenance of";
 		message += " " + Global.sharedData.getFacilitiesData().getBuildingNumber();

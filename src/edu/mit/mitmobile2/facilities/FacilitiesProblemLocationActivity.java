@@ -55,9 +55,7 @@ public class FacilitiesProblemLocationActivity extends NewModuleActivity {
 	public void createViews() {
 		
 		setContentView(R.layout.facilities_problem_location);
-		MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Where is it?");
-		getTitleBar().addSecondaryBar(titlebar);
+		addSecondaryTitle("Where is it?");
 		
 		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
 		mLoader.showLoading();

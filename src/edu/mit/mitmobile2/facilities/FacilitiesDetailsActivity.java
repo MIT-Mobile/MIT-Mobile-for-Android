@@ -95,9 +95,6 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 	
 	public void createViews() {
         setContentView(R.layout.facilities_details);    
-        MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Details");
-		getTitleBar().addSecondaryBar(titlebar);
         
     	// Set problem string
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);

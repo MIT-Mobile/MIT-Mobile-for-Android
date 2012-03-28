@@ -78,9 +78,7 @@ public class FacilitiesRoomLocationsActivity extends NewModuleActivity {
 
 	public void createViews() {
         setContentView(R.layout.facilities_rooms_for_location);
-        MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("Where is it?");
-		getTitleBar().addSecondaryBar(titlebar);
+        addSecondaryTitle("Where is it?");
         
 		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
 		

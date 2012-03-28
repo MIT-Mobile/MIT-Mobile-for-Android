@@ -33,9 +33,7 @@ public class FacilitiesProblemTypeActivity extends NewModuleActivity {
 	public void createViews() {
 	
         setContentView(R.layout.facilities_problem_type);
-        MITPlainSecondaryTitleBar titlebar = new MITPlainSecondaryTitleBar(this);
-		titlebar.setTitle("What is it?");
-		getTitleBar().addSecondaryBar(titlebar);
+        addSecondaryTitle("What is it?");
         
 		ProblemTypeAdapter adapter = new ProblemTypeAdapter(FacilitiesProblemTypeActivity.this, db.getProblemTypeCursor());
 		ListView listView = (ListView) findViewById(R.id.facilitiesProblemTypeListView);
