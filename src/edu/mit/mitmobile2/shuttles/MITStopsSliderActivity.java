@@ -142,12 +142,6 @@ public class MITStopsSliderActivity extends SliderNewModuleActivity implements O
 	}
 
 	@Override
-	protected boolean isScrollable() {
-	    // TODO Auto-generated method stub
-	    return false;
-	}
-
-	@Override
 	protected void onOptionSelected(String optionId) {
 	    if (optionId.equals("viewmap")) {
 		MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), mStops, getPosition());

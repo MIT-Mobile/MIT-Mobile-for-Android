@@ -299,12 +299,6 @@ public class PeopleDetailActivity extends SliderNewModuleActivity {
 	}
 
 	@Override
-	protected boolean isScrollable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		

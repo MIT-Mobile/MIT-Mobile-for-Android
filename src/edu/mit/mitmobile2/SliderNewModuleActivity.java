@@ -244,4 +244,9 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 		loader.setVisibility(View.GONE);
 		mSliderView.setVisibility(View.VISIBLE);
 	}
+	
+	@Override
+	public final boolean isScrollable() {
+	    return false;
+	}
 }
