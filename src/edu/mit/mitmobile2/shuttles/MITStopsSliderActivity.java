@@ -8,18 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITStopsSliderActivity extends SliderActivity implements OnPositionChangedListener {
+public class MITStopsSliderActivity extends CategoryNewModuleActivity {
 	
 	// Alarm related
 	static public HashMap<String,HashMap <String,Long>> alertIdx;  // <Stop,<Routes,Times>>
@@ -34,8 +31,6 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
 	
 	protected Stops stops;
  
-	static final int MENU_VIEW_MAP = MENU_LAST + 1;
-	
 	SharedPreferences pref;
 	
 	/****************************************************/
@@ -69,15 +64,12 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
     	setTitle("MIT Stops");
     	
     	createViews();
-    	
-    	setOnPositionChangedListener(this);
-
 	}
 	
 	@Override
 	public void onNewIntent(Intent intent) {
 		stopId = intent.getStringExtra(ShuttleModel.KEY_STOP_ID);
-		setPosition(ShuttleModel.getStopPosition(mStops, stopId));
+		onOptionItemSelected(stopId);
 	}
 	
 	/****************************************************/
@@ -109,50 +101,47 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
     	
     	for (Stops s : mStops) {
     		cv = new StopsAsyncView(this, s);
-    		addScreen(cv, s.title, "Shuttle Stop");  
+    		addCategory(cv, s.id, s.title);  
     	}
 
-    	setPosition(last_pos);
-		curView = (StopsAsyncView) getScreen(last_pos);  // need to set here first time to avoid memory leak (otherwise onStop() will find curView==null)
+    	onOptionItemSelected(stopId);
+		curView = (StopsAsyncView) getCategory(stopId);  // need to set here first time to avoid memory leak (otherwise onStop() will find curView==null)
     	
     }	
     
-
+    
 	@Override
-	public void onPositionChanged(int newPosition, int oldPosition) {
+	public void onOptionItemSelected(String optionId) {
+		// TODO Auto-generated method stub
+		super.onOptionItemSelected(optionId);
 		if (curView != null) {
 			curView.terminate();
 		}
-		curView = (StopsAsyncView) getScreen(newPosition);
+		curView = (StopsAsyncView) getCategory(optionId);
 	}
 	
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		case MENU_VIEW_MAP: 
-			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), mStops, getPosition());
-			break;
-		
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_VIEW_MAP, Menu.NONE, "View on Map")
-		  .setIcon(R.drawable.menu_view_on_map);		
-	}
-	
-	@Override
-	protected Module getModule() {
-		return new ShuttlesModule();
-	}
+//	MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), mStops, getPosition());
 	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ShuttlesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }
