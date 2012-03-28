@@ -17,11 +17,13 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
-public class LibraryActivity extends ModuleActivity {
+public class LibraryActivity extends NewModuleActivity {
 
     private TwoLineActionRow accountRow;
     private TwoLineActionRow locationRow;
@@ -88,19 +90,13 @@ public class LibraryActivity extends ModuleActivity {
     }
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
     @Override
     public boolean isModuleHomeActivity() {
         return true;
-    }
-
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-		.setIcon(R.drawable.menu_search);
     }
 
     private void doSearch() {
@@ -156,6 +152,18 @@ public class LibraryActivity extends ModuleActivity {
     static class LinkItem {
         public String title;
         public String url;
+    }
+
+
+    @Override
+    protected boolean isScrollable() {
+	return true;
+    }
+
+    @Override
+    protected void onOptionSelected(String optionId) {
+	// TODO Auto-generated method stub
+	
     }
 
 }
