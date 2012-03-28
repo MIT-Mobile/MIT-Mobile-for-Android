@@ -35,6 +35,12 @@ public abstract class NewModuleActivity extends Activity {
 		return mTitleBar;
 	}
 	
+	protected void addSecondaryTitle(String title) {
+	    MITPlainSecondaryTitleBar secondaryTitleBar = new MITPlainSecondaryTitleBar(this);
+	    secondaryTitleBar.setTitle(title);
+	    getTitleBar().addSecondaryBar(secondaryTitleBar);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
