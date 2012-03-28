@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
 
 public abstract class NewModuleActivity extends Activity {
@@ -86,7 +87,7 @@ public abstract class NewModuleActivity extends Activity {
 		
 		View view = mInflater.inflate(layoutResID, null);
 		wrapContentView(view);
-		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 	
 	protected void setContentView(View view, boolean fullRefresh) {
@@ -97,14 +98,13 @@ public abstract class NewModuleActivity extends Activity {
 			mMainLayout.removeViewAt(mMainLayout.getChildCount()-1);
 		}
 		wrapContentView(view);
-		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 	}
 	
 	private void wrapContentView(View view) {
 		if (isScrollable()) {
-			View scrollView = mInflater.inflate(R.layout.scroll_wrapper, null);
-			LinearLayout wrapperLayout = (LinearLayout) scrollView.findViewById(R.id.scrollWrapper);
-			wrapperLayout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			ScrollView scrollView = new ScrollView(this);
+			scrollView.addView(view, new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			mContentView = scrollView;
 		} else {
 			mContentView = view;
