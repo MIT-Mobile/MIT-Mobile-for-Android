@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.shuttles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -225,5 +227,13 @@ public class ShuttlesActivity extends NewModuleActivity {
 		if (optionId.equals("refresh")) {
 			getData(true);
 		}
+	}
+	
+	@Override
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		// TODO Auto-generated method stub
+		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
+		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));
+		return menuItems;
 	}
 }

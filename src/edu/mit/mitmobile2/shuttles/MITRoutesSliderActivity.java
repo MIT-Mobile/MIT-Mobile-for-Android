@@ -139,6 +139,5 @@ public class MITRoutesSliderActivity extends CategoryNewModuleActivity {
 	@Override
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
-		
 	}
 }
