@@ -18,6 +18,7 @@ public abstract class NewModuleActivity extends Activity {
 	private MITTitleBar mTitleBar;
 	private LinearLayout mMainLayout;
 	private View mContentView;
+	private LayoutInflater mInflater;
 	
 	protected Global app;
 	
@@ -37,6 +38,8 @@ public abstract class NewModuleActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
 		app = (Global)getApplication();
+		
+		mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	
@@ -81,9 +84,9 @@ public abstract class NewModuleActivity extends Activity {
 	public void setContentView(int layoutResID) {
 		initContentView();
 		
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mContentView = inflater.inflate(layoutResID, null);
-		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		View view = mInflater.inflate(layoutResID, null);
+		wrapContentView(view);
+		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
 	protected void setContentView(View view, boolean fullRefresh) {
@@ -93,8 +96,19 @@ public abstract class NewModuleActivity extends Activity {
 		if (mContentView != null) {
 			mMainLayout.removeViewAt(mMainLayout.getChildCount()-1);
 		}
-		mContentView = view;
-		mMainLayout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		wrapContentView(view);
+		mMainLayout.addView(mContentView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+	}
+	
+	private void wrapContentView(View view) {
+		if (isScrollable()) {
+			View scrollView = mInflater.inflate(R.layout.scroll_wrapper, null);
+			LinearLayout wrapperLayout = (LinearLayout) scrollView.findViewById(R.id.scrollWrapper);
+			wrapperLayout.addView(view, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			mContentView = scrollView;
+		} else {
+			mContentView = view;
+		}
 	}
 	
 	private void initViews() {
