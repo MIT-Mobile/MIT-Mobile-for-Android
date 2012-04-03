@@ -225,7 +225,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	}
 	
 	protected void showLoading(String title) {
-		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.newsliderActivityLoader);
+		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.newSliderActivityLoader);
 		loader.setVisibility(View.VISIBLE);
 		loader.showLoading();
 		mSliderView.setVisibility(View.GONE);
@@ -233,14 +233,14 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	}
 	
 	protected void showLoadingError() {
-		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.newsliderActivityLoader);
+		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.newSliderActivityLoader);
 		loader.setVisibility(View.VISIBLE);
 		loader.showError();
 		mSliderView.setVisibility(View.GONE);
 	}
 	
 	protected void showLoadingCompleted() {
-		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.newsliderActivityLoader);
+		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.newSliderActivityLoader);
 		loader.setVisibility(View.GONE);
 		mSliderView.setVisibility(View.VISIBLE);
 	}
