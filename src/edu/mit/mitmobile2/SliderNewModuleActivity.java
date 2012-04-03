@@ -48,7 +48,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
         mSliderTitleBar = new MITSliderTitleBar(this);
         getTitleBar().addSliderBar(mSliderTitleBar);
         
-        mSliderView = (SliderView) findViewById(R.id.newsliderMainContent);
+        mSliderView = (SliderView) findViewById(R.id.newSliderMainContent);
         
 		ctx = this;
 		
