@@ -3,8 +3,6 @@ package edu.mit.mitmobile2.objs;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.mit.mitmobile2.objs.EmergencyItem.Date;
-
 public class CourseItem {
 
 	public class CourseTime {
@@ -17,7 +15,6 @@ public class CourseItem {
 		public List<String> tas = new ArrayList<String>();
 	}
 	public class Announcement {
-		public Date date;
 		public long unixtime;
 		public String title;
 		public String text;
