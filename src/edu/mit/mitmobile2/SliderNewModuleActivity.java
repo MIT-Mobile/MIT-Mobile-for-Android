@@ -1,92 +1,71 @@
 package edu.mit.mitmobile2;
 
-import java.util.ArrayList;
-
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Display;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import edu.mit.mitmobile2.MITSliderTitleBar.OnSlideToListener;
+import edu.mit.mitmobile2.MITSliderTitleBar.OnPreviousNextListener;
+import edu.mit.mitmobile2.SliderView.Adapter;
+import edu.mit.mitmobile2.SliderView.OnSeekListener;
 
-public abstract class SliderNewModuleActivity extends NewModuleActivity {
-	public static final String KEY_POSITION = "start_position";
-	private static final String KEY_POSITION_SAVED = "saved_start_position";
-	private int mLastSavedPosition = -1;
-	public static String TAG = "SliderActivity";
-	
+public abstract class SliderNewModuleActivity extends NewModuleActivity {	
 	protected Context ctx;
-
-	private ArrayList<String> headerTitles = new ArrayList<String>();
-	
-	protected GestureDetector mFlingDetector;
-
-	protected ImageView overlayLeftIV,overlayRightIV;
-	protected TextView overlayTitleTV;
 	
 	private MITSliderTitleBar mSliderTitleBar;
 	protected SliderView mSliderView;
 	
-	public Boolean mWasRotated;
+	abstract protected SliderView.Adapter getSliderAdapter();
 	
+	protected abstract String getCurrentHeaderTitle();
 	
-	private SliderView.OnPositionChangedListener mSliderActivityPositionChangedListener = null;
+	protected void onSliderSeek() {
+	    // default implementation does nothing
+	}
 	
 	
 	/****************************************************/
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-    	super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_slider);
-        mSliderTitleBar = new MITSliderTitleBar(this);
-        getTitleBar().addSliderBar(mSliderTitleBar);
+    		super.onCreate(savedInstanceState);
+    		setContentView(R.layout.new_slider);
+    		mSliderTitleBar = new MITSliderTitleBar(this);
+    		getTitleBar().addSliderBar(mSliderTitleBar);
         
-        mSliderView = (SliderView) findViewById(R.id.newSliderMainContent);
+    		mSliderView = (SliderView) findViewById(R.id.newSliderMainContent);
         
-		ctx = this;
+    		ctx = this;
 		
-		mWasRotated = (Boolean) getLastNonConfigurationInstance();
-        
-        Display display = getWindowManager().getDefaultDisplay(); 
-        mSliderView.setWidth(display.getWidth());
+    		mSliderView.setOnSeekListener(new OnSeekListener() {
+    		    @Override
+    		    public void onSeek(SliderView view, Adapter adapter) {
+    			mSliderTitleBar.enablePreviousButton(!view.isAtBeginning());
+    			mSliderTitleBar.enableNextButton(!view.isAtEnd());
+    			
+    			if (!view.isAtEnd() || !view.isAtBeginning()) {
+    			    mSliderTitleBar.showPreviousNext();
+    			}
+    			
+    			mSliderTitleBar.setTitle(getCurrentHeaderTitle());
+			
+    			onSliderSeek();
+    		    }
+    		});
+    		
+    		mSliderView.setAdapter(getSliderAdapter());
 
-        mSliderView.setOnPositionChangedListener(new SliderView.OnPositionChangedListener() {
+    		mSliderTitleBar.setPreviousNextListener(new OnPreviousNextListener() {
 			@Override
-			public void onPositionChanged(int newPosition, int oldPosition) {
-				mSliderTitleBar.enablePreviousButton(!mSliderView.isAtBeginning());
-				mSliderTitleBar.enableNextButton(!mSliderView.isAtEnd());
-				mSliderTitleBar.setTitle(headerTitles.get(newPosition));
-				
-				if(mSliderActivityPositionChangedListener != null) {
-					mSliderActivityPositionChangedListener.onPositionChanged(newPosition, oldPosition);
-				}
-			}       	
-        });
-        
-        mSliderTitleBar.setSlideListener(new OnSlideToListener() {
-			@Override
-			public void onSlideToPrevious() {
-				// TODO Auto-generated method stub
+			public void onPreviousClicked() {
 				mSliderView.slideLeft();
 			}
 			
 			@Override
-			public void onSlideToNext() {
-				// TODO Auto-generated method stub
+			public void onNextClicked() {
 				mSliderView.slideRight();
 			}
 		});  
-        
-        if(savedInstanceState != null && savedInstanceState.containsKey(KEY_POSITION_SAVED)) {
-        	mLastSavedPosition = savedInstanceState.getInt(KEY_POSITION_SAVED);
-        }
     }
 	
     @Override 
@@ -111,92 +90,14 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
     	super.onDestroy();
     }
     
-    @Override 
-    protected void onSaveInstanceState(Bundle outState) {
-    	super.onSaveInstanceState(outState);
-    	
-    	outState.putInt(KEY_POSITION_SAVED, mSliderView.getPosition());
-    	
-    }
-    
 //    protected void useSubtitles(String mainTitle) {
 //    	mSliderTitleBar.useSubtitleBar();
 //    	mSliderTitleBar.setTitle(mainTitle);
 //    }
-    
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-	    final Boolean rotated = new Boolean(true);  // TODO may need to confirm
-	    return rotated;
-	}
-	
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-        Display display = getWindowManager().getDefaultDisplay(); 
-        mSliderView.onWidthChanged(display.getWidth());		
-	}
-	
-	protected void addScreen(SliderInterface sliderInterface, String jumpTitle, String headerTitle) {
-		headerTitles.add(headerTitle);
-		mSliderView.addScreen(sliderInterface);
-		
-		if(mSliderView.getScreenCount() > 1) {
-			mSliderTitleBar.showPreviousNext();
-		}
-	}
-	
-	public void freezeScroll() {
-		mSliderView.freezeScroll();
-	}
-	
-	public void unfreezeScroll() {
-		mSliderView.unfreezeScroll();		
-	}
-
-	protected void setPosition(int position) {
-		mSliderView.setPosition(position);
-	}
-	
-	protected int getPosition() {
-		return mSliderView.getPosition();
-	}
-	
-	protected int getPositionValue() {
-		if(mLastSavedPosition > 0) {
-			return mLastSavedPosition;
-		}
-		
-		Bundle extras = getIntent().getExtras();
-		
-		if (extras != null){
-			return extras.getInt(KEY_POSITION);
-		} else {
-			return 0;
-		}
-	}
-	
-	protected View getScreen(int position) {
-		return mSliderView.getScreen(position);
-	}
-	
-	@Override
-	protected void onNewIntent(Intent intent) {
-		
-		super.onNewIntent(intent);
-		
-		Bundle extras = getIntent().getExtras();
-		if (extras != null){
-			setPosition(extras.getInt(KEY_POSITION));
-		}
-		
-	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		mSliderView.start();
 		
 		// not sure why, but sometimes when activities
 		// are resumed it scrolls to the previous FrameLayout
@@ -212,16 +113,6 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 		});
 
 		
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		mSliderView.stop();
-	}
-	
-	protected void setOnPositionChangedListener(SliderView.OnPositionChangedListener positionChangedListener) {
-		mSliderActivityPositionChangedListener = positionChangedListener;
 	}
 	
 	protected void showLoading(String title) {

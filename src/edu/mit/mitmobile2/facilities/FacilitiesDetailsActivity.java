@@ -43,7 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;

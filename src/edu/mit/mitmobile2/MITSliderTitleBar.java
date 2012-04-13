@@ -28,20 +28,18 @@ public class MITSliderTitleBar extends RelativeLayout {
 		mNext = (TextView) container.findViewById(R.id.subSliderTitleBarRightArrow);
 	}
 	
-	public void setSlideListener(final OnSlideToListener listener) {
+	public void setPreviousNextListener(final OnPreviousNextListener listener) {
 		mPrevious.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				listener.onSlideToPrevious();
+				listener.onPreviousClicked();
 			}
 		});
 		
 		mNext.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				listener.onSlideToNext();
+				listener.onNextClicked();
 			}
 		});
 	}
@@ -58,10 +56,10 @@ public class MITSliderTitleBar extends RelativeLayout {
 		mTitle.setText(title);
 	}
 	
-	public static interface OnSlideToListener {
-		public void onSlideToPrevious();
+	public static interface OnPreviousNextListener {
+		public void onPreviousClicked();
 		
-		public void onSlideToNext();
+		public void onNextClicked();
 	}
 
 	public void showPreviousNext() {

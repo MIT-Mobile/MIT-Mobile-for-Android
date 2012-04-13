@@ -14,12 +14,12 @@ import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderNewModuleActivity;
-import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
+import edu.mit.mitmobile2.SliderListAdapter.OnPositionChangedListener;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITStopsSliderActivity extends SliderNewModuleActivity implements OnPositionChangedListener {
+public class MITStopsSliderActivity extends SliderListNewModuleActivity implements OnPositionChangedListener {
 	
 	// Alarm related
 	static public HashMap<String,HashMap <String,Long>> alertIdx;  // <Stop,<Routes,Times>>

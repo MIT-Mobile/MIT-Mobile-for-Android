@@ -26,13 +26,13 @@ import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.PersonItem;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailItem;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
 
-public class PeopleDetailActivity extends SliderNewModuleActivity {
+public class PeopleDetailActivity extends SliderListNewModuleActivity {
 	
 	public static final String UID_KEY = "uid";
 	public static final String SEARCH_TERM_KEY = "search_term";

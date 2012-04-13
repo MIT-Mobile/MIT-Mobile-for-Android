@@ -17,10 +17,10 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.NewsItem;
 
-public class NewsDetailsActivity extends SliderNewModuleActivity {
+public class NewsDetailsActivity extends SliderListNewModuleActivity {
 	
 	static final String TAG = "NewsDetailsActivity";
 	

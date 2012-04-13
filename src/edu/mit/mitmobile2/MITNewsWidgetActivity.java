@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -33,7 +32,6 @@ import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
 import edu.mit.mitmobile2.libraries.LibrariesModule;
-import edu.mit.mitmobile2.maps.MapsModule;
 import edu.mit.mitmobile2.maps.NewMapModule;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
@@ -73,6 +71,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 	List<NewsItem> news;
 
 	private SliderView mNewsSlider;
+	private SliderListAdapter mNewsSliderListAdapter = new SliderListAdapter();
 
 	public static final String TAG = "MITNewsWidgetActivity";
 	private Global app;
@@ -136,10 +135,9 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		
 		
 		mNewsSlider = (SliderView) findViewById(R.id.newsWidgetSlider);
-		Display display = getWindowManager().getDefaultDisplay(); 
-        mNewsSlider.setWidth(display.getWidth());
-        mNewsSlider.setOnPositionChangedListener(
-        	new SliderView.OnPositionChangedListener() {				
+		
+		mNewsSliderListAdapter.setOnPositionChangedListener(
+			new SliderListAdapter.OnPositionChangedListener() {				
 				@Override
 				public void onPositionChanged(int newPosition, int oldPosition) {
 					leftArrow.setEnabled(!mNewsSlider.isAtBeginning());
@@ -169,7 +167,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(ctx, NewsDetailsActivity.class);
-				i.putExtra(NewsDetailsActivity.KEY_POSITION, mNewsSlider.getPosition());
+				i.putExtra(NewsDetailsActivity.KEY_POSITION, mNewsSliderListAdapter.getPosition());
 				i.putExtra(NewsDetailsActivity.CATEGORY_ID_KEY, NewsModel.TOP_NEWS);
 				startActivity(i);
 			}
@@ -318,12 +316,11 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 		final Runnable updateResultsUI = new Runnable() {
 			public void run() {
 				news = newsModel.getTopTen();
-				mNewsSlider.clear();
 				for(NewsItem newsItem : news) {
 					NewsHomeItem newsHomeItem = new NewsHomeItem(newsItem, newsModel, MITNewsWidgetActivity.this);
-					mNewsSlider.addScreen(newsHomeItem);					
+					mNewsSliderListAdapter.addScreen(newsHomeItem);					
 				}
-				mNewsSlider.setPosition(0);
+				mNewsSlider.setAdapter(mNewsSliderListAdapter);
 				mNewsWidgetPlaceHolder.setVisibility(View.GONE);
 				LoadingUIHelper.stopLoadingImage(new Handler(), mNewsWidgetLoadingImage);
 				mNewsWidget.setVisibility(View.VISIBLE);

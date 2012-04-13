@@ -9,10 +9,10 @@ import android.util.Log;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.CourseItem;
 
-public class MITCoursesDetailsSliderActivity extends SliderNewModuleActivity {
+public class MITCoursesDetailsSliderActivity extends SliderListNewModuleActivity {
 	
 	public static final String SUBJECT_MASTER_ID_KEY = "subject_master_id";
 	public static final String KEY_COURSE_ID = "course_id";

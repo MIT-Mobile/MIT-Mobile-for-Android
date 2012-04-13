@@ -24,7 +24,7 @@ import edu.mit.mitmobile2.AudioPlayer;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
-import edu.mit.mitmobile2.SliderView;
+import edu.mit.mitmobile2.SliderListAdapter;
 import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.StartLocation;
 import edu.mit.mitmobile2.tour.Tour.TourItem;
@@ -94,7 +94,7 @@ public class TourStopSliderActivity extends SliderActivity {
 		
 		createView();
 		
-		this.setOnPositionChangedListener(new SliderView.OnPositionChangedListener() {		
+		this.setOnPositionChangedListener(new SliderListAdapter.OnPositionChangedListener() {		
 			@Override
 			public void onPositionChanged(int newPosition, int oldPosition) {
 				ap.setPage(newPosition);

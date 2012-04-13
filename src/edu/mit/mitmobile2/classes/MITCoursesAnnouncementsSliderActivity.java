@@ -15,10 +15,10 @@ import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.CourseItem;
 
-public class MITCoursesAnnouncementsSliderActivity extends SliderNewModuleActivity {
+public class MITCoursesAnnouncementsSliderActivity extends SliderListNewModuleActivity {
 	
 	final static String KEY_SUBJECT_MASTER_ID = "master_id";
 	
@@ -120,7 +120,5 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderNewModuleActivi
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-
+	}	
 }

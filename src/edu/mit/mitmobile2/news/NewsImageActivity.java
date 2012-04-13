@@ -8,7 +8,7 @@ import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.StyledContentHTML;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.NewsItem.Image;
@@ -24,7 +24,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class NewsImageActivity extends SliderNewModuleActivity {
+public class NewsImageActivity extends SliderListNewModuleActivity {
 
 	static final String NEWS_ITEM_ID_KEY = "news_item_cache_id";
 	
