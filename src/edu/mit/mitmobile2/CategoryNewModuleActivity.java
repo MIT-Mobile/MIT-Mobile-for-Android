@@ -22,6 +22,13 @@ public abstract class CategoryNewModuleActivity extends NewModuleActivity implem
 		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
 	}
 	
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    if (mCurrentScreenInterface != null) {
+		mCurrentScreenInterface.updateView();
+	    }
+	}
 	
 	protected MITPopupSecondaryTitleBar getSecondaryBar() {
 		return mSecondaryTitleBar;
@@ -60,6 +67,7 @@ public abstract class CategoryNewModuleActivity extends NewModuleActivity implem
 	protected ScreenInterface getCurrentCategory() {
 		return mCurrentScreenInterface;
 	}
+	
 	@Override
 	public void onOptionItemSelected(String optionId) {
 		loadScreen(optionId);

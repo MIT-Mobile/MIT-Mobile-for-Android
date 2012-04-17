@@ -327,8 +327,10 @@ public class SliderView extends HorizontalScrollView {
 			mSliderAdapter.seek(position);
 		}
 		
-		View newScreen = mSliderAdapter.getScreen(position);
-		//FrameLayout wrapperView = new FrameLayout(mContext);
+		View newScreen = null;
+		if (mSliderAdapter.hasScreen(position)) {
+		    newScreen = mSliderAdapter.getScreen(position);
+		}
 		
 		FrameLayout previousWrapper = (FrameLayout) mLinearLayout.getChildAt(0);
 		FrameLayout currentWrapper = (FrameLayout) mLinearLayout.getChildAt(1);
@@ -423,8 +425,9 @@ public class SliderView extends HorizontalScrollView {
 	}
 	
 	private void clearScreen(int childIndex, ScreenPosition screenPosition) {
-		FrameLayout view = (FrameLayout) mLinearLayout.getChildAt(0);
+		FrameLayout view = (FrameLayout) mLinearLayout.getChildAt(childIndex);
 		if (view.getChildCount() > 0) {
+		    	view.removeViewAt(0);
 			mSliderAdapter.destroyScreen(screenPosition);
 		}
 	}

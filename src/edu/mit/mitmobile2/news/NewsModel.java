@@ -60,6 +60,8 @@ public class NewsModel {
 		"Top News", "Campus", "Engineering", "Science", "Management", "Architecture", "Humanties"
 	};
 	
+	final static int MAX_STORIES_PER_CAREGORY = 200;
+	
 	public static final int FETCH_SUCCESSFUL = 1;
 	public static final int FETCH_FAILED = 2;
 	

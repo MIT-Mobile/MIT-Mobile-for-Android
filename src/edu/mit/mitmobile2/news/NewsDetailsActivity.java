@@ -1,26 +1,27 @@
 package edu.mit.mitmobile2.news;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
+import android.os.Message;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.IdEncoder;
-import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.SliderListNewModuleActivity;
+import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderView;
+import edu.mit.mitmobile2.news.NewsSliderCursorAdapter.OnLoadingScreenListener;
 import edu.mit.mitmobile2.objs.NewsItem;
 
-public class NewsDetailsActivity extends SliderListNewModuleActivity {
+public class NewsDetailsActivity extends SliderNewModuleActivity implements StorySliderListener, OnLoadingScreenListener {
 	
 	static final String TAG = "NewsDetailsActivity";
 	
@@ -38,9 +39,10 @@ public class NewsDetailsActivity extends SliderListNewModuleActivity {
 	
 	Context ctx;
 	private int mStartPosition;
+	private int mLastSavedPosition;
+	public static String KEY_POSITION = "position";
 	
 	NewsModel mNewsModel;
-	List<NewsItem> mNewsItems;
 	
 	private MITMenuItem mBookmarkMenuItem;
 	
@@ -49,37 +51,38 @@ public class NewsDetailsActivity extends SliderListNewModuleActivity {
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 
-		mStartPosition = getPositionValue();
-	
-		Bundle extras = getIntent().getExtras();
-		if(extras.containsKey(CATEGORY_ID_KEY)) {
-			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
-		} else if(extras.containsKey(SEARCH_TERM_KEY)) {
-			mSearchTerm = extras.getString(SEARCH_TERM_KEY);
-		} else if(extras.containsKey(BOOKMARKS_KEY)) {
-			mBookmarks = true;
-		}
- 
-		initSecondaryTitleBar();
-		
-		mNewsModel = new NewsModel(this);		
-		initalizeNewsList();
-
-		if (mNewsItems == null || mNewsItems.size() == 0) {
+		if (mSliderAdapter.getStoriesCount() == 0) {
 			// gracefull exit
 			finish();
 			return;
 		}
+	}
+
+	protected int getPositionValue() {
+		if(mLastSavedPosition > 0) {
+			return mLastSavedPosition;
+		}
 		
-		new Handler().postDelayed(
-			new Runnable() {
-				@Override
-				public void run() {
-					createScreens();
-				}
-			}, 
-			200
-		);
+		Bundle extras = getIntent().getExtras();
+		
+		if (extras != null){
+			return extras.getInt(KEY_POSITION);
+		} else {
+			return 0;
+		}
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		
+		super.onNewIntent(intent);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null){
+		    	mSliderAdapter.seekToNewsItem(extras.getInt(KEY_POSITION));
+		    	refreshScreens();
+		}
+		
 	}
 	
 	private void initSecondaryTitleBar() {
@@ -94,7 +97,7 @@ public class NewsDetailsActivity extends SliderListNewModuleActivity {
 			@Override
 			public void onOptionItemSelected(String optionId) {
 				// TODO Auto-generated method stub
-				NewsItem newsItem = mNewsItems.get(getPosition());
+				NewsItem newsItem = mSliderAdapter.getCurrentNewsItem();
 				if(optionId.equals(MENU_BOOKMARKED)) {			
 					// toggle bookmark status
 					updateBookmarkMenuItem();
@@ -130,67 +133,6 @@ public class NewsDetailsActivity extends SliderListNewModuleActivity {
 		return null;
 	}
 	
-	@Override
-	protected void onDestroy() {
-		mNewsItems = null;
-		super.onDestroy();
-	}
-	
-	private void initalizeNewsList() {
-		if(mCategoryId >= 0 || mBookmarks) {
-			ArrayList<NewsItem> newsItems = new ArrayList<NewsItem>();			
-			Cursor newsCursor = null;
-			
-			if(mCategoryId >= 0) {
-				newsCursor = mNewsModel.getNewsCursor(mCategoryId);
-			} else if(mBookmarks) {
-				newsCursor = mNewsModel.getBookmarksCursor();
-			}
-			
-			newsCursor.moveToFirst();
-			while(!newsCursor.isAfterLast()) {
-				NewsItem newsItem = NewsDB.retrieveNewsItem(newsCursor);
-				newsItems.add(newsItem);
-				newsCursor.moveToNext();
-			}
-			newsCursor.close();
-			
-			mNewsItems = newsItems;
-		
-		} else if(mSearchTerm != null) {			
-			mNewsItems = mNewsModel.executeLocalSearch(mSearchTerm);
-		}	
-	}
-	
-	/****************************************************/
-	void createScreens() {
-		if(mNewsItems == null) {
-			// activity must have already been closed
-			// no need to layout screens
-			return;
-		}
-		
-		int totalStories = mNewsItems.size();
-
-		for(int index=0; index < totalStories; index++) {
-			NewsItem newsItem = mNewsItems.get(index);
-			String headerTitle = "Story " + Integer.toString(index+1) + " of " + Integer.toString(totalStories);
-			//DEBUG
-//			if (index == 0) {
-//				Log.d(TAG,"author = " + newsItem.author);
-//				Log.d(TAG,"body = " + newsItem.body);
-//				Log.d(TAG,"description = " + newsItem.description);
-//				Log.d(TAG,"link = " + newsItem.link);
-//				Log.d(TAG,"thumbURL = " + newsItem.thumbURL);
-//				Log.d(TAG,"title = " + newsItem.title);
-//			}
-			//DEBUG
-			addScreen(new NewsDetailsScreen(this, newsItem), newsItem.title, headerTitle);
-		}
-		
-		setPosition(mStartPosition);
-	}
-	
 	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -210,56 +152,6 @@ public class NewsDetailsActivity extends SliderListNewModuleActivity {
 	}
 	*/
 	
-	private class NewsDetailsScreen implements SliderInterface {
-
-		NewsItem mNewsItem;
-		Context mContext;
-		NewsDetailsView mNewsDetailView;
-		
-		public NewsDetailsScreen(Context context, NewsItem newsItem) {
-			mContext = context;
-			mNewsItem = newsItem;
-		}
-
-		@Override
-		public View getView() {
-			mNewsDetailView = new NewsDetailsView(mContext, mNewsItem);
-			
-			return mNewsDetailView;
-			
-		}
-
-		@Override
-		public void onSelected() {
-			// TODO Auto-generated method stub
-			NewsItem newsItem = mNewsItems.get(getPosition());
-			
-			if (mNewsModel.isBookmarked(newsItem)) {
-				mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
-			} else {
-				mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
-			}
-			mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
-		}
-
-		@Override
-		public void updateView() {
-			mNewsDetailView.populateView();	
-		}
-
-		@Override
-		public LockingScrollView getVerticalScrollView() {
-			return mNewsDetailView;
-		}
-
-		@Override
-		public void onDestroy() {
-			if(mNewsDetailView != null) {
-				mNewsDetailView.destroy();
-			}
-		}
-	}
-	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
@@ -275,5 +167,95 @@ public class NewsDetailsActivity extends SliderListNewModuleActivity {
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	static private NewsSliderAdapter mSliderAdapter;
+	
+	interface NewsSliderAdapter extends SliderView.Adapter {
+	    public void seekToNewsItem(int position);
+	
+	    public NewsItem getCurrentNewsItem();
+	    
+	    public int getStoriesCount();
+	}
+	
+	static interface StoryListener {
+
+	}
+	
+	@Override
+	protected SliderView.Adapter getSliderAdapter() {
+		mStartPosition = getPositionValue();
+
+		initSecondaryTitleBar();
+		
+		mNewsModel = new NewsModel(this);
+		
+		Bundle extras = getIntent().getExtras();
+		if(extras.containsKey(CATEGORY_ID_KEY)) {
+		    
+			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
+			Cursor newsCursor = mNewsModel.getNewsCursor(mCategoryId);
+			mSliderAdapter = new NewsSliderCursorAdapter(this, newsCursor, this, true);
+			((NewsSliderCursorAdapter) mSliderAdapter).setOnLoadingScreenListener(this);
+			
+		} else if(extras.containsKey(SEARCH_TERM_KEY)) {
+		    
+			mSearchTerm = extras.getString(SEARCH_TERM_KEY);
+			List<NewsItem> newsItems = mNewsModel.executeLocalSearch(mSearchTerm);
+			mSliderAdapter = new NewsSliderListAdapter(this, newsItems, this);
+			
+		} else if(extras.containsKey(BOOKMARKS_KEY)) {
+			mBookmarks = true;
+			Cursor newsCursor = mNewsModel.getBookmarksCursor();
+			mSliderAdapter = new NewsSliderCursorAdapter(this, newsCursor, this, false);
+		}
+ 
+		mSliderAdapter.seekToNewsItem(mStartPosition);
+		
+		return mSliderAdapter;
+	}
+
+	@Override
+	protected String getCurrentHeaderTitle() {
+	    return "";
+	}
+
+	boolean mIsLoadingMoreStories = false;
+	
+	@Override
+	public void onLoadingScreenSelected(final NewsSliderCursorAdapter adapter, final Cursor cursor) {
+	    if (!mIsLoadingMoreStories) {
+		mIsLoadingMoreStories = true;
+		int lastStoryID = adapter.getLastStoryItem().story_id;
+		final int currentSize = cursor.getCount();
+		
+		mNewsModel.fetchCategory(mCategoryId, lastStoryID, false, new Handler() {
+		    
+		    @Override
+		    public void handleMessage(Message msg) {
+			mIsLoadingMoreStories = false;
+			if (msg.arg1 == MobileWebApi.SUCCESS) {
+			    cursor.requery();
+			    cursor.moveToPosition(currentSize);
+			    adapter.stopLoading();
+			    refreshScreens();
+			} else {
+			    adapter.showError();
+			}
+		    }
+		});
+	    }	    
+	}
+
+	@Override
+	public void onStorySelected(NewsItem newsItem) {
+	    
+		if (mNewsModel.isBookmarked(newsItem)) {
+			mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
+		} else {
+			mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
+		}
+		mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
 	}
 }

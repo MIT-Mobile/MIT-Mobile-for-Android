@@ -29,7 +29,6 @@ import android.widget.ListView;
 
 public class NewsListActivity extends CategoryNewModuleActivity {
 	
-	final static int MAX_STORIES = 200;
 	final static String LOAD_MORE_ARTICLES = "Load 10 more articles...";
 	final static String LOADING_ARTICLES = "Loading...";
 	public static final String TAG = "NewsListSliderActivity";
@@ -42,9 +41,6 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 	EditText searchET;
 	
 	int category_id;
-	
-	HashMap<Integer, Integer> last_story_ids;
-
 	
 	Context mContext;
 
@@ -138,26 +134,7 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 					
 					if(msg.arg1 == NewsModel.FETCH_SUCCESSFUL) {
 						// update the UI
-						if (mNewsCursor.isClosed()) {
-							mNewsListView.removeFooterView(mFooterView);
-							mNewsCursor = null;
-							initalizeCursorAdapter();
-						}
-						
-						mNewsCursor.requery();
-					
-						mNewsCursor.moveToLast();
-						int newLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
-						
-						if(mLastStoryId == null || newLastStoryId != mLastStoryId) {
-							mLastStoryId = newLastStoryId; 
-						} else {
-							mNewsListView.removeFooterView(mFooterView);
-						}
-						
-						if(mNewsCursor.getCount() >= MAX_STORIES) {
-							mNewsListView.removeFooterView(mFooterView);
-						}
+					    	updateNewsList();
 						
 						mLoaderBar.endLoading();
 					} else if(msg.arg1 == NewsModel.FETCH_FAILED) {
@@ -204,8 +181,36 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 			}
 		}
 
+		
+		private void updateNewsList() {
+		    // update the UI
+		    if (mNewsCursor.isClosed()) {
+			mNewsListView.removeFooterView(mFooterView);
+			mNewsCursor = null;
+			initalizeCursorAdapter();
+		    }
+		
+		    mNewsCursor.requery();
+	
+		    mNewsCursor.moveToLast();
+		    int newLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
+		
+		    if(mLastStoryId == null || newLastStoryId != mLastStoryId) {
+			mLastStoryId = newLastStoryId; 
+		    } else {
+			mNewsListView.removeFooterView(mFooterView);
+		    }
+		
+		    if(mNewsCursor.getCount() >= NewsModel.MAX_STORIES_PER_CAREGORY) {
+			mNewsListView.removeFooterView(mFooterView);
+		    }
+		}
+		
 		@Override
 		public void updateView() {
+			if (mNewsCursor != null) {
+			    updateNewsList();
+			}
 			
 			// delay makes UI more responsive
 			new Handler().postDelayed(

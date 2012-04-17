@@ -13,7 +13,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	protected Context ctx;
 	
 	private MITSliderTitleBar mSliderTitleBar;
-	protected SliderView mSliderView;
+	private SliderView mSliderView;
 	
 	abstract protected SliderView.Adapter getSliderAdapter();
 	
@@ -139,5 +139,9 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	@Override
 	public final boolean isScrollable() {
 	    return false;
+	}
+	
+	public void refreshScreens() {
+	    mSliderView.refreshScreens();
 	}
 }

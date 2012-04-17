@@ -41,10 +41,12 @@ public class NewsDetailsView extends LockingScrollView {
 
 		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		vi.inflate(R.layout.news_details, this);
+		
+		populateView();
 	}
 	
 
-	public void populateView() {
+	private void populateView() {
 		// standard view
 			
 		NewsModel newsModel = new NewsModel(mContext);

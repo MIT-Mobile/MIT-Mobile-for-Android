@@ -53,7 +53,7 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
 
 	protected void setPosition(int position) {
 	    	mSliderListAdapter.seekTo(position);
-		mSliderView.refreshScreens();
+		refreshScreens();
 	}
 	
 	protected int getPosition() {
