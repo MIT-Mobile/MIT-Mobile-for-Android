@@ -12,20 +12,16 @@ import android.webkit.WebChromeClient;
 import android.content.Context;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ScrollView;
 import android.webkit.JsResult;
 
-import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.NewsItem;
 
-public class NewsDetailsView extends LockingScrollView {
+public class NewsDetailsView extends WebView {
 	private Handler mHandler = new Handler();
-	private WebView webview;
 
 	Context mContext;
 	NewsItem mNewsItem;
@@ -38,9 +34,6 @@ public class NewsDetailsView extends LockingScrollView {
 		super(context);
 		mContext = context;
 		mNewsItem = newsItem;
-
-		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		vi.inflate(R.layout.news_details, this);
 		
 		populateView();
 	}
@@ -53,8 +46,7 @@ public class NewsDetailsView extends LockingScrollView {
 		newsModel.populateImages(mNewsItem);
 		
 		// Web template
-		webview = (WebView) findViewById(R.id.newsDetailsWV);
-		webview.setFocusable(false);
+		setFocusable(false);
 		String templateHtml = readTextFromResource(R.raw.news_detail);
 		
 		// Set Title
@@ -83,11 +75,11 @@ public class NewsDetailsView extends LockingScrollView {
 
 		Log.d(TAG,"html = " + templateHtml);
 		
-		webview.getSettings().setJavaScriptEnabled(true);
-		webview.getSettings().setSupportZoom(false);
-		webview.setWebChromeClient(new MyWebChromeClient());			
-		webview.addJavascriptInterface(new JavaScriptInterface(), "newsDetail");
-		webview.loadDataWithBaseURL( "file:///android_asset/", templateHtml, "text/html", "UTF-8", null);
+		getSettings().setJavaScriptEnabled(true);
+		getSettings().setSupportZoom(false);
+		setWebChromeClient(new MyWebChromeClient());			
+		addJavascriptInterface(new JavaScriptInterface(), "newsDetail");
+		loadDataWithBaseURL( "file:///android_asset/", templateHtml, "text/html", "UTF-8", null);
 
 	}
 		
@@ -107,17 +99,6 @@ public class NewsDetailsView extends LockingScrollView {
 	    	e.printStackTrace();
 	    }
 	    return stream.toString();
-	}
-
-	public void destroy() {
-		WebView wv = (WebView) findViewById(R.id.newsDetailsWV);
-		wv.destroy();
-		
-		removeAllViews();
-	}
-	
-	public ScrollView getScrollView() {
-		return (ScrollView) findViewById(R.id.newsDetailScrollView);
 	}
 	
 	private static class PictureFailedToLoadHandler extends WebViewClient {

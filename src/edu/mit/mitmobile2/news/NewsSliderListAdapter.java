@@ -65,7 +65,7 @@ public class NewsSliderListAdapter extends SliderListAdapter implements NewsSlid
 
 		@Override
 		public LockingScrollView getVerticalScrollView() {
-			return mNewsDetailView;
+			return null;
 		}
 
 		@Override
