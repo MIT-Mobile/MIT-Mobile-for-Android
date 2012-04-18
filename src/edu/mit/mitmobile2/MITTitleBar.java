@@ -73,9 +73,6 @@ public class MITTitleBar extends LinearLayout {
 	}
 	
 	public void setModuleButtonEnabled(boolean enabled) {
-		if (enabled) {
-			mModuleHomeBtn.setBackgroundResource(R.drawable.titlebar_action_module_background);
-		}
 		mModuleHomeBtn.setClickable(enabled);
 	}
 	

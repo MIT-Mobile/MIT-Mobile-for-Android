@@ -21,8 +21,8 @@
 	
 	<style name="PageTitle">
 		<item name="android:textStyle">normal</item>
-		<item name="android:textSize">18sp</item>
-		<item name="android:textColor">#ffd5d5d5</item>
+		<item name="android:textSize">17sp</item>
+		<item name="android:textColor">#ffffffff</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
@@ -153,5 +153,10 @@
 		<item name="android:textColor">#ff000000</item>
 		<item name="android:typeface">sans</item>
 	</style>
+	
+	<dimen name="standardPadding">15dip</dimen>
+	
+	<dimen name="moduleHomeUnderlineWidth">2dip</dimen>
+    <color name="moduleHomeUnderlineColor">#993333</color>
 	
 </resources>
