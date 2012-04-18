@@ -22,8 +22,8 @@ public class ModuleHomeTextView extends TextView {
 	
 	if (isClickable()) {
 	    int lineWidth = getContext().getResources().getDimensionPixelSize(R.dimen.moduleHomeUnderlineWidth);
-	    int height = canvas.getHeight();
-	    int width = canvas.getWidth();
+	    int height = getMeasuredHeight();
+	    int width = getMeasuredWidth();
 	    float standardPadding = getContext().getResources().getDimension(R.dimen.standardPadding);
 	    int horizontalPadding = (int) (standardPadding/2);
 	    int bottomInset = (int) (standardPadding * (2.0f/3.0f));
