@@ -118,8 +118,8 @@
 	</style>
 	
 	<style name="SubHead">
-		<item name="android:textStyle">bold</item>
-		<item name="android:textSize">13sp</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
 		<item name="android:textColor">#ffffffff</item>
 		<item name="android:typeface">sans</item>
 	</style>

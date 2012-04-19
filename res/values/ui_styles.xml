@@ -13,6 +13,9 @@
 	<dimen name="interlinePadding">2dip</dimen>
 	<dimen name="minRowHeight">40dip</dimen>
 	<color name="plainBackground">#FFFFFF</color>
+	
+	<color name="primarySectionHeaderBackground">#ff993333</color>
+    <color name="secondarySectionHeaderBackground">#ff666666</color>
 
 <dimen name="tabTextSize">12sp</dimen>
 </resources>
