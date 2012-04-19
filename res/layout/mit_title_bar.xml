@@ -46,12 +46,12 @@
 	    	android:layout_height="fill_parent">
 		    
 	    	<ImageView android:id="@+id/titleOverflowBtn"
-	        	android:layout_width="@dimen/titleBarOverflowItemWidth"
+	        	android:layout_width="wrap_content"
 	        	android:layout_height="fill_parent"
 	        	android:padding="@dimen/titleBarPadding"
 	        	android:background="@android:drawable/list_selector_background"
 	        	android:layout_gravity="center_vertical|center_horizontal"
-	        	android:src="@drawable/popup_menu_anchor"/>
+	        	android:src="@drawable/menu_overflow"/>
 	    </LinearLayout>
 	</RelativeLayout>
 </LinearLayout>

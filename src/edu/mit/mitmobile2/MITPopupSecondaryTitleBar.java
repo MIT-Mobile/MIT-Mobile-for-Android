@@ -1,16 +1,17 @@
 package edu.mit.mitmobile2;
 
+import java.util.Locale;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import edu.mit.mitmobile2.OnMITMenuItemListener;
 
 public class MITPopupSecondaryTitleBar extends MITSecondaryTitleBar {
 
-	private FrameLayout mAnchorView;
+	private View mAnchorView;
 	private MITPopupMenu mPopUpMenu;
 	private TextView mTitleView;
 	
@@ -18,7 +19,7 @@ public class MITPopupSecondaryTitleBar extends MITSecondaryTitleBar {
 		super(context, attrs);
 		
 		mTitleView = (TextView) mContainer.findViewById(R.id.secondaryTitleBarPopupTitle);
-		mAnchorView = (FrameLayout) mContainer.findViewById(R.id.secondaryTitleBarAnchorView);
+		mAnchorView = mContainer.findViewById(R.id.secondaryTitleBarAnchorView);
 		mAnchorView.setVisibility(View.VISIBLE);
 		
 		mPopUpMenu = new MITPopupMenu(mAnchorView);
@@ -45,6 +46,6 @@ public class MITPopupSecondaryTitleBar extends MITSecondaryTitleBar {
 	}
 
 	public void setTitle(String title) {
-		mTitleView.setText(title);
+		mTitleView.setText(title.toUpperCase());
 	}
 }

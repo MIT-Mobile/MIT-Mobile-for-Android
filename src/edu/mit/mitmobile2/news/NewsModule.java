@@ -40,7 +40,7 @@ public class NewsModule extends NewModule {
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		items.add(new MITMenuItem("search", "Search", R.drawable.menuitem_search));
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
 		return items;
 	}
 

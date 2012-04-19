@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   	android:layout_width="fill_parent"
-  	android:layout_height="30dip"
+  	android:layout_height="48dip"
   	android:orientation="horizontal"
-  	android:background="@drawable/title_secondary_bar_background">
+  	android:background="#666666">
   		
-    <FrameLayout 
-		android:id="@+id/secondaryTitleBarAnchorView"
-        android:layout_height="fill_parent"
-        android:layout_width="wrap_content" 
-        android:visibility="gone"
-        >
-        
-        <TextView
-        	android:id="@+id/secondaryTitleBarPopupTitle"
-  			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
-  			android:layout_gravity="center_vertical"
-  			android:paddingLeft="5dip"
-  			/>
-    </FrameLayout>
+	<LinearLayout
+        	android:id="@+id/secondaryTitleBarAnchorView"
+        	android:visibility="gone"
+        	android:layout_height="fill_parent"
+        	android:layout_width="wrap_content"
+        	android:orientation="horizontal"
+        	android:paddingRight="5dip"
+        	android:background="@android:drawable/list_selector_background"
+        	>
+        	
+        	<TextView
+        		android:id="@+id/secondaryTitleBarPopupTitle"
+  				android:layout_width="wrap_content"
+  				android:layout_height="fill_parent"
+  				android:gravity="center_vertical"
+  				android:paddingLeft="@dimen/standardPadding"
+  				android:paddingRight="3dip"
+  				style="@style/ToolbarTappable"
+  				/>
+  				
+  			<ImageView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:src="@drawable/spinner_triangle"
+  				android:layout_gravity="bottom"
+  				/>
+  				
+  	</LinearLayout>
     
    <TextView
    			android:visibility="gone"

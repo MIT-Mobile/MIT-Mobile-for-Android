@@ -2,8 +2,8 @@
 <resources>
 	<color name="boldBlack">#000000</color>
 	<color name="detailText">#505050</color>
-	<color name="dividerColor">#C0C0C0</color>
-	<dimen name="dividerHeight">1px</dimen>
+	<color name="dividerColor">#33000000</color>
+	<dimen name="dividerHeight">1dip</dimen>
 
 
 

@@ -36,16 +36,20 @@
 	<style name="ListItemPrimary">
 		<item name="android:textStyle">bold</item>
 		<item name="android:textSize">17sp</item>
-		<item name="android:textColor">@color/list_item_primary_color</item>
+		<item name="android:textColor">#ff222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
+		
+	<dimen name="ListItemPrimaryPadding">10.75dip</dimen>
 	
 	<style name="ListItemSecondary">
 		<item name="android:textStyle">normal</item>
 		<item name="android:textSize">13sp</item>
-		<item name="android:textColor">#ff8c8c8c</item>
+		<item name="android:textColor">#8c222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
+	
+	<dimen name="ListItemSecondaryPadding">11.25dip</dimen>
 	
 	<style name="ListValue">
 		<item name="android:textStyle">normal</item>
@@ -126,7 +130,14 @@
 		<item name="android:textColor">#ff505050</item>
 		<item name="android:typeface">sans</item>
 	</style>
-	
+
+	<style name="ToolbarTappable">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">#ffffffff</item>
+		<item name="android:typeface">sans</item>
+	</style>
+		
 	<style name="BoldRed">
 	    <item name="android:textColor">#ff990000</item>
 	    <item name="android:textStyle">bold</item>
