@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,6 +11,10 @@ public class TwoLineActionRow extends ActionRow {
 	private TextView mTitleView;
 	private TextView mSubtitleView;
 	private ImageView mActionIconView;
+	
+	private int mListItemPrimaryPadding;
+	private int mListItemSecondaryPadding;
+	
 	
 	private static final String NAMESPACE = "http://schemas.android.com/apk/res/android";
 	public TwoLineActionRow(Context context, AttributeSet attrs) {
@@ -48,6 +53,28 @@ public class TwoLineActionRow extends ActionRow {
 		mTitleView = (TextView) findViewById(R.id.simpleRowTitle);
 		mSubtitleView = (TextView) findViewById(R.id.simpleRowSubtitle);
 		mActionIconView = (ImageView) findViewById(R.id.simpleRowActionIcon);	
+		
+		mListItemPrimaryPadding = context.getResources().getDimensionPixelOffset(R.dimen.ListItemPrimaryPadding);
+		mListItemSecondaryPadding = context.getResources().getDimensionPixelOffset(R.dimen.ListItemSecondaryPadding);
+	}
+
+	/*
+	 * This method is to take into account that the 
+	 * vertical paddings depend on which views are visible
+	 */
+	private void refreshPaddings() {
+	    int titleBottomPadding = 0;
+	    if (mSubtitleView.getVisibility() == View.GONE) {
+		titleBottomPadding = mListItemPrimaryPadding;
+	    }
+	    
+	    int subtitleTopPadding = 0;
+	    if (mTitleView.getVisibility() == View.GONE) {
+		subtitleTopPadding = mListItemSecondaryPadding;
+	    }
+	    
+	    mTitleView.setPadding(0, mListItemPrimaryPadding, 0, titleBottomPadding);
+	    mSubtitleView.setPadding(0, subtitleTopPadding, 0, mListItemSecondaryPadding);
 	}
 	
 	public void setTitle(CharSequence title, int color) {
@@ -66,6 +93,7 @@ public class TwoLineActionRow extends ActionRow {
 		} else {
 			mTitleView.setVisibility(GONE);
 		}
+		refreshPaddings();
 	}
 
 	public CharSequence getTitle() {
@@ -79,6 +107,7 @@ public class TwoLineActionRow extends ActionRow {
 		} else {
 			mSubtitleView.setVisibility(GONE);
 		}
+		refreshPaddings();
 	}
 	
 	public void setActionIconResource(int resId) {
