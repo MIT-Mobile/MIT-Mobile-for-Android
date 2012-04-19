@@ -38,6 +38,20 @@
 				<category android:name="android.intent.category.HOME" />
 			</intent-filter>
 		</receiver>
+		
+		<!-- Only C2DM servers can send messages for the app. If permission is not set - any other app can generate it --> 
+        <receiver android:name=".alerts.C2DMReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+          <!-- Receive the actual message -->
+          <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+              <category android:name="edu.mit.mitmobile2" />
+          </intent-filter>
+          <!-- Receive the registration id -->
+          <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+              <category android:name="edu.mit.mitmobile2" />
+          </intent-filter>
+       </receiver>
 	        
 	    <activity android:name=".tour.TourCameraActivity"/>
 	    <activity android:name=".mit150.MainMIT150Activity" android:screenOrientation="portrait"/>
@@ -297,6 +311,13 @@
 <uses-permission android:name="android.permission.WRITE_CALENDAR"></uses-permission>
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
+   <!-- Only this application can receive the messages and registration result --> 
+   <permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+   <uses-permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" />
+
+   <!-- This app has permission to register and receive message -->
+   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+   
 <uses-feature android:name="android.hardware.telephony" android:required="false"/>
 
 </manifest> 

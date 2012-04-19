@@ -36,6 +36,7 @@
   	android:paddingTop="@dimen/verticalPadding"
   	android:paddingBottom="@dimen/verticalPadding"
     android:paddingLeft="@dimen/horizontalPadding"
+    android:paddingRight="@dimen/horizontalPadding"
     style="@style/BodyText" />  
    
 </LinearLayout>

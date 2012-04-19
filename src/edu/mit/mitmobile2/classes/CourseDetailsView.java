@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.alerts.C2DMReceiver;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.CourseItem.CourseTime;
 import edu.mit.mitmobile2.people.PeopleSearchActivity;
@@ -97,7 +98,8 @@ public class CourseDetailsView implements SliderInterface {
 			public void run() {
 				CourseItem c = CoursesDataModel.getDetails(mCourseItem.masterId);
 				if(c != null) {
-					updateUI(c);
+					mCourseItem = c;
+					updateUI(mCourseItem);
 				} else {
 					mLoader.showError();
 				}
@@ -108,6 +110,7 @@ public class CourseDetailsView implements SliderInterface {
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
+				C2DMReceiver.markNotificationAsRead(mActivity, "stellar:" + mCourseItem.masterId);
 				post(updateResultsUI);
 			}
 		};
@@ -274,6 +277,9 @@ public class CourseDetailsView implements SliderInterface {
 		
 	}
 	
+	public CourseItem getCourse() {
+		return mCourseItem;
+	}
 	/****************************************************/
 	
 
