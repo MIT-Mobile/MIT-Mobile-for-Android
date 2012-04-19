@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   		android:layout_width="fill_parent"
-  		android:layout_height="30dip"
-  		android:background="@drawable/title_secondary_bar_background">
+  		android:layout_height="48dip"
+  		android:background="#666666">
 	    
   		<TextView
   			android:id="@+id/subSliderTitleBarLeftArrow"
   			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
+  			android:layout_height="fill_parent"
+  			android:gravity="center_vertical"
   			android:visibility="gone"
-  			android:paddingLeft="5dip"
+  			android:paddingLeft="@dimen/standardPadding"
+  			android:paddingRight="@dimen/standardPadding"
+  			android:background="@android:drawable/list_selector_background"
   			android:layout_centerVertical="true"
-  			android:text="PREVIOUS" />
+  			android:text="PREVIOUS" 
+  			style="@style/ToolbarTappable"
+  			/>
   		
   		<TextView 
   		    android:id="@+id/subSliderTitleBarTitleText"
   		    android:layout_centerInParent="true"
   		    android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"/>
+  			android:layout_height="wrap_content"
+  			style="@style/ToolbarTitle"
+  			/>
   		
   		<TextView
   			android:id="@+id/subSliderTitleBarRightArrow"
   			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
+  			android:layout_height="fill_parent"
+  			android:gravity="center_vertical"
   			android:visibility="gone"
-  			android:paddingRight="5dip"
+  			android:paddingLeft="@dimen/standardPadding"
+  			android:paddingRight="@dimen/standardPadding"
+  			android:background="@android:drawable/list_selector_background"
   			android:layout_alignParentRight="true"
   			android:layout_centerVertical="true"
-  			android:text="NEXT"/>
+  			android:text="NEXT"
+  			style="@style/ToolbarTappable"
+  			/>
 </RelativeLayout>

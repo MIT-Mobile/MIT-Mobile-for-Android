@@ -187,7 +187,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 	protected SliderView.Adapter getSliderAdapter() {
 		mStartPosition = getPositionValue();
 
-		initSecondaryTitleBar();
+		//initSecondaryTitleBar();
 		
 		mNewsModel = new NewsModel(this);
 		
@@ -251,11 +251,13 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 	@Override
 	public void onStorySelected(NewsItem newsItem) {
 	    
+	    	/*
 		if (mNewsModel.isBookmarked(newsItem)) {
 			mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
 		} else {
 			mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
 		}
 		mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
+		*/
 	}
 }

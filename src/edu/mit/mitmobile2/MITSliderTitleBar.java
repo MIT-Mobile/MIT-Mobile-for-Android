@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,10 +47,20 @@ public class MITSliderTitleBar extends RelativeLayout {
 	
 	public void enablePreviousButton(boolean enabled) {
 		mPrevious.setEnabled(enabled);
+		if (enabled) {
+		    mPrevious.setTextAppearance(getContext(), R.style.ToolbarTappable);
+		} else {
+		    mPrevious.setTextColor(getContext().getResources().getColor(R.color.ToolbarTappableDisabled));
+		}
 	}
 	
 	public void enableNextButton(boolean enabled) {
 		mNext.setEnabled(enabled);
+		if (enabled) {
+		    mNext.setTextAppearance(getContext(), R.style.ToolbarTappable);
+		} else {
+		    mNext.setTextColor(getContext().getResources().getColor(R.color.ToolbarTappableDisabled));
+		}
 	}
 	
 	public void setTitle(String title) {
