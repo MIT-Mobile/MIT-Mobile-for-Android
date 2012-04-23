@@ -1,6 +1,6 @@
 package edu.mit.mitmobile2.people;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -42,17 +42,9 @@ public class PeopleModule extends NewModule {
 
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
-		// TODO Auto-generated method stub
-		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		items.add(new MITMenuItem("y", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("x", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("a", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("b", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("c", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("d", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("e", "Browse", R.drawable.titlebar_action_icon));
-		items.add(new MITMenuItem("f", "Browse", R.drawable.titlebar_action_icon));
-		return items;
+		return Arrays.asList(
+			new MITMenuItem("search", "Search", R.drawable.menu_search)
+		);
 	}
 
 	@Override
@@ -63,7 +55,10 @@ public class PeopleModule extends NewModule {
 
 	@Override
 	public boolean onItemSelected(Activity activity, String id) {
-		// TODO Auto-generated method stub
+		if (id.equals("search")) {
+		    activity.onSearchRequested();
+		    return true;
+		}
 		return false;
 	}
 

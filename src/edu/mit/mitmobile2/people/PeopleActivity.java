@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.people;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.HighlightEffects;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -113,19 +115,13 @@ public class PeopleActivity extends NewModuleActivity {
 		recentlyViewedListAdapter.setLookupHandler(mRecentlyViewed, PersonDetailViewMode.RECENT, null);
 	}
 	
-	/*
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_CLEAR_RECENTS:
-			PeopleDB.getInstance(this).clearAll();
-			populateRecentlyViewed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+	private static String MENU_CLEAR_RECENTS = "clear_recents";
+	
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+		return Arrays.asList(
+			new MITMenuItem(MENU_CLEAR_RECENTS, "Clear Recents")
+		);
 	}
-	*/
 
 	@Override
 	public boolean isModuleHomeActivity() {
@@ -134,19 +130,19 @@ public class PeopleActivity extends NewModuleActivity {
 
 	@Override
 	protected NewModule getNewModule() {
-		// TODO Auto-generated method stub
 		return new PeopleModule();
 	}
 
 	@Override
 	protected boolean isScrollable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected void onOptionSelected(String id) {
-		// TODO Auto-generated method stub
-		
+	    if (id.equals(MENU_CLEAR_RECENTS)) {
+		PeopleDB.getInstance(this).clearAll();
+		populateRecentlyViewed();
+	    }
 	}
 }

@@ -77,10 +77,12 @@
 	<!--  content styles -->
 	<style name="ContentTitle">
 		<item name="android:textStyle">normal</item>
-		<item name="android:textSize">22sp</item>
-		<item name="android:textColor">#ff000000</item>
+		<item name="android:textSize">24sp</item>
+		<item name="android:textColor">#ff222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
+	
+	<dimen name="ContentTitlePadding">9dip</dimen>
 	
 	<style name="Deck">
 		<item name="android:textStyle">normal</item>
@@ -126,10 +128,12 @@
 	
 	<style name="SmallPrint">
 		<item name="android:textStyle">normal</item>
-		<item name="android:textSize">14sp</item>
-		<item name="android:textColor">#ff505050</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#8c222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
+	
+	<dimen name="SmallPrintPadding">11.25dip</dimen>
 
 	<style name="ToolbarTappable">
 		<item name="android:textStyle">normal</item>
@@ -145,7 +149,23 @@
 		<item name="android:textColor">#ffffffff</item>
 		<item name="android:typeface">sans</item>
 	</style>
-			
+	
+	<style name="ActionButtons">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">#ff4b4b4b</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="InfoTitle">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#8c222222</item>
+		<item name="android:typeface">sans</item>
+	</style>
+				
+	<dimen name="InfoTitlePadding">11.25dip</dimen>
+		
 	<style name="BoldRed">
 	    <item name="android:textColor">#ff990000</item>
 	    <item name="android:textStyle">bold</item>
@@ -174,6 +194,7 @@
 	</style>
 	
 	<dimen name="standardPadding">15dip</dimen>
+	<dimen name="halfStandardPadding">7.5dip</dimen>
 	
 	<dimen name="moduleHomeUnderlineWidth">2dip</dimen>
     <color name="moduleHomeUnderlineColor">#993333</color>

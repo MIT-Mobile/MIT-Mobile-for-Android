@@ -2,54 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/horizontalPadding"
-	android:paddingRight="@dimen/horizontalPadding"
-	android:paddingBottom="@dimen/verticalPadding"
+    android:paddingLeft="@dimen/halfStandardPadding"
+	android:paddingRight="@dimen/halfStandardPadding"
     android:orientation="vertical" >
     
 	<TextView 
 	    android:id="@+id/peopleDetailListItemTitle"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    style="@style/Caption"/>
+	    android:paddingLeft="@dimen/halfStandardPadding"
+		android:paddingRight="@dimen/halfStandardPadding"
+		android:paddingTop="@dimen/InfoTitlePadding"
+	    style="@style/InfoTitle"/>
 	
 	<edu.mit.mitmobile2.DividerView
 	    android:layout_width="match_parent"
 	    android:layout_height="@dimen/dividerHeight"/>
 	
 	<LinearLayout 
-	    android:paddingTop="5dip"
+	    android:id="@+id/peopleDetailListItemActionButton"
+	    android:background="@android:drawable/list_selector_background"
+	    android:paddingLeft="@dimen/halfStandardPadding"
+		android:paddingRight="@dimen/halfStandardPadding"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content">
 	    
 	    <TextView 
-	        android:text="asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf"
 	      	android:id="@+id/peopleDetailListItemContent"
-	    	android:layout_width="match_parent"
+	    	android:layout_width="0dip"
 	    	android:layout_height="wrap_content"
 	    	android:layout_weight="1"
-	    	style="@style/BodyText"/>
+	    	android:paddingTop="@dimen/ListItemPrimaryPadding"
+	    	android:paddingBottom="@dimen/ListItemPrimaryPadding"
+	    	style="@style/ListItemPrimary"/>
 	    
-	    <LinearLayout 
-	        android:id="@+id/peopleDetailListItemIconLayout"
-	        android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:layout_gravity="right|center_vertical"
-	    	android:visibility="gone"
-	        android:layout_marginRight="15dip"
-	    	android:orientation="horizontal">
-	    	
-	    	<ImageView 
-	    	    android:src="@color/dividerColor"
-	    	    android:layout_marginRight="@dimen/horizontalPadding"
-	    	    android:layout_width="@dimen/dividerHeight"
-	    	    android:layout_height="fill_parent"/>
-	    	
-	    	<ImageView 
+	    <ImageView
 	    	    android:id="@+id/peopleDetailListItemIcon"
-	    	    android:src="@drawable/action_email"
+	    	    android:paddingLeft="@dimen/standardPadding"
 	    	    android:layout_width="wrap_content"
-	    	    android:layout_height="wrap_content"/>
-	    </LinearLayout>
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="center_vertical"
+	    	    />
+
 	</LinearLayout>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.people;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,9 +18,8 @@ import android.provider.ContactsContract.Intents.Insert;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -195,7 +195,8 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 	
 	private class PersonSliderInterface implements SliderInterface {
 		private PersonItem mPerson;
-		private LinearLayout mMainLayout;
+		private View mMainLayout;
+		private ViewGroup mListItemsLayout;
 		
 		PersonSliderInterface(PersonItem person) {
 			mPerson = person;
@@ -210,12 +211,12 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 		@Override
 		public View getView() {
 			LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			mMainLayout = (LinearLayout) inflator.inflate(R.layout.people_detail, null);
+			mMainLayout = inflator.inflate(R.layout.people_detail, null);
 			
 			TextView nameView = (TextView) mMainLayout.findViewById(R.id.personName);
 			nameView.setText(mPerson.getName());
 			
-			ImageButton addContactBtn = (ImageButton) mMainLayout.findViewById(R.id.personAddButton);
+			View addContactBtn = mMainLayout.findViewById(R.id.personAddButton);
 			addContactBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -228,8 +229,13 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 			if(mPerson.getTitle() != null) {
 				titleView.setText(mPerson.getTitle());
 			} else {
+			    	int bottomPadding = getResources().getDimensionPixelOffset(R.dimen.ContentTitlePadding);
+			    	nameView.setPadding(0, bottomPadding, 0, bottomPadding);
 				titleView.setVisibility(View.GONE);
 			}
+			
+			
+			mListItemsLayout = (ViewGroup) mMainLayout.findViewById(R.id.peopleDetailListItemsWrapper);
 			
 			List<PersonDetailItem> detailItems = mPerson.getPersonDetails();
 			
@@ -239,31 +245,18 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 				itemLayout.setContentValue(item.getValue());
 				
 				String type = item.getType();
-				if(type.equals("email")) {
-					itemLayout.setActionIconResouce(R.drawable.action_email);					
-				} else if(type.equals("phone")) {
-					itemLayout.setActionIconResouce(R.drawable.action_phone);
-				} else if(type.equals("office")) {
-					itemLayout.setActionIconResouce(R.drawable.action_map);
-				} else {
-					// not one of the actionable types of data
-					itemLayout.hideActionIcon();
-				}
-				
-				itemLayout.setOnItemClickListener(new OnClickListener() {
+				if (hasAction(type)) {
+				    itemLayout.setActionIconResource(getActionIconResourceId(item.getType()));
+				    itemLayout.setOnItemClickListener(new OnClickListener() {
 					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						if(item.getType().equals("email")) {
-							CommonActions.composeEmail(ctx, item.getValue());
-						} else if(item.getType().equals("phone")) {
-							CommonActions.callPhone(ctx, item.getValue());
-						} else if(item.getType().equals("office")) {
-							CommonActions.searchMap(ctx, item.getValue());
-						}
+					public void onClick(View view) {
+					    performAction(item);
 					}
-				});
-				mMainLayout.addView(itemLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+				    });
+				} else {
+				    itemLayout.hideActionIcon();
+				}				
+				mListItemsLayout.addView(itemLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			}
 			return mMainLayout;
 		}
@@ -302,5 +295,31 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private boolean hasAction(String type) {
+	    List<String> typesWithActions = Arrays.asList("email", "phone", "office");
+	    return typesWithActions.contains(type);
+	}
+	
+	private void performAction(PersonDetailItem item) {
+	    if(item.getType().equals("email")) {
+		CommonActions.composeEmail(mContext, item.getValue());
+	    } else if(item.getType().equals("phone")) {
+		CommonActions.callPhone(mContext, item.getValue());
+	    } else if(item.getType().equals("office")) {
+		CommonActions.searchMap(mContext, item.getValue());
+	    }
+	}
+	
+	private int getActionIconResourceId(String type) {
+	    if (type.equals("email")) {
+		return R.drawable.action_email;					
+	    } else if(type.equals("phone")) {
+		return R.drawable.action_phone;
+	    } else if(type.equals("office")) {
+		return R.drawable.action_map;
+	    }
+	    return -1;
 	}
 }
