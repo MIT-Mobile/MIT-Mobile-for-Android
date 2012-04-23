@@ -10,10 +10,10 @@
     <TextView android:text="Select a shuttle to view the full schedule and realtime map locations."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/horizontalPadding"
-        android:paddingRight="@dimen/horizontalPadding"
-        android:paddingTop="@dimen/verticalPadding"
-        android:paddingBottom="@dimen/verticalPadding"
+        android:paddingLeft="@dimen/standardPadding"
+        android:paddingRight="@dimen/standardPadding"
+        android:paddingTop="@dimen/SmallPrintPadding"
+        android:paddingBottom="@dimen/SmallPrintPadding"
         style="@style/SmallPrint" />
         
 	<LinearLayout

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="horizontal"
-  android:padding="2px"
+  android:paddingLeft="@dimen/standardPadding"
+  android:paddingRight="@dimen/standardPadding"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content">
 
@@ -13,15 +13,16 @@
       android:layout_width="wrap_content" 
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      android:paddingLeft="@dimen/horizontalPadding"
-      android:paddingRight="@dimen/horizontalPadding"/>
+	  />
       
     <TextView
       android:id="@+id/shuttleRowRouteTV"
       android:layout_width="wrap_content" 
       android:layout_height="wrap_content"
-      android:paddingTop="@dimen/verticalPadding"
-      android:paddingBottom="@dimen/verticalPadding"
-      style="@style/ListItemPrimary"/>
+      android:paddingLeft="@dimen/standardPadding"
+      android:paddingTop="@dimen/ListItemPrimaryPadding"
+      android:paddingBottom="@dimen/ListItemPrimaryPadding"
+      style="@style/ListItemPrimary"
+      />
       
 </LinearLayout>
