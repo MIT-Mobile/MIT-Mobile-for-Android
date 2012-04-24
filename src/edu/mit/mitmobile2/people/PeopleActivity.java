@@ -26,7 +26,6 @@ import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
 public class PeopleActivity extends NewModuleActivity {
 	
-	private SearchBar mSearchBar;
 	private ListView mRecentlyViewed;
 	private View mRecentlyViewedListViewHeader;
 	private View mRecentlyViewedSectionHeader;
@@ -47,10 +46,6 @@ public class PeopleActivity extends NewModuleActivity {
 	
 	private void createViews() {
 		setContentView(R.layout.people_main);
-		
-		mSearchBar = (SearchBar) findViewById(R.id.peopleSearchBar);
-		mSearchBar.setSearchHint(getString(R.string.people_search_hint));
-		mSearchBar.setSystemSearchInvoker(this);
 		
 		mRecentlyViewed = (ListView) findViewById(R.id.peopleRecentlyViewed);
 		
