@@ -11,11 +11,12 @@ import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITRoutesSliderActivity extends CategoryNewModuleActivity {
+public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	private RoutesAsyncListView curView;
 	
 	private int position;
@@ -42,6 +43,7 @@ public class MITRoutesSliderActivity extends CategoryNewModuleActivity {
     		position = bundle.getInt(KEY_POSITION, 0);
     	}
     	
+    	/*
     	getSecondaryBar().addMenuItem(new MITMenuItem("LIST_MAP", "", R.drawable.menu_view_as_list));
     	getSecondaryBar().setOnMITMenuItemListener(new OnMITMenuItemListener() {
 			@Override
@@ -53,6 +55,8 @@ public class MITRoutesSliderActivity extends CategoryNewModuleActivity {
 				} 
 			}
 		});
+	*/
+    	
     	createViews();
 	}
     /****************************************************/
@@ -87,20 +91,19 @@ public class MITRoutesSliderActivity extends CategoryNewModuleActivity {
     		
     		cv = new RoutesAsyncListView(this, routeId, r);
 
-    		addCategory(cv, r.title, r.title);
+    		addScreen(cv, r.title, r.title);
     	}
-    	onOptionItemSelected(ShuttleModel.getSortedRoutes().get(position).title);
+    	setPosition(position);
     }
     
 	@Override
-	public void onOptionItemSelected(String optionId) {
-		// TODO Auto-generated method stub
-		super.onOptionItemSelected(optionId);
-		
-		if(curView != null) {
-			curView.terminate();
-		}
-		curView = (RoutesAsyncListView) getCategory(optionId);
+	public void onPositionChanged(int newPosition, int oldPosition) {
+	    super.onPositionChanged(newPosition, oldPosition);	
+	    
+	    if(curView != null) {
+		curView.terminate();
+	    }
+	    curView = (RoutesAsyncListView) getScreen(newPosition);
 	}
 
 	@Override
@@ -131,13 +134,14 @@ public class MITRoutesSliderActivity extends CategoryNewModuleActivity {
 		// TODO Auto-generated method stub
 		return new ShuttlesModule();
 	}
-	@Override
-	protected boolean isScrollable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 	@Override
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	protected String getHeaderTitle(int position) {
+	    return null;
 	}
 }

@@ -2,6 +2,7 @@ package edu.mit.mitmobile2;
 
 import java.util.ArrayList;
 
+import edu.mit.mitmobile2.SliderListAdapter.OnPositionChangedListener;
 import edu.mit.mitmobile2.SliderView.Adapter;
 
 import android.content.Context;
@@ -9,7 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public abstract class SliderListNewModuleActivity extends SliderNewModuleActivity {
+public abstract class SliderListNewModuleActivity extends SliderNewModuleActivity implements OnPositionChangedListener {
 	public static final String KEY_POSITION = "start_position";
 	private static final String KEY_POSITION_SAVED = "saved_start_position";
 	private int mLastSavedPosition = -1;
@@ -18,6 +19,7 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
 
 	private ArrayList<String> mHeaderTitles = new ArrayList<String>();
 	private SliderListAdapter mSliderListAdapter = new SliderListAdapter();
+	private OnPositionChangedListener mOnPositionChangedListener;
 	
 	
 	/****************************************************/
@@ -28,6 +30,8 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
     		if(savedInstanceState != null && savedInstanceState.containsKey(KEY_POSITION_SAVED)) {
     		    mLastSavedPosition = savedInstanceState.getInt(KEY_POSITION_SAVED);
     		}
+    		
+    		mSliderListAdapter.setOnPositionChangedListener(this);
     	}
     
     @Override 
@@ -90,8 +94,15 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
 		
 	}
 	
+	@Override
+	public void onPositionChanged(int newPosition, int oldPosition) {
+	    if (mOnPositionChangedListener != null) {
+		mOnPositionChangedListener.onPositionChanged(newPosition, oldPosition);
+	    }
+	}
+	
 	protected void setOnPositionChangedListener(SliderListAdapter.OnPositionChangedListener positionChangedListener) {
-	    mSliderListAdapter.setOnPositionChangedListener(positionChangedListener);
+	    mOnPositionChangedListener = positionChangedListener;
 	}
 	
 	@Override

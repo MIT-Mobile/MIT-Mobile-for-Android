@@ -4,7 +4,7 @@
   android:orientation="horizontal"
   android:layout_width="fill_parent"
   android:layout_height="25dip"
-  android:background="#ff191919" >
+  android:background="#ff979797" >
   
 
  	<ImageView
@@ -19,7 +19,8 @@
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical" 
-		style="@style/Caption" />
+		android:textColor="#8cffffff"
+		style="@style/SmallPrint" />
 		
  
 	<TextView 
@@ -29,6 +30,7 @@
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical" 
-		style="@style/Caption" />
+		android:textColor="#8cffffff"
+		style="@style/SmallPrint" />
 	
 </LinearLayout>

@@ -20,12 +20,14 @@ import android.widget.TextView;
 public class RouteStopsArrayAdapter extends ArrayAdapter<Stops> {
 
 	Context ctx;
+	List<Stops> mStops;
 	
 	//int nearest = 0;	
 	
 	public RouteStopsArrayAdapter(Context context, int resource, int textViewResourceId, List<Stops> stops) {
 		super(context, resource, textViewResourceId, stops);
 		this.ctx = context;
+		mStops = stops;
 	}
 
 	@Override
@@ -62,11 +64,26 @@ public class RouteStopsArrayAdapter extends ArrayAdapter<Stops> {
 			ImageView routeIV = (ImageView) v.findViewById(R.id.routesRowIV);
 			//routeIV.setImageResource(R.drawable.shuttle_stop_dot);
 			
+			boolean isStart = (position == 0);
+			boolean isEnd = (position == (mStops.size()-1));
+			
 			if (s.upcoming) {
-				routeIV.setImageResource(R.drawable.shuttle_stop_dot_next);
+			    	if (isStart) {
+			    	    routeIV.setImageResource(R.drawable.status_route_on_start);
+			    	} else if(isEnd) {
+			    	    routeIV.setImageResource(R.drawable.status_route_on_end);
+			    	} else {
+			    	    routeIV.setImageResource(R.drawable.status_route_on_between); 
+			    	}
 				nextTV.setTextAppearance(ctx, R.style.BoldRed);
 			} else {
-				routeIV.setImageResource(R.drawable.shuttle_stop_dot);
+			    	if (isStart) {
+			    	    routeIV.setImageResource(R.drawable.status_route_off_start);
+			    	} else if(isEnd) {
+			    	    routeIV.setImageResource(R.drawable.status_route_off_end);
+			    	} else {
+			    	    routeIV.setImageResource(R.drawable.status_route_off_between); 
+			    	}
 				nextTV.setTextAppearance(ctx, R.style.ListValue);
 			}
 			
