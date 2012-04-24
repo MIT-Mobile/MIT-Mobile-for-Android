@@ -9,8 +9,8 @@
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	android:id="@+id/popup_menu_item_wrapper"
-    	android:paddingLeft="@dimen/horizontalPadding"
-    	android:paddingRight="@dimen/horizontalPadding"
+    	android:paddingLeft="@dimen/standardPadding"
+    	android:paddingRight="@dimen/standardPadding"
     	android:background="@android:drawable/list_selector_background"
     	android:orientation="horizontal" >
     
