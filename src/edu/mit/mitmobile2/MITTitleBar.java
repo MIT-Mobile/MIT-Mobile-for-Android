@@ -27,6 +27,8 @@ public class MITTitleBar extends LinearLayout {
 	private MITPopupMenu mPopoverMenu;
 	
 	private int primaryItemsShowing = 0;
+	private int mPrimaryItemWidth;
+	private int mOverflowButtonWidth;
 	
 	public MITTitleBar(Context context) {
 		this(context, null);
@@ -60,6 +62,11 @@ public class MITTitleBar extends LinearLayout {
 				mClickListener.onModuleHomeSelected();
 			}
 		});
+		
+		mPrimaryItemWidth = getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPrimaryItemWidth);
+		mPrimaryItemWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding) * 2;
+		mOverflowButtonWidth = getContext().getResources().getDimensionPixelSize(R.dimen.titleBarOverflowItemWidth);
+		mOverflowButtonWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding) * 2;
 		
 		initPopupMenu();
 	}
@@ -131,7 +138,7 @@ public class MITTitleBar extends LinearLayout {
         	View view = getMenuItem(item);       	
             view.setFocusable(true);
             view.setClickable(true);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(mPrimaryItemWidth, LayoutParams.FILL_PARENT);
             mPrimaryList.addView(view, mPrimaryList.getChildCount()-1, layoutParams);
     }
     
@@ -167,18 +174,12 @@ public class MITTitleBar extends LinearLayout {
 		int availableWidth = MeasureSpec.getSize(widthMeasureSpec);
 		availableWidth -= mHomeBtn.getMeasuredWidth();
 		availableWidth -= mModuleHomeBtn.getMeasuredWidth();		
-
-
-	    int primaryItemWidth = getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPrimaryItemWidth);
-	    primaryItemWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding) * 2;
-	    int overflowButtonWidth = getContext().getResources().getDimensionPixelSize(R.dimen.titleBarOverflowItemWidth);
-	    overflowButtonWidth += getContext().getResources().getDimensionPixelSize(R.dimen.titleBarPadding) * 2;
 	    
 		if (!mSecondaryItems.isEmpty()) {
-			availableWidth -= overflowButtonWidth;
+			availableWidth -= mOverflowButtonWidth;
 		}
 		
-		if (availableWidth > mPrimaryItems.size() * primaryItemWidth) {
+		if (availableWidth > mPrimaryItems.size() * mPrimaryItemWidth) {
 			if (primaryItemsShowing != mPrimaryItems.size()) {
 				requestLayout();
 				primaryItemsShowing = mPrimaryItems.size();
@@ -195,10 +196,10 @@ public class MITTitleBar extends LinearLayout {
 			// if we have no secondary items, then the space needed 
 			// for the overflow button has not yet been accounted for
 			if (mSecondaryItems.isEmpty()) {
-				availableWidth -= overflowButtonWidth;
+				availableWidth -= mOverflowButtonWidth;
 			}
 			
-			int itemsThatFit = availableWidth / primaryItemWidth;
+			int itemsThatFit = availableWidth / mPrimaryItemWidth;
 			if (itemsThatFit != primaryItemsShowing) {
 				requestLayout();
 				primaryItemsShowing = itemsThatFit;
