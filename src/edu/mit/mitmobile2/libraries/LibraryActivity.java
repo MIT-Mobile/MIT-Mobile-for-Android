@@ -44,10 +44,6 @@ public class LibraryActivity extends NewModuleActivity {
 
         mLinearLayout = (LinearLayout) findViewById(R.id.libraryMainLinearLayout);
 
-        SearchBar searchBar = (SearchBar) findViewById(R.id.librarySearchBar);
-        searchBar.setSearchHint(getString(R.string.library_search_hint));
-        searchBar.setSystemSearchInvoker(this);
-
         accountRow = (TwoLineActionRow) findViewById(R.id.libraryAccount);
         locationRow = (TwoLineActionRow) findViewById(R.id.libraryLocationHours);
         askUsRow = (TwoLineActionRow) findViewById(R.id.libraryAskUs);
