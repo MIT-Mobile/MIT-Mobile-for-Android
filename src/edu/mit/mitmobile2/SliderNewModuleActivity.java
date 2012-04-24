@@ -45,6 +45,9 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
     			
     			if (!view.isAtEnd() || !view.isAtBeginning()) {
     			    mSliderTitleBar.showPreviousNext();
+    			    mSliderTitleBar.setVisibility(View.VISIBLE);
+    			} else {
+    			    mSliderTitleBar.setVisibility(View.GONE);
     			}
     			
     			mSliderTitleBar.setTitle(getCurrentHeaderTitle());
