@@ -30,7 +30,7 @@ import android.util.Log;
 public class C2DMReceiver extends BroadcastReceiver {
 
 	public static abstract class NoticeListener {
-		abstract public void onReceivedNotice(Context context, JSONObject object);
+		abstract public void onReceivedNotice(Context context, JSONObject object, int noticeCount);
 		
 		protected void notifyUser(Context context, String statusBarText, String alarmTitle,
 				String alarmText, int iconResID, Class<?> classname) {
@@ -95,7 +95,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 					noticeListener = new CoursesNoticeListener();
 				}
 				if (noticeListener != null) {
-					noticeListener.onReceivedNotice(context, payloadObject);
+					noticeListener.onReceivedNotice(context, payloadObject, incrementNoticeCount(context));
 				} else {
 					Log.d("C2DMReceiver", "Could not find a target for notification with tag=" + tag);
 				}
@@ -112,6 +112,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String PREFERENCES = "DeviceRegistration";
 	private final static String DEVICE_ID_KEY = "device_id";
 	private final static String DEVICE_PASS_KEY = "pass_key";
+	private final static String NOTICE_COUNT_KEY = "notice_count"; 
 	
 	private void registerDevice(Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -225,4 +226,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 		);
 	}
 	
+	
+	private int incrementNoticeCount(Context context) {
+		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		int count = preferences.getInt(NOTICE_COUNT_KEY, 0);
+		Editor editor = preferences.edit();
+		editor.putInt(NOTICE_COUNT_KEY, count+1);
+		editor.commit();
+		return count+1;		
+	}
 }
