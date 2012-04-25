@@ -5,46 +5,6 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:background="@drawable/main_repeat">
-  
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        	 	
-   	        <ImageView android:src="@drawable/shuttle"
-     	        android:layout_width="wrap_content"
-     	        android:layout_height="wrap_content"
-     	        android:layout_gravity="center_vertical"
-     	        android:paddingLeft="@dimen/standardPadding"
-     	        android:paddingRight="@dimen/standardPadding" />
-	 	
-            <TextView android:text="Shuttle is currently running"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingTop="@dimen/SmallPrintPadding"
-     	        android:paddingBottom="@dimen/SmallPrintPadding"
-                style="@style/SmallPrint"/>
-        </LinearLayout>
-	 	
-        <LinearLayout android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        	 	
-   	        <ImageView android:src="@drawable/shuttle_off"
-     	        android:layout_width="wrap_content"
-     	        android:layout_height="wrap_content"
-     	        android:layout_gravity="center_vertical"
-     	        android:paddingLeft="@dimen/standardPadding"
-     	        android:paddingRight="@dimen/standardPadding" />
-	 	
-            <TextView android:text="Shuttle is not running at this time, please check the schedule"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingTop="@dimen/SmallPrintPadding"
-     	        android:paddingBottom="@dimen/SmallPrintPadding"
-                style="@style/SmallPrint"/>
-        </LinearLayout>
         
         <!-- Contacts -->
         

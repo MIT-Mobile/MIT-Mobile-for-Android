@@ -13,9 +13,45 @@
         android:paddingLeft="@dimen/standardPadding"
         android:paddingRight="@dimen/standardPadding"
         android:paddingTop="@dimen/SmallPrintPadding"
-        android:paddingBottom="@dimen/SmallPrintPadding"
+        android:paddingBottom="7.5dip"
         style="@style/SmallPrint" />
         
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/standardPadding"
+        android:paddingRight="@dimen/standardPadding"
+        android:paddingBottom="@dimen/SmallPrintPadding"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="17dip"
+            android:paddingTop="4dip"
+            android:src="@drawable/shuttle"
+            />
+        <TextView
+        	android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Currently running"
+			style="@style/SmallPrint"
+			/>      
+			
+       <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="17dip"
+            android:paddingTop="4dip"
+            android:paddingLeft="10dip"
+            android:src="@drawable/shuttle_off"
+            />
+        <TextView
+        	android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Not running at this time"
+			style="@style/SmallPrint"
+			/>   
+    </LinearLayout>
+    
 	<LinearLayout
   		android:orientation="vertical"
   		android:id="@+id/shuttlesDayLL"
