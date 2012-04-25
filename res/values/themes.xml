@@ -162,10 +162,18 @@
 		<item name="android:textSize">15sp</item>
 		<item name="android:textColor">#8c222222</item>
 		<item name="android:typeface">sans</item>
+	</style>			
+    	
+	<style name="TabTitle">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">@color/tab_text_color</item>
+		<item name="android:typeface">sans</item>
 	</style>
-				
+		
 	<dimen name="InfoTitlePadding">11.25dip</dimen>
 		
+	
 	<style name="BoldRed">
 	    <item name="android:textColor">#ff990000</item>
 	    <item name="android:textStyle">bold</item>
