@@ -63,6 +63,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
 	 	    android:background="#ffffffff"
+	 	    android:footerDividersEnabled="false"
 	 	    android:visibility="gone"
             style="@style/Lists"/>
             
