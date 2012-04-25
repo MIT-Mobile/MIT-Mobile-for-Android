@@ -17,7 +17,6 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class LibraryActivity extends NewModuleActivity {
