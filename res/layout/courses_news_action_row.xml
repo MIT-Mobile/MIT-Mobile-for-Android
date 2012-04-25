@@ -7,9 +7,10 @@
   android:layout_gravity="center_vertical" 
   android:orientation="vertical"
   android:minHeight="@dimen/minRowHeight" 
-  android:paddingLeft="@dimen/horizontalPadding"
-  android:paddingTop="@dimen/verticalPadding"
-  android:paddingBottom="@dimen/verticalPadding" >
+  android:paddingLeft="@dimen/standardPadding"
+  android:paddingRight="@dimen/standardPadding"
+  android:paddingTop="@dimen/ListItemPrimaryPadding"
+  android:paddingBottom="@dimen/ListItemSecondaryPadding" >
   	
   			<!-- top line -->
   			<TextView
@@ -27,7 +28,6 @@
   					android:layout_width="wrap_content"
   					android:layout_height="wrap_content"
   					android:layout_alignParentRight="true"
-  					android:paddingRight="@dimen/horizontalPadding"
   					android:id="@+id/coursesNewsActionRowDate" 
   					style="@style/ListItemSecondary" />
   				
@@ -35,7 +35,6 @@
   					android:layout_width="wrap_content"
   					android:layout_height="wrap_content"
   					android:layout_toLeftOf="@id/coursesNewsActionRowDate"
-  					android:paddingRight="3dip"
   					android:layout_alignParentLeft="true"
   					android:id="@+id/coursesNewsActionRowContent" 
   					android:singleLine="true"

@@ -39,7 +39,7 @@ public class ClassesModule extends NewModule {
 	public List<MITMenuItem> getPrimaryOptions() {
 		// TODO Auto-generated method stub
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		items.add(new MITMenuItem("search", "Search", R.drawable.menuitem_search));
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
 		return items;
 	}
 

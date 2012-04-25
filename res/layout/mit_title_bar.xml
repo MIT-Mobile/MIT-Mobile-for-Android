@@ -5,7 +5,7 @@
 	android:orientation="vertical">
 	<RelativeLayout 
 	    android:layout_width="fill_parent"
-	    android:layout_height="48dip"
+	    android:layout_height="@dimen/ToolbarHeight"
 	    android:background="#FF222222"
 	    >
 	    
@@ -18,7 +18,7 @@
 	    	
 		    <ImageView android:id="@+id/titleHomeBtn"
 		        android:layout_width="69dip"
-		        android:layout_height="48dip"
+		        android:layout_height="@dimen/ToolbarHeight"
 		        android:scaleType="fitXY"
 		        android:padding="0dip"
 		        android:layout_gravity="center_vertical|center_horizontal"

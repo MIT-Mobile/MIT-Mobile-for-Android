@@ -16,8 +16,9 @@
 		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingTop="@dimen/ContentTitlePadding"
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"
 			android:id="@+id/coursesDetailsTitleTV"
 			style="@style/ContentTitle" />
 
@@ -25,17 +26,48 @@
 		<TextView android:id="@+id/coursesDetailsTimeTV"
 			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
-			android:paddingLeft="@dimen/horizontalPadding"
-			style="@style/Deck" />	
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingBottom="@dimen/SmallPrintPadding"
+			style="@style/SmallPrint" />	
 		
-		<ImageView
-			android:id="@+id/coursesDetailsBookmarkBtn"
-			android:layout_width="wrap_content" 
+		<!-- border line -->
+		<FrameLayout
+			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
-			android:paddingTop="6dip"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:paddingBottom="16dip"/>
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"
+			>
+		    <View
+		        android:layout_width="fill_parent"
+		        android:layout_height="@dimen/dividerHeight"
+		        android:background="@color/dividerColor"
+		        />
+		</FrameLayout>
+
+		<LinearLayout
+		    android:id="@+id/coursesDetailsBookmarkBtn"
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/ToolbarHeight"
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"
+			android:background="@android:drawable/list_selector_background"
+			android:orientation="horizontal">
+		    				    
+			<ImageView
+				android:id="@+id/coursesDetailsBookmarkBtnImage"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				/>
 		
+			<TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center_vertical"
+			    android:text="My Stellar"
+			    style="@style/ActionButtons"
+			/>
+		</LinearLayout>
 		<TabHost
 			android:visibility="gone"
 			android:background="@color/rowBackground" 
@@ -70,7 +102,7 @@
 										android:layout_width="fill_parent"
 										android:layout_height="fill_parent"
 										android:background="@color/rowBackground"
-										android:paddingLeft="@dimen/horizontalPadding"
+										android:paddingLeft="@dimen/standardPadding"
 										android:paddingTop="30dip"
 										style="@style/ListItemPrimary" />
 										
@@ -89,7 +121,7 @@
 										android:layout_width="fill_parent"
 										android:layout_height="fill_parent"
 										android:background="@color/rowBackground"
-										android:paddingLeft="@dimen/horizontalPadding"
+										android:paddingLeft="@dimen/standardPadding"
 										android:paddingTop="30dip"
 										style="@style/ListItemPrimary" />
 									<!-- 

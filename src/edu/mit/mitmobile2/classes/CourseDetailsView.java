@@ -40,7 +40,9 @@ public class CourseDetailsView implements SliderInterface {
 	
 	protected FullScreenLoader mLoader;
 	
-	private ImageView mBookmarkBtn;
+	private View mBookmarkBtn;
+	private ImageView mBookmarkBtnImage;
+	
 	/***************************************************/
 	public CourseDetailsView(Context context, CourseItem course) {
 		
@@ -57,7 +59,8 @@ public class CourseDetailsView implements SliderInterface {
 		mView = (LockingScrollView) vi.inflate(R.layout.courses_details, null);
 		
 		mLoader = (FullScreenLoader) mView.findViewById(R.id.coursesDetailsLoader);
-		mBookmarkBtn = (ImageView) mView.findViewById(R.id.coursesDetailsBookmarkBtn);
+		mBookmarkBtnImage = (ImageView) mView.findViewById(R.id.coursesDetailsBookmarkBtnImage); 
+		mBookmarkBtn = mView.findViewById(R.id.coursesDetailsBookmarkBtn);
 		
 		mBookmarkBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -84,13 +87,13 @@ public class CourseDetailsView implements SliderInterface {
 	}
 	
 	private void updateBookmarkBtn() {
-		int resId = R.drawable.menu_add_bookmark;
+		int resId = R.drawable.action_button_add_bookmark;
 		if (CoursesDataModel.myCourses.containsKey(mCourseItem.masterId)) {
 			resId = R.drawable.menu_remove_bookmark;
 		} else {
-			resId = R.drawable.menu_add_bookmark;
+			resId = R.drawable.action_button_add_bookmark;
 		}
-		mBookmarkBtn.setImageResource(resId);
+		mBookmarkBtnImage.setImageResource(resId);
 	}
 
 	private void updateHeader(CourseItem courseItem) {

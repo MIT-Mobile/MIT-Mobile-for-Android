@@ -58,10 +58,6 @@ public class CoursesTopActivity extends NewModuleActivity {
 	void createView() {
 	
 		setContentView(R.layout.courses);
-
-		mSearchBar = (SearchBar) findViewById(R.id.coursesSearchBar);
-		mSearchBar.setSearchHint(getString(R.string.courses_search_hint));  
-		mSearchBar.setSystemSearchInvoker(this);
 		
 		View view;
 		OnClickListener l;
@@ -145,12 +141,20 @@ public class CoursesTopActivity extends NewModuleActivity {
 		mMyStellarLL.removeAllViews();
 		if(myStellar.size() > 0) {
 			mMyStellarLL.addView(new SectionHeader(this, "My Stellar"));
+			
+			boolean firstRow = true;
 			for(final CourseItem courseItem : myStellar) {
 				TwoLineActionRow row = new TwoLineActionRow(ctx);
 				if (courseItem.read) row.setTitle(courseItem.masterId,0xFF000000);
 				else row.setTitle(courseItem.masterId,0xFFFF0000);
+				
+				if (firstRow) {
+				    firstRow = false;
+				} else {
+				    mMyStellarLL.addView(new DividerView(this, null));
+				}
+				
 				mMyStellarLL.addView(row);
-				mMyStellarLL.addView(new DividerView(this, null));
 				row.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
