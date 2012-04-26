@@ -6,13 +6,11 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content">
 
-    <WebView android:id="@+id/emergencyMsgTV" 
+	<WebView android:id="@+id/emergencyMsgTV" 
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:paddingTop="@dimen/verticalPadding"
-        android:paddingBottom="@dimen/verticalPadding"
-        android:paddingLeft="@dimen/horizontalPadding"
-        android:paddingRight="@dimen/horizontalPadding" />
+		/>        
+
         
     <edu.mit.mitmobile2.SectionHeader
         	mit:prominence="secondary"

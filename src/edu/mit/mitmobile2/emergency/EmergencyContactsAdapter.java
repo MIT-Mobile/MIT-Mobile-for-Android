@@ -20,6 +20,7 @@ class EmergencyContactsAdapter extends CursorAdapter {
 	private Context mContext;
 	private TextAppearanceSpan mContactStyle;
 	private TextAppearanceSpan mPhoneStyle;
+	private int mListItemPrimaryPadding;
 	
 	public EmergencyContactsAdapter(Context context, Cursor cursor) {
 		super(context, cursor);
@@ -27,6 +28,8 @@ class EmergencyContactsAdapter extends CursorAdapter {
 		mContext = context;
 		mContactStyle = new TextAppearanceSpan(mContext, R.style.ListItemPrimary);
 		mPhoneStyle = new TextAppearanceSpan(mContext, R.style.ListItemSecondary);
+		mListItemPrimaryPadding = context.getResources().getDimensionPixelOffset(R.dimen.ListItemPrimaryPadding);
+		
 	}
 	
 	private void setupRow(Cursor cursor, View row) {
@@ -55,21 +58,23 @@ class EmergencyContactsAdapter extends CursorAdapter {
 		if (contact.description != null) {
 			descTV.setText(contact.description);
 			descTV.setVisibility(View.VISIBLE);
+			contactTV.setPadding(0, contactTV.getPaddingTop(), 0, 0);
 		} else {
 			descTV.setVisibility(View.GONE);
+			contactTV.setPadding(0, contactTV.getPaddingTop(), 0, mListItemPrimaryPadding);
 		}
 	}
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		LinearLayout row = (LinearLayout) view;
+		View row = view;
 		setupRow(cursor, row);
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout row = (LinearLayout) inflater.inflate(R.layout.emergency_row, null);
+		View row = inflater.inflate(R.layout.emergency_row, null);
 		setupRow(cursor, row);
 		return row;
 	}

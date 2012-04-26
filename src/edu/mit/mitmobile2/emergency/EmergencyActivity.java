@@ -66,6 +66,7 @@ public class EmergencyActivity extends NewModuleActivity {
 		
 	}
 
+	private static String noticeTemplate = "<html><body style=\"padding: 7px;\">%s\n<p>Posted %s</p></body></html>";
 	/****************************************************/
 	private void updateEmergencyText() {
 		String html;
@@ -73,7 +74,7 @@ public class EmergencyActivity extends NewModuleActivity {
 			Date postDate = new Date(emergencyItem.unixtime * 1000);
 			SimpleDateFormat format = new SimpleDateFormat("EEE d, MMM yyyy");
 			String dateStr = format.format(postDate);
-			html = String.format("%s\n<p>Posted %s</p>",
+			html = String.format(noticeTemplate,
 				emergencyItem.text,
 				dateStr);
 		} else {
