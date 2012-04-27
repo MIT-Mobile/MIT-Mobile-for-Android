@@ -17,5 +17,6 @@
 	<color name="primarySectionHeaderBackground">#ff993333</color>
     <color name="secondarySectionHeaderBackground">#ff666666</color>
 	
-	<dimen name="ToolbarHeight">48dip</dimen>
+	<dimen name="ActionBarHeight">48dip</dimen>
+	<dimen name="ToolbarHeight">42dip</dimen>
 </resources>
