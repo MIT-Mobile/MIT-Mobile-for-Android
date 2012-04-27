@@ -149,6 +149,7 @@
         <activity android:name=".classes.MITCoursesSubjectsSliderActivity" android:configChanges="orientation" android:process=":courses">
         	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
         </activity>
+        <service android:name=".classes.CoursesTermUpdateService" android:process=":courses"></service>
         
 		
 		<activity android:name=".people.PeopleActivity">
