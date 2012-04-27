@@ -7,13 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
 import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.classes.CoursesDataModel;
 import edu.mit.mitmobile2.classes.CoursesNoticeListener;
+import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
 import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 import android.app.Notification;
@@ -114,7 +117,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String DEVICE_PASS_KEY = "pass_key";
 	private final static String NOTICE_COUNT_KEY = "notice_count"; 
 	
-	private void registerDevice(Context context, final String registrationID) {
+	private void registerDevice(final Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
 		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
 		long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
@@ -138,6 +141,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 					editor.putLong(DEVICE_PASS_KEY, object.getLong(DEVICE_PASS_KEY));
 					editor.commit();
 					sRegistrationID = registrationID;
+					
+					Global.onDeviceRegisterCompleted();
 				}
 			});
 		} else {
@@ -157,7 +162,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
 					// nothing to do
 					if (object.getBoolean("success")) {
-						sRegistrationID = registrationID;					
+						sRegistrationID = registrationID;	
+						
+						Global.onDeviceRegisterCompleted();
 					} else {
 						Log.d("C2DMReceiver", "Device token failed to registered");
 					}
@@ -165,7 +172,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			});		
 		}
 	}
-	
+
 	public static void markNotificationAsRead(Context context, String tag) {
 		JSONStringer encoder = new JSONStringer();
 		try {
