@@ -89,8 +89,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 			
 		} else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
 			try {
+				final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+				long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
+				
 				JSONObject payloadObject = new JSONObject(intent.getExtras().getString("payload"));
 				String tag = payloadObject.getString("tag");
+				int recipientDeviceID = payloadObject.getInt("deviceID");
+				if (recipientDeviceID != deviceID) {
+					// notice not intended for this recipient
+					// user probably uninstalled and reinstalled the app
+					return;
+				}
+
 				NoticeListener noticeListener = null;
 				if (tag.startsWith("emergencyinfo:")) {
 					noticeListener = new EmergencyInfoNoticeListener();
