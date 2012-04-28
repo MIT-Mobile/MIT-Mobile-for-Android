@@ -70,8 +70,8 @@
 		<item name="android:textSize">17sp</item>
 		<item name="android:textColor">#ff333333</item>
 		<item name="android:typeface">sans</item>
-		<item name="android:paddingTop">3dip</item>
-		<item name="android:paddingBottom">5dip</item>
+		<item name="android:paddingTop">@dimen/halfStandardPadding</item>
+		<item name="android:paddingBottom">@dimen/halfStandardPadding</item>
 	</style>
 	
 	<!--  content styles -->
