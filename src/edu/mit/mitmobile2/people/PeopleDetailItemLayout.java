@@ -17,7 +17,7 @@ public class PeopleDetailItemLayout extends LinearLayout {
 	private ImageView mActionIcon;
 	private OnClickListener mOnClickListener;
 	
-	private int mSystemSelectionResourceId = android.R.drawable.list_selector_background;
+	private int mSystemSelectionResourceId = R.drawable.highlight_background;
 	private int mBackgroundResourceId = R.color.rowBackground;
 	
 	public PeopleDetailItemLayout(Context context) {
