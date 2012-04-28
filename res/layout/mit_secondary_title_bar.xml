@@ -12,7 +12,7 @@
         	android:layout_width="wrap_content"
         	android:orientation="horizontal"
         	android:paddingRight="5dip"
-        	android:background="@android:drawable/list_selector_background"
+        	android:background="@drawable/highlight_background"
         	>
         	
         	<TextView

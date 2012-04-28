@@ -21,7 +21,7 @@
 	
 	<LinearLayout 
 	    android:id="@+id/peopleDetailListItemActionButton"
-	    android:background="@android:drawable/list_selector_background"
+	    android:background="@drawable/highlight_background"
 	    android:paddingLeft="@dimen/halfStandardPadding"
 		android:paddingRight="@dimen/halfStandardPadding"
 	    android:layout_width="match_parent"

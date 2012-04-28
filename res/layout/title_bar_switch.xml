@@ -12,7 +12,7 @@
 		android:layout_height="match_parent"	
 		android:gravity="center_vertical"
 		android:textColor="@color/title_bar_switch_text_color"
-		android:background="@android:drawable/list_selector_background"
+		android:background="@drawable/highlight_background"
 		android:paddingLeft="5dip"
 		android:paddingRight="5dip"
 		/>
@@ -30,7 +30,7 @@
 		android:layout_height="match_parent"	
 		android:gravity="center_vertical"
 		android:textColor="@color/title_bar_switch_text_color"
-		android:background="@android:drawable/list_selector_background"
+		android:background="@drawable/highlight_background"
 		android:paddingLeft="5dip"
 		android:paddingRight="5dip"
 		/>		

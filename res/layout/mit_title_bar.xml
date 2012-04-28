@@ -31,7 +31,7 @@
 		        android:layout_height="fill_parent"
 		        android:paddingLeft="@dimen/standardPadding"
 		        android:paddingRight="@dimen/standardPadding"
-		        android:background="@android:drawable/list_selector_background"
+		        android:background="@drawable/highlight_background"
 		        android:gravity="center_vertical|center_horizontal"
 		        android:layout_gravity="center_vertical|center_horizontal"
 		        style="@style/PageTitle"
@@ -50,7 +50,7 @@
 	        	android:layout_height="fill_parent"
 	        	android:scaleType="center"
 	        	android:padding="@dimen/titleBarPadding"
-	        	android:background="@android:drawable/list_selector_background"
+	        	android:background="@drawable/highlight_background"
 	        	android:gravity="center_vertical|center_horizontal"
 	        	android:src="@drawable/menu_overflow"/>
 	    </LinearLayout>

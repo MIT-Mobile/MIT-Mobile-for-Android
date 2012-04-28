@@ -11,7 +11,7 @@
     	android:id="@+id/popup_menu_item_wrapper"
     	android:paddingLeft="@dimen/standardPadding"
     	android:paddingRight="@dimen/standardPadding"
-    	android:background="@android:drawable/list_selector_background"
+    	android:background="@drawable/highlight_background"
     	android:orientation="horizontal" >
     
     	<ImageView

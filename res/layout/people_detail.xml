@@ -59,7 +59,7 @@
 	  			android:layout_height="wrap_content"
 	  			android:paddingLeft="@dimen/halfStandardPadding"
 	  			android:paddingRight="@dimen/halfStandardPadding"
-	  			android:background="@android:drawable/list_selector_background"
+	  			android:background="@drawable/highlight_background"
 	  			android:orientation="horizontal">
 	  
 	    		<ImageView
