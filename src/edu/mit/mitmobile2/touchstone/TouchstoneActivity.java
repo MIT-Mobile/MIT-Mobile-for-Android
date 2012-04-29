@@ -11,7 +11,6 @@ import org.jsoup.nodes.Document;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -19,10 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,13 +28,12 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MITClientData;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.libraries.LibraryModel;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
-public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
+public class TouchstoneActivity extends NewModuleActivity implements OnSharedPreferenceChangeListener {
 	
 	private Context mContext;	
 
@@ -168,8 +163,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
     };
  
 	@Override
-	protected Module getModule() {
-		return null;
+	protected NewModule getNewModule() {
+		return new TouchstoneModule();
 	}
 
 	@Override
@@ -193,17 +188,6 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		}
 	}
 	*/
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		/*
-		menu.add(0, MENU_INFO, Menu.NONE, "Info")
-		  .setIcon(R.drawable.menu_about);
-		
-		menu.add(1, MENU_PREFS, Menu.NONE, "Prefs")
-		  .setIcon(R.drawable.main_repeat);
-		 */
-	}
     
 
 	
@@ -237,6 +221,18 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		Log.d(TAG,"cancelling request " + requestKey);
 		((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
 		finish();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
