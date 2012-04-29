@@ -1,8 +1,8 @@
 package edu.mit.mitmobile2.about;
 
 import edu.mit.mitmobile2.MITNewsWidgetActivity;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class AboutMITActivity extends ModuleActivity {
+public class AboutMITActivity extends NewModuleActivity {
 	
 	static final int MENU_HOME = Menu.FIRST;
 	
@@ -48,7 +48,7 @@ public class AboutMITActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new AboutModule();
 	}
 
@@ -58,6 +58,10 @@ public class AboutMITActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { }
+	protected boolean isScrollable() {
+		return true;
+	}
 
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }
