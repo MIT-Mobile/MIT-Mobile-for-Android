@@ -20,7 +20,6 @@ class EmergencyContactsAdapter extends CursorAdapter {
 	private Context mContext;
 	private TextAppearanceSpan mContactStyle;
 	private TextAppearanceSpan mPhoneStyle;
-	private int mListItemPrimaryPadding;
 	
 	public EmergencyContactsAdapter(Context context, Cursor cursor) {
 		super(context, cursor);
@@ -28,7 +27,6 @@ class EmergencyContactsAdapter extends CursorAdapter {
 		mContext = context;
 		mContactStyle = new TextAppearanceSpan(mContext, R.style.ListItemPrimary);
 		mPhoneStyle = new TextAppearanceSpan(mContext, R.style.ListItemSecondary);
-		mListItemPrimaryPadding = context.getResources().getDimensionPixelOffset(R.dimen.ListItemPrimaryPadding);
 		
 	}
 	
@@ -58,10 +56,8 @@ class EmergencyContactsAdapter extends CursorAdapter {
 		if (contact.description != null) {
 			descTV.setText(contact.description);
 			descTV.setVisibility(View.VISIBLE);
-			contactTV.setPadding(0, contactTV.getPaddingTop(), 0, 0);
 		} else {
 			descTV.setVisibility(View.GONE);
-			contactTV.setPadding(0, contactTV.getPaddingTop(), 0, mListItemPrimaryPadding);
 		}
 	}
 	

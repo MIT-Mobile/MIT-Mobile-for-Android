@@ -20,8 +20,8 @@
       android:layout_width="wrap_content" 
       android:layout_height="wrap_content"
       android:paddingLeft="@dimen/standardPadding"
-      android:paddingTop="@dimen/ListItemPrimaryPadding"
-      android:paddingBottom="@dimen/ListItemPrimaryPadding"
+      android:paddingTop="@dimen/standardPadding"
+      android:paddingBottom="@dimen/standardPadding"
       style="@style/ListItemPrimary"
       />
       

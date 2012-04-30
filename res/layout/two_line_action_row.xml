@@ -24,8 +24,7 @@
   			android:layout_toLeftOf="@+id/simpleRowActionIcon"
   			android:layout_gravity="center_vertical"
   			android:orientation="vertical"
-  			android:paddingLeft="@dimen/standardPadding"
-  			android:paddingRight="@dimen/standardPadding"
+  			android:padding="@dimen/standardPadding"
   			>
   	
   			<TextView

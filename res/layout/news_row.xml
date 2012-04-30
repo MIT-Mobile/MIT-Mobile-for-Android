@@ -20,7 +20,7 @@
 		
 		<TextView
 			android:id="@+id/newsRowTV"
-			android:paddingTop="@dimen/ListItemPrimaryPadding"
+			android:paddingTop="@dimen/standardPadding"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:maxLines="4"
@@ -29,7 +29,7 @@
 			
 		<TextView
 			android:id="@+id/newsRowDeckTV"
-			android:paddingBottom="@dimen/ListItemSecondaryPadding"
+			android:paddingBottom="@dimen/standardPadding"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:maxLines="2"

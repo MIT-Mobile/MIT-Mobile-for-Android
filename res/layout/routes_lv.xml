@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/standardPadding"
         android:paddingRight="@dimen/standardPadding"
-        android:paddingTop="@dimen/ContentTitlePadding"
+        android:paddingTop="@dimen/standardPadding"
         android:paddingBottom="5.25dip"
         style="@style/ContentTitle" />
 	
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/standardPadding"
         android:paddingRight="@dimen/standardPadding"
-        android:paddingBottom="@dimen/SmallPrintPadding"
+        android:paddingBottom="@dimen/standardPadding"
         style="@style/SmallPrint" />
 		
 	<ListView android:id="@+id/routesLV"

@@ -48,7 +48,7 @@
         <TextView android:id="@+id/libraryDetailInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/ListItemPrimaryPadding"
+            android:paddingTop="@dimen/standardPadding"
             android:paddingLeft="@dimen/standardPadding"
             android:paddingRight="@dimen/standardPadding"
             android:visibility="gone" 

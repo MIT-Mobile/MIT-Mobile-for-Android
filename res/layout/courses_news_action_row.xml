@@ -9,8 +9,8 @@
   android:minHeight="@dimen/minRowHeight" 
   android:paddingLeft="@dimen/standardPadding"
   android:paddingRight="@dimen/standardPadding"
-  android:paddingTop="@dimen/ListItemPrimaryPadding"
-  android:paddingBottom="@dimen/ListItemSecondaryPadding" >
+  android:paddingTop="@dimen/standardPadding"
+  android:paddingBottom="@dimen/standardPadding" >
   	
   			<!-- top line -->
   			<TextView

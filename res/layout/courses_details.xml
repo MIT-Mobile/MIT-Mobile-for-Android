@@ -16,7 +16,7 @@
 		<TextView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/ContentTitlePadding"
+			android:paddingTop="@dimen/standardPadding"
 			android:paddingLeft="@dimen/standardPadding"
 			android:paddingRight="@dimen/standardPadding"
 			android:id="@+id/coursesDetailsTitleTV"
@@ -27,7 +27,7 @@
 			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
 			android:paddingLeft="@dimen/standardPadding"
-			android:paddingBottom="@dimen/SmallPrintPadding"
+			android:paddingBottom="@dimen/standardPadding"
 			style="@style/SmallPrint" />	
 		
 		<!-- border line -->

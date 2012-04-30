@@ -12,7 +12,7 @@
 	    android:layout_height="wrap_content"
 	    android:paddingLeft="@dimen/halfStandardPadding"
 		android:paddingRight="@dimen/halfStandardPadding"
-		android:paddingTop="@dimen/InfoTitlePadding"
+		android:paddingTop="@dimen/standardPadding"
 	    style="@style/InfoTitle"/>
 	
 	<edu.mit.mitmobile2.DividerView
@@ -32,8 +32,8 @@
 	    	android:layout_width="0dip"
 	    	android:layout_height="wrap_content"
 	    	android:layout_weight="1"
-	    	android:paddingTop="@dimen/ListItemPrimaryPadding"
-	    	android:paddingBottom="@dimen/ListItemPrimaryPadding"
+	    	android:paddingTop="@dimen/standardPadding"
+	    	android:paddingBottom="@dimen/standardPadding"
 	    	style="@style/ListItemPrimary"/>
 	    
 	    <ImageView

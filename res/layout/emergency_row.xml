@@ -22,19 +22,19 @@
     android:layout_height="wrap_content"
     android:layout_toLeftOf="@id/emergencyRowIV"
     android:paddingRight="@dimen/standardPadding"
+    android:paddingTop="@dimen/standardPadding"
+    android:paddingBottom="@dimen/standardPadding"
     android:orientation="vertical"
     >
   	
 	<TextView android:id="@+id/emergencyRowTV"
 		android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-        android:paddingTop="@dimen/ListItemPrimaryPadding"
-        />
+	    />
 		    
 	<TextView android:id="@+id/emergencyDescriptionTV"
 		android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-		android:paddingBottom="@dimen/ListItemSecondaryPadding"
 	    android:visibility="gone"
 	    />
 	    

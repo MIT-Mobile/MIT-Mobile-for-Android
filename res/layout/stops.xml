@@ -10,7 +10,7 @@
 	<TextView android:id="@+id/stopsTitleTV" 
 			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/ListItemPrimaryPadding"
+			android:paddingTop="@dimen/standardPadding"
 			android:paddingBottom="5.25dip"
 			android:paddingLeft="@dimen/standardPadding"
 			android:paddingRight="@dimen/standardPadding"
@@ -35,7 +35,7 @@
 			android:text="Tap the 'Alert Me' icon to be notified 5 minutes before the estimated arrival time."
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/SmallPrintPadding"
+            android:paddingBottom="@dimen/standardPadding"
             />
             
 	</LinearLayout>

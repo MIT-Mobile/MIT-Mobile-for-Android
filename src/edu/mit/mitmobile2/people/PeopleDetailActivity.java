@@ -229,8 +229,6 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 			if(mPerson.getTitle() != null) {
 				titleView.setText(mPerson.getTitle());
 			} else {
-			    	int bottomPadding = getResources().getDimensionPixelOffset(R.dimen.ContentTitlePadding);
-			    	nameView.setPadding(0, bottomPadding, 0, bottomPadding);
 				titleView.setVisibility(View.GONE);
 			}
 			
