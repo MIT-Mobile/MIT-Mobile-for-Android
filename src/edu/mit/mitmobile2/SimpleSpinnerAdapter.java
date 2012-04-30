@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class SimpleSpinnerAdapter extends ArrayAdapter<String> {
 	
@@ -43,11 +44,11 @@ public class SimpleSpinnerAdapter extends ArrayAdapter<String> {
 		
 		if(convertView == null || convertView == mEmptyView) {
 			LayoutInflater inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflator.inflate(R.layout.boring_action_row, null);
+			convertView = inflator.inflate(R.layout.spinner_drop_down_row, parent, false);
 		}
 		
-		TwoLineActionRow actionRow = (TwoLineActionRow) convertView;
-		actionRow.setTitle(mValues.get(position-1));
+		TextView actionRow = (TextView) convertView;
+		actionRow.setText(mValues.get(position-1));
 		return actionRow;
 	}
 	
