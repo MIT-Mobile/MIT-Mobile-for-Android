@@ -8,6 +8,8 @@ import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
+import edu.mit.mitmobile2.shuttles.ShuttlesStatusView.Position;
+import edu.mit.mitmobile2.shuttles.ShuttlesStatusView.ShuttleStatus;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -61,29 +63,26 @@ public class RouteStopsArrayAdapter extends ArrayAdapter<Stops> {
 
 			////////////
 			
-			ImageView routeIV = (ImageView) v.findViewById(R.id.routesRowIV);
+			ShuttlesStatusView statusView = (ShuttlesStatusView) v.findViewById(R.id.routesRowStatus);
 			//routeIV.setImageResource(R.drawable.shuttle_stop_dot);
 			
-			boolean isStart = (position == 0);
-			boolean isEnd = (position == (mStops.size()-1));
+			Position shuttlePosition = Position.BETWEEN;	
+			// first stop
+			if (position == 0) {
+				shuttlePosition = Position.START;
+			}
+			// last stop
+			if (position == (mStops.size()-1)) {
+				shuttlePosition = Position.END;
+			}
+			statusView.setPosition(shuttlePosition);
+			
 			
 			if (s.upcoming) {
-			    	if (isStart) {
-			    	    routeIV.setImageResource(R.drawable.status_route_on_start);
-			    	} else if(isEnd) {
-			    	    routeIV.setImageResource(R.drawable.status_route_on_end);
-			    	} else {
-			    	    routeIV.setImageResource(R.drawable.status_route_on_between); 
-			    	}
+				statusView.setStatus(ShuttleStatus.ON);
 				nextTV.setTextAppearance(ctx, R.style.BoldRed);
 			} else {
-			    	if (isStart) {
-			    	    routeIV.setImageResource(R.drawable.status_route_off_start);
-			    	} else if(isEnd) {
-			    	    routeIV.setImageResource(R.drawable.status_route_off_end);
-			    	} else {
-			    	    routeIV.setImageResource(R.drawable.status_route_off_between); 
-			    	}
+				statusView.setStatus(ShuttleStatus.OFF);
 				nextTV.setTextAppearance(ctx, R.style.ListValue);
 			}
 			

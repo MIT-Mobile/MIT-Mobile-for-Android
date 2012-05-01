@@ -18,16 +18,15 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_toLeftOf="@id/routesRowNextTV"
-		android:paddingLeft="@dimen/halfStandardPadding"
+		android:paddingLeft="@dimen/standardPadding"
 		android:paddingRight="@dimen/standardPadding"
 		android:layout_alignParentLeft="true"
 		>
          
-        <ImageView android:id="@+id/routesRowIV"
+        <edu.mit.mitmobile2.shuttles.ShuttlesStatusView
+            android:id="@+id/routesRowStatus"
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
-			android:scaleType="fitXY"
-        	android:paddingLeft="@dimen/horizontalPadding"
 			/>
              
       	<TextView android:id="@+id/routesRowStopTV"
