@@ -35,8 +35,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import edu.mit.mitmobile2.DLog;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.ModoLog;
 import edu.mit.mitmobile2.about.BuildSettings;
 
 public class MapTilesManager {
@@ -626,7 +626,7 @@ public class MapTilesManager {
       	    		if (bitmap!=null) {
       	    			// Put in cache...
       	    			imagesMap.put(name, new SoftReference<Bitmap>(bitmap));  
-		        		ModoLog.v("MapTilesManager", "Requesting mapView redraw");
+		        		DLog.v("MapTilesManager", "Requesting mapView redraw");
       	    			mv.postInvalidate();
       	    			pendingImages.remove(name);
       	    			return;
