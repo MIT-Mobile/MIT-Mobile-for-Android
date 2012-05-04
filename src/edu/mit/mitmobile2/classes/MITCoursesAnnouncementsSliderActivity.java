@@ -90,7 +90,12 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderListNewModuleAc
 			String dateText = sDateFormat.format(new Date(mAnnouncement.unixtime * 1000));
 			mDateView.setText(dateText);
 			
-			mBodyView.setText(mAnnouncement.text);
+			if (null == mAnnouncement.text || mAnnouncement.text.equals("")) {
+				mBodyView.setVisibility(View.GONE);
+			} else {
+				mBodyView.setVisibility(View.VISIBLE);				
+				mBodyView.setText(mAnnouncement.text);
+			}
 		}
 
 		@Override
