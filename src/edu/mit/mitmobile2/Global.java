@@ -114,6 +114,8 @@ public class Global extends Application {
 	
 	public static void setMobileWebDomain(String mobileWebDomain) {
 		Global.mobileWebDomain = mobileWebDomain;
+		C2DMReceiver.clearDeviceRegistration(mContext);
+		C2DMReceiver.registerForNotifications(mContext);
 	}
 	
 	// Facilities Related

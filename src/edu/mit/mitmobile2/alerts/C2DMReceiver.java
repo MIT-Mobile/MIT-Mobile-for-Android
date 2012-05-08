@@ -14,9 +14,7 @@ import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
 import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.classes.CoursesDataModel;
 import edu.mit.mitmobile2.classes.CoursesNoticeListener;
-import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
 import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 import android.app.Notification;
@@ -126,6 +124,15 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String DEVICE_ID_KEY = "device_id";
 	private final static String DEVICE_PASS_KEY = "pass_key";
 	private final static String NOTICE_COUNT_KEY = "notice_count"; 
+	
+	public static void clearDeviceRegistration(Context context) {
+		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putLong(DEVICE_ID_KEY, -1);
+		editor.commit();
+		
+		sRegistrationID = null;
+	}
 	
 	private void registerDevice(final Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
