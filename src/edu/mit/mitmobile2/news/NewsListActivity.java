@@ -1,17 +1,6 @@
 package edu.mit.mitmobile2.news;
 
 import java.util.Date;
-import java.util.HashMap;
-
-import edu.mit.mitmobile2.CategoryNewModuleActivity;
-import edu.mit.mitmobile2.HighlightEffects;
-import edu.mit.mitmobile2.LoaderBar;
-import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.objs.NewsItem;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +15,15 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
+import edu.mit.mitmobile2.HighlightEffects;
+import edu.mit.mitmobile2.LoaderBar;
+import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.objs.NewsItem;
 
 public class NewsListActivity extends CategoryNewModuleActivity {
 	
@@ -184,12 +182,6 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 		
 		private void updateNewsList() {
 		    // update the UI
-		    if (mNewsCursor.isClosed()) {
-			mNewsListView.removeFooterView(mFooterView);
-			mNewsCursor = null;
-			initalizeCursorAdapter();
-		    }
-		
 		    mNewsCursor.requery();
 	
 		    mNewsCursor.moveToLast();
@@ -208,10 +200,6 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 		
 		@Override
 		public void updateView() {
-			if (mNewsCursor != null) {
-			    updateNewsList();
-			}
-			
 			// delay makes UI more responsive
 			new Handler().postDelayed(
 				new Runnable() {
