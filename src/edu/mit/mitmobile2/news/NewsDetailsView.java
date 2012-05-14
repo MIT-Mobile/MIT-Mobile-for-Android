@@ -9,6 +9,7 @@ import android.os.Handler;
 
 import android.webkit.WebChromeClient;
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.util.Log;
@@ -17,6 +18,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.JsResult;
 
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.NewsItem;
 
@@ -72,6 +76,9 @@ public class NewsDetailsView extends WebView {
 		
 		// Set Body
 		templateHtml = templateHtml.replace("__BODY__", mNewsItem.body);
+		
+		String bookmarkClass = newsModel.isBookmarked(mNewsItem) ? "on" : "off";
+		templateHtml = templateHtml.replace("__BOOKMARK__", bookmarkClass);
 
 		Log.d(TAG,"html = " + templateHtml);
 		
@@ -131,6 +138,21 @@ public class NewsDetailsView extends WebView {
          * loadUrl on the UI thread.
          */
 
+        public void clickBookmarkButton(String status) {
+        	NewsModel newsModel = new NewsModel(mContext);
+        	boolean bookmarkStatus = status.equals("on");
+        	newsModel.setStoryBookmarkStatus(mNewsItem, bookmarkStatus);
+        }
+ 
+        public void clickShareButton() {
+            mHandler.post(new Runnable() {
+                public void run() {
+        			String url  = "http://" + Global.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(mNewsItem.story_id);
+        			CommonActions.shareCustomContent(mContext, mNewsItem.title, mNewsItem.description, url);
+                }
+            });
+        }
+        
         public void clickViewImage() {
             mHandler.post(new Runnable() {
                 public void run() {

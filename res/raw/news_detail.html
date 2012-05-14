@@ -1,49 +1,41 @@
 <html>
     <head>
         <style type="text/css">
-            html {padding: 10px;}
-            body {font-family: Helvetica;font-size: 14px;margin: 0;padding: 0;}
+            html {padding: 12px;}
+            body {font-family: Helvetica; margin: 0;padding: 0;}
             a { color: #990000; }
-            .slugline {font-weight: bold;font-size:20px;line-height: 24px;margin: 0;padding: 0;}
-            .dek {font-size: 16px;line-height: 20px;margin: 14px 0;color: #505050;}
+            .slugline {font-weight: normal; font-size:24px; line-height: 28px; margin-bottom: 12px; color: #222222}
+            .dek {font-style: italic; font-size: 17px;line-height: 20px;margin: 14px 0;color: #222222;}
             .dek:empty { margin: 0; } /* CSS 3: shrink if no content */
+            
             .inlineControls {
-                float: right;
-                -webkit-user-select: none;
-                position: relative;
-                top: 6px;
+            	font-size: 14px;
             }
+            
             .inlineControls a {
+            	display: inline-block;
+            	min-height: 47px;
+            	line-height: 47px;
+            	background-size: 25.5px 47px;
                 -webkit-tap-highlight-color: rgba(0,0,0,0);
+                padding-left: 25.5px;
+                text-decoration: none;
+                color: #4b4b4b;
             }
-            .inlineControls span {
-                display: inline-block;
-                width: 44px;
-                height: 38px;
-                -webkit-user-select: none;
-            }
-            #bookmarkButton {
-                background: url('global/bookmark_button@2x.png') no-repeat 0 -38px;
-                -webkit-background-size: 88px 76px;
-            }
-            #bookmarkButton.pressed {
-                background-position: 0 1px;
-            }
+            
             #bookmarkButton.on {
-                background-position: -44px -38px;
+                background: url('file:///android_res/drawable/action_button_remove_bookmark.png') no-repeat 0 50%;
             }
-            #bookmarkButton.pressed.on {
-                background-position: -44px 1px;
+            
+            #bookmarkButton.off {
+                background: url('file:///android_res/drawable/action_button_add_bookmark.png') no-repeat 0 50%;
             }
+            
             #shareButton {
-                background-image: url('global/share@2x.png');
-                -webkit-background-size: 44px 38px;
+                background: url('file:///android_res/drawable/action_button_share.png') no-repeat 0 50%;
             }
-            #shareButton.pressed {
-                background-image: url('global/share_pressed@2x.png');
-                -webkit-background-size: 44px 38px;
-            }
-            .byline {font-size: 11px;color: #505050;min-height:30px;}
+            
+            .byline {font-size: 14px; color:rgba(34, 34, 34, 0.5); min-height:22px; margin: 0px;}
             .inline-separator {margin: 0 3px;}
             #content {border-top: 1px dotted #F00;}
             .credential {font-size:8pt;}
@@ -54,7 +46,7 @@
             #image a { text-align:right; font-size:11px; line-height: 30px; text-decoration:none; color:#777;}
             #image a div { margin-top: -4px; }
             #image a+a div { margin-top: 2px; }
-            #body {line-height: 20px;color: #202020; margin-top: 14px;}
+            #body {font-size: 17px; line-height: 20px;color: #4b4b4b; margin-top: 14px;}
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <title>__TITLE__</title>
@@ -62,18 +54,20 @@
     <body bgcolor="#FFFFFF" onload="init()">     
         <h1 class="slugline">__TITLE__
         </h1>
-        <span class="inlineControls">
-            <a href="bookmark"><span width="44" height="38" alt="Bookmark" id="bookmarkButton" class="__BOOKMARKED__"></span></a>
-            <a href="share"><span width="44" height="38" alt="Share" id="shareButton" class=""></span></a>
-        </span>
         <p class="byline">
             <span class="credit">by <span class="author">__AUTHOR__</span><br /></span>
             <span class="postdate">__DATE__</span>
         </p>
+        <div class="inlineControls">
+            <a id="shareButton">Share</a> 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a id="bookmarkButton" class="__BOOKMARK__">Bookmark</a>
+            
+        </div>
         <div id="content">
             <div id="image"><a id="thumbnailLink" href="javascript:window.newsDetail.clickViewImage()"><img class="thumbnail" src="__THUMBNAIL_URL__" />
                 <br /></a>
-                <a onClick="window.newsDetail.clickViewImage()"><div>View <span id="imageCount">image</span><img class="enlarge" src="button_zoom_in.png" width="30" height="30" alt="zoom"></div>
+                <a onClick="window.newsDetail.clickViewImage()"><div class="byline">View <span id="imageCount">image</span><img class="enlarge" src="button_zoom_in.png" width="30" height="30" alt="zoom"></div>
             </a></div>
             <p class="dek">__DEK__</p><div id="body">__BODY__</div>
         </div>
@@ -110,7 +104,7 @@
 		    });
 		    bookmarkButton.addEventListener("touchend", function() {
 		        removeClass(bookmarkButton, "pressed");
-		        toggleClass(bookmarkButton, "on");
+		        toggleBookmark();
 		    });
 		    var shareButton = document.getElementById("shareButton");
 		    shareButton.addEventListener("touchstart", function() {
@@ -118,6 +112,7 @@
 		    });        
 		    shareButton.addEventListener("touchend", function() {
 		        removeClass(shareButton, "pressed");
+		        window.newsDetail.clickShareButton();
 		    });
 
 		}
@@ -145,5 +140,19 @@
 	        }
 	    }
        
+       function toggleBookmark() {
+       	  var element = document.getElementById("bookmarkButton");
+       	  var newStatus;
+       	  if (hasClass(element, "on")) {
+       	    removeClass(element, "on");
+       	    addClass(element, "off");
+       	  	newStatus = "off";
+       	  } else {
+       	    removeClass(element, "off");
+       	    addClass(element, "on");
+       	    newStatus = "on";
+       	  }
+       	  window.newsDetail.clickBookmarkButton(newStatus);
+       }
 	</script>
 </html>

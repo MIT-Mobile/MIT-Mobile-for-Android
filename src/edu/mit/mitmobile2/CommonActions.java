@@ -133,7 +133,7 @@ public class CommonActions {
 	/*************************************************************************************/
 	static String FB = "com.facebook.katana.ShareLinkActivity";
 	
-	public static void shareCustomContent(final Activity ctx, String subject, String summary, final String url) {
+	public static void shareCustomContent(final Context ctx, String subject, String summary, final String url) {
 		
 		
 		String extraText = summary;

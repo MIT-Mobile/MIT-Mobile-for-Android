@@ -38,7 +38,7 @@ public class NewsBookmarksActivity extends NewModuleActivity {
 		
 		setContentView(R.layout.news_bookmarks_list);
 		
-		initSecondaryTitleBar();
+		//initSecondaryTitleBar();
 		
 		mListView = (ListView) findViewById(R.id.newsBookmarksLV);
 		mEmptyMessageTV = findViewById(R.id.newsBookmarksListEmptyTV);
