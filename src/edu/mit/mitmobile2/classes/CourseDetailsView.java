@@ -89,7 +89,7 @@ public class CourseDetailsView implements SliderInterface {
 	private void updateBookmarkBtn() {
 		int resId = R.drawable.action_button_add_bookmark;
 		if (CoursesDataModel.myCourses.containsKey(mCourseItem.masterId)) {
-			resId = R.drawable.menu_remove_bookmark;
+			resId = R.drawable.action_button_remove_bookmark;
 		} else {
 			resId = R.drawable.action_button_add_bookmark;
 		}
