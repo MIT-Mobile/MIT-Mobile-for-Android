@@ -38,7 +38,7 @@ public class NewsBookmarksActivity extends NewModuleActivity {
 		
 		setContentView(R.layout.news_bookmarks_list);
 		
-		//initSecondaryTitleBar();
+		initSecondaryTitleBar();
 		
 		mListView = (ListView) findViewById(R.id.newsBookmarksLV);
 		mEmptyMessageTV = findViewById(R.id.newsBookmarksListEmptyTV);
@@ -66,6 +66,7 @@ public class NewsBookmarksActivity extends NewModuleActivity {
 		final MITPlainSecondaryTitleBar titleBar = new MITPlainSecondaryTitleBar(this);
 		titleBar.setTitle("Bookmarks");
 		
+		/*
 		if(mBookmarksCursor.getCount() > 0) {
 			final MITMenuItem bookmarkItem = new MITMenuItem(MENU_CLEAR_BOOKMARKS, "", R.drawable.menu_remove_bookmark);
 			titleBar.addMenuItem(bookmarkItem);	
@@ -85,6 +86,7 @@ public class NewsBookmarksActivity extends NewModuleActivity {
 				}
 			});
 		}
+		*/
 		getTitleBar().addSecondaryBar(titleBar);
 	}
 
