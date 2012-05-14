@@ -35,6 +35,7 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 	
 	NewsCursorAdapter mCursorAdapter;
 	private NewsModel mNewsModel;
+	private ListAdapter mNewsAdapter;
 	
 	EditText searchET;
 	
@@ -160,7 +161,7 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 				mLoaderBar.startLoading();
 				mFooterView.setTitle(LOADING_ARTICLES);
 				HighlightEffects.turnOffHighlightingEffects(mFooterView);
-				mNewsModel.fetchCategory(mCategoryId, mLastStoryId, false, uiHandler);
+				mNewsModel.fetchCategory(mCategoryId, NewsDB.retrieveNewsItem(mNewsCursor).story_id, false, uiHandler);
 			}
 		}
 		
@@ -182,25 +183,29 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 		
 		private void updateNewsList() {
 		    // update the UI
-		    mNewsCursor.requery();
+			if (mNewsCursor.isClosed()) {
+				mNewsListView.removeFooterView(mFooterView);
+				mNewsCursor = null;
+				initalizeCursorAdapter();
+			}
+			
+			mNewsCursor.requery();
 	
 		    mNewsCursor.moveToLast();
-		    int newLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
+		    mLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
 		
-		    if(mLastStoryId == null || newLastStoryId != mLastStoryId) {
-			mLastStoryId = newLastStoryId; 
-		    } else {
-			mNewsListView.removeFooterView(mFooterView);
-		    }
-		
-		    if(mNewsCursor.getCount() >= NewsModel.MAX_STORIES_PER_CAREGORY) {
-			mNewsListView.removeFooterView(mFooterView);
+		    if  (mNewsCursor.getCount() >= NewsModel.MAX_STORIES_PER_CAREGORY) {
+		    	mNewsListView.removeFooterView(mFooterView);
 		    }
 		}
 		
 		@Override
 		public void updateView() {
 			// delay makes UI more responsive
+			if (null != mNewsCursor) {
+				updateNewsList();
+			}
+			
 			new Handler().postDelayed(
 				new Runnable() {
 					@Override
@@ -213,7 +218,7 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 		}
 		
 		private void initalizeCursorAdapter() {
-			if(mNewsCursor == null) {
+			if (mNewsCursor == null) {
 				// create a footer row (that allows for asking more articles)
 				Context context = NewsListActivity.this;
 
@@ -221,10 +226,9 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 				mFooterView.setTitle(LOAD_MORE_ARTICLES);
 				mNewsListView.addFooterView(mFooterView);
 				
-				
 				mNewsCursor = mNewsModel.getNewsCursor(mCategoryId);
-				ListAdapter newsAdapter = new NewsCursorAdapter(mContext, mNewsListView, mNewsModel, mNewsCursor); 
-				mNewsListView.setAdapter(newsAdapter);																
+				mNewsAdapter = new NewsCursorAdapter(mContext, mNewsListView, mNewsModel, mNewsCursor); 
+				mNewsListView.setAdapter(mNewsAdapter);																
 			}
 		}
 
