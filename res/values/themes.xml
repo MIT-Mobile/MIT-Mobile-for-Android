@@ -162,7 +162,14 @@
 		<item name="android:textColor">@color/tab_text_color</item>
 		<item name="android:typeface">sans</item>
 	</style>		
-	
+
+	<style name="MenuItemLabel">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#ffffff</item>
+		<item name="android:typeface">sans</item>
+	</style>	
+		
 	<style name="BoldRed">
 	    <item name="android:textColor">#ff990000</item>
 	    <item name="android:textStyle">bold</item>
