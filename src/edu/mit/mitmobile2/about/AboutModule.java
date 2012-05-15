@@ -27,7 +27,7 @@ public class AboutModule extends NewModule {
 
 	@Override
 	public int getMenuIconResourceId() {
-		return R.drawable.menu_about;
+		return R.drawable.menu_info;
 	}
 
 	@Override

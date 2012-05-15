@@ -178,7 +178,7 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) { 
 		menu.add(0, MENU_INFO, Menu.NONE, "Info")
-		  .setIcon(R.drawable.menu_about);
+		  .setIcon(R.drawable.menu_info);
 		
 		menu.add(1, MENU_PREFS, Menu.NONE, "Prefs")
 		  .setIcon(R.drawable.main_repeat);

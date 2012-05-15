@@ -45,7 +45,7 @@ public class FacilitiesModule extends NewModule {
 	public List<MITMenuItem> getPrimaryOptions() {
 		// TODO Auto-generated method stub
 		List<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
-		menuItems.add(new MITMenuItem("menu_info", "", R.drawable.menu_about));
+		menuItems.add(new MITMenuItem("menu_info", "", R.drawable.menu_info));
 		return menuItems;
 	}
 

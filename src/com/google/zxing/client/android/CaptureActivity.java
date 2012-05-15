@@ -305,7 +305,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     super.onPrepareOptionsMenu(menu);
 	menu.clear();
 	menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-		.setIcon(R.drawable.menu_about);
+		.setIcon(R.drawable.menu_info);
     return true;
   }
   
