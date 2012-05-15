@@ -38,6 +38,10 @@ public class SliderView extends HorizontalScrollView {
 	private boolean mHasNextScreen;
 	private boolean mScrollNeedsResetting;
 	
+	// prevent accidentally starting a horizontal
+	// scroll when tapping on bottoms
+	private int mStaticFrictionThreshold;
+	
 	/****************************************************/
 	public SliderView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
@@ -53,6 +57,8 @@ public class SliderView extends HorizontalScrollView {
 		mHeight = AttributesParser.parseDimension(layout_height, mContext);
 		
         setHorizontalFadingEdgeEnabled(false);
+        
+        mStaticFrictionThreshold = AttributesParser.parseDimension("4dip", mContext);
 	}
 
 	@Override
@@ -114,6 +120,12 @@ public class SliderView extends HorizontalScrollView {
 		
 		switch (action) {
 		case MotionEvent.ACTION_MOVE:
+			if (Math.abs(event.getX() - mLastX) < mStaticFrictionThreshold) {
+				// do not process move events
+				// until the finger has moved a minimum distance
+				return false;
+			}
+			
 			if (mTouchState == TOUCH_STATE_REST) {
 				if (mTouchState != TOUCH_STATE_HORIZONTAL_SCROLLING) {
 					if (VERTICAL_FAVOR_FACTOR * Math.abs(mLastY - event.getY()) > Math.abs(mLastX - event.getX())) {
