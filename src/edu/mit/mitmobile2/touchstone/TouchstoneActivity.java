@@ -225,14 +225,10 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 
 	@Override
 	protected boolean isScrollable() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
-	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
-		
-	}
+	protected void onOptionSelected(String optionId) { }
 
 }
