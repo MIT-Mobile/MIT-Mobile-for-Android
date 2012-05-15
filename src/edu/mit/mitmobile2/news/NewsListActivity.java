@@ -74,6 +74,7 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 
 		private int mCategoryId;
 		private Integer mLastStoryId = null;
+		private int mStoriesLoaded = 0;
 		private View mView;
 		private ListView mNewsListView;
 		private LoaderBar mLoaderBar;
@@ -161,7 +162,13 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 				mLoaderBar.startLoading();
 				mFooterView.setTitle(LOADING_ARTICLES);
 				HighlightEffects.turnOffHighlightingEffects(mFooterView);
-				mNewsModel.fetchCategory(mCategoryId, NewsDB.retrieveNewsItem(mNewsCursor).story_id, false, uiHandler);
+				if (mStoriesLoaded != mNewsCursor.getCount()) {
+					if ( mLastStoryId != null) {
+						// more stories must have been loaded outside of this activity
+						mLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
+					}
+				}
+				mNewsModel.fetchCategory(mCategoryId, mLastStoryId, false, uiHandler);
 			}
 		}
 		
@@ -193,6 +200,7 @@ public class NewsListActivity extends CategoryNewModuleActivity {
 	
 		    mNewsCursor.moveToLast();
 		    mLastStoryId = NewsDB.retrieveNewsItem(mNewsCursor).story_id;
+		    mStoriesLoaded = mNewsCursor.getCount();
 		
 		    if  (mNewsCursor.getCount() >= NewsModel.MAX_STORIES_PER_CAREGORY) {
 		    	mNewsListView.removeFooterView(mFooterView);
