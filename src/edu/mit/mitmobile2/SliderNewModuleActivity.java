@@ -12,7 +12,7 @@ import edu.mit.mitmobile2.SliderView.OnSeekListener;
 public abstract class SliderNewModuleActivity extends NewModuleActivity {	
 	protected Context ctx;
 	
-	private MITSliderTitleBar mSliderTitleBar;
+	protected MITSliderTitleBar mSliderTitleBar;
 	private SliderView mSliderView;
 	
 	abstract protected SliderView.Adapter getSliderAdapter();
@@ -50,14 +50,14 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
     			    mSliderTitleBar.setVisibility(View.GONE);
     			}
     			
-    			mSliderTitleBar.setTitle(getCurrentHeaderTitle());
+    			mSliderTitleBar.setAllTitles(getPreviousTitle(), getCurrentHeaderTitle(), getNextTitle());
 			
     			onSliderSeek();
     		    }
     		});
     		
-    		mSliderView.setAdapter(getSliderAdapter());
-
+    		reloadAdapter();
+    		
     		mSliderTitleBar.setPreviousNextListener(new OnPreviousNextListener() {
 			@Override
 			public void onPreviousClicked() {
@@ -70,6 +70,13 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 			}
 		});  
     }
+	
+	protected void reloadAdapter() {
+   		Adapter adapter = getSliderAdapter();
+		if (adapter != null) {
+			mSliderView.setAdapter(getSliderAdapter());
+		}		
+	}
 	
     @Override 
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -147,4 +154,13 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	public void refreshScreens() {
 	    mSliderView.refreshScreens();
 	}
+	
+	protected String getPreviousTitle() {
+		return "PREVIOUS";
+	}
+	
+	protected String getNextTitle() {
+		return "NEXT";
+	}
+	
 }

@@ -14,7 +14,6 @@
   			android:paddingRight="@dimen/standardPadding"
   			android:background="@drawable/highlight_background"
   			android:layout_centerVertical="true"
-  			android:text="PREVIOUS" 
   			style="@style/ToolbarTappable"
   			/>
   		
@@ -37,7 +36,6 @@
   			android:background="@drawable/highlight_background"
   			android:layout_alignParentRight="true"
   			android:layout_centerVertical="true"
-  			android:text="NEXT"
   			style="@style/ToolbarTappable"
   			/>
 </RelativeLayout>

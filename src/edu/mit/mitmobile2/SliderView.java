@@ -43,8 +43,21 @@ public class SliderView extends HorizontalScrollView {
 	private int mStaticFrictionThreshold;
 	
 	/****************************************************/
+	
+	public SliderView(Context context) {
+		super(context);
+		initSliderView(context);
+		mHeight = LayoutParams.MATCH_PARENT;
+	}
+	
 	public SliderView(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
+		initSliderView(context);
+		String layout_height = attributeSet.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
+		mHeight = AttributesParser.parseDimension(layout_height, mContext);
+	}
+
+	private void initSliderView(Context context) {
 		mContext = context;
 		
 		mLinearLayout = new LinearLayout(context);
@@ -53,14 +66,12 @@ public class SliderView extends HorizontalScrollView {
 		
 		setHorizontalScrollBarEnabled(false);
 		mWidth = 0;
-		String layout_height = attributeSet.getAttributeValue("http://schemas.android.com/apk/res/android", "layout_height");
-		mHeight = AttributesParser.parseDimension(layout_height, mContext);
 		
         setHorizontalFadingEdgeEnabled(false);
         
-        mStaticFrictionThreshold = AttributesParser.parseDimension("4dip", mContext);
+        mStaticFrictionThreshold = AttributesParser.parseDimension("4dip", mContext);		
 	}
-
+	
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		int newWidth = right - left;

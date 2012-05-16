@@ -3,7 +3,7 @@
   	android:layout_width="fill_parent"
   	android:layout_height="@dimen/ToolbarHeight"
   	android:orientation="horizontal"
-  	android:background="#666666">
+  	android:background="#383838">
   		
 	<LinearLayout
         	android:id="@+id/secondaryTitleBarAnchorView"

@@ -235,12 +235,23 @@ public class MITTitleBar extends LinearLayout {
 	/*
 	 * These add bar methods should only be called once
 	 */
+	View mSecondaryBar;
 	public void addSecondaryBar(View view) {
+		mSecondaryBar = view;
 		mContainer.addView(view, 1, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
 	}
 	
+	View mSliderBar;
 	public void addSliderBar(View view) {
+		mSliderBar = view;
 		mContainer.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+	}
+	
+	public void removeSliderBar() {
+		if (mSliderBar != null) {
+			mContainer.removeView(mSliderBar);
+			mSliderBar = null;
+		}
 	}
 	
 	public static interface OnMITTitleBarListener extends OnMITMenuItemListener {
