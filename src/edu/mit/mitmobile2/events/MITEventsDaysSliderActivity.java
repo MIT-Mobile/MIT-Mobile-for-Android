@@ -10,13 +10,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 
+import edu.mit.mitmobile2.MITSliderTitleBar;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.SliderNewModuleActivity;
+import edu.mit.mitmobile2.SliderView;
+import edu.mit.mitmobile2.SliderView.Adapter;
+import edu.mit.mitmobile2.events.EventDayListSliderAdapter.OnDayChangeListener;
 import edu.mit.mitmobile2.events.EventsModel.EventType;
 
-public class MITEventsDaysSliderActivity extends SliderActivity {
+public class MITEventsDaysSliderActivity extends SliderNewModuleActivity implements OnDayChangeListener {
 	
 	final static String LIST_TYPE_KEY = "list_type";
 	final static int STANDARD_LIST = 0;
@@ -27,11 +33,6 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	final static String START_TIME_KEY = "start_time";
 	
 	final static String EVENT_TYPE_KEY = "event_type";
-	final static int EVENT_TYPE_EVENTS = 0;
-	final static int EVENT_TYPE_EXHIBITS = 1;
-	final static int DAYS_PAST_FUTURE = 30;
-	
-	private static final long TWENTY_FOUR_HOURS = 24 * 60 *  60 * 1000;
 	
 	private long mCurrentTime = System.currentTimeMillis();
 	private long mStartTime;
@@ -42,6 +43,8 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	
 	private int mCategoryId = -1;
 	private String mCategoryName = null;
+	
+	private SliderView.Adapter mSliderAdapter;
 	
 	public static void launch(Context context, EventType eventType) {	
 		launchEventType(context, eventType.getTypeId(), null);
@@ -76,8 +79,6 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 		
 		final Bundle extras = getIntent().getExtras();
 		
-		setJumpTitle("Go to Date", R.drawable.menu_go_to_date);
-		
 		mStartTime = extras.getLong(START_TIME_KEY, System.currentTimeMillis());
 		if(extras.getInt(LIST_TYPE_KEY) == LIST_BY_CATEGORY) {
 			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
@@ -107,46 +108,17 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	
 	protected void createViews() {
 		if(mCategoryName != null) {
-			useSubtitles(mCategoryName);
+			addSecondaryTitle(mCategoryName);
 		} else if(mEventType != null) {
-			useSubtitles(mEventType.getShortName());
-		}
+			addSecondaryTitle(mEventType.getShortName());
+		}		
 		
-		// calculate today, tommorrow, and yesterday
-		String today = sDateFormat.format(new Date(mCurrentTime));
-		String tomorrow = sDateFormat.format(new Date(mCurrentTime + TWENTY_FOUR_HOURS));
-		String yesterday = sDateFormat.format(new Date(mCurrentTime - TWENTY_FOUR_HOURS));
-		
-		// create views for today, and a fixed number of days in the past and future
-		for(long i = -DAYS_PAST_FUTURE; i <= DAYS_PAST_FUTURE; i++) {
-			long dayTime = mStartTime + i * TWENTY_FOUR_HOURS;
-			
-			EventsListSliderInterface sliderInterface = null;
-			if(mCategoryId < 0) {
-				sliderInterface	= EventsListSliderInterface.daysFactory(this, mEventType, dayTime/1000);
-			} else {
-				sliderInterface = EventsListSliderInterface.categoriesFactory(this, mCategoryId, mEventType, dayTime/1000);
-			} 
-			
-			String dayTitle = sDateFormat.format(new Date(dayTime));
-			if(dayTitle.equals(today)) {
-				dayTitle = "Today";
-			} else if(dayTitle.equals(tomorrow)) {
-				dayTitle = "Tomorrow";
-			} else if(dayTitle.equals(yesterday)) {
-				dayTitle = "Yesterday";
-			}
-			
-			addScreen(sliderInterface, dayTitle, dayTitle);
-		}
-		
-		// set the position to today
-		setPosition(DAYS_PAST_FUTURE);
-		
+		mSliderAdapter = new EventDayListSliderAdapter(this, mEventType, mCurrentTime/1000, mCategoryId, this);
+		reloadAdapter();
 	}
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new EventsModule();
 	}
 
@@ -156,10 +128,38 @@ public class MITEventsDaysSliderActivity extends SliderActivity {
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		prepareJumpOptionsMenu(menu);
-		
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-			.setIcon(R.drawable.menu_search);
+	protected Adapter getSliderAdapter() {
+		return mSliderAdapter;
 	}
+
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private String mPrevious, mCurrent, mNext;
+	@Override
+	public void onDayChangeListener(String previous, String current, String next) {
+		mPrevious = previous;
+		mCurrent = current;
+		mNext = next;
+	}
+	
+	@Override
+	protected String getPreviousTitle() {
+		return mPrevious;
+	}
+
+	@Override
+	protected String getCurrentHeaderTitle() {
+		return mCurrent;
+	}
+	
+	@Override
+	protected String getNextTitle() {
+		return mNext;
+	}
+	
 }

@@ -10,12 +10,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.events.EventsModel.EventType;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 
-public class MITEventsSliderActivity extends SliderActivity {
+public class MITEventsSliderActivity extends SliderListNewModuleActivity {
 	
 	private final static String LIST_MODE_KEY = "list_mode";
 	
@@ -44,9 +46,6 @@ public class MITEventsSliderActivity extends SliderActivity {
 	private List<EventDetailsItem> mEvents = null;
 	private boolean mBriefMode = false; // this is used for events which dont have detail information such as (Academic Calendar)
 	private ArrayList<EventDetailsView> eventViews = new ArrayList<EventDetailsView>();
-	
-	static final int MENU_ADD_TO_CALENDAR = MENU_LAST + 1;
-	static final int MENU_SHARE = MENU_LAST + 2;
 	
 	public static void launchEvents(Context context, String eventId, long unixtime, EventType eventType) {
 		Intent intent = new Intent(context, MITEventsSliderActivity.class);
@@ -159,6 +158,7 @@ public class MITEventsSliderActivity extends SliderActivity {
     	eventViews = null;
     }
     
+    /*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
@@ -174,25 +174,10 @@ public class MITEventsSliderActivity extends SliderActivity {
 		
 		return super.onOptionsItemSelected(item);
 	}
-	
+	*/
+    
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-		
-		EventDetailsView view = eventViews.get(getPosition());
-		
-		if(view.hasLoadingCompleted()) {
-			menu.add(0, MENU_ADD_TO_CALENDAR, Menu.NONE, "Add to Calendar")
-				.setIcon(R.drawable.menu_add_to_calendar);
-			menu.add(0, MENU_SHARE, Menu.NONE, "Share")
-				.setIcon(R.drawable.menu_share);
-		}
-		
-		return true;
-	}
-
-	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new EventsModule();
 	}
 	@Override
@@ -201,8 +186,8 @@ public class MITEventsSliderActivity extends SliderActivity {
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-			.setIcon(R.drawable.menu_search);
-	}	
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
+	}
 }
