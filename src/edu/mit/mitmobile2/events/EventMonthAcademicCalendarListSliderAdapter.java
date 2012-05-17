@@ -45,7 +45,7 @@ public class EventMonthAcademicCalendarListSliderAdapter extends AbstractSliderV
 	@Override
 	public SliderInterface getSliderInterface(ScreenPosition screenPosition) {
 		return EventsListSliderInterface.academicCalendarFactory(
-				mContext, getYear(screenPosition), getMonth(screenPosition));
+				mContext, getYear(screenPosition), getMonth(screenPosition)+1);
 	}
 	
 	@Override
