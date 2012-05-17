@@ -64,6 +64,7 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 			
 			@Override
 			public void handleMessage(Message msg) {
+				mLoader.stopLoading();
 				
 				if(msg.arg1 == MobileWebApi.SUCCESS && !mTypesLoaded) {
 					setContentView(new View(mContext), false);
@@ -181,8 +182,8 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 	}
 	
 	private void loadBrowseCategoriesView() {
-		mLoader.showLoading();
 		setContentView(mLoader, false);
+		mLoader.showLoading();
 		if (EventsModel.categoriesAvailable()) {
 			EventsModel.fetchCategories(this, handleCategories());
 		} else {
@@ -197,6 +198,7 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 			
 			@Override
 			public void handleMessage(Message message) {
+				mLoader.stopLoading();
 				if(message.arg1 == MobileWebApi.SUCCESS) {
 					List<EventCategoryItem> categories = EventsModel.getCategories();
 					loadCategories(categories);
@@ -225,7 +227,6 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 			}
 		);
 		listView.setAdapter(adapter);
-		listView.setBackgroundColor(getResources().getColor(R.color.rowBackground));
 		setContentView(listView, false);
 	}
 	
@@ -240,7 +241,6 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 					List<EventDetailsItem> events = EventsModel.getHolidays();
 					ListAdapter listAdapter = new EventsArrayAdapter(mContext, R.layout.events_row, 0, events, EventDetailsItem.SHORT_DAYS_ONLY);
 					ListView listView = new ListView(mContext);
-					listView.setBackgroundColor(mContext.getResources().getColor(R.color.rowBackground));
 					listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 						@Override
 						public void onItemClick(AdapterView<?> listView, View view, int position, long arg3) {

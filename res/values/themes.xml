@@ -4,6 +4,7 @@
 		<item name="android:windowBackground">@drawable/main_repeat</item>
 		<item name="android:background">@android:color/transparent</item>
 		<item name="android:windowNoTitle">true</item>
+		<item name="android:listViewStyle">@style/Lists</item>
 	</style>
 	
 	<style name="PlainBackground" parent="@style/Main">
@@ -17,6 +18,7 @@
 		
 		<item name="android:divider">@color/dividerColor</item>
 		<item name="android:dividerHeight">@dimen/dividerHeight</item>
+		<item name="android:listSelector">@drawable/highlight_background</item>
 	</style>
 	
 	<style name="PageTitle">
