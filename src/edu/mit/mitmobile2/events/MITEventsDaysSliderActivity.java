@@ -1,21 +1,14 @@
 package edu.mit.mitmobile2.events;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
 
-import edu.mit.mitmobile2.MITSliderTitleBar;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderNewModuleActivity;
 import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.SliderView.Adapter;
@@ -34,10 +27,7 @@ public class MITEventsDaysSliderActivity extends SliderNewModuleActivity impleme
 	
 	final static String EVENT_TYPE_KEY = "event_type";
 	
-	private long mCurrentTime = System.currentTimeMillis();
-	private long mStartTime;
-	
-	private SimpleDateFormat sDateFormat = new SimpleDateFormat("MMMM d");
+	private long mCurrentTime = -1;
 	
 	private EventType mEventType = null;
 	
@@ -79,7 +69,8 @@ public class MITEventsDaysSliderActivity extends SliderNewModuleActivity impleme
 		
 		final Bundle extras = getIntent().getExtras();
 		
-		mStartTime = extras.getLong(START_TIME_KEY, System.currentTimeMillis());
+		mCurrentTime = System.currentTimeMillis();
+
 		if(extras.getInt(LIST_TYPE_KEY) == LIST_BY_CATEGORY) {
 			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
 			mCategoryName = extras.getString(CATEGORY_NAME_KEY);

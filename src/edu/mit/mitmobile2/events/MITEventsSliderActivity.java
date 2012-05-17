@@ -6,13 +6,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.events.EventsModel.EventType;
 import edu.mit.mitmobile2.objs.EventDetailsItem;

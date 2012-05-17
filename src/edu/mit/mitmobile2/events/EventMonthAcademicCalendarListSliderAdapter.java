@@ -9,7 +9,7 @@ import edu.mit.mitmobile2.AbstractSliderViewAdapter;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderView.ScreenPosition;
 
-public class EventMonthAcademicaCalendarListSliderAdapter extends AbstractSliderViewAdapter {
+public class EventMonthAcademicCalendarListSliderAdapter extends AbstractSliderViewAdapter {
 	
 	private int mSelectedMonth;  
 	private int mSelectedYear; 
@@ -19,10 +19,10 @@ public class EventMonthAcademicaCalendarListSliderAdapter extends AbstractSlider
 	OnMonthChangeListener mMonthChangeListener;
 	
 	public interface OnMonthChangeListener {
-		public void onMonthChange(EventMonthAcademicaCalendarListSliderAdapter adapter);
+		public void onMonthChange(EventMonthAcademicCalendarListSliderAdapter adapter);
 	}
 	
-	EventMonthAcademicaCalendarListSliderAdapter(Context context, long currentDayTime,OnMonthChangeListener monthChangeListener) {
+	EventMonthAcademicCalendarListSliderAdapter(Context context, long currentDayTime,OnMonthChangeListener monthChangeListener) {
 		mContext = context;
 		mMonthChangeListener = monthChangeListener;
 		

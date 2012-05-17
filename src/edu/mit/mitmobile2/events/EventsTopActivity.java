@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.events;
 
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -8,35 +7,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPopupSecondaryTitleBar;
 import edu.mit.mitmobile2.MITSliderTitleBar;
 import edu.mit.mitmobile2.MITSliderTitleBar.OnPreviousNextListener;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.SliderView.ScreenPosition;
-import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.events.EventDayListSliderAdapter.OnDayChangeListener;
-import edu.mit.mitmobile2.events.EventMonthAcademicaCalendarListSliderAdapter.OnMonthChangeListener;
+import edu.mit.mitmobile2.events.EventMonthAcademicCalendarListSliderAdapter.OnMonthChangeListener;
 import edu.mit.mitmobile2.events.EventsModel.EventType;
 import edu.mit.mitmobile2.objs.EventCategoryItem;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
@@ -47,7 +37,6 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 	private FullScreenLoader mLoader;
 	private MITPopupSecondaryTitleBar mSecondaryTitleBar;
 	
-	private HashMap<String, EventType> mEventTypes = new HashMap<String, EventType>();
     private long mCurrentTimestamp;
 	private MITSliderTitleBar mSecondarySliderBar;
 	 
@@ -101,111 +90,6 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 		});
 	}
 
-	/*
-	TwoLineActionRow actionRow = new TwoLineActionRow(EventsTopActivity.this);
-	actionRow.setTitle(eventType.getLongName());
-	actionRow.setOnClickListener(new View.OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			if(eventType.hasCategories()) {
-				EventsSimpleCategoryActivity.launch(EventsTopActivity.this, eventType);
-			} else {
-				MITEventsDaysSliderActivity.launch(EventsTopActivity.this, eventType);
-			}
-		}
-	});
-	*/
-	
-	/*
-	DividerView dividerView = new DividerView(EventsTopActivity.this, null);
-	topLevelList.addView(actionRow);
-	topLevelList.addView(dividerView);
-	private TwoLineActionRow mCategories;
-	private TwoLineActionRow mAcademicCalendar;
-	private TwoLineActionRow mHolidaysCalendar;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setContentView(R.layout.events_main);
-		final FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.eventsMainLoader);
-		loader.showLoading();
-		
-		EventsModel.fetchEventTypes(this, new Handler() {
-			boolean mTypesLoaded = false;
-			
-			@Override
-			public void handleMessage(Message msg) {
-				LinearLayout topLevelList = (LinearLayout) findViewById(R.id.eventsTopLevelTypes);
-				View loaderDivider = findViewById(R.id.eventsMainLoaderDivider);
-				
-				if(msg.arg1 == MobileWebApi.SUCCESS && !mTypesLoaded) {
-					loader.setVisibility(View.GONE);
-					loaderDivider.setVisibility(View.GONE);
-					
-					for(final EventType eventType : EventsModel.getEventTypes()) {
-						TwoLineActionRow actionRow = new TwoLineActionRow(EventsTopActivity.this);
-						actionRow.setTitle(eventType.getLongName());
-						actionRow.setOnClickListener(new View.OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								if(eventType.hasCategories()) {
-									EventsSimpleCategoryActivity.launch(EventsTopActivity.this, eventType);
-								} else {
-									MITEventsDaysSliderActivity.launch(EventsTopActivity.this, eventType);
-								}
-							}
-						});
-						
-						DividerView dividerView = new DividerView(EventsTopActivity.this, null);
-						topLevelList.addView(actionRow);
-						topLevelList.addView(dividerView);
-					}	
-					
-					mTypesLoaded = true;
-				} else if(msg.arg1 == MobileWebApi.ERROR) {
-					loader.showError();
-				}
-			}
-			
-		});
-		
-		mCategories = (TwoLineActionRow) findViewById(R.id.eventsBrowseCatogories);
-		mCategories.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(EventsTopActivity.this, EventsCategoryActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		mAcademicCalendar = (TwoLineActionRow) findViewById(R.id.eventsAcademicCalendar);
-		mAcademicCalendar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(EventsTopActivity.this, MITAcademicCalendarSliderActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		mHolidaysCalendar = (TwoLineActionRow) findViewById(R.id.eventsHolidaysCalendar);
-		mHolidaysCalendar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(EventsTopActivity.this, MITHolidaysCalendarActivity.class);
-				startActivity(intent);
-			}
-		});
-		
-		SearchBar searchBar = (SearchBar) findViewById(R.id.eventsSearchBar);
-		searchBar.setSearchHint(getString(R.string.events_search_hint));
-		searchBar.setSystemSearchInvoker(this);
-	}
-   
-    */
 	@Override
 	protected NewModule getNewModule() {
 		return new EventsModule();
@@ -269,10 +153,10 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 	private void loadAcademicCalendar() {
 		getTitleBar().addSliderBar(mSecondarySliderBar);
 		final SliderView sliderView = new SliderView(mContext);
-		sliderView.setAdapter(new EventMonthAcademicaCalendarListSliderAdapter(this, mCurrentTimestamp,
+		sliderView.setAdapter(new EventMonthAcademicCalendarListSliderAdapter(this, mCurrentTimestamp,
 			new OnMonthChangeListener() {
 				@Override
-				public void onMonthChange(EventMonthAcademicaCalendarListSliderAdapter adapter) {
+				public void onMonthChange(EventMonthAcademicCalendarListSliderAdapter adapter) {
 					mSecondarySliderBar.showPreviousNext();
 					mSecondarySliderBar.setAllTitles(
 							adapter.monthTitle(ScreenPosition.Previous, false), 

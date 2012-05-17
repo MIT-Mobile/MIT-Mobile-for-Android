@@ -93,12 +93,6 @@
         <activity android:name=".events.MITEventsDaysSliderActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
         	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
         </activity>
-        <activity android:name=".events.MITAcademicCalendarSliderActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
-        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
-        </activity>
-        <activity android:name=".events.MITHolidaysCalendarActivity" android:theme="@style/PlainBackground">
-        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
-        </activity>
         <activity android:name=".events.EventsCategoryActivity">
         	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
         </activity>
