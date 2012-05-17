@@ -158,24 +158,6 @@ public class MITEventsSliderActivity extends SliderListNewModuleActivity {
     	eventViews = null;
     }
     
-    /*
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		if(item.getItemId() == MENU_ADD_TO_CALENDAR) {
-			EventDetailsView eventView = eventViews.get(getPosition());
-			eventView.addEvent();
-			return true;
-		} else if(item.getItemId() == MENU_SHARE) {
-			EventDetailsView eventView = eventViews.get(getPosition());
-			eventView.shareEvent();
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	*/
-    
 	@Override
 	protected NewModule getNewModule() {
 		return new EventsModule();

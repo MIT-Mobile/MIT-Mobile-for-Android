@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edu.mit.mitmobile2.LockingScrollView
+<ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="fill_parent"
@@ -8,34 +8,68 @@
 	<LinearLayout
   		android:id="@+id/eventDetailsLinearLayout"
   		android:orientation="vertical"
-  		android:background="#FFFFFF"
   		android:layout_width="fill_parent"
-  		android:layout_height="fill_parent">
+  		android:layout_height="wrap_content">
   
   
 		<TextView
 			android:id="@+id/eventDetailsTitleTV"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/verticalPadding"
-			android:paddingBottom="@dimen/verticalPadding"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:paddingRight="@dimen/horizontalPadding"
+			android:paddingTop="@dimen/standardPadding"
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"
 			style="@style/ContentTitle" />
 		
 		<TextView
 			android:id="@+id/eventDetailsDateTV"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/verticalPadding"
-			android:paddingBottom="@dimen/verticalPadding"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:paddingRight="@dimen/horizontalPadding"
+			android:paddingBottom="@dimen/standardPadding"
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"
 			style="@style/Deck" />
-		
+					
+		<LinearLayout
+		    android:orientation="vertical"
+		    android:layout_width="fill_parent"
+		    android:layout_height="@dimen/ToolbarHeight"
+		    >
+ 			<edu.mit.mitmobile2.DividerView
+		    	android:layout_marginLeft="@dimen/standardPadding"
+		    	android:layout_marginRight="@dimen/standardPadding"
+				android:layout_width="fill_parent"
+				android:layout_height="@dimen/dividerHeight" />		
+
+ 			<LinearLayout
+		    	android:orientation="horizontal"
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="wrap_content"
+		    	>
+
+ 				<edu.mit.mitmobile2.ActionButton
+ 				    android:id="@+id/eventDetailsShareButton"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:src="@drawable/action_button_share"
+					android:text="Share"
+					/>	
+						    				
+ 				<edu.mit.mitmobile2.ActionButton
+ 				    android:id="@+id/eventDetailsAddToCalendarButton"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" 
+					android:src="@drawable/action_button_share"
+					android:text="Add to Calendar"
+					/>	
+					
+			</LinearLayout>    
+		</LinearLayout>
 		<edu.mit.mitmobile2.DividerView
 			android:layout_width="fill_parent"
 			android:layout_height="@dimen/dividerHeight" />		
+			
+		
 					
 	</LinearLayout>
-</edu.mit.mitmobile2.LockingScrollView>
+</ScrollView>
