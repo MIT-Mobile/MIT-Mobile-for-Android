@@ -1,12 +1,9 @@
 package edu.mit.mitmobile2.events;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
@@ -40,10 +37,11 @@ public class EventsModule extends NewModule {
 
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(
+			new MITMenuItem("search", "Search", R.drawable.menu_search)
+		);
 	}
-
+	
 	@Override
 	public List<MITMenuItem> getSecondaryOptions() {
 		// TODO Auto-generated method stub
@@ -52,7 +50,10 @@ public class EventsModule extends NewModule {
 
 	@Override
 	public boolean onItemSelected(Activity activity, String id) {
-		// TODO Auto-generated method stub
+		if (id.equals("search")) {
+		    activity.onSearchRequested();
+		    return true;
+		}
 		return false;
 	}
 }
