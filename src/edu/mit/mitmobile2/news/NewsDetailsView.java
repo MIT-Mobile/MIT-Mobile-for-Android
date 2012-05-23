@@ -173,6 +173,8 @@ public class NewsDetailsView extends WebView {
             mCustomViewCallback = callback;
             if (view instanceof FrameLayout){
                 FrameLayout frame = (FrameLayout) view;
+                
+                // finding the VideoView is only required before honeycomb
                 if (frame.getFocusedChild() instanceof VideoView){
                     mVideoView = (VideoView) frame.getFocusedChild();
                     mVideoView.setOnCompletionListener(this);
