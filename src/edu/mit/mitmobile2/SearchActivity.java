@@ -131,7 +131,10 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 				if(currentSearchResults == mSearchResults) {
 					mLoadMore.setEnabled(true);
 					if (msg.arg1 == MobileWebApi.SUCCESS) {
+						final SearchResults<ResultItem> tempSearchResults = (SearchResults<ResultItem>) msg.obj;
+						mSearchResults = tempSearchResults;
 						mLoadMore.setTitle(LOAD_MORE);
+						
 						showSummaryView();
 						if(!mSearchResults.isPartialResult()) {
 							mSearchListView.removeFooterView(mLoadMore);
@@ -222,13 +225,9 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 			summaryText = "No matches for \"" + mSearchTerm + "\"";
 		} else if(resultsCount == 1) {
 			summaryText = "1 result";
-		} else if(!mSearchResults.isPartialResult() || supportsMoreResult()) {
+		} else if(!mSearchResults.isPartialResult() || !supportsMoreResult()) {
 			String totalCount;
-			if (mSearchResults.totalResultsCount() != null) {
-				totalCount = "" + mSearchResults.totalResultsCount();
-			} else {
-				totalCount = "" + mSearchResults.getResultsList().size();
-			}
+			totalCount = "" + mSearchResults.getResultsList().size();
 			summaryText = totalCount + " results";
 		} else {
 			if(mSearchResults.totalResultsCount() != null) {

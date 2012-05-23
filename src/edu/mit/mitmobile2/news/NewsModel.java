@@ -463,18 +463,20 @@ public class NewsModel {
 		return message;
 	}
 	
-	public void executeSearch(final String searchTerm, final Handler uiHandler) {
+	public void executeSearch(final String searchTerm, final Handler uiHandler, int start) {
 		// check cache
 		if(searchCache.get(searchTerm) != null) {
 			SearchResults<NewsItem> searchResults = searchCache.get(searchTerm);
-			MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
-			return;
+			if (searchResults.getResultsList().size() > start) {
+				MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
+				return;
+			}
 		}
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("searchword", searchTerm);
 		params.put("ordering", "newest");
-		params.put("start", "0");
+		params.put("start", String.valueOf(start));
 		params.put("limit", "50");
 		
 		String query = MobileWebApi.query(params);
@@ -491,6 +493,11 @@ public class NewsModel {
 				public void onResponse(InputStream stream) {
 					SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
 					if (results != null) {
+						SearchResults<NewsItem> lastResults = searchCache.get(searchTerm);
+						if (null != lastResults) {
+							lastResults.addMoreResults(results.getResultsList());
+							results = lastResults;
+						}
 						searchCache.put(searchTerm, results);
 						MobileWebApi.sendSuccessMessage(uiHandler, results);
 					} else {
