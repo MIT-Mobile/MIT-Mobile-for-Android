@@ -18,23 +18,19 @@
 		android:paddingRight="@dimen/standardPadding"
 		android:paddingLeft="@dimen/standardPadding" >
 		
-		<TextView
+		<edu.mit.mitmobile2.TruncatingTextView
 			android:id="@+id/newsRowTV"
 			android:paddingTop="@dimen/standardPadding"
+			style="@style/ListItemPrimary"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:maxLines="4"
-			android:ellipsize="end"
-			style="@style/ListItemPrimary" />
+			android:layout_height="wrap_content"/>
 			
-		<TextView
+		<edu.mit.mitmobile2.TruncatingTextView
 			android:id="@+id/newsRowDeckTV"
+			style="@style/ListItemSecondary"
 			android:paddingBottom="@dimen/standardPadding"
 			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:maxLines="2"
-			android:ellipsize="end"
-			style="@style/ListItemSecondary" />
+			android:layout_height="fill_parent"/>
 			
 	</LinearLayout>
 
