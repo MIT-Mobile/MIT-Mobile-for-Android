@@ -14,6 +14,7 @@ import edu.mit.mitmobile2.objs.SearchResults;
 public class NewsSearchActivity extends SearchActivity<NewsItem> {
 
 	protected NewsModel mNewsModel;
+	private String mSearchTerm;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,8 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 
 	@Override
 	protected void initiateSearch(String searchTerm, Handler uiHandler) {
-		mNewsModel.executeSearch(searchTerm, uiHandler);
+		mSearchTerm = searchTerm;
+		mNewsModel.executeSearch(searchTerm, uiHandler, 0);
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 
     @Override
     protected boolean supportsMoreResult() {
-        return false;
+        return true;
     }
 
 	@Override
@@ -76,6 +78,12 @@ public class NewsSearchActivity extends SearchActivity<NewsItem> {
 	@Override
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	protected void continueSearch(SearchResults<NewsItem> previousResults,
+			Handler uiHandler) {
+		// TODO Auto-generated method stub
+		mNewsModel.executeSearch(mSearchTerm, uiHandler, previousResults.getResultsList().size());
 	}
 }
