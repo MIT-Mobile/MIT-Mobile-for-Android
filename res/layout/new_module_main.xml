@@ -5,6 +5,14 @@
     android:orientation="vertical" 
     android:id="@+id/newModuleMain">
 	
+    <FrameLayout
+        android:id="@+id/newModuleMainFullScreenFrameLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />  
+        
     <edu.mit.mitmobile2.MITTitleBar
         android:id="@+id/mitTitleBar"
         android:layout_width="fill_parent"

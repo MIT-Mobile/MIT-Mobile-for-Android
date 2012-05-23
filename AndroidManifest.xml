@@ -3,6 +3,7 @@
       package="edu.mit.mitmobile2"
       android:versionCode="10"
       android:installLocation="auto"
+      android:hardwareAccelerated="true"
       android:versionName="2.3.1">
     <application android:label="@string/app_name" 
     			 android:name=".Global"

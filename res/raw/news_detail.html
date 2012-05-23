@@ -47,6 +47,8 @@
             #image a div { margin-top: -4px; }
             #image a+a div { margin-top: 2px; }
             #body {font-size: 17px; line-height: 20px;color: #4b4b4b; margin-top: 14px;}
+            
+            #body img {max-width: 100%;}
         </style>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <title>__TITLE__</title>
@@ -114,9 +116,41 @@
 		        removeClass(shareButton, "pressed");
 		        window.newsDetail.clickShareButton();
 		    });
-
+		    
+            resizeVideos();
 		}
-    
+		
+		function resizeVideos(fullWidth) {
+		    var content = document.getElementById("content");
+		    if (!content) { return; }
+		    
+		    var fullWidth = content.offsetWidth;
+		    var iframes = document.getElementsByTagName("IFRAME");
+		    for (var i = 0; i < iframes.length; i++) {
+		        var iframe = iframes[i];
+		        
+                // remember original width and height
+                if (typeof iframe.originalWidth == 'undefined') {
+                    iframe.originalWidth = iframe.width;
+                }
+                if (typeof iframe.originalHeight == 'undefined') {
+                    iframe.originalHeight = iframe.height;
+                }
+                
+                // safety check so we don't divide by zero on bad data
+                if (!iframe.originalWidth || !iframe.originalHeight) { continue; }
+                
+                if (fullWidth < iframe.originalWidth) {
+                    var ratio = iframe.originalHeight / iframe.originalWidth;
+                    
+                    // shrink videos to 100% if they are wider than offsetHeight
+                    iframe.width = fullWidth.toString();
+                    iframe.height = Math.floor(fullWidth * ratio).toString();
+                }
+                alert(fullWidth);
+		    }
+		}
+		    
 	    function hasClass(ele,cls) {
 	        return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
 	    }

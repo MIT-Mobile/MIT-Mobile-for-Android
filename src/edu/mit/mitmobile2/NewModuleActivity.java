@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
@@ -47,8 +48,8 @@ public abstract class NewModuleActivity extends Activity {
 		app = (Global)getApplication();
 		
 		mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
 	}
-
 	
 	/**
 	 * Use it to add TitleBar items by use {@link NewModuleActivity#addPrimaryMenuItem(List)
@@ -142,12 +143,63 @@ public abstract class NewModuleActivity extends Activity {
 		mTitleBar.setModuleButtonEnabled(!isModuleHomeActivity());
 	}
 	
+	public interface OnBackPressedListener {
+		public boolean onBackPressed();
+	}
+	
+	OnBackPressedListener mBackPressedListener;
+	
+	public void setOnBackPressedListener(OnBackPressedListener backPressedListener) {
+		mBackPressedListener = backPressedListener;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mBackPressedListener != null) {
+			if (mBackPressedListener.onBackPressed()) {
+				return;
+			}
+		}
+		super.onBackPressed();
+	}
+
+	public interface OnPausedListener {
+		public void onPaused();
+	}
+	
+	OnPausedListener mPausedListener;
+	
+	public void setOnPausedListener(OnPausedListener pausedListener) {
+		mPausedListener = pausedListener;
+	}
+	
+	@Override
+	protected void onPause() {
+		if (mPausedListener != null) {
+			mPausedListener.onPaused();
+		}
+		super.onPause();
+	}
+	
 	@Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
         		mTitleBar.showOverflowMenu();
         		return true;
-        }
+        } 
         return super.onKeyUp(keyCode, event);
     }
+	
+	public void showFullScreen(View view) {
+		FrameLayout fullScreenFrameLayout = (FrameLayout) findViewById(R.id.newModuleMainFullScreenFrameLayout);
+		fullScreenFrameLayout.removeAllViews();
+		fullScreenFrameLayout.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		fullScreenFrameLayout.setVisibility(View.VISIBLE);
+	}
+	
+	public void hideFullScreen() {
+		FrameLayout fullScreenFrameLayout = (FrameLayout) findViewById(R.id.newModuleMainFullScreenFrameLayout);
+		fullScreenFrameLayout.removeAllViews();
+		fullScreenFrameLayout.setVisibility(View.GONE);
+	}
 }
