@@ -73,10 +73,15 @@ public class TruncatingTextView extends TextView {
 				if (charsThatFit > 0) {
 					String text = getText().toString().substring(0, charsThatFit).trim()  + "\u2026";
 					mStaticLayout = new StaticLayout(text, mTextPaint, mWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 1.0f, false);
+				} else {
+					mStaticLayout = null;
 				}
 			}
+		}
+		
+		if (mStaticLayout != null) {
 			mHeight += mStaticLayout.getHeight();
-		} 
+		}
 		setMeasuredDimension(mWidth, mHeight);
 	}
 
