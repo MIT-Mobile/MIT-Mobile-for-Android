@@ -18,12 +18,12 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.LoadingUIHelper;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -39,7 +39,9 @@ public class EmergencyActivity extends NewModuleActivity {
 
 	private Context mContext;
 	private WebView mEmergencyMsgTV = null;
-
+	private ImageView mEmergencyMsgLoader;
+	private ImageView mEmergencyListLoader;
+	
 	TextView emergencyContactsTV;
 
 	SharedPreferences pref;
@@ -51,17 +53,15 @@ public class EmergencyActivity extends NewModuleActivity {
 	/****************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
-		
 		mContext = this;
 		
 		setContentView(R.layout.emergency);
 		
-		pref = this.getSharedPreferences(Global.PREFS,MODE_PRIVATE);  // FIXME
+		mEmergencyMsgLoader = (ImageView) findViewById(R.id.emergencyMsgLoader);
+		mEmergencyListLoader = (ImageView) findViewById(R.id.emergencyListLoader);
 		
-		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.emergencyListLoader);
-		loader.showLoading();
+		pref = this.getSharedPreferences(Global.PREFS,MODE_PRIVATE);  // FIXME
 		getData();
 		
 	}
@@ -69,7 +69,27 @@ public class EmergencyActivity extends NewModuleActivity {
 	private static String noticeTemplate = "<html><body style=\"padding: 7px;\">%s\n<p>Posted %s</p></body></html>";
 	/****************************************************/
 	private void updateEmergencyText() {
+		emergencyItem = EmergencyParser.getStatus();
+
+		if (emergencyItem==null) {
+			emergencyItem = new EmergencyItem();
+			Toast.makeText(mContext, "Sorry, showing cached info", Toast.LENGTH_LONG).show();
+			emergencyItem.text = pref.getString(PREF_KEY_EMERGENCY_TEXT, "");
+		} else {
+			// Did version change?
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putInt(Global.PREF_KEY_EMERGENCY_VERSION, Integer.valueOf(emergencyItem.version));
+			editor.putString(PREF_KEY_EMERGENCY_TEXT, emergencyItem.text);
+			editor.commit();
+		}
+		
+		setTitle(emergencyItem.title);
 		String html;
+		
+		mEmergencyMsgTV = (WebView) findViewById(R.id.emergencyMsgTV);
+		mEmergencyMsgTV.setVisibility(View.VISIBLE);
+		mEmergencyMsgLoader.setVisibility(View.GONE);
+		
 		if (emergencyItem.unixtime > 0) {
 			Date postDate = new Date(emergencyItem.unixtime * 1000);
 			SimpleDateFormat format = new SimpleDateFormat("EEE d, MMM yyyy");
@@ -85,42 +105,16 @@ public class EmergencyActivity extends NewModuleActivity {
 	}
 	
 	private void updateView() {
-		
-		emergencyItem = EmergencyParser.getStatus();
-
-		if (emergencyItem==null) {
-			emergencyItem = new EmergencyItem();
-			Toast.makeText(mContext, "Sorry, showing cached info", Toast.LENGTH_LONG).show();
-			emergencyItem.text = pref.getString(PREF_KEY_EMERGENCY_TEXT, "");
-		} else {
-			// Did version change?
-			SharedPreferences.Editor editor = pref.edit();
-			editor.putInt(Global.PREF_KEY_EMERGENCY_VERSION, Integer.valueOf(emergencyItem.version));
-			editor.putString(PREF_KEY_EMERGENCY_TEXT, emergencyItem.text);
-			editor.commit();
-		}
-		
-		
-		setTitle(emergencyItem.title);
-		
-		FullScreenLoader loadingView = (FullScreenLoader) findViewById(R.id.emergencyListLoader);		
-		loadingView.setVisibility(View.GONE);
-		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		mListView = (ListView) findViewById(R.id.emergencyListView);
 		mListView.setVisibility(View.VISIBLE);
-		LinearLayout listHeader = (LinearLayout) inflater.inflate(R.layout.emergency_header, null);
+		mEmergencyListLoader.setVisibility(View.GONE);
 		//ImageView backgroundView = (ImageView) listHeader.findViewById(R.id.graySectionHeaderBackground);
 		//int height = backgroundView.getDrawable().getIntrinsicHeight();
 		//FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, height);
 		//FrameLayout wrapper = (FrameLayout) listHeader.findViewById(R.id.graySectionHeaderWrapper);
 		//wrapper.setLayoutParams(params);
-		mListView.addHeaderView(listHeader);
-		mEmergencyMsgTV = (WebView) findViewById(R.id.emergencyMsgTV);
-		
-		updateEmergencyText();
-		
 		final EmergencyDB db = EmergencyDB.getInstance(this);
 		
 		EmergencyContactsAdapter adapter = null;
@@ -160,7 +154,6 @@ public class EmergencyActivity extends NewModuleActivity {
 		final Handler uiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
 				updateView();
 			}
 		};
@@ -169,13 +162,17 @@ public class EmergencyActivity extends NewModuleActivity {
 		final Handler nextHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				EmergencyParser.fetchContacts(mContext, uiHandler);
+				updateEmergencyText();
 			}
 		};
 		
-		EmergencyParser.fetchStatus(this, nextHandler);
+		mEmergencyMsgLoader.setVisibility(View.VISIBLE);
+		mEmergencyListLoader.setVisibility(View.VISIBLE);
+		LoadingUIHelper.startLoadingImage(new Handler(), mEmergencyMsgLoader);
+		LoadingUIHelper.startLoadingImage(new Handler(), mEmergencyListLoader);
 		
+		EmergencyParser.fetchStatus(this, nextHandler);
+		EmergencyParser.fetchContacts(mContext, uiHandler);
 	}
 	
 	void refresh() {

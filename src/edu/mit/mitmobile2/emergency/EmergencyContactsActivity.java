@@ -24,9 +24,9 @@ public class EmergencyContactsActivity extends NewModuleActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.emergency);
+		setContentView(R.layout.emergency_contact);
 		setTitle("Emergeny Contacts");
-		mLoadingView = (FullScreenLoader) findViewById(R.id.emergencyListLoader);
+		mLoadingView = (FullScreenLoader) findViewById(R.id.emergencyContactListLoader);
 		
 		Handler uiHandler = new Handler() {
 			@Override
@@ -42,7 +42,7 @@ public class EmergencyContactsActivity extends NewModuleActivity {
 	private void updateView() {	
 		mLoadingView.setVisibility(View.GONE);
 		
-		ListView listView = (ListView) findViewById(R.id.emergencyListView);
+		ListView listView = (ListView) findViewById(R.id.emergencyContactListView);
 		listView.setVisibility(View.VISIBLE);
 		final EmergencyDB db = EmergencyDB.getInstance(this);
 		EmergencyContactsAdapter adapter = new EmergencyContactsAdapter(this, db.getContactsCursor());
