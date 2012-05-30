@@ -11,7 +11,7 @@
                  android:debuggable="true" 
                  android:theme="@style/Main">
     
-        <activity android:name=".MITNewsWidgetActivity"
+        <activity android:name=".HomeScreenActivity"
         		  android:screenOrientation="portrait"
        			  android:alwaysRetainTaskState="true"
                   android:label="@string/app_name">

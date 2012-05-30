@@ -1,6 +1,6 @@
 package edu.mit.mitmobile2.about;
 
-import edu.mit.mitmobile2.MITNewsWidgetActivity;
+import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -36,7 +36,7 @@ public class AboutMITActivity extends NewModuleActivity {
 		
 		switch (item.getItemId()) {
 		case MENU_HOME:
-			i = new Intent(this,MITNewsWidgetActivity.class);  
+			i = new Intent(this,HomeScreenActivity.class);  
 			startActivity(i);
 			finish();
 			break;

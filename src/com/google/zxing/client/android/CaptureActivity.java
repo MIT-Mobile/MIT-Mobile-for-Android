@@ -16,8 +16,8 @@
 
 package com.google.zxing.client.android;
 
+import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.MITNewsWidgetActivity;
 import edu.mit.mitmobile2.MITTitleBar;
 import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
 import edu.mit.mitmobile2.NewModule;
@@ -44,6 +44,7 @@ import com.google.zxing.client.android.result.ResultHandlerFactory;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -61,11 +62,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -662,7 +661,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	  
 	  @Override
 	  public void onHomeSelected() {
-	      MITNewsWidgetActivity.goHome(ctx);
+	      HomeScreenActivity.goHome(ctx);
 	  }
 
 	  @Override

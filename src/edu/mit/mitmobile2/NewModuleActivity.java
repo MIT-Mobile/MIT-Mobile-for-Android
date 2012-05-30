@@ -129,7 +129,7 @@ public abstract class NewModuleActivity extends Activity {
 
 			@Override
 			public void onHomeSelected() {
-				MITNewsWidgetActivity.goHome(NewModuleActivity.this);				
+				HomeScreenActivity.goHome(NewModuleActivity.this);				
 			}
 
 			@Override
