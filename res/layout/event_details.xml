@@ -59,7 +59,7 @@
  				    android:id="@+id/eventDetailsAddToCalendarButton"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" 
-					android:src="@drawable/action_button_share"
+					android:src="@drawable/action_button_add_to_calendar"
 					android:text="Add to Calendar"
 					/>	
 					
