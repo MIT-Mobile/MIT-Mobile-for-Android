@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -22,13 +23,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
+import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.about.AboutActivity;
@@ -62,6 +64,12 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 	public static final String TAG = "MITNewsWidgetActivity";
 	private Global app;
 	private SharedPreferences prefs;
+	
+	private SharedPreferences mHomePreferences;
+	private final static String PHOTO_URL_KEY="photo_url";
+	private final static String ACTION_URL_KEY="action_url";
+	private final static String HEIGHT_KEY="height_url";
+	private final static String WIDTH_KEY="width_url";
 
 	
 	/****************************************************/
@@ -84,6 +92,15 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		createView();
 		
 		NotificationsHelper.setupAlarmData(getApplicationContext());
+		
+		mHomePreferences = this.getSharedPreferences("home_prefs", MODE_PRIVATE);
+		
+	}
+	
+	public void onWindowFocusChanged (boolean hasFocus) {
+		if (hasFocus && mBanner == null) {
+			getBannerData();
+		}
 	}
 	
 	/****************************************************/
@@ -137,24 +154,49 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		mSpringBoard.setAdapter(springBoardAdapter);	
 		
 		mBannerView = (RemoteImageView) findViewById(R.id.homeSpringBoardBanner);
-		
-		getBannerData();
 	}
 	
 	private Handler uiHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			if (msg.arg1 == MobileWebApi.SUCCESS) {
-				if (mBanner != null) {
-					float width = mSpringBoard.getWidth();
-					int height = (int) (((float)mBanner.height) / ((float)mBanner.width) * width);
-					mBannerView.setURL(mBanner.photoUrl);
-					mBannerView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
-					mBannerView.setVisibility(View.VISIBLE);
+				updateBanner();
+			} else {
+				String photoUrl = mHomePreferences.getString(PHOTO_URL_KEY, "");
+				if (photoUrl.length() > 0) {
+					Banner banner = new Banner();
+					banner.photoUrl = photoUrl;
+					banner.height = mHomePreferences.getInt(HEIGHT_KEY, 0);
+					banner.width = mHomePreferences.getInt(WIDTH_KEY, 0);
+					String actionUrl = mHomePreferences.getString(ACTION_URL_KEY, "");
+					if (actionUrl.length() > 0) {
+						banner.actionUrl = actionUrl;
+					}
+					mBanner = banner;
+					updateBanner();
 				}
 			}
 		}
 	};
+	
+	private void updateBanner() {
+		if (mBanner != null) {
+			float width = mSpringBoard.getWidth();
+			int height = (int) (((float)mBanner.height) / ((float)mBanner.width) * width);
+			mBannerView.setURL(mBanner.photoUrl);
+			mBannerView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
+			
+			if (mBanner.actionUrl != null) {
+				mBannerView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						CommonActions.doAction(HomeScreenActivity.this, mBanner.actionUrl);								
+					}
+				});
+			}
+			mBannerView.setVisibility(View.VISIBLE);
+		}		
+	}
 	
 	private void getBannerData() {
 		MobileWebApi webApi = new MobileWebApi(false, false, "Banner", this, uiHandler);
@@ -163,7 +205,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		params.put("command", "banner");
 		
 		webApi.requestJSONObject(params, 
-			new JSONObjectResponseListener(new IgnoreErrorListener(), null) {
+			new JSONObjectResponseListener(new DefaultErrorListener(uiHandler), null) {
 			
 				@Override
 				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
@@ -172,9 +214,20 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 						banner.photoUrl = object.getString("photo-url");
 						banner.height = object.getJSONObject("dimensions").getInt("height");
 						banner.width = object.getJSONObject("dimensions").getInt("width");
-						banner.url = object.getString("url");
-						banner.id = object.getString("id");
+						banner.actionUrl = object.getString("url");
 						mBanner = banner;
+
+						// save banner data in persistently
+						Editor editor = mHomePreferences.edit();
+						editor.putString(PHOTO_URL_KEY, banner.photoUrl);
+						editor.putInt(HEIGHT_KEY, banner.height);
+						editor.putInt(WIDTH_KEY, banner.width);
+						editor.putString(ACTION_URL_KEY, banner.actionUrl);
+						editor.commit();
+					} else {
+						Editor editor = mHomePreferences.edit();
+						editor.putString(PHOTO_URL_KEY, null);
+						editor.commit();
 					}
 					MobileWebApi.sendSuccessMessage(uiHandler);
 				}		
@@ -185,10 +238,8 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 	private static class Banner {
 		int height;
 		int width;
-		String id;
-		Date lastModified;
 		String photoUrl;
-		String url;
+		String actionUrl;
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu){
