@@ -5,11 +5,6 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:background="@drawable/main_repeat" >         	
-  
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="Settings"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
 
     <!-- MIT Touchstone -->
 	<edu.mit.mitmobile2.SectionHeader
