@@ -22,7 +22,8 @@
 		        android:scaleType="fitXY"
 		        android:padding="0dip"
 		        android:layout_gravity="center_vertical|center_horizontal"
-		        android:src="@drawable/title_bar_logo"/>
+		        android:src="@drawable/title_bar_logo"
+		        android:background="@drawable/title_bar_logo_background"/>
 		    
 		    <edu.mit.mitmobile2.ModuleHomeTextView 
 		    	android:id="@+id/titleModuleHomeBtn"
