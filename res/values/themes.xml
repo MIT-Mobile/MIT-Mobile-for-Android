@@ -204,5 +204,6 @@
 	
 	<dimen name="moduleHomeUnderlineWidth">2dip</dimen>
     <color name="moduleHomeUnderlineColor">#993333</color>
+    <color name="homeButtonBackgroundColor">#993333</color>
 	
 </resources>
