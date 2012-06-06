@@ -5,6 +5,8 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
 		
+    	<include layout="@layout/home_title_bar"/>
+    
 		<GridView
 			android:paddingTop="15dip"
     		android:id="@+id/homeSpringBoardGV"
