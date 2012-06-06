@@ -32,8 +32,8 @@
 	    	android:layout_width="0dip"
 	    	android:layout_height="wrap_content"
 	    	android:layout_weight="1"
-	    	android:paddingTop="@dimen/standardPadding"
-	    	android:paddingBottom="@dimen/standardPadding"
+	    	android:paddingTop="@dimen/halfStandardPadding"
+	    	android:paddingBottom="@dimen/halfStandardPadding"
 	    	style="@style/ListItemPrimary"/>
 	    
 	    <ImageView
