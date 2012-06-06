@@ -57,7 +57,7 @@ public class NewsModel {
 	
 	
 	static final String[] category_titles = {
-		"Top News", "Campus", "Engineering", "Science", "Management", "Architecture", "Humanties"
+		"Top News", "Campus", "Engineering", "Science", "Management", "Architecture", "Humanities"
 	};
 	
 	final static int MAX_STORIES_PER_CAREGORY = 200;
