@@ -180,4 +180,11 @@ public class MITPopupMenu {
 		});
         return container;
     }
+    
+    public void notifyScreenRotated() {
+    	if (mWindow.isShowing()) {
+    		MITPopupMenu.this.mWindow.dismiss();
+    		show();
+    	}
+    }
 }

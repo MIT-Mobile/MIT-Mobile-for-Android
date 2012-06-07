@@ -254,6 +254,12 @@ public class MITTitleBar extends LinearLayout {
 		}
 	}
 	
+	public void notifiyScreenChanged() {
+		if (null != mPopoverMenu) {
+			mPopoverMenu.notifyScreenRotated();
+		}
+	}
+	
 	public static interface OnMITTitleBarListener extends OnMITMenuItemListener {
 		public void onHomeSelected();
 		public void onModuleHomeSelected();
