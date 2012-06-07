@@ -26,7 +26,7 @@ public class MITTitleBar extends LinearLayout {
 	private OnMITTitleBarListener mClickListener;
 	private MITPopupMenu mPopoverMenu;
 	
-	private int primaryItemsShowing = 0;
+	private int mPrimaryItemsShowing = 0;
 	private int mPrimaryItemWidth;
 	private int mOverflowButtonWidth;
 	
@@ -97,6 +97,15 @@ public class MITTitleBar extends LinearLayout {
 	 */
 	public void addSecondaryItem(MITMenuItem item) {
 		mSecondaryItems.add(item);
+	}
+
+	/**
+	 * clear menu options
+	 */
+	public void clearMenuItems() {
+		mPrimaryItems.clear();
+		mSecondaryItems.clear();
+		mPrimaryItemsShowing = 0;
 	}
 	
 	/**
@@ -180,13 +189,8 @@ public class MITTitleBar extends LinearLayout {
 		}
 		
 		if (availableWidth > mPrimaryItems.size() * mPrimaryItemWidth) {
-			if (primaryItemsShowing != mPrimaryItems.size()) {
-				requestLayout();
-				primaryItemsShowing = mPrimaryItems.size();
-			} else {
-				return;
-			}
-		    
+			mPrimaryItemsShowing = mPrimaryItems.size();
+			
 			clearPrimaryItemViews();
 			mOverflowBtn.setVisibility(View.GONE);
 			for (MITMenuItem item : mPrimaryItems) {
@@ -200,25 +204,20 @@ public class MITTitleBar extends LinearLayout {
 			}
 			
 			int itemsThatFit = availableWidth / mPrimaryItemWidth;
-			if (itemsThatFit != primaryItemsShowing) {
-				requestLayout();
-				primaryItemsShowing = itemsThatFit;
-			} else {
-				return;
-			}
+			mPrimaryItemsShowing = itemsThatFit;
 			
 			clearPrimaryItemViews();
 			
-			for (int i = 0; i < primaryItemsShowing; i++) {
+			for (int i = 0; i < mPrimaryItemsShowing; i++) {
 				addPrimaryItemToView(mPrimaryItems.get(i));
 			}
 		}
 		
-		if (primaryItemsShowing < mPrimaryItems.size() || !mSecondaryItems.isEmpty()) {
+		if (mPrimaryItemsShowing < mPrimaryItems.size() || !mSecondaryItems.isEmpty()) {
 			mOverflowBtn.setVisibility(View.VISIBLE);
 			mPopoverMenu.clearMenuItems();
-			if (primaryItemsShowing < mPrimaryItems.size()) {
-				for (int j = primaryItemsShowing; j < mPrimaryItems.size(); j++) {
+			if (mPrimaryItemsShowing < mPrimaryItems.size()) {
+				for (int j = mPrimaryItemsShowing; j < mPrimaryItems.size(); j++) {
 					mPopoverMenu.addMenuItem(mPrimaryItems.get(j));
 				}
 			}
@@ -229,6 +228,8 @@ public class MITTitleBar extends LinearLayout {
 		} else {
 			mOverflowBtn.setVisibility(View.GONE);
 		}
+		
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 	
 	
