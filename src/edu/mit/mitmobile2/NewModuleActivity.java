@@ -56,7 +56,8 @@ public abstract class NewModuleActivity extends Activity {
 	 * Use it to add TitleBar items by use {@link NewModuleActivity#addPrimaryMenuItem(List)
 	 * , NewModuleActivity#addSecondaryMenuItem(List)}}
 	 */
-	protected void initTitleBar() {
+	protected void refreshTitleBarOptions() {
+		mTitleBar.clearMenuItems();
 		List<MITMenuItem> primaryItems = getPrimaryMenuItems();
 		if (primaryItems != null) {
 			for (MITMenuItem item : primaryItems) {
@@ -69,6 +70,7 @@ public abstract class NewModuleActivity extends Activity {
 				mTitleBar.addSecondaryItem(item);
 			}
 		}
+		mTitleBar.requestLayout();
 	}
 
 	// default implementation for primary, and secondary menu items.
@@ -86,7 +88,7 @@ public abstract class NewModuleActivity extends Activity {
 		mMainLayout = (LinearLayout) findViewById(R.id.newModuleMain);
 		mTitleBar = (MITTitleBar) findViewById(R.id.mitTitleBar);
 		initViews();
-		initTitleBar();
+		refreshTitleBarOptions();
 	}
 	
 	@Override
