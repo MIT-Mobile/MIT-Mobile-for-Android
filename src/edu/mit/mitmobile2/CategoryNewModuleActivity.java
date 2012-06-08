@@ -2,6 +2,7 @@ package edu.mit.mitmobile2;
 
 import java.util.HashMap;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
@@ -30,6 +31,15 @@ public abstract class CategoryNewModuleActivity extends NewModuleActivity implem
 	    }
 	}
 	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		if (null != mSecondaryTitleBar) {
+			mSecondaryTitleBar.notifyScreenRotated();
+		}
+	}
+
 	protected MITPopupSecondaryTitleBar getSecondaryBar() {
 		return mSecondaryTitleBar;
 	}

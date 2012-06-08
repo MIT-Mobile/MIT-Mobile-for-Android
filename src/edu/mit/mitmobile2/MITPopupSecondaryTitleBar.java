@@ -40,6 +40,10 @@ public class MITPopupSecondaryTitleBar extends MITSecondaryTitleBar implements O
 		this(context, null);
 	}
 	
+	public void notifyScreenRotated() {
+		mPopUpMenu.notifyScreenRotated();
+	}
+	
 	public void setOnPopupMenuItemListener(OnMITMenuItemListener listener) {
 		mMenuItemListener = listener;
 	}

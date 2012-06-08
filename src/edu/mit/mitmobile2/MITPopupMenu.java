@@ -184,7 +184,6 @@ public class MITPopupMenu {
     public void notifyScreenRotated() {
     	if (mWindow.isShowing()) {
     		MITPopupMenu.this.mWindow.dismiss();
-    		show();
     	}
     }
 }
