@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -127,7 +128,12 @@ public class MITPopupMenu {
         } else {
         	mWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         }
-        mWindow.setAnimationStyle(R.style.PopupWindowAnimation);
+        
+        // the animation has serious bugs in gingerbread
+        // not sure which API level bugs are fixed (but definitely fixed by API Level 15)
+        if (Build.VERSION.SDK_INT >= 15) {
+        	mWindow.setAnimationStyle(R.style.PopupWindowAnimation);
+        }
         mWindow.showAtLocation(this.mAnchorView, Gravity.NO_GRAVITY, xPos, yPos);
     }
 
