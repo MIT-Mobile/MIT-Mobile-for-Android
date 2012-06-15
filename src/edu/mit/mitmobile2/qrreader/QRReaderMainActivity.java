@@ -14,15 +14,20 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.DateStrings;
+import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
+import edu.mit.mitmobile2.qrreader.QRReaderModel.SuggestedUrl;
 
 public class QRReaderMainActivity extends ModuleActivity {
 
@@ -35,6 +40,9 @@ public class QRReaderMainActivity extends ModuleActivity {
 	
 	ListView mHistoryListView;
 	View mHelpView;
+	FullScreenLoader mLoader;
+	
+	private Bitmap mBitmap;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 				}
 			}
 		);
+		
+		mLoader = (FullScreenLoader) findViewById(R.id.qrreaderMainFullScreenLoader);
 		
 		updateView();		
 
@@ -97,23 +107,67 @@ public class QRReaderMainActivity extends ModuleActivity {
 			Bundle extras = data.getExtras();
 			
 			byte[] bitmapBytes = extras.getByteArray(com.google.zxing.client.android.Intents.Scan.RESULT_BITMAP_BYTES);
-			Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+			mBitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+			String result = extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT);
 			
-			QRCode qrcode = new QRCode(
-				extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT),
-				bitmap,
-				new Date(System.currentTimeMillis())
-			);
-			
-			mQRCodes.add(0, qrcode);
-			mQRCodeDB.insertQRCode(qrcode);
-			if(mQRCodeDB.qrcodesCount() > MAXIMUM_SAVED_QR_CODES) {
-				mQRCodeDB.removeOldestQRCode();
-			}
-			updateView();
-			
-			QRReaderDetailActivity.launch(this, qrcode);
+			reMapURL(result);
 		}
+	}
+	
+	private boolean isUrl(String result) {
+		return result.matches("http:\\\\.*");
+	}
+	
+	private void reMapURL(final String result) {
+		Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				
+				if (MobileWebApi.SUCCESS == msg.arg1) {
+					SuggestedUrl suggested = (SuggestedUrl) msg.obj;
+					String url = result;
+					
+					if (null == suggested) {
+						return;
+					}
+					
+					if (suggested.isSuccess && null != suggested.suggestedUrl) {
+						url = suggested.suggestedUrl;
+					}
+					updateDBAndViews(url);
+				} else {
+					updateDBAndViews(result);
+				}
+			}
+		};
+		
+		mLoader.setVisibility(View.VISIBLE);
+		mLoader.showLoading();
+		
+		((QRReaderModule) getModule()).getModel().fetchSuggestedUrl(this, result, handler, isUrl(result));
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+	
+		// always hide loading indicator when pausing
+		// we don't care the loading indicator does not get reshown
+		// when we resume
+		mLoader.setVisibility(View.GONE);
+		mLoader.stopLoading();
+	}
+	
+	private void updateDBAndViews(String url) {
+		QRCode qrcode = new QRCode(url, mBitmap, new Date(System.currentTimeMillis()));
+		mQRCodes.add(0, qrcode);
+		mQRCodeDB.insertQRCode(qrcode);
+		if(mQRCodeDB.qrcodesCount() > MAXIMUM_SAVED_QR_CODES) {
+			mQRCodeDB.removeOldestQRCode();
+		}
+		updateView();
+			
+		QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
 	}
 	
 	@Override

@@ -30,4 +30,13 @@ public class QRReaderModule extends Module {
 	public int getHomeIconResourceId() {
 		return R.drawable.home_qr;
 	}
+
+	private QRReaderModel mModel;
+	
+	public QRReaderModel getModel() {
+		if (null == mModel) {
+			mModel = new QRReaderModel();
+		}
+		return mModel;
+	}
 }
