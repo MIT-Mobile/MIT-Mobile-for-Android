@@ -3,6 +3,7 @@
 	<color name="boldBlack">#000000</color>
 	<color name="detailText">#505050</color>
 	<color name="dividerColor">#33000000</color>
+	<color name="popupDividerColor">#33FFFFFF</color>
 	<dimen name="dividerHeight">1dip</dimen>
 
 

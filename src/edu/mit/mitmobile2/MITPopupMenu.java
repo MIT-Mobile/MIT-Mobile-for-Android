@@ -13,11 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 public class MITPopupMenu {
 
@@ -130,45 +127,47 @@ public class MITPopupMenu {
         } else {
         	mWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         }
+        mWindow.setAnimationStyle(R.style.PopupWindowAnimation);
         mWindow.showAtLocation(this.mAnchorView, Gravity.NO_GRAVITY, xPos, yPos);
     }
 
     public void refreshMenuList() {
     	mMenuList.removeAllViews();
-        
+    	
     	for (MITMenuItem item : mMenuItems) {
-        	View view = getMenuItem(item);
-
+        	View view = getMenuItem(item, mMenuItems.indexOf(item));
+        	
             view.setFocusable(true);
         	view.setEnabled(true);
             view.setClickable(true);
             mMenuList.addView(view);
         }
-        mMenuList.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
     
-    private View getMenuItem(final MITMenuItem item) {
-        LinearLayout container = (LinearLayout) mInflater.inflate(R.layout.popup_menu_item_layout, null);
-        LinearLayout wrapper = (LinearLayout) container.findViewById(R.id.popup_menu_item_wrapper);
-        ImageView image = (ImageView) container.findViewById(R.id.popup_menuitem_image);
-        TextView text = (TextView) container.findViewById(R.id.popup_menuitem_title);
+    private View getMenuItem(final MITMenuItem item, int index) {
+    	MITPopupMenuItemLayout itemLayout = new MITPopupMenuItemLayout(mContext, null);
         
+    	itemLayout.setTopBorder(true);
+    	if ((mMenuItems.size() - 1) == index) {
+    		itemLayout.setBottomBorder(true);
+    	}
+    	
         if (item.getIcon() != null) {
-        	image.setImageDrawable(item.getIcon());
+        	itemLayout.setImageDrawable(item.getIcon());
         } else if (item.getIconResId() != 0) {
-        	image.setImageResource(item.getIconResId());
+        	itemLayout.setImageResource(item.getIconResId());
         } else {
-        	image.setVisibility(View.GONE);
+        	itemLayout.setImageVisibility(View.GONE);
         }
         
         String title = item.getTitle();
         if (title != null) {
-            text.setText(title);
+        	itemLayout.setText(title);
         } else {
-            text.setVisibility(View.GONE);
+        	itemLayout.setTextVisibility(View.GONE);
         }
         
-        wrapper.setOnClickListener(new OnClickListener() {
+        itemLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -178,7 +177,7 @@ public class MITPopupMenu {
 				MITPopupMenu.this.mWindow.dismiss();
 			}
 		});
-        return container;
+        return itemLayout;
     }
     
     public void notifyScreenRotated() {
