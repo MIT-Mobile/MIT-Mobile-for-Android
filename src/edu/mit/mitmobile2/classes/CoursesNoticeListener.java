@@ -13,7 +13,7 @@ import edu.mit.mitmobile2.alerts.C2DMReceiver.NoticeListener;
 public class CoursesNoticeListener extends NoticeListener {
 
 	@Override
-	public void onReceivedNotice(Context context, JSONObject object) {
+	public void onReceivedNotice(Context context, JSONObject object, int noticeCount) {
 		try {
 			String tag = object.getString("tag");
 			String[] tagParts = tag.split(":");
@@ -25,7 +25,8 @@ public class CoursesNoticeListener extends NoticeListener {
 			intent.putExtra(MITCoursesDetailsSliderActivity.MY_STELLAR_KEY, true);
 			intent.putExtra(MITCoursesDetailsSliderActivity.SUBJECT_MASTER_ID_KEY, courseID); 
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, noticeCount, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 			
 			notifyUser(context, title, title, message, R.drawable.alert_stellar, pendingIntent);
 		} catch (JSONException e) {

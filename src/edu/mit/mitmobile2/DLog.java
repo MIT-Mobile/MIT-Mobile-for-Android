@@ -6,12 +6,12 @@ import edu.mit.mitmobile2.about.BuildSettings;
 
 import android.util.Log;
 
-public class ModoLog {
+public class DLog {
 	
 	long mLastTime = -1;
 	String mTag;
 	
-	public ModoLog(String tag) {
+	public DLog(String tag) {
 		mTag = tag; 
 	}
 

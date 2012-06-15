@@ -11,7 +11,7 @@ import edu.mit.mitmobile2.alerts.C2DMReceiver.NoticeListener;
 public class EmergencyInfoNoticeListener extends NoticeListener {
 
 	@Override
-	public void onReceivedNotice(Context context, JSONObject object) {
+	public void onReceivedNotice(Context context, JSONObject object, int noticeCount) {
 		try {
 			String title = context.getString(R.string.emergency_alert_title);
 			String message;

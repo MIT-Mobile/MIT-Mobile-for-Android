@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="edu.mit.mitmobile2"
-      android:versionCode="9"
+      android:versionCode="10"
       android:installLocation="auto"
-      android:versionName="2.3">
+      android:versionName="2.3.1">
     <application android:label="@string/app_name" 
     			 android:name=".Global"
                  android:icon="@drawable/mit_mobile_icon" 
@@ -149,6 +149,7 @@
         <activity android:name=".classes.MITCoursesSubjectsSliderActivity" android:configChanges="orientation" android:process=":courses">
         	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
         </activity>
+        <service android:name=".classes.CoursesTermUpdateService" android:process=":courses"></service>
         
 		
 		<activity android:name=".people.PeopleActivity">

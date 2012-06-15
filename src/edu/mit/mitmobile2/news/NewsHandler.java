@@ -10,7 +10,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import edu.mit.mitmobile2.ModoLog;
+import edu.mit.mitmobile2.DLog;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.NewsItem.Image;
 
@@ -72,7 +72,7 @@ public class NewsHandler extends DefaultHandler{
 	        
 	        String text = builder.toString().trim();
 
-	    	ModoLog.v("NewsHandler","end: name="+name + " localName=" + localName);
+	    	DLog.v("NewsHandler","end: name="+name + " localName=" + localName);
 	    	
 	        if (this.curItem != null){
 	            if (localName.equalsIgnoreCase(TITLE)){
@@ -131,7 +131,7 @@ public class NewsHandler extends DefaultHandler{
 	    public void startElement(String uri, String localName, String name,
 	            Attributes attributes) throws SAXException {
 	    	
-	    	ModoLog.v("NewsHandler","start:"+name);
+	    	DLog.v("NewsHandler","start:"+name);
 	    	
 	        super.startElement(uri, localName, name, attributes);
 	        

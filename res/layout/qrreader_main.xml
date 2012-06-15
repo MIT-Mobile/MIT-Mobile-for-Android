@@ -53,7 +53,7 @@
 	<TextView
 		android:layout_width="fill_parent" android:layout_height="wrap_content" 
 		android:padding="2dp" style="@style/BodyText" 
-		android:text="MIT is using themed QR codes to help visitors learn more about the many activities happening on campus during its Open House, happening April 30, 2011.\n\nTap the button below to begin scanning a QR code."
+		android:text="Tap the button below to begin scanning a QR code."
 		/>
 
 </LinearLayout>

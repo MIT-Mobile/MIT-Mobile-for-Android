@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,6 +24,9 @@ import android.widget.Toast;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.CancelRequestListener;
+import edu.mit.mitmobile2.MobileWebApi.ErrorResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.NaturalSort;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
 import edu.mit.mitmobile2.alerts.C2DMReceiver.Device;
@@ -32,11 +37,13 @@ import edu.mit.mitmobile2.objs.SearchResults;
 public class CoursesDataModel {
 
 	// Stellar related
-	static SharedPreferences pref;
+
 	public static HashMap<String,CourseItem> myCourses;
 
 	public static final String KEY_COURSE_ID = "course_id";
 	
+	private static String PREF_KEY_TERM = "term"; 
+	private static String PREF_STELLAR_VERSION = "version";
 	public static String PREF_KEY_STELLAR_IDS = "pref_ids";
 	public static String PREF_KEY_STELLAR_TITLES = "pref_titles";
 	public static String PREF_KEY_STELLAR_READ = "pref_read";
@@ -209,7 +216,7 @@ public class CoursesDataModel {
 	/****************************************************/
 	static void saveMyStellar(Context ctx) {
 
-		pref = ctx.getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_PRIVATE);  
+		SharedPreferences pref = ctx.getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_PRIVATE);  
 		
 		SharedPreferences.Editor editor = pref.edit();
 		
@@ -239,7 +246,7 @@ public class CoursesDataModel {
 	
 	public static void getMyStellar(Context ctx) {
 
-		pref = ctx.getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_PRIVATE);  
+		SharedPreferences pref = ctx.getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_PRIVATE);  
 		
 		myCourses = new HashMap<String,CourseItem>();
 		
@@ -283,10 +290,8 @@ public class CoursesDataModel {
     	SUBSCRIBE,
     	UNSUBSCRIBE
     }
-    
-	 public static void subscribeForCourse(final Context context, final CourseItem ci, SubscriptionType subscriptionType, final Handler uiHandler) {
-
-
+     
+     private static Map<String, String> courseSubscriptionParameters(final Context context, CourseItem ci, SubscriptionType subscriptionType) {
 			HashMap<String, String> params = new HashMap<String, String>();
 			
 			params.put("module", "stellar");
@@ -301,6 +306,13 @@ public class CoursesDataModel {
 			
 			params.put("term", ci.getTermId());
 			params.put("subject", ci.masterId);
+			
+			return params;
+     }
+     
+	 public static void subscribeForCourse(final Context context, final CourseItem ci, SubscriptionType subscriptionType, final Handler uiHandler) {
+
+		 	Map<String, String> params = courseSubscriptionParameters(context, ci, subscriptionType);
 			
 			MobileWebApi webApi = new MobileWebApi(false, true, "My Stellar", context, uiHandler);		
 			
@@ -319,8 +331,130 @@ public class CoursesDataModel {
 			);
 	    }
 	 
+	 private static class DetectErrorListener implements ErrorResponseListener {
+		 
+		public boolean mSubscriptionFailed = false; 
+		
+		@Override
+		public void onError() {
+			mSubscriptionFailed = true;
+		}
+	 }
+	 
+	 private static class TermResponseListener extends MobileWebApi.JSONObjectResponseListener {
+
+		public String mTerm;
+		
+		public TermResponseListener(ErrorResponseListener errorListener) {
+			super(errorListener, null);
+		}
+
+		@Override
+		public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
+			mTerm = object.getString("term");
+		}
+		 
+	 }
+	 
+	/*
+	 * This function will attempt to subscribe to all the course on your favorites
+	 */
+	 public static void updateFavoritesForTerm(final Context context) {
+		 
+		 final ArrayList<CourseItem> favorites = getFavoritesList(context);	 
+		 
+		 new Thread() {
+			 
+			 @Override
+			 public void run() {
+				 final DetectErrorListener errorListener = new DetectErrorListener();
+				 
+				 String cachedTerm = getTerm(context);
+				 
+				 HashMap<String, String> termParams = new HashMap<String, String>();
+				 termParams.put("module", "stellar");
+				 termParams.put("command", "term");
+				 
+				 
+
+				 
+				 // term has never been set need to
+
+				 MobileWebApi webApiTerm = new MobileWebApi(false, false, "My Stellar", null, null);
+				 TermResponseListener termResponseListener = new TermResponseListener(errorListener);
+				 webApiTerm.requestJSONObject(termParams, termResponseListener);
+
+				 String currentTerm = termResponseListener.mTerm;
+				 if (currentTerm != null) {
+					 if (cachedTerm == null || !cachedTerm.equals(currentTerm)) {
+						 updateTerm(context, termResponseListener.mTerm);
+						 
+						 if (cachedTerm != null) {
+							 removeAllFavorites(context);
+						 }
+					 }
+				 }
+				 
+				 SharedPreferences pref = context.getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_PRIVATE);  
+				 int version = pref.getInt(PREF_STELLAR_VERSION, 1);
+				 
+				 if (version == 2) {
+					 // migration  not needed
+					 return;
+				 }
+				 
+				 for (CourseItem favorite : favorites) {
+					 favorite.setTerm(termResponseListener.mTerm);
+					 
+					 Map<String, String> params = courseSubscriptionParameters(context, favorite, SubscriptionType.SUBSCRIBE);
+					 MobileWebApi webApi = new MobileWebApi(false, false, "My Stellar", null, null);
+					 webApi.requestJSONObject(params,
+						new MobileWebApi.JSONObjectResponseListener(errorListener, null) {
+							@Override	
+						 	public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
+									if (!object.has("success")) {
+										errorListener.mSubscriptionFailed = true;
+									}						
+								}
+					 		});
+					 
+						 if (errorListener.mSubscriptionFailed) {
+							 break;
+						 }
+				 }
+				 
+				 if (!errorListener.mSubscriptionFailed) {
+					 // migration succeeded
+					 Editor editor = pref.edit();
+					 editor.putInt(PREF_STELLAR_VERSION, 2);
+					 editor.commit();
+				 }
+			 }
+		 }.start();
+	 }
+	 
+	 private static void removeAllFavorites(Context ctx) {
+		 myCourses = new HashMap<String, CourseItem>();
+		 saveMyStellar(ctx);
+	 }
+	 
+	 private static String getTerm(Context context) {
+		 SharedPreferences pref = context.getSharedPreferences(Global.PREFS_STELLAR,Context.MODE_PRIVATE);  
+		 return pref.getString(PREF_KEY_TERM, null);
+	 }
+	 
+	 private static void updateTerm(Context context, String term) {
+		 SharedPreferences pref = context.getSharedPreferences(Global.PREFS_STELLAR, Context.MODE_PRIVATE); 
+		 Editor editor = pref.edit();
+		 editor.putString(PREF_KEY_TERM, term);
+		 editor.commit();
+	 }
 	 
 	 private static void saveCourseAlert(Context context, CourseItem ci) {
+		if (!ci.getTermId().equals(getTerm(context))) {
+			myCourses = new HashMap<String, CourseItem>();
+		}
+		
 	    CourseItem alertId = myCourses.get(ci.masterId);
 		// Adjust alert
 		if (alertId==null) {
@@ -337,7 +471,7 @@ public class CoursesDataModel {
 	private static HashMap<String, List<CourseItem>> searchCache = new HashMap<String, List<CourseItem>>();
 	private static HashMap<String, CourseItem> recentlyViewedCache = new HashMap<String, CourseItem>();
 	
-	public static void executeSearch(final String searchTerm, Context context, final Handler uiHandler) {
+	public static void executeSearch(final String searchTerm, final Context context, final Handler uiHandler) {
 		
 		if(searchCache.containsKey(searchTerm)) {
 			MobileWebApi.sendSuccessMessage(uiHandler, 
@@ -363,6 +497,7 @@ public class CoursesDataModel {
 					
 					@SuppressWarnings("unchecked")
 					List<CourseItem> courses = parser.items;
+
 					searchCache.put(searchTerm, courses);
 					MobileWebApi.sendSuccessMessage(uiHandler, new SearchResults<CourseItem>(searchTerm, courses));				
 			}

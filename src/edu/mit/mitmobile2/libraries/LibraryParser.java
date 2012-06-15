@@ -54,7 +54,6 @@ public class LibraryParser {
     static void parseLibraryDetail(JSONObject object, LibraryItem container) {
         try {
             container.hoursToday = object.getString("hours_today");
-            container.url = object.getString("url");
             container.tel = object.getString("tel");
             container.location = object.getString("location");
             JSONObject temp = object.getJSONObject("schedule");

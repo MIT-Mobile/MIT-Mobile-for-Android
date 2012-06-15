@@ -7,13 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
 import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.classes.CoursesDataModel;
 import edu.mit.mitmobile2.classes.CoursesNoticeListener;
+import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
 import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 import android.app.Notification;
@@ -30,7 +33,7 @@ import android.util.Log;
 public class C2DMReceiver extends BroadcastReceiver {
 
 	public static abstract class NoticeListener {
-		abstract public void onReceivedNotice(Context context, JSONObject object);
+		abstract public void onReceivedNotice(Context context, JSONObject object, int noticeCount);
 		
 		protected void notifyUser(Context context, String statusBarText, String alarmTitle,
 				String alarmText, int iconResID, Class<?> classname) {
@@ -86,8 +89,18 @@ public class C2DMReceiver extends BroadcastReceiver {
 			
 		} else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
 			try {
+				final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+				long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
+				
 				JSONObject payloadObject = new JSONObject(intent.getExtras().getString("payload"));
 				String tag = payloadObject.getString("tag");
+				int recipientDeviceID = payloadObject.getInt("deviceID");
+				if (recipientDeviceID != deviceID) {
+					// notice not intended for this recipient
+					// user probably uninstalled and reinstalled the app
+					return;
+				}
+
 				NoticeListener noticeListener = null;
 				if (tag.startsWith("emergencyinfo:")) {
 					noticeListener = new EmergencyInfoNoticeListener();
@@ -95,7 +108,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 					noticeListener = new CoursesNoticeListener();
 				}
 				if (noticeListener != null) {
-					noticeListener.onReceivedNotice(context, payloadObject);
+					noticeListener.onReceivedNotice(context, payloadObject, incrementNoticeCount(context));
 				} else {
 					Log.d("C2DMReceiver", "Could not find a target for notification with tag=" + tag);
 				}
@@ -112,8 +125,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String PREFERENCES = "DeviceRegistration";
 	private final static String DEVICE_ID_KEY = "device_id";
 	private final static String DEVICE_PASS_KEY = "pass_key";
+	private final static String NOTICE_COUNT_KEY = "notice_count"; 
 	
-	private void registerDevice(Context context, final String registrationID) {
+	private void registerDevice(final Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
 		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
 		long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
@@ -137,6 +151,8 @@ public class C2DMReceiver extends BroadcastReceiver {
 					editor.putLong(DEVICE_PASS_KEY, object.getLong(DEVICE_PASS_KEY));
 					editor.commit();
 					sRegistrationID = registrationID;
+					
+					Global.onDeviceRegisterCompleted();
 				}
 			});
 		} else {
@@ -156,7 +172,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
 					// nothing to do
 					if (object.getBoolean("success")) {
-						sRegistrationID = registrationID;					
+						sRegistrationID = registrationID;	
+						
+						Global.onDeviceRegisterCompleted();
 					} else {
 						Log.d("C2DMReceiver", "Device token failed to registered");
 					}
@@ -164,7 +182,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			});		
 		}
 	}
-	
+
 	public static void markNotificationAsRead(Context context, String tag) {
 		JSONStringer encoder = new JSONStringer();
 		try {
@@ -225,4 +243,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 		);
 	}
 	
+	
+	private int incrementNoticeCount(Context context) {
+		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		int count = preferences.getInt(NOTICE_COUNT_KEY, 0);
+		Editor editor = preferences.edit();
+		editor.putInt(NOTICE_COUNT_KEY, count+1);
+		editor.commit();
+		return count+1;		
+	}
 }

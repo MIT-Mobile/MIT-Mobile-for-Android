@@ -44,6 +44,11 @@ public class MITMapShuttlesUpdaterTask  extends AsyncTask<String, Void, Void> {
 	PinItem oi;
 	GeoPoint gpt;
 	int lat,lon;
+	
+	int mMaxLat;
+	int mMinLat;
+	int mMaxLon;
+	int mMinLon;
 
 	Handler routeUpdateHandler;
 
@@ -98,17 +103,63 @@ public class MITMapShuttlesUpdaterTask  extends AsyncTask<String, Void, Void> {
 		
 	}
 
+	private boolean updatePathBounds(int maxLat, int maxLon, int minLat, int minLon) {
+		boolean valuesChanged = false;
+		if (mMaxLat != maxLat) {
+			mMaxLat = maxLat;
+			valuesChanged = true;
+		}
+		if (mMinLat != minLat) {
+			mMinLat = minLat;
+			valuesChanged = true;
+		}
+		if (mMaxLon != maxLon) {
+			mMaxLon = maxLon;
+			valuesChanged = true;
+		}
+		if (mMinLon != minLon) {
+			mMinLon = minLon;
+			valuesChanged = true;
+		}
+		return valuesChanged;
+	}
+	
 	/***************************************************/
 	void addPath(Stops s) {
+		if (s.path.size() == 0) {
+			// nothing to do
+			return;
+		}
 		
 		// TODO sampling
+		int maxLon = (int) (s.path.get(0).lon * 1000000.0);
+		int maxLat = (int) (s.path.get(0).lat * 1000000.0);
+		int minLon = maxLon;
+		int minLat = maxLat;
+		
 		int step = 1;
 		for (int index=0; index<s.path.size(); index+=step) {
 			Loc l = s.path.get(index);
 			lat = (int) (l.lat * 1000000.0);
 			lon = (int) (l.lon * 1000000.0);
+			
+			maxLat = Math.max(maxLat, lat);
+			maxLon = Math.max(maxLon, lon);
+			minLat = Math.min(minLat, lat);
+			minLon = Math.min(minLon, lon);
+			
 			gpt = new GeoPoint(lat,lon);
 	        oi.detailed_path.add(gpt);
+		}
+		
+		if (updatePathBounds(maxLat, maxLon, minLat, minLon)) {
+				new Handler().post(new Runnable() {
+					@Override
+					public void run() {
+						mapView.getController().zoomToSpan(mMaxLat-mMinLat, mMaxLon-mMinLon);
+						mapView.getController().setCenter(new GeoPoint((mMaxLat+mMinLat)/2, (mMaxLon+mMinLon)/2));	
+					}
+				});
 		}
 		addedPath = true;
 		

@@ -11,7 +11,6 @@ public class LibraryItem {
     public boolean isDetailLoaded = false;
     
     public String hoursToday;
-    public String url;
     public String tel;
     public String location;
     
