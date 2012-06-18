@@ -131,7 +131,7 @@ public class MITPopupMenu {
         
         // the animation has serious bugs in gingerbread
         // not sure which API level bugs are fixed (but definitely fixed by API Level 15)
-        if (Build.VERSION.SDK_INT >= 15) {
+        if (Build.VERSION.SDK_INT >= 11) {
         	mWindow.setAnimationStyle(R.style.PopupWindowAnimation);
         }
         mWindow.showAtLocation(this.mAnchorView, Gravity.NO_GRAVITY, xPos, yPos);
