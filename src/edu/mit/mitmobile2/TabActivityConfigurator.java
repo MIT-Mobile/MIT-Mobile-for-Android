@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,7 +34,7 @@ public class TabActivityConfigurator {
 	}
 	
 	public void addTab(String tabName, Class className) {
-		mTabNames.add(tabName);
+		mTabNames.add(tabName.toUpperCase(Locale.US));
 		mTabActivities.add(className);
 	}
 	

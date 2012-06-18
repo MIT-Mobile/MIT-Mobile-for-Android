@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
@@ -30,7 +31,7 @@ public class TabConfigurator {
 	
 	
 	public void addTab(String tabName, int contentId) {
-		mTabNames.add(tabName);
+		mTabNames.add(tabName.toUpperCase(Locale.US));
 		mTabContentResourceIds.add(contentId);
 	}
 	
