@@ -182,7 +182,7 @@ public class NewsModel {
 			}
 		}.start();
 		
-		String bookmarkStatusText = bookmarkStatus ? "saving bookmark" : "removing bookmark";
+		String bookmarkStatusText = bookmarkStatus ? "Bookmark saved" : "Bookmark removed";
 		Toast.makeText(mContext, bookmarkStatusText, Toast.LENGTH_LONG).show();
 	}
 	
