@@ -115,7 +115,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 	}
 	
 	private boolean isUrl(String result) {
-		return result.matches("http:\\\\.*");
+		return result.matches("http:\\/\\/.*");
 	}
 	
 	private void reMapURL(final String result) {
