@@ -91,7 +91,7 @@ public class EventDayListSliderAdapter extends AbstractSliderViewAdapter{
 		if (dayTime == mToday) {
 			return "TODAY";
 		} else if (dayTime == mToday + SECONDS_PER_DAY) {
-			return "TOMMOROW";
+			return "TOMORROW";
 		} else if (dayTime == mToday - SECONDS_PER_DAY) {
 			return "YESTERDAY";
 		}
