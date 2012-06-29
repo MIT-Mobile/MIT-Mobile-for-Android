@@ -34,7 +34,7 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 		mQRCodes = new ArrayList<QRCode>(savedQRCodes);
 		mListAdapter = new QRCodeArrayAdapter(this, mQRCodes);
 		
-		setContentView(R.layout.qrreader_main);
+		setContentView(R.layout.qrreader_history);
 		mHelpView = findViewById(R.id.qrreaderHelpView);
 		mHistoryListView = (ListView) findViewById(R.id.qrreaderMainHistoryLV);
 		mHistoryListView.setAdapter(mListAdapter);

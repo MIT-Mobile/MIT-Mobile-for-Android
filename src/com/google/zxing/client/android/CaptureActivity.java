@@ -16,7 +16,11 @@
 
 package com.google.zxing.client.android;
 
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.QRReaderHistoryActivity;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -59,7 +63,6 @@ import android.text.ClipboardManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -77,15 +80,16 @@ import android.widget.TextView;
  *
  * @author ian.gavalakis@modolabs.com 
  */
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class CaptureActivity extends ModuleActivity implements SurfaceHolder.Callback {
 
   public static final int CAPTURE_QR_ACTIVITY_REQUEST_CODE = 1666;
 	  
   private static final String TAG = CaptureActivity.class.getSimpleName();
 
-  private static final int SHARE_ID = Menu.FIRST;
+  //private static final int SHARE_ID = Menu.FIRST;
 
-  private static final int MENU_QR_HELP = Menu.FIRST;
+  private static final int MENU_QR_HISTORY = Menu.FIRST;
+  private static final int MENU_QR_HELP = Menu.FIRST + 1;
   
   private static final int DIALOG_QR_HELP = 1;
 	
@@ -292,24 +296,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     return true;
   }
 */
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-	menu.clear();
-	menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-		.setIcon(R.drawable.menu_about);
-    return true;
-  }
-  
-   @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_QR_HELP:
-			showDialog(DIALOG_QR_HELP);
-			break;
-		}
-		return true;
-	}
 
 	
 	@Override
@@ -635,5 +621,41 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
   public void drawViewfinder() {
     viewfinderView.drawViewfinder();
+  }
+
+  
+  /*
+   * Additions added specifically for the MIT Android app
+   */
+  @Override
+  protected Module getModule() {
+	return new QRReaderModule();
+  }
+
+  @Override
+  public boolean isModuleHomeActivity() {
+	return true;
+  }
+
+   @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_QR_HISTORY:
+			Intent intent = new Intent(this, QRReaderHistoryActivity.class);
+			startActivity(intent);
+			return true;
+		case MENU_QR_HELP:
+			showDialog(DIALOG_QR_HELP);
+			break;
+		}
+		return true;
+	}
+   
+   @Override
+   protected void prepareActivityOptionsMenu(Menu menu) {
+		menu.add(0, MENU_QR_HISTORY, Menu.NONE, "History")
+			.setIcon(R.drawable.menu_browse);
+		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
+			.setIcon(R.drawable.menu_about);
   }
 }

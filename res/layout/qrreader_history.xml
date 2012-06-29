@@ -58,40 +58,11 @@
 
 </LinearLayout>
   		
- 		
-  	<RelativeLayout
-  		android:layout_width="fill_parent"
-  		android:layout_height="fill_parent" >
-
-		<LinearLayout
-			android:orientation="vertical"
-			android:id="@+id/qrreaderMainButtons"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-  			android:layout_alignParentRight="true"
-  			android:layout_alignParentBottom="true">
-			
-			<edu.mit.mitmobile2.DividerView
-  				android:layout_width="fill_parent"
-  				android:layout_height="@dimen/dividerHeight" />
-  		
-  			<edu.mit.mitmobile2.TwoLineActionRow
-  				android:id="@+id/qrreaderScanButton"
-  				android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:background="@color/rowBackground"
-  				android:text="Scan QR Code" />
-  		</LinearLayout>
-  		
-  		<ListView
+    <ListView
   			android:id="@+id/qrreaderMainHistoryLV"
-  			android:layout_alignParentTop="true"
-  			android:layout_above="@id/qrreaderMainButtons"
   			android:layout_width="fill_parent"
   			android:layout_height="wrap_content"
  			android:visibility="gone"
  			style="@style/Lists" />
- 			
-  	</RelativeLayout>
+
 </LinearLayout>
