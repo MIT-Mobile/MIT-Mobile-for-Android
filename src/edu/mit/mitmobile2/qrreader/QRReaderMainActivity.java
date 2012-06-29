@@ -1,13 +1,10 @@
 package edu.mit.mitmobile2.qrreader;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.google.zxing.client.android.CaptureActivity;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,25 +14,21 @@ import android.view.MenuItem;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.TextView;
-import edu.mit.mitmobile2.DateStrings;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SimpleArrayAdapter;
+import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.qrreader.QRReaderModel.SuggestedUrl;
 
 public class QRReaderMainActivity extends ModuleActivity {
 
-	private static final String QRCODES_KEY = "qrcodes";
 	private static final int MAXIMUM_SAVED_QR_CODES = 10;
 	
-	ArrayList<QRCode> mQRCodes;
-	QRCodeArrayAdapter mListAdapter;
 	QRCodeDB mQRCodeDB;
 	
 	ListView mHistoryListView;
@@ -44,66 +37,56 @@ public class QRReaderMainActivity extends ModuleActivity {
 	
 	private Bitmap mBitmap;
 	
+	private static final String LAUNCH_SCHEDULED_KEY = "launch_scheduled";
+	private static final String FINISH_SCHEDULED_KEY = "finish_scheduled";
+	
+	private boolean mLaunchScanScheduled;
+	private boolean mFinishScheduled;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	
+		
+		setContentView(R.layout.boring_activity_layout);
+		LinearLayout root = (LinearLayout) findViewById(R.id.boringLayoutRoot);
+		TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
+		titleBar.setTitle("Scanner");
+			
+		mLoader = new FullScreenLoader(this, null);	
+		root.addView(mLoader, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		
 		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());
 		
-		List<QRCode> savedQRCodes = mQRCodeDB.getQRCodes();
-		mQRCodes = new ArrayList<QRCode>(savedQRCodes);
-		mListAdapter = new QRCodeArrayAdapter(this, mQRCodes);
+			
 		
-		setContentView(R.layout.qrreader_main);
-		mHelpView = findViewById(R.id.qrreaderHelpView);
-		mHistoryListView = (ListView) findViewById(R.id.qrreaderMainHistoryLV);
-		mHistoryListView.setAdapter(mListAdapter);
-		mListAdapter.setOnItemClickListener(mHistoryListView,
-			new SimpleArrayAdapter.OnItemClickListener<QRCode>() {
-				@Override
-				public void onItemSelected(QRCode item) {
-					QRReaderDetailActivity.launch(QRReaderMainActivity.this, item);
-				}
-			}
-		);
-		
-		mLoader = (FullScreenLoader) findViewById(R.id.qrreaderMainFullScreenLoader);
-		
-		updateView();		
-
-		
-		findViewById(R.id.qrreaderScanButton).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				launchScan();
-			}
-		});
+		mLaunchScanScheduled = true;
+		mFinishScheduled = false;
+		if (savedInstanceState != null) {
+			mLaunchScanScheduled = savedInstanceState.getBoolean(LAUNCH_SCHEDULED_KEY, true);
+			mFinishScheduled = savedInstanceState.getBoolean(FINISH_SCHEDULED_KEY, false);
+		}
 	}
 	
-	private void updateView() {
-		mListAdapter.notifyDataSetChanged();
-		if(mQRCodes.size() > 0) {
-			mHelpView.setVisibility(View.GONE);
-			mHistoryListView.setVisibility(View.VISIBLE);
-		}
+	@Override
+	protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(LAUNCH_SCHEDULED_KEY, mLaunchScanScheduled);
+		outState.putBoolean(FINISH_SCHEDULED_KEY, mFinishScheduled);
 	}
 	
 	private void launchScan() {
 		Intent i = new Intent(this, com.google.zxing.client.android.CaptureActivity.class);
 		i.setAction(com.google.zxing.client.android.Intents.Scan.ACTION);
 		i.putExtra("SCAN_MODE", "ONE_D_QRCODE_MODE");
+		i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivityForResult(i, 1);
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putParcelableArrayList(QRCODES_KEY, mQRCodes);
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
+			mFinishScheduled = false;
+			
 			Bundle extras = data.getExtras();
 			
 			byte[] bitmapBytes = extras.getByteArray(com.google.zxing.client.android.Intents.Scan.RESULT_BITMAP_BYTES);
@@ -123,6 +106,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				
+				QRCode qrcode;
 				if (MobileWebApi.SUCCESS == msg.arg1) {
 					SuggestedUrl suggested = (SuggestedUrl) msg.obj;
 					String url = result;
@@ -134,10 +118,13 @@ public class QRReaderMainActivity extends ModuleActivity {
 					if (suggested.isSuccess && null != suggested.suggestedUrl) {
 						url = suggested.suggestedUrl;
 					}
-					updateDBAndViews(url);
+					qrcode = updateDB(url);
 				} else {
-					updateDBAndViews(result);
+					qrcode = updateDB(result);
 				}
+				
+				QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
+				mLaunchScanScheduled = true;				
 			}
 		};
 		
@@ -148,9 +135,26 @@ public class QRReaderMainActivity extends ModuleActivity {
 	}
 	
 	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if (mFinishScheduled) {
+			finish();
+			return;
+		}
+		
+		if (mLaunchScanScheduled) {
+			mLaunchScanScheduled = false;
+			mFinishScheduled = true;
+			launchScan();
+		}
+		
+	}
+	
+	@Override
 	protected void onPause() {
 		super.onPause();
-	
+		
 		// always hide loading indicator when pausing
 		// we don't care the loading indicator does not get reshown
 		// when we resume
@@ -158,16 +162,13 @@ public class QRReaderMainActivity extends ModuleActivity {
 		mLoader.stopLoading();
 	}
 	
-	private void updateDBAndViews(String url) {
+	private QRCode updateDB(String url) {
 		QRCode qrcode = new QRCode(url, mBitmap, new Date(System.currentTimeMillis()));
-		mQRCodes.add(0, qrcode);
 		mQRCodeDB.insertQRCode(qrcode);
 		if(mQRCodeDB.qrcodesCount() > MAXIMUM_SAVED_QR_CODES) {
 			mQRCodeDB.removeOldestQRCode();
 		}
-		updateView();
-			
-		QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
+		return qrcode;
 	}
 	
 	@Override
@@ -215,22 +216,5 @@ public class QRReaderMainActivity extends ModuleActivity {
 			return CaptureActivity.helpDialog(this);
 		}
 		return null;
-	}
-	private static class QRCodeArrayAdapter extends SimpleArrayAdapter<QRCode> {
-
-		public QRCodeArrayAdapter(Context context, List<QRCode> items) {
-			super(context, items, R.layout.qrreader_row);
-		}
-
-		@Override
-		public void updateView(QRCode item, View view) {
-			ImageView barcodeIV = (ImageView) view.findViewById(R.id.qrreaderRowIV);
-			TextView barcodeTitle = (TextView) view.findViewById(R.id.qrreaderRowTitle);
-			TextView barcodeSubtitle = (TextView) view.findViewById(R.id.qrreaderRowSubtitle);
-			
-			barcodeIV.setImageBitmap(item.getBitmap());
-			barcodeTitle.setText(item.getUrl());
-			barcodeSubtitle.setText(DateStrings.agoString(item.getDate()));
-		}
 	}
 }
