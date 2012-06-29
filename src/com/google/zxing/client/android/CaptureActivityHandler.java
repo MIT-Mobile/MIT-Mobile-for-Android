@@ -97,6 +97,14 @@ public final class CaptureActivityHandler extends Handler {
         Log.d(TAG, "Got return scan result message");
         activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
         activity.finish();
+        
+        /*
+         * Addition added by MIT (basically the idea is we launch the activity with no animation
+         * then lets also finish with no animation.
+         */
+        if ((activity.getIntent().getFlags() & Intent.FLAG_ACTIVITY_NO_ANIMATION) != 0) {
+        	activity.overridePendingTransition(0, 0);
+        }
         break;
       case R.id.launch_product_query:
         Log.d(TAG, "Got product query message");
