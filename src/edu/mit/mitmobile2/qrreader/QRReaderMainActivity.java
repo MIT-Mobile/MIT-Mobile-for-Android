@@ -40,8 +40,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 	private static final String LAUNCH_SCHEDULED_KEY = "launch_scheduled";
 	private static final String FINISH_SCHEDULED_KEY = "finish_scheduled";
 	
-	private boolean mLaunchScanScheduled;
-	private boolean mFinishScheduled;
+	private boolean mLaunchScanScheduled = true;
+	private boolean mFinishScheduled = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +61,13 @@ public class QRReaderMainActivity extends ModuleActivity {
 		
 		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
-		if (savedInstanceState != null) {
-			mLaunchScanScheduled = savedInstanceState.getBoolean(LAUNCH_SCHEDULED_KEY, true);
-			mFinishScheduled = savedInstanceState.getBoolean(FINISH_SCHEDULED_KEY, false);
-		}
+	}
+	
+	@Override
+	protected void onRestoreInstanceState (Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		mLaunchScanScheduled = savedInstanceState.getBoolean(LAUNCH_SCHEDULED_KEY, true);
+		mFinishScheduled = savedInstanceState.getBoolean(FINISH_SCHEDULED_KEY, false);		
 	}
 	
 	@Override
@@ -86,7 +89,6 @@ public class QRReaderMainActivity extends ModuleActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
 			mFinishScheduled = false;
-			
 			Bundle extras = data.getExtras();
 			
 			byte[] bitmapBytes = extras.getByteArray(com.google.zxing.client.android.Intents.Scan.RESULT_BITMAP_BYTES);
@@ -124,7 +126,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 				}
 				
 				QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
-				mLaunchScanScheduled = true;				
+				mLaunchScanScheduled = true;
+				mFinishScheduled = false;
 			}
 		};
 		
@@ -180,33 +183,6 @@ public class QRReaderMainActivity extends ModuleActivity {
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
-
-	static final int MENU_SCAN_QR = MENU_MODULE_HOME + 1;
-	static final int MENU_QR_HELP = MENU_MODULE_HOME + 2;
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SCAN_QR, Menu.NONE, "Scan")
-			.setIcon(R.drawable.menu_camera);
-		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-			.setIcon(R.drawable.menu_about);
-	}
-	
-	/*****************************************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_SCAN_QR:
-				launchScan();
-				return true;
-				
-			case MENU_QR_HELP:
-				showDialog(DIALOG_QR_HELP);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
 	
 	private final static int DIALOG_QR_HELP = 1;
 	@Override
@@ -217,4 +193,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 		}
 		return null;
 	}
+
+	@Override
+	protected void prepareActivityOptionsMenu(Menu menu) { } // TODO Auto-generated method stub
 }
