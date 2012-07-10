@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -58,16 +59,21 @@ public abstract class NewModuleActivity extends Activity {
 	 */
 	protected void refreshTitleBarOptions() {
 		mTitleBar.clearMenuItems();
-		List<MITMenuItem> primaryItems = getPrimaryMenuItems();
+		List<MITMenuItem> primaryItems = getPrimaryMenuItems();		
+		List<String> blackList = getMenuItemBlackList();
 		if (primaryItems != null) {
 			for (MITMenuItem item : primaryItems) {
-				mTitleBar.addPrimaryItem(item);
+				if (!blackList.contains(item.getId())) {
+					mTitleBar.addPrimaryItem(item);
+				}
 			}
 		}
 		List<MITMenuItem> secondaryItems = getSecondaryMenuItems();
 		if (secondaryItems != null) {
 			for (MITMenuItem item : secondaryItems) {
-				mTitleBar.addSecondaryItem(item);
+				if (!blackList.contains(item.getId())) {
+					mTitleBar.addSecondaryItem(item);
+				}
 			}
 		}
 		mTitleBar.requestLayout();
@@ -82,6 +88,9 @@ public abstract class NewModuleActivity extends Activity {
 		return getNewModule().getSecondaryOptions();
 	}
 
+	protected List<String> getMenuItemBlackList() {
+		return Collections.emptyList();
+	}
 	
 	protected void initContentView() {
 		super.setContentView(R.layout.new_module_main);
