@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.http.AndroidHttpClient;
@@ -28,6 +29,8 @@ import android.util.AndroidException;
 import android.util.Log;
 import android.webkit.CookieManager;
 import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.alerts.C2DMReceiver;
+import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
 import edu.mit.mitmobile2.classes.SharedData;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
@@ -73,8 +76,11 @@ public class Global extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
 		Log.d(TAG,"onCreate()");
 		mContext = this;
+		
+		C2DMReceiver.registerForNotifications(this);
 		
 		// load Mobile Web Domain preferences
 		try {
@@ -233,4 +239,7 @@ public class Global extends Application {
 		}
 	}
 
+	public static void onDeviceRegisterCompleted() {
+		mContext.startService(new Intent(mContext, CoursesTermUpdateService.class)); 
+	}
 }

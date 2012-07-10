@@ -16,11 +16,9 @@
 
 package com.google.zxing.client.android;
 
-import edu.mit.mitmobile2.HomeScreenActivity;
-import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITTitleBar;
-import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
 import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
 
@@ -65,8 +63,6 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -82,15 +78,13 @@ import android.widget.TextView;
  *
  * @author modified by MIT Mobile
  */
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class CaptureActivity extends NewModuleActivity implements SurfaceHolder.Callback {
 
   public static final int CAPTURE_QR_ACTIVITY_REQUEST_CODE = 1666;
 	  
   private static final String TAG = CaptureActivity.class.getSimpleName();
 
-  private static final int SHARE_ID = Menu.FIRST;
-
-  private static final int MENU_QR_HELP = Menu.FIRST;
+  //private static final int SHARE_ID = Menu.FIRST;
   
   private static final int DIALOG_QR_HELP = 1;
 	
@@ -175,8 +169,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     Window window = getWindow();
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.capture);
-    MITTitleBar titleBar = (MITTitleBar) findViewById(R.id.qrCaptureTitleBar);
-    initMitTitleBar(titleBar);
     
     CameraManager.init(getApplication());
     viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
@@ -289,35 +281,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
     return super.onKeyDown(keyCode, event);
   }
-
-  /*
-  // Don't display the share menu item if the result overlay is showing.
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-    menu.findItem(SHARE_ID).setVisible(lastResult == null);
-    return true;
-  }
-*/
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-	menu.clear();
-	menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-		.setIcon(R.drawable.menu_info);
-    return true;
-  }
-  
-   @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_QR_HELP:
-			showDialog(DIALOG_QR_HELP);
-			break;
-		}
-		return true;
-	}
-
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -643,33 +606,25 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   public void drawViewfinder() {
     viewfinderView.drawViewfinder();
   }
-  
-  private void initMitTitleBar(MITTitleBar titleBar) {
-      final NewModule qrModule = new QRReaderModule();
-      titleBar.setTextForModuleBtn("QR Reader");
-      titleBar.setTextForModuleBtn("QR Reader");
-      titleBar.setModuleButtonEnabled(true);
-      for (MITMenuItem item : qrModule.getPrimaryOptions()) {
-	  titleBar.addPrimaryItem(item);
-      }
-	  
-      titleBar.setOnTitleBarListener(new OnMITTitleBarListener() {
-	  @Override
-	  public void onOptionItemSelected(String optionId) {
-	      qrModule.onItemSelected((Activity) ctx, optionId);
-	  }
-	  
-	  @Override
-	  public void onHomeSelected() {
-	      HomeScreenActivity.goHome(ctx);
-	  }
 
-	  @Override
-	  public void onModuleHomeSelected() {
-	      Intent intent = new Intent(ctx, qrModule.getModuleHomeActivity());
-	      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	      startActivity(intent);
-	  }
-      });
-  }
+	/*
+	 * Additions added specifically for the MIT Android app
+	 */
+	@Override
+	public boolean isModuleHomeActivity() {
+		return true;
+  	}
+
+   @Override
+   protected NewModule getNewModule() {
+	   return new QRReaderModule();
+   }
+
+   @Override
+   protected boolean isScrollable() {
+	   return false;
+   }
+
+   @Override
+   protected void onOptionSelected(String optionId) { }
 }

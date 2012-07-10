@@ -50,7 +50,6 @@ public class CourseSubjectParser extends JSONParser {
 	        if (getSubject)  {
 	        	
 		        cdi.masterId = jItem.getString("masterId");
-		        cdi.setTerm(jItem.getString("term"));
 		        
 		        cdi.name = jItem.optString("name",cdi.masterId);
 		        cdi.title = jItem.optString("title",cdi.masterId);
@@ -130,6 +129,9 @@ public class CourseSubjectParser extends JSONParser {
 	       // cdi.startStr = sdf.format(d);
 	       */
 	        
+	        if (jItem.has("term")) {
+	        	cdi.setTerm(jItem.getString("term"));
+	        }
 	        items.add(cdi);
 	        
 	        

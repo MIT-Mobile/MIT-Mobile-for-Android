@@ -117,13 +117,11 @@ public class MITCoursesAnnouncementsSliderActivity extends SliderListNewModuleAc
 
 	@Override
 	protected NewModule getNewModule() {
-		// TODO Auto-generated method stub
 		return new ClassesModule();
 	}
 
+
 	@Override
-	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
-		
-	}	
+	protected void onOptionSelected(String optionId) { } // TODO Auto-generated method stub
+
 }

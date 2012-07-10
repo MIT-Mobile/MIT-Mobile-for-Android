@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.zxing.client.android.CaptureActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
@@ -13,6 +14,7 @@ import edu.mit.mitmobile2.R;
 public class QRReaderModule extends NewModule {
 
 	private static final String MENU_QR_HELP = "about";
+	private static final String MENU_HISTORY = "history";
 	
 	@Override
 	public String getShortName() {
@@ -43,6 +45,7 @@ public class QRReaderModule extends NewModule {
 	public List<MITMenuItem> getPrimaryOptions() {
 		List<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
 		menuItems.add(new MITMenuItem(MENU_QR_HELP, "", R.drawable.menu_info));
+		menuItems.add(new MITMenuItem(MENU_HISTORY, "history", R.drawable.menu_info));
 		return menuItems;
 	}
 
@@ -57,7 +60,20 @@ public class QRReaderModule extends NewModule {
 		if (id.equals(MENU_QR_HELP)) {
 			CaptureActivity.helpDialog(activity).show();
 			return true;
+		} else if (id.equals(MENU_HISTORY)) {
+			Intent intent = new Intent(activity, QRReaderHistoryActivity.class);
+			activity.startActivity(intent);
+			return true;
 		}
 		return false;
+	}
+	
+	private QRReaderModel mModel;
+	
+	public QRReaderModel getModel() {
+		if (null == mModel) {
+			mModel = new QRReaderModel();
+		}
+		return mModel;
 	}
 }

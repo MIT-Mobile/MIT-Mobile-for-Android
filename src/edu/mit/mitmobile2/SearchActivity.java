@@ -40,6 +40,7 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 	private Long mLastFailedSearchTime = null;
 	private final static long MINIMUM_TRY_AGAIN_WAIT = 5000; // 5 seconds
 	protected boolean mResultsDisplayed = false;
+	private boolean mResetSearchScheduled = false;
 	private String mSearchTerm;
 	private SearchResults<ResultItem> mSearchResults;
 	
@@ -114,6 +115,7 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 
 			mResultsDisplayed = false;
 			mSearching = true;
+			mResetSearchScheduled = false;
 			mSearchTerm = searchTerm;
 			initiateSearch(searchTerm, searchHandler(searchTerm));
 		}
@@ -249,14 +251,23 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 	}
 	
 	private void resetBackToSearch() {
-		mResultsDisplayed = false;
-		startSearch(mSearchTerm, false, null, false);
+		if (hasWindowFocus()) {
+			mResetSearchScheduled = false;
+			mResultsDisplayed = false;
+			startSearch(mSearchTerm, false, null, false);
+		} else {
+			mResetSearchScheduled = true;
+		}
 	}
 	
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
-		if(!mSearching && !mResultsDisplayed && hasFocus) {
-			finish();
+		if (hasFocus) {
+			if (mResetSearchScheduled) {
+				resetBackToSearch();
+			} else if(!mSearching && !mResultsDisplayed) {
+				finish();
+			}
 		}
 		super.onWindowFocusChanged(hasFocus);
 	}

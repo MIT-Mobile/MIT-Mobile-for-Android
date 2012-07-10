@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
@@ -23,6 +24,8 @@ import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.alerts.C2DMReceiver;
+import edu.mit.mitmobile2.classes.CoursesDataModel.SubscriptionType;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.CourseItem.CourseTime;
 import edu.mit.mitmobile2.people.PeopleSearchActivity;
@@ -43,6 +46,8 @@ public class CourseDetailsView implements SliderInterface {
 	private View mBookmarkBtn;
 	private ImageView mBookmarkBtnImage;
 	
+	SubscriptionType mSubscriptionType;
+	
 	/***************************************************/
 	public CourseDetailsView(Context context, CourseItem course) {
 		
@@ -62,12 +67,25 @@ public class CourseDetailsView implements SliderInterface {
 		mBookmarkBtnImage = (ImageView) mView.findViewById(R.id.coursesDetailsBookmarkBtnImage); 
 		mBookmarkBtn = mView.findViewById(R.id.coursesDetailsBookmarkBtn);
 		
+		if (CoursesDataModel.myCourses.containsKey(mCourseItem.masterId)) {
+			mSubscriptionType = CoursesDataModel.SubscriptionType.UNSUBSCRIBE;
+		} else {
+			mSubscriptionType = CoursesDataModel.SubscriptionType.SUBSCRIBE;
+		}
+		
 		mBookmarkBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				CoursesDataModel.setAlarm(mActivity, mCourseItem);
-				updateBookmarkBtn();
+				showSubscriptionToast(mActivity, mSubscriptionType);
+				CoursesDataModel.subscribeForCourse(mActivity, mCourseItem, mSubscriptionType, 
+					new Handler() {					
+						@Override
+						public void handleMessage(Message msg) {
+							updateBookmarkBtn();						
+						}
+					}
+				);
 			}
 		});
 		
@@ -86,6 +104,20 @@ public class CourseDetailsView implements SliderInterface {
 		return mView;
 	}
 	
+    public static void showSubscriptionToast(Context context, SubscriptionType subscriptionType) {
+		String userNotice = null;
+		switch (subscriptionType) {
+			case SUBSCRIBE:
+				userNotice = "Subscribing for notices";
+				break;
+			case UNSUBSCRIBE:
+				userNotice = "removing notices";
+				break;
+		}  
+		
+		Toast.makeText(context, userNotice, Toast.LENGTH_SHORT).show();
+    }
+    
 	private void updateBookmarkBtn() {
 		int resId = R.drawable.action_button_add_bookmark;
 		if (CoursesDataModel.myCourses.containsKey(mCourseItem.masterId)) {
@@ -123,7 +155,8 @@ public class CourseDetailsView implements SliderInterface {
 			public void run() {
 				CourseItem c = CoursesDataModel.getDetails(mCourseItem.masterId);
 				if(c != null) {
-					updateUI(c);
+					mCourseItem = c;
+					updateUI(mCourseItem);
 				} else {
 					mLoader.showError();
 				}
@@ -133,7 +166,7 @@ public class CourseDetailsView implements SliderInterface {
 		final Handler myHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
+				C2DMReceiver.markNotificationAsRead(mActivity, "stellar:" + mCourseItem.masterId);
 				post(updateResultsUI);
 			}
 		};
@@ -300,6 +333,9 @@ public class CourseDetailsView implements SliderInterface {
 		
 	}
 	
+	public CourseItem getCourse() {
+		return mCourseItem;
+	}
 	/****************************************************/
 	
 
