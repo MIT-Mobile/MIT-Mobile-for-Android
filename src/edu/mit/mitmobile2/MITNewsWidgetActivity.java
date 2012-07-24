@@ -33,6 +33,7 @@ import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
 import edu.mit.mitmobile2.libraries.LibrariesModule;
+import edu.mit.mitmobile2.links.LinksModule;
 import edu.mit.mitmobile2.maps.MapsModule;
 import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.news.NewsHomeItem;
@@ -219,6 +220,7 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new LibrariesModule(),
 			new FacilitiesModule(),
 			new QRReaderModule(),
+			new LinksModule()
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);

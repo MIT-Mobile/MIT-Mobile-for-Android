@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content">
+  
+  	<edu.mit.mitmobile2.TitleBar
+  		android:text="Links"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  	
+  	<ListView 
+  	    android:id="@+id/links_list"
+  	    android:layout_width="match_parent"
+  	    android:layout_height="wrap_content"
+  	    style="@style/Lists"/>
+  	
+  	<edu.mit.mitmobile2.FullScreenLoader
+  	    android:id="@+id/links_loader"
+  	    android:layout_width="match_parent"
+  		android:layout_height="match_parent" />
+  	
+  	
+</LinearLayout>
