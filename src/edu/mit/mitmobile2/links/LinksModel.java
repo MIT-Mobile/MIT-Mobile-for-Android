@@ -24,13 +24,13 @@ public class LinksModel {
 			
 			@Override
 			public void onResponse(JSONArray array) throws JSONException {
-				ArrayList<LinkItem> links = new ArrayList<LinkItem>();
+				ArrayList<LinkListItem> linkLists = new ArrayList<LinkListItem>();
 				
 				for (int i = 0; i < array.length(); i++) {
-					links.add(new LinkItem(array.getJSONObject(i)));
+					linkLists.add(new LinkListItem(array.getJSONObject(i)));
 				}
 				
-				MobileWebApi.sendSuccessMessage(uiHandler, links);
+				MobileWebApi.sendSuccessMessage(uiHandler, linkLists);
 			}
 		});
 	}

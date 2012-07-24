@@ -4,22 +4,27 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SimpleArrayAdapter;
+import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.links.LinkListItem.LinkItem;
 
 public class LinksActivity extends ModuleActivity {
 
@@ -55,38 +60,35 @@ public class LinksActivity extends ModuleActivity {
 	private Handler uiHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.arg1 == MobileWebApi.SUCCESS) {
-				ListView linkList = (ListView) findViewById(R.id.links_list);
+				LinearLayout container = (LinearLayout) findViewById(R.id.link_list_container);
+				container.setOrientation(LinearLayout.VERTICAL);
 				@SuppressWarnings("unchecked")
-				ArrayList<LinkItem> links = (ArrayList<LinkItem>) msg.obj;
-				
-				SimpleArrayAdapter<LinkItem> adapter = new SimpleArrayAdapter<LinkItem>(app, links, R.layout.boring_action_row) {
-					@Override
-					public void updateView(final LinkItem item, View view) {
-						// TODO Auto-generated method stub
-						TwoLineActionRow row = (TwoLineActionRow) view;
-						
-						
-						row.setTitle(item.name);
-						row.setSubtitle(item.url);
-						
-						row.setOnTouchListener(new OnTouchListener() {
+				ArrayList<LinkListItem> linkSections = (ArrayList<LinkListItem>) msg.obj;
+				for (LinkListItem section : linkSections) {
+					SectionHeader header = new SectionHeader(mContext, section.title);
+					container.addView(header);
+					for (final LinkItem link : section.links) {
+						TwoLineActionRow row = new TwoLineActionRow(mContext);
+						row.setTitle(link.name);
+						row.setSubtitle(link.url);
+						row.setBackgroundColor(Color.WHITE);
+						row.setOnClickListener(new OnClickListener() {
+
 							@Override
-							public boolean onTouch(View v, MotionEvent event) {
-								// TODO Auto-generated method stub
-								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
+							public void onClick(View v) {
+								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.url));
 								startActivity(intent);
-								return true;
 							}
-							
 						});
+						container.addView(row);
+						
+						DividerView divider = new DividerView(mContext, null);
+						container.addView(divider);
+						
 					}
-				};
-				
-				linkList.setAdapter(adapter);
-				
+				}
 				mLoader.setVisibility(View.GONE);
-				
-			}
+			} // if SUCCESS
 		}
 	};
 
