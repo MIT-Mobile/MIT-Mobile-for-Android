@@ -9,17 +9,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ListView;
-import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.SimpleArrayAdapter.OnItemClickListener;
+import edu.mit.mitmobile2.TwoLineActionRow;
 
 public class LinksActivity extends ModuleActivity {
 
@@ -59,23 +59,25 @@ public class LinksActivity extends ModuleActivity {
 				@SuppressWarnings("unchecked")
 				ArrayList<LinkItem> links = (ArrayList<LinkItem>) msg.obj;
 				
-				SimpleArrayAdapter<LinkItem> adapter = new SimpleArrayAdapter<LinkItem>(app, links, R.layout.links_row) {
+				SimpleArrayAdapter<LinkItem> adapter = new SimpleArrayAdapter<LinkItem>(app, links, R.layout.boring_action_row) {
 					@Override
 					public void updateView(final LinkItem item, View view) {
 						// TODO Auto-generated method stub
-						TextView title = (TextView) view.findViewById(R.id.link_title);
-						TextView subtitle = (TextView) view.findViewById(R.id.link_subtitle);
+						TwoLineActionRow row = (TwoLineActionRow) view;
 						
-						title.setText(item.name);
-						subtitle.setText(item.url);
 						
-						view.setOnClickListener(new OnClickListener() {
+						row.setTitle(item.name);
+						row.setSubtitle(item.url);
+						
+						row.setOnTouchListener(new OnTouchListener() {
 							@Override
-							public void onClick(View v) {
+							public boolean onTouch(View v, MotionEvent event) {
 								// TODO Auto-generated method stub
 								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.url));
 								startActivity(intent);
+								return true;
 							}
+							
 						});
 					}
 				};
