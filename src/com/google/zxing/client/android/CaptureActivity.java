@@ -310,7 +310,7 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
 	public static Dialog helpDialog(Activity activity) {
 		//Context context = activity.getApplicationContext();
 		Dialog dialog = new Dialog(activity);
-		dialog.setTitle("Scan QR Code");
+		dialog.setTitle("Scan QR or Bar Code");
 		dialog.setContentView(R.layout.qr_dialog);
 		return dialog;
 		
