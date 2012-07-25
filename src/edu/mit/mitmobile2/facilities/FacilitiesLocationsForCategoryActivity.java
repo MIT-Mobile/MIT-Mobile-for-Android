@@ -24,7 +24,6 @@ import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 	
 	public static final String TAG = "FacilitiesLocationsForCategoryActivity";
-	private static final int MENU_INFO = 0;
 
 	Context mContext;
 	ListView mListView;
@@ -110,10 +109,7 @@ public class FacilitiesLocationsForCategoryActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

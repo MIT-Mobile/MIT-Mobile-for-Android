@@ -19,7 +19,6 @@ import edu.mit.mitmobile2.R;
 public class FacilitiesProblemTypeActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
-	private static final int MENU_INFO = 0;
 
 	private Context mContext;	
 	final FacilitiesDB db = FacilitiesDB.getInstance(this);
@@ -68,10 +67,7 @@ public class FacilitiesProblemTypeActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
+		
 		default:
 			return super.onOptionsItemSelected(item);
 		}

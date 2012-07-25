@@ -28,7 +28,6 @@ import edu.mit.mitmobile2.facilities.RoomSearchCursorAdapter.RoomSearchFilteredC
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 	public static final String TAG = "FacilitiesRoomLocationsActivity";
-	private static final int MENU_INFO = 0;
 
 	Context mContext;
 	ListView mListView;
@@ -166,10 +165,7 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
