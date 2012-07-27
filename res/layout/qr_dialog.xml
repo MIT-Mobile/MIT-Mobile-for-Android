@@ -31,7 +31,7 @@
 			android:layout_toLeftOf="@id/qrreaderHelpIV"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:padding="2dp" style="@style/BodyText" 
-			android:text="To scan a QR or Bar code, frame it above. Avoid glare and shadows." /> 
+			android:text="To scan a QR code or Barcode, frame it above. Avoid glare and shadows." /> 
 	</RelativeLayout>
 
 </LinearLayout>
