@@ -212,21 +212,6 @@ public class NewsDetailsView extends LockingScrollView {
                 return bar; 
         } 
         
-//		 public void onSizeChanged(final int w, int h, int oldw, int oldh) {
-//		    	super.onSizeChanged(w, h, oldw, oldh);
-//		    	
-//		    	new Handler().postDelayed(new Runnable() {
-//
-//					@Override
-//					public void run() {
-//				    	if (w > 0) {
-//				    		loadUrl("javascript:resizeVideos(" + w + ")");
-//				    	}
-//					}
-//		    		
-//		    	}, 200);
-//		    }
-        
     }
 
     final class JavaScriptInterface {
