@@ -193,7 +193,6 @@ public class NewsDetailsActivity extends SliderActivity {
 			mNewsDetailView = new NewsDetailsView(mContext, mNewsItem);
 			
 			return mNewsDetailView;
-			
 		}
 
 		@Override
