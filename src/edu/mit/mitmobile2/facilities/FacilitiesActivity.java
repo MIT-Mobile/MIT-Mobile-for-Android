@@ -31,7 +31,6 @@ public class FacilitiesActivity extends ModuleActivity {
 	
 	
 	public static final String TAG = "FacilitiesActivity";
-	private static final int MENU_INFO = 0;
 	
 	/****************************************************/
 	@Override
@@ -115,10 +114,6 @@ public class FacilitiesActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -126,8 +121,6 @@ public class FacilitiesActivity extends ModuleActivity {
 	
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) { 
-		menu.add(0, MENU_INFO, Menu.NONE, "Info")
-		  .setIcon(R.drawable.menu_about);
 	}
 
 

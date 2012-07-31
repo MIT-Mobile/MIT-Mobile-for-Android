@@ -54,7 +54,6 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
-	private static final int MENU_INFO = 0;
 	private static String ATTACH_PHOTO = "Attach Photo";
 	private static String CHANGE_PHOTO = "Change Photo";
 
@@ -329,10 +328,7 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

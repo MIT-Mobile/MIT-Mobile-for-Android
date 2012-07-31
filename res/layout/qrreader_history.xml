@@ -6,7 +6,7 @@
   android:layout_height="fill_parent">
   
     <edu.mit.mitmobile2.TitleBar
-  		android:text="QR Reader"
+  		android:text="QR Scanner"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
 
@@ -47,7 +47,7 @@
 			android:layout_toLeftOf="@id/qrreaderHelpIV"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:padding="2dp" style="@style/BodyText" 
-			android:text="QR codes, similar to barcodes, are two-dimensional data matrices used to encode URLs and other data." /> 
+			android:text="To scan a bar or QR code, frame it above. Avoid glare and shadows." /> 
 	</RelativeLayout>
 
 	<TextView
