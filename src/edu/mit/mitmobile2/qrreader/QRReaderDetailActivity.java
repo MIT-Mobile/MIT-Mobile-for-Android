@@ -104,10 +104,10 @@ public class QRReaderDetailActivity extends ModuleActivity {
 								if (position == 0) {
 									// share is always at position 0
 									// handle share action
-									CommonActions.shareContent(QRReaderDetailActivity.this, "", "", qrcode.getId());
+									CommonActions.shareContent(QRReaderDetailActivity.this, "", "", item.payload);
 								} else {
 									// handle regular action
-									CommonActions.doAction(QRReaderDetailActivity.this, qrcode.getId());
+									CommonActions.doAction(QRReaderDetailActivity.this, item.payload);
 								}
 							}
 						});

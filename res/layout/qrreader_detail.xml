@@ -6,6 +6,13 @@
   android:layout_height="wrap_content"
   android:background="@color/rowBackground">
   
+    <edu.mit.mitmobile2.FullScreenLoader
+  	    android:layout_width="match_parent"
+  	    android:layout_height="match_parent"
+  	    android:id="@+id/qrDetailLoader"
+  	    android:visibility="gone"
+  	/>
+  
     <edu.mit.mitmobile2.TitleBar
   		android:text="QR Reader"
   		android:layout_width="fill_parent"
@@ -57,11 +64,6 @@
   		</LinearLayout>	
   	</RelativeLayout>
   	
-  	<edu.mit.mitmobile2.FullScreenLoader
-  	    android:layout_width="match_parent"
-  	    android:layout_height="match_parent"
-  	    android:id="@+id/qrDetailLoader"
-  	    android:visibility="gone"
-  	    />
+  	
   	
 </LinearLayout>
