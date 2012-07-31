@@ -35,29 +35,29 @@ public class QRReaderDetailActivity extends ModuleActivity {
 		qrcodeIV.setImageBitmap(qrcode.getBitmap());
 		
 		TextView qrcodeTV = (TextView) findViewById(R.id.qrreaderDetailTV);
-		String urlTitle = SpecialActions.actionTitle(qrcode.getUrl());
+		String urlTitle = SpecialActions.actionTitle(qrcode.getId());
 		if(urlTitle != null) {
 			qrcodeTV.setText(urlTitle);
 		} else {
-			qrcodeTV.setText(qrcode.getUrl());
+			qrcodeTV.setText(qrcode.getId());
 		}
 		
 		TwoLineActionRow openURLAction = (TwoLineActionRow) findViewById(R.id.qrreaderDetailOpenURL);
 		openURLAction.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CommonActions.doAction(QRReaderDetailActivity.this, qrcode.getUrl());
+				CommonActions.doAction(QRReaderDetailActivity.this, qrcode.getId());
 			}
 		});
-		if(SpecialActions.actionSummary(qrcode.getUrl()) != null) {
-			openURLAction.setTitle(SpecialActions.actionSummary(qrcode.getUrl()));
+		if(SpecialActions.actionSummary(qrcode.getId()) != null) {
+			openURLAction.setTitle(SpecialActions.actionSummary(qrcode.getId()));
 		}
 		
 		TwoLineActionRow shareURLAction = (TwoLineActionRow) findViewById(R.id.qrreaderDetailShareURL);
 		shareURLAction.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				CommonActions.shareContent(QRReaderDetailActivity.this, "", "", qrcode.getUrl());
+				CommonActions.shareContent(QRReaderDetailActivity.this, "", "", qrcode.getId());
 			}
 		});
 	}

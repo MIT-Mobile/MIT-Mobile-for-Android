@@ -55,9 +55,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 		mLoader = new FullScreenLoader(this, null);	
 		root.addView(mLoader, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		
-		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());
-		
-			
+		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
 		
 		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
@@ -111,16 +109,16 @@ public class QRReaderMainActivity extends ModuleActivity {
 				QRCode qrcode;
 				if (MobileWebApi.SUCCESS == msg.arg1) {
 					SuggestedUrl suggested = (SuggestedUrl) msg.obj;
-					String url = result;
+					String identifier = result;
 					
 					if (null == suggested) {
 						return;
 					}
 					
-					if (suggested.isSuccess && null != suggested.suggestedUrl) {
-						url = suggested.suggestedUrl;
+					if (suggested.isSuccess && null != suggested.displayName) {
+						identifier = suggested.displayName;
 					}
-					qrcode = updateDB(url);
+					qrcode = updateDB(identifier);
 				} else {
 					qrcode = updateDB(result);
 				}

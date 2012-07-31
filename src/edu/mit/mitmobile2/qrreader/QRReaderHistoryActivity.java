@@ -66,7 +66,7 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 			TextView barcodeSubtitle = (TextView) view.findViewById(R.id.qrreaderRowSubtitle);
 			
 			barcodeIV.setImageBitmap(item.getBitmap());
-			barcodeTitle.setText(item.getUrl());
+			barcodeTitle.setText(item.getId());
 			barcodeSubtitle.setText(DateStrings.agoString(item.getDate()));
 		}
 	}
