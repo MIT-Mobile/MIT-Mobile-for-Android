@@ -93,46 +93,11 @@ public class QRReaderMainActivity extends ModuleActivity {
 			mBitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
 			String result = extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT);
 			
-			reMapURL(result);
+			QRCode qrcode = updateDB(result);
+			QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
+			mLaunchScanScheduled = false;
+			mFinishScheduled = false;
 		}
-	}
-	
-	private boolean isUrl(String result) {
-		return result.matches("http:\\/\\/.*");
-	}
-	
-	private void reMapURL(final String result) {
-		Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				
-				QRCode qrcode;
-				if (MobileWebApi.SUCCESS == msg.arg1) {
-					SuggestedUrl suggested = (SuggestedUrl) msg.obj;
-					String identifier = result;
-					
-					if (null == suggested) {
-						return;
-					}
-					
-					if (suggested.isSuccess && null != suggested.displayName) {
-						identifier = suggested.displayName;
-					}
-					qrcode = updateDB(identifier);
-				} else {
-					qrcode = updateDB(result);
-				}
-				
-				QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
-				mLaunchScanScheduled = true;
-				mFinishScheduled = false;
-			}
-		};
-		
-		mLoader.setVisibility(View.VISIBLE);
-		mLoader.showLoading();
-		
-		((QRReaderModule) getModule()).getModel().fetchSuggestedUrl(this, result, handler, isUrl(result));
 	}
 	
 	@Override
@@ -156,11 +121,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 	protected void onPause() {
 		super.onPause();
 		
-		// always hide loading indicator when pausing
-		// we don't care the loading indicator does not get reshown
-		// when we resume
-		mLoader.setVisibility(View.GONE);
-		mLoader.stopLoading();
+		mLaunchScanScheduled = true;
+		mFinishScheduled = false;
 	}
 	
 	private QRCode updateDB(String url) {

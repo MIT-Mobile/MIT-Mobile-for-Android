@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.qrreader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -15,7 +16,7 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 public class QRReaderModel {
 	private static final String MODULE_NAME = "qr";
 	
-	public void fetchSuggestedUrl(Context context, String originString, final Handler uiHandler, boolean isUrl) {
+	public void fetchSuggestedUrl(Context context, String originString, final Handler uiHandler) {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		parameters.put("module", MODULE_NAME);
 		parameters.put("q", originString);
@@ -42,19 +43,22 @@ public class QRReaderModel {
 					if (shareObj != null) {
 						suggest.shareAction = new QRAction();
 						suggest.shareAction.title	= shareObj.getString("title");
-						suggest.shareAction.url		= shareObj.getString("data");
+						suggest.shareAction.payload	= shareObj.getString("data");
 					}
 					
 					// init suggest.actions array
 					JSONArray actionsArr = object.optJSONArray("actions");
 					if (actionsArr != null) {
 						int actionsArrLength = actionsArr.length();
-						suggest.actions = new QRAction[actionsArrLength];
+						suggest.actions = new ArrayList<QRAction>();
 						for (int i = 0; i < actionsArrLength; i++) {
 							
 							JSONObject jsonAction = actionsArr.getJSONObject(i);
-							suggest.actions[i].title 	= jsonAction.getString("title");
-							suggest.actions[i].url 		= jsonAction.getString("url");
+							QRAction actionItem = new QRAction();
+							actionItem.title 	= jsonAction.optString("title");
+							actionItem.payload 	= jsonAction.optString("url");
+							
+							suggest.actions.add( actionItem );
 						}
 					}
 					
@@ -69,14 +73,14 @@ public class QRReaderModel {
 		public String type;
 		public String displayType;
 		public String displayName;
-		public QRAction[] actions;
+		public ArrayList<QRAction> actions;
 		public QRAction	shareAction;
 		
 	}
 	
 	public static class QRAction {
 		public String title;
-		public String url;
+		public String payload;
 	}
 	
 }
