@@ -60,6 +60,8 @@ public class NewsDetailsView extends LockingScrollView {
 		webview = (WebView) findViewById(R.id.newsDetailsWV);
 		webview.setFocusable(false);
 		String templateHtml = readTextFromResource(R.raw.news_detail);
+		webview.getSettings().setPluginsEnabled(true);
+//		webview.getSettings().setPluginState(WebSettings.PluginState.ON);
 		
 		// Set Title
 		templateHtml = templateHtml.replace("__TITLE__", mNewsItem.title);
@@ -202,8 +204,8 @@ public class NewsDetailsView extends LockingScrollView {
 				}
             });
             
+            
         }
-
 		
         
 		@Override
