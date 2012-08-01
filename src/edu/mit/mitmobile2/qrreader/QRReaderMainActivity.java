@@ -2,28 +2,27 @@ package edu.mit.mitmobile2.qrreader;
 
 import java.util.Date;
 
-import com.google.zxing.client.android.CaptureActivity;
-
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+
+import com.google.zxing.client.android.CaptureActivity;
+
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
-import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.qrreader.QRReaderModel.SuggestedUrl;
+
 
 public class QRReaderMainActivity extends ModuleActivity {
 
@@ -47,17 +46,26 @@ public class QRReaderMainActivity extends ModuleActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.boring_activity_layout);
-		LinearLayout root = (LinearLayout) findViewById(R.id.boringLayoutRoot);
-		TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
-		titleBar.setTitle("Scanner");
+		PackageManager pm = this.getPackageManager();
+		
+		if (!(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))) {
+			Log.d("camera","System does NOT have a camera!");
+			setContentView(R.layout.camera_not_found);
+			mLaunchScanScheduled = false;
+		} else {
+			Log.d("camera","System does have a camera!");
+			setContentView(R.layout.boring_activity_layout);
+			LinearLayout root = (LinearLayout) findViewById(R.id.boringLayoutRoot);
+			TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
+			titleBar.setTitle("Scanner");
+				
+			mLoader = new FullScreenLoader(this, null);	
+			root.addView(mLoader, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			
-		mLoader = new FullScreenLoader(this, null);	
-		root.addView(mLoader, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		
-		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
-		
-		mLaunchScanScheduled = true;
+			mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
+			
+			mLaunchScanScheduled = true;
+		}
 		mFinishScheduled = false;
 	}
 	
