@@ -68,7 +68,7 @@ public class QRCodeDB {
 		SQLiteDatabase db = mQRCodeDBHelper.getWritableDatabase();
 		
 		ContentValues qrcodeValues = new ContentValues();
-		qrcodeValues.put(URL, qrcode.getUrl());
+		qrcodeValues.put(URL, qrcode.getId());
 		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		qrcode.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, ostream);
 		qrcodeValues.put(IMAGE, ostream.toByteArray());

@@ -3,11 +3,18 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
+  android:layout_height="fill_parent"
   android:background="@color/rowBackground">
   	<!-- <FrameLayout
   		android:layout_width="fill_parent"
   		android:layout_height="500px"> -->
+  		
+  		<edu.mit.mitmobile2.FullScreenLoader
+		  	    android:layout_width="fill_parent"
+		  	    android:layout_height="fill_parent"
+		  	    android:id="@+id/qrDetailLoader"
+		  	    android:visibility="gone"
+  			/>
   		
   		<ImageView
   			android:id="@+id/qrreaderDetailIV"
@@ -27,11 +34,11 @@
   		android:gravity="center_horizontal"
   		android:id="@+id/qrreaderDetailTV" 
   		style="@style/SmallPrint" />
+  	
   		
   	<RelativeLayout
   		android:layout_width="fill_parent"
   		android:layout_height="fill_parent">
-  	
   	
   		<LinearLayout
   			android:orientation="vertical"
@@ -39,27 +46,20 @@
   			android:layout_height="wrap_content"
   			android:layout_alignParentBottom="true">
   			
+  		    
+  		    
   			<edu.mit.mitmobile2.DividerView
-  				android:layout_width="fill_parent"
-  				android:layout_height="@dimen/dividerHeight" />
-  				
-  			<edu.mit.mitmobile2.TwoLineActionRow
-  				android:id="@+id/qrreaderDetailOpenURL"
-  				android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:text="Open URL" />
-  				
-  			<edu.mit.mitmobile2.DividerView
-  				android:layout_width="fill_parent"
-  				android:layout_height="@dimen/dividerHeight" />
-  				
-  			<edu.mit.mitmobile2.TwoLineActionRow
-  				android:id="@+id/qrreaderDetailShareURL"
-  				android:layout_width="fill_parent"
-  				android:layout_height="wrap_content"
-  				android:text="Share URL" />
+  	    		android:layout_width = "match_parent"
+  	    		android:layout_height = "1dip" />
+  			<ListView
+	    		android:id="@+id/qrreaderActionLV"
+	    		android:layout_width = "match_parent"
+	    		android:layout_height = "wrap_content"
+				style="@style/Lists" />
   			
   		</LinearLayout>	
   	</RelativeLayout>
+  	
+  	
   	
 </LinearLayout>

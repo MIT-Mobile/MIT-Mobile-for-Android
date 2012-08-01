@@ -42,7 +42,7 @@ import com.google.zxing.client.android.result.ResultHandlerFactory;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ClipboardManager;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;

@@ -6,21 +6,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-
 
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.FullScreenLoader;
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.qrreader.QRReaderModel.SuggestedUrl;
+
 
 public class QRReaderMainActivity extends NewModuleActivity {
 
@@ -47,9 +39,7 @@ public class QRReaderMainActivity extends NewModuleActivity {
 		mLoader = new FullScreenLoader(this, null);	
 		setContentView(mLoader, false);
 		
-		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());
-		
-			
+		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
 		
 		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
@@ -87,7 +77,10 @@ public class QRReaderMainActivity extends NewModuleActivity {
 			mBitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
 			String result = extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT);
 			
-			reMapURL(result);
+			QRCode qrcode = updateDB(result);
+			QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
+			mLaunchScanScheduled = false;
+			mFinishScheduled = false;
 		}
 	}
 	
@@ -111,45 +104,6 @@ public class QRReaderMainActivity extends NewModuleActivity {
 	@Override
 	protected void onOptionSelected(String optionId) { }
 
-	
-	private boolean isUrl(String result) {
-		return result.matches("http:\\/\\/.*");
-	}
-	
-	private void reMapURL(final String result) {
-		Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				
-				QRCode qrcode;
-				if (MobileWebApi.SUCCESS == msg.arg1) {
-					SuggestedUrl suggested = (SuggestedUrl) msg.obj;
-					String url = result;
-					
-					if (null == suggested) {
-						return;
-					}
-					
-					if (suggested.isSuccess && null != suggested.suggestedUrl) {
-						url = suggested.suggestedUrl;
-					}
-					qrcode = updateDB(url);
-				} else {
-					qrcode = updateDB(result);
-				}
-				
-				QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
-				mLaunchScanScheduled = true;
-				mFinishScheduled = false;
-			}
-		};
-		
-		mLoader.setVisibility(View.VISIBLE);
-		mLoader.showLoading();
-		
-		((QRReaderModule) getNewModule()).getModel().fetchSuggestedUrl(this, result, handler, isUrl(result));
-	}
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -164,18 +118,8 @@ public class QRReaderMainActivity extends NewModuleActivity {
 			mFinishScheduled = true;
 			launchScan();
 		}
-		
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		// always hide loading indicator when pausing
-		// we don't care the loading indicator does not get reshown
-		// when we resume
-		mLoader.setVisibility(View.GONE);
-		mLoader.stopLoading();
+		mLaunchScanScheduled = true;
+		mFinishScheduled = false;
 	}
 	
 	private QRCode updateDB(String url) {

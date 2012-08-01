@@ -93,13 +93,13 @@
 		    } else {
 		        document.getElementById("imageCount").innerHTML = imageCount + ((imageCount == 1) ? " image" : " images");
 		    }
-		    
+
 		    // remove img.thumbnail if thumbnail is not set (empty src attributes == the base URL)
 		    if (document.getElementsByClassName("thumbnail").length > 0 && document.getElementsByClassName("thumbnail")[0].src.indexOf("file:") == 0) {
 		        var imageNode = document.getElementById("thumbnailLink");
 		        imageNode.parentElement.removeChild(imageNode);
 		    }
-		    
+
 		    var bookmarkButton = document.getElementById("bookmarkButton");
 		    bookmarkButton.addEventListener("touchstart", function() {
 		        addClass(bookmarkButton, "pressed");
@@ -116,19 +116,19 @@
 		        removeClass(shareButton, "pressed");
 		        window.newsDetail.clickShareButton();
 		    });
-		    
+
             resizeVideos();
 		}
-		
+
 		function resizeVideos(fullWidth) {
 		    var content = document.getElementById("content");
 		    if (!content) { return; }
-		    
+
 		    var fullWidth = content.offsetWidth;
 		    var iframes = document.getElementsByTagName("IFRAME");
 		    for (var i = 0; i < iframes.length; i++) {
 		        var iframe = iframes[i];
-		        
+
                 // remember original width and height
                 if (typeof iframe.originalWidth == 'undefined') {
                     iframe.originalWidth = iframe.width;
@@ -149,7 +149,7 @@
                 }
 		    }
 		}
-		    
+
 	    function hasClass(ele,cls) {
 	        return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
 	    }

@@ -13,10 +13,14 @@ import android.os.Handler;
 import android.webkit.WebChromeClient;
 
 import android.content.Context;
-
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnErrorListener;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,17 +35,22 @@ import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.NewModuleActivity.OnBackPressedListener;
 import edu.mit.mitmobile2.NewModuleActivity.OnPausedListener;
+
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.objs.NewsItem;
 
 public class NewsDetailsView extends WebView {
 	private Handler mHandler = new Handler();
+
 
 	NewModuleActivity mModuleActivity;
 	NewsItem mNewsItem;
 	static final String TAG = "NewsDetailsView";
 	
     static final SimpleDateFormat sDateFormat = new SimpleDateFormat("EEE d, MMM yyyy");
+    
+    SliderActivity mSliderActivity;
 	
 	/****************************************************/
 	public NewsDetailsView(Context context, NewsItem newsItem) {
@@ -198,8 +207,8 @@ public class NewsDetailsView extends WebView {
 					}
 				}
             });
-        }
 
+        }
         
         @Override 
         public View getVideoLoadingProgressView() { 
@@ -253,6 +262,7 @@ public class NewsDetailsView extends WebView {
             mHandler.post(new Runnable() {
                 public void run() {
 					NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
+
                 }
             });
         }

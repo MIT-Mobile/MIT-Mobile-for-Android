@@ -3,13 +3,15 @@
       package="edu.mit.mitmobile2"
       android:versionCode="10"
       android:installLocation="auto"
-      android:hardwareAccelerated="true"
-      android:versionName="2.3.1">
+      android:versionName="2.3.1"
+      >
+
     <application android:label="@string/app_name" 
     			 android:name=".Global"
                  android:icon="@drawable/mit_mobile_icon" 
                  android:debuggable="true" 
-                 android:theme="@style/Main">
+                 android:theme="@style/Main"
+                 android:hardwareAccelerated="true">
     
         <activity android:name=".HomeScreenActivity"
         		  android:screenOrientation="portrait"
@@ -206,7 +208,7 @@
 		<activity android:name=".tour.TourMapActivity" android:process=":tourmap" android:screenOrientation="portrait"/>
 		<activity android:name=".tour.TourStartHelpActivity" android:screenOrientation="portrait"/>
 		
-		<activity android:name=".qrreader.QRReaderMainActivity" android:process=":qrreader"/>
+		<activity android:name=".qrreader.QRReaderMainActivity" android:process=":qrreader" android:hardwareAccelerated="false"/>
 		<activity android:name=".qrreader.QRReaderDetailActivity" android:screenOrientation="portrait" android:process=":qrreader" />
 		<activity android:name=".qrreader.QRReaderHistoryActivity" android:screenOrientation="portrait" android:process=":qrreader" />
 		
@@ -310,7 +312,8 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>	
 	
-	<uses-sdk android:minSdkVersion="8"></uses-sdk>
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11"></uses-sdk>
+	
 
 <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
 <uses-permission android:name="android.permission.WRITE_CALENDAR"></uses-permission>
