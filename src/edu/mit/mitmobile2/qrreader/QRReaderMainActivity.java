@@ -55,9 +55,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 		mLoader = new FullScreenLoader(this, null);	
 		root.addView(mLoader, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		
-		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());
-		
-			
+		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
 		
 		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
@@ -95,46 +93,11 @@ public class QRReaderMainActivity extends ModuleActivity {
 			mBitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
 			String result = extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT);
 			
-			reMapURL(result);
+			QRCode qrcode = updateDB(result);
+			QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
+			mLaunchScanScheduled = false;
+			mFinishScheduled = false;
 		}
-	}
-	
-	private boolean isUrl(String result) {
-		return result.matches("http:\\/\\/.*");
-	}
-	
-	private void reMapURL(final String result) {
-		Handler handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				
-				QRCode qrcode;
-				if (MobileWebApi.SUCCESS == msg.arg1) {
-					SuggestedUrl suggested = (SuggestedUrl) msg.obj;
-					String url = result;
-					
-					if (null == suggested) {
-						return;
-					}
-					
-					if (suggested.isSuccess && null != suggested.suggestedUrl) {
-						url = suggested.suggestedUrl;
-					}
-					qrcode = updateDB(url);
-				} else {
-					qrcode = updateDB(result);
-				}
-				
-				QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
-				mLaunchScanScheduled = true;
-				mFinishScheduled = false;
-			}
-		};
-		
-		mLoader.setVisibility(View.VISIBLE);
-		mLoader.showLoading();
-		
-		((QRReaderModule) getModule()).getModel().fetchSuggestedUrl(this, result, handler, isUrl(result));
 	}
 	
 	@Override
@@ -151,18 +114,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 			mFinishScheduled = true;
 			launchScan();
 		}
-		
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
-		// always hide loading indicator when pausing
-		// we don't care the loading indicator does not get reshown
-		// when we resume
-		mLoader.setVisibility(View.GONE);
-		mLoader.stopLoading();
+		mLaunchScanScheduled = true;
+		mFinishScheduled = false;
 	}
 	
 	private QRCode updateDB(String url) {

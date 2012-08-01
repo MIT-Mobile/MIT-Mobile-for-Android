@@ -236,7 +236,7 @@ public class CommonActions {
 			actionUrl = SpecialActions.actionUrl(actionUrl);
 		}
 		
-		if(actionUrl.startsWith("http://")) {
+		if(actionUrl.startsWith("http://") || actionUrl.startsWith("https://")) {
 			viewURL(context, actionUrl);
 		}
 		
