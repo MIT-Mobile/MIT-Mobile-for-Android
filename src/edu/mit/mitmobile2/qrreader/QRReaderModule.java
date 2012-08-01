@@ -18,12 +18,12 @@ public class QRReaderModule extends NewModule {
 	
 	@Override
 	public String getShortName() {
-		return "QR Reader";
+		return "Scanner";
 	}
 	
 	@Override
 	public String getLongName() {
-		return "QR Reader";
+		return "Scanner";
 	}
 
 	@Override
