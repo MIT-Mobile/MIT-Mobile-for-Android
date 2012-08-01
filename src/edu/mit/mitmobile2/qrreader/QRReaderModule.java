@@ -45,7 +45,7 @@ public class QRReaderModule extends NewModule {
 	public List<MITMenuItem> getPrimaryOptions() {
 		List<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
 		menuItems.add(new MITMenuItem(MENU_QR_HELP, "", R.drawable.menu_info));
-		menuItems.add(new MITMenuItem(MENU_HISTORY, "history", R.drawable.menu_info));
+		menuItems.add(new MITMenuItem(MENU_HISTORY, "history", R.drawable.action_history));
 		return menuItems;
 	}
 
