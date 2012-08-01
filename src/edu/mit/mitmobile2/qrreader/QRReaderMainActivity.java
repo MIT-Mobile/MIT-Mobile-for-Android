@@ -114,13 +114,6 @@ public class QRReaderMainActivity extends ModuleActivity {
 			mFinishScheduled = true;
 			launchScan();
 		}
-		
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		
 		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
 	}
