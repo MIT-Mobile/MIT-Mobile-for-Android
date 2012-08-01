@@ -40,8 +40,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 	private static final String LAUNCH_SCHEDULED_KEY = "launch_scheduled";
 	private static final String FINISH_SCHEDULED_KEY = "finish_scheduled";
 	
-	private boolean mLaunchScanScheduled = true;
-	private boolean mFinishScheduled = false;
+	private boolean mLaunchScanScheduled;
+	private boolean mFinishScheduled;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,6 @@ public class QRReaderMainActivity extends ModuleActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
-			mFinishScheduled = false;
 			Bundle extras = data.getExtras();
 			
 			byte[] bitmapBytes = extras.getByteArray(com.google.zxing.client.android.Intents.Scan.RESULT_BITMAP_BYTES);
@@ -115,7 +114,11 @@ public class QRReaderMainActivity extends ModuleActivity {
 			launchScan();
 		}
 		mLaunchScanScheduled = true;
-		mFinishScheduled = false;
+	}
+	
+	protected void onBackPresed() {
+		mFinishScheduled = true;
+		super.onBackPressed();
 	}
 	
 	private QRCode updateDB(String url) {
