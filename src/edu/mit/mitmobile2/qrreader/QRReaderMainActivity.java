@@ -32,7 +32,6 @@ public class QRReaderMainActivity extends ModuleActivity {
 	
 	ListView mHistoryListView;
 	View mHelpView;
-	FullScreenLoader mLoader;
 	
 	private Bitmap mBitmap;
 	
@@ -46,26 +45,9 @@ public class QRReaderMainActivity extends ModuleActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		PackageManager pm = this.getPackageManager();
+		setContentView(R.layout.camera_not_found);
 		
-		if (!(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))) {
-			Log.d("camera","System does NOT have a camera!");
-			setContentView(R.layout.camera_not_found);
-			mLaunchScanScheduled = false;
-		} else {
-			Log.d("camera","System does have a camera!");
-			setContentView(R.layout.boring_activity_layout);
-			LinearLayout root = (LinearLayout) findViewById(R.id.boringLayoutRoot);
-			TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
-			titleBar.setTitle("Scanner");
-				
-			mLoader = new FullScreenLoader(this, null);	
-			root.addView(mLoader, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			
-			mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
-			
-			mLaunchScanScheduled = true;
-		}
+		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
 	}
 	
@@ -110,6 +92,17 @@ public class QRReaderMainActivity extends ModuleActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		PackageManager pm = this.getPackageManager();
+		if (!(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))) {
+			Log.d("camera","System does NOT have a camera!");
+			mLaunchScanScheduled = false;
+		} else {
+			mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());
+			
+			View noCamera = findViewById(R.id.NoCameraLayout);
+			noCamera.setVisibility(View.GONE);
+		}
+		
 		
 		if (mFinishScheduled) {
 			finish();
