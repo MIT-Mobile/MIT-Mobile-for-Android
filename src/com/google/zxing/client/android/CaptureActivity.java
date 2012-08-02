@@ -294,7 +294,7 @@ public final class CaptureActivity extends NewModuleActivity implements SurfaceH
 	public static Dialog helpDialog(Activity activity) {
 		//Context context = activity.getApplicationContext();
 		Dialog dialog = new Dialog(activity);
-		dialog.setTitle("Scan QR Code");
+		dialog.setTitle("Scanner");
 		dialog.setContentView(R.layout.qr_dialog);
 		return dialog;
 		
