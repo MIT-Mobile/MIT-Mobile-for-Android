@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -34,6 +35,8 @@ public class QRReaderMainActivity extends ModuleActivity {
 	View mHelpView;
 	
 	private Bitmap mBitmap;
+	
+	 private static final int MENU_QR_HELP = Menu.FIRST;
 	
 	private static final String LAUNCH_SCHEDULED_KEY = "launch_scheduled";
 	private static final String FINISH_SCHEDULED_KEY = "finish_scheduled";
@@ -140,17 +143,21 @@ public class QRReaderMainActivity extends ModuleActivity {
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
-	
-	private final static int DIALOG_QR_HELP = 1;
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-		case DIALOG_QR_HELP:			
-			return CaptureActivity.helpDialog(this);
-		}
-		return null;
-	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { } // TODO Auto-generated method stub
+	protected void prepareActivityOptionsMenu(Menu menu) {
+		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
+		.setIcon(R.drawable.menu_about);
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_QR_HELP:
+			Intent intent = new Intent(this, QRReaderHelpActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		return true;
+		
+	}
 }

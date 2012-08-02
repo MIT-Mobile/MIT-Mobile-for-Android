@@ -32,12 +32,23 @@
 		/>
 		  
 		<TextView
+		    android:id="@+id/qrreaderHelpText"
 			android:layout_toLeftOf="@id/qrreaderHelpIV"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:padding="2dp" style="@style/BodyText" 
+			android:padding="2dp"
+			style="@style/BodyText" 
 			android:text="To scan a bar code or QR code, frame it above. Avoid glare and shadows." 
 		/> 
+		
 	</RelativeLayout>
-
+		<TextView
+		    android:id="@+id/qrreaderHelpNoCameraText"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:paddingTop="30dip"
+			android:padding="2dp"
+			style="@style/BodyText" 
+			android:gravity="center"
+			android:text="Unfortunately a rear-facing camera is required for the Scanner. Sorry for any inconvenience." 
+		/> 
 
 </LinearLayout>

@@ -646,8 +646,8 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
 			startActivity(intent);
 			return true;
 		case MENU_QR_HELP:
-			intent = new Intent(this, QRReaderHelpActivity.class);
-			startActivity(intent);
+			Intent helpIntent = new Intent(this, QRReaderHelpActivity.class);
+			startActivity(helpIntent);
 			return true;
 		}
 		return true;

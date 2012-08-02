@@ -71,7 +71,6 @@
             android:paddingLeft="25dip"
             />
     
-    
     </RelativeLayout>
     
 </LinearLayout>
