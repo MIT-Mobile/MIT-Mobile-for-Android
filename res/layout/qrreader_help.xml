@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/qrreaderHelpView"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+  
+    <edu.mit.mitmobile2.TitleBar
+        android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Scanner Help"
+	/>
+		   
+	<RelativeLayout
+	  	android:orientation="horizontal"
+	  	android:layout_width="fill_parent"
+	  	android:layout_height="wrap_content"
+	  	android:paddingLeft="@dimen/horizontalPadding"
+  		android:paddingRight="@dimen/horizontalPadding"
+  		android:paddingTop="@dimen/verticalPadding"
+  		android:paddingBottom="@dimen/verticalPadding">
+  
+  		<ImageView
+	  	  	android:src="@drawable/sample_qr"
+	  	  	android:scaleType="fitXY"
+		  	android:padding="4dp" 
+		  	android:id="@+id/qrreaderHelpIV"
+		  	android:layout_alignParentRight="true"
+		  	android:layout_width="90dp"
+		  	android:layout_height="90dp"
+		/>
+		  
+		<TextView
+			android:layout_toLeftOf="@id/qrreaderHelpIV"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:padding="2dp" style="@style/BodyText" 
+			android:text="To scan a bar code or QR code, frame it above. Avoid glare and shadows." 
+		/> 
+	</RelativeLayout>
+
+
+</LinearLayout>

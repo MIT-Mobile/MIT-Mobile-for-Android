@@ -21,7 +21,6 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 	private QRCodeDB mQRCodeDB;
 	private ArrayList<QRCode> mQRCodes;
 	private QRCodeArrayAdapter mListAdapter;
-	private View mHelpView;
 	private ListView mHistoryListView;
 
 	@Override
@@ -35,7 +34,7 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 		mListAdapter = new QRCodeArrayAdapter(this, mQRCodes);
 		
 		setContentView(R.layout.qrreader_history);
-		mHelpView = findViewById(R.id.qrreaderHelpView);
+		View noHistory = findViewById(R.id.qrreaderNoHistory);
 		mHistoryListView = (ListView) findViewById(R.id.qrreaderMainHistoryLV);
 		mHistoryListView.setAdapter(mListAdapter);
 		mListAdapter.setOnItemClickListener(mHistoryListView,
@@ -48,7 +47,7 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 		);
 		
 		if(mQRCodes.size() > 0) {
-			mHelpView.setVisibility(View.GONE);
+			noHistory.setVisibility(View.GONE);
 			mHistoryListView.setVisibility(View.VISIBLE);
 		}
 	}

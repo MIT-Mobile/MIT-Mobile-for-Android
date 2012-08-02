@@ -93,7 +93,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 	protected void onResume() {
 		super.onResume();
 		PackageManager pm = this.getPackageManager();
-		if (!(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))) {
+		if (!(pm.hasSystemFeature(PackageManager.FEATURE_CAMERA))) {			// remove BANG to test camera-less device
 			Log.d("camera","System does NOT have a camera!");
 			mLaunchScanScheduled = false;
 		} else {
@@ -145,7 +145,7 @@ public class QRReaderMainActivity extends ModuleActivity {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
-		case DIALOG_QR_HELP:
+		case DIALOG_QR_HELP:			
 			return CaptureActivity.helpDialog(this);
 		}
 		return null;

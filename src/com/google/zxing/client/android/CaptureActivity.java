@@ -16,12 +16,6 @@
 
 package com.google.zxing.client.android;
 
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.qrreader.QRReaderHistoryActivity;
-import edu.mit.mitmobile2.qrreader.QRReaderModule;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -30,14 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -72,6 +58,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.QRReaderHelpActivity;
+import edu.mit.mitmobile2.qrreader.QRReaderHistoryActivity;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 
 /**
  *  This client is a heavily paired down version of the sample zxing one
@@ -645,8 +646,9 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
 			startActivity(intent);
 			return true;
 		case MENU_QR_HELP:
-			showDialog(DIALOG_QR_HELP);
-			break;
+			intent = new Intent(this, QRReaderHelpActivity.class);
+			startActivity(intent);
+			return true;
 		}
 		return true;
 	}

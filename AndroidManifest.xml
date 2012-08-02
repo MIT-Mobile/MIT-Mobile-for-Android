@@ -209,6 +209,7 @@
 		<activity android:name=".qrreader.QRReaderMainActivity" android:screenOrientation="portrait" android:process=":qrreader" android:hardwareAccelerated="false" />
 		<activity android:name=".qrreader.QRReaderDetailActivity" android:screenOrientation="portrait" android:process=":qrreader" />
 		<activity android:name=".qrreader.QRReaderHistoryActivity" android:screenOrientation="portrait" android:process=":qrreader" />
+		<activity android:name=".qrreader.QRReaderHelpActivity" android:screenOrientation="portrait" android:process=":qrreader" />
 		
 		<activity android:name=".SettingsActivity" android:theme="@android:style/Theme.Light" />
 
