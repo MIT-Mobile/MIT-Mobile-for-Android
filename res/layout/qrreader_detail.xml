@@ -4,66 +4,67 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
-  android:background="@color/rowBackground">
+  android:background="@drawable/main_repeat">
   
     <edu.mit.mitmobile2.TitleBar
-  		android:text="Scanner"
+  		android:text="Scan Detail"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
   		
-  	<!-- <FrameLayout
+  		
+	<ImageView
+		android:id="@+id/qrreaderDetailIV"
+		android:paddingBottom="15dip"
+		android:layout_gravity="center_horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+  		
+	<TextView
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+  		android:id="@+id/qrreaderDetailScanDate"
+  		android:paddingLeft="@dimen/horizontalPadding"
+  		android:paddingRight="@dimen/horizontalPadding"
+  		android:paddingTop="@dimen/verticalPadding"
+  		android:paddingBottom="@dimen/verticalPadding"
+  		style="@style/SmallPrint" />
+	
+	<TextView
   		android:layout_width="fill_parent"
-  		android:layout_height="500px"> -->
-  		
-  		<ImageView
-  			android:id="@+id/qrreaderDetailIV"
-  			android:paddingTop="40dip"
-  			android:paddingBottom="15dip"
-  			android:layout_gravity="center_horizontal"
-  			android:layout_width="422px"
-  			android:layout_height="350px" />
-  		
-  	<!-- </FrameLayout> -->
+  		android:layout_height="wrap_content"
+  		android:paddingLeft="@dimen/horizontalPadding"
+  		android:paddingRight="@dimen/horizontalPadding"
+  		android:paddingTop="@dimen/verticalPadding"
+  		android:paddingBottom="@dimen/verticalPadding"
+  		android:id="@+id/qrreaderDetailType" 
+  		style="@style/BoldBodyText" />
+  	
   	
   	<TextView
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content"
   		android:paddingLeft="@dimen/horizontalPadding"
   		android:paddingRight="@dimen/horizontalPadding"
-  		android:gravity="center_horizontal"
-  		android:id="@+id/qrreaderDetailTV" 
-  		style="@style/SmallPrint" />
+  		android:paddingTop="@dimen/verticalPadding"
+  		android:paddingBottom="@dimen/verticalPadding"
+  		android:id="@+id/qrreaderDetailContent" 
+  		style="@style/ListItemPrimary" />
+		    
+	<edu.mit.mitmobile2.DividerView
+   		android:layout_width = "match_parent"
+   		android:layout_height = "1dip" />
+	<ListView
+   		android:id="@+id/qrreaderActionLV"
+   		android:layout_width = "match_parent"
+   		android:layout_height = "wrap_content"
+		style="@style/Lists" />
+			
   	
-  		
-  	<RelativeLayout
-  		android:layout_width="fill_parent"
-  		android:layout_height="fill_parent">
-  	
-  		<LinearLayout
-  			android:orientation="vertical"
-  			android:layout_width="fill_parent"
-  			android:layout_height="wrap_content"
-  			android:layout_alignParentBottom="true">
-  			
-  		    <edu.mit.mitmobile2.FullScreenLoader
-		  	    android:layout_width="fill_parent"
-		  	    android:layout_height="fill_parent"
-		  	    android:id="@+id/qrDetailLoader"
-		  	    android:visibility="gone"
-  			/>
-  		    
-  			<edu.mit.mitmobile2.DividerView
-  	    		android:layout_width = "match_parent"
-  	    		android:layout_height = "1dip" />
-  			<ListView
-	    		android:id="@+id/qrreaderActionLV"
-	    		android:layout_width = "match_parent"
-	    		android:layout_height = "wrap_content"
-				style="@style/Lists" />
-  			
-  		</LinearLayout>	
-  	</RelativeLayout>
-  	
-  	
+  	<edu.mit.mitmobile2.FullScreenLoader
+  	    android:layout_width="fill_parent"
+  	    android:layout_height="fill_parent"
+  	    android:id="@+id/qrDetailLoader"
+  	    android:visibility="gone"
+			/>
   	
 </LinearLayout>

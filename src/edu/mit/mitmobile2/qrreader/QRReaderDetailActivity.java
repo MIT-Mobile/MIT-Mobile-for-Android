@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.DateStrings;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
@@ -46,13 +47,17 @@ public class QRReaderDetailActivity extends ModuleActivity {
 		ImageView qrcodeIV = (ImageView) findViewById(R.id.qrreaderDetailIV);
 		qrcodeIV.setImageBitmap(qrcode.getBitmap());
 		
-		TextView qrcodeTV = (TextView) findViewById(R.id.qrreaderDetailTV);
+		TextView qrcodeTV = (TextView) findViewById(R.id.qrreaderDetailContent);
 		String urlTitle = SpecialActions.actionTitle(qrcode.getId());
 		if(urlTitle != null) {
 			qrcodeTV.setText(urlTitle);
 		} else {
 			qrcodeTV.setText(qrcode.getId());
 		}
+		
+		TextView qrcodeDate = (TextView) findViewById(R.id.qrreaderDetailScanDate);
+		qrcodeDate.setText("Scanned " + DateStrings.agoString(qrcode.getDate()));
+		
 		
 		mLoader = (FullScreenLoader) findViewById(R.id.qrDetailLoader);
 		mLoader.setVisibility(View.VISIBLE);
@@ -69,6 +74,9 @@ public class QRReaderDetailActivity extends ModuleActivity {
 					}
 					
 					if (qrItem.isSuccess) {
+						
+						TextView itemType = (TextView) findViewById(R.id.qrreaderDetailType);
+						itemType.setText(qrItem.displayType);
 						
 						ListView actionList = (ListView) findViewById(R.id.qrreaderActionLV);
 						final ArrayList<QRAction> actions = new ArrayList<QRAction>();
@@ -92,6 +100,11 @@ public class QRReaderDetailActivity extends ModuleActivity {
 							public void updateView(QRAction item, View view) {
 								TwoLineActionRow row = (TwoLineActionRow) view;
 								row.setTitle(item.title);
+								if (item.title.equals("Share URL")) {
+									row.setActionIconResource(R.drawable.action_email);
+								} else {
+									row.setActionIconResource(R.drawable.action_external);
+								}
 							}
 						};
 						
