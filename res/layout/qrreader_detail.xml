@@ -15,10 +15,10 @@
 	<ImageView
 		android:id="@+id/qrreaderDetailIV"
 		android:paddingBottom="15dip"
-		android:layout_gravity="center_horizontal"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
-  		
+		android:layout_height="wrap_content"
+		android:scaleType="centerCrop" 
+		/>	
 	<TextView
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
