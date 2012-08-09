@@ -11,36 +11,55 @@
 		android:layout_height="wrap_content"
 		android:text="Scanner Help"
 	/>
-		   
-	<RelativeLayout
-	  	android:orientation="horizontal"
-	  	android:layout_width="fill_parent"
-	  	android:layout_height="wrap_content"
-	  	android:paddingLeft="@dimen/horizontalPadding"
-  		android:paddingRight="@dimen/horizontalPadding"
-  		android:paddingTop="@dimen/verticalPadding"
-  		android:paddingBottom="@dimen/verticalPadding">
   
-  		<ImageView
-	  	  	android:src="@drawable/sample_qr"
-	  	  	android:scaleType="fitXY"
-		  	android:padding="4dp" 
-		  	android:id="@+id/qrreaderHelpIV"
-		  	android:layout_alignParentRight="true"
-		  	android:layout_width="90dp"
-		  	android:layout_height="90dp"
-		/>
+  		
 		  
 		<TextView
-		    android:id="@+id/qrreaderHelpText"
-			android:layout_toLeftOf="@id/qrreaderHelpIV"
+		    android:id="@+id/qrreaderHelpText1"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:padding="2dp"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+			android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
 			style="@style/BodyText" 
-			android:text="To scan a bar code or QR code, frame it above. Avoid glare and shadows." 
+			android:text="Many groups at MIT use QR codes and barcodes to tag objects with extra information, such as URLs, phone numbers, and other data." 
+		/> 
+		<TextView
+		    android:id="@+id/qrreaderHelpText2"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+			android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
+			style="@style/BodyText" 
+			android:text="MIT Mobile's Scanner can recognize those codes and can provide special functionality in some cases." 
 		/> 
 		
-	</RelativeLayout>
+		<LinearLayout
+		    android:orientation="horizontal"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_vertical"
+		    android:gravity="center"	>
+		
+			<ImageView
+		  	  	android:src="@drawable/sample_qr"
+		  	  	android:scaleType="fitXY"
+			  	android:padding="4dp" 
+			  	android:layout_width="90dp"
+			  	android:layout_height="90dp"
+			/>
+			
+			<ImageView
+		  	  	android:src="@drawable/sample_barcode"
+		  	  	android:scaleType="fitXY"
+			  	android:padding="4dp" 
+			  	android:layout_width="wrap_content"
+			  	android:layout_height="wrap_content"
+			/>
+		
+		</LinearLayout>
+		
 		<TextView
 		    android:id="@+id/qrreaderHelpNoCameraText"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"

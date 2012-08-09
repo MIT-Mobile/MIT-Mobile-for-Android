@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,6 +38,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	private static final String QRCODE_KEY = "qrcode";
 	FullScreenLoader mLoader;
 	SuggestedUrl mQRItem;
+	Context mContext;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 		mLoader.setVisibility(View.VISIBLE);
 		mLoader.showLoading();
 		
-		final Context context = this;
+		mContext = this;
 		Handler handler = new Handler() {
 			public void handleMessage(Message msg) {
 				
@@ -75,62 +77,41 @@ public class QRReaderDetailActivity extends ModuleActivity {
 					}
 					
 					if (mQRItem.isSuccess) {
+						layoutDetailView();
 						
-						TextView itemType = (TextView) findViewById(R.id.qrreaderDetailType);
-						itemType.setText(mQRItem.displayType);
-						
-						ListView actionList = (ListView) findViewById(R.id.qrreaderActionLV);
-						final ArrayList<QRAction> actions = new ArrayList<QRAction>();
-						
-						if (mQRItem.shareAction != null) {
-							actions.add(0,mQRItem.shareAction);
-							if (isUrl(mQRItem.shareAction.payload) && mQRItem.actions == null) {
-								// if share action payload happens to be a url and there are no actions in list, create new action to open URL
-								QRAction item = new QRAction();
-								item.title = "Open URL";
-								item.payload = mQRItem.shareAction.payload;
-								actions.add(item);
-							}
-						}
-						if (mQRItem.actions != null) {
-							actions.addAll(mQRItem.actions);
-						}
-						
-						SimpleArrayAdapter<QRAction> adapter = new SimpleArrayAdapter<QRAction>(context, actions, R.layout.boring_action_row){
-							@Override
-							public void updateView(QRAction item, View view) {
-								TwoLineActionRow row = (TwoLineActionRow) view;
-								row.setTitle(item.title);
-								if (item.equals(mQRItem.shareAction)) {
-									row.setActionIconResource(R.drawable.action_email);
-								} else {
-									row.setActionIconResource(R.drawable.action_external);
-								}
-							}
-						};
-						
-						adapter.setOnItemClickListener(actionList, new OnItemClickListener<QRAction>(){
-
-							@Override
-							public void onItemSelected(QRAction item) {
-								// TODO Auto-generated method stub
-								int position = actions.indexOf(item);
-								if (position == 0) {
-									// share is always at position 0
-									// handle share action
-									CommonActions.shareContent(QRReaderDetailActivity.this, "", "", item.payload);
-								} else {
-									// handle regular action
-									CommonActions.doAction(QRReaderDetailActivity.this, item.payload);
-								}
-							}
-						});
-						
-						actionList.setAdapter(adapter);
 					}
-					mLoader.setVisibility(View.GONE);
 					
-				} // if SUCCESS
+				} else {
+					mQRItem = new SuggestedUrl();
+					
+					String urlString = qrcode.getId();
+					if (isUrl(urlString)) {
+						QRAction shareAction = new QRAction();
+						shareAction.title = "Share URL";
+						shareAction.payload = urlString;
+						
+						QRAction action = new QRAction();
+						action.title = "Open URL";
+						action.payload = urlString;
+						
+						mQRItem.type = "url";
+						mQRItem.displayType = "URL";
+						mQRItem.shareAction = shareAction;
+						mQRItem.actions.add(action);
+					} else {
+						QRAction shareAction = new QRAction();
+						shareAction.title = "Share data";
+						shareAction.payload = urlString;
+						
+						mQRItem.type = "other";
+						mQRItem.displayType = "Other";
+						mQRItem.shareAction = shareAction;
+						
+					}
+					
+					layoutDetailView();
+					
+				}
 			}
 		}; // Handler
 		
@@ -139,7 +120,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	}
 	
 	private boolean isUrl(String result) {
-		return result.matches("http:\\/\\/.*");
+		return result.matches("http:\\/\\/.*") || result.matches("https:\\/\\/.*") ;
 	}
 	
 	@Override
@@ -156,6 +137,61 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	protected void prepareActivityOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void layoutDetailView() {
+		TextView itemType = (TextView) findViewById(R.id.qrreaderDetailType);
+		itemType.setText(mQRItem.displayType);
+		
+		ListView actionList = (ListView) findViewById(R.id.qrreaderActionLV);
+		final ArrayList<QRAction> actions = new ArrayList<QRAction>();
+		actions.addAll(mQRItem.actions);
+		if (mQRItem.shareAction != null) {
+			if (isUrl(mQRItem.shareAction.payload) && mQRItem.actions.size() == 0) {
+				// if share action payload happens to be a url and there are no actions in list, create new action to open URL
+				QRAction item = new QRAction();
+				item.title = "Open URL";
+				item.payload = mQRItem.shareAction.payload;
+				actions.add(item);
+			}
+			actions.add(mQRItem.shareAction);
+		}
+		
+		
+		
+		SimpleArrayAdapter<QRAction> adapter = new SimpleArrayAdapter<QRAction>(mContext, actions, R.layout.boring_action_row){
+			@Override
+			public void updateView(QRAction item, View view) {
+				TwoLineActionRow row = (TwoLineActionRow) view;
+				row.setTitle(item.title);
+				if (item.equals(mQRItem.shareAction)) {
+					row.setActionIconResource(R.drawable.action_share);
+				} else {
+					row.setActionIconResource(R.drawable.action_external);
+				}
+			}
+		};
+		
+		adapter.setOnItemClickListener(actionList, new OnItemClickListener<QRAction>(){
+
+			@Override
+			public void onItemSelected(QRAction item) {
+				// TODO Auto-generated method stub
+				int position = actions.indexOf(item);
+				if (position == actions.size() - 1) {
+					// share is always last index
+					// handle share action
+					CommonActions.shareContent(QRReaderDetailActivity.this, "", "", item.payload);
+				} else {
+					// handle regular action
+					CommonActions.doAction(QRReaderDetailActivity.this, item.payload);
+				}
+			}
+		});
+		
+		actionList.setAdapter(adapter);
+		
+		mLoader.setVisibility(View.GONE);
 	}
 
 }
