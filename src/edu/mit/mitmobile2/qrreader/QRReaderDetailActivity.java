@@ -36,6 +36,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	
 	private static final String QRCODE_KEY = "qrcode";
 	FullScreenLoader mLoader;
+	SuggestedUrl mQRItem;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,31 +69,31 @@ public class QRReaderDetailActivity extends ModuleActivity {
 			public void handleMessage(Message msg) {
 				
 				if (MobileWebApi.SUCCESS == msg.arg1) {
-					SuggestedUrl qrItem = (SuggestedUrl) msg.obj;
-					if (null == qrItem) {
+					mQRItem = (SuggestedUrl) msg.obj;
+					if (null == mQRItem) {
 						return;
 					}
 					
-					if (qrItem.isSuccess) {
+					if (mQRItem.isSuccess) {
 						
 						TextView itemType = (TextView) findViewById(R.id.qrreaderDetailType);
-						itemType.setText(qrItem.displayType);
+						itemType.setText(mQRItem.displayType);
 						
 						ListView actionList = (ListView) findViewById(R.id.qrreaderActionLV);
 						final ArrayList<QRAction> actions = new ArrayList<QRAction>();
 						
-						if (qrItem.shareAction != null) {
-							actions.add(0,qrItem.shareAction);
-							if (isUrl(qrItem.shareAction.payload) && qrItem.actions == null) {
+						if (mQRItem.shareAction != null) {
+							actions.add(0,mQRItem.shareAction);
+							if (isUrl(mQRItem.shareAction.payload) && mQRItem.actions == null) {
 								// if share action payload happens to be a url and there are no actions in list, create new action to open URL
 								QRAction item = new QRAction();
 								item.title = "Open URL";
-								item.payload = qrItem.shareAction.payload;
+								item.payload = mQRItem.shareAction.payload;
 								actions.add(item);
 							}
 						}
-						if (qrItem.actions != null) {
-							actions.addAll(qrItem.actions);
+						if (mQRItem.actions != null) {
+							actions.addAll(mQRItem.actions);
 						}
 						
 						SimpleArrayAdapter<QRAction> adapter = new SimpleArrayAdapter<QRAction>(context, actions, R.layout.boring_action_row){
@@ -100,7 +101,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 							public void updateView(QRAction item, View view) {
 								TwoLineActionRow row = (TwoLineActionRow) view;
 								row.setTitle(item.title);
-								if (item.title.equals("Share URL")) {
+								if (item.equals(mQRItem.shareAction)) {
 									row.setActionIconResource(R.drawable.action_email);
 								} else {
 									row.setActionIconResource(R.drawable.action_external);

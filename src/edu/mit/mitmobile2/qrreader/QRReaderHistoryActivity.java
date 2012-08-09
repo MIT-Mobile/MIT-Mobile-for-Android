@@ -66,7 +66,7 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 			
 			barcodeIV.setImageBitmap(item.getBitmap());
 			barcodeTitle.setText(item.getId());
-			barcodeSubtitle.setText(DateStrings.agoString(item.getDate()));
+			barcodeSubtitle.setText("Scanned " + DateStrings.agoString(item.getDate()));
 		}
 	}
 
