@@ -40,10 +40,12 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	SuggestedUrl mQRItem;
 	Context mContext;
 	
+	boolean mShouldTimeout;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	
+		mShouldTimeout = true;
 		final QRCode qrcode = getIntent().getParcelableExtra(QRCODE_KEY);
 		
 		setContentView(R.layout.qrreader_detail);
@@ -69,8 +71,8 @@ public class QRReaderDetailActivity extends ModuleActivity {
 		mContext = this;
 		Handler handler = new Handler() {
 			public void handleMessage(Message msg) {
-				
 				if (MobileWebApi.SUCCESS == msg.arg1) {
+					mShouldTimeout = false;
 					mQRItem = (SuggestedUrl) msg.obj;
 					if (null == mQRItem) {
 						return;
@@ -82,38 +84,25 @@ public class QRReaderDetailActivity extends ModuleActivity {
 					}
 					
 				} else {
-					mQRItem = new SuggestedUrl();
-					
-					String urlString = qrcode.getId();
-					if (isUrl(urlString)) {
-						QRAction shareAction = new QRAction();
-						shareAction.title = "Share URL";
-						shareAction.payload = urlString;
-						
-						QRAction action = new QRAction();
-						action.title = "Open URL";
-						action.payload = urlString;
-						
-						mQRItem.type = "url";
-						mQRItem.displayType = "URL";
-						mQRItem.shareAction = shareAction;
-						mQRItem.actions.add(action);
-					} else {
-						QRAction shareAction = new QRAction();
-						shareAction.title = "Share data";
-						shareAction.payload = urlString;
-						
-						mQRItem.type = "other";
-						mQRItem.displayType = "Other";
-						mQRItem.shareAction = shareAction;
-						
-					}
-					
+					handleError(qrcode);
 					layoutDetailView();
 					
 				}
 			}
 		}; // Handler
+		
+		new Handler().postDelayed(
+				new Runnable() {
+					@Override
+					public void run() {
+						if (mShouldTimeout) {
+							handleError(qrcode);
+							layoutDetailView();
+						}
+					}
+				}, 
+				10000
+			);
 		
 		((QRReaderModule) getModule()).getModel().fetchSuggestedUrl(this, qrcode.getId(), handler);
 		
@@ -136,6 +125,37 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	@Override
 	protected void prepareActivityOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	private void handleError(QRCode qrcode) {
+		mQRItem = new SuggestedUrl();
+		
+		String urlString = qrcode.getId();
+		if (isUrl(urlString)) {
+			QRAction shareAction = new QRAction();
+			shareAction.title = "Share URL";
+			shareAction.payload = urlString;
+			
+			QRAction action = new QRAction();
+			action.title = "Open URL";
+			action.payload = urlString;
+			
+			mQRItem.type = "url";
+			mQRItem.displayType = "URL";
+			mQRItem.shareAction = shareAction;
+			mQRItem.actions.add(action);
+		} else {
+			QRAction shareAction = new QRAction();
+			shareAction.title = "Share data";
+			shareAction.payload = urlString;
+			
+			mQRItem.type = "other";
+			mQRItem.displayType = "Other";
+			mQRItem.shareAction = shareAction;
+			
+		}
+		
 		
 	}
 	
