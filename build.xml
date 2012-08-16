@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="KurogoAndroid" default="help">
+<project name="MITApp" default="help">
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
@@ -51,14 +51,10 @@
 <!--
     <target name="-pre-build">
     </target>
--->
+
     <target name="-pre-compile">
-         <echo message="Copying R file into package org.kurogo" />
-         <exec executable="python">
-         <arg line="build-scripts/generate_gen.py" />
-         </exec>
     </target>
-<!--
+
     /* This is typically used for code obfuscation.
        Compiled code location: ${out.classes.absolute.dir}
        If this is not done in place, override ${out.dex.input.absolute.dir} */

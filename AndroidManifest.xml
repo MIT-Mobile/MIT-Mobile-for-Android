@@ -299,6 +299,7 @@
         <activity android:name=".libraries.LibraryHoldDetail"></activity>
         <activity android:name=".libraries.LibraryFines"></activity>        
         <activity android:name=".libraries.LibraryFineDetail"></activity>
+        <activity android:name=".links.LinksActivity"></activity>
         
 </application>
 
@@ -312,7 +313,7 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>	
 	
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="11"></uses-sdk>
+	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="11"></uses-sdk>
 	
 
 <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
