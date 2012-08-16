@@ -60,9 +60,9 @@ public class QRReaderModel {
 							suggest.actions.add( actionItem );
 						}
 					}
-					
+					MobileWebApi.sendSuccessMessage(uiHandler, suggest);
 				}
-				MobileWebApi.sendSuccessMessage(uiHandler, suggest);
+				MobileWebApi.sendErrorMessage(uiHandler);
 			}
 		});
 	}
