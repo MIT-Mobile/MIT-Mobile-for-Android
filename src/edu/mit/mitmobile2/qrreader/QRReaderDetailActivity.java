@@ -101,7 +101,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 						}
 					}
 				}, 
-				10000
+				15000
 			);
 		
 		((QRReaderModule) getModule()).getModel().fetchSuggestedUrl(this, qrcode.getId(), handler);
