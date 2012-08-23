@@ -8,12 +8,12 @@ import android.os.Parcelable;
 
 public class QRCode implements Parcelable {
 	
-	private String mUrl;
+	private String mId;
 	private Bitmap mBitmap;
 	private Date mDate;
 	
-	public QRCode(String url, Bitmap bitmap, Date date) {
-		mUrl = url;
+	public QRCode(String displayName, Bitmap bitmap, Date date) {
+		mId = displayName;
 		mBitmap = bitmap;
 		mDate = date;
 	}
@@ -43,7 +43,7 @@ public class QRCode implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(mUrl);
+		dest.writeString(mId);
 		int height = mBitmap.getHeight();
 		int width = mBitmap.getWidth();
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(mBitmap, width/2, height/2, true);
@@ -51,8 +51,8 @@ public class QRCode implements Parcelable {
 		dest.writeLong(mDate.getTime());
 	}
 	
-	public String getUrl() {
-		return mUrl;
+	public String getId() {
+		return mId;
 	}
 	
 	public Bitmap getBitmap() {

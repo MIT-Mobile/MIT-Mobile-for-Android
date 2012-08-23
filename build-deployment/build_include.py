@@ -7,8 +7,8 @@ import time
 import platform
 import shlex
 
-VERSION_NUMBER = 10
-VERSION_NAME = "2.3.1"
+VERSION_NUMBER = 11
+VERSION_NAME = "2.3.2"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
@@ -51,6 +51,7 @@ def write_build_settings(build_settings_dictionary):
               public final static String NEWS_OFFICE_PATH = "%(news_office_path)s";
               public final static boolean VERBOSE_LOGGING = %(verbose_logging)s;
               public final static String BUILD_TAG = "%(build_tag)s";
+              public final static String C2DM_SENDER = "%(c2dm_sender)s";
               public final static String release_project_name = "%(release_project_name)s";
               public final static String source_project_name = "%(source_project_name)s";
          }
@@ -263,6 +264,7 @@ def build_source(builder, tag, fresh_repository):
        "news_office_path" : build_settings.news_office_path,
        "verbose_logging" : verbose_logging_literal,
        "build_tag" : build_settings.build_tag,
+       "c2dm_sender" : build_settings.c2dm_sender,
        "release_project_name" : release_project_name,
        "source_project_name" : build_settings.source_project_name,
    })

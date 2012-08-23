@@ -38,7 +38,7 @@
 
 
   	<edu.mit.mitmobile2.TitleBar
-  		android:text="Scan QR"
+  		android:text="Scanner"
   		android:layout_width="fill_parent"
   		android:layout_height="wrap_content" />
   		

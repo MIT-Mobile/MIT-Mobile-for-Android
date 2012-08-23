@@ -33,6 +33,8 @@ final class DecodeFormatManager {
   static final Vector<BarcodeFormat> ONE_D_FORMATS;
   static final Vector<BarcodeFormat> QR_CODE_FORMATS;
   static final Vector<BarcodeFormat> DATA_MATRIX_FORMATS;
+  static final Vector<BarcodeFormat> ONE_D_QRCODE_FORMATS;
+  
   static {
     PRODUCT_FORMATS = new Vector<BarcodeFormat>(5);
     PRODUCT_FORMATS.add(BarcodeFormat.UPC_A);
@@ -48,6 +50,9 @@ final class DecodeFormatManager {
     ONE_D_FORMATS.add(BarcodeFormat.ITF);
     QR_CODE_FORMATS = new Vector<BarcodeFormat>(1);
     QR_CODE_FORMATS.add(BarcodeFormat.QR_CODE);
+    ONE_D_QRCODE_FORMATS = new Vector<BarcodeFormat>(ONE_D_FORMATS.size() + 1);
+    ONE_D_QRCODE_FORMATS.addAll(ONE_D_FORMATS);
+    ONE_D_QRCODE_FORMATS.add(BarcodeFormat.QR_CODE);
     DATA_MATRIX_FORMATS = new Vector<BarcodeFormat>(1);
     DATA_MATRIX_FORMATS.add(BarcodeFormat.DATA_MATRIX);
   }
@@ -85,6 +90,9 @@ final class DecodeFormatManager {
       }
     }
     if (decodeMode != null) {
+      if (Intents.Scan.ONE_D_QRCODE_MODE.equals(decodeMode)) {
+    	  return ONE_D_QRCODE_FORMATS;
+      }
       if (Intents.Scan.PRODUCT_MODE.equals(decodeMode)) {
         return PRODUCT_FORMATS;
       }

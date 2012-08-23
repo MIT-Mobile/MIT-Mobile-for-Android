@@ -16,8 +16,6 @@
 
 package com.google.zxing.client.android;
 
-import edu.mit.mitmobile2.R;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -26,14 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Result;
-import com.google.zxing.ResultMetadataType;
-import com.google.zxing.ResultPoint;
-import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.result.ResultHandler;
-import com.google.zxing.client.android.result.ResultHandlerFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -59,7 +49,6 @@ import android.text.ClipboardManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -70,6 +59,21 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.camera.CameraManager;
+import com.google.zxing.client.android.result.ResultHandler;
+import com.google.zxing.client.android.result.ResultHandlerFactory;
+
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.QRReaderHelpActivity;
+import edu.mit.mitmobile2.qrreader.QRReaderHistoryActivity;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
+
 /**
  *  This client is a heavily paired down version of the sample zxing one
  *  written by Daniel Switkin which in turn was based on the CameraPreview
@@ -77,15 +81,16 @@ import android.widget.TextView;
  *
  * @author ian.gavalakis@modolabs.com 
  */
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class CaptureActivity extends ModuleActivity implements SurfaceHolder.Callback {
 
   public static final int CAPTURE_QR_ACTIVITY_REQUEST_CODE = 1666;
 	  
   private static final String TAG = CaptureActivity.class.getSimpleName();
 
-  private static final int SHARE_ID = Menu.FIRST;
+  //private static final int SHARE_ID = Menu.FIRST;
 
-  private static final int MENU_QR_HELP = Menu.FIRST;
+  private static final int MENU_QR_HISTORY = Menu.FIRST;
+  private static final int MENU_QR_HELP = Menu.FIRST + 1;
   
   private static final int DIALOG_QR_HELP = 1;
 	
@@ -292,24 +297,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     return true;
   }
 */
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-	menu.clear();
-	menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-		.setIcon(R.drawable.menu_about);
-    return true;
-  }
-  
-   @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_QR_HELP:
-			showDialog(DIALOG_QR_HELP);
-			break;
-		}
-		return true;
-	}
 
 	
 	@Override
@@ -324,7 +311,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	public static Dialog helpDialog(Activity activity) {
 		//Context context = activity.getApplicationContext();
 		Dialog dialog = new Dialog(activity);
-		dialog.setTitle("Scan QR Code");
+		dialog.setTitle("Scan QR Code or Barcode");
 		dialog.setContentView(R.layout.qr_dialog);
 		return dialog;
 		
@@ -635,5 +622,42 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
   public void drawViewfinder() {
     viewfinderView.drawViewfinder();
+  }
+
+  
+  /*
+   * Additions added specifically for the MIT Android app
+   */
+  @Override
+  protected Module getModule() {
+	return new QRReaderModule();
+  }
+
+  @Override
+  public boolean isModuleHomeActivity() {
+	return true;
+  }
+
+   @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_QR_HISTORY:
+			Intent intent = new Intent(this, QRReaderHistoryActivity.class);
+			startActivity(intent);
+			return true;
+		case MENU_QR_HELP:
+			Intent helpIntent = new Intent(this, QRReaderHelpActivity.class);
+			startActivity(helpIntent);
+			return true;
+		}
+		return true;
+	}
+   
+   @Override
+   protected void prepareActivityOptionsMenu(Menu menu) {
+		menu.add(0, MENU_QR_HISTORY, Menu.NONE, "History")
+			.setIcon(R.drawable.menu_browse);
+		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
+			.setIcon(R.drawable.menu_about);
   }
 }

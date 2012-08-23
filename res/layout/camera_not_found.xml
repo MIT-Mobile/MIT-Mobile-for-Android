@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="fill_parent"
+ 	android:background="#090909"
+ 	android:id="@+id/NoCameraLayout" >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Scanner"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+    
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="7dip"
+        android:paddingBottom="10dip"
+        android:text="A camera is required to scan QR codes and barcodes."
+        />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="275dip"
+        >
+        
+        <ImageView 
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:src="@drawable/crop_corner_top_left"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:paddingTop="25dip"
+            android:paddingLeft="25dip"
+            />
+        
+        <ImageView 
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:src="@drawable/crop_corner_top_right"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingTop="25dip"
+            android:paddingRight="25dip"
+            />
+    	<ImageView
+        	android:layout_width="225dip"
+        	android:layout_height="225dip"
+        	android:contentDescription="No Camera Found"
+        	android:src="@drawable/no_camera"
+        	android:layout_centerInParent="true"
+        	android:paddingTop="20dip"
+        	android:paddingBottom="20dip"
+			/>
+    	<ImageView 
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:src="@drawable/crop_corner_bottom_right"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:paddingRight="25dip"
+            />
+    	<ImageView 
+            android:layout_width="100dip"
+            android:layout_height="100dip"
+            android:src="@drawable/crop_corner_bottom_left"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="25dip"
+            />
+    
+    </RelativeLayout>
+    
+</LinearLayout>

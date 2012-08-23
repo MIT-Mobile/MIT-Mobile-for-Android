@@ -8,12 +8,12 @@ public class QRReaderModule extends Module {
 
 	@Override
 	public String getShortName() {
-		return "QR Reader";
+		return "Scanner";
 	}
 	
 	@Override
 	public String getLongName() {
-		return "QR Reader";
+		return "Scanner";
 	}
 
 	@Override
@@ -29,5 +29,14 @@ public class QRReaderModule extends Module {
 	@Override
 	public int getHomeIconResourceId() {
 		return R.drawable.home_qr;
+	}
+
+	private QRReaderModel mModel;
+	
+	public QRReaderModel getModel() {
+		if (null == mModel) {
+			mModel = new QRReaderModel();
+		}
+		return mModel;
 	}
 }

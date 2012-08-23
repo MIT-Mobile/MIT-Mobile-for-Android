@@ -1,13 +1,13 @@
 <resources>
 	<string name="libraryTopicsTitle">Select a topic area</string>
     <string-array name="libraryTopics">
+        <item>General</item>
         <item>Art, Architecture &amp; Planning</item>
         <item>Engineering &amp; Computer Science</item>
         <item>Humanities</item>
         <item>Management &amp; Business</item>
         <item>Science</item>
         <item>Social Sciences</item>
-        <item>General</item>
         <item>Circulation</item>
         <item>Technical Help</item>
     </string-array>
@@ -31,7 +31,7 @@
     <string name="libraryResearchTopicTitle">Select a topic</string>
     <string-array name="libraryResearchTopics">
         <item>General</item>
-        <item>Art, Architecture Planning</item>
+        <item>Art &amp; Architecture</item>
         <item>Engineering &amp; Computer Science</item>
         <item>GIS</item>
         <item>Humanities</item>
