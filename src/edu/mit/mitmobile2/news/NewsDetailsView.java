@@ -21,7 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.VideoView;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderActivity.OnBackPressedListener;
@@ -31,7 +35,8 @@ import edu.mit.mitmobile2.objs.NewsItem;
 public class NewsDetailsView extends LockingScrollView {
 	private Handler mHandler = new Handler();
 	private WebView webview;
-
+	
+	ModuleActivity mModuleActivity;
 	NewsItem mNewsItem;
 	static final String TAG = "NewsDetailsView";
 	
@@ -42,6 +47,7 @@ public class NewsDetailsView extends LockingScrollView {
 	/****************************************************/
 	public NewsDetailsView(final Context context, NewsItem newsItem) {
 		super(context);
+		mModuleActivity = (ModuleActivity) context;
 		mNewsItem = newsItem;
 		mSliderActivity = (SliderActivity) context;
 
@@ -225,7 +231,23 @@ public class NewsDetailsView extends LockingScrollView {
          * This is not called on the UI thread. Post a runnable to invoke
          * loadUrl on the UI thread.
          */
-
+        
+        public void clickBookmarkButton(String status) {
+        	NewsModel newsModel = new NewsModel(mModuleActivity);
+        	boolean bookmarkStatus = status.equals("on");
+        	newsModel.setStoryBookmarkStatus(mNewsItem, bookmarkStatus);
+        }
+ 
+        public void clickShareButton() {
+            mHandler.post(new Runnable() {
+                public void run() {
+        			String url  = "http://" + Global.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(mNewsItem.story_id);
+        			CommonActions.shareCustomContent(mModuleActivity, mNewsItem.title, mNewsItem.description, url);
+                }
+            });
+        }
+        
+        
         public void clickViewImage() {
             mHandler.post(new Runnable() {
                 public void run() {
