@@ -14,9 +14,6 @@ import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
 import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.classes.CoursesDataModel;
-import edu.mit.mitmobile2.classes.CoursesNoticeListener;
-import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
 import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 import android.app.Notification;
@@ -104,8 +101,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 				NoticeListener noticeListener = null;
 				if (tag.startsWith("emergencyinfo:")) {
 					noticeListener = new EmergencyInfoNoticeListener();
-				} else if (tag.startsWith("stellar:")) {
-					noticeListener = new CoursesNoticeListener();
 				}
 				if (noticeListener != null) {
 					noticeListener.onReceivedNotice(context, payloadObject, incrementNoticeCount(context));

@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.about.AboutActivity;
-import edu.mit.mitmobile2.classes.ClassesModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
@@ -210,7 +209,6 @@ public class MITNewsWidgetActivity extends Activity implements OnSharedPreferenc
 			new ShuttlesModule(),
 			new MapsModule(),
 			new EventsModule(),
-			new ClassesModule(),
 			new PeopleModule(),
 			new TourModule(),
 			new EmergencyModule(),

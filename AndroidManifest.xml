@@ -126,35 +126,6 @@
         <activity android:name=".shuttles.MITStopsSliderActivity" android:configChanges="orientation"/>
         <activity android:name=".shuttles.MITRoutesSliderActivity" android:configChanges="orientation"/>
 		
-		<activity android:name=".classes.CoursesTopActivity" android:process=":courses">
-        		<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
-        </activity>
-		<activity android:name=".classes.CoursesSearchActivity"
-			android:process=":courses"
-			android:launchMode="singleTop"
-			android:windowSoftInputMode="stateAlwaysHidden"
-			android:theme="@style/PlainBackground">
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH"/>
-			</intent-filter>			
-			<meta-data android:name="android.app.searchable" android:resource="@xml/courses_searchable" />
-		</activity>
-		<provider android:name=".classes.CourseSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.classes.SuggestionsProvider" />
-        <activity android:name=".classes.MITCoursesListsSliderActivity" android:configChanges="orientation" android:process=":courses">
-        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
-        </activity>
-        <activity android:name=".classes.MITCoursesDetailsSliderActivity" android:theme="@style/PlainBackground" android:screenOrientation="portrait" android:process=":courses">
-        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
-        </activity>
-        <activity android:name=".classes.MITCoursesAnnouncementsSliderActivity" android:configChanges="orientation" android:process=":courses">
-        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
-        </activity>
-        <activity android:name=".classes.MITCoursesSubjectsSliderActivity" android:configChanges="orientation" android:process=":courses">
-        	<meta-data android:name="android.app.default_searchable" android:value=".classes.CoursesSearchActivity"/>
-        </activity>
-        <service android:name=".classes.CoursesTermUpdateService" android:process=":courses"></service>
-        
-		
 		<activity android:name=".people.PeopleActivity">
 			<meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
 		</activity>

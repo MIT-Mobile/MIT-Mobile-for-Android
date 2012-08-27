@@ -39,13 +39,10 @@ public class MITMapActivity extends MapBaseActivity {
 	// sent only by Event:
 	public static final String KEY_LON = "lon";
 	public static final String KEY_LAT = "lat";
-	
-	// sent by Stellar and Events
 	public static final String KEY_LOCATION = "location";
 	
 	// TODO may not need (activityForResult)
 	public static final String MODULE_SHUTTLE = "shuttle";
-	//public static final String MODULE_STELLAR = "stellar";
 	//public static final String MODULE_CALENDAR = "calendar";
 
 	// Generic Menu
@@ -103,12 +100,11 @@ public class MITMapActivity extends MapBaseActivity {
         } 
         
         
-        // Four cases:
+        // Three cases:
         //
         // 1 - Events sends LAT/LON
-        // 2 - Stellar sends findLoc query that should yield ONE building
-        // 3 - Map Search sends many buildings
-        // 4 - Shuttle sends many stops
+        // 2 - Map Search sends many buildings
+        // 3 - Shuttle sends many stops
         
      
     	center = new GeoPoint(42359238,-71093109);	// MIT
@@ -207,8 +203,6 @@ public class MITMapActivity extends MapBaseActivity {
 
 			Drawable pin;
 			GeoPoint gpt;
-			
-			// handles Events, Map search, and Stellar...
 			
 			pin = this.getResources().getDrawable(R.drawable.map_red_pin);
 			markers = new MITItemizedOverlay(pin, this, mapView);

@@ -83,7 +83,6 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 
 	URI uri = null;
 	String uriString = "";
-	//public static String targetUrl = "https://stellar.mit.edu/atstellar";
 	public static String targetUrl = "https://mobile-dev.mit.edu/api/index.php";
 	URI targetUri;
 	public static SharedPreferences prefs;
