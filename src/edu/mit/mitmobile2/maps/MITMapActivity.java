@@ -17,8 +17,9 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.Overlay;
+
+import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.LoaderBar;
-import edu.mit.mitmobile2.MITNewsWidgetActivity;
 import edu.mit.mitmobile2.MITSearchRecentSuggestions;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
@@ -341,7 +342,7 @@ public class MITMapActivity extends MapBaseActivity {
 		
 		switch (item.getItemId()) {
 		case MENU_HOME:
-			i = new Intent(this,MITNewsWidgetActivity.class);  
+			i = new Intent(this, HomeScreenActivity.class);  
 			startActivity(i);
 			finish();
 			break;

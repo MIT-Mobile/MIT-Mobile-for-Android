@@ -154,4 +154,5 @@
 		<item name="android:typeface">sans</item>
 	</style>
 	
+	<color name="homeButtonBackgroundColor">#993333</color>
 </resources>

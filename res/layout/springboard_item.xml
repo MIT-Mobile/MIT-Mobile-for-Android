@@ -8,15 +8,19 @@
   
  	<ImageView
  		android:id="@+id/springBoardImage"
+ 		android:paddingTop="15dip"
  		android:layout_width="wrap_content"
  		android:layout_height="wrap_content" />
  		
  	<TextView
  		android:id="@+id/springBoardTitle"
+ 		android:paddingTop="15dip"
+ 		android:paddingBottom="15dip"
 		android:textColor="#ff333333"
 		android:textSize="12sp" 
-		android:textStyle="normal" 
+		android:textStyle="bold" 
 		android:typeface="sans" 
+		android:gravity="center_horizontal"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content" />
 
