@@ -1,9 +1,7 @@
 package edu.mit.mitmobile2;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +37,7 @@ import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
 import edu.mit.mitmobile2.libraries.LibrariesModule;
+import edu.mit.mitmobile2.links.LinksModule;
 import edu.mit.mitmobile2.maps.MapsModule;
 import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.people.PeopleModule;
@@ -118,6 +117,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 				new LibrariesModule(),
 				new FacilitiesModule(),
 				new QRReaderModule(),
+				new LinksModule(),
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);

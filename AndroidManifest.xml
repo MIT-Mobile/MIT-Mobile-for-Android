@@ -269,6 +269,7 @@
         <activity android:name=".libraries.LibraryHoldDetail"></activity>
         <activity android:name=".libraries.LibraryFines"></activity>        
         <activity android:name=".libraries.LibraryFineDetail"></activity>
+        <activity android:name=".links.LinksActivity"></activity>
         
 </application>
 
