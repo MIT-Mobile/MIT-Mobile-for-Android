@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.qrreader;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 
@@ -39,4 +41,14 @@ public class QRReaderModule extends Module {
 		}
 		return mModel;
 	}
+	
+	public void handleUrl(Context context, String url) {
+		if (url.startsWith("mitmobile://qrreader/")) {
+			Intent i = new Intent(context, QRReaderMainActivity.class);
+			context.startActivity(i);
+		}
+		
+	}
+	
+	
 }

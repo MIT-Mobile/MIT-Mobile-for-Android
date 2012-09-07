@@ -1,17 +1,9 @@
 package edu.mit.mitmobile2;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.mit.mitmobile2.events.EventsModule;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MapsModule;
-import edu.mit.mitmobile2.mit150.CorridorListActivity;
-import edu.mit.mitmobile2.mit150.MIT150Module;
-import edu.mit.mitmobile2.mit150.MIT150WelcomeActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,11 +20,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import edu.mit.mitmobile2.events.EventsModule;
+import edu.mit.mitmobile2.maps.MITMapActivity;
+import edu.mit.mitmobile2.maps.MapsModule;
+import edu.mit.mitmobile2.mit150.MIT150Module;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
 
 public class CommonActions {
 
@@ -248,6 +245,8 @@ public class CommonActions {
 				module = new MIT150Module();
 			} else if (actionUrl.startsWith("mitmobile://calendar/")) {
 				module = new EventsModule();
+			} else if (actionUrl.startsWith("mitmobile://qrreader/")) {
+				module = new QRReaderModule();
 			}
 			
 			if(module != null) {
