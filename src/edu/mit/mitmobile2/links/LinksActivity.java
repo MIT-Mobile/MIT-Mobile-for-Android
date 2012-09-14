@@ -58,12 +58,21 @@ public class LinksActivity extends ModuleActivity {
 	}
 	
 	private Handler uiHandler = new Handler() {
+
+		
 		public void handleMessage(Message msg) {
+			ArrayList<LinkListItem> linkSections = null;
+			LinearLayout container = (LinearLayout) findViewById(R.id.link_list_container);
 			if (msg.arg1 == MobileWebApi.SUCCESS) {
-				LinearLayout container = (LinearLayout) findViewById(R.id.link_list_container);
-				container.setOrientation(LinearLayout.VERTICAL);
 				@SuppressWarnings("unchecked")
-				ArrayList<LinkListItem> linkSections = (ArrayList<LinkListItem>) msg.obj;
+				ArrayList<LinkListItem> unsafeLinkSections = (ArrayList<LinkListItem>) msg.obj;
+				linkSections = unsafeLinkSections;
+			} else {
+				linkSections = LinksModel.getCachedLinks(mContext);
+			}
+			
+			
+			if (linkSections != null) {
 				for (LinkListItem section : linkSections) {
 					SectionHeader header = new SectionHeader(mContext, section.title);
 					container.addView(header);
@@ -88,7 +97,9 @@ public class LinksActivity extends ModuleActivity {
 					}
 				}
 				mLoader.setVisibility(View.GONE);
-			} // if SUCCESS
+			} else {
+				mLoader.showError();
+			}
 		}
 	};
 
