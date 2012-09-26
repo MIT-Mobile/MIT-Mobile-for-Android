@@ -8,7 +8,7 @@
     	<include layout="@layout/home_title_bar"/>
     
 		<GridView
-			android:paddingTop="15dip"
+			android:paddingTop="9dip"
     		android:id="@+id/homeSpringBoardGV"
     		android:numColumns="4"
         	android:layout_width="fill_parent"
