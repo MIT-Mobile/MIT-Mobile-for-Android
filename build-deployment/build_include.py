@@ -7,8 +7,8 @@ import time
 import platform
 import shlex
 
-VERSION_NUMBER = 11
-VERSION_NAME = "2.3.2"
+VERSION_NUMBER = 12
+VERSION_NAME = "2.3.3"
 
 # a wrapper to make it harder to silently ignore errors
 def shell(command, silent=False):
