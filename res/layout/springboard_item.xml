@@ -14,10 +14,10 @@
  		
  	<TextView
  		android:id="@+id/springBoardTitle"
- 		android:paddingTop="5dip"
- 		android:paddingBottom="2dip"
-		android:textColor="#ff333333"
-		android:textSize="12sp" 
+ 		android:paddingTop="2dip"
+ 		android:paddingBottom="0dip"
+		android:textColor="#ff000000"
+		android:textSize="@dimen/springboardTextSize" 
 		android:textStyle="bold" 
 		android:typeface="sans" 
 		android:gravity="center_horizontal"
