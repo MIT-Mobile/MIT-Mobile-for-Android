@@ -50,7 +50,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 	
 	
 	private static final int ABOUT_MENU_ID = 0;
-	private static final int MOBILE_WEB_MENU_ID = 1;
+  // private static final int MOBILE_WEB_MENU_ID = 1;
 	private static final int SETTINGS_MENU_ID = 2;
 
 	Context ctx;
@@ -241,15 +241,12 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu){
-		menu.add(0, ABOUT_MENU_ID     , 0, "About")
-			.setIcon(R.drawable.menu_about);
-		
-		menu.add(0, MOBILE_WEB_MENU_ID, 0, "Mobile Web")
-			.setIcon(R.drawable.menu_mobile_web);
-		
 		menu.add(0, SETTINGS_MENU_ID, 0, "Settings")
 		.setIcon(R.drawable.menu_settings);
 
+		menu.add(0, ABOUT_MENU_ID     , 0, "About")
+			.setIcon(R.drawable.menu_about);
+		
 		return true;
 	}
 	
@@ -260,9 +257,6 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 			case ABOUT_MENU_ID:
 				intent = new Intent(ctx, AboutActivity.class);
 				startActivity(intent);
-				return true;
-			case MOBILE_WEB_MENU_ID:
-				CommonActions.viewURL(ctx, "http://" + Global.getMobileWebDomain() + "/");
 				return true;
 			case SETTINGS_MENU_ID:
 				intent = new Intent(ctx, MITSettingsActivity.class);
