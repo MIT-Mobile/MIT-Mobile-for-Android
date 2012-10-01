@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.links;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 
@@ -34,6 +36,14 @@ public class LinksModule extends Module {
 	public int getHomeIconResourceId() {
 		// TODO Auto-generated method stub
 		return R.drawable.home_links;
+	}
+
+	public void handleUrl(Context context, String url) {
+		if (url.startsWith("mitmobile://links/")) {
+			Intent i = new Intent(context, LinksActivity.class);
+			context.startActivity(i);
+		}
+		
 	}
 
 }
