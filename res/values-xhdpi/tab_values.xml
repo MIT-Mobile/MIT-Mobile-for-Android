@@ -1,0 +1,4 @@
+<resources>
+  <dimen name="tabHeight">96px</dimen>
+  <dimen name="tabTextSize">10sp</dimen>
+</resources>
