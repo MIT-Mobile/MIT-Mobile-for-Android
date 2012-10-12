@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;

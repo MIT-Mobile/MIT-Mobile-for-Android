@@ -1,7 +1,5 @@
 package edu.mit.mitmobile2.objs;
 
-import java.util.Date;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 

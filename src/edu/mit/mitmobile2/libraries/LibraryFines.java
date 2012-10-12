@@ -6,11 +6,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -23,10 +21,7 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.classes.FineData;
-import edu.mit.mitmobile2.classes.HoldData;
-import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.objs.FineListItem;
 
 public class LibraryFines extends ModuleActivity  {

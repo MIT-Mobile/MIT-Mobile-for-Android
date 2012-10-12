@@ -1,15 +1,9 @@
 package edu.mit.mitmobile2.libraries;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,14 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.classes.LoanData;
-import edu.mit.mitmobile2.facilities.FacilitiesDetailsActivity;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryRenewBooks extends ModuleActivity  {

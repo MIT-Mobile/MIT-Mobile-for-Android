@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,7 +21,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.classes.FacilitiesData;
 import edu.mit.mitmobile2.facilities.RoomSearchCursorAdapter.RoomSearchFilteredCursor;
 
 

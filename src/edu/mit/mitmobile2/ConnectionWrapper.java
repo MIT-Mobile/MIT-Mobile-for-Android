@@ -10,8 +10,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
-import edu.mit.mitmobile2.about.BuildSettings;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;

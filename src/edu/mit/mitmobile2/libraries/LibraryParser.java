@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import edu.mit.mitmobile2.MITClient;
-import edu.mit.mitmobile2.MITHttpEntity;
 import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.classes.LoanData;

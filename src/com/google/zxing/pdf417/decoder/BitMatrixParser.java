@@ -17,7 +17,6 @@
 package com.google.zxing.pdf417.decoder;
 
 import com.google.zxing.FormatException;
-import com.google.zxing.NotFoundException;
 import com.google.zxing.common.BitMatrix;
 
 /**

@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.qrreader;
 
 import java.util.Date;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,17 +11,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
-import com.google.zxing.client.android.CaptureActivity;
-
-import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
 
 
 public class QRReaderMainActivity extends ModuleActivity {

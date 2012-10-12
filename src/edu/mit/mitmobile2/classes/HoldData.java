@@ -1,10 +1,7 @@
 package edu.mit.mitmobile2.classes;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import edu.mit.mitmobile2.objs.HoldListItem;
-import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class HoldData {
 
