@@ -7,16 +7,65 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
+import edu.mit.mitmobile2.classes.MapBaseLayer;
+import edu.mit.mitmobile2.classes.MapFeatureLayer;
+import edu.mit.mitmobile2.classes.MapLayer;
+import edu.mit.mitmobile2.classes.MapServerData;
 import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapParser {
 	
+	private static final String TAG = "MapParser"; 
+
+	public static MapServerData parseMapServerData(JSONObject jobject) throws JSONException {
+		MapServerData mapServerData = new MapServerData();
+		try {
+			JSONArray array = jobject.getJSONArray("basemaps");
+			Log.d("MapBaseActivity2","num basemaps = " + array.length());
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject map = array.getJSONObject(i);
+				MapBaseLayer layer = new MapBaseLayer();
+				layer.setLayerIdentifier(map.optString("layerIdentifier"));
+				layer.setDisplayName(map.optString("displayName"));
+				layer.setUrl(map.optString("url"));
+				layer.setEnabled(map.optBoolean("isEnabled"));
+				mapServerData.getBaseMaps().add(layer);
+			}
+			
+			array = jobject.getJSONArray("features");
+			Log.d("MapBaseActivity2","num features = " + array.length());
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject map = array.getJSONObject(i);
+				MapFeatureLayer layer = new MapFeatureLayer();
+				layer.setLayerIdentifier(map.optString("layerIdentifier"));
+				layer.setDisplayName(map.optString("displayName"));
+				layer.setUrl(map.optString("url"));
+				layer.setTiledLayer(map.optBoolean("isTiledLayer"));
+				layer.setDataLayer(map.optBoolean("isDataLayer"));
+				mapServerData.getFeatures().add(layer);
+			}
+
+		}
+		catch (JSONException e) {
+			Log.d(TAG,"JSON exception " + e.getMessage());				
+		}
+		Log.d(TAG,"class = " + mapServerData.getClass());
+		return mapServerData;
+	}
+	
 	public static List<MapItem> parseMapItems(JSONArray jArray) throws JSONException {
 	
 		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
+		try {
 		for(int i = 0; i < jArray.length(); i++) {
 			MapItem mapItem = parseMapItem(jArray.getJSONObject(i));
 			mapItems.add(mapItem);
+		}
+		}
+		catch (JSONException e) {
+			
 		}
 		
 		return mapItems;

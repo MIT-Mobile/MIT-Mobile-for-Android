@@ -32,6 +32,14 @@
  		spacialReference = "102113" >
   	</com.esri.android.map.MapView>
   	
+    <edu.mit.mitmobile2.FullScreenLoader
+            android:id="@+id/mapLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+            android:layout_weight="1"
+    />
+    
+  	
 <!--  
 	<com.esri.android.map.ags.ArcGISTiledMapServiceLayer  	
 		url="http://services.arcgisonline.com/ArcGIS/rest/services/ World_Topo_Map/MapServer" />

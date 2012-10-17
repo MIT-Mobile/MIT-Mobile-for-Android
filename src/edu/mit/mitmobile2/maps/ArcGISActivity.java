@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -13,6 +15,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,13 +42,22 @@ import com.esri.core.symbol.SimpleMarkerSymbol.STYLE;
 import com.esri.core.tasks.ags.query.Query;
 import com.esri.core.tasks.ags.query.QueryTask;
 
+import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.classes.FineData;
+import edu.mit.mitmobile2.classes.MapLayer;
+import edu.mit.mitmobile2.classes.MapServerData;
+import edu.mit.mitmobile2.objs.FineListItem;
 
 public class ArcGISActivity extends Activity {
 	
 	private static final String TAG = "ArcGISActivity";
 	MapView map = null;
+    private FullScreenLoader mLoadingView;
 	ArcGISTiledMapServiceLayer serviceLayer;
+	ArcGISTiledMapServiceLayer layer1; //debug
+	ArcGISTiledMapServiceLayer layer2; //debug
 	String targetLayer;
 	QueryTask queryTask;
 	Query query;
@@ -75,17 +88,12 @@ public class ArcGISActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.arcgis);
-		
+        mLoadingView = (FullScreenLoader) findViewById(R.id.mapLoading);
+
 		// Retrieve the map and initial extent from XML layout
 		map = (MapView)findViewById(R.id.map);
 
-		// Define Layers
-		serviceLayer = new ArcGISTiledMapServiceLayer("http://ims-pub.mit.edu/ArcGIS/rest/services/mobile/WhereIs_Base_Topo_Mobile/MapServer");
-		graphicsLayer = new GraphicsLayer();
-		
-		// Add Layers
-		map.addLayer(serviceLayer);
-		map.addLayer(graphicsLayer);
+		mapInit();
 
 		queryTask = new QueryTask(targetServerURL + "/17");
 
@@ -329,4 +337,38 @@ public class ArcGISActivity extends Activity {
 		
 	}
 	
+	private Handler uiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            mLoadingView.setVisibility(View.GONE);
+
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	Log.d(TAG,"MobileWebApi success");
+                @SuppressWarnings("unchecked")
+                MapServerData mapServerData = (MapServerData)msg.obj;
+                for (int i = 0; i < mapServerData.getBaseMaps().size(); i++) {
+                	MapLayer layer = (MapLayer)mapServerData.getBaseMaps().get(i);
+                	Log.d(TAG,"layer = " + layer.getUrl());
+                	                	
+            		serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());            		
+                    map.addLayer(serviceLayer);
+                }
+            } else if (msg.arg1 == MobileWebApi.ERROR) {
+                mLoadingView.showError();
+            } else if (msg.arg1 == MobileWebApi.CANCELLED) {
+                mLoadingView.showError();
+            }
+        }
+    };
+	
+    private void mapInit() {
+        mLoadingView = (FullScreenLoader) findViewById(R.id.mapLoading);
+
+		// Retrieve the map and initial extent from XML layout
+		map = (MapView)findViewById(R.id.map);
+
+		mLoadingView.setVisibility(View.VISIBLE);
+        mLoadingView.showLoading();
+        MapModel.fetchMapServerData(this, uiHandler);    	
+    }
 }
