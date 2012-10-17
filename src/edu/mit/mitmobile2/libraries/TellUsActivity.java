@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -23,8 +22,8 @@ import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
@@ -32,7 +31,7 @@ import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
-public class TellUsActivity extends ModuleActivity {
+public class TellUsActivity extends NewModuleActivity {
     
 	private Activity mContext;
 	
@@ -55,6 +54,7 @@ public class TellUsActivity extends ModuleActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_tell_us);
+        addSecondaryTitle("Tell Us");
         
         mContext = this;
         
@@ -83,7 +83,7 @@ public class TellUsActivity extends ModuleActivity {
         mGoHomeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 		    public void onClick(View v) {
-				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				Intent intent = new Intent(mContext, getNewModule().getModuleHomeActivity());
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		    }
@@ -175,7 +175,7 @@ public class TellUsActivity extends ModuleActivity {
     };
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
@@ -184,9 +184,12 @@ public class TellUsActivity extends ModuleActivity {
         return false;
     }
 
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
 
-    }
+	@Override
+	protected void onOptionSelected(String optionId) { }
 
 }

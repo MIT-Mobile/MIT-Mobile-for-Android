@@ -34,10 +34,6 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.FineData;
-import edu.mit.mitmobile2.classes.HoldData;
-import edu.mit.mitmobile2.classes.LoanData;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.FineListItem;
 import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
@@ -817,7 +813,7 @@ public class LibraryYourAccount extends ModuleActivity {
         		loanStatusIcon.setVisibility(View.VISIBLE);
         	}
         	else {
-        		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusTV.setTextColor(getResources().getColor(R.color.contents_text));
         		loanStatusIcon.setVisibility(View.GONE);
         	}
         	

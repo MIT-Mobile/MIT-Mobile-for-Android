@@ -7,44 +7,36 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
 
-	<LinearLayout 
-			android:orientation="horizontal"
- 	  		android:layout_width="fill_parent"
-  	  		android:layout_height="wrap_content">
-  	  		
-  		<ImageView android:id="@+id/stopsMapIV"
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" />
-			
-		<TextView android:id="@+id/stopsTitleTV" 
-			android:layout_width="wrap_content" 
+	<TextView android:id="@+id/stopsTitleTV" 
+			android:layout_width="fill_parent" 
 			android:layout_height="wrap_content"
-			android:paddingTop="@dimen/verticalPadding"
-			android:paddingBottom="@dimen/verticalPadding"
-			android:paddingLeft="@dimen/horizontalPadding"
-			android:paddingRight="@dimen/horizontalPadding"
-			style="@style/ContentTitle" />
-			
-	</LinearLayout>
+			android:paddingTop="@dimen/standardPadding"
+			android:paddingBottom="5.25dip"
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"
+			style="@style/ContentTitle" 
+			/>
 	
 	<LinearLayout 
 			android:orientation="horizontal"
-			android:paddingBottom="3px"
+			android:paddingLeft="@dimen/standardPadding"
+			android:paddingRight="@dimen/standardPadding"			
  	  		android:layout_width="fill_parent"
   	  		android:layout_height="wrap_content">
+  	  		
   		<ImageView android:src="@drawable/shuttle_alert_descriptive"
+  		    android:paddingRight="3dip"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/horizontalPadding"
-            android:paddingTop="@dimen/verticalPadding"/>
+			/>
+  		
 		<TextView android:id="@+id/stopsInfoTV" 
 			style="@style/SmallPrint"
 			android:text="Tap the 'Alert Me' icon to be notified 5 minutes before the estimated arrival time."
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/horizontalPadding"
-            android:paddingTop="@dimen/verticalPadding"
-            android:paddingBottom="16dip"/>
+            android:paddingBottom="@dimen/standardPadding"
+            />
             
 	</LinearLayout>
 		

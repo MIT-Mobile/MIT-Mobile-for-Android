@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:id="@+id/newModuleMain">
+	
+    <FrameLayout
+        android:id="@+id/newModuleMainFullScreenFrameLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />  
+        
+    <edu.mit.mitmobile2.MITTitleBar
+        android:id="@+id/mitTitleBar"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"/>
+</LinearLayout>

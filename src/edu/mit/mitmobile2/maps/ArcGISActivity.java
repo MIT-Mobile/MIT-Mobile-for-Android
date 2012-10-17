@@ -45,9 +45,7 @@ import com.esri.core.tasks.ags.query.QueryTask;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.classes.FineData;
-import edu.mit.mitmobile2.classes.MapLayer;
-import edu.mit.mitmobile2.classes.MapServerData;
+
 import edu.mit.mitmobile2.objs.FineListItem;
 
 public class ArcGISActivity extends Activity {

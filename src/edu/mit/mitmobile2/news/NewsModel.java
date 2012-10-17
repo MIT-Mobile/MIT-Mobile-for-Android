@@ -57,8 +57,10 @@ public class NewsModel {
 	
 	
 	static final String[] category_titles = {
-		"Top News", "Campus", "Engineering", "Science", "Management", "Architecture", "Humanties"
+		"Top News", "Campus", "Engineering", "Science", "Management", "Architecture", "Humanities"
 	};
+	
+	final static int MAX_STORIES_PER_CAREGORY = 200;
 	
 	public static final int FETCH_SUCCESSFUL = 1;
 	public static final int FETCH_FAILED = 2;
@@ -180,7 +182,7 @@ public class NewsModel {
 			}
 		}.start();
 		
-		String bookmarkStatusText = bookmarkStatus ? "saving bookmark" : "removing bookmark";
+		String bookmarkStatusText = bookmarkStatus ? "Bookmark saved" : "Bookmark removed";
 		Toast.makeText(mContext, bookmarkStatusText, Toast.LENGTH_LONG).show();
 	}
 	
@@ -461,18 +463,20 @@ public class NewsModel {
 		return message;
 	}
 	
-	public void executeSearch(final String searchTerm, final Handler uiHandler) {
+	public void executeSearch(final String searchTerm, final Handler uiHandler, int start) {
 		// check cache
 		if(searchCache.get(searchTerm) != null) {
 			SearchResults<NewsItem> searchResults = searchCache.get(searchTerm);
-			MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
-			return;
+			if (searchResults.getResultsList().size() > start) {
+				MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
+				return;
+			}
 		}
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("searchword", searchTerm);
 		params.put("ordering", "newest");
-		params.put("start", "0");
+		params.put("start", String.valueOf(start));
 		params.put("limit", "50");
 		
 		String query = MobileWebApi.query(params);
@@ -489,6 +493,11 @@ public class NewsModel {
 				public void onResponse(InputStream stream) {
 					SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
 					if (results != null) {
+						SearchResults<NewsItem> lastResults = searchCache.get(searchTerm);
+						if (null != lastResults) {
+							lastResults.addMoreResults(results.getResultsList());
+							results = lastResults;
+						}
 						searchCache.put(searchTerm, results);
 						MobileWebApi.sendSuccessMessage(uiHandler, results);
 					} else {

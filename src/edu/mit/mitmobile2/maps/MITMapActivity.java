@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.google.android.maps.GeoPoint;
+
 import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;

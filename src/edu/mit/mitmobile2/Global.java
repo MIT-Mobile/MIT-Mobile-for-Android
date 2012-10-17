@@ -19,7 +19,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
-import edu.mit.mitmobile2.classes.SharedData;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
@@ -48,8 +47,7 @@ public class Global extends Application {
 
 	// Shared Data
 	public static SharedPreferences prefs;
-
-	public static final SharedData sharedData = new SharedData();
+	public static SharedData sharedData = new SharedData();
 	
 	// Facilities 
 	private static String problemType;

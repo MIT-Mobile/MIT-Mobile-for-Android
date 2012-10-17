@@ -1,29 +1,34 @@
 package edu.mit.mitmobile2.news;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 
-public class NewsBookmarksActivity extends ModuleActivity {
+public class NewsBookmarksActivity extends NewModuleActivity {
 
 	private NewsModel mNewsModel;
 	Cursor mBookmarksCursor;
 	
 	ListView mListView;
 	View mEmptyMessageTV;
+	
+	private final static String MENU_CLEAR_BOOKMARKS = "menu_clear_bookmarks";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,8 @@ public class NewsBookmarksActivity extends ModuleActivity {
 		mBookmarksCursor = mNewsModel.getBookmarksCursor();
 		
 		setContentView(R.layout.news_bookmarks_list);
+		
+		initSecondaryTitleBar();
 		
 		mListView = (ListView) findViewById(R.id.newsBookmarksLV);
 		mEmptyMessageTV = findViewById(R.id.newsBookmarksListEmptyTV);
@@ -56,6 +63,21 @@ public class NewsBookmarksActivity extends ModuleActivity {
 		);
 		
 		updateUI();
+	}
+	
+	@Override
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		if(mBookmarksCursor.getCount() > 0) {
+			items.add(new MITMenuItem(MENU_CLEAR_BOOKMARKS, "Clear Bookmarks"));
+		}
+		return items;
+	}
+	
+	private void initSecondaryTitleBar() {
+		final MITPlainSecondaryTitleBar titleBar = new MITPlainSecondaryTitleBar(this);
+		titleBar.setTitle("Bookmarks");
+		getTitleBar().addSecondaryBar(titleBar);
 	}
 
 	@Override
@@ -79,40 +101,36 @@ public class NewsBookmarksActivity extends ModuleActivity {
 			mListView.setVisibility(View.GONE);
 			mEmptyMessageTV.setVisibility(View.VISIBLE);
 		}
+		refreshTitleBarOptions();
 	}
 	
-	@Override
-	protected Module getModule() {
-		return new NewsModule();
-	}
-
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	final static int MENU_CLEAR_BOOKMARKS = MENU_SEARCH + 1;
-	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == MENU_CLEAR_BOOKMARKS) {
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new NewsModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		if (optionId.equals(MENU_CLEAR_BOOKMARKS)) {
 			mNewsModel.clearAllBookmarks(new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
 					updateUI();
 				}
-			});
-			return true;
+			});			
 		}
 		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		if(mBookmarksCursor.getCount() > 0) {
-			menu.add(0, MENU_CLEAR_BOOKMARKS, Menu.NONE, "Clear Bookmarks")
-				.setIcon(R.drawable.menu_clear_recent);
-		}
 	}
 }

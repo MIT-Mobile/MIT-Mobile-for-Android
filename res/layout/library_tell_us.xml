@@ -4,10 +4,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <edu.mit.mitmobile2.TitleBar
-        android:text="Tell Us"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+
     <edu.mit.mitmobile2.LockingScrollView
         android:id="@+id/scrollView"
         android:layout_width="fill_parent"
@@ -23,7 +20,9 @@
         	    android:orientation="vertical"
         	    android:layout_width="fill_parent"
         	    android:layout_height="fill_parent"
-        	    android:padding="5dip"
+				android:paddingLeft="@dimen/standardPadding"
+				android:paddingRight="@dimen/standardPadding"
+				android:paddingBottom="@dimen/standardPadding"
         	    android:background="@color/rowBackground">
             	<TextView
                 	android:text="Status:"

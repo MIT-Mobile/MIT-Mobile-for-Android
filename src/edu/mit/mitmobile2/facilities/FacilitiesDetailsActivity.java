@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -15,7 +16,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,8 +35,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -46,12 +44,12 @@ import android.widget.Toast;
 import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
-public class FacilitiesDetailsActivity extends ModuleActivity {
+public class FacilitiesDetailsActivity extends NewModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemTypeActivity";
 	private static String ATTACH_PHOTO = "Attach Photo";
@@ -95,8 +93,8 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	}
 	
 	public void createViews() {
-        setContentView(R.layout.facilities_details);        
-    	
+        setContentView(R.layout.facilities_details);    
+        
     	// Set problem string
         problemStringTextView = (TextView)findViewById(R.id.facilitiesProblemString);
         String problemString = "I am reporting a problem";
@@ -317,27 +315,10 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
     }
     
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-	}
-	
 	void submitForm() {
 		FileUploader fileUploader = new FileUploader();
 		fileUploader.execute();
@@ -526,6 +507,24 @@ public class FacilitiesDetailsActivity extends ModuleActivity {
 	        mTransferred++;
 	        mFileUploadListener.onBytesTransfered(mTransferred);
 	    }
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 	

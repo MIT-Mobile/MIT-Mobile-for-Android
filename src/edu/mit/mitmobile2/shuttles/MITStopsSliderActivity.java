@@ -8,18 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
 
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
-import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
+import edu.mit.mitmobile2.SliderListAdapter.OnPositionChangedListener;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITStopsSliderActivity extends SliderActivity implements OnPositionChangedListener {
+public class MITStopsSliderActivity extends SliderListNewModuleActivity implements OnPositionChangedListener {
 	
 	// Alarm related
 	static public HashMap<String,HashMap <String,Long>> alertIdx;  // <Stop,<Routes,Times>>
@@ -33,8 +33,6 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
 	protected String routeId,stopId;
 	
 	protected Stops stops;
- 
-	static final int MENU_VIEW_MAP = MENU_LAST + 1;
 	
 	SharedPreferences pref;
 	
@@ -74,6 +72,7 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
 
 	}
 	
+	
 	@Override
 	public void onNewIntent(Intent intent) {
 		stopId = intent.getStringExtra(ShuttleModel.KEY_STOP_ID);
@@ -106,10 +105,10 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
     	StopsAsyncView cv;   
     	
     	// TODO get ALL data ONCE from above layer?
-    	
-    	for (Stops s : mStops) {
-    		cv = new StopsAsyncView(this, s);
-    		addScreen(cv, s.title, "Shuttle Stop");  
+    	for (int i = 0; i < mStops.size(); i++) {
+    	    Stops s = mStops.get(i);
+    	    cv = new StopsAsyncView(this, s);
+    	    addScreen(cv, s.title, "" + (i+1) + " of " + mStops.size());
     	}
 
     	setPosition(last_pos);
@@ -126,33 +125,26 @@ public class MITStopsSliderActivity extends SliderActivity implements OnPosition
 		curView = (StopsAsyncView) getScreen(newPosition);
 	}
 	
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		case MENU_VIEW_MAP: 
-			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), mStops, getPosition());
-			break;
-		
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_VIEW_MAP, Menu.NONE, "View on Map")
-		  .setIcon(R.drawable.menu_view_on_map);		
-	}
-	
-	@Override
-	protected Module getModule() {
-		return new ShuttlesModule();
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+	    items.add(new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map));
+	    return items;
 	}
 	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+	    return new ShuttlesModule();
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+	    if (optionId.equals("viewmap")) {
+		MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), mStops, getPosition());
+	    }
 	}
 }

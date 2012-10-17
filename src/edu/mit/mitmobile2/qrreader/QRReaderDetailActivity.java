@@ -7,17 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DateStrings;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.SimpleArrayAdapter.OnItemClickListener;
@@ -26,7 +25,7 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.qrreader.QRReaderModel.QRAction;
 import edu.mit.mitmobile2.qrreader.QRReaderModel.SuggestedUrl;
 
-public class QRReaderDetailActivity extends ModuleActivity {
+public class QRReaderDetailActivity extends NewModuleActivity {
 
 	public static void launch(Context context, QRCode qrcode) {
 		Intent intent = new Intent(context, QRReaderDetailActivity.class);
@@ -103,7 +102,7 @@ public class QRReaderDetailActivity extends ModuleActivity {
 				15000
 			);
 		
-		((QRReaderModule) getModule()).getModel().fetchSuggestedUrl(this, qrcode.getId(), handler);
+		((QRReaderModule) getNewModule()).getModel().fetchSuggestedUrl(this, qrcode.getId(), handler);
 		
 	}
 	
@@ -112,17 +111,24 @@ public class QRReaderDetailActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
-		return new QRReaderModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new QRReaderModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		
 	}

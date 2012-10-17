@@ -18,10 +18,6 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.DefaultCancelRequestListener;
 import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
 
-import edu.mit.mitmobile2.classes.FineData;
-import edu.mit.mitmobile2.classes.HoldData;
-import edu.mit.mitmobile2.classes.LoanData;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 
 public class LibraryModel {

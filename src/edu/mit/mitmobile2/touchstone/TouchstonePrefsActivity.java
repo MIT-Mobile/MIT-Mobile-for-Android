@@ -20,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -30,13 +29,13 @@ import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.settings.SettingsModule;
 
-//public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
+public class TouchstonePrefsActivity extends NewModuleActivity implements OnSharedPreferenceChangeListener {
 	
 	private Context mContext;	
 
@@ -60,8 +59,6 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
     
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstonePrefsActivity";
-	private static final int MENU_INFO = 0;
-	private static final int MENU_PREFS = 1;
 	
 	/**
 	 * @throws IOException 
@@ -71,9 +68,10 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        Handler uiHandler = new Handler();
 
         createViews();
+        
+        addSecondaryTitle("MIT Touchstone");
 	}
 		
 	private void createViews() {
@@ -195,44 +193,14 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
     };
  
 	@Override
-	protected Module getModule() {
-		return null;
+	protected NewModule getNewModule() {
+		return new SettingsModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
-
-	/*
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_INFO:
-			//Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			//startActivity(intent);
-			return true;
-		case MENU_PREFS:
-			//Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-        	startActivity( new Intent(this, TouchstonePrefsActivity.class) );
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-		
-	}
-	*/
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		/*
-		menu.add(0, MENU_INFO, Menu.NONE, "Info")
-		  .setIcon(R.drawable.menu_about);
-		
-		menu.add(1, MENU_PREFS, Menu.NONE, "Prefs")
-		  .setIcon(R.drawable.main_repeat);
-		*/
-	}
-
 
 	
 	public static String responseContentToString(HttpResponse response) {
@@ -268,5 +236,13 @@ public class TouchstonePrefsActivity extends ModuleActivity implements OnSharedP
 //		
 //		Toast.makeText(this, "user set to " + mitClient.getUser(), Toast.LENGTH_SHORT).show();
 	}
+
+	@Override
+	protected boolean isScrollable() {
+		return true;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {	}
 
 }

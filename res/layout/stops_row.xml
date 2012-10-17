@@ -14,10 +14,10 @@
 		android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center_vertical"
-        android:paddingLeft="@dimen/horizontalPadding"
-        android:paddingRight="@dimen/horizontalPadding"
-        android:paddingTop="@dimen/verticalPadding"
-        android:paddingBottom="@dimen/verticalPadding"/>
+        android:paddingLeft="@dimen/standardPadding"
+        android:paddingRight="@dimen/standardPadding"
+        android:paddingTop="@dimen/standardPadding"
+        android:paddingBottom="@dimen/standardPadding"/>
 		
 	<TextView android:id="@+id/stopsRowMinsTV"
 		android:layout_weight="1"
@@ -36,8 +36,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_vertical"
-        android:paddingRight="@dimen/horizontalPadding"
-        android:paddingTop="@dimen/verticalPadding"
-        android:paddingBottom="@dimen/verticalPadding"/>
+        android:paddingRight="@dimen/standardPadding"
+		/>
 	
 </LinearLayout>

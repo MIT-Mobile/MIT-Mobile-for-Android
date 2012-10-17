@@ -378,7 +378,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
         topView.setMinimumHeight(height-30);
         
 		lb = new LoaderBar(ctx);
-		topView.addView(lb);
+		topView.addView(lb, 0);
 		
 		addView(topView);
 

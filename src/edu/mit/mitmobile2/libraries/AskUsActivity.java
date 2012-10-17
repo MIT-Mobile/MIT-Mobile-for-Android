@@ -28,6 +28,8 @@ import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleSpinnerAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
@@ -35,7 +37,7 @@ import edu.mit.mitmobile2.libraries.LibraryModel.FormResult;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 
-public class AskUsActivity extends ModuleActivity {
+public class AskUsActivity extends NewModuleActivity {
 	
     private Spinner mTopicSpinner;
     private Spinner mStatusSpinner;
@@ -66,6 +68,7 @@ public class AskUsActivity extends ModuleActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_ask_us);
+        addSecondaryTitle("Ask Us");
         
         mContext = this;
         
@@ -95,7 +98,7 @@ public class AskUsActivity extends ModuleActivity {
         mGoHomeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 		    public void onClick(View v) {
-				Intent intent = new Intent(mContext, getModule().getModuleHomeActivity());
+				Intent intent = new Intent(mContext, getNewModule().getModuleHomeActivity());
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 		    }
@@ -296,7 +299,7 @@ public class AskUsActivity extends ModuleActivity {
     };
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
@@ -305,8 +308,11 @@ public class AskUsActivity extends ModuleActivity {
         return false;
     }
 
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-    }
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
 
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

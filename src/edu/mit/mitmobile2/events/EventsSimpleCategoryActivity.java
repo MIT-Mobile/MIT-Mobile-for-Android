@@ -56,7 +56,6 @@ public class EventsSimpleCategoryActivity extends ModuleActivity {
 		
 		mListView = (ListView) findViewById(R.id.eventsCategoryLV);	
 		mLoadingView = (FullScreenLoader) findViewById(R.id.eventsCategoriesLoading);
-		mTitleBar = (TitleBar) findViewById(R.id.eventsCategoryTitleBar);
 		mContext = this;
 		
 

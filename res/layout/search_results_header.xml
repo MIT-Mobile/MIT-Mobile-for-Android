@@ -34,5 +34,7 @@
   	android:layout_centerVertical="true"
   	android:layout_alignParentLeft="true"
   	android:paddingLeft="10dip"
-  	android:id="@+id/searchResultsHeaderText" />
+  	android:textColor="#ffffff"
+  	android:id="@+id/searchResultsHeaderText" 
+  	/>
 </RelativeLayout>

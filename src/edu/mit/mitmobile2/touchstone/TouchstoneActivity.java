@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,12 +28,12 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MITClientData;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
-public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
+public class TouchstoneActivity extends NewModuleActivity implements OnSharedPreferenceChangeListener {
 	
 	private Context mContext;	
 
@@ -164,8 +163,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
     };
  
 	@Override
-	protected Module getModule() {
-		return null;
+	protected NewModule getNewModule() {
+		return new TouchstoneModule();
 	}
 
 	@Override
@@ -189,17 +188,6 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		}
 	}
 	*/
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		/*
-		menu.add(0, MENU_INFO, Menu.NONE, "Info")
-		  .setIcon(R.drawable.menu_about);
-		
-		menu.add(1, MENU_PREFS, Menu.NONE, "Prefs")
-		  .setIcon(R.drawable.main_repeat);
-		 */
-	}
     
 
 	
@@ -234,5 +222,13 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
 		finish();
 	}
+
+	@Override
+	protected boolean isScrollable() {
+		return true;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 
 }

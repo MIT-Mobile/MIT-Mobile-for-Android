@@ -1,7 +1,9 @@
 package edu.mit.mitmobile2.emergency;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,21 +14,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.LoadingUIHelper;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
@@ -34,13 +34,15 @@ import edu.mit.mitmobile2.objs.EmergencyItem;
 import edu.mit.mitmobile2.objs.EmergencyItem.Contact;
 
 
-public class EmergencyActivity extends ModuleActivity {
+public class EmergencyActivity extends NewModuleActivity {
 
 	private ListView mListView;
 
 	private Context mContext;
 	private WebView mEmergencyMsgTV = null;
-
+	private ImageView mEmergencyMsgLoader;
+	private ImageView mEmergencyListLoader;
+	
 	TextView emergencyContactsTV;
 
 	SharedPreferences pref;
@@ -49,45 +51,25 @@ public class EmergencyActivity extends ModuleActivity {
 	
 	static String PREF_KEY_EMERGENCY_TEXT = "emergency_text";
 	
-	static final int MENU_REFRESH = MENU_SEARCH + 1;
-	
 	/****************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
-		
 		mContext = this;
 		
 		setContentView(R.layout.emergency);
 		
-		pref = this.getSharedPreferences(Global.PREFS,MODE_PRIVATE);  // FIXME
+		mEmergencyMsgLoader = (ImageView) findViewById(R.id.emergencyMsgLoader);
+		mEmergencyListLoader = (ImageView) findViewById(R.id.emergencyListLoader);
 		
-		FullScreenLoader loader = (FullScreenLoader) findViewById(R.id.emergencyListLoader);
-		loader.showLoading();
+		pref = this.getSharedPreferences(Global.PREFS,MODE_PRIVATE);  // FIXME
 		getData();
 		
 	}
 
+	private static String noticeTemplate = "<html><body style=\"padding: 7px;\">%s\n<p>Posted %s</p></body></html>";
 	/****************************************************/
 	private void updateEmergencyText() {
-		String html;
-		if (emergencyItem.unixtime > 0) {
-			Date postDate = new Date(emergencyItem.unixtime * 1000);
-			SimpleDateFormat format = new SimpleDateFormat("EEE d, MMM yyyy");
-			String dateStr = format.format(postDate);
-			html = String.format("%s\n<p>Posted %s</p>",
-				emergencyItem.text,
-				dateStr);
-		} else {
-			html = emergencyItem.text;
-		}
-		
-		mEmergencyMsgTV.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
-	}
-	
-	private void updateView() {
-		
 		emergencyItem = EmergencyParser.getStatus();
 
 		if (emergencyItem==null) {
@@ -102,27 +84,38 @@ public class EmergencyActivity extends ModuleActivity {
 			editor.commit();
 		}
 		
-		
 		setTitle(emergencyItem.title);
+		String html;
 		
-		FullScreenLoader loadingView = (FullScreenLoader) findViewById(R.id.emergencyListLoader);		
-		loadingView.setVisibility(View.GONE);
+		mEmergencyMsgTV = (WebView) findViewById(R.id.emergencyMsgTV);
+		mEmergencyMsgTV.setVisibility(View.VISIBLE);
+		mEmergencyMsgLoader.setVisibility(View.GONE);
 		
+		if (emergencyItem.unixtime > 0) {
+			Date postDate = new Date(emergencyItem.unixtime * 1000);
+			SimpleDateFormat format = new SimpleDateFormat("EEE d, MMM yyyy");
+			String dateStr = format.format(postDate);
+			html = String.format(noticeTemplate,
+				emergencyItem.text,
+				dateStr);
+		} else {
+			html = emergencyItem.text;
+		}
+		
+		mEmergencyMsgTV.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
+	}
+	
+	private void updateView() {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		mListView = (ListView) findViewById(R.id.emergencyListView);
 		mListView.setVisibility(View.VISIBLE);
-		LinearLayout listHeader = (LinearLayout) inflater.inflate(R.layout.emergency_header, null);
+		mEmergencyListLoader.setVisibility(View.GONE);
 		//ImageView backgroundView = (ImageView) listHeader.findViewById(R.id.graySectionHeaderBackground);
 		//int height = backgroundView.getDrawable().getIntrinsicHeight();
 		//FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, height);
 		//FrameLayout wrapper = (FrameLayout) listHeader.findViewById(R.id.graySectionHeaderWrapper);
 		//wrapper.setLayoutParams(params);
-		mListView.addHeaderView(listHeader);
-		mEmergencyMsgTV = (WebView) findViewById(R.id.emergencyMsgTV);
-		
-		updateEmergencyText();
-		
 		final EmergencyDB db = EmergencyDB.getInstance(this);
 		
 		EmergencyContactsAdapter adapter = null;
@@ -162,7 +155,6 @@ public class EmergencyActivity extends ModuleActivity {
 		final Handler uiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
 				updateView();
 			}
 		};
@@ -171,16 +163,19 @@ public class EmergencyActivity extends ModuleActivity {
 		final Handler nextHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				EmergencyParser.fetchContacts(mContext, uiHandler);
-				
 				// mark emergency as read
+				updateEmergencyText();
 				C2DMReceiver.markNotificationAsRead(mContext, "emergencyinfo:");
 			}
 		};
 		
-		EmergencyParser.fetchStatus(this, nextHandler);
+		mEmergencyMsgLoader.setVisibility(View.VISIBLE);
+		mEmergencyListLoader.setVisibility(View.VISIBLE);
+		LoadingUIHelper.startLoadingImage(new Handler(), mEmergencyMsgLoader);
+		LoadingUIHelper.startLoadingImage(new Handler(), mEmergencyListLoader);
 		
+		EmergencyParser.fetchStatus(this, nextHandler);
+		EmergencyParser.fetchContacts(mContext, uiHandler);
 	}
 	
 	void refresh() {
@@ -196,30 +191,35 @@ public class EmergencyActivity extends ModuleActivity {
 		EmergencyParser.refreshStatus(this, handler);
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_REFRESH:
-			refresh();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+	// default implementation for primary, and secondary menu items.
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
+		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));
+		return menuItems;
 	}
-
-	@Override
-	protected Module getModule() {
-		return new EmergencyModule();
-	}
-
+	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		menu.add(0, MENU_REFRESH, Menu.NONE, "Refresh")
-		  .setIcon(R.drawable.menu_refresh);
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new EmergencyModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		if (optionId.equals("refresh")) {
+			refresh();
+		}
 	}
 }

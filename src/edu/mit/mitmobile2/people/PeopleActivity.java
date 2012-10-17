@@ -1,17 +1,7 @@
 package edu.mit.mitmobile2.people;
 
+import java.util.Arrays;
 import java.util.List;
-
-import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.HighlightEffects;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
-import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.emergency.EmergencyContactsActivity;
-import edu.mit.mitmobile2.objs.PersonItem;
-import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,21 +9,27 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.HighlightEffects;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SearchBar;
+import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.emergency.EmergencyContactsActivity;
+import edu.mit.mitmobile2.objs.PersonItem;
+import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
-public class PeopleActivity extends ModuleActivity {
+public class PeopleActivity extends NewModuleActivity {
 	
-	private SearchBar mSearchBar;
 	private ListView mRecentlyViewed;
 	private View mRecentlyViewedListViewHeader;
 	private View mRecentlyViewedSectionHeader;
 	private List<PersonItem> mRecents;
-
-	private static final int MENU_CLEAR_RECENTS = MENU_SEARCH + 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +47,6 @@ public class PeopleActivity extends ModuleActivity {
 	private void createViews() {
 		setContentView(R.layout.people_main);
 		
-		mSearchBar = (SearchBar) findViewById(R.id.peopleSearchBar);
-		mSearchBar.setSearchHint(getString(R.string.people_search_hint));
-		mSearchBar.setSystemSearchInvoker(this);
-		
-		
-
 		mRecentlyViewed = (ListView) findViewById(R.id.peopleRecentlyViewed);
 		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -120,36 +110,34 @@ public class PeopleActivity extends ModuleActivity {
 		recentlyViewedListAdapter.setLookupHandler(mRecentlyViewed, PersonDetailViewMode.RECENT, null);
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_CLEAR_RECENTS:
-			PeopleDB.getInstance(this).clearAll();
-			populateRecentlyViewed();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+	private static String MENU_CLEAR_RECENTS = "clear_recents";
 	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		if (mRecents.size() > 0) {
-			menu.add(0, MENU_CLEAR_RECENTS, Menu.NONE, "Clear Recents")
-				.setIcon(R.drawable.menu_clear_recent);
-		}
-		
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-			.setIcon(R.drawable.menu_search);
-	}
-
-	@Override
-	protected Module getModule() {
-		return new PeopleModule();
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+		return Arrays.asList(
+			new MITMenuItem(MENU_CLEAR_RECENTS, "Clear Recents")
+		);
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		return new PeopleModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String id) {
+	    if (id.equals(MENU_CLEAR_RECENTS)) {
+		PeopleDB.getInstance(this).clearAll();
+		populateRecentlyViewed();
+	    }
 	}
 }

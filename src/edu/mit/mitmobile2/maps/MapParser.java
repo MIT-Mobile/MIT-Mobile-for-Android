@@ -9,10 +9,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import edu.mit.mitmobile2.classes.MapBaseLayer;
-import edu.mit.mitmobile2.classes.MapFeatureLayer;
-import edu.mit.mitmobile2.classes.MapLayer;
-import edu.mit.mitmobile2.classes.MapServerData;
 import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapParser {

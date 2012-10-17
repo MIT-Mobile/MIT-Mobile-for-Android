@@ -8,9 +8,9 @@
   
 	<TextView 
 		android:id="@+id/eventTitleTV"
-		android:paddingTop="@dimen/verticalPadding" 
-		android:paddingLeft="@dimen/horizontalPadding"
-		android:paddingRight="@dimen/horizontalPadding"
+		android:paddingTop="@dimen/standardPadding" 
+		android:paddingLeft="@dimen/standardPadding"
+		android:paddingRight="@dimen/standardPadding"
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content" 
 		style="@style/ListItemPrimary" />
@@ -18,9 +18,9 @@
 	<!--  bottom line contains date and location -->
 	<RelativeLayout
 		android:orientation="horizontal"
-	  	android:paddingBottom="@dimen/verticalPadding"
-	  	android:paddingLeft="@dimen/horizontalPadding"
-		android:paddingRight="@dimen/horizontalPadding"
+	  	android:paddingBottom="@dimen/standardPadding"
+	  	android:paddingLeft="@dimen/standardPadding"
+		android:paddingRight="@dimen/standardPadding"
   		android:layout_width="fill_parent" 
   		android:layout_height="wrap_content">
 					

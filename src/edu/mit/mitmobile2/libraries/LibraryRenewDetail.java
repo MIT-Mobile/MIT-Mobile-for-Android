@@ -16,7 +16,6 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryRenewDetail extends ModuleActivity{
@@ -60,7 +59,7 @@ public class LibraryRenewDetail extends ModuleActivity{
         }
         else {
         	renewMessageTV.setText("1 renewed successfully!");
-        	renewMessageTV.setTextColor(R.color.result_text);
+        	renewMessageTV.setTextColor(getResources().getColor(R.color.result_text));
         }
         
         renewDoneButton  = (Button)findViewById(R.id.renewDoneButton);

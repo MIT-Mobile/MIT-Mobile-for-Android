@@ -54,5 +54,10 @@ public class SearchResults<ResultItem> {
 	
 	public void addMoreResults(List<ResultItem> moreResults) {
 		mResultsList.addAll(moreResults);
+		if (mTotalResultsCount != null) {
+			if (mResultsList.size() == mTotalResultsCount) {
+				mIsPartialResult = false;
+			}
+		}
 	}
 }

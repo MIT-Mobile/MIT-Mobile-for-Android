@@ -21,7 +21,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.classes.FineData;
 import edu.mit.mitmobile2.objs.FineListItem;
 
 public class LibraryFines extends ModuleActivity  {

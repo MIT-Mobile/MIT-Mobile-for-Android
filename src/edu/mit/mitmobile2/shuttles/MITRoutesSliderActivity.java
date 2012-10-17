@@ -6,26 +6,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
-import edu.mit.mitmobile2.SliderView.OnPositionChangedListener;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class MITRoutesSliderActivity extends SliderActivity implements OnPositionChangedListener {
-
-	static String KEY_ROUTE_ID = "route_id";
-	
+public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	private RoutesAsyncListView curView;
+	
+	private int position;
 
-	//static final int MENU_REFRESH  = Menu.FIRST+2;
-	static final int MENU_MAP_LIST_VIEW = MENU_LAST + 1;
-
+	static final String KEY_POSITION = "key_position";
 	static final String NOT_RUNNING = "Bus not running. Following schedule.";
 	static final String GPS_ONLINE = "Real time bus tracking online.";
 	static final String GPS_OFFLINE = "Tracking offline. Following Schedule";
@@ -42,11 +38,26 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
     		finish();
     		return;
     	}
+    	Bundle bundle = getIntent().getExtras();
+    	if (null != bundle) {
+    		position = bundle.getInt(KEY_POSITION, 0);
+    	}
+    	
+    	/*
+    	getSecondaryBar().addMenuItem(new MITMenuItem("LIST_MAP", "", R.drawable.menu_view_as_list));
+    	getSecondaryBar().setOnMITMenuItemListener(new OnMITMenuItemListener() {
+			@Override
+			public void onOptionItemSelected(String optionId) {
+				// TODO Auto-generated method stub
+				if (optionId.equals("LIST_MAP")) {
+					RoutesAsyncListView view = (RoutesAsyncListView) getCurrentCategory();
+					launchShuttleRouteMap(MITRoutesSliderActivity.this, view.ri, view.getStops(), -1);
+				} 
+			}
+		});
+	*/
     	
     	createViews();
-    	
-    	setOnPositionChangedListener(this);
-
 	}
     /****************************************************/
 	@Override
@@ -80,48 +91,21 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
     		
     		cv = new RoutesAsyncListView(this, routeId, r);
 
-    		addScreen(cv, r.title, "Route Detail");
-   		
+    		addScreen(cv, r.title, r.title);
     	}
-    	int initialPosition = getPositionValue();
-    	setPosition(initialPosition);
-		curView = (RoutesAsyncListView) getScreen(initialPosition);  // need to set here first time to avoid memory leak (otherwise onStop() will find curView==null)
+    	setPosition(position);
     }
     
 	@Override
 	public void onPositionChanged(int newPosition, int oldPosition) {
-		if(curView != null) {
-			curView.terminate();
-		}
-		curView = (RoutesAsyncListView) getScreen(newPosition);
+	    super.onPositionChanged(newPosition, oldPosition);	
+	    
+	    if(curView != null) {
+		curView.terminate();
+	    }
+	    curView = (RoutesAsyncListView) getScreen(newPosition);
 	}
-    
 
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		case MENU_MAP_LIST_VIEW: 
-			RoutesAsyncListView view = (RoutesAsyncListView) getScreen(getPosition());
-			launchShuttleRouteMap(this, view.ri, view.getStops(), -1);
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_MAP_LIST_VIEW, Menu.NONE, "View on Map")
-		  .setIcon(R.drawable.menu_view_on_map);
-	}
-	
-	@Override
-	protected Module getModule() {
-		return new ShuttlesModule();
-	}
-	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
@@ -144,5 +128,20 @@ public class MITRoutesSliderActivity extends SliderActivity implements OnPositio
 		i.putExtra(MITMapActivity.KEY_ROUTE, routeItem);
 		
 		context.startActivity(i);
+	}
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new ShuttlesModule();
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	protected String getHeaderTitle(int position) {
+	    return null;
 	}
 }

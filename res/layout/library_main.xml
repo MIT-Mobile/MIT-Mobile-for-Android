@@ -5,16 +5,6 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:background="@color/rowBackground">
-  
-    <edu.mit.mitmobile2.TitleBar
-        android:text="Library"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-        
-    <edu.mit.mitmobile2.SearchBar
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/librarySearchBar" />
         
     <edu.mit.mitmobile2.DividerView
         android:layout_width="fill_parent"

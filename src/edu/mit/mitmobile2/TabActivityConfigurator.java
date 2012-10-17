@@ -1,11 +1,15 @@
 package edu.mit.mitmobile2;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.Spannable.Factory;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -30,7 +34,7 @@ public class TabActivityConfigurator {
 	}
 	
 	public void addTab(String tabName, Class className) {
-		mTabNames.add(tabName);
+		mTabNames.add(tabName.toUpperCase(Locale.US));
 		mTabActivities.add(className);
 	}
 	
@@ -38,6 +42,8 @@ public class TabActivityConfigurator {
 		int height = mActivity.getResources().getDimensionPixelSize(R.dimen.tabHeight);
 		int displayWidth = mActivity.getWindowManager().getDefaultDisplay().getWidth();
 		int width = displayWidth/mTabNames.size();
+		
+		Factory spanFactory = Spannable.Factory.getInstance();
 		
 		int remainingWidth = displayWidth; // insure the whole width is used in cases where the division rounds off pixels
 		
@@ -60,13 +66,14 @@ public class TabActivityConfigurator {
 			indicatorView.setLayoutParams(new LayoutParams(tabWidth, height));
 			indicatorView.setBackgroundResource(R.drawable.tab2_background);
 			indicatorView.setGravity(Gravity.CENTER);
+			Spannable tabNameSpan = spanFactory.newSpannable(tabName);
+			tabNameSpan.setSpan(
+				new TextAppearanceSpan(mActivity, R.style.TabTitle), 
+				0, tabName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			
 			TextView textView = new TextView(mActivity);
 			textView.setLayoutParams(new LayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)));
-			textView.setText(tabName);
-			ColorStateList colors = mActivity.getResources().getColorStateList(R.color.tab_text_color);
-			textView.setTextColor(colors);
-			textView.setTextSize(mActivity.getResources().getDimensionPixelSize(R.dimen.tabTextSize));
-			textView.setTypeface(Typeface.SANS_SERIF);
+			textView.setText(tabNameSpan);
 			indicatorView.addView(textView);
 			TabSpec tabSpec = mTabHost.newTabSpec(tabName);
 			tabSpec.setIndicator(indicatorView);

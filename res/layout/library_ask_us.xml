@@ -5,10 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/main_repeat">
-    <edu.mit.mitmobile2.TitleBar
-        android:text="Ask Us"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+
     <edu.mit.mitmobile2.LockingScrollView
         android:id="@+id/askUsScrollView"
         android:layout_width="fill_parent"
@@ -22,8 +19,12 @@
         	    android:orientation="vertical"
         	    android:layout_width="fill_parent"
         	    android:layout_height="fill_parent"
-        	    android:padding="5dip" 
-        	    android:background="@color/rowBackground">
+        	    android:paddingLeft="@dimen/standardPadding" 
+        	    android:paddingRight="@dimen/standardPadding"
+        	    android:paddingBottom="@dimen/standardPadding" 
+        	    android:background="@color/rowBackground"
+        	    >
+        	    
         	    <TextView
         	        android:text="Topic:"
         	        android:layout_width="wrap_content"
@@ -79,7 +80,7 @@
             		android:layout_width="fill_parent"
             		android:layout_height="fill_parent"
             		android:background="@color/rowBackground"
-            		android:padding="5dip"
+            		android:padding="@dimen/standardPadding"
             		>
  
      	        	<TextView
@@ -147,8 +148,11 @@
             	android:orientation="vertical"
             	android:layout_width="fill_parent"
             	android:layout_height="fill_parent"
-            	android:padding="5dip" 
-            	android:background="@color/rowBackground">
+				android:paddingLeft="@dimen/standardPadding"
+				android:paddingRight="@dimen/standardPadding"
+				android:paddingBottom="@dimen/standardPadding" 
+            	android:background="@color/rowBackground"
+            	>
             	
 		
     	        <TextView

@@ -18,11 +18,6 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.DefaultCancelRequestListener;
 import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
 
-import edu.mit.mitmobile2.classes.FineData;
-import edu.mit.mitmobile2.classes.HoldData;
-import edu.mit.mitmobile2.classes.LoanData;
-import edu.mit.mitmobile2.classes.MapServerData;
-
 public class MapModel {
     public static String MODULE_MAP = "map";
 	public static final String TAG = "MapModel";

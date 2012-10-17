@@ -20,7 +20,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.objs.HoldListItem;
 
 public class LibraryHolds extends ModuleActivity  {

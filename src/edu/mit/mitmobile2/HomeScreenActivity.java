@@ -1,7 +1,9 @@
 package edu.mit.mitmobile2;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,7 @@ import edu.mit.mitmobile2.facilities.FacilitiesModule;
 import edu.mit.mitmobile2.libraries.LibrariesModule;
 import edu.mit.mitmobile2.links.LinksModule;
 import edu.mit.mitmobile2.maps.MapsModule;
+import edu.mit.mitmobile2.maps.NewMapModule;
 import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.qrreader.QRReaderModule;
@@ -49,9 +52,8 @@ import edu.mit.mitmobile2.tour.TourModule;
 public class HomeScreenActivity extends Activity implements OnSharedPreferenceChangeListener {
 	
 	
-	private static final int ABOUT_MENU_ID = 0;
-  // private static final int MOBILE_WEB_MENU_ID = 1;
-	private static final int SETTINGS_MENU_ID = 2;
+	private static final int ABOUT_MENU_ID = 0; 
+        private static final int SETTINGS_MENU_ID = 1;
 
 	Context ctx;
 	
@@ -258,6 +260,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 				intent = new Intent(ctx, AboutActivity.class);
 				startActivity(intent);
 				return true;
+
 			case SETTINGS_MENU_ID:
 				intent = new Intent(ctx, MITSettingsActivity.class);
 				startActivity(intent);

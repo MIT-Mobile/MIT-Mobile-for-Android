@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -18,15 +16,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.facilities.FacilitiesDB.LocationTable;
 import edu.mit.mitmobile2.objs.FacilitiesItem.CategoryRecord;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
-public class FacilitiesProblemLocationActivity extends ModuleActivity {
+public class FacilitiesProblemLocationActivity extends NewModuleActivity {
 
 	public static final String TAG = "FacilitiesProblemLocationActivity";
 	
@@ -56,6 +54,8 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	public void createViews() {
 		
 		setContentView(R.layout.facilities_problem_location);
+		addSecondaryTitle("Where is it?");
+		
 		mLoader = (FullScreenLoader) findViewById(R.id.facilitiesLoader);
 		mLoader.showLoading();
 		new DatabaseUpdater().execute(""); 
@@ -178,25 +178,26 @@ public class FacilitiesProblemLocationActivity extends ModuleActivity {
 	}
 		
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

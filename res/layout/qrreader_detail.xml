@@ -6,11 +6,6 @@
   android:layout_height="wrap_content"
   android:background="@drawable/main_repeat">
   
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="Scan Detail"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
-  		
   		
 	<ImageView
 		android:id="@+id/qrreaderDetailIV"

@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:minHeight="@dimen/minRowHeight" >
+	>
 	
+	<ImageView
+  		android:layout_alignParentRight="true"
+  		android:layout_width="wrap_content"
+  		android:layout_height="wrap_content"
+  		android:layout_centerVertical="true"
+  		android:scaleType="center"
+  		android:paddingRight="@dimen/standardPadding"
+  		android:id="@+id/simpleRowActionIcon"/>
+  			
 	
 	<!--  content title, subtitle --> 
 	<LinearLayout
@@ -12,16 +21,15 @@
   			android:layout_alignParentLeft="true"
   			android:layout_width="wrap_content"
   			android:layout_height="wrap_content"
+  			android:layout_toLeftOf="@+id/simpleRowActionIcon"
   			android:layout_gravity="center_vertical"
   			android:orientation="vertical"
-  			android:paddingLeft="@dimen/horizontalPadding"
-  			android:paddingTop="@dimen/verticalPadding"
-  			android:paddingBottom="@dimen/verticalPadding" >
+  			android:padding="@dimen/standardPadding"
+  			>
   	
   			<TextView
   				android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
-  				android:paddingRight="30dip"
   				android:visibility="gone"
   				android:id="@+id/simpleRowTitle" 
   				style="@style/ListItemPrimary" />
@@ -30,28 +38,8 @@
   				android:layout_width="wrap_content"
   				android:layout_height="wrap_content"
   				android:visibility="gone"
-  				android:paddingTop="@dimen/interlinePadding"
-  				android:paddingRight="@dimen/horizontalPadding"
   				android:id="@+id/simpleRowSubtitle" 
   				style="@style/ListItemSecondary" />
   				
-  	</LinearLayout>	
-  		
-	<RelativeLayout
- 		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-  		android:layout_gravity="center_vertical" >
-  
-    	<!-- icon -->  	
-
-		<ImageView
-  			android:layout_alignParentRight="true"
-  			android:layout_width="wrap_content"
-  			android:layout_height="wrap_content"
-  			android:layout_centerVertical="true"
-  			android:scaleType="center"
-  			android:paddingRight="@dimen/horizontalPadding"
-  			android:id="@+id/simpleRowActionIcon"/>
-  	</RelativeLayout>
- 		
-</FrameLayout>
+  	</LinearLayout>	 		
+</RelativeLayout>

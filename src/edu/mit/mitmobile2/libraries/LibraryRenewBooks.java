@@ -21,7 +21,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryRenewBooks extends ModuleActivity  {
@@ -157,7 +156,7 @@ public class LibraryRenewBooks extends ModuleActivity  {
         		loanStatusTV.setTextColor(Color.RED);
         	}
         	else {
-        		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusTV.setTextColor(getResources().getColor(R.color.contents_text));
         	}
         }
 
