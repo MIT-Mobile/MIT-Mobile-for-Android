@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import edu.mit.mitmobile2.MITNewsWidgetActivity;
+import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
@@ -111,7 +111,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 		
 		switch (item.getItemId()) {
 		case MENU_HOME:
-			i = new Intent(this,MITNewsWidgetActivity.class); 
+			i = new Intent(this, HomeScreenActivity.class); 
 			startActivity(i);
 			finish();
 			return true;

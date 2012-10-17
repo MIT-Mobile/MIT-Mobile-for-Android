@@ -15,13 +15,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.Overlay;
-import edu.mit.mitmobile2.LoaderBar;
-import edu.mit.mitmobile2.MITNewsWidgetActivity;
-import edu.mit.mitmobile2.MITSearchRecentSuggestions;
-import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
@@ -42,13 +36,10 @@ public class MITMapActivity extends MapBaseActivity {
 	// sent only by Event:
 	public static final String KEY_LON = "lon";
 	public static final String KEY_LAT = "lat";
-	
-	// sent by Stellar and Events
 	public static final String KEY_LOCATION = "location";
 	
 	// TODO may not need (activityForResult)
 	public static final String MODULE_SHUTTLE = "shuttle";
-	//public static final String MODULE_STELLAR = "stellar";
 	//public static final String MODULE_CALENDAR = "calendar";
 
 	// Generic Menu
@@ -107,12 +98,11 @@ public class MITMapActivity extends MapBaseActivity {
         } 
         
         
-        // Four cases:
+        // Three cases:
         //
         // 1 - Events sends LAT/LON
-        // 2 - Stellar sends findLoc query that should yield ONE building
-        // 3 - Map Search sends many buildings
-        // 4 - Shuttle sends many stops
+        // 2 - Map Search sends many buildings
+        // 3 - Shuttle sends many stops
         
      
     	center = new GeoPoint(42359238,-71093109);	// MIT
@@ -211,8 +201,6 @@ public class MITMapActivity extends MapBaseActivity {
 
 			Drawable pin;
 			GeoPoint gpt;
-			
-			// handles Events, Map search, and Stellar...
 			
 			pin = this.getResources().getDrawable(R.drawable.map_red_pin);
 			markers = new MITItemizedOverlay(pin, this, mapView);
@@ -351,7 +339,7 @@ public class MITMapActivity extends MapBaseActivity {
 		
 		switch (item.getItemId()) {
 		case MENU_HOME:
-			i = new Intent(this,MITNewsWidgetActivity.class);  
+			i = new Intent(this, HomeScreenActivity.class);  
 			startActivity(i);
 			finish();
 			break;

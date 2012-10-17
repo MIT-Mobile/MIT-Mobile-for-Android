@@ -16,9 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.mitmobile2.about.BuildSettings;
-
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 

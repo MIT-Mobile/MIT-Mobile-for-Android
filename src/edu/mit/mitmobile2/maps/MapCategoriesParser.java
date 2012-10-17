@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.MapCatItem;
 
 public class MapCategoriesParser extends JSONParser {

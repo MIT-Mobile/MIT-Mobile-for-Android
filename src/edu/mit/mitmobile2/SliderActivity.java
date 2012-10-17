@@ -16,6 +16,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -312,4 +314,59 @@ abstract public class SliderActivity extends ModuleActivity {
 		loader.setVisibility(View.GONE);
 		mSliderView.setVisibility(View.VISIBLE);
 	}
+	
+// 	******************************************************
+// 	show/hideFullScreen, OnBackPressedListener, onPausedListener are all implemented for full screen video
+//	implemented at higher level in future releases
+	public void showFullScreen(View view) {
+		FrameLayout fullScreenFrameLayout = (FrameLayout) findViewById(R.id.sliderActivityFullScreen);
+		fullScreenFrameLayout.removeAllViews();
+		fullScreenFrameLayout.addView(view, new FrameLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		fullScreenFrameLayout.setVisibility(View.VISIBLE);
+	}
+	
+	public void hideFullScreen() {
+		FrameLayout fullScreenFrameLayout = (FrameLayout) findViewById(R.id.sliderActivityFullScreen);
+		fullScreenFrameLayout.removeAllViews();
+		fullScreenFrameLayout.setVisibility(View.GONE);
+	}
+	
+	public interface OnBackPressedListener {
+		public boolean onBackPressed();
+	}
+
+	OnBackPressedListener mBackPressedListener;
+
+	public void setOnBackPressedListener(OnBackPressedListener backPressedListener) {
+		mBackPressedListener = backPressedListener;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mBackPressedListener != null) {
+			if (mBackPressedListener.onBackPressed()) {
+				return;
+			}
+		}
+		super.onBackPressed();
+	}
+
+	public interface OnPausedListener {
+		public void onPaused();
+	}
+
+	OnPausedListener mPausedListener;
+
+	public void setOnPausedListener(OnPausedListener pausedListener) {
+		mPausedListener = pausedListener;
+	}
+
+	@Override
+	protected void onPause() {
+		if (mPausedListener != null) {
+			mPausedListener.onPaused();
+		}
+		super.onPause();
+	}
+// 	******************************************************
 }

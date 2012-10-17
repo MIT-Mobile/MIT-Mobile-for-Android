@@ -2,10 +2,7 @@ package edu.mit.mitmobile2.classes;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import edu.mit.mitmobile2.objs.FineListItem;
-import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class FineData {
 

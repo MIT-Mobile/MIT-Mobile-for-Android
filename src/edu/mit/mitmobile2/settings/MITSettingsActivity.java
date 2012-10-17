@@ -8,8 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import edu.mit.mitmobile2.MITNewsWidgetActivity;
+import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.maps.ArcGISActivity;
@@ -77,7 +76,7 @@ public class MITSettingsActivity extends Activity {
 		
 		switch (item.getItemId()) {
 			case HOME_ITEM_ID: 
-				MITNewsWidgetActivity.goHome(this);
+				HomeScreenActivity.goHome(this);
 				return true;		}
 			
 		return super.onOptionsItemSelected(item);

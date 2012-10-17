@@ -10,7 +10,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.NewsItem;
 
 
@@ -18,7 +17,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -193,7 +191,6 @@ public class NewsDetailsActivity extends SliderActivity {
 			mNewsDetailView = new NewsDetailsView(mContext, mNewsItem);
 			
 			return mNewsDetailView;
-			
 		}
 
 		@Override

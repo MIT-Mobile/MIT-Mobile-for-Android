@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import edu.mit.mitmobile2.objs.ShuttleAlertItem;
-import edu.mit.mitmobile2.objs.StellarAlertItem;
 
 public class AlertsDB {
 	
@@ -27,11 +26,6 @@ public class AlertsDB {
 	private static final String STOP_ID = "stop_id";
 	private static final String TITLE = "title";
 	private static final String LAST_UPDATE = "last_update";
-	
-	// Stellar
-	private static final String ANNOUNCEMENT = "announcement";
-	private static final String CLASS = "class";
-	private static final String READ = "read";
 
 	private static final String ID_WHERE = ID + "=?";
 	private static final String SHUTTLE_ID_WHERE = ROUTE_ID + "=?";
@@ -110,34 +104,9 @@ public class AlertsDB {
 	}
 
 	/********************************************************************/
-	synchronized void saveStellarAlertItem(StellarAlertItem cai) {
-		
-		SQLiteDatabase db = mAlertsDBHelper.getWritableDatabase();
-		
-		ContentValues alertValues = new ContentValues();
-		alertValues.put(ANNOUNCEMENT, cai.announcement);
-		alertValues.put(CLASS, cai.class_id);
-		int read = (cai.read)?1:0;
-		alertValues.put(READ, read);
-		
-		// TODO
-		/*
-		if(stellarAlertExists(cai.class_id)) {
-			rows = db.update(CLASS_ALERTS_TABLE, alertValues, ID_WHERE, whereArgs(cai));
-			Log.d("StellarAlertDB","StellarAlertDB: updating "+rows);
-		} else {
-			row_id = db.insert(CLASS_ALERTS_TABLE, TITLE, alertValues);
-			Log.d("StellarAlertDB","StellarAlertDB: adding "+row_id);
-		}
-		*/
-		db.close();
-		mAlertsDBHelper.close();
-		
-	}
-	/********************************************************************/
 	public Cursor getShuttleAlertsCursor() {
 		SQLiteDatabase db = mAlertsDBHelper.getReadableDatabase();
-		String[] fields = new String[] {ID, ROUTE_ID, STOP_ID, TITLE, LAST_UPDATE, ANNOUNCEMENT, CLASS};
+		String[] fields = new String[] {ID, ROUTE_ID, STOP_ID, TITLE, LAST_UPDATE};
 		
 		Cursor cursor = db.query(SHUTTLE_ALERTS_TABLE, fields, null, null, null, null, ROUTE_ID + " DESC", null);
 		return cursor;
@@ -154,17 +123,7 @@ public class AlertsDB {
 		
 		return item;
 	}
-	/********************************************************************/
-	static StellarAlertItem retrieveStellarAlertItem(Cursor cursor) {
-		StellarAlertItem item = new StellarAlertItem();
-		
-		item.announcement = cursor.getString(cursor.getColumnIndex(ANNOUNCEMENT));
-		item.class_id = cursor.getString(cursor.getColumnIndex(CLASS));
-		int read = cursor.getInt(cursor.getColumnIndex(READ));
-		item.read = (read==1)? true: false;
-		
-		return item;
-	}
+	
 	/********************************************************************/
 	public ShuttleAlertItem retrieveShuttleAlertItem(String name) {
 		SQLiteDatabase db = mAlertsDBHelper.getReadableDatabase();
@@ -221,10 +180,7 @@ public class AlertsDB {
 				+ ");");
 			
 			db.execSQL("CREATE TABLE " + CLASS_ALERTS_TABLE + " ("
-					+ ID + " INTEGER PRIMARY KEY,"
-					+ ANNOUNCEMENT + " INTEGER,"
-					+ READ + " INTEGER,"
-					+ CLASS + " TEXT"
+				+ ID + " INTEGER PRIMARY KEY,"
 				+ ");");
 			
 				

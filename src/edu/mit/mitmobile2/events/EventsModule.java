@@ -7,7 +7,6 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 
-import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 

@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.alerts;
 
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.classes.CoursesDataModel;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
 import android.app.AlarmManager;
@@ -10,7 +9,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class NotificationsHelper {
 
@@ -46,21 +44,6 @@ public class NotificationsHelper {
 		editor.putString(ShuttleModel.KEY_ROUTE_ID, null);  
 		editor.putString(ShuttleModel.KEY_TIME, null);  
 		editor.commit();
-
-		// Restart Emergency
-		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Service.ALARM_SERVICE);
-		Intent i = new Intent(context, NotificationsAlarmReceiver.class);
-		i.setAction(NotificationsAlarmReceiver.ACTION_ALARM_EMERGENCY);
-		long curTime  = System.currentTimeMillis();
-		long wakeTime = curTime + 60*1000; 
-		long period = 30*60*1000;  // 30 mins
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, i, 0);
-		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  wakeTime, period, pendingIntent);
-		Log.d("BootReceiver", pendingIntent.toString());
-		
-		// Restart Stellar 
-		CoursesDataModel.getMyStellar(context);
-		CoursesDataModel.startAlarms(context);
 		
 		return true;
 		

@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.mit150;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.provider.BaseColumns;
 
 public class MIT150FeatureItem implements BaseColumns {

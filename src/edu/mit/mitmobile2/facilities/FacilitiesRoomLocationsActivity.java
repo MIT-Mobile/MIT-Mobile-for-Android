@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,13 +21,11 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.classes.FacilitiesData;
 import edu.mit.mitmobile2.facilities.RoomSearchCursorAdapter.RoomSearchFilteredCursor;
 
 
 public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 	public static final String TAG = "FacilitiesRoomLocationsActivity";
-	private static final int MENU_INFO = 0;
 
 	Context mContext;
 	ListView mListView;
@@ -166,10 +163,7 @@ public class FacilitiesRoomLocationsActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

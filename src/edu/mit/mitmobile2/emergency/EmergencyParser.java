@@ -111,39 +111,6 @@ public class EmergencyParser {
 			
 			item.unixtime = jsonObj.getLong("unixtime");
 
-			////////////////
-			
-			JSONObject jDate = jsonObj.optJSONObject("date");
-			
-			item.date.year = jDate.getInt("year");
-			item.date.month = jDate.getInt("month");
-			item.date.day = jDate.getInt("day");
-			item.date.hour = jDate.getInt("hour");
-			item.date.second = jDate.getInt("second");
-			item.date.fraction = jDate.getInt("fraction");
-
-			item.date.warning_count = jDate.getInt("warning_count");
-			item.date.error_count = jDate.getInt("error_count");
-
-			JSONArray jMsgs = jDate.optJSONArray("warnings");
-
-			if (jMsgs!=null) {
-				item.date.warnings = new String[jMsgs.length()];
-				for(int s=0; s<jMsgs.length(); s++)
-				{
-					item.date.warnings[s]=jMsgs.getString(s);
-				}
-			}
-
-			jMsgs = jDate.optJSONArray("errors");
-
-			if (jMsgs!=null) {
-				item.date.errors = new String[jMsgs.length()];
-				for(int s=0; s<jMsgs.length(); s++)
-				{
-					item.date.errors[s]=jMsgs.getString(s);
-				}
-			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();

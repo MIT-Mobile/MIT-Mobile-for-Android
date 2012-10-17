@@ -1,20 +1,10 @@
 package edu.mit.mitmobile2;
 
-import java.text.DateFormat;
-import java.util.Date;
-
-import edu.mit.mitmobile2.about.AboutCreditsActivity;
-import edu.mit.mitmobile2.about.AboutMITActivity;
-import edu.mit.mitmobile2.about.BuildSettings;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public abstract class ModuleActivity extends Activity {
 	
@@ -36,7 +26,7 @@ public abstract class ModuleActivity extends Activity {
 		
 		switch (item.getItemId()) {
 			case MENU_HOME: 
-				MITNewsWidgetActivity.goHome(this);
+				HomeScreenActivity.goHome(this);
 				return true;
 		
 			case MENU_MODULE_HOME:

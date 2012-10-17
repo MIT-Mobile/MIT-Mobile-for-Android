@@ -18,7 +18,7 @@ public class DateStrings {
 		long diff = (currentTime - date.getTime()) / 1000;
 		
 		if(diff < SECONDS_PER_MINUTE) {
-			return "Less than 1 minute ago";
+			return "less than 1 minute ago";
 		} else if(diff < SECONDS_PER_HOUR) {
 			long minutes = diff / SECONDS_PER_MINUTE;
 			String plural = (minutes > 1) ? "s" : "";

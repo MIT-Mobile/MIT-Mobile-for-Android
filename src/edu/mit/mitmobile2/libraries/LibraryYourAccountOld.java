@@ -2,28 +2,20 @@ package edu.mit.mitmobile2.libraries;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabSpec;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TabActivityConfigurator;
-import edu.mit.mitmobile2.TabConfigurator;
 
 public class LibraryYourAccountOld extends ActivityGroup {
 

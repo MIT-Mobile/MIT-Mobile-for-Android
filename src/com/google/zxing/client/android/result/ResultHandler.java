@@ -18,26 +18,17 @@ package com.google.zxing.client.android.result;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.android.Contents;
-import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.LocaleManager;
 import edu.mit.mitmobile2.R;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.ParsedResultType;
-import com.google.zxing.client.result.WifiParsedResult;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.provider.Contacts;
-import android.view.View;
-
 import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

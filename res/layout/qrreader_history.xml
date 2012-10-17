@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Scanner History"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+	/>
+
+	<edu.mit.mitmobile2.FullScreenLoader
+	    android:id="@+id/qrreaderMainFullScreenLoader"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:visibility="gone"
+	    android:background="#ffffff"
+	    />
+	
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		android:id="@+id/qrreaderNoHistory" >
+		<TextView 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="There is nothing here. History hasn't happened yet. Please scan some QR codes or barcodes."
+		    android:padding="5dip"
+		    android:textColor="#090909"
+		    android:gravity="center"
+		    android:layout_gravity="center"
+		    android:layout_centerVertical="true"
+		    />
+  	</RelativeLayout>
+    <ListView
+  			android:id="@+id/qrreaderMainHistoryLV"
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+ 			android:visibility="gone"
+ 			style="@style/Lists" />
+
+</LinearLayout>

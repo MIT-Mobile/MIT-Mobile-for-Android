@@ -14,5 +14,5 @@
 	<dimen name="minRowHeight">40dip</dimen>
 	<color name="plainBackground">#FFFFFF</color>
 
-<dimen name="tabTextSize">12sp</dimen>
+  <dimen name="tabTextSize">12dp</dimen>
 </resources>

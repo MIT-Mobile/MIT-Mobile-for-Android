@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,10 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
-import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
@@ -37,7 +34,6 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 	
 	
 	public static final String TAG = "FacilitiesInsideOutsideActivity";
-	private static final int MENU_INFO = 0;
 
 	/****************************************************/
 	@Override
@@ -93,10 +89,7 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_INFO:
-			Intent intent = new Intent(mContext, FacilitiesInfoActivity.class);					
-			startActivity(intent);
-			return true;
+		
 		default:
 			return super.onOptionsItemSelected(item);
 		}

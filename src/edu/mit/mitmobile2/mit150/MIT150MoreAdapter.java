@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import edu.mit.mitmobile2.R;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MIT150MoreAdapter extends ArrayAdapter<MIT150MoreItem> {

@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.objs;
 
 import android.database.Cursor;
-import edu.mit.mitmobile2.facilities.FacilitiesDB.LocationTable;
 
 public class FacilitiesItem {
 	

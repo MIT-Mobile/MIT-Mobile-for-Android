@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.news;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

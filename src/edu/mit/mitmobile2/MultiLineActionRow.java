@@ -1,10 +1,7 @@
 package edu.mit.mitmobile2;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MultiLineActionRow extends TwoLineActionRow {

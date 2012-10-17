@@ -13,13 +13,12 @@ import org.json.JSONObject;
 
 import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
 import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
-import edu.mit.mitmobile2.about.BuildSettings;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
@@ -191,7 +190,6 @@ public class MobileWebApi {
 		}		
 	}
 	
-	private boolean mShowLoading;
 	private LoadingDialogType mLoadingDialogType;
 	private boolean mShowErrors;
 	private Context mContext = null;
@@ -199,11 +197,10 @@ public class MobileWebApi {
 	private boolean mIsSearchQuery = false;
 	
 	public MobileWebApi(boolean showLoading, boolean showErrors, String errorTitle, Context context, Handler UIHandler) {
-		mShowLoading = showLoading;
 		mShowErrors = showErrors;
 		mLoadingDialogType = LoadingDialogType.Generic;
 		
-		if(mShowLoading || mShowErrors) {
+		if(mShowErrors) {
 			if(context == null) {
 				throw new RuntimeException("Fatal error, context needs to be defined to show loading or errors");
 			} 
@@ -228,11 +225,10 @@ public class MobileWebApi {
 	}
 	
 	public MobileWebApi(boolean showLoading, boolean showErrors, String errorTitle, Context context, Handler UIHandler, HttpClientType httpClientType) {
-		mShowLoading = showLoading;
 		mShowErrors = showErrors;
 		mLoadingDialogType = LoadingDialogType.Generic;
 		
-		if(mShowLoading || mShowErrors) {
+		if(mShowErrors) {
 			if(context == null) {
 				throw new RuntimeException("Fatal error, context needs to be defined to show loading or errors");
 			} 
@@ -304,7 +300,6 @@ public class MobileWebApi {
 	}
 	
 	private boolean requestResponse(String path, Map<String, String> parameters, final ResponseType expectedType, final ResponseListener responseListener) {
-		final LoadingProgressDialog loadingDialog = new LoadingProgressDialog(responseListener.getCancelRequestListener());
 		
 		Log.d(TAG,"path = " + path);
 		Log.d(TAG,"requestResponse");
@@ -316,10 +311,6 @@ public class MobileWebApi {
 				if(responseListener.wasRequestCancelled()) {
 					// nothing to handle request was cancelled
 					return;
-				}
-				
-				if(mShowLoading) {
-					loadingDialog.dismiss();
 				}
 				
 				if(mShowErrors) {
@@ -346,43 +337,71 @@ public class MobileWebApi {
 			}
 			
 			@Override
-			public void onResponse(InputStream stream) {
+			public void onResponse(final InputStream stream) {
 				if(responseListener.wasRequestCancelled()) {
 					return;
 				}
 				
-				try {
+				if (Looper.myLooper() != null) {
+					final Handler responseHandler = new Handler();
+					new Thread() {
+						
+						@Override
+						public void run() {
+							String responseText = null;
+							switch(expectedType) {
+								case JSONObject: 
+								case JSONArray:
+									responseText = convertStreamToString(stream);
+									break;
+							}
+							final String finalResponseText = responseText;
+							responseHandler.post(new Runnable() {
+								@Override
+								public void run() {
+									processResponse(finalResponseText, stream);
+								}
+							});
+						}
+					}.start();
+				} else {
 					String responseText = null;
 					switch(expectedType) {
-						case JSONObject:
-							responseText = convertStreamToString(stream);
-							JSONObjectResponseListener objectResponseListener = (JSONObjectResponseListener) responseListener;
-							objectResponseListener.onResponse(new JSONObject(responseText));
-							break;
+						case JSONObject: 
 						case JSONArray:
 							responseText = convertStreamToString(stream);
-							JSONArrayResponseListener arrayResponseListener = (JSONArrayResponseListener) responseListener;
-							arrayResponseListener.onResponse(new JSONArray(responseText));							
-							break;
-						case Raw:
-							RawResponseListener rawResponseListener = (RawResponseListener) responseListener;
-							rawResponseListener.onResponse(stream);
 							break;
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-					responseListener.onError();
-					onError(ErrorType.Server);
-				} catch (ServerResponseException e) {
-					e.printStackTrace();
-					onError(ErrorType.Server);
-				}
-				
-				if(mShowLoading) {
-					loadingDialog.dismiss();
+					processResponse(responseText, stream);				
 				}
 			}
 			
+			private void processResponse(String responseText, InputStream stream) {
+				try {
+					switch(expectedType) {
+					case JSONObject:
+						JSONObjectResponseListener objectResponseListener = (JSONObjectResponseListener) responseListener;
+						objectResponseListener.onResponse(new JSONObject(responseText));
+						break;
+						
+					case JSONArray:
+						JSONArrayResponseListener arrayResponseListener = (JSONArrayResponseListener) responseListener;
+						arrayResponseListener.onResponse(new JSONArray(responseText));
+						break;
+						
+					case Raw:
+						RawResponseListener rawResponseListener = (RawResponseListener) responseListener;
+						rawResponseListener.onResponse(stream);	
+						break;
+					}	
+				} catch (JSONException e) {
+					e.printStackTrace();
+					onError(ErrorType.Server);										
+				} catch (ServerResponseException e) {
+					e.printStackTrace();
+					onError(ErrorType.Server);										
+				}
+			}
 		};
 		
 		ConnectionWrapper connection;
@@ -401,19 +420,9 @@ public class MobileWebApi {
 			connection = new ConnectionWrapper();
 		}
 		
-		if(mShowLoading) {
-			loadingDialog.show();
-		}
-		
 		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path + "/?" + query(parameters);
 		Log.d(TAG, "requesting " + urlString);
 		boolean isStarted = connection.openURL(urlString, callback);
-
-		if(!isStarted && mShowLoading) {
-			// this will prevent the dialog from being shown at
-			// if connection did not succeed at starting
-			loadingDialog.dismiss();
-		}
 		
 		return isStarted;
 	}
@@ -476,46 +485,4 @@ public class MobileWebApi {
         }
         return stringBuilder.toString();
     }	
-    
-    /*
-     * A Wrapper around androids builtin Progress Dialog
-     * this wrapper is needs to detach the progress dialog from the current thread
-     * and to make sure it runs on the UI thread
-     */
-    private class LoadingProgressDialog {
-    	private ProgressDialog mProgressDialog = null;
-    	private boolean mDialogShouldDisplay = false;
-    	private CancelRequestListener mCancelRequestListener;
-    	
-    	LoadingProgressDialog(CancelRequestListener cancelListener) {
-    		mCancelRequestListener = cancelListener;
-    	}
-    	
-    	
-    	void show() {
-    		mDialogShouldDisplay = true;
-    		
-    		mUIHandler.post(new Runnable() {
-				@Override
-				public void run() {	
-					if(mDialogShouldDisplay) {
-						mProgressDialog = MobileWebApi.MobileWebLoadingDialog(mContext, mLoadingDialogType, mCancelRequestListener);
-						mProgressDialog.show();
-					}
-				}});
-    	}
-    	
-    	void dismiss() {
-    		mDialogShouldDisplay = false;
-    		
-    		mUIHandler.post(new Runnable() {
-    			@Override
-    			public void run() {
-    				if(mProgressDialog != null) {
-    					mProgressDialog.dismiss();
-    				}
-    			}
-    		});
-    	}
-    }
 }

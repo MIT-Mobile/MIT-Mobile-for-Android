@@ -37,9 +37,6 @@
 	<string name="maps_search_label">Map Search</string>
 	<string name="maps_search_hint">Search MIT Campus Map</string>
 	<string name="map_no_bookmarks">You don\'t have any map locations bookmarked. To bookmark a location, navigate to that location, press your device\'s Menu button, and tap the \'Add Bookmark\' menu item.</string>
-	
-	<string name="courses_search_label">Stellar Search</string>
-	<string name="courses_search_hint">Search by keyword or subject #</string>
 
 	<string name="news_search_label">News Search</string>
 	<string name="news_search_hint">Search articles</string>

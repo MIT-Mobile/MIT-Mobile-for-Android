@@ -10,13 +10,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.objs.NewsItem.Image;
 
 public class QRCodeDB {
 	private static final int DATABASE_VERSION = 1;
@@ -73,7 +68,7 @@ public class QRCodeDB {
 		SQLiteDatabase db = mQRCodeDBHelper.getWritableDatabase();
 		
 		ContentValues qrcodeValues = new ContentValues();
-		qrcodeValues.put(URL, qrcode.getUrl());
+		qrcodeValues.put(URL, qrcode.getId());
 		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		qrcode.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, ostream);
 		qrcodeValues.put(IMAGE, ostream.toByteArray());

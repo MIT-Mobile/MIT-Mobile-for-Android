@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2;
 
 import java.net.URI;
-import android.app.Activity;
 
 public class MITClientData {
 

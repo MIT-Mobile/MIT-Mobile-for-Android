@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -18,7 +18,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
 
-import com.google.android.maps.MapView.LayoutParams;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
@@ -56,15 +55,15 @@ public class MITItemizedOverlay extends MITBaseItemizedOverlay {
         textSmallPaint = new Paint(); 
         textSmallPaint.setARGB(255, 102, 102, 102);
         textSmallPaint.setAntiAlias(true); 
-        
+
         backPaint = new Paint(); 
         backPaint.setARGB(164, 255, 255, 255); 
         backPaint.setAntiAlias(true); 
-        
+
 	    linePaint = new Paint(); 
 	    linePaint.setARGB(204, 204, 0, 0);  //  CCCC0000
         linePaint.setStyle(Style.STROKE);
-	    linePaint.setStrokeWidth(3);  // 0 is special
+	    linePaint.setStrokeWidth(3);  		// 0 is special
 	    //linePaint.setAlpha(120); 
 
 	    Resources res = mContext.getResources();

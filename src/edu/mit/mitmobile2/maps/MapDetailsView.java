@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -31,7 +30,6 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.StyledContentHTML;
 import edu.mit.mitmobile2.TabConfigurator;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapDetailsView implements SliderInterface {
