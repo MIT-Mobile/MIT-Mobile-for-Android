@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="config">
+    <property file="ant.properties" />
+    <loadproperties srcFile="project.properties" />
+    <loadproperties srcFile="local.properties" />
+    <import file="${sdk.dir}/tools/ant/build.xml" />
+    
+
+    <available file=".git" type="dir" property="git.present"/>
+    <target name="git.revision" description="Store git revision in ${repository.version}" if="git.present">
+        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+            <arg value="describe"/>
+            <arg value="--tags"/>
+            <arg value="--always"/>
+            <arg value="HEAD"/>
+        </exec>
+        <condition property="repository.version" value="${git.revision}" else="unknown">
+            <and>
+                <isset property="git.revision"/>
+                <length string="${git.revision}" trim="yes" length="0" when="greater"/>
+            </and>
+        </condition>
+        <echo message="The current git description :: ${repository.version}" />
+
+        <exec executable="git" outputproperty="git.hash" failifexecutionfails="false" errorproperty="">
+            <arg value="log"/>
+            <arg value="-1" />
+            <arg value="--format=%H" />
+        </exec>
+        <condition property="repository.hash" value="${git.hash}" else="unknown">
+            <and>
+                <isset property="git.hash" />
+                <length string="${git.hash}" trim="yes" length="0" when="greater" />
+            </and>
+        </condition>
+        <echo message="The current git hash :: ${repository.hash}" />
+
+    </target>
+
+
+    <target name="config" depends="git.revision" >
+        <property name="config-target-path" value="${source.dir}/edu/mit/mitmobile2/about" />
+        <!-- Copy file to new target location, replace keys with new values -->
+        <copy file="config/Config.java" todir="${config-target-path}" overwrite="true" encoding="utf-8">
+            <filterset>
+                <filter token="GIT.DESCRIBE" value="${repository.version}" />
+            </filterset>
+            <filterset>
+                <filter token="GIT.HASH" value="${repository.hash}" />
+            </filterset>
+
+        </copy>
+
+        <!-- Set new file to read only so it doesn't cause confusion. Will need to uncomment and implement a delete before the copy -->
+       <!--  <chmod file="${config-target-path}/Config.java" perm="-w" />
+        <attrib file="${config-target-path}/Config.java" readonly="true" /> -->
+
+    </target>
+</project>
