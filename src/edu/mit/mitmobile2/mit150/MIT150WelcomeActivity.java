@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.mit150;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,13 +9,6 @@ import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.StyledContentHTML;
-import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
-import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
-import edu.mit.mitmobile2.about.BuildSettings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,10 +26,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
-import android.widget.VideoView;
 import android.widget.LinearLayout.LayoutParams;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.StyledContentHTML;
+import edu.mit.mitmobile2.about.Config;
 
 public class MIT150WelcomeActivity extends Activity {
 
@@ -114,7 +109,7 @@ public class MIT150WelcomeActivity extends Activity {
 	void playVideo() {
 	
 		
-		String subpath = "/Android/data/" + BuildSettings.release_project_name + "/cache/";  
+		String subpath = "/Android/data/" + Config.release_project_name + "/cache/";  
 
     	String state = Environment.getExternalStorageState();
 

@@ -1,11 +1,11 @@
 package edu.mit.mitmobile2;
 
-import edu.mit.mitmobile2.about.BuildSettings;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import edu.mit.mitmobile2.about.Config;
 
 
 public class SectionHeader extends FrameLayout {
@@ -20,7 +20,7 @@ public class SectionHeader extends FrameLayout {
 			super(context, attributeSet);
 			
 			String initialText = attributeSet.getAttributeValue("http://schemas.android.com/apk/res/android", "text");
-			int prominenceInt = attributeSet.getAttributeIntValue("http://schemas.android.com/apk/res/" + BuildSettings.release_project_name, "prominence", 0);
+			int prominenceInt = attributeSet.getAttributeIntValue("http://schemas.android.com/apk/res/" + Config.release_project_name, "prominence", 0);
 			Prominence prominence = Prominence.values()[prominenceInt];
 			initializeHelper(context, initialText, prominence);
 	}

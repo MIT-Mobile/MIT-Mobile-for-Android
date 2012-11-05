@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2;
 
-import edu.mit.mitmobile2.about.BuildSettings;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,13 +8,13 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import edu.mit.mitmobile2.about.Config;
 
 public class WebImageCacheProvider extends ContentProvider {
 	
-	public static final String AUTHORITY = BuildSettings.release_project_name + ".WebImageCacheProvider";
+	public static final String AUTHORITY = Config.release_project_name + ".WebImageCacheProvider";
 	private static final String DATABASE_NAME = "imageCache.db";
 	private static final int DATABASE_VERSION = 1;
 	private static final String IMAGES_TABLE = "images";

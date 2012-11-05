@@ -1,19 +1,14 @@
 package edu.mit.mitmobile2;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.http.client.CookieStore;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,13 +17,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.net.http.AndroidHttpClient;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.AndroidException;
 import android.util.Log;
-import android.webkit.CookieManager;
-import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.about.Config;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
 import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
 import edu.mit.mitmobile2.classes.SharedData;
@@ -36,8 +28,6 @@ import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.MITCookieStore;
-import org.apache.http.cookie.Cookie;
 
 public class Global extends Application {
 
@@ -60,7 +50,7 @@ public class Global extends Application {
 	// Mobile Server 
 	private static final String TAG = "Global";
 	public static final String MIT_MOBILE_SERVER_KEY = "mit_mobile_server"; // key for server variable in the preferences file
-	public static final String DEFAULT_MIT_MOBILE_SERVER = BuildSettings.MOBILE_WEB_DOMAIN; // key for server variable in the preferences file
+	public static final String DEFAULT_MIT_MOBILE_SERVER = Config.MOBILE_WEB_DOMAIN; // key for server variable in the preferences file
 	private static String mobileWebDomain = DEFAULT_MIT_MOBILE_SERVER;
 	private static Map version = null;
 	private Resources res;

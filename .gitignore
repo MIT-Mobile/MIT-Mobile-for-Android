@@ -3,7 +3,7 @@
 bin/
 gen/
 src/edu/mit/mitmobile/about/BuildSettings.java
-src/edu/mit/mitmobile/about/Config.java
+src/edu/mit/mitmobile2/about/Config.java
 local.properties
 res/values/build_settings_resource.xml
 res/raw/*.mp4

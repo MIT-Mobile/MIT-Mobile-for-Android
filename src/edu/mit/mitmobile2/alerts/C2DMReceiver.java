@@ -7,18 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
-import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
-import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
-import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
-import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
-import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.classes.CoursesDataModel;
-import edu.mit.mitmobile2.classes.CoursesNoticeListener;
-import edu.mit.mitmobile2.classes.CoursesTermUpdateService;
-import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,8 +15,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-
 import android.util.Log;
+import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
+import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.about.Config;
+import edu.mit.mitmobile2.classes.CoursesNoticeListener;
+import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 public class C2DMReceiver extends BroadcastReceiver {
 
@@ -131,7 +128,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
 		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
 		long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
-		String appID = BuildSettings.release_project_name;
+		String appID = Config.release_project_name;
 		if (deviceID == -1) {
 			// need register the device
 			HashMap<String, String> params = new HashMap<String, String>();
@@ -201,7 +198,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		params.put("command", "markNotificationsAsRead");
 		params.put("tags", encoder.toString());
 		params.put("device_type", "android");
-		params.put("app_id", BuildSettings.release_project_name);	
+		params.put("app_id", Config.release_project_name);	
 		params.put("device_id", Long.toString(device.mDeviceId));
 		params.put("pass_key", Long.toString(device.mPassKey));
 		

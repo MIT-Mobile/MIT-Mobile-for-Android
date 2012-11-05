@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project default="config">
+<project name="MITApp" default="config">
     <property file="ant.properties" />
     <loadproperties srcFile="project.properties" />
     <loadproperties srcFile="local.properties" />
