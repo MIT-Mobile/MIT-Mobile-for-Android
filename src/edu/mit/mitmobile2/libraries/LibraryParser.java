@@ -192,7 +192,8 @@ public class LibraryParser {
             			availabilityObject.getBoolean("available"),
             			availabilityObject.getString("call-no"),
             			availabilityObject.getString("location"),
-            			availabilityObject.getString("status")
+            			availabilityObject.getString("status"),
+            			availabilityObject.getString("collection")
             		);
             	}
             }

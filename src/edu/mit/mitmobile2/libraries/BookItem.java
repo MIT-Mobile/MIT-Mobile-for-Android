@@ -78,8 +78,8 @@ public class BookItem {
         public int count;
         private ArrayList<Availability> mAvailibitity = new ArrayList<Availability>();
         
-        public void addAvailibility(boolean available, String callNumber, String location, String status) {
-        	mAvailibitity.add(new Availability(available, callNumber, location, status));
+        public void addAvailibility(boolean available, String callNumber, String location, String status, String collection) {
+        	mAvailibitity.add(new Availability(available, callNumber, location, status, collection));
         }
         
         public List<Availability> getAvailabitity() {
@@ -91,12 +91,14 @@ public class BookItem {
         	String callNumber;
         	String location;
         	String status;
+        	String collection;
         	
-        	public Availability(boolean available, String callNumber, String location, String status) {
+        	public Availability(boolean available, String callNumber, String location, String status, String collection) {
         		this.available = available;
         		this.callNumber = callNumber;
         		this.location = location;
         		this.status = status;
+        		this.collection = collection;
         	}
         }
         
