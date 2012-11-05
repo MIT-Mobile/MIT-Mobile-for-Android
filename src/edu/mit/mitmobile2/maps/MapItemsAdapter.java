@@ -1,8 +1,11 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -13,6 +16,7 @@ import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 
+	static final String TAG = "MapItemsAdapter"; 
 	List<MapItem> mMapItems;
 	Context mContext;
 	
@@ -37,8 +41,12 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		return new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
+				Log.d(TAG,"adapter view click position = " + position + " id = " + id);
 				MapItem mapItem = getItem(position);
-				MITMapActivity.launchNewMapItem(mContext, mapItem);
+				MapBaseActivity2.launchNewMapItem(mContext, mapItem);
+				Log.d(TAG,"start MITMapActivity2.class");
+				Intent i = new Intent(mContext, MITMapActivity2.class); 
+				mContext.startActivity(i);
 			}
 		};
 	}

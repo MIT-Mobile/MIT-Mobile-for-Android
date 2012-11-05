@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:id="@+id/newModuleMain">
+	
+    <FrameLayout
+        android:id="@+id/newModuleMainFullScreenFrameLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />  
+
+    
+    <!-- MapView layout and initial extent -->
+    <com.esri.android.map.MapView
+  		android:id="@+id/map"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+  		initExtent = "-7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899" 
+ 		spacialReference = "102113" >
+  	</com.esri.android.map.MapView>
+  	
+    <edu.mit.mitmobile2.FullScreenLoader
+            android:id="@+id/mapLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" 
+            android:layout_weight="1"
+    />
+    
+</LinearLayout>

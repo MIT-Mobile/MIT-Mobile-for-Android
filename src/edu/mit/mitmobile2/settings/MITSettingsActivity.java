@@ -11,6 +11,8 @@ import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.maps.ArcGISActivity;
+import edu.mit.mitmobile2.maps.MITMapActivity2;
+import edu.mit.mitmobile2.maps.MapBaseActivity2;
 import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
 
 public class MITSettingsActivity extends NewModuleActivity {
@@ -49,7 +51,7 @@ public class MITSettingsActivity extends NewModuleActivity {
 		arcgisTestButton.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mContext, ArcGISActivity.class);
+				Intent intent = new Intent(mContext, MITMapActivity2.class);
 				startActivity(intent);
 			}
 		});
