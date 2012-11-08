@@ -43,9 +43,12 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
 				Log.d(TAG,"adapter view click position = " + position + " id = " + id);
 				MapItem mapItem = getItem(position);
-				MapBaseActivity2.launchNewMapItem(mContext, mapItem);
-				Log.d(TAG,"start MITMapActivity2.class");
+				MapData mapData = new MapData();
+				mapData.getMapItems().add(mapItem);
 				Intent i = new Intent(mContext, MITMapActivity2.class); 
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				i.putExtra(MITMapActivity2.MAP_DATA_KEY, mapData);
+				//MapBaseActivity2.launchNewMapItem(mContext, mapItem);
 				mContext.startActivity(i);
 			}
 		};

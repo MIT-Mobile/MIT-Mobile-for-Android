@@ -1,12 +1,18 @@
 package edu.mit.mitmobile2.objs;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MapItem implements Parcelable {
+public class MapItem implements Parcelable, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public MapItem() {
 		category = new ArrayList<String>();
 		contents = new ArrayList<String>();
@@ -61,14 +67,11 @@ public class MapItem implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel out, int flag) {
 		out.writeDouble(long_wgs84);
-		out.writeDouble(lat_wgs84);
-		
+		out.writeDouble(lat_wgs84);		
 		out.writeLong(sql_id);
-		
 		out.writeList(category);
 		out.writeList(contents);
 		out.writeList(alts);
-		
 		out.writeString(name);
 		out.writeString(displayName);
 		out.writeString(id);
@@ -78,19 +81,20 @@ public class MapItem implements Parcelable {
 		out.writeString(bldgimg);
 		out.writeString(viewangle);
 		out.writeString(bldgnum);
-		
 		out.writeString(query);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void readFromParcel(Parcel in) {
+	public void readFromParcel(Parcel in) {
 		long_wgs84 = in.readDouble();
 		lat_wgs84 = in.readDouble();
 		
 		sql_id = in.readLong();
 		
 		category = in.readArrayList(String.class.getClassLoader());
+
 		contents = in.readArrayList(String.class.getClassLoader());
+
 		alts = in.readArrayList(String.class.getClassLoader());
 		
 		name = in.readString();

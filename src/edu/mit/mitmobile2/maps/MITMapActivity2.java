@@ -79,11 +79,7 @@ public class MITMapActivity2 extends MapBaseActivity2 {
 		mContext = this;
 		Log.d(TAG,"onCreate() " + this.hashCode());
 	    super.onCreate(savedInstanceState);
-	    
-    	Bundle extras = getIntent().getExtras();
-    	processExtras(extras);
 	}
-	
 	
 	protected List<MITMenuItem> getSecondaryMenuItems() {
 		return Arrays.asList(
@@ -177,17 +173,6 @@ public class MITMapActivity2 extends MapBaseActivity2 {
 //
         	findLoc = extras.getString(KEY_LOCATION); 
         	
-        	if (extras.containsKey(MAP_ITEMS_KEY)) {
-        		ArrayList<MapItem> mapItems = extras.getParcelableArrayList(MAP_ITEMS_KEY);
-        	
-	        	for (int i = 0; i < mapItems.size(); i++) {
-	        		MapItem mapItem = mapItems.get(i);
-	        		dislayMapItem(mapItem);
-	        		Log.d(TAG,mapItem.lat_wgs84 + "");
-	        		Log.d(TAG,mapItem.long_wgs84 + "");
-	        		Log.d(TAG,mapItem.displayName); 		
-	        	}
-        	}
 	
         }
         else {
