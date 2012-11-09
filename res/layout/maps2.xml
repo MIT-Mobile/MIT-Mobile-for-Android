@@ -20,9 +20,10 @@
   		android:layout_width="fill_parent"
   		android:layout_height="fill_parent"
   		initExtent = "-7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899" 
- 		spacialReference = "102113" >
+ 		spacialReference = "102113" 
+ 		calloutStyle="@xml/callout" >
   	</com.esri.android.map.MapView>
-  	
+  	    
     <edu.mit.mitmobile2.FullScreenLoader
             android:id="@+id/mapLoading"
             android:layout_width="fill_parent"
