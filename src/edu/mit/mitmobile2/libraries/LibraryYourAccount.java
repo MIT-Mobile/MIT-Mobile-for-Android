@@ -30,6 +30,8 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
@@ -39,7 +41,7 @@ import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 import edu.mit.mitmobile2.objs.RenewResponseItem;
 
-public class LibraryYourAccount extends ModuleActivity {
+public class LibraryYourAccount extends NewModuleActivity {
 
 	private static final String TAG = "LibraryYourAccount"; 
 	private static final int LOANS_TAB = 0;
@@ -151,8 +153,6 @@ public class LibraryYourAccount extends ModuleActivity {
 
 	// SET UP VIEWS
 	private void setUpViews() {
-		mTitleBar = (TitleBar) findViewById(R.id.librariesYourAccountTitleBar);
-		mTitleBar.setTitle("Your Account");
 		
         mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
@@ -820,7 +820,8 @@ public class LibraryYourAccount extends ModuleActivity {
         }
     }
 
-
+    // END ARRAY ADAPTERS
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     	if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -834,24 +835,23 @@ public class LibraryYourAccount extends ModuleActivity {
     	
     	return super.onKeyDown(keyCode, event);
     }
-    
-	@Override
-	protected Module getModule() {
-		// TODO Auto-generated method stub
-		return new LibrariesModule();
-	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected NewModule getNewModule() {
+		return new LibrariesModule();
 	}
 
-    // END ARRAY ADAPTERS
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
+	
 }

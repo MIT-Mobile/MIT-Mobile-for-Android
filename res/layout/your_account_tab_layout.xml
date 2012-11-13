@@ -12,14 +12,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
         
-        <edu.mit.mitmobile2.TitleBar
-        android:id="@+id/librariesYourAccountTitleBar"
-        android:text="Your Account"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-        
         <TabWidget
-        	android:background="#FFFFFF00"
+        	android:background="#FFFFFFFF"
 			android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
