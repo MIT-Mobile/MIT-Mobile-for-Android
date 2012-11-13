@@ -64,9 +64,18 @@ public class MITSliderTitleBar extends RelativeLayout {
 	}
 	
 	public void setAllTitles(String previous, String current, String next) {
-		mPrevious.setText(previous.toUpperCase());
-		mTitle.setText(current.toUpperCase());
-		mNext.setText(next.toUpperCase());
+		if (previous != null) {
+			previous = previous.toUpperCase();
+		}
+		if (current != null) {
+			current = current.toUpperCase();
+		}
+		if (next != null) {
+			next = next.toUpperCase();
+		}
+		mPrevious.setText(previous);
+		mTitle.setText(current);
+		mNext.setText(next);
 	}
 	
 	public static interface OnPreviousNextListener {
