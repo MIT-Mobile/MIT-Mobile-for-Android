@@ -124,7 +124,7 @@ public class LibrariesHoldingsSliderActivity extends SliderListNewModuleActivity
 		public void updateView(Availability item, View view) {
 			TwoLineActionRow row = (TwoLineActionRow) view;
 			row.setTitle(item.callNumber);
-			Spannable status = Spannable.Factory.getInstance().newSpannable(item.status);
+			Spannable status = Spannable.Factory.getInstance().newSpannable(item.collection + "\n" + item.status);
 			StyleSpan boldMarker = new StyleSpan(Typeface.BOLD);
 			if (item.available) {
 				status.setSpan(boldMarker, 0, status.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);

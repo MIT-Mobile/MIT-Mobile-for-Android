@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,17 +16,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.LocationService;
@@ -36,18 +36,14 @@ import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnZoomListener;
-import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
-import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.FeatureSet;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.PictureMarkerSymbol;
-import com.esri.core.symbol.SimpleFillSymbol;
-import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol.STYLE;
 import com.esri.core.tasks.ags.query.Query;
@@ -57,11 +53,8 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.maps.ArcGISActivity.MyOnSingleTapListener;
-import edu.mit.mitmobile2.maps.ArcGISActivity.MyOnZoomListener;
-import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.people.PeopleModule;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapBaseActivity2 extends NewModuleActivity {
 	
@@ -76,6 +69,7 @@ public class MapBaseActivity2 extends NewModuleActivity {
 	private String provider;
 	protected String module;
 	protected List<MapItem> mMapItems;
+	Context mContext;
 	QueryTask queryTask;
 	Query query;
 	FeatureSet featureSet;
@@ -87,6 +81,9 @@ public class MapBaseActivity2 extends NewModuleActivity {
 	//Graphic[] highlightGraphics;  
 	//GraphicsLayer locationLayer; // used to show the pin for for the current location
 	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
+	public static int DEFAULT_PIN = R.drawable.map_red_pin;
+	PictureMarkerSymbol pms;
+	
 	protected static Map<String, Long> layerIdMap;
 	private MapData mapData;
 
@@ -110,6 +107,7 @@ public class MapBaseActivity2 extends NewModuleActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"oncreate()");
 		super.onCreate(savedInstanceState);
+		mContext = this;
 		setContentView(R.layout.maps2);
         mLoadingView = (FullScreenLoader) findViewById(R.id.mapLoading);
 
@@ -261,24 +259,47 @@ public class MapBaseActivity2 extends NewModuleActivity {
 
 		@Override
 		public void onSingleTap(float x, float y) {
+			
+			if (!map.isLoaded()) {
+				return;
+			}
 			// TODO Auto-generated method stub
 			Log.d(TAG,"tap x:" + x + " y:" + y);
-			Point point = new Point();
-			point.setX(x);
-			point.setY(y);
+			Point point = map.toMapPoint(new Point(x,y));
 			
-			//Bitmap libImage = BitmapFactory.decodeResource(getResources(), R.drawable.map_red_pin);
-			//BitmapDrawable libDrawable = new BitmapDrawable(libImage);
-			//PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
-
-			Graphic graphic = new Graphic(map.toMapPoint(new Point(x,y)),new SimpleMarkerSymbol(Color.RED,25,STYLE.CIRCLE));
+			//Graphic graphic = new Graphic(map.toMapPoint(new Point(x,y)),new SimpleMarkerSymbol(Color.RED,25,STYLE.CIRCLE));
 			//Graphic graphic = new Graphic(map.toMapPoint(new Point(x,y)),pms);
 
-    		//((GraphicsLayer) map.getLayer(2)).addGraphic(graphic);
-    		graphicsLayer = (GraphicsLayer)getMapLayer(MapBaseActivity2.DEFAULT_GRAPHICS_LAYER);
-    		graphicsLayer.addGraphic(graphic);
+//    		graphicsLayer = (GraphicsLayer)getMapLayer(MapBaseActivity2.DEFAULT_GRAPHICS_LAYER);
+//    		graphicsLayer.addGraphic(graphic);
     		Log.d(TAG,"num graphics = " + graphicsLayer.getGraphicIDs().length);
+    		// Construct the Callout content.
+			
+    		gl = (GraphicsLayer)getMapLayer(MapBaseActivity2.DEFAULT_GRAPHICS_LAYER);
+    		int[] graphicId = gl.getGraphicIDs(x, y, 10);
+    		
+    		if (graphicId.length > 0) {
+	    		String calloutText = "";    		
+	    		
+	    		for (int i = 0; i < graphicId.length; i++) {
+	    			Graphic g = gl.getGraphic(graphicId[i]);
+	    			calloutText += g.getAttributeValue("info").toString() + "\n";
+	    			Log.d(TAG,g.getAttributeValue("info").toString());
+	    		}
 
+	    		TextView textView = new TextView(mContext);
+				textView.setText(calloutText);
+	
+				
+				// Show the callout at the correct location.
+				Callout callout = map.getCallout(); 
+				callout.setContent(textView);
+	    		callout.setCoordinates(point);
+	    		callout.setStyle(R.xml.callout);
+				callout.refresh();
+				callout.show();
+    		}
+    		
 			//map.centerAt(point, true);
 		}
 		
@@ -396,7 +417,7 @@ public class MapBaseActivity2 extends NewModuleActivity {
     	Log.d(TAG,"mapInit");
 
     	if (map == null) {
-    	
+    		    		
 	    	// Retrieve the map and initial extent from XML layout
 			map = (MapView)findViewById(R.id.map);
 
@@ -483,18 +504,17 @@ public class MapBaseActivity2 extends NewModuleActivity {
 
 	protected int dislayMapItem(String layerName, MapItem mapItem) {
 		Log.d(TAG,"displayMapItem");
-		debugLayerIdMap(TAG);
 		Log.d(TAG,"mapItem:lat = " + mapItem.lat_wgs84 + "");
 		Log.d(TAG,"mapItem:long = " + mapItem.long_wgs84 + "");
 		Log.d(TAG,"mapItem = " + mapItem.toString());
 		
-		Bitmap libImage = BitmapFactory.decodeResource(getResources(), R.drawable.map_red_pin);
+		Bitmap libImage = BitmapFactory.decodeResource(getResources(), MapBaseActivity2.DEFAULT_PIN);
 		BitmapDrawable libDrawable = new BitmapDrawable(libImage);
 		PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
-		//Graphic g = new Graphic(toWebmercator(mapItem.lat_wgs84,mapItem.long_wgs84), pms);
-		Graphic g = new Graphic(toWebmercator(mapItem.lat_wgs84,mapItem.long_wgs84), new SimpleMarkerSymbol(Color.RED,25,STYLE.CIRCLE));
-		
-		//Graphic g = new Graphic(map.getCenter(), pms);
+
+		Map attributes = new HashMap();
+		attributes.put("info", mapItem.displayName);
+		Graphic g = new Graphic(toWebmercator(mapItem.lat_wgs84,mapItem.long_wgs84), pms,attributes, null);
 
 		gl = (GraphicsLayer)getMapLayer(layerName);
 		gl.addGraphic(g);
@@ -591,9 +611,6 @@ public class MapBaseActivity2 extends NewModuleActivity {
         	}
         	
         }
-        else {
-        	Log.d(TAG,"extras is null");
-        }
 	}
 
 	 @Override
@@ -607,7 +624,22 @@ public class MapBaseActivity2 extends NewModuleActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		Log.d(TAG,"onResume");
+		map.unpause();
 	}
 
+	//This is the view that will get added to the callout
+	//Create a text view and assign the text that should be visible in the callout		
+	public View getView(int position, View convertView, ViewGroup parent) {
+		String outputVal = null;
+		TextView txtView;
+		
+		txtView = new TextView(this);
+		txtView.setText(outputVal);
+		txtView.setTextColor(Color.BLACK);
+		txtView.setGravity(Gravity.CENTER_VERTICAL);
+	
+		return txtView;
+	}
+	
 	 
 }
