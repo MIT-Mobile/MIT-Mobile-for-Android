@@ -54,7 +54,7 @@ public class LibraryModel {
         parameters.put("command", "locationDetail");
         parameters.put("library", libraryItem.library);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
+        MobileWebApi webApi = new MobileWebApi(false, false, "Library", context, uiHandler);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {

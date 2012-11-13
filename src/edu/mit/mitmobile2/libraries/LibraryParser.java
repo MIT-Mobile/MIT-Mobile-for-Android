@@ -46,27 +46,23 @@ public class LibraryParser {
     }
     
     
-    static void parseLibraryDetail(JSONObject object, LibraryItem container) {
-        try {
-            container.hoursToday = object.getString("hours_today");
-            container.tel = object.getString("tel");
-            container.location = object.getString("location");
-            JSONObject temp = object.getJSONObject("schedule");
-            if(temp.has("current_term")) {
-                container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
-            }
-            if(temp.has("previous_terms")) {
-                container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
-            }
-            if(temp.has("next_terms")) {
-                container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
-            }
-            
-            container.isDetailLoaded = true;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error parsing library details");
+    static void parseLibraryDetail(JSONObject object, LibraryItem container) throws JSONException {
+    	
+        container.hoursToday = object.getString("hours_today");
+        container.tel = object.getString("tel");
+        container.location = object.getString("location");
+        JSONObject temp = object.getJSONObject("schedule");
+        if(temp.has("current_term")) {
+            container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
         }
+        if(temp.has("previous_terms")) {
+            container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
+        }
+        if(temp.has("next_terms")) {
+            container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
+        }
+        
+        container.isDetailLoaded = true;
     }
     
     private static Schedule getSchedule(JSONObject object, boolean isCurrentTerm) throws JSONException {
