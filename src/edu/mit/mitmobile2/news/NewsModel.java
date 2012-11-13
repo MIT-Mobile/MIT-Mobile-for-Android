@@ -21,6 +21,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import edu.mit.mitmobile2.ConnectionWrapper;
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
 import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
@@ -68,8 +69,6 @@ public class NewsModel {
 	static final String NEWS_PREFERENCES_FILE = "NewsPreferencesFile";
 	static final String LAST_CATEGORY_CLEARED_KEY_PREFIX = "LastCategoryClearedDate";
 	static final long FRESH_TIME = 4 * 60 * 60 * 1000; // 4 hours (in miliseconds)
-		
-	static final String SEARCH_URL = "http://web.mit.edu/newsoffice/index.php?option=com_search&view=isearch";
 	
 	private NewsDB mNewsDB;
 	private Context mContext;
@@ -474,15 +473,16 @@ public class NewsModel {
 		}
 		
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("searchword", searchTerm);
-		params.put("ordering", "newest");
+		params.put("command", "search");
+		params.put("q", searchTerm);
 		params.put("start", String.valueOf(start));
 		params.put("limit", "50");
 		
 		String query = MobileWebApi.query(params);
 		
 		ConnectionWrapper connection = new ConnectionWrapper(mContext);
-		connection.openURL(SEARCH_URL + "&" + query, 
+		String searchURL = "http://" + Global.getMobileWebDomain() + "/api/" + BuildSettings.NEWS_OFFICE_PATH + "/";
+		connection.openURL(searchURL + "?" + query, 
 			new ConnectionInterface() {
 				@Override
 				public void onError(ErrorType error) {
@@ -490,19 +490,24 @@ public class NewsModel {
 				}
 
 				@Override
-				public void onResponse(InputStream stream) {
-					SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
-					if (results != null) {
-						SearchResults<NewsItem> lastResults = searchCache.get(searchTerm);
-						if (null != lastResults) {
-							lastResults.addMoreResults(results.getResultsList());
-							results = lastResults;
+				public void onResponse(final InputStream stream) {
+					new Thread() {
+						@Override
+						public void run() {
+							SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
+							if (results != null) {
+								SearchResults<NewsItem> lastResults = searchCache.get(searchTerm);
+								if (null != lastResults) {
+									lastResults.addMoreResults(results.getResultsList());
+									results = lastResults;
+								}
+								searchCache.put(searchTerm, results);
+								MobileWebApi.sendSuccessMessage(uiHandler, results);
+							} else {
+								MobileWebApi.sendErrorMessage(uiHandler);
+							}
 						}
-						searchCache.put(searchTerm, results);
-						MobileWebApi.sendSuccessMessage(uiHandler, results);
-					} else {
-						MobileWebApi.sendErrorMessage(uiHandler);
-					}
+					}.start();
 				}
 			}
 		);
