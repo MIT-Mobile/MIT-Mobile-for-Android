@@ -40,7 +40,7 @@ public class LibraryModel {
                         uiHandler)) {
 
             @Override
-            public void onResponse(JSONArray array) {
+            public void onResponse(JSONArray array) throws JSONException {
                 ArrayList<LibraryItem> libraries = LibraryParser.parseLibrary(array);
 
                 MobileWebApi.sendSuccessMessage(uiHandler, libraries);

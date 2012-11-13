@@ -26,20 +26,15 @@ public class LibraryParser {
 
 	public static final String TAG = "LibraryParser";
 
-	static ArrayList<LibraryItem> parseLibrary(JSONArray array) {
+	static ArrayList<LibraryItem> parseLibrary(JSONArray array) throws JSONException {
         ArrayList<LibraryItem> libraries = new ArrayList<LibraryItem>();
 
-        try {
-            for (int index = 0; index < array.length(); index++) {
-                JSONObject object = array.getJSONObject(index);
-                LibraryItem library = new LibraryItem();
-                library.library = object.getString("library");
-                library.status = object.getString("status");
-                libraries.add(library);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error parsing libraries");
+        for (int index = 0; index < array.length(); index++) {
+            JSONObject object = array.getJSONObject(index);
+            LibraryItem library = new LibraryItem();
+            library.library = object.getString("library");
+            library.status = object.getString("status");
+            libraries.add(library);
         }
 
         return libraries;
