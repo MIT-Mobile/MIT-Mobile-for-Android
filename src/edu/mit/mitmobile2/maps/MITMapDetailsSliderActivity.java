@@ -116,7 +116,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 			finish();
 			return true;
 		case MENU_MAPS_RESET: 
-			i = new Intent(this,MITMapActivity2.class);  
+			i = new Intent(this,MITMapActivity.class);  
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i);
 			return true;
@@ -130,7 +130,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 		    
 		    return true;
 		case MENU_VIEW_PIN: 
-			MITMapActivity2.viewMapItem(this, focusedMapItem);
+			MITMapActivity.viewMapItem(this, focusedMapItem);
 			break;
 		case MENU_GOOGLE: 
 			

@@ -20,7 +20,7 @@ public class MapData implements Serializable {
 	public MapData() {
 		super();
 		this.mode = MapData.MODE_OVERWRITE;
-		this.layerName = MapBaseActivity2.DEFAULT_GRAPHICS_LAYER;
+		this.layerName = MapBaseActivity.DEFAULT_GRAPHICS_LAYER;
 		this.mapItems = new ArrayList<MapItem>();
 	}
 	public int getMode() {

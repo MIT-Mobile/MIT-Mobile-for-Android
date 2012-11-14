@@ -113,17 +113,17 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     
 	static void launchShuttleRouteMap(Context context, RouteItem routeItem, List<Stops> stops, int bubblePos) {
 		Intent i = new Intent(context, MITMapActivity.class);
-		i.putExtra(MITMapActivity.KEY_MODULE, MITMapActivity.MODULE_SHUTTLE);  
-		if (bubblePos>-1) i.putExtra(MITMapActivity.KEY_POSITION, bubblePos);  
+		//i.putExtra(MITMapActivity.KEY_MODULE, MITMapActivity.MODULE_SHUTTLE);  
+		//if (bubblePos>-1) i.putExtra(MITMapActivity.KEY_POSITION, bubblePos);  
 		
 		// prefetch to speed up first draw call
 		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
 		
 		RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);
 		
-		i.putExtra(MITMapActivity.KEY_HEADER_TITLE, updatedRouteItem.title);
+		//i.putExtra(MITMapActivity.KEY_HEADER_TITLE, updatedRouteItem.title);
 		String subtitle = updatedRouteItem.gpsActive ? GPS_ONLINE : GPS_OFFLINE;
-		i.putExtra(MITMapActivity.KEY_HEADER_SUBTITLE, subtitle);
+		//i.putExtra(MITMapActivity.KEY_HEADER_SUBTITLE, subtitle);
 		i.putExtra(MITMapActivity.KEY_SHUTTLE_STOPS, stops.toArray());
 		i.putExtra(MITMapActivity.KEY_ROUTE, routeItem);
 		

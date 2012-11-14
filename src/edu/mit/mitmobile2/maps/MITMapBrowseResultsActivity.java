@@ -244,8 +244,8 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		case MENU_MODULE_HOME: 
 			Log.d(TAG,"menu_module_home");
 			if (results==null) return false;
-			Intent i = new Intent(this, MITMapActivity2.class);
-			i.putParcelableArrayListExtra(MITMapActivity2.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
+			Intent i = new Intent(this, MITMapActivity.class);
+			i.putParcelableArrayListExtra(MITMapActivity.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
 			
 			startActivity(i);
 			return true;
@@ -278,7 +278,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		case MENU_VIEW_MAP: 
 			Log.d(TAG,"menu_view_map");
 			//MITMapActivity.launchNewMapItems(this, results);
-			MITMapActivity2.launchNewMapItems(this, results);
+			MITMapActivity.launchNewMapItems(this, results);
 			break;
 		
 		}

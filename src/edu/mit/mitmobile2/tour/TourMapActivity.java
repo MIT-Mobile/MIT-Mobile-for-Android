@@ -77,7 +77,7 @@ public class TourMapActivity extends MapBaseActivity {
 	}
 	
 	@Override
-	protected void onCreate(Bundle savedState) {
+	public void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		
 		Intent i = getIntent();
@@ -93,7 +93,7 @@ public class TourMapActivity extends MapBaseActivity {
 		
 		GeoRect geoRect = new GeoRect(geoPoints);
 		
-		mSiteMarkers = new TourRouteOverlay(this, mapView, mSiteTourMapItems, geoPoints);
+		//mSiteMarkers = new TourRouteOverlay(this, mapView, mSiteTourMapItems, geoPoints);
 		mSiteMarkers.setOnTourItemSelectedListener(new TourRouteOverlay.OnTourItemSelectedListener() {
 			@Override
 			public void onTourItemSelected(TourMapItem tourItem) {
@@ -104,12 +104,11 @@ public class TourMapActivity extends MapBaseActivity {
 			}
 		});
 		
-		setOverlays();
+		//setOverlays();
 		
-		mapView.getOverlays().add(mSiteMarkers);
+		//mapView.getOverlays().add(mSiteMarkers);
 		
-		mapView.getController().setCenter(geoRect.getCenter());
-		mapView.getController().zoomToSpan(geoRect.getLatitudeSpanE6(), geoRect.getLongitudeSpanE6());		
+		//mapView.getController().setCenter(geoRect.getCenter());
 		
 		TitleBar titleBar = (TitleBar) findViewById(R.id.mapTitleBar);
 		
@@ -373,8 +372,8 @@ public class TourMapActivity extends MapBaseActivity {
 				return true;
 				
 			case MENU_MY_LOCATION: 
-				GeoPoint myLocation = myLocationOverlay.getMyLocation();
-				if (myLocation != null) mctrl.animateTo(myLocation);
+				//GeoPoint myLocation = myLocationOverlay.getMyLocation();
+				//if (myLocation != null) mctrl.animateTo(myLocation);
 				return true;
 				
 			case MENU_SHOW_OR_HIDE_SIDETRIPS:
@@ -547,8 +546,8 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 	}
 
-	@Override
-	protected int getLayoutId() {
-		return R.layout.tour_map;
-	}
+	//@Override
+	//protected int getLayoutId() {
+	//	return R.layout.tour_map;
+	//}
 }

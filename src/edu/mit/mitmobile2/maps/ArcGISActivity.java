@@ -344,13 +344,13 @@ public class ArcGISActivity extends Activity {
             	Log.d(TAG,"MobileWebApi success");
                 @SuppressWarnings("unchecked")
                 MapServerData mapServerData = (MapServerData)msg.obj;
-                for (int i = 0; i < mapServerData.getBaseMaps().size(); i++) {
-                	MapLayer layer = (MapLayer)mapServerData.getBaseMaps().get(i);
-                	Log.d(TAG,"layer = " + layer.getUrl());
-                	                	
-            		serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());            		
-                    map.addLayer(serviceLayer);
-                }
+//                for (int i = 0; i < mapServerData.getBaseMaps().size(); i++) {
+//                	MapLayer layer = (MapLayer)mapServerData.getBaseMaps().get(i);
+//                	Log.d(TAG,"layer = " + layer.getUrl());
+//                	                	
+//            		serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());            		
+//                    map.addLayer(serviceLayer);
+//                }
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
             } else if (msg.arg1 == MobileWebApi.CANCELLED) {

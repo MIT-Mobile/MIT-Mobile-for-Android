@@ -174,7 +174,7 @@ public class MapDetailsView implements SliderInterface {
 		mThumbnailView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MITMapActivity2.viewMapItem(mActivity, mi);
+				MITMapActivity.viewMapItem(mActivity, mi);
 			}
 		});
 

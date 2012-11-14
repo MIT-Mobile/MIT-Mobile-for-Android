@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,20 +19,35 @@ public class MapParser {
 	public static MapServerData parseMapServerData(JSONObject jobject) throws JSONException {
 		MapServerData mapServerData = new MapServerData();
 		try {
-			JSONArray array = jobject.getJSONArray("basemaps");
-			Log.d("MapBaseActivity2","num basemaps = " + array.length());
-			for (int i = 0; i < array.length(); i++) {
-				JSONObject map = array.getJSONObject(i);
-				MapBaseLayer layer = new MapBaseLayer();
-				layer.setLayerIdentifier(map.optString("layerIdentifier"));
-				layer.setDisplayName(map.optString("displayName"));
-				layer.setUrl(map.optString("url"));
-				layer.setEnabled(map.optBoolean("isEnabled"));
-				mapServerData.getBaseMaps().add(layer);
+			// Get the default basemap set
+			mapServerData.setDefaultBasemap(jobject.getString("defaultBasemap"));
+			
+			// populate the baseLayer groups
+			JSONObject layerGroups = jobject.getJSONObject("basemaps");
+			
+			// loop through the layer groups
+			Iterator g = layerGroups.keys();
+			while (g.hasNext()) {
+				String group = (String)g.next(); // name of the layer group, i.e. "default"
+				JSONArray layers = layerGroups.getJSONArray(group); // basemap layers in this group
+				ArrayList<MapBaseLayer> baseMaps = new ArrayList<MapBaseLayer>();
+				// add all layers in the group
+				for (int i = 0; i < layers.length(); i++) {
+					JSONObject map = layers.getJSONObject(i);
+					MapBaseLayer layer = new MapBaseLayer();
+					layer.setLayerIdentifier(map.optString("layerIdentifier"));
+					layer.setDisplayName(map.optString("displayName"));
+					layer.setUrl(map.optString("url"));
+					layer.setEnabled(map.optBoolean("isEnabled"));
+					baseMaps.add(layer);
+				}
+				
+				// add the baseMaps array to the baseLayerGroup hashmap
+				mapServerData.getBaseLayerGroup().put(group, baseMaps);
 			}
 			
-			array = jobject.getJSONArray("features");
-			Log.d("MapBaseActivity2","num features = " + array.length());
+			JSONArray array = jobject.getJSONArray("features");
+			Log.d("MapBaseActivity","num features = " + array.length());
 			for (int i = 0; i < array.length(); i++) {
 				JSONObject map = array.getJSONObject(i);
 				MapFeatureLayer layer = new MapFeatureLayer();

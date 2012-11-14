@@ -45,10 +45,10 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 				MapItem mapItem = getItem(position);
 				MapData mapData = new MapData();
 				mapData.getMapItems().add(mapItem);
-				Intent i = new Intent(mContext, MITMapActivity2.class); 
+				Intent i = new Intent(mContext, MITMapActivity.class); 
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				i.putExtra(MITMapActivity2.MAP_DATA_KEY, mapData);
-				//MapBaseActivity2.launchNewMapItem(mContext, mapItem);
+				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData);
+				//MapBaseActivity.launchNewMapItem(mContext, mapItem);
 				mContext.startActivity(i);
 			}
 		};
