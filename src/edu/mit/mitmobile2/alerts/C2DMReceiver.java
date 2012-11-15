@@ -82,9 +82,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 		Log.d("action", intent.getAction());
 		if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
 			String registration = intent.getStringExtra("registration_id");
-			if (mPendingRegistrationID == null || !registration.equals(mPendingRegistrationID)) {
-				mPendingRegistrationID = registration;
-				registerDevice(context, mPendingRegistrationID);
+			if (registration != null) {
+				if (mPendingRegistrationID == null || !registration.equals(mPendingRegistrationID)) {
+					mPendingRegistrationID = registration;
+					registerDevice(context, mPendingRegistrationID);
+				}
+			} else {
+				Log.d("C2DMReceiver", "failed to get a registration ID, probably an invalid C2DM sender configuration");
 			}
 			
 		} else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
