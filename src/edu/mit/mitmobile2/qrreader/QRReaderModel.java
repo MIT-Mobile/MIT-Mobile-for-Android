@@ -50,6 +50,7 @@ public class QRReaderModel {
 					JSONArray actionsArr = object.optJSONArray("actions");
 					if (actionsArr != null) {
 						int actionsArrLength = actionsArr.length();
+						suggest.actions = new ArrayList<QRAction>();
 						for (int i = 0; i < actionsArrLength; i++) {
 							
 							JSONObject jsonAction = actionsArr.getJSONObject(i);
@@ -60,9 +61,9 @@ public class QRReaderModel {
 							suggest.actions.add( actionItem );
 						}
 					}
-					MobileWebApi.sendSuccessMessage(uiHandler, suggest);
+
 				}
-				MobileWebApi.sendErrorMessage(uiHandler);
+				MobileWebApi.sendSuccessMessage(uiHandler, suggest);
 			}
 		});
 	}
@@ -75,9 +76,6 @@ public class QRReaderModel {
 		public ArrayList<QRAction> actions;
 		public QRAction	shareAction;
 		
-		public SuggestedUrl() {
-			actions = new ArrayList<QRAction>();
-		}
 		
 	}
 	
