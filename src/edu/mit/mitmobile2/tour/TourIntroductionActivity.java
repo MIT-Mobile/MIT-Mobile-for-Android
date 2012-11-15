@@ -31,6 +31,7 @@ public class TourIntroductionActivity extends NewModuleActivity {
 		String html = StyledContentHTML.populateTemplate(this, "tour/intro_template.html", content);
 		webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
 		setContentView(webView, false);
+		addSecondaryTitle(header.getTitle());
 		
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
