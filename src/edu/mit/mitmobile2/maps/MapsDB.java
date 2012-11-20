@@ -99,8 +99,8 @@ public class MapsDB {
 		mapValues.put(BLDGIMG, mi.bldgimg);
 		mapValues.put(VIEWANGLE, mi.viewangle);
 		mapValues.put(BLDGNUM, mi.bldgnum);
-		mapValues.put(LONG_WGS84, mi.long_wgs84);
-		mapValues.put(LAT_WGS84, mi.lat_wgs84);
+		mapValues.put(LONG_WGS84, mi.mapPoints.get(0).long_wgs84);
+		mapValues.put(LAT_WGS84, mi.mapPoints.get(0).lat_wgs84);
 		
 		long row_id;
 		int rows;
@@ -152,8 +152,8 @@ public class MapsDB {
 		item.bldgnum = cursor.getString(cursor.getColumnIndex(BLDGNUM));
 		item.bldgimg = cursor.getString(cursor.getColumnIndex(BLDGIMG));
 		item.viewangle = cursor.getString(cursor.getColumnIndex(VIEWANGLE));
-		item.long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
-		item.lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
+		item.mapPoints.get(0).long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
+		item.mapPoints.get(0).lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
 		
 		return item;
 	}

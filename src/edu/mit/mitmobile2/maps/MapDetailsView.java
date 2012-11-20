@@ -196,8 +196,8 @@ public class MapDetailsView implements SliderInterface {
 			final int zoomLevel = 17;
 			
 			// google map tile coordinates of the actual center long/lat
-			double xCenter = MITMapView.computeGoogleX((int)Math.round(mi.long_wgs84*1000000), zoomLevel);
-			double yCenter = MITMapView.computeGoogleY((int)Math.round(mi.lat_wgs84*1000000), zoomLevel);
+			double xCenter = MITMapView.computeGoogleX((int)Math.round(mi.mapPoints.get(0).long_wgs84*1000000), zoomLevel);
+			double yCenter = MITMapView.computeGoogleY((int)Math.round(mi.mapPoints.get(0).lat_wgs84*1000000), zoomLevel);
 			
 			// google map tile coordinates of the top left corner of thumbnail image
 			double xLeft = xCenter - (double) (size/2) / (double) MITMapView.IMAGE_TILE_SIZE;

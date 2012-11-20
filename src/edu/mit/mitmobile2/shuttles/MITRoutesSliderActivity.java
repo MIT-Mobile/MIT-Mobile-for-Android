@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import edu.mit.mitmobile2.CategoryNewModuleActivity;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
@@ -13,6 +14,9 @@ import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
+import edu.mit.mitmobile2.maps.MapData;
+import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
@@ -124,9 +128,24 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 		//i.putExtra(MITMapActivity.KEY_HEADER_TITLE, updatedRouteItem.title);
 		String subtitle = updatedRouteItem.gpsActive ? GPS_ONLINE : GPS_OFFLINE;
 		//i.putExtra(MITMapActivity.KEY_HEADER_SUBTITLE, subtitle);
-		i.putExtra(MITMapActivity.KEY_SHUTTLE_STOPS, stops.toArray());
-		i.putExtra(MITMapActivity.KEY_ROUTE, routeItem);
-		
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//i.putExtra(MITMapActivity.KEY_SHUTTLE_STOPS, stops.toArray());
+		//i.putExtra(MITMapActivity.KEY_ROUTE, routeItem);
+
+		// convert routeItem to MapData object
+		MapData mapData = new MapData();
+		MapItem mapItem = new MapItem();
+		// create a polyline for all stops
+		mapItem.geometryType = MapItem.TYPE_POLYLINE;
+		for (int p = 0; p < routeItem.stops.size(); p++) {
+			Stops stop = routeItem.stops.get(p);
+			MapPoint mapPoint = new MapPoint(stop.lat, stop.lon);
+			mapItem.mapPoints.add(mapPoint);
+		}
+
+		mapData.getMapItems().add(mapItem);
+		i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData);
+		Log.d("ZZZ","launch map activity from MITRouteSliderActivity");
 		context.startActivity(i);
 	}
 	@Override

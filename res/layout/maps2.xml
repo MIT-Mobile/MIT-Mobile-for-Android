@@ -24,6 +24,14 @@
  		calloutStyle="@xml/callout" >
   	</com.esri.android.map.MapView>
   	    
+    
+    <ListView
+		android:id="@+id/mapListView"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		style="@style/Lists" />
+    	
     <edu.mit.mitmobile2.FullScreenLoader
             android:id="@+id/mapLoading"
             android:layout_width="fill_parent"
