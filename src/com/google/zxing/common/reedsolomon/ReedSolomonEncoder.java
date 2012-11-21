@@ -27,9 +27,11 @@ import java.util.Vector;
 public final class ReedSolomonEncoder {
 
   private final GF256 field;
-  private final Vector cachedGenerators;
+  @SuppressWarnings("rawtypes")
+private final Vector cachedGenerators;
 
-  public ReedSolomonEncoder(GF256 field) {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public ReedSolomonEncoder(GF256 field) {
     if (!GF256.QR_CODE_FIELD.equals(field)) {
       throw new IllegalArgumentException("Only QR Code is supported at this time");
     }
@@ -38,7 +40,8 @@ public final class ReedSolomonEncoder {
     cachedGenerators.addElement(new GF256Poly(field, new int[] { 1 }));
   }
 
-  private GF256Poly buildGenerator(int degree) {
+  @SuppressWarnings("unchecked")
+private GF256Poly buildGenerator(int degree) {
     if (degree >= cachedGenerators.size()) {
       GF256Poly lastGenerator = (GF256Poly) cachedGenerators.elementAt(cachedGenerators.size() - 1);
       for (int d = cachedGenerators.size(); d <= degree; d++) {

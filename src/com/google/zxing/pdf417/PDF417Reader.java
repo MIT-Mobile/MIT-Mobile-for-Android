@@ -51,11 +51,13 @@ public final class PDF417Reader implements Reader {
    * @throws NotFoundException if a PDF417 code cannot be found,
    * @throws FormatException if a PDF417 cannot be decoded
    */
-  public Result decode(BinaryBitmap image) throws NotFoundException, FormatException {
+  @Override
+public Result decode(BinaryBitmap image) throws NotFoundException, FormatException {
     return decode(image, null);
   }
 
-  public Result decode(BinaryBitmap image, Hashtable hints)
+  @Override
+public Result decode(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, FormatException {
     DecoderResult decoderResult;
     ResultPoint[] points;
@@ -72,7 +74,8 @@ public final class PDF417Reader implements Reader {
         BarcodeFormat.PDF417);
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     // do nothing
   }
 

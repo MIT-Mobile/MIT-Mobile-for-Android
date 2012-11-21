@@ -31,7 +31,8 @@ final class CameraConfigurationManager {
   private static final String TAG = CameraConfigurationManager.class.getSimpleName();
 
   private static final int TEN_DESIRED_ZOOM = 27;
-  private static final int DESIRED_SHARPNESS = 30;
+  @SuppressWarnings("unused")
+private static final int DESIRED_SHARPNESS = 30;
 
   private static final Pattern COMMA_PATTERN = Pattern.compile(",");
 

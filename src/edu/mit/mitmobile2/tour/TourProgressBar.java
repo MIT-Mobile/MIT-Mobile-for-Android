@@ -11,6 +11,7 @@ public class TourProgressBar extends LinearLayout {
 	private Context ctx;
 	
 	private int total = 0;
+	@SuppressWarnings("unused")
 	private int done = 0;
 	
 	/*****************************************************************************/

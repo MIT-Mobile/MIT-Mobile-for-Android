@@ -296,7 +296,8 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 	}
 	
 	
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == CAMERA_PIC_REQUEST) {
@@ -382,7 +383,7 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 				addField("roomName",  Global.sharedData.getFacilitiesData().getBuildingRoomName());
 				addField("roomNameByUser", Global.sharedData.getFacilitiesData().getUserAssignedRoomName());
 				addField("problemType",  Global.sharedData.getFacilitiesData().getProblemType());
-				publishProgress(new Long(0)); // initialize the progress bar
+				publishProgress( Long.valueOf(0)); // initialize the progress bar
 				
 				httpPost.setEntity(mUploadEntity);
 				HttpResponse response;
@@ -490,7 +491,8 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 	    	isCancelled = true;	
 	    }
 	    
-	    public void write(byte[] b, int off, int len) throws IOException {
+	    @Override
+		public void write(byte[] b, int off, int len) throws IOException {
 	    	if(isCancelled) {
 	    		throw new IOException("Upload was cancelled");
 	    	}
@@ -499,7 +501,8 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 	        mFileUploadListener.onBytesTransfered(mTransferred);
 	    }
 
-	    public void write(int b) throws IOException {
+	    @Override
+		public void write(int b) throws IOException {
 	    	if(isCancelled) {
 	    		throw new IOException("Upload was cancelled");
 	    	}

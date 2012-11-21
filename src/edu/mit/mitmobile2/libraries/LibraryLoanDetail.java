@@ -101,7 +101,8 @@ public class LibraryLoanDetail extends ModuleActivity{
         loanRenewButton = (Button) findViewById(R.id.libraryBartonDetailRenewButton);
         loanRenewButton.setVisibility(View.VISIBLE);
         loanRenewButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	renewBook(item.getBarcode());
                 Log.d(TAG,"renew ");
             }

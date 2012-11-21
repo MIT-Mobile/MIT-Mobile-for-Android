@@ -60,7 +60,8 @@ public final class CameraManager {
     SDK_INT = sdkInt;
   }
 
-  private final Context context;
+  @SuppressWarnings("unused")
+private final Context context;
   private final CameraConfigurationManager configManager;
   private Camera camera;
   private Rect framingRect;

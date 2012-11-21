@@ -148,16 +148,18 @@ public class Global extends Application {
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 				SharedPreferences.Editor prefsEditor = prefs.edit();
 				try {
-					Iterator m = obj.keys();
+					@SuppressWarnings("unchecked")
+					Iterator<Object> m =  obj.keys();
 					while (m.hasNext()) {
 
 						module = (String)m.next();
 						Log.d(TAG,"module = " + module);
 	
-						JSONObject data = (JSONObject)obj.get(module);
-						Iterator d = data.keys();
+						JSONObject data = (JSONObject) obj.get(module);
+						@SuppressWarnings("unchecked")
+						Iterator<Object> d =  data.keys();
 						while (d.hasNext()) {
-							key = (String)d.next();
+							key = (String) d.next();
 							versionKey = "remote_" + module + "_" + key;
 							version = (String)data.getString(key);
 							Log.d(TAG,"key = " + key);
@@ -174,6 +176,7 @@ public class Global extends Application {
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 			
+			@SuppressWarnings("unused")
 			public void onError(JSONObject obj) {
 				Log.d(TAG,"error");				
 			}

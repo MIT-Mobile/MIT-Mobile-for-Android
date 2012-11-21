@@ -108,22 +108,26 @@ public final class RSSExpandedReader extends AbstractRSSReader{
   private static final int LONGEST_SEQUENCE_SIZE = FINDER_PATTERN_SEQUENCES[FINDER_PATTERN_SEQUENCES.length - 1].length;
 
   private static final int MAX_PAIRS = 11;
-  private final Vector pairs = new Vector(MAX_PAIRS);
+  @SuppressWarnings("rawtypes")
+private final Vector pairs = new Vector(MAX_PAIRS);
   private final int [] startEnd = new int[2];
   private final int [] currentSequence = new int[LONGEST_SEQUENCE_SIZE];
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints) throws NotFoundException {
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException {
     this.reset();
     decodeRow2pairs(rowNumber, row);
     return constructResult(this.pairs);
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     this.pairs.setSize(0);
   }
 
   // Not private for testing
-  Vector decodeRow2pairs(int rowNumber, BitArray row) throws NotFoundException {
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+Vector decodeRow2pairs(int rowNumber, BitArray row) throws NotFoundException {
     while(true){
       ExpandedPair nextPair = retrieveNextPair(row, this.pairs, rowNumber);
       this.pairs.addElement(nextPair);
@@ -139,7 +143,7 @@ public final class RSSExpandedReader extends AbstractRSSReader{
     }
   }
 
-  private static Result constructResult(Vector pairs) throws NotFoundException{
+  private static Result constructResult(@SuppressWarnings("rawtypes") Vector pairs) throws NotFoundException{
     BitArray binary = BitArrayBuilder.buildBitArray(pairs);
 
     AbstractExpandedDecoder decoder = AbstractExpandedDecoder.createDecoder(binary);
@@ -198,7 +202,7 @@ public final class RSSExpandedReader extends AbstractRSSReader{
   }
 
   // not private for testing
-  ExpandedPair retrieveNextPair(BitArray row, Vector previousPairs, int rowNumber) throws NotFoundException{
+  ExpandedPair retrieveNextPair(BitArray row, @SuppressWarnings("rawtypes") Vector previousPairs, int rowNumber) throws NotFoundException{
     boolean isOddPattern  = previousPairs.size() % 2 == 0;
 
     FinderPattern pattern;
@@ -232,7 +236,7 @@ public final class RSSExpandedReader extends AbstractRSSReader{
     return new ExpandedPair(leftChar, rightChar, pattern, mayBeLast);
   }
 
-  private boolean checkPairSequence(Vector previousPairs, FinderPattern pattern) throws NotFoundException{
+  private boolean checkPairSequence(@SuppressWarnings("rawtypes") Vector previousPairs, FinderPattern pattern) throws NotFoundException{
     int currentSequenceLength = previousPairs.size() + 1;
     if(currentSequenceLength > this.currentSequence.length) {
       throw NotFoundException.getNotFoundInstance();
@@ -264,7 +268,7 @@ public final class RSSExpandedReader extends AbstractRSSReader{
     throw NotFoundException.getNotFoundInstance();
   }
 
-  private void findNextPair(BitArray row, Vector previousPairs, int forcedOffset) throws NotFoundException{
+  private void findNextPair(BitArray row, @SuppressWarnings("rawtypes") Vector previousPairs, int forcedOffset) throws NotFoundException{
     int[] counters = this.decodeFinderCounters;
     counters[0] = 0;
     counters[1] = 0;
@@ -454,7 +458,8 @@ public final class RSSExpandedReader extends AbstractRSSReader{
       oddSum += oddCounts[i];
     }
     int evenChecksumPortion = 0;
-    int evenSum = 0;
+    @SuppressWarnings("unused")
+	int evenSum = 0;
     for (int i = evenCounts.length - 1; i >= 0; i--) {
       if(isNotA1left(pattern, isOddPattern, leftChar)){
         int weight = WEIGHTS[weightRowNumber][2 * i + 1];

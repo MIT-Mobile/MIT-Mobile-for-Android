@@ -32,6 +32,6 @@ public interface MultipleBarcodeReader {
 
   Result[] decodeMultiple(BinaryBitmap image) throws NotFoundException;
 
-  Result[] decodeMultiple(BinaryBitmap image, Hashtable hints) throws NotFoundException;
+  Result[] decodeMultiple(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException;
 
 }

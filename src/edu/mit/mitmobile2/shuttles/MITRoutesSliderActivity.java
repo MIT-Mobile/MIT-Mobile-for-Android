@@ -6,11 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import edu.mit.mitmobile2.CategoryNewModuleActivity;
-import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.OnMITMenuItemListener;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.objs.RouteItem;
@@ -119,10 +115,10 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 		// prefetch to speed up first draw call
 		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
 		
-		RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);
+		//RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);
 		
 		//i.putExtra(MITMapActivity.KEY_HEADER_TITLE, updatedRouteItem.title);
-		String subtitle = updatedRouteItem.gpsActive ? GPS_ONLINE : GPS_OFFLINE;
+
 		//i.putExtra(MITMapActivity.KEY_HEADER_SUBTITLE, subtitle);
 		i.putExtra(MITMapActivity.KEY_SHUTTLE_STOPS, stops.toArray());
 		i.putExtra(MITMapActivity.KEY_ROUTE, routeItem);

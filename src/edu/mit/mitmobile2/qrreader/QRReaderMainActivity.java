@@ -36,6 +36,7 @@ public class QRReaderMainActivity extends NewModuleActivity {
 	private boolean mLaunchScanScheduled;
 	private boolean mFinishScheduled;
 
+	@SuppressWarnings("unused")
 	private FullScreenLoader mLoader;
 	
 	@Override

@@ -30,7 +30,8 @@ public final class Result {
   private final byte[] rawBytes;
   private ResultPoint[] resultPoints;
   private final BarcodeFormat format;
-  private Hashtable resultMetadata;
+  @SuppressWarnings("rawtypes")
+private Hashtable resultMetadata;
   private final long timestamp;
 
   public Result(String text,
@@ -91,18 +92,21 @@ public final class Result {
    *   <code>null</code>. This contains optional metadata about what was detected about the barcode,
    *   like orientation.
    */
-  public Hashtable getResultMetadata() {
+  @SuppressWarnings("rawtypes")
+public Hashtable getResultMetadata() {
     return resultMetadata;
   }
 
-  public void putMetadata(ResultMetadataType type, Object value) {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public void putMetadata(ResultMetadataType type, Object value) {
     if (resultMetadata == null) {
       resultMetadata = new Hashtable(3);
     }
     resultMetadata.put(type, value);
   }
 
-  public void putAllMetadata(Hashtable metadata) {
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+public void putAllMetadata(Hashtable metadata) {
     if (metadata != null) {
       if (resultMetadata == null) {
         resultMetadata = metadata;
@@ -132,7 +136,8 @@ public final class Result {
     return timestamp;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     if (text == null) {
       return "[" + rawBytes.length + " bytes]";
     } else {

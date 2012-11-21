@@ -101,6 +101,7 @@ public class MIT150Model {
 
 				new Thread() {
 
+					@Override
 					public void run() {
 						
 						if(cachedLastSaved == -1 || cachedLastSaved > lastModified) {

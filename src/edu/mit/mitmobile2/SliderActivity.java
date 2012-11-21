@@ -71,6 +71,7 @@ abstract public class SliderActivity extends ModuleActivity {
 					jumpTitles.toArray(titlesArray);
 					
 					builder.setItems(titlesArray, new DialogInterface.OnClickListener() {
+						@Override
 						public void onClick(DialogInterface dialog, int item) {
 						    	mSliderListAdapter.seekTo(item);
 						}
@@ -188,7 +189,8 @@ abstract public class SliderActivity extends ModuleActivity {
     
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-	    final Boolean rotated = new Boolean(true);  // TODO may need to confirm
+	    //final Boolean rotated = new Boolean(true);  // TODO may need to confirm
+		final Boolean rotated = Boolean.valueOf(true);
 	    return rotated;
 	}
 	

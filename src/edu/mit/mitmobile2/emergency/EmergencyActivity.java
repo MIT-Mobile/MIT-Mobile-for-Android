@@ -192,6 +192,7 @@ public class EmergencyActivity extends NewModuleActivity {
 	}
 	
 	// default implementation for primary, and secondary menu items.
+	@Override
 	protected List<MITMenuItem> getPrimaryMenuItems() {
 		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
 		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));

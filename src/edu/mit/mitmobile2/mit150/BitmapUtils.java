@@ -46,7 +46,7 @@ public class BitmapUtils {
 	    
 	    final Paint paint = new Paint();
 	    final int roundPxInt = convertDipsToPixels(context, ROUND_DIPS);
-	    final float roundPx = roundPxInt;
+	    
 	    
 	    final Rect rect = new Rect(0, 0, width, height-roundPxInt);
 	    final RectF rectF = new RectF(rect);

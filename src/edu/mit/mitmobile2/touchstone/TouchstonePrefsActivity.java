@@ -104,20 +104,26 @@ public class TouchstonePrefsActivity extends NewModuleActivity implements OnShar
 	    touchstoneContents = (LinearLayout)findViewById(R.id.touchstoneContents);
 
 	    touchstoneUsername.addTextChangedListener(new TextWatcher(){
-	        public void afterTextChanged(Editable s) {
+	        @Override
+			public void afterTextChanged(Editable s) {
 	        	 credentialsChanged = true;
 	        	 Log.d(TAG,"credentials changed");
 	        }
-	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	        @Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        @Override
+			public void onTextChanged(CharSequence s, int start, int before, int count){}
 	    });
 	    
 	    touchstonePassword.addTextChangedListener(new TextWatcher(){
-	        public void afterTextChanged(Editable s) {
+	        @Override
+			public void afterTextChanged(Editable s) {
 	        	 credentialsChanged = true;
 	        }
-	        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	        @Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+	        @Override
+			public void onTextChanged(CharSequence s, int start, int before, int count){}
 	    });
 
 	    
@@ -168,7 +174,8 @@ public class TouchstonePrefsActivity extends NewModuleActivity implements OnShar
 	}
 	
 	
-    private Handler loginUiHandler = new Handler() {
+    @SuppressWarnings("unused")
+	private Handler loginUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
         	Log.d(TAG,"handleMessage");
@@ -177,8 +184,7 @@ public class TouchstonePrefsActivity extends NewModuleActivity implements OnShar
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
-            	UserIdentity identity = (UserIdentity)msg.obj;
+                UserIdentity identity = (UserIdentity)msg.obj;
                 Log.d(TAG,"identity = " + identity.getUsername());
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {
@@ -223,6 +229,7 @@ public class TouchstonePrefsActivity extends NewModuleActivity implements OnShar
 		}
 	}
 	
+	@Override
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 //		Context mContext = this;
 //		Handler uiHandler = new Handler();

@@ -41,7 +41,8 @@ final class EmailAddressResultParser extends ResultParser {
       if (queryStart >= 0) {
         emailAddress = emailAddress.substring(0, queryStart);
       }
-      Hashtable nameValues = parseNameValuePairs(rawText);
+      @SuppressWarnings("rawtypes")
+	Hashtable nameValues = parseNameValuePairs(rawText);
       String subject = null;
       String body = null;
       if (nameValues != null) {

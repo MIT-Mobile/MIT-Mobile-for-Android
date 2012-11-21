@@ -129,6 +129,8 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 		
 		final SearchResults<ResultItem> currentSearchResults = mSearchResults;		
 		continueSearch(currentSearchResults, new Handler() {
+			@SuppressWarnings("unchecked")
+			@Override
 			public void handleMessage(Message msg) {
 				if(currentSearchResults == mSearchResults) {
 					mLoadMore.setEnabled(true);

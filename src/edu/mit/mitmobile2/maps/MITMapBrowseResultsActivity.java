@@ -204,6 +204,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Action");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int item) {
 				Log.d(TAG,"item = " + item);
 				Intent i;

@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.tour;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -271,6 +272,7 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 		}
 	}
 	
+	@Override
 	public void releaseLargeMemoryChunks() {
 		mMainImageView.setURL(null);
 		ResizableImageView mapImageView = (ResizableImageView) mView.findViewById(R.id.tourDirectionsMapIV);
@@ -283,6 +285,7 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 		mMapStatus = MapStatus.NotStarted;
 	}
 	
+	@Override
 	public void completelyUpdateView() {
 		getView(); //insure view has already been inflated
 		updateMap();
@@ -295,6 +298,7 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 		updateMap();
 	}
 	
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public void updateView() {
 		TextView titleView = (TextView) mView.findViewById(R.id.tourStopTitle);
@@ -328,7 +332,8 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 		});
 		
 		mWebView.setWebChromeClient(new WebChromeClient() {
-	        public void onConsoleMessage(String message, int lineNumber, String sourceID) {
+	        @Override
+			public void onConsoleMessage(String message, int lineNumber, String sourceID) {
 				 Log.d("TourSiteLocation", "TourItemId= " + mTourItem.getTitle() + " message +  -- From line "
 				                         + lineNumber + " of "
 				                         + sourceID);

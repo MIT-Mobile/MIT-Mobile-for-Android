@@ -49,13 +49,14 @@ final class DecodedBitStreamParser {
   private DecodedBitStreamParser() {
   }
 
-  static DecoderResult decode(byte[] bytes, Version version, ErrorCorrectionLevel ecLevel, Hashtable hints)
+  static DecoderResult decode(byte[] bytes, Version version, ErrorCorrectionLevel ecLevel, @SuppressWarnings("rawtypes") Hashtable hints)
       throws FormatException {
     BitSource bits = new BitSource(bytes);
     StringBuffer result = new StringBuffer(50);
     CharacterSetECI currentCharacterSetECI = null;
     boolean fc1InEffect = false;
-    Vector byteSegments = new Vector(1);
+    @SuppressWarnings("rawtypes")
+	Vector byteSegments = new Vector(1);
     Mode mode;
     do {
       // While still another segment to read...
@@ -136,12 +137,13 @@ final class DecodedBitStreamParser {
     }
   }
 
-  private static void decodeByteSegment(BitSource bits,
+  @SuppressWarnings("unchecked")
+private static void decodeByteSegment(BitSource bits,
                                         StringBuffer result,
                                         int count,
                                         CharacterSetECI currentCharacterSetECI,
-                                        Vector byteSegments,
-                                        Hashtable hints) throws FormatException {
+                                        @SuppressWarnings("rawtypes") Vector byteSegments,
+                                        @SuppressWarnings("rawtypes") Hashtable hints) throws FormatException {
     byte[] readBytes = new byte[count];
     if (count << 3 > bits.available()) {
       throw FormatException.getFormatInstance();

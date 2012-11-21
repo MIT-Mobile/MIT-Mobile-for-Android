@@ -62,6 +62,7 @@ public class MITSettingsActivity extends NewModuleActivity {
 		return new SettingsModule();
 	}
 
+	@Override
 	protected boolean isScrollable() {
 		return false;
 	}

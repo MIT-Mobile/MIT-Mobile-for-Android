@@ -49,12 +49,14 @@ public final class HybridBinarizer extends GlobalHistogramBinarizer {
     super(source);
   }
 
-  public BitMatrix getBlackMatrix() throws NotFoundException {
+  @Override
+public BitMatrix getBlackMatrix() throws NotFoundException {
     binarizeEntireImage();
     return matrix;
   }
 
-  public Binarizer createBinarizer(LuminanceSource source) {
+  @Override
+public Binarizer createBinarizer(LuminanceSource source) {
     return new HybridBinarizer(source);
   }
 

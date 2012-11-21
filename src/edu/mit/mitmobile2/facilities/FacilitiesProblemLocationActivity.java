@@ -123,21 +123,24 @@ public class FacilitiesProblemLocationActivity extends NewModuleActivity {
                     try {
                             final String categoryVersion = FacilitiesDB.updateCategories(mContext, mFacilitiesLoadedHandler );
                             mFacilitiesLoadedHandler.post(new Runnable() {
-                                 public void run() {
+                                 @Override
+								public void run() {
                                 	 Global.setVersion("local", "map", "category_list", categoryVersion, mContext);
                                  }
                             });
 
                             final String locationVersion = FacilitiesDB.updateLocations(mContext, mFacilitiesLoadedHandler );
                             mFacilitiesLoadedHandler.post(new Runnable() {
-                                 public void run() {
+                                 @Override
+								public void run() {
                                 	 Global.setVersion("local", "map", "location", locationVersion, mContext);
                                  }
                             });
 
                             final String problemTypeVersion = FacilitiesDB.updateProblemTypes(mContext,mFacilitiesLoadedHandler);
                             mFacilitiesLoadedHandler.post(new Runnable() {
-                                 public void run() {
+                                 @Override
+								public void run() {
                                 	 Global.setVersion("local", "facilities", "problem_type", problemTypeVersion, mContext);
                                  }
                             });

@@ -36,9 +36,11 @@ import java.util.Vector;
  */
 public final class MultiFormatUPCEANReader extends OneDReader {
 
-  private final Vector readers;
+  @SuppressWarnings("rawtypes")
+private final Vector readers;
 
-  public MultiFormatUPCEANReader(Hashtable hints) {
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+public MultiFormatUPCEANReader(Hashtable hints) {
     Vector possibleFormats = hints == null ? null :
         (Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS);
     readers = new Vector();
@@ -63,7 +65,8 @@ public final class MultiFormatUPCEANReader extends OneDReader {
     }
   }
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints) throws NotFoundException {
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException {
     // Compute this location once and reuse it on multiple implementations
     int[] startGuardPattern = UPCEANReader.findStartGuardPattern(row);
     int size = readers.size();
@@ -90,7 +93,8 @@ public final class MultiFormatUPCEANReader extends OneDReader {
       boolean ean13MayBeUPCA =
           BarcodeFormat.EAN_13.equals(result.getBarcodeFormat()) &&
           result.getText().charAt(0) == '0';
-      Vector possibleFormats = hints == null ? null : (Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS);
+      @SuppressWarnings("rawtypes")
+	Vector possibleFormats = hints == null ? null : (Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS);
       boolean canReturnUPCA = possibleFormats == null || possibleFormats.contains(BarcodeFormat.UPC_A);
 
       if (ean13MayBeUPCA && canReturnUPCA) {
@@ -102,7 +106,8 @@ public final class MultiFormatUPCEANReader extends OneDReader {
     throw NotFoundException.getNotFoundInstance();
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     int size = readers.size();
     for (int i = 0; i < size; i++) {
       Reader reader = (Reader) readers.elementAt(i);

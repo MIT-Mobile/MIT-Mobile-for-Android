@@ -43,7 +43,8 @@ public final class WifiParsedResult extends ParsedResult {
     return password;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     StringBuffer result = new StringBuffer(80);
     maybeAppend(ssid, result);
     maybeAppend(networkEncryption, result);

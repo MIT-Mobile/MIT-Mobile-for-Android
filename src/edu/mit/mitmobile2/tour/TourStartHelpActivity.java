@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.tour;
 
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class TourStartHelpActivity extends ModuleActivity {
 	
 	public static final String SELECTED_SITE = "selected_site";
 	
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle saveInstance) {
 		super.onCreate(saveInstance);
@@ -58,7 +60,8 @@ public class TourStartHelpActivity extends ModuleActivity {
 		});
 		
 		mainContent.setWebChromeClient(new WebChromeClient() {
-			  public void onConsoleMessage(String message, int lineNumber, String sourceID) {
+			  @Override
+			public void onConsoleMessage(String message, int lineNumber, String sourceID) {
 			    Log.d("TourSuggestedLocations", message + " -- From line "
 			                         + lineNumber + " of "
 			                         + sourceID);

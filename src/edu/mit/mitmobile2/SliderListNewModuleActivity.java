@@ -110,6 +110,7 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
 	    return mSliderListAdapter;
 	}
 	
+	@Override
 	protected String getCurrentHeaderTitle() {
 	    return getHeaderTitle(getPosition());
 	}

@@ -44,7 +44,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_weight="1"
 	    android:clickable="true"
-	    android:apiKey="@string/googleMapsApiKey"
+	    android:apiKey="myfakekey"
 	/>
 	
 	<edu.mit.mitmobile2.LoaderBar

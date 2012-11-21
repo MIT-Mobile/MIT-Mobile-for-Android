@@ -79,7 +79,8 @@ final class DecodedBitStreamParser {
     BitSource bits = new BitSource(bytes);
     StringBuffer result = new StringBuffer(100);
     StringBuffer resultTrailer = new StringBuffer(0);
-    Vector byteSegments = new Vector(1);
+    @SuppressWarnings("rawtypes")
+	Vector byteSegments = new Vector(1);
     int mode = ASCII_ENCODE;
     do {
       if (mode == ASCII_ENCODE) {
@@ -420,7 +421,8 @@ final class DecodedBitStreamParser {
   /**
    * See ISO 16022:2006, 5.2.9 and Annex B, B.2
    */
-  private static void decodeBase256Segment(BitSource bits, StringBuffer result, Vector byteSegments)
+  @SuppressWarnings("unchecked")
+private static void decodeBase256Segment(BitSource bits, StringBuffer result, @SuppressWarnings("rawtypes") Vector byteSegments)
       throws FormatException {
     // Figure out how long the Base 256 Segment is.
     int d1 = bits.readBits(8);

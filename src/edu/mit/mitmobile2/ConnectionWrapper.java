@@ -90,6 +90,7 @@ public class ConnectionWrapper {
 					} else if(msg.arg1 == CONNECTION_RESPONSE) {
 						Log.d(TAG,"ON RESPONSE");
 						Log.d(TAG,"msg = " + msg.obj.getClass());
+						@SuppressWarnings("unused")
 						InputStream i = (InputStream)msg.obj;
 						//Log.d(TAG,"stream = " + MobileWebApi.convertStreamToString(i));						
 						callback.onResponse((InputStream) msg.obj);

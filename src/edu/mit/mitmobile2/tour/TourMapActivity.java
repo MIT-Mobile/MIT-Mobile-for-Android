@@ -10,7 +10,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.maps.GeoRect;
 import edu.mit.mitmobile2.maps.MapBaseActivity;
 import edu.mit.mitmobile2.tour.Tour.ParcelableGeoPoint;
 import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
@@ -39,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 
 
@@ -83,7 +81,7 @@ public class TourMapActivity extends MapBaseActivity {
 		Intent i = getIntent();
 		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
-		List<ParcelableGeoPoint> geoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
+
 		mTourActive = i.getBooleanExtra(TOUR_ACTIVE_KEY, false);
 		mTourCurrentPosition = getCurrentPosition();
 				
@@ -91,7 +89,7 @@ public class TourMapActivity extends MapBaseActivity {
 		mShowingSidetrips = !mTourActive;
 		setTourItemsList(mShowingSidetrips);
 		
-		GeoRect geoRect = new GeoRect(geoPoints);
+
 		
 		//mSiteMarkers = new TourRouteOverlay(this, mapView, mSiteTourMapItems, geoPoints);
 		mSiteMarkers.setOnTourItemSelectedListener(new TourRouteOverlay.OnTourItemSelectedListener() {
@@ -469,6 +467,7 @@ public class TourMapActivity extends MapBaseActivity {
 			private static final long serialVersionUID = 1L;
 			protected static final int MAX_ENTRIES = 10;
 			
+			@Override
 			protected boolean removeEldestEntry(Map.Entry<String, View> eldest) {
 				return size() > MAX_ENTRIES;
 			}

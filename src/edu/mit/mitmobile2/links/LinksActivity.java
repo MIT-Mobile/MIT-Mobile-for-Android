@@ -9,18 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.LinearLayout;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -44,6 +38,7 @@ public class LinksActivity extends NewModuleActivity {
 		return true;
 	}
 	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.links_main);
@@ -57,6 +52,7 @@ public class LinksActivity extends NewModuleActivity {
 	private Handler uiHandler = new Handler() {
 
 		
+		@Override
 		public void handleMessage(Message msg) {
 			ArrayList<LinkListItem> linkSections = null;
 			LinearLayout container = (LinearLayout) findViewById(R.id.link_list_container);

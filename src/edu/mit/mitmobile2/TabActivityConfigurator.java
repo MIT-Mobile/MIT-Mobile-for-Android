@@ -5,8 +5,6 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.Spannable.Factory;
 import android.text.style.TextAppearanceSpan;
@@ -23,9 +21,11 @@ public class TabActivityConfigurator {
 	TabHost mTabHost;
 	Activity mActivity;
 	ArrayList<String> mTabNames;
+	@SuppressWarnings("rawtypes")
 	//ArrayList<Integer> mTabContentResourceIds;
 	ArrayList<Class> mTabActivities;
 	Intent mIntent;
+	@SuppressWarnings("rawtypes")
 	public TabActivityConfigurator(Activity activity, TabHost tabHost) {
 		mTabHost = tabHost;
 		mActivity = activity;
@@ -33,7 +33,7 @@ public class TabActivityConfigurator {
 		mTabActivities = new ArrayList<Class>();
 	}
 	
-	public void addTab(String tabName, Class className) {
+	public void addTab(String tabName, @SuppressWarnings("rawtypes") Class className) {
 		mTabNames.add(tabName.toUpperCase(Locale.US));
 		mTabActivities.add(className);
 	}

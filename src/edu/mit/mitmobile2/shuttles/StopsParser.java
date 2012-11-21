@@ -14,6 +14,7 @@ public class StopsParser extends JSONParser {
 
 	public String ROUTES_BASE_URL = "http://" + Global.getMobileWebDomain() + "/api/shuttles/";
 	
+	@Override
 	public String getBaseUrl() {
 		return ROUTES_BASE_URL;
 	}
@@ -26,6 +27,7 @@ public class StopsParser extends JSONParser {
 	}
 
 	/****************************************/
+	@SuppressWarnings("unchecked")
 	@Override
 	protected
 	void parseObj(){

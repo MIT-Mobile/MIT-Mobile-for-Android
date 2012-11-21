@@ -52,7 +52,8 @@ public final class Code93Reader extends OneDReader {
   };
   private static final int ASTERISK_ENCODING = CHARACTER_ENCODINGS[47];
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints)
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, ChecksumException, FormatException {
 
     int[] start = findAsteriskPattern(row);

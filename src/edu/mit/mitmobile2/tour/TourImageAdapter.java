@@ -19,6 +19,7 @@ public class TourImageAdapter extends BaseAdapter {
 
 	private Context mContext;
 
+	@SuppressWarnings("unused")
 	private ContentResolver crThumb;
     
 	ArrayList<String> filepaths = new ArrayList<String>();
@@ -39,15 +40,18 @@ public class TourImageAdapter extends BaseAdapter {
         a.recycle();
     }
 
-    public int getCount() {
+    @Override
+	public int getCount() {
         return filepaths.size();
     }
 
-    public long getItemId(int position) {
+    @Override
+	public long getItemId(int position) {
         return 0;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+	public View getView(int position, View convertView, ViewGroup parent) {
     	
         ImageView imageView;
         

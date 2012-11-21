@@ -22,6 +22,7 @@ package com.google.zxing.common.reedsolomon;
  *
  * @author Sean Owen
  */
+@SuppressWarnings("serial")
 public final class ReedSolomonException extends Exception {
 
   public ReedSolomonException(String message) {

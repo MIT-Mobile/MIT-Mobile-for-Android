@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.people;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,8 +16,7 @@ public class PeopleDetailItemLayout extends LinearLayout {
 	private ImageView mActionIcon;
 	private OnClickListener mOnClickListener;
 	
-	private int mSystemSelectionResourceId = R.drawable.highlight_background;
-	private int mBackgroundResourceId = R.color.rowBackground;
+
 	
 	public PeopleDetailItemLayout(Context context) {
 		this(context, null);

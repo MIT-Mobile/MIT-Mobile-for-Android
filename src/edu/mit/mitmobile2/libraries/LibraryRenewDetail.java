@@ -31,7 +31,8 @@ public class LibraryRenewDetail extends ModuleActivity{
 	
     private int index;
     private String errorMsg = "";
-    private String successMsg = "";
+    @SuppressWarnings("unused")
+	private String successMsg = "";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +76,8 @@ public class LibraryRenewDetail extends ModuleActivity{
         
     }
 
-    private void doSearch(String barcode) {
+    @SuppressWarnings("unused")
+	private void doSearch(String barcode) {
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();

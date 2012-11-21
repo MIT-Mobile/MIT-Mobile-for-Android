@@ -18,6 +18,7 @@ public class MainTourActivity extends NewModuleActivity {
 	FullScreenLoader mLoader;
 	TextView mIntroductionView;
 
+	@SuppressWarnings("unused")
 	private boolean mTourAvailable = false;
 	private MainTourBackgroundView mBackgroundView;
 	

@@ -23,6 +23,7 @@ package com.google.zxing;
  *
  * @author Sean Owen
  */
+@SuppressWarnings("serial")
 public abstract class ReaderException extends Exception {
 
   // TODO: Currently we throw up to 400 ReaderExceptions while scanning a single 240x240 image before
@@ -91,7 +92,8 @@ public abstract class ReaderException extends Exception {
   // Prevent stack traces from being taken
   // srowen says: huh, my IDE is saying this is not an override. native methods can't be overridden?
   // This, at least, does not hurt. Because we use a singleton pattern here, it doesn't matter anyhow.
-  public final Throwable fillInStackTrace() {
+  @Override
+public final Throwable fillInStackTrace() {
     return null;
   }
 

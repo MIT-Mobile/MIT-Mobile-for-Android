@@ -68,6 +68,7 @@ public class QRReaderDetailActivity extends NewModuleActivity {
 		
 		mContext = this;
 		Handler handler = new Handler() {
+			@Override
 			public void handleMessage(Message msg) {
 				if (MobileWebApi.SUCCESS == msg.arg1) {
 					mShouldTimeout = false;

@@ -52,7 +52,8 @@ public final class NDEFSmartPosterParsedResult extends ParsedResult {
     return action;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     if (title == null) {
       return uri;
     } else {

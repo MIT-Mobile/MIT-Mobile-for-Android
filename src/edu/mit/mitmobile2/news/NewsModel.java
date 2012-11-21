@@ -30,6 +30,7 @@ import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.SearchResults;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -330,7 +331,9 @@ public class NewsModel {
 		}
 	}
 	
+	@SuppressLint("UseSparseArrays")
 	private Map<Integer, Boolean> mPendingThumbnails = new HashMap<Integer, Boolean>();
+	@SuppressLint("UseSparseArrays")
 	private Map<Integer, Boolean> mRejectedThumbnails = new HashMap<Integer, Boolean>();
 	
 	private static int FETCH_THUMBNAIL_THREADS_MAX = 5;
@@ -349,6 +352,7 @@ public class NewsModel {
 				
 				mHandler = new Handler() {
 					
+					@Override
 					public void handleMessage(Message msg) {
 						if(msg.arg1 == FETCH_THUMBNAIL_STOP) {
 							Looper.myLooper().quit();

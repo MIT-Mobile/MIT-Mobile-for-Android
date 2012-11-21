@@ -28,7 +28,8 @@ public final class ResultMetadataType {
 
   // No, we can't use an enum here. J2ME doesn't support it.
 
-  private static final Hashtable VALUES = new Hashtable();
+  @SuppressWarnings("rawtypes")
+private static final Hashtable VALUES = new Hashtable();
 
   // No, we can't use an enum here. J2ME doesn't support it.
 
@@ -82,7 +83,8 @@ public final class ResultMetadataType {
 
   private final String name;
 
-  private ResultMetadataType(String name) {
+  @SuppressWarnings("unchecked")
+private ResultMetadataType(String name) {
     this.name = name;
     VALUES.put(name, this);
   }
@@ -91,7 +93,8 @@ public final class ResultMetadataType {
     return name;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return name;
   }
 

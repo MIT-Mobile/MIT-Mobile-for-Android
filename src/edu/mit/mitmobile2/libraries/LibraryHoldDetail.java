@@ -31,7 +31,6 @@ public class LibraryHoldDetail extends ModuleActivity{
 	private TextView holdISBNTV;
 	private ImageView holdStatusIconIV;
 	private TextView holdStatusTV;
-	private TextView holdPickupLocationTV;
     private int index;
 
 	@Override
@@ -81,7 +80,8 @@ public class LibraryHoldDetail extends ModuleActivity{
 
     }
 
-    private void doSearch(String barcode) {
+    @SuppressWarnings("unused")
+	private void doSearch(String barcode) {
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();

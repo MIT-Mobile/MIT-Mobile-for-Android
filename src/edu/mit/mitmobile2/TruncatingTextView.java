@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -7,7 +8,6 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -43,6 +43,7 @@ public class TruncatingTextView extends TextView {
 		mTextPaint.setTextSize(textSize);
 	}
 	
+	@SuppressLint({ "DrawAllocation", "DrawAllocation", "DrawAllocation" })
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		// TODO Auto-generated method stub

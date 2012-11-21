@@ -39,7 +39,7 @@ final class BitArrayBuilder {
   private BitArrayBuilder() {
   }
 
-  static BitArray buildBitArray(Vector pairs) {
+  static BitArray buildBitArray(@SuppressWarnings("rawtypes") Vector pairs) {
     int charNumber = (pairs.size() << 1) - 1;
     if ((((ExpandedPair)pairs.lastElement()).getRightChar()) == null) {
       charNumber -= 1;

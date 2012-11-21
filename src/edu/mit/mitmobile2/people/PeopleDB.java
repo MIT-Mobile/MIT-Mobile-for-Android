@@ -194,6 +194,7 @@ public class PeopleDB {
 			db.execSQL(builder.toString());
 		}
 		
+		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVesion, int newVersion) {
 			throw new UnsupportedOperationException();
 		}

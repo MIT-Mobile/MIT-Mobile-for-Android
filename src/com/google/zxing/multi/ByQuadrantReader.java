@@ -42,12 +42,14 @@ public final class ByQuadrantReader implements Reader {
     this.delegate = delegate;
   }
 
-  public Result decode(BinaryBitmap image)
+  @Override
+public Result decode(BinaryBitmap image)
       throws NotFoundException, ChecksumException, FormatException {
     return decode(image, null);
   }
 
-  public Result decode(BinaryBitmap image, Hashtable hints)
+  @Override
+public Result decode(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, ChecksumException, FormatException {
 
     int width = image.getWidth();
@@ -89,7 +91,8 @@ public final class ByQuadrantReader implements Reader {
     return delegate.decode(center, hints);
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     delegate.reset();
   }
 
