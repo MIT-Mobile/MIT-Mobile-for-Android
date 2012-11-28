@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,11 +22,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,12 +44,17 @@ import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnZoomListener;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.MultiPath;
 import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polygon;
+import com.esri.core.geometry.Polyline;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.FeatureSet;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.PictureMarkerSymbol;
+import com.esri.core.symbol.SimpleFillSymbol;
+import com.esri.core.symbol.SimpleLineSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol;
 import com.esri.core.symbol.SimpleMarkerSymbol.STYLE;
 import com.esri.core.tasks.ags.query.Query;
@@ -56,6 +66,7 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 
 public class MapBaseActivity extends NewModuleActivity {
 	
@@ -79,6 +90,7 @@ public class MapBaseActivity extends NewModuleActivity {
 	EditText buildingQuery;
 	GraphicsLayer gl;
 	GraphicsLayer graphicsLayer;
+	Bundle extras;
 	//Graphic[] highlightGraphics;  
 	//GraphicsLayer locationLayer; // used to show the pin for for the current location
 	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
@@ -94,16 +106,17 @@ public class MapBaseActivity extends NewModuleActivity {
 	ProgressDialog progress;
 
 	protected static final String MAP_ITEMS_KEY = "map_items";
-	protected static final String MAP_DATA_KEY = "map_data";
+	public static final String MAP_DATA_KEY = "map_data";
 
 	final static int HAS_RESULTS = 1;
 	final static int NO_RESULT = 2;
 	final static int CLEAR_RESULT = 3;
 	
-	private static final int WEST_LONGITUDE_E6  = -71132698;
-	private static final int EAST_LONGITUDE_E6  = -71006698;
-	private static final int NORTH_LATITUDE_E6  =  42407741;
-	private static final int SOUTH_LATITUDE_E6  =  42331392;
+	private static final double INIT_SCALE = 10000;
+	private static final double WEST_LONGITUDE_E6  = -71.132698;
+	private static final double EAST_LONGITUDE_E6  = -71.006698;
+	private static final double NORTH_LATITUDE_E6  =  42.407741;
+	private static final double SOUTH_LATITUDE_E6  =  42.331392;
 	
 	static int INIT_ZOOM = 17; // DELETE ?
 	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
@@ -114,9 +127,10 @@ public class MapBaseActivity extends NewModuleActivity {
 		Log.d(TAG,"oncreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-		setContentView(R.layout.maps2);
+		setContentView(R.layout.maps);
         mLoadingView = (FullScreenLoader) findViewById(R.id.mapLoading);
 
+        this.extras = this.getIntent().getExtras();
 		mapInit();
 
 		map.setOnZoomListener(new MyOnZoomListener());
@@ -139,7 +153,7 @@ public class MapBaseActivity extends NewModuleActivity {
 		Object init = getLastNonConfigurationInstance();
 		if (init != null) {
 			map.restoreState((String) init);
-		}	
+		}
 		
 	}
 	
@@ -246,9 +260,15 @@ public class MapBaseActivity extends NewModuleActivity {
 	
 	final class MyOnZoomListener implements OnZoomListener {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void postAction(float pivotX, float pivotY, double factor) {
 			Log.d(TAG,"zoom x:" + pivotX + " y:" + pivotY);
+			Log.d(TAG,"scale = " + map.getScale());
 			// TODO Auto-generated method stub
 			
 		}
@@ -265,48 +285,28 @@ public class MapBaseActivity extends NewModuleActivity {
 
 		@Override
 		public void onSingleTap(float x, float y) {
-			
+
+			Callout callout = map.getCallout(); 
+
 			if (!map.isLoaded()) {
 				return;
 			}
 			// TODO Auto-generated method stub
 			Log.d(TAG,"tap x:" + x + " y:" + y);
 			Point point = map.toMapPoint(new Point(x,y));
-			
-			//Graphic graphic = new Graphic(map.toMapPoint(new Point(x,y)),new SimpleMarkerSymbol(Color.RED,25,STYLE.CIRCLE));
-			//Graphic graphic = new Graphic(map.toMapPoint(new Point(x,y)),pms);
-
-//    		graphicsLayer = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
-//    		graphicsLayer.addGraphic(graphic);
-    		Log.d(TAG,"num graphics = " + graphicsLayer.getGraphicIDs().length);
-    		// Construct the Callout content.
+			Log.d(TAG,"map x:" + point.getX() + " y:" + point.getY());
 			
     		gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
-    		int[] graphicId = gl.getGraphicIDs(x, y, 10);
+    		int[] graphicId = gl.getGraphicIDs(x, y, 10,1);
     		
     		if (graphicId.length > 0) {
-	    		String calloutText = "";    		
-	    		
-	    		for (int i = 0; i < graphicId.length; i++) {
-	    			Graphic g = gl.getGraphic(graphicId[i]);
-	    			calloutText += g.getAttributeValue("info").toString() + "\n";
-	    			Log.d(TAG,g.getAttributeValue("info").toString());
-	    		}
-
-	    		TextView textView = new TextView(mContext);
-				textView.setText(calloutText);
-	
-				
-				// Show the callout at the correct location.
-				Callout callout = map.getCallout(); 
-				callout.setContent(textView);
-	    		callout.setCoordinates(point);
-	    		callout.setStyle(R.xml.callout);
-				callout.refresh();
-				callout.show();
+    			Graphic g = gl.getGraphic(graphicId[0]);
+    			displayCallout(g);
+    		}
+    		else {
+    			callout.hide();
     		}
     		
-			//map.centerAt(point, true);
 		}
 		
 	}
@@ -369,7 +369,6 @@ public class MapBaseActivity extends NewModuleActivity {
                 // Add general graphics layer
                 graphicsLayer  = new GraphicsLayer();
         		addMapLayer(graphicsLayer, MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
-                //map.addLayer(graphicsLayer);
                 
         		// Define a listener that responds to location updates
         		LocationListener locationListener = new LocationListener() {
@@ -380,8 +379,10 @@ public class MapBaseActivity extends NewModuleActivity {
 
         		    private void makeUseOfNewLocation(Location location) {
         				// TODO Auto-generated method stub
-        				Log.d(TAG,"lat = " + location.getLatitude());
-        				Log.d(TAG,"lon = " + location.getLongitude());
+        				if (location != null) {
+	        		    	Log.d(TAG,"lat = " + location.getLatitude());
+	        				Log.d(TAG,"lon = " + location.getLongitude());
+        				}
         		    }
 
         			public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -395,26 +396,47 @@ public class MapBaseActivity extends NewModuleActivity {
         		ls = map.getLocationService();
         		ls.setLocationListener(locationListener);
         		ls.setAllowNetworkLocation(true);
+        		ls.start();
 
-//        		gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
-        		SimpleMarkerSymbol sms = new SimpleMarkerSymbol(Color.RED,25,STYLE.CIRCLE);
-        		Graphic g = new Graphic(ls.getPoint(),sms);
-        		graphicsLayer.addGraphic(g);
-        		// Add graphics layer to show the current location
-                //locationLayer = new GraphicsLayer();
-                //locationLayer.setVisible(false);
-        		//addMapLayer(locationLayer, "layer_location");
+        		// zoom and center 
+        		if (ls.isStarted()) {
+        			map.zoomToScale(ls.getPoint(), MapBaseActivity.INIT_SCALE);
+        		}
+        		//gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
+        		Point upperleft = toWebmercator(NORTH_LATITUDE_E6,WEST_LONGITUDE_E6);
+        		Point lowerleft = toWebmercator(SOUTH_LATITUDE_E6,WEST_LONGITUDE_E6);
+        		Point upperright = toWebmercator(NORTH_LATITUDE_E6,EAST_LONGITUDE_E6);
+        		Point lowerright = toWebmercator(SOUTH_LATITUDE_E6,EAST_LONGITUDE_E6);
+        		Log.d(TAG,"upperleft x=" + upperleft.getX() + " y=" + upperleft.getY());
+        		Log.d(TAG,"lowerleft x=" + lowerleft.getX() + " y=" + lowerleft.getY());
+        		Log.d(TAG,"upperright x=" + upperright.getX() + " y=" + upperright.getY());
+        		Log.d(TAG,"lowerright x=" + lowerright.getX() + " y=" + lowerright.getY());
+        		
+        		//SimpleMarkerSymbol sms = new SimpleMarkerSymbol(Color.RED, 20, STYLE.CROSS);
+				//Graphic graphic = new Graphic(point,sms);
+				//gl.addGraphic(graphic);
+    			//map.centerAt(point, true);
 
-        		// zoom to extents of Campus map
-//        		Layer layer = getMapLayer("edu.mit.mobile.map.Base");
+        		//        		Layer layer = getMapLayer("edu.mit.mobile.map.Base");
 //        		if (layer != null) {
-//        			Log.d(TAG,"extent = " + layer.getExtent());
-//        			Log.d(TAG,"full extent = " + layer.getFullExtent());        			
-//        			//Point point = polygon..getCenter();
+//        			Polygon polygon = layer.getExtent();
+//        			Point point = polygon.
+//        			int points = polygon.getPointCount();
+//        			for (int p = 0; p < points; p++) {
+//        				Point point = polygon.getPoint(p);
+//        				SimpleMarkerSymbol sms = new SimpleMarkerSymbol(Color.RED, 20, STYLE.CROSS);
+//        				Graphic graphic = new Graphic(point,sms);
+//        				gl.addGraphic(graphic);
+//        			}
+//        			//Poinpoint = polygon..getCenter();
 //        			//map.centerAt(point, true);
 //        		}        		
         		// add location marker
         		//addPicture("layer_location", R.drawable.ic_maps_indicator_current_position_anim1, getMyLocation());
+        		
+        		processMapData(extras);
+
+        		
         		
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
@@ -514,24 +536,167 @@ public class MapBaseActivity extends NewModuleActivity {
 	}
 
 	protected int dislayMapItem(String layerName, MapItem mapItem) {
+		int gId = 0;
 		Log.d(TAG,"displayMapItem");
-		Log.d(TAG,"mapItem:lat = " + mapItem.lat_wgs84 + "");
-		Log.d(TAG,"mapItem:long = " + mapItem.long_wgs84 + "");
-		Log.d(TAG,"mapItem = " + mapItem.toString());
+		//Log.d(TAG,"mapItem:lat = " + mapItem.lat_wgs84 + "");
+		//Log.d(TAG,"mapItem:long = " + mapItem.long_wgs84 + "");
+		Log.d(TAG,"mapItem:displayName = " + mapItem.displayName + "");
+		Log.d(TAG,"mapItem:bldgnum = " + mapItem.bldgnum + "");
+		Log.d(TAG,"mapItem:name = " + mapItem.name + "");
+		Log.d(TAG,"mapItem:snippets = " + mapItem.snippets + "");
+	
 		
-		Bitmap libImage = BitmapFactory.decodeResource(getResources(), MapBaseActivity.DEFAULT_PIN);
-		BitmapDrawable libDrawable = new BitmapDrawable(libImage);
-		PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
+		switch (mapItem.geometryType) {
+			case MapItem.TYPE_POINT:
+				gId = displayMapPoint(mapItem);
+			break;
+			
+			case MapItem.TYPE_POLYLINE:
+				gId = displayMapPolyline(mapItem);
+			break;
+			
+			case MapItem.TYPE_POLYGON:
+			break;
+			
+			default:
+				gId = 0;
+			break;
+			
+		}
 
-		Map attributes = new HashMap();
-		attributes.put("info", mapItem.displayName);
-		Graphic g = new Graphic(toWebmercator(mapItem.lat_wgs84,mapItem.long_wgs84), pms,attributes, null);
+		return gId;
 
-		gl = (GraphicsLayer)getMapLayer(layerName);
-		gl.addGraphic(g);
-        return g.getUid();	
 	}
 	
+	protected int displayMapPoint(MapItem mapItem) {
+		if (mapItem.mapPoints.size() > 0) {
+			MapPoint mapPoint = mapItem.mapPoints.get(0);
+			Point point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
+
+			Bitmap libImage = BitmapFactory.decodeResource(getResources(), MapBaseActivity.DEFAULT_PIN);
+			BitmapDrawable libDrawable = new BitmapDrawable(libImage);
+			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
+
+			Map attributes = new HashMap();
+			attributes.put("displayName", mapItem.displayName);
+			attributes.put("bldgnum", mapItem.bldgnum);
+			attributes.put("name", mapItem.name);
+			attributes.put("snippets", mapItem.snippets);
+			attributes.put("pointX", point.getX() + "");
+			attributes.put("pointY", point.getY() + "");
+			
+			Graphic g = new Graphic(point, pms,attributes, null);
+
+			gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl.addGraphic(g);
+	        return g.getUid();	
+			
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	protected int displayMapPolyline(MapItem mapItem) {
+		Log.d(TAG,"displayMapPolyline");
+		Point point;
+		Point startPoint;
+		Polyline polyline = new Polyline();
+	   
+		if (mapItem.mapPoints.size() > 0) {
+			
+			startPoint = toWebmercator(mapItem.mapPoints.get(0).lat_wgs84,mapItem.mapPoints.get(0).long_wgs84);
+			polyline.startPath(startPoint);
+			for (int p = 0; p < mapItem.mapPoints.size(); p++) {
+				MapPoint mapPoint = mapItem.mapPoints.get(p);
+				Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
+				point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
+				polyline.lineTo(point);
+			}
+			
+			Graphic g = new Graphic(polyline,new SimpleLineSymbol(Color.RED,5));
+
+			gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl.addGraphic(g);
+	        return g.getUid();	
+			
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	protected int displayMapPolygon(MapItem mapItem) {
+		return 0;
+	}
+
+	protected void displayCallout(MapItem mapItem) {
+		if (!map.isLoaded()) {
+			return;
+		}
+
+		Callout callout = map.getCallout(); 
+		gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
+		Point point = toWebmercator(mapItem.mapPoints.get(0).lat_wgs84,mapItem.mapPoints.get(0).long_wgs84);
+   		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_callout, null);
+		TextView calloutTitle = (TextView)calloutLayout.findViewById(R.id.callout_item_title);
+		TextView calloutSnippet = (TextView)calloutLayout.findViewById(R.id.callout_item_snippet);
+		String bldgnum = mapItem.bldgnum;
+		String displayName = mapItem.displayName;
+		
+		if (bldgnum.trim().length() == 0) {
+			calloutTitle.setVisibility(View.GONE);
+		}
+		else {
+			calloutTitle.setText(bldgnum);
+		}
+		calloutSnippet.setText(displayName);
+
+		callout.setContent(calloutLayout);
+    	callout.setCoordinates(point);
+    	callout.setStyle(R.xml.callout);
+		callout.refresh();
+		callout.show();
+	}
+	
+	protected void displayCallout(Graphic g) {
+		if (!map.isLoaded()) {
+			return;
+		}
+
+		Callout callout = map.getCallout(); 
+		gl = (GraphicsLayer)getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
+		Point point = new Point();
+		Double x = new Double((String)g.getAttributeValue("pointX"));
+		Double y = new Double((String)g.getAttributeValue("pointY"));
+		point.setX(x.doubleValue());
+		point.setY(y.doubleValue());
+			
+		Log.d(TAG,"point tostring = " + point.toString());
+		Log.d(TAG,"point x = " + point.getX());
+   		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_callout, null);
+		TextView calloutTitle = (TextView)calloutLayout.findViewById(R.id.callout_item_title);
+		TextView calloutSnippet = (TextView)calloutLayout.findViewById(R.id.callout_item_snippet);
+		String bldgnum = (String)g.getAttributeValue("bldgnum");
+		String displayName = (String)g.getAttributeValue("displayName");
+		
+		if (bldgnum.trim().length() == 0) {
+			calloutTitle.setVisibility(View.GONE);
+		}
+		else {
+			calloutTitle.setText(bldgnum);
+		}
+		calloutSnippet.setText(displayName);
+
+		callout.setContent(calloutLayout);
+    	callout.setCoordinates(point);
+    	callout.setStyle(R.xml.callout);
+		callout.refresh();
+		callout.show();
+	}
+
 	protected Point getMyLocation() {
 		double lat = location.getLatitude();
 		double lon = location.getLongitude();
@@ -603,6 +768,8 @@ public class MapBaseActivity extends NewModuleActivity {
         		// get mapData
         		mapData = (MapData)extras.get(MAP_DATA_KEY);
         		
+        		int gId = 0; // ID of graphic object created by displayMapItem
+
         		// get Graphics Layer
         		gl = (GraphicsLayer)getMapLayer(mapData.getLayerName());
         		Log.d(TAG,"test id of gl = " + gl.getID());
@@ -616,16 +783,26 @@ public class MapBaseActivity extends NewModuleActivity {
             	
 	        	for (int i = 0; i < mapItems.size(); i++) {
 	        		MapItem mapItem = mapItems.get(i);
-	        		dislayMapItem(mapData.getLayerName(),mapItem);
+	        		gId = dislayMapItem(mapData.getLayerName(),mapItem);
 	        	}
+	        	
+	        	// If there is only one mapItem, display the callout
+	        	if (mapItems.size() == 1) {
+	        		displayCallout((MapItem)mapItems.get(0));
+	        		
+	        		// this should be replaced with logic to find the extent and center of all map items
+	        		Point centerPt = toWebmercator(mapItems.get(0).mapPoints.get(0).lat_wgs84,mapItems.get(0).mapPoints.get(0).long_wgs84);
+	        		map.centerAt(centerPt,false);
 
+	        	}
         	}
         	
         }
 	}
 
 	 @Override
-	    protected void onNewIntent(Intent intent) {
+	 protected void onNewIntent(Intent intent) {
+		 Log.d(TAG,"onNewIntent");
 	    Bundle extras = intent.getExtras();
 	    processMapData(extras);
 	 } // End of onN

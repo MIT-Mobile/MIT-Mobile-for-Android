@@ -13,14 +13,23 @@ public class MapItem implements Parcelable, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
 	public MapItem() {
 		category = new ArrayList<String>();
 		contents = new ArrayList<String>();
+		mapPoints = new ArrayList<MapPoint>();
+		geometryType = MapItem.TYPE_POINT;
 	}
 	
 	
-	public double long_wgs84;
-	public double lat_wgs84;
+	//public double long_wgs84;
+	//public double lat_wgs84;
+	public int geometryType;
+	public static final int TYPE_POINT = 1;
+	public static final int TYPE_POLYLINE = 2;
+	public static final int TYPE_POLYGON = 3;
+	
+	public ArrayList<MapPoint> mapPoints;
 	
 	public long sql_id = -1;  // not to confuse with "id"
 	
@@ -66,8 +75,8 @@ public class MapItem implements Parcelable, Serializable {
 
 	@Override
 	public void writeToParcel(Parcel out, int flag) {
-		out.writeDouble(long_wgs84);
-		out.writeDouble(lat_wgs84);		
+		//out.writeDouble(long_wgs84);
+		//out.writeDouble(lat_wgs84);		
 		out.writeLong(sql_id);
 		out.writeList(category);
 		out.writeList(contents);
@@ -86,8 +95,8 @@ public class MapItem implements Parcelable, Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public void readFromParcel(Parcel in) {
-		long_wgs84 = in.readDouble();
-		lat_wgs84 = in.readDouble();
+		//long_wgs84 = in.readDouble();
+		//lat_wgs84 = in.readDouble();
 		
 		sql_id = in.readLong();
 		

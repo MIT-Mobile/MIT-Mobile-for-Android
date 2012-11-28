@@ -132,7 +132,7 @@ public class TourMapActivity extends MapBaseActivity {
 			}
 		});
 		
-		mMapView = (MapView) findViewById(R.id.mapview);
+		//mMapView = (MapView) findViewById(R.id.mapview);
 		mMapListSwitch = (ImageView) findViewById(R.id.tourMapListSwitchImage);
 		mStartHelpActionRow = (TourStartHelpActionRow) findViewById(R.id.tourMapStartHelp);
 		mStartHelpActionRow.setOnClickListener(new View.OnClickListener() {

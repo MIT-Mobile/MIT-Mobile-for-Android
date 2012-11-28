@@ -128,15 +128,8 @@ public class MITMapActivity extends MapBaseActivity {
 	}
 
 	protected void onMyLocationRequested() {
-
-		ls.setAccuracyCircleOn(true);
-		if (ls.isStarted()) {
-			ls.stop();
-		}
-		else {
-			ls.start();
-			map.centerAt(ls.getPoint(),true);
-		}		
+		// location is always displayed in Map. Selecting my location just centers map to that point
+		map.centerAt(ls.getPoint(),true);
 	}
 	
 	public boolean onSearchRequested() {

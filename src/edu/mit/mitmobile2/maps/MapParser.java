@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 
 public class MapParser {
 	
@@ -132,8 +133,8 @@ public class MapParser {
 	        	if (!mi.snippets.startsWith("Building ")) mi.snippets = "Building " + mi.snippets;
 	        }
 
-	        mi.long_wgs84 = jItem.getDouble("long_wgs84");
-	        mi.lat_wgs84 = jItem.getDouble("lat_wgs84");
+	        MapPoint mapPoint = new MapPoint(jItem.getDouble("lat_wgs84"),jItem.getDouble("long_wgs84"));
+	        mi.mapPoints.add(mapPoint);
 	        
 	        return mi;	        
 	}

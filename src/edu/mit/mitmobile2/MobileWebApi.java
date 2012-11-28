@@ -456,6 +456,8 @@ public class MobileWebApi {
 				if(query.length() > 0) {
 					query += "&";
 				}
+				Log.d("ZZZ","query = " + query);
+				Log.d("ZZZ","key = " + key);
 				query += key + "=" + java.net.URLEncoder.encode(parameters.get(key), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
