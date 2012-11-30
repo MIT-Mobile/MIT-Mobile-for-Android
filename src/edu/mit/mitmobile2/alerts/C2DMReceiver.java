@@ -130,6 +130,15 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String DEVICE_REGISTRATION_KEY = "device_registration";
 	private final static String NOTICE_COUNT_KEY = "notice_count"; 
 	
+	public static void clearDeviceRegistration(Context context) {
+		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putLong(DEVICE_ID_KEY, -1);
+		editor.commit();
+		
+		sRegistrationID = null;
+	}
+	
 	private void registerDevice(final Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
 		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
