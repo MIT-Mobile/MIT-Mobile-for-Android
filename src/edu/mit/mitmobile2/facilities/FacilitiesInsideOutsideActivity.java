@@ -4,13 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -20,7 +17,7 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 public class FacilitiesInsideOutsideActivity extends NewModuleActivity {
 
 	// this is a test 
-	private Button reportButton;
+	
 	//private ImageView callButton;
 	
 
@@ -40,7 +37,7 @@ public class FacilitiesInsideOutsideActivity extends NewModuleActivity {
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        Handler uiHandler = new Handler();
+
 
 		createViews();
 	}

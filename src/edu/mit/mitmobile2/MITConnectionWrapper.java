@@ -16,12 +16,14 @@ public class MITConnectionWrapper extends ConnectionWrapper {
 
 	static Context mContext;
 	
+	@SuppressWarnings("static-access")
 	public MITConnectionWrapper(Context context, HttpClientType httpClientType) {
 		super();
 		Log.d(TAG,"MITConnectionWrapper");
 		this.mContext = context;
 	}
 		
+	@Override
 	public HttpResponse httpClientResponse(HttpGet httpGet) throws ClientProtocolException, IOException {
 		Log.d(TAG,"httpClientResponse from MITConnectionWrapper");
 		MITClient mitClient = new MITClient(mContext);

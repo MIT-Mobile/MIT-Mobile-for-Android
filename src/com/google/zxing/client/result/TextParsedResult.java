@@ -41,7 +41,8 @@ public final class TextParsedResult extends ParsedResult {
     return language;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     return text;
   }
 

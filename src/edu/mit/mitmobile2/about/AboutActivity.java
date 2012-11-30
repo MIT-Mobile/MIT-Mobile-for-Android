@@ -48,6 +48,7 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 	
 	/****************************************************/
 	@Override
+	@SuppressWarnings("static-access")
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -162,7 +163,7 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 	
 	@Override
 	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		ArrayList  predictions = mLibrary.recognize(gesture);
+		ArrayList<Prediction> predictions = mLibrary.recognize(gesture);
 
 	    // We want at least one prediction
 	    if (predictions.size() > 0) {
@@ -230,6 +231,7 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 
 				// image data chunk
 				buf = ByteBuffer.allocate(4 * 4 * sSquareSize * sSquareSize + 4 * sSquareSize);
+				@SuppressWarnings("unused")
 				int curPos = 0;
 				for (int bigRow = 0; bigRow < 4; bigRow++) {
 					for (int smallRow = 0; smallRow < sSquareSize; smallRow++) {

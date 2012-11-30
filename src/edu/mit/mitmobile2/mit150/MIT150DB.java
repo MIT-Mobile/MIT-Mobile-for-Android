@@ -19,7 +19,7 @@ public class MIT150DB {
 	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "mit150.db";
 	private static final String FEATURES_TABLE = "features";
-	private static final String MORE_FEATURES_TABLE = "more_features";  // may not need...
+	
 	private static final String MORE_THUMBS_TABLE = "more_thumbnails";
 	
 	private static final String FEATURE_ID = "feature_id";
@@ -133,7 +133,7 @@ public class MIT150DB {
 	
 
 	public synchronized void saveFeature(MIT150FeatureItem featureItem) {
-		SQLiteDatabase db = mMIT150DBHelper.getWritableDatabase();
+		
 		ContentValues cv = new ContentValues();
 		cv.put(FEATURE_ID, featureItem.id);
 		cv.put(TITLE, featureItem.title);
@@ -145,13 +145,13 @@ public class MIT150DB {
 		cv.put(PHOTO_URL, featureItem.photo_url);
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-		boolean success = featureItem.bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
 		cv.put(BITMAP, baos.toByteArray());
 		
 		cv.put(DIM_H, featureItem.dim.height);
 		cv.put(DIM_W, featureItem.dim.width);
 		
-		long row = db.insert(FEATURES_TABLE, null, cv);
+		
 		//db.update(FEATURES_TABLE, cv, MIT150FeatureItem._ID+"="+featureItem.row_id, null);
 	}
 	
@@ -160,6 +160,7 @@ public class MIT150DB {
 	/*********************************************************************/
 	public synchronized void saveMoreThumbnail(MIT150MoreItem moreItem) {
 		
+		@SuppressWarnings("unused")
 		boolean update;
 
 		//assert(moreItem.bd!=null);
@@ -179,9 +180,9 @@ public class MIT150DB {
 		
 		ContentValues cv = new ContentValues();
 		cv.put(URL, moreItem.url);
-		Bitmap bm = moreItem.bd.getBitmap();
+		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-		boolean success = bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
 
 		try {
 			baos.flush();
@@ -190,12 +191,12 @@ public class MIT150DB {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+        /*		
 		if (update) {
 			int rows = db.update(MORE_THUMBS_TABLE, cv, WHERE_URL, where_args);
 		} else {
 			long row_id = db.insert(MORE_THUMBS_TABLE, null, cv);
-		}
+		} */
 	}
 	
 	void retrieveMoreThumb(MIT150MoreItem item) {
@@ -209,7 +210,7 @@ public class MIT150DB {
 		}
 		cursor.moveToFirst();
 		
-		int url_index = cursor.getColumnIndex(URL);
+
 		int bitmap_index = cursor.getColumnIndex(BITMAP);
 		
 		Bitmap bm;

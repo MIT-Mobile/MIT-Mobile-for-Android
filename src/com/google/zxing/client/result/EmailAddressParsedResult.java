@@ -50,7 +50,8 @@ public final class EmailAddressParsedResult extends ParsedResult {
     return mailtoURI;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     StringBuffer result = new StringBuffer(30);
     maybeAppend(emailAddress, result);
     maybeAppend(subject, result);

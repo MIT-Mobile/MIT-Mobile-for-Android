@@ -67,7 +67,8 @@ public final class URIParsedResult extends ParsedResult {
     return at >= hostStart && at < hostEnd;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     StringBuffer result = new StringBuffer(30);
     maybeAppend(title, result);
     maybeAppend(uri, result);

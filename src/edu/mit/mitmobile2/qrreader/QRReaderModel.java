@@ -84,6 +84,7 @@ public class QRReaderModel {
 		public String payload;
 		
 		
+		@Override
 		public boolean equals(Object o) {
 			QRAction item = (QRAction) o;
 			if (title.equals(item.title) && payload.equals(item.payload)) {

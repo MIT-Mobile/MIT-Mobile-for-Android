@@ -55,7 +55,8 @@ final class DecodeThread extends Thread {
 
     // The prefs can't change while the thread is running, so pick them up once here.
     if (decodeFormats == null || decodeFormats.isEmpty()) {
-      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+      @SuppressWarnings("unused")
+	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
       decodeFormats = new Vector<BarcodeFormat>();
       
         decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);

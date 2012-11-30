@@ -28,11 +28,12 @@ import com.google.zxing.common.BitMatrix;
  */
 public final class ITFWriter extends UPCEANWriter {
 
-  public BitMatrix encode(String contents,
+  @Override
+public BitMatrix encode(String contents,
                           BarcodeFormat format,
                           int width,
                           int height,
-                          Hashtable hints) throws WriterException {
+                          @SuppressWarnings("rawtypes") Hashtable hints) throws WriterException {
     if (format != BarcodeFormat.ITF) {
       throw new IllegalArgumentException("Can only encode ITF, but got " + format);
     }
@@ -40,7 +41,8 @@ public final class ITFWriter extends UPCEANWriter {
     return super.encode(contents, format, width, height, hints);
   }
 
-  public byte[] encode(String contents) {
+  @Override
+public byte[] encode(String contents) {
     int length = contents.length();
     if (length > 80) {
       throw new IllegalArgumentException(

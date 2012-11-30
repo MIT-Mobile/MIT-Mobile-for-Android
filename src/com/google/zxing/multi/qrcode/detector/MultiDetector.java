@@ -41,7 +41,8 @@ public final class MultiDetector extends Detector {
     super(image);
   }
 
-  public DetectorResult[] detectMulti(Hashtable hints) throws NotFoundException {
+  @SuppressWarnings("unchecked")
+public DetectorResult[] detectMulti(@SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException {
     BitMatrix image = getImage();
     MultiFinderPatternFinder finder = new MultiFinderPatternFinder(image);
     FinderPatternInfo[] info = finder.findMulti(hints);
@@ -50,7 +51,8 @@ public final class MultiDetector extends Detector {
       throw NotFoundException.getNotFoundInstance();
     }
 
-    Vector result = new Vector();
+    @SuppressWarnings("rawtypes")
+	Vector result = new Vector();
     for (int i = 0; i < info.length; i++) {
       try {
         result.addElement(processFinderPatternInfo(info[i]));

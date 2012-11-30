@@ -45,7 +45,8 @@ public class GlobalHistogramBinarizer extends Binarizer {
   }
 
   // Applies simple sharpening to the row data to improve performance of the 1D Readers.
-  public BitArray getBlackRow(int y, BitArray row) throws NotFoundException {
+  @Override
+public BitArray getBlackRow(int y, BitArray row) throws NotFoundException {
     LuminanceSource source = getLuminanceSource();
     int width = source.getWidth();
     if (row == null || row.getSize() < width) {
@@ -79,7 +80,8 @@ public class GlobalHistogramBinarizer extends Binarizer {
   }
 
   // Does not sharpen the data, as this call is intended to only be used by 2D Readers.
-  public BitMatrix getBlackMatrix() throws NotFoundException {
+  @Override
+public BitMatrix getBlackMatrix() throws NotFoundException {
     LuminanceSource source = getLuminanceSource();
     int width = source.getWidth();
     int height = source.getHeight();
@@ -117,7 +119,8 @@ public class GlobalHistogramBinarizer extends Binarizer {
     return matrix;
   }
 
-  public Binarizer createBinarizer(LuminanceSource source) {
+  @Override
+public Binarizer createBinarizer(LuminanceSource source) {
     return new GlobalHistogramBinarizer(source);
   }
 

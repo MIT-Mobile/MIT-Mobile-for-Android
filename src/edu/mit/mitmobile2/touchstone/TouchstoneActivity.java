@@ -54,8 +54,9 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 	AlertDialog alert;
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstoneActivity";
+	@SuppressWarnings("unused")
 	private static final int MENU_INFO = 0;
-	private static final int MENU_PREFS = 1;
+	
 	
 	Bundle extras;
 	
@@ -67,7 +68,8 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        Handler uiHandler = new Handler();
+        @SuppressWarnings("unused")
+		Handler uiHandler = new Handler();
 
         createViews(); 
 	}
@@ -120,7 +122,8 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 		builder.setMessage("Please enter a valid username and password.")
 		       .setCancelable(false)
 		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
+		           @Override
+				public void onClick(DialogInterface dialog, int id) {
 		                Log.d(TAG,"finish");
 		           }
 		       });
@@ -138,7 +141,8 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 		
 	}
 	
-    private Handler loginUiHandler = new Handler() {
+    @SuppressWarnings("unused")
+	private Handler loginUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
         	Log.d(TAG,"handleMessage");
@@ -147,8 +151,7 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
-            	UserIdentity identity = (UserIdentity)msg.obj;
+                UserIdentity identity = (UserIdentity)msg.obj;
                 Log.d(TAG,"identity = " + identity.getUsername());
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {
@@ -211,6 +214,7 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 		}
 	}
 	
+	@Override
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 	}
 

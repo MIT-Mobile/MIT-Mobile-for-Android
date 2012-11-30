@@ -50,13 +50,16 @@ public final class GenericMultipleBarcodeReader implements MultipleBarcodeReader
     this.delegate = delegate;
   }
 
-  public Result[] decodeMultiple(BinaryBitmap image) throws NotFoundException {
+  @Override
+public Result[] decodeMultiple(BinaryBitmap image) throws NotFoundException {
     return decodeMultiple(image, null);
   }
 
-  public Result[] decodeMultiple(BinaryBitmap image, Hashtable hints)
+  @Override
+public Result[] decodeMultiple(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException {
-    Vector results = new Vector();
+    @SuppressWarnings("rawtypes")
+	Vector results = new Vector();
     doDecodeMultiple(image, hints, results, 0, 0);
     if (results.isEmpty()) {
       throw NotFoundException.getNotFoundInstance();
@@ -69,9 +72,10 @@ public final class GenericMultipleBarcodeReader implements MultipleBarcodeReader
     return resultArray;
   }
 
-  private void doDecodeMultiple(BinaryBitmap image,
-                                Hashtable hints,
-                                Vector results,
+  @SuppressWarnings("unchecked")
+private void doDecodeMultiple(BinaryBitmap image,
+                                @SuppressWarnings("rawtypes") Hashtable hints,
+                                @SuppressWarnings("rawtypes") Vector results,
                                 int xOffset,
                                 int yOffset) {
     Result result;

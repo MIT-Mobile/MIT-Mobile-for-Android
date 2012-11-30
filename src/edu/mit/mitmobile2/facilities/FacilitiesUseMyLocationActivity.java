@@ -53,6 +53,7 @@ public class FacilitiesUseMyLocationActivity extends NewModuleActivity {
 		uiHandler = new Handler();
 		uiHandler.postDelayed(
 			new Runnable() {
+				@Override
 				public void run() {
 					loadLocations();
 				}
@@ -132,6 +133,7 @@ public class FacilitiesUseMyLocationActivity extends NewModuleActivity {
 			}
 			
 			new Thread() {
+				@Override
 				public void run() {					
 					FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 					List<LocationRecord> allLocations = db.getLocationsNearLocation(mLocation);
@@ -187,6 +189,7 @@ public class FacilitiesUseMyLocationActivity extends NewModuleActivity {
 	public class MyLocationListener implements LocationListener {
 
 
+			@Override
 			public void onLocationChanged(Location loc){
 				loc.getLatitude();
 				loc.getLongitude();

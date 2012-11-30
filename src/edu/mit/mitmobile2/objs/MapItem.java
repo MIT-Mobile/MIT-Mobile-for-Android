@@ -48,6 +48,7 @@ public class MapItem implements Parcelable, Serializable {
 	
 	public String query = "";
 	
+	@Override
 	public String toString() {
 		return name;
 	}

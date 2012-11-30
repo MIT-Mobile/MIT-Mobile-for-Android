@@ -125,6 +125,7 @@ public class MITStopsSliderActivity extends SliderListNewModuleActivity implemen
 		curView = (StopsAsyncView) getScreen(newPosition);
 	}
 	
+	@Override
 	protected List<MITMenuItem> getPrimaryMenuItems() {
 	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
 	    items.add(new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map));

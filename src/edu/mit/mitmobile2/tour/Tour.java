@@ -464,6 +464,7 @@ public class Tour {
 			return mTitle;
 		}
 		
+		@Override
 		public String getHtml() {
 			return mHtml;
 		}

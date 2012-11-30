@@ -30,7 +30,6 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.shuttles.ShuttleRouteArrayAdapter.SectionListItemView;
@@ -143,6 +142,7 @@ public class ShuttlesActivity extends NewModuleActivity {
 		List<RouteItem> nightRoutes = ShuttleModel.getRoutes(true);
 		
 		SectionListItemView itemBuilder = new SectionListItemView() {
+			@Override
 			public View getView(Object item, View convertView, ViewGroup parent) {
 				View v = convertView;
 				if (v == null) {

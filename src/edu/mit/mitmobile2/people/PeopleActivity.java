@@ -18,7 +18,6 @@ import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.emergency.EmergencyContactsActivity;
 import edu.mit.mitmobile2.objs.PersonItem;
@@ -112,6 +111,7 @@ public class PeopleActivity extends NewModuleActivity {
 	
 	private static String MENU_CLEAR_RECENTS = "clear_recents";
 	
+	@Override
 	protected List<MITMenuItem> getSecondaryMenuItems() {
 		return Arrays.asList(
 			new MITMenuItem(MENU_CLEAR_RECENTS, "Clear Recents")

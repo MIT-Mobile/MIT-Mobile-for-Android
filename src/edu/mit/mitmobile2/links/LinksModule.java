@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
@@ -41,6 +40,7 @@ public class LinksModule extends NewModule {
 		return R.drawable.home_links;
 	}
 
+	@Override
 	public void handleUrl(Context context, String url) {
 		if (url.startsWith("mitmobile://links/")) {
 			Intent i = new Intent(context, LinksActivity.class);

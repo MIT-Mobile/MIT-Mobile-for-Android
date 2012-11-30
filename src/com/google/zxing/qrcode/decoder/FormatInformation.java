@@ -155,11 +155,13 @@ final class FormatInformation {
     return dataMask;
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return (errorCorrectionLevel.ordinal() << 3) | (int) dataMask;
   }
 
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (!(o instanceof FormatInformation)) {
       return false;
     }

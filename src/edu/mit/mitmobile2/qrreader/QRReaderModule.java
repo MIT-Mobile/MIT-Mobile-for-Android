@@ -78,6 +78,7 @@ public class QRReaderModule extends NewModule {
 		return mModel;
 	}
 	
+	@Override
 	public void handleUrl(Context context, String url) {
 		if (url.startsWith("mitmobile://qrreader/")) {
 			Intent i = new Intent(context, QRReaderMainActivity.class);

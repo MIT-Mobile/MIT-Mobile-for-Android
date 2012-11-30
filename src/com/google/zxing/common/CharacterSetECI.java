@@ -16,6 +16,7 @@
 
 package com.google.zxing.common;
 
+import android.annotation.SuppressLint;
 import java.util.Hashtable;
 
 /**
@@ -26,10 +27,13 @@ import java.util.Hashtable;
  */
 public final class CharacterSetECI extends ECI {
 
-  private static Hashtable VALUE_TO_ECI;
-  private static Hashtable NAME_TO_ECI;
+  @SuppressWarnings("rawtypes")
+private static Hashtable VALUE_TO_ECI;
+  @SuppressWarnings("rawtypes")
+private static Hashtable NAME_TO_ECI;
 
-  private static void initialize() {
+  @SuppressWarnings("rawtypes")
+private static void initialize() {
     VALUE_TO_ECI = new Hashtable(29);
     NAME_TO_ECI = new Hashtable(29);
     // TODO figure out if these values are even right!
@@ -65,13 +69,17 @@ public final class CharacterSetECI extends ECI {
     return encodingName;
   }
 
-  private static void addCharacterSet(int value, String encodingName) {
+  @SuppressLint("UseValueOf")
+@SuppressWarnings("unchecked")
+private static void addCharacterSet(int value, String encodingName) {
     CharacterSetECI eci = new CharacterSetECI(value, encodingName);
     VALUE_TO_ECI.put(new Integer(value), eci); // can't use valueOf
     NAME_TO_ECI.put(encodingName, eci);
   }
 
-  private static void addCharacterSet(int value, String[] encodingNames) {
+  @SuppressLint("UseValueOf")
+@SuppressWarnings("unchecked")
+private static void addCharacterSet(int value, String[] encodingNames) {
     CharacterSetECI eci = new CharacterSetECI(value, encodingNames[0]);
     VALUE_TO_ECI.put(new Integer(value), eci); // can't use valueOf
     for (int i = 0; i < encodingNames.length; i++) {
@@ -85,7 +93,8 @@ public final class CharacterSetECI extends ECI {
    *   unsupported
    * @throws IllegalArgumentException if ECI value is invalid
    */
-  public static CharacterSetECI getCharacterSetECIByValue(int value) {
+  @SuppressLint("UseValueOf")
+public static CharacterSetECI getCharacterSetECIByValue(int value) {
     if (VALUE_TO_ECI == null) {
       initialize();
     }

@@ -33,6 +33,7 @@ public class SimpleSpinnerAdapter extends ArrayAdapter<String> {
 		mValues = values;
 	}
 	
+	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		if(position == 0) {
 			if(mEmptyView == null) {

@@ -61,8 +61,10 @@ final class BizcardResultParser extends AbstractDoCoMoResultParser {
                                        null);
   }
 
-  private static String[] buildPhoneNumbers(String number1, String number2, String number3) {
-    Vector numbers = new Vector(3);
+  @SuppressWarnings("unchecked")
+private static String[] buildPhoneNumbers(String number1, String number2, String number3) {
+    @SuppressWarnings("rawtypes")
+	Vector numbers = new Vector(3);
     if (number1 != null) {
       numbers.addElement(number1);
     }

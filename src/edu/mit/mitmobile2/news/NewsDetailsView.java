@@ -13,15 +13,8 @@ import android.os.Handler;
 import android.webkit.WebChromeClient;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.os.Handler;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-
-import android.webkit.WebChromeClient.CustomViewCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.JsResult;
@@ -129,7 +122,9 @@ public class NewsDetailsView extends WebView {
 	    return stream.toString();
 	}
 	
+	@SuppressWarnings("unused")
 	private static class PictureFailedToLoadHandler extends WebViewClient {
+		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 			view.setVisibility(View.GONE);
 		}
@@ -249,7 +244,8 @@ public class NewsDetailsView extends WebView {
  
         public void clickShareButton() {
             mHandler.post(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
         			String url  = "http://" + Global.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(mNewsItem.story_id);
         			CommonActions.shareCustomContent(mModuleActivity, mNewsItem.title, mNewsItem.description, url);
                 }
@@ -259,7 +255,8 @@ public class NewsDetailsView extends WebView {
 
         public void clickViewImage() {
             mHandler.post(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
 					NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
 
                 }

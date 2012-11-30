@@ -13,6 +13,7 @@ public abstract class ActionRow extends FrameLayout {
 	private OnClickListener mOnClickListener;
 
 	// TEST
+	@SuppressWarnings("unused")
 	private int layoutId;
 	
 	protected abstract int getLayoutId();

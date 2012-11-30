@@ -85,6 +85,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 		
 	}
 	
+	@SuppressWarnings("unused")
 	private void initSecondaryTitleBar() {
 		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
 		mSecondaryTitleBar.setTitle(newsCategoryTitle());
@@ -104,6 +105,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 					mNewsModel.setStoryBookmarkStatus(newsItem, !mNewsModel.isBookmarked(newsItem));
 					
 				} else if(optionId == MENU_SHARE) {
+					@SuppressWarnings("static-access")
 					String url  = "http://" + app.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(newsItem.story_id);
 					CommonActions.shareCustomContent(NewsDetailsActivity.this, newsItem.title, newsItem.description, url);
 				}

@@ -37,7 +37,8 @@ final class AI01320xDecoder extends AI013x0xDecoder {
     super(information);
   }
 
-  protected void addWeightCode(StringBuffer buf, int weight) {
+  @Override
+protected void addWeightCode(StringBuffer buf, int weight) {
     if (weight < 10000) {
       buf.append("(3202)");
     } else {
@@ -45,7 +46,8 @@ final class AI01320xDecoder extends AI013x0xDecoder {
     }
   }
 
-  protected int checkWeight(int weight) {
+  @Override
+protected int checkWeight(int weight) {
     if(weight < 10000) {
       return weight;
     }

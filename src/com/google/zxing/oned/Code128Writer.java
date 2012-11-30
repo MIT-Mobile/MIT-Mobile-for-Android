@@ -28,18 +28,20 @@ import com.google.zxing.common.BitMatrix;
  */
 public final class Code128Writer extends UPCEANWriter {
 
-    public BitMatrix encode(String contents,
+    @Override
+	public BitMatrix encode(String contents,
                             BarcodeFormat format,
                             int width,
                             int height,
-                            Hashtable hints) throws WriterException {
+                            @SuppressWarnings("rawtypes") Hashtable hints) throws WriterException {
       if (format != BarcodeFormat.CODE_128) {
         throw new IllegalArgumentException("Can only encode CODE_128, but got " + format);
       }
       return super.encode(contents, format, width, height, hints);
     }
 
-    public byte[] encode(String contents) {
+    @Override
+	public byte[] encode(String contents) {
       int length = contents.length();
       if (length > 80) {
         throw new IllegalArgumentException(

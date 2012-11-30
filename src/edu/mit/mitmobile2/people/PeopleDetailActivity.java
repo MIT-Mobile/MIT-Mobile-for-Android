@@ -135,6 +135,7 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 		}
 	}
 	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode != 0) {
 			Cursor result = getContentResolver().query(data.getData(), new String[] {ContactsContract.Contacts._ID}, null, null, null);

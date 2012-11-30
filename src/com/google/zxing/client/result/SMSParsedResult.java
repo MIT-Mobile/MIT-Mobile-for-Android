@@ -93,7 +93,8 @@ public final class SMSParsedResult extends ParsedResult {
     return body;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     StringBuffer result = new StringBuffer(100);
     maybeAppend(numbers, result);
     maybeAppend(subject, result);

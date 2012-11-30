@@ -23,7 +23,8 @@ import com.google.zxing.NotFoundException;
  */
 public final class DefaultGridSampler extends GridSampler {
 
-  public BitMatrix sampleGrid(BitMatrix image,
+  @Override
+public BitMatrix sampleGrid(BitMatrix image,
                               int dimension,
                               float p1ToX, float p1ToY,
                               float p2ToX, float p2ToY,
@@ -41,7 +42,8 @@ public final class DefaultGridSampler extends GridSampler {
     return sampleGrid(image, dimension, transform);
   }
 
-  public BitMatrix sampleGrid(BitMatrix image,
+  @Override
+public BitMatrix sampleGrid(BitMatrix image,
                               int dimension,
                               PerspectiveTransform transform) throws NotFoundException {
     BitMatrix bits = new BitMatrix(dimension);

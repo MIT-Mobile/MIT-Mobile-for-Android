@@ -73,7 +73,8 @@ public class LibraryFineDetail extends ModuleActivity{
 
     }
 
-    private void doSearch(String barcode) {
+    @SuppressWarnings("unused")
+	private void doSearch(String barcode) {
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();

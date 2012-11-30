@@ -7,7 +7,7 @@ import edu.mit.mitmobile2.facilities.FacilitiesData;
 
 public class SharedData {
 
-	private Map data = new HashMap();
+	private Map<String, FacilitiesData> data = new HashMap<String, FacilitiesData>();
 	
 	
 	public SharedData() {

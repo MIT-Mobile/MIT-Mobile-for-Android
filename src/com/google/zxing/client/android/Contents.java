@@ -24,6 +24,7 @@ import android.provider.Contacts;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
+@SuppressWarnings("deprecation")
 public final class Contents {
   private Contents() {
   }

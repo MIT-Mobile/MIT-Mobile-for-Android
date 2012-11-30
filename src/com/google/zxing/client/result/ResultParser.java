@@ -232,7 +232,8 @@ public abstract class ResultParser {
     return true;
   }
 
-  static Hashtable parseNameValuePairs(String uri) {
+  @SuppressWarnings("rawtypes")
+static Hashtable parseNameValuePairs(String uri) {
     int paramStart = uri.indexOf('?');
     if (paramStart < 0) {
       return null;
@@ -248,7 +249,8 @@ public abstract class ResultParser {
     return result;
   }
 
-  private static void appendKeyValue(String uri, int paramStart, int paramEnd, Hashtable result) {
+  @SuppressWarnings("unchecked")
+private static void appendKeyValue(String uri, int paramStart, int paramEnd, @SuppressWarnings("rawtypes") Hashtable result) {
     int separator = uri.indexOf('=', paramStart);
     if (separator >= 0) {
       // key = value
@@ -260,7 +262,8 @@ public abstract class ResultParser {
     // Can't put key, null into a hashtable
   }
 
-  static String[] matchPrefixedField(String prefix, String rawText, char endChar, boolean trim) {
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+static String[] matchPrefixedField(String prefix, String rawText, char endChar, boolean trim) {
     Vector matches = null;
     int i = 0;
     int max = rawText.length();
@@ -307,7 +310,7 @@ public abstract class ResultParser {
     return matches == null ? null : matches[0];
   }
 
-  static String[] toStringArray(Vector strings) {
+  static String[] toStringArray(@SuppressWarnings("rawtypes") Vector strings) {
     int size = strings.size();
     String[] result = new String[size];
     for (int j = 0; j < size; j++) {

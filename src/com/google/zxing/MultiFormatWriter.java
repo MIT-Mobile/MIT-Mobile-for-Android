@@ -34,14 +34,16 @@ import java.util.Hashtable;
  */
 public final class MultiFormatWriter implements Writer {
 
-  public BitMatrix encode(String contents, BarcodeFormat format, int width,
+  @Override
+public BitMatrix encode(String contents, BarcodeFormat format, int width,
       int height) throws WriterException {
 
     return encode(contents, format, width, height, null);
   }
 
-  public BitMatrix encode(String contents, BarcodeFormat format, int width, int height,
-      Hashtable hints) throws WriterException {
+  @Override
+public BitMatrix encode(String contents, BarcodeFormat format, int width, int height,
+      @SuppressWarnings("rawtypes") Hashtable hints) throws WriterException {
 
     Writer writer;
     if (format == BarcodeFormat.EAN_8) {

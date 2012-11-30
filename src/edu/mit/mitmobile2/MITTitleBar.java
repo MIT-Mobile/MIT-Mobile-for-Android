@@ -178,6 +178,7 @@ public class MITTitleBar extends LinearLayout {
 		return view;
 	}
 	
+	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		int availableWidth = MeasureSpec.getSize(widthMeasureSpec);

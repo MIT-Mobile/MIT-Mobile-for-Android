@@ -11,8 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.nodes.Document;
@@ -76,6 +74,7 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 	/**
 	 * @throws IOException 
 	 * @throws ClientProtocolException **************************************************/
+	@SuppressWarnings("static-access")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"onCreate()");
@@ -86,7 +85,7 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
         mitClient = new MITClient(mContext);
 
         // Create local HTTP context
-        HttpContext localContext = new BasicHttpContext();
+        // HttpContext localContext = new BasicHttpContext();
         
         // get user name and password from preferences file
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -144,6 +143,7 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
         }
 	}
 		
+	@SuppressWarnings("unused")
 	private void createViews() throws ClientProtocolException, IOException {
 		Log.d(TAG,"createViews()");
 		
@@ -159,6 +159,7 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 		return false;
 	}
 
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_INFO:
@@ -206,8 +207,11 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 		}
 	}
 	
+	@Override
+	@SuppressWarnings("static-access")
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		Context mContext = this;
+		
+		@SuppressWarnings("unused")
 		Handler uiHandler = new Handler();
 		if (key.equalsIgnoreCase("PREF_TOUCHSTONE_USERNAME")) {
 			mitClient.setUser(prefs.getString("PREF_TOUCHSTONE_USERNAME", null));

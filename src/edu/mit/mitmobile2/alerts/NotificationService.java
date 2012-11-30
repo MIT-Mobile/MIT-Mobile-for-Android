@@ -48,7 +48,8 @@ public class NotificationService extends Service {
 	
 	/******************************************************************/
     Runnable mTask = new Runnable() {
-        public void run() {
+        @Override
+		public void run() {
         	
     		if (i==null) return;
     		
