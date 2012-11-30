@@ -5,40 +5,68 @@
     <loadproperties srcFile="project.properties" />
     <loadproperties srcFile="local.properties" />
     <import file="${sdk.dir}/tools/ant/build.xml" />
-    
-
+	
     <available file=".git" type="dir" property="git.present"/>
     <target name="git.revision" description="Store git revision in ${repository.version}" if="git.present">
-        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
+    
+    	<!-- Get Git properties on UNIX machines -->
+    	<!-- ################################### -->
+    	<!-- ################################### -->
+    	<!-- Get git describe on UNIX machines -->
+        <exec executable="git" osfamily="unix" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
             <arg value="describe"/>
-            <arg value="--tags"/>
-            <arg value="--always"/>
-            <arg value="HEAD"/>
         </exec>
+        
+        <!-- Get git SHA1 on UNIX machines -->
+        <exec executable="git" osfamily="unix" outputproperty="git.hash" failifexecutionfails="false" errorproperty="">
+            <arg value="log" />
+        	<arg value="-1" />
+        	<arg value="--pretty=format:%H" />
+        </exec>
+        
+        <!-- Get Git properties on WINDOWS machines -->
+    	<!-- ################################### -->
+    	<!-- ################################### -->
+        <!-- Get Git describe on WINDOWS machines -->
+        <exec executable="git.cmd" osfamily="windows" outputproperty="git.revision" failifexecutionfails="false" errorproperty="git.error">
+        	<arg value="describe" />
+    	</exec>
+
+        <!-- Get Git SHA1 on WINDOWS machines -->
+        <exec executable="git.cmd" osfamily="windows" outputproperty="git.hash" failifexecutionfails="false" errorproperty="git.error">
+        	<!-- <arg value="log -1 -pretty=format:%H" /> -->
+        	<arg value="log" />
+        	<arg value="-1" />
+        	<arg value="--pretty=format:%H" />
+        </exec>
+        
+        
+        
+        <!-- Check if git describe has been stored into property git.revision -->
         <condition property="repository.version" value="${git.revision}" else="unknown">
             <and>
                 <isset property="git.revision"/>
                 <length string="${git.revision}" trim="yes" length="0" when="greater"/>
             </and>
         </condition>
-        <echo message="The current git description :: ${repository.version}" />
-
-        <exec executable="git" outputproperty="git.hash" failifexecutionfails="false" errorproperty="">
-            <arg value="log"/>
-            <arg value="-1" />
-            <arg value="--format=%H" />
-        </exec>
+        
+        
+        <!-- Check if git SHA1 has been stored into property git.hash -->
         <condition property="repository.hash" value="${git.hash}" else="unknown">
             <and>
                 <isset property="git.hash" />
                 <length string="${git.hash}" trim="yes" length="0" when="greater" />
             </and>
         </condition>
-        <echo message="The current git hash :: ${repository.hash}" />
 
+
+		<echo message="The current git description :: ${repository.version}" />
+		<echo message="The most recent git hash :: ${repository.hash}" />
     </target>
 
 
+
+	<!-- Write ant properties into Config.java -->
     <target name="config" depends="git.revision" >
         <property name="config-target-path" value="${source.dir}/edu/mit/mitmobile2/about" />
         <!-- Copy file to new target location, replace keys with new values -->
