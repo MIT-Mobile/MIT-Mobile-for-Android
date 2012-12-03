@@ -22,7 +22,6 @@ import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.about.Config;
 import edu.mit.mitmobile2.classes.CoursesNoticeListener;
 import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
@@ -69,7 +68,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		if (sRegistrationID == null) {
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 			registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0)); // boilerplate
-			registrationIntent.putExtra("sender", BuildSettings.C2DM_SENDER);
+			registrationIntent.putExtra("sender", Config.C2DM_SENDER);
 			context.startService(registrationIntent);	
 		}
 

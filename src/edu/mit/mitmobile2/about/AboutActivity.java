@@ -78,14 +78,6 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 		buildDateTV.setVisibility(View.GONE);
 		
 		TextView buildSourceTV = (TextView) findViewById(R.id.aboutBuildSource);
-		String buildSourceText;
-		if(BuildSettings.BUILD_SOURCE.equals("repository")) {
-			buildSourceText = BuildSettings.TAG;
-		} else {
-			buildSourceText = BuildSettings.BUILD_SOURCE;
-		}
-		buildSourceTV.setText("Built from: " + buildSourceText);
-		buildSourceTV.setVisibility(View.GONE);
 		
 		TextView buildTagTV = (TextView) findViewById(R.id.aboutBuildTag);
 		buildTagTV.setVisibility(View.GONE);

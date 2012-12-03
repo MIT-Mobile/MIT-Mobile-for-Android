@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
-import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.objs.CourseItem;
 import edu.mit.mitmobile2.objs.CourseItem.Announcement;
 import edu.mit.mitmobile2.objs.CourseItem.CourseTime;

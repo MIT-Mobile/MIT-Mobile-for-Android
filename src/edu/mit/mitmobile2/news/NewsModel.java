@@ -20,15 +20,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import edu.mit.mitmobile2.ConnectionWrapper;
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
-import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
-import edu.mit.mitmobile2.FixedCache;
-import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.objs.SearchResults;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -39,6 +30,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+import edu.mit.mitmobile2.ConnectionWrapper;
+import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
+import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
+import edu.mit.mitmobile2.FixedCache;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.about.Config;
+import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.objs.SearchResults;
 
 public class NewsModel {
 	// categorys
@@ -74,7 +73,7 @@ public class NewsModel {
 	private NewsDB mNewsDB;
 	private Context mContext;
 	private SharedPreferences mSharedPreferences;
-	static String NEWS_PATH = "/" + BuildSettings.NEWS_OFFICE_PATH;
+	static String NEWS_PATH = "/" + Config.NEWS_OFFICE_PATH;
 	
 	private static HashMap<String, SearchResults<NewsItem>> searchCache = new FixedCache<SearchResults<NewsItem>>(10);
 	

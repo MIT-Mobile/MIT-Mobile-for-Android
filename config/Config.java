@@ -13,4 +13,6 @@ public class Config
 	public final static String MOBILE_WEB_DOMAIN = "mobile-dev.mit.edu";
 	public final static String release_project_name = "edu.mit.mitmobile2";
     public final static String source_project_name = "edu.mit.mitmobile2";
+    public final static String C2DM_SENDER = "";
+    public final static String NEWS_OFFICE_PATH = "/newsoffice";
 }
