@@ -91,6 +91,11 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		
 		mHomePreferences = this.getSharedPreferences("home_prefs", MODE_PRIVATE);
 		
+		String url = getIntent().getDataString();
+		if (url != null && url.startsWith("mitmobile://")) {
+			CommonActions.doAction(this, url);
+			finish();
+		}		
 	}
 	
 	@Override
