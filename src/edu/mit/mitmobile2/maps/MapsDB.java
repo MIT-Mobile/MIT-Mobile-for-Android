@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapsDB {
@@ -58,8 +59,10 @@ public class MapsDB {
 		mMapsDBHelper = new MapsDatabaseHelper(context); 
 	}
 	private String[] whereMapIdArgs(MapItem MapItem) {
-		return new String[] {MapItem.id};
+		//return new String[] {MapItem.id};
+		return new String[]{""};
 	}
+	
 	private String[] whereArgs(MapItem MapItem) {
 		return new String[] {Long.toString(MapItem.sql_id)};
 	}
@@ -90,21 +93,22 @@ public class MapsDB {
 		SQLiteDatabase db = mMapsDBHelper.getWritableDatabase();
 		
 		ContentValues mapValues = new ContentValues();
-		mapValues.put(MAP_ID, mi.id);
-		mapValues.put(NAME, mi.name);
-		mapValues.put(DISPLAY_NAME, mi.displayName);
-		mapValues.put(SNIPPETS, mi.snippets);
-		mapValues.put(STREET, mi.street);
-		mapValues.put(FLOORPLANS, mi.floorplans);
-		mapValues.put(BLDGIMG, mi.bldgimg);
-		mapValues.put(VIEWANGLE, mi.viewangle);
-		mapValues.put(BLDGNUM, mi.bldgnum);
-		mapValues.put(LONG_WGS84, mi.mapPoints.get(0).long_wgs84);
-		mapValues.put(LAT_WGS84, mi.mapPoints.get(0).lat_wgs84);
+		mapValues.put(MAP_ID, (String)mi.getItemData().get("id"));
+		mapValues.put(NAME, (String)mi.getItemData().get("name"));
+		mapValues.put(DISPLAY_NAME, (String)mi.getItemData().get("displayName"));
+		mapValues.put(SNIPPETS, (String)mi.getItemData().get("snippets"));
+		mapValues.put(STREET, (String)mi.getItemData().get("street"));
+		mapValues.put(FLOORPLANS, (String)mi.getItemData().get("floorplans"));
+		mapValues.put(BLDGIMG, (String)mi.getItemData().get("bldgimg"));
+		mapValues.put(VIEWANGLE, (String)mi.getItemData().get("viewangle"));
+		mapValues.put(BLDGNUM, (String)mi.getItemData().get("bldgnum"));
+		mapValues.put(LONG_WGS84, mi.getMapPoints().get(0).long_wgs84);
+		mapValues.put(LAT_WGS84, mi.getMapPoints().get(0).lat_wgs84);
 		
 		long row_id;
 		int rows;
-		if(miExists(mi.id)) {
+		String id = (String)mi.getItemData().get("id");
+		if(miExists(id)) {
 			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
 			Log.d("MapDB","MapDB: updating "+rows);
 		} else {
@@ -140,20 +144,20 @@ public class MapsDB {
 	}
 	/********************************************************************/
 	static MapItem retrieveMapItem(Cursor cursor) {
-		MapItem item = new MapItem();
+		BuildingMapItem item = new BuildingMapItem();
 		
 		item.sql_id = cursor.getLong(cursor.getColumnIndex(ID));
-		item.id = cursor.getString(cursor.getColumnIndex(MAP_ID));
-		item.name = cursor.getString(cursor.getColumnIndex(NAME));
-		item.displayName = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-		item.snippets = cursor.getString(cursor.getColumnIndex(SNIPPETS));
-		item.street = cursor.getString(cursor.getColumnIndex(STREET));
-		item.floorplans = cursor.getString(cursor.getColumnIndex(FLOORPLANS));
-		item.bldgnum = cursor.getString(cursor.getColumnIndex(BLDGNUM));
-		item.bldgimg = cursor.getString(cursor.getColumnIndex(BLDGIMG));
-		item.viewangle = cursor.getString(cursor.getColumnIndex(VIEWANGLE));
-		item.mapPoints.get(0).long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
-		item.mapPoints.get(0).lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
+		item.getItemData().put("id", cursor.getString(cursor.getColumnIndex(MAP_ID)));
+		item.getItemData().put("name",cursor.getString(cursor.getColumnIndex(NAME)));
+		item.getItemData().put("displayName",cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+		item.getItemData().put("snippets",cursor.getString(cursor.getColumnIndex(SNIPPETS)));
+		item.getItemData().put("street",cursor.getString(cursor.getColumnIndex(STREET)));
+		item.getItemData().put("floorplans",cursor.getString(cursor.getColumnIndex(FLOORPLANS)));
+		item.getItemData().put("bldgnum",cursor.getString(cursor.getColumnIndex(BLDGNUM)));
+		item.getItemData().put("bldgimg", cursor.getString(cursor.getColumnIndex(BLDGIMG)));
+		item.getItemData().put("viewangle",cursor.getString(cursor.getColumnIndex(VIEWANGLE)));
+		item.getMapPoints().get(0).long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
+		item.getMapPoints().get(0).lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
 		
 		return item;
 	}

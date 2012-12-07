@@ -1,122 +1,103 @@
 package edu.mit.mitmobile2.objs;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.Context;
+import android.graphics.Color;
+import android.view.View;
+import edu.mit.mitmobile2.R;
 
-public class MapItem implements Parcelable, Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+public abstract class MapItem {
 	
 	public MapItem() {
-		category = new ArrayList<String>();
-		contents = new ArrayList<String>();
+		mapItemClass = this.getClass().getName();
+		itemData = new HashMap();
 		mapPoints = new ArrayList<MapPoint>();
 		geometryType = MapItem.TYPE_POINT;
+		symbol = MapItem.DEFAULT_SYMBOL;
+		lineColor = MapItem.DEFAULT_LINE_COLOR;
+		lineWidth = MapItem.DEFAULT_LINE_WIDTH;
 	}
+		
+	public abstract View getCallout(Context mContext);
 	
+	protected String mapItemClass; // this is a hack to recreate MapItem objects that are extended from the abstract class
 	
-	//public double long_wgs84;
-	//public double lat_wgs84;
-	public int geometryType;
+	protected HashMap itemData;
+	
 	public static final int TYPE_POINT = 1;
 	public static final int TYPE_POLYLINE = 2;
 	public static final int TYPE_POLYGON = 3;
+
+	public static final int DEFAULT_SYMBOL = R.drawable.map_red_pin;
+	public static final int DEFAULT_LINE_COLOR = Color.RED; // 
+	public static final int DEFAULT_LINE_WIDTH = 1; //
+
+	protected ArrayList<MapPoint> mapPoints; 
 	
-	public ArrayList<MapPoint> mapPoints;
+	public int geometryType;
+	public int symbol; // symbol to show for points
+	public int lineColor; // color to use for polylines and polygons
+	public int lineWidth; // width tu use for polylines and polygons
 	
 	public long sql_id = -1;  // not to confuse with "id"
-	
-	public ArrayList<String> category;
-	public ArrayList<String> alts;
-	public ArrayList<String> contents;
-	public String name;
-	public String displayName;
-	public String id;
-	public String snippets;
-	public String street;
-	public String floorplans;
-	public String bldgimg;
-	public String viewangle;
-	public String bldgnum;
-	
-	public String query = "";
-	
-	@Override
-	public String toString() {
-		return name;
-	}
-	
-	public static final Parcelable.Creator<MapItem> CREATOR = new Parcelable.Creator<MapItem>() {
 
-		@Override
-		public MapItem createFromParcel(Parcel source) {
-			MapItem mapItem = new MapItem();
-			mapItem.readFromParcel(source);
-			return mapItem;
-		}
 
-		@Override
-		public MapItem[] newArray(int size) {
-			return new MapItem[size];
-		}
-	};
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+	public HashMap getItemData() {
+		return itemData;
 	}
 
-	@Override
-	public void writeToParcel(Parcel out, int flag) {
-		//out.writeDouble(long_wgs84);
-		//out.writeDouble(lat_wgs84);		
-		out.writeLong(sql_id);
-		out.writeList(category);
-		out.writeList(contents);
-		out.writeList(alts);
-		out.writeString(name);
-		out.writeString(displayName);
-		out.writeString(id);
-		out.writeString(snippets);
-		out.writeString(street);
-		out.writeString(floorplans);
-		out.writeString(bldgimg);
-		out.writeString(viewangle);
-		out.writeString(bldgnum);
-		out.writeString(query);
+	public void setItemData(HashMap itemData) {
+		this.itemData = itemData;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public void readFromParcel(Parcel in) {
-		//long_wgs84 = in.readDouble();
-		//lat_wgs84 = in.readDouble();
-		
-		sql_id = in.readLong();
-		
-		category = in.readArrayList(String.class.getClassLoader());
 
-		contents = in.readArrayList(String.class.getClassLoader());
-
-		alts = in.readArrayList(String.class.getClassLoader());
-		
-		name = in.readString();
-		displayName = in.readString();
-		id = in.readString();
-		snippets = in.readString();
-		street = in.readString();
-		floorplans = in.readString();
-		bldgimg = in.readString();
-		viewangle = in.readString();
-		bldgnum = in.readString();
-		
-		query = in.readString();
+	public ArrayList<MapPoint> getMapPoints() {
+		return mapPoints;
 	}
+
+	public void setMapPoints(ArrayList<MapPoint> mapPoints) {
+		this.mapPoints = mapPoints;
+	}
+
+	public int getGeometryType() {
+		return geometryType;
+	}
+
+	public void setGeometryType(int geometryType) {
+		this.geometryType = geometryType;
+	}
+
+	public int getLineColor() {
+		return lineColor;
+	}
+
+	public void setLineColor(int lineColor) {
+		this.lineColor = lineColor;
+	}
+
+	public int getLineWidth() {
+		return lineWidth;
+	}
+
+	public void setLineWidth(int lineWidth) {
+		this.lineWidth = lineWidth;
+	}
+
+	public String getMapItemClass() {
+		return mapItemClass;
+	}
+
+	public void setMapItemClass(String mapItemClass) {
+		this.mapItemClass = mapItemClass;
+	}
+
+	public int getSymbol() {
+		return symbol;
+	}
+
+	public void setSymbol(int symbol) {
+		this.symbol = symbol;
+	}
+
 }

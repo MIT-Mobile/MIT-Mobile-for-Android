@@ -204,7 +204,6 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Action");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
-			@Override
 			public void onClick(DialogInterface dialog, int item) {
 				Log.d(TAG,"item = " + item);
 				Intent i;
@@ -223,7 +222,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 					break;
 				case 2:
 					// Google
-					String uri = "geo:0,0?q="+curMapItem.name+"+near+"+curMapItem.street+",Cambridge,MA";
+					String uri = "geo:0,0?q="+(String)curMapItem.getItemData().get("name")+"+near+"+ (String)curMapItem.getItemData().get("street")+",Cambridge,MA";
 					i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
 					startActivity(i);
 					break;
@@ -246,7 +245,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 			Log.d(TAG,"menu_module_home");
 			if (results==null) return false;
 			Intent i = new Intent(this, MITMapActivity.class);
-			i.putParcelableArrayListExtra(MITMapActivity.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
+			i.putExtra(MITMapActivity.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
 			
 			startActivity(i);
 			return true;

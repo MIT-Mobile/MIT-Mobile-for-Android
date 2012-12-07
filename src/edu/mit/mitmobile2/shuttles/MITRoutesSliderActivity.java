@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.shuttles;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +17,8 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.maps.MapData;
+import edu.mit.mitmobile2.maps.RouteMapItem;
+import edu.mit.mitmobile2.maps.StopMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
@@ -132,19 +136,41 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 		//i.putExtra(MITMapActivity.KEY_SHUTTLE_STOPS, stops.toArray());
 		//i.putExtra(MITMapActivity.KEY_ROUTE, routeItem);
 
-		// convert routeItem to MapData object
+		// convert routeItem and stops to MapData object
 		MapData mapData = new MapData();
-		MapItem mapItem = new MapItem();
-		// create a polyline for all stops
-		mapItem.geometryType = MapItem.TYPE_POLYLINE;
+		RouteMapItem route = new RouteMapItem();
+		// create a polygon for route
+		// create shuttle pin + callout for each stop
+		route.setGeometryType(MapItem.TYPE_POLYGON);
 		for (int p = 0; p < routeItem.stops.size(); p++) {
 			Stops stop = routeItem.stops.get(p);
-			MapPoint mapPoint = new MapPoint(stop.lat, stop.lon);
-			mapItem.mapPoints.add(mapPoint);
+
+			// get a map point for the stop
+			MapPoint mapPoint = new MapPoint();
+			mapPoint.lat_wgs84 = Double.valueOf(stop.lat);
+			mapPoint.long_wgs84 = Double.valueOf(stop.lon);
+
+			// Create a map item to show an icon at the stop
+			StopMapItem stopItem = new StopMapItem();
+			stopItem.setGeometryType(MapItem.TYPE_POINT);
+			if (routeItem.isRunning) {
+				stopItem.symbol = R.drawable.shuttle;
+			}
+			else {
+				stopItem.symbol = R.drawable.shuttle_off;				
+			}	
+
+			stopItem.getItemData().put("displayName",stop.title);
+
+			stopItem.getMapPoints().add(mapPoint);
+
+			// add the map point to the route polygon
+			route.getMapPoints().add(mapPoint);
+			mapData.getMapItems().add(stopItem);
 		}
 
-		mapData.getMapItems().add(mapItem);
-		i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData);
+		mapData.getMapItems().add(route);
+		//i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData);
 		Log.d("ZZZ","launch map activity from MITRouteSliderActivity");
 		context.startActivity(i);
 	}

@@ -53,7 +53,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 	
 	public static void launchMapDetails(Context context, List<MapItem> mapItems, int position) {
 		Intent i = new Intent(context, MITMapDetailsSliderActivity.class);		
-		i.putParcelableArrayListExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+		i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
 		i.putExtra(KEY_POSITION, position);
 		context.startActivity(i);	
 	}
@@ -79,7 +79,9 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 
         mDB =  MapsDB.getInstance(this);
         
-        mapDetails = getIntent().getParcelableArrayListExtra(MAP_ITEMS_KEY);
+        extras = getIntent().getExtras();
+        mapDetails = (List<MapItem>) extras.get(MAP_ITEMS_KEY);
+        
         mStartPosition = getPositionValue();
         
 		createViews();
@@ -97,7 +99,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
     		
     		cv = new MapDetailsView(this,mi);
     		
-    		addScreen(cv, mi.name, "Map Detail");    		
+    		addScreen(cv, (String)mi.getItemData().get("name"), "Map Detail");    		
     	}
     
     	setPosition(mStartPosition);        
@@ -136,7 +138,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 			
 			// for more details look at
 			// http://developer.android.com/guide/appendix/g-app-intents.html
-			String uri = "geo:0,0?q=" + URLEncoder.encode(focusedMapItem.street+",Cambridge,MA"); 
+			String uri = "geo:0,0?q=" + URLEncoder.encode((String)focusedMapItem.getItemData().get("street") +",Cambridge,MA"); 
 			i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
 			startActivity(i);
 			return true;
@@ -151,7 +153,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 		mSelectedPosition = getPosition();
 		focusedMapItem = mapDetails.get(mSelectedPosition);
 		
-		MapItem databaseMapItem = mDB.retrieveMapItem(focusedMapItem.id);
+		MapItem databaseMapItem = mDB.retrieveMapItem((String)focusedMapItem.getItemData().get("id"));
 		
 		if (databaseMapItem==null) {
 			text_add_remove = TEXT_ADD;

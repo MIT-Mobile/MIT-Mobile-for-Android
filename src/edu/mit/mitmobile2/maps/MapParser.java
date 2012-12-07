@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.maps;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
 
@@ -72,10 +74,10 @@ public class MapParser {
 	
 		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 		try {
-		for(int i = 0; i < jArray.length(); i++) {
-			MapItem mapItem = parseMapItem(jArray.getJSONObject(i));
-			mapItems.add(mapItem);
-		}
+			for(int i = 0; i < jArray.length(); i++) {
+				MapItem mapItem = parseMapItem(jArray.getJSONObject(i));
+				mapItems.add(mapItem);
+			}
 		}
 		catch (JSONException e) {
 			
@@ -87,54 +89,74 @@ public class MapParser {
 	public static MapItem parseMapItem(JSONObject jItem) throws JSONException {
 		
 		
-        	MapItem mi = new MapItem();
+        	BuildingMapItem mi = new BuildingMapItem();
 
+        	ArrayList<String> category = new ArrayList();
 	        JSONArray temp = jItem.optJSONArray("category");
 	        if (temp!=null) {
 	        	for (int index=0; index<temp.length(); index++) {
 	        		String it = temp.getString(index);
-	    	        mi.category.add(it);
+	        		category.add(it);
+	    	       // mi.category.add(it);
 	        	}
+	        	mi.getItemData().put("category", category);
 	        }
 	        
 
 	        temp = jItem.optJSONArray("altname");
 	        if (temp!=null) {
-	        	mi.alts = new ArrayList<String>();
+		        ArrayList<String> alts = new ArrayList();
 	        	for (int index=0; index<temp.length(); index++) {
 	        		String it = temp.getString(index);
-	    	        mi.alts.add(it);
+	    	        alts.add(it);
 	        	}
+	        	mi.getItemData().put("alts", alts);	        	
 	        }
 
 	        temp = jItem.optJSONArray("contents");
 	        if (temp!=null) {
+	        	ArrayList<String> contents = new ArrayList();
 	        	JSONObject j;
 	        	String it;
 	        	for (int index=0; index<temp.length(); index++) {
 	        		j = temp.getJSONObject(index);
 	        		it = j.getString("name");
-	    	        mi.contents.add(it);
+	    	        contents.add(it);
 	        	}
+	        	mi.getItemData().put("contents",contents);
 	        }
 
-	        mi.displayName = jItem.optString("displayName","");
-	        mi.name = jItem.getString("name");
-	        mi.id = jItem.getString("id");
-	        mi.street = jItem.optString("street","");
-	        mi.viewangle = jItem.optString("viewangle","");
-	        mi.bldgimg = jItem.optString("bldgimg","");
-	        mi.bldgnum = jItem.optString("bldgnum","");
+	        mi.getItemData().put("displayName",jItem.optString("displayName",""));
+	        mi.getItemData().put("name", jItem.getString("name"));
+	        mi.getItemData().put("id",jItem.getString("id"));
+	        mi.getItemData().put("street",jItem.optString("street",""));
+	        mi.getItemData().put("viewangle",jItem.optString("viewangle",""));
+	        mi.getItemData().put("bldgimg",jItem.optString("bldgimg",""));
+	        mi.getItemData().put("bldgnum",jItem.optString("bldgnum",""));
 
+	        
 	        temp = jItem.optJSONArray("snippets");
 	        if (temp!=null) {
-	        	mi.snippets = temp.getString(0);
-	        	if (mi.snippets.equalsIgnoreCase(mi.name)) mi.snippets = "";
-	        	if (!mi.snippets.startsWith("Building ")) mi.snippets = "Building " + mi.snippets;
+	        	String name = (String)mi.getItemData().get("name");
+	        	String snippets = (String)mi.getItemData().get("snippets");
+	        	snippets = temp.getString(0);
+	        	if (snippets.equalsIgnoreCase(name)) snippets = "";
+	        	if (!snippets.startsWith("Building ")) snippets = "Building " + snippets;
 	        }
 
 	        MapPoint mapPoint = new MapPoint(jItem.getDouble("lat_wgs84"),jItem.getDouble("long_wgs84"));
-	        mi.mapPoints.add(mapPoint);
+
+	        Log.d(TAG,"mappoint lat = " + mapPoint.lat_wgs84 + " long = " + mapPoint.long_wgs84);
+	        mi.getMapPoints().add(mapPoint);
+	        
+	        Log.d("ZZZ","parseMapItem: mapItem has " + mi.getMapPoints().size() + " points");
+	        //DEBUG itemData
+	        Iterator it = mi.getItemData().entrySet().iterator();
+	        while (it.hasNext()) {
+	            Map.Entry pairs = (Map.Entry)it.next();
+	            Log.d("ZZZ",pairs.getKey() + " = " + pairs.getValue());
+	        }
+	        //DEBUG itemData
 	        
 	        return mi;	        
 	}

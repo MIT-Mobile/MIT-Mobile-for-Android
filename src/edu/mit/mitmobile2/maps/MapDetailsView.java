@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -83,7 +84,7 @@ public class MapDetailsView implements SliderInterface {
 		TextView tv;
 
 		tv = (TextView) tabHost.findViewById(R.id.mapDetailsPhotosTV);		
-		if ("".equals(mi.bldgimg)) {
+		if ("".equals(mi.getItemData().get("bldgimg"))) {
 			//Typeface tf = tv.getTypeface();
 			//tv.setTypeface(tf, R.style.BodyText);  // no effect - must set manually
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
@@ -106,9 +107,9 @@ public class MapDetailsView implements SliderInterface {
 				}
 			});
 			
-			wv.loadDataWithBaseURL(null, StyledContentHTML.imageHtml(mActivity, mi.bldgimg), "text/html", "utf-8", null);
-			if(!mi.viewangle.equals(""))  {
-				tv.setText("view from " + mi.viewangle);  
+			wv.loadDataWithBaseURL(null, StyledContentHTML.imageHtml(mActivity, (String)mi.getItemData().get("bldgimg")), "text/html", "utf-8", null);
+			if(!mi.getItemData().get("viewangle").equals(""))  {
+				tv.setText("view from " + mi.getItemData().get("viewangle"));  
 			}
 		}
 		
@@ -116,7 +117,8 @@ public class MapDetailsView implements SliderInterface {
 		
 		String bullet = new String(new int[] {0x2022}, 0 ,1);
 		String text = "";
-		for (String s : mi.contents) {
+		ArrayList<String> contents = (ArrayList)mi.getItemData().get("contents");
+		for (String s : contents) {
 			text += " "  + bullet + " " + s + "\n";
 		}
 		
@@ -129,10 +131,10 @@ public class MapDetailsView implements SliderInterface {
 		///////////////////////
 
 		tv = (TextView) topView.findViewById(R.id.mapDetailsQueryTV);
-		if ("".equals(mi.query)) {
+		if ("".equals((String)mi.getItemData().get("query"))) {
 			tv.setVisibility(View.GONE);
 		} else {
-			text = "\'"+ mi.query + "\' was found in:";
+			text = "\'"+ (String)mi.getItemData().get("query") + "\' was found in:";
 			tv.setText(text);
 		} 
 		
@@ -143,14 +145,23 @@ public class MapDetailsView implements SliderInterface {
 			
 		String buildingName = "";
 		
-		if (mi.bldgnum.equals("")) {
-			if ("".equals(mi.name)) buildingName = mi.displayName;
-			else buildingName = mi.name;
+		String bldgnum = (String)mi.getItemData().get("bldgnum");
+		String name = (String)mi.getItemData().get("name");
+		String displayName = (String)mi.getItemData().get("displayName");
+		String street = (String)mi.getItemData().get("street");
+
+		if (bldgnum.equals("")) {
+			if ("".equals(name)) {
+				buildingName = displayName;
+			}
+			else {
+				buildingName = name;
+			}
 		} else {
-			buildingName = "Building " + mi.bldgnum;
-			if(!mi.bldgnum.equals(mi.name)) {
-				if(!(mi.name.equals("") || mi.name.equals(buildingName))) {
-					buildingName += " (" + mi.name + ")";
+			buildingName = "Building " + bldgnum;
+			if(!bldgnum.equals(name)) {
+				if(!(name.equals("") || name.equals(buildingName))) {
+					buildingName += " (" + name + ")";
 				}
 			} 
 		}
@@ -161,11 +172,11 @@ public class MapDetailsView implements SliderInterface {
 		
 		TextView subtitleView = (TextView) topView.findViewById(R.id.mapDetailsSubtitleTV);
 		
-		if (mi.street.contains("Access Via ")) {
-			mi.street = mi.street.replace("Access Via ", "");
+		if (street.contains("Access Via ")) {
+			street = street.replace("Access Via ", "");
 		}
 		
-		subtitleView.setText(mi.street);
+		subtitleView.setText(street);
 		
 		mThumbnailView = (ImageView) topView.findViewById(R.id.mapDetailsThumbnailIV);
 		mThumbnailView.setScaleType(ScaleType.CENTER);
@@ -187,91 +198,91 @@ public class MapDetailsView implements SliderInterface {
 	boolean mHasBeenSelected = false;
 	@Override
 	public void onSelected() {
-		if(!mHasBeenSelected) {
-			LoadingUIHelper.startLoadingImage(new Handler(), mThumbnailView);
-			
-			// Note we assume the thumbnail is smaller than a single map tile
-			final int size = mActivity.getResources().getDimensionPixelSize(R.dimen.mapThumbnailInner);
-			
-			final int zoomLevel = 17;
-			
-			// google map tile coordinates of the actual center long/lat
-			double xCenter = MITMapView.computeGoogleX((int)Math.round(mi.mapPoints.get(0).long_wgs84*1000000), zoomLevel);
-			double yCenter = MITMapView.computeGoogleY((int)Math.round(mi.mapPoints.get(0).lat_wgs84*1000000), zoomLevel);
-			
-			// google map tile coordinates of the top left corner of thumbnail image
-			double xLeft = xCenter - (double) (size/2) / (double) MITMapView.IMAGE_TILE_SIZE;
-			double yTop = yCenter - (double) (size/2) / (double) MITMapView.IMAGE_TILE_SIZE;
-			
-			final int tileX = (int) Math.floor(xLeft);
-			final int tileY = (int) Math.floor(yTop);
-			
-			final int topOffset = (int) (MITMapView.IMAGE_TILE_SIZE * (yTop - tileY));
-			final int leftOffset = (int) (MITMapView.IMAGE_TILE_SIZE * (xLeft - tileX));
-			
-			final String baseURL = "http://" + Global.getMobileWebDomain() + "/api/map/tile2/";
-			
-			final Handler uiHandler = new Handler();
-			
-			final Bitmap thumbnailBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-			final Canvas canvas = new Canvas(thumbnailBitmap);
-			
-			new Thread() {
-				boolean result = true;
-				
-				@Override 
-				public void run() {
-
-					result = drawBitmap(0, 0) && result;
-					result = drawBitmap(0, 1) && result;
-					result = drawBitmap(1, 0) && result;
-					result = drawBitmap(1, 1) && result;
-					BitmapDrawable mapPin = (BitmapDrawable) mActivity.getResources().getDrawable(R.drawable.map_red_pin);
-					Bitmap mapPinBitmap = mapPin.getBitmap();
-					
-					// center the bottom left point of the map pin
-					int left = (size - mapPinBitmap.getWidth())/2;
-					int top = (size/2 - mapPinBitmap.getHeight());
-					canvas.drawBitmap(mapPinBitmap, left, top, null);
-					
-			     	uiHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							if(result) {
-								mThumbnailView.setImageBitmap(thumbnailBitmap);
-							} else {
-								mThumbnailView.setImageResource(R.drawable.news_placeholder);
-							}
-						}
-			     	});
-				}
-				
-				private boolean drawBitmap(int X, int Y) {
-					final String url = baseURL + zoomLevel + "/" + (tileY+Y) + "/" + (tileX+X);
-
-			    	DefaultHttpClient httpClient = new DefaultHttpClient();
-			    	HttpGet request = new HttpGet(url);
-			    	HttpResponse response;
-					try {
-						response = httpClient.execute(request);
-				     	if(response.getStatusLine().getStatusCode() == 200) {
-				     		final Bitmap imageTile = BitmapFactory.decodeStream(response.getEntity().getContent());
-				     		canvas.drawBitmap(imageTile, -leftOffset + X * MITMapView.IMAGE_TILE_SIZE, -topOffset + Y * MITMapView.IMAGE_TILE_SIZE, null);
-				     		return true;
-				     	}	
-					} catch (ClientProtocolException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}	
-					
-					return false;
-				}
-			}.start();
-			
-		}
-		
-		mHasBeenSelected = true;
+//		if(!mHasBeenSelected) {
+//			LoadingUIHelper.startLoadingImage(new Handler(), mThumbnailView);
+//			
+//			// Note we assume the thumbnail is smaller than a single map tile
+//			final int size = mActivity.getResources().getDimensionPixelSize(R.dimen.mapThumbnailInner);
+//			
+//			final int zoomLevel = 17;
+//			
+//			// google map tile coordinates of the actual center long/lat
+//			double xCenter = MITMapView.computeGoogleX((int)Math.round(mi.mapPoints.get(0).long_wgs84*1000000), zoomLevel);
+//			double yCenter = MITMapView.computeGoogleY((int)Math.round(mi.mapPoints.get(0).lat_wgs84*1000000), zoomLevel);
+//			
+//			// google map tile coordinates of the top left corner of thumbnail image
+//			double xLeft = xCenter - (double) (size/2) / (double) MITMapView.IMAGE_TILE_SIZE;
+//			double yTop = yCenter - (double) (size/2) / (double) MITMapView.IMAGE_TILE_SIZE;
+//			
+//			final int tileX = (int) Math.floor(xLeft);
+//			final int tileY = (int) Math.floor(yTop);
+//			
+//			final int topOffset = (int) (MITMapView.IMAGE_TILE_SIZE * (yTop - tileY));
+//			final int leftOffset = (int) (MITMapView.IMAGE_TILE_SIZE * (xLeft - tileX));
+//			
+//			final String baseURL = "http://" + Global.getMobileWebDomain() + "/api/map/tile2/";
+//			
+//			final Handler uiHandler = new Handler();
+//			
+//			final Bitmap thumbnailBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+//			final Canvas canvas = new Canvas(thumbnailBitmap);
+//			
+//			new Thread() {
+//				boolean result = true;
+//				
+//				@Override 
+//				public void run() {
+//
+//					result = drawBitmap(0, 0) && result;
+//					result = drawBitmap(0, 1) && result;
+//					result = drawBitmap(1, 0) && result;
+//					result = drawBitmap(1, 1) && result;
+//					BitmapDrawable mapPin = (BitmapDrawable) mActivity.getResources().getDrawable(R.drawable.map_red_pin);
+//					Bitmap mapPinBitmap = mapPin.getBitmap();
+//					
+//					// center the bottom left point of the map pin
+//					int left = (size - mapPinBitmap.getWidth())/2;
+//					int top = (size/2 - mapPinBitmap.getHeight());
+//					canvas.drawBitmap(mapPinBitmap, left, top, null);
+//					
+//			     	uiHandler.post(new Runnable() {
+//						@Override
+//						public void run() {
+//							if(result) {
+//								mThumbnailView.setImageBitmap(thumbnailBitmap);
+//							} else {
+//								mThumbnailView.setImageResource(R.drawable.news_placeholder);
+//							}
+//						}
+//			     	});
+//				}
+//				
+//				private boolean drawBitmap(int X, int Y) {
+//					final String url = baseURL + zoomLevel + "/" + (tileY+Y) + "/" + (tileX+X);
+//
+//			    	DefaultHttpClient httpClient = new DefaultHttpClient();
+//			    	HttpGet request = new HttpGet(url);
+//			    	HttpResponse response;
+//					try {
+//						response = httpClient.execute(request);
+//				     	if(response.getStatusLine().getStatusCode() == 200) {
+//				     		final Bitmap imageTile = BitmapFactory.decodeStream(response.getEntity().getContent());
+//				     		canvas.drawBitmap(imageTile, -leftOffset + X * MITMapView.IMAGE_TILE_SIZE, -topOffset + Y * MITMapView.IMAGE_TILE_SIZE, null);
+//				     		return true;
+//				     	}	
+//					} catch (ClientProtocolException e) {
+//						e.printStackTrace();
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}	
+//					
+//					return false;
+//				}
+//			}.start();
+//			
+//		}
+//		
+//		mHasBeenSelected = true;
 	}
 
 	@Override

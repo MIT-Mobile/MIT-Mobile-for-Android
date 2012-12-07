@@ -141,7 +141,7 @@ public class MITMapActivity extends MapBaseActivity {
 		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 		mapItems.add(focusedMapItem);
 		Intent i = new Intent(context, MITMapActivity.class);  
-		i.putParcelableArrayListExtra(MAP_ITEMS_KEY, mapItems);
+		i.putExtra(MAP_ITEMS_KEY, mapItems);
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.putExtra(KEY_VIEW_PINS, true);
 		context.startActivity(i);

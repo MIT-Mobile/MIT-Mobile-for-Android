@@ -1,11 +1,11 @@
 package edu.mit.mitmobile2.objs;
 
-import java.io.Serializable;
 
-public class MapPoint implements Serializable {
+public class MapPoint {
 	
-	private static final long serialVersionUID = 1L;
-	
+	public MapPoint() {
+		
+	}
 	
 	public MapPoint(double lat_wgs84, double long_wgs84) {
 		this.lat_wgs84 = lat_wgs84;

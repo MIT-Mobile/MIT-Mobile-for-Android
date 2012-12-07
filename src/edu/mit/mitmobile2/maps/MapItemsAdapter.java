@@ -30,10 +30,13 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 	public void updateView(MapItem mapItem, View view) {
 		TwoLineActionRow row = (TwoLineActionRow) view;
 		
-		if(mapItem.displayName != null && !mapItem.displayName.equals("")) {
-			row.setTitle(mapItem.displayName);
+		String displayName = (String)mapItem.getItemData().get("displayName");
+		String name = (String)mapItem.getItemData().get("name");
+		
+		if(displayName != null && !displayName.equals("")) {
+			row.setTitle(displayName);
 		} else {
-			row.setTitle(mapItem.name);
+			row.setTitle(name);
 		}
 	}
 	
@@ -45,10 +48,16 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 				MapItem mapItem = getItem(position);
 				MapData mapData = new MapData();
 				mapData.getMapItems().add(mapItem);
+				
+				//TEST JSON
+				Log.d(TAG,"mapData json = " + mapData.toJSON());
+				// END TEST GSON
 				Intent i = new Intent(mContext, MITMapActivity.class); 
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData);
+				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData.toJSON());
 				//MapBaseActivity.launchNewMapItem(mContext, mapItem);
+				Log.d(TAG,"before activity launch there are " + mapData.getMapItems().size() + " map items");
+				Log.d(TAG,"before activity launch there are " + mapData.getMapItems().get(0).getMapPoints().size() + " map points");
 				mContext.startActivity(i);
 			}
 		};
