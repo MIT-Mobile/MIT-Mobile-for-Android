@@ -24,13 +24,14 @@ public class MIT150RemoteView extends RemoteImageView {
 		this.color = color;
 		
 	}
-	/****************************************************************************/
+	/****************************************************************************/ 	
 	public void inflateLayout(Context context) {
 		LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflator.inflate(R.layout.mit150_remote_imageview, this); 
-	}
+	} 
 	/****************************************************************************/
 	// This rounds corners of image as well as textview and darkens latters background
+	@Override
 	public void updateImage(Bitmap image) {
 	
 		LayoutParams params = new LayoutParams(width,LayoutParams.WRAP_CONTENT);

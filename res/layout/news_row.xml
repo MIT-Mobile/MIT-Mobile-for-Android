@@ -3,52 +3,34 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="horizontal"
   android:layout_width="wrap_content"
-  android:layout_height="80px">
+  android:layout_height="103dip">
   
-  
-  	<FrameLayout
-  		android:layout_width="81dip"
-  		android:layout_height="85dip">
-  		
-  		<FrameLayout
-  			android:layout_gravity="center_vertical|right"
-  			android:layout_width="78dip"
-  			android:layout_height="78dip"
-  			android:background="#000000">
-  		
-			<ImageView android:id="@+id/newsRowIV"
+  <ImageView android:id="@+id/newsRowIV"
 				android:src="@drawable/news_placeholder"	
 				android:layout_gravity="center"
-				android:layout_width="75dip" 
-				android:layout_height="75dip"/>
+				android:layout_width="103dip" 
+				android:layout_height="103dip"/>
 			
-		</FrameLayout>
-		
-	</FrameLayout>
-	
-	<LinearLayout
+  <LinearLayout
 		android:orientation="vertical"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingLeft="10dip" >
+		android:layout_height="fill_parent"
+		android:paddingRight="@dimen/standardPadding"
+		android:paddingLeft="@dimen/standardPadding" >
 		
-		<TextView
+		<edu.mit.mitmobile2.TruncatingTextView
 			android:id="@+id/newsRowTV"
-			android:paddingTop="3dip"
-			android:paddingRight="@dimen/horizontalPadding"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:ellipsize="end"
-			style="@style/ListItemPrimary" />
+			android:paddingTop="@dimen/standardPadding"
+			style="@style/ListItemPrimary"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
 			
-		<TextView
+		<edu.mit.mitmobile2.TruncatingTextView
 			android:id="@+id/newsRowDeckTV"
-			android:paddingBottom="3dip"
-			android:paddingRight="@dimen/horizontalPadding"
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			android:ellipsize="end"
-			style="@style/ListItemSecondary" />
+			style="@style/ListItemSecondary"
+			android:paddingBottom="@dimen/standardPadding"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"/>
 			
 	</LinearLayout>
 

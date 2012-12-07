@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,8 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.MapCatItem;
 
 public class MITMapBrowseCatsActivity extends ModuleActivity {
+
+	public static final String TAG = "MITMapBrowseCatsActivity";
 
 	//public static final String KEY_TITLE = "title";
 
@@ -59,7 +62,7 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
 	/****************************************************/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
+		Log.d(TAG,"onCreate()");
 	    super.onCreate(savedInstanceState);
 	    
     	Bundle extras = getIntent().getExtras();
@@ -92,6 +95,7 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
+				Log.d(TAG,"click position = " + position + " id = " + id);
 				Intent i;
 				Global.curSubCats = cats.get(position).subcategories;
 				if (Global.curSubCats.size()<1) {

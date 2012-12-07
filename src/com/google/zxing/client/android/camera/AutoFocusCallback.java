@@ -35,7 +35,8 @@ final class AutoFocusCallback implements Camera.AutoFocusCallback {
     this.autoFocusMessage = autoFocusMessage;
   }
 
-  public void onAutoFocus(boolean success, Camera camera) {
+  @Override
+public void onAutoFocus(boolean success, Camera camera) {
     if (autoFocusHandler != null) {
       Message message = autoFocusHandler.obtainMessage(autoFocusMessage, success);
       // Simulate continuous autofocus by sending a focus request every

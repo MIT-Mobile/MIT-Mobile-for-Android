@@ -2,7 +2,6 @@ package edu.mit.mitmobile2;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,9 +48,8 @@ import edu.mit.mitmobile2.tour.TourModule;
 public class HomeScreenActivity extends Activity implements OnSharedPreferenceChangeListener {
 	
 	
-	private static final int ABOUT_MENU_ID = 0;
-  // private static final int MOBILE_WEB_MENU_ID = 1;
-	private static final int SETTINGS_MENU_ID = 2;
+	private static final int ABOUT_MENU_ID = 0; 
+        private static final int SETTINGS_MENU_ID = 1;
 
 	Context ctx;
 	
@@ -93,8 +91,14 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		
 		mHomePreferences = this.getSharedPreferences("home_prefs", MODE_PRIVATE);
 		
+		String url = getIntent().getDataString();
+		if (url != null && url.startsWith("mitmobile://")) {
+			CommonActions.doAction(this, url);
+			finish();
+		}		
 	}
 	
+	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
 		if (hasFocus && mBanner == null) {
 			getBannerData();
@@ -240,6 +244,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		String actionUrl;
 	}
 	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		menu.add(0, SETTINGS_MENU_ID, 0, "Settings")
 		.setIcon(R.drawable.menu_settings);
@@ -250,6 +255,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		return true;
 	}
 	
+	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
 		Intent intent;
 		
@@ -258,6 +264,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 				intent = new Intent(ctx, AboutActivity.class);
 				startActivity(intent);
 				return true;
+
 			case SETTINGS_MENU_ID:
 				intent = new Intent(ctx, MITSettingsActivity.class);
 				startActivity(intent);
@@ -273,6 +280,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		context.startActivity(i);
 	}
 	
+	@Override
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 		Log.d(TAG, "Preference changed: " + key);
 		Context mContext = this;

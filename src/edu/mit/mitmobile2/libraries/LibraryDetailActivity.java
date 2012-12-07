@@ -7,11 +7,10 @@ import java.util.WeakHashMap;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.SliderActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 
-public class LibraryDetailActivity extends SliderActivity {
+public class LibraryDetailActivity extends SliderListNewModuleActivity {
     private static final String KEY = "key";
     private static final String KEY_POSITION = "key_position";
     private List<LibraryItem> mLibraries = Collections.emptyList();
@@ -63,7 +62,7 @@ public class LibraryDetailActivity extends SliderActivity {
     }
     
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
@@ -73,7 +72,5 @@ public class LibraryDetailActivity extends SliderActivity {
     }
 
     @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-    }
-
+    protected void onOptionSelected(String optionId) { }
 }

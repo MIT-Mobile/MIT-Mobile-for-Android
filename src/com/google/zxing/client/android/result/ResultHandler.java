@@ -46,12 +46,14 @@ import java.util.GregorianCalendar;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
+@SuppressWarnings("deprecation")
 public abstract class ResultHandler {
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
   private static final DateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
 
   private static final String GOOGLE_SHOPPER_PACKAGE = "com.google.android.apps.shopper";
-  private static final String GOOGLE_SHOPPER_ACTIVITY = GOOGLE_SHOPPER_PACKAGE +
+  @SuppressWarnings("unused")
+private static final String GOOGLE_SHOPPER_ACTIVITY = GOOGLE_SHOPPER_PACKAGE +
       ".results.SearchResultsActivity";
   private static final String MARKET_URI_PREFIX = "market://search?q=pname:";
   private static final String MARKET_REFERRER_SUFFIX =
@@ -64,9 +66,11 @@ public abstract class ResultHandler {
   private final Result rawResult;
   private final String customProductSearch;
 
-  private final DialogInterface.OnClickListener shopperMarketListener =
+  @SuppressWarnings("unused")
+private final DialogInterface.OnClickListener shopperMarketListener =
       new DialogInterface.OnClickListener() {
-    public void onClick(DialogInterface dialogInterface, int which) {
+    @Override
+	public void onClick(DialogInterface dialogInterface, int which) {
       launchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(MARKET_URI_PREFIX +
           GOOGLE_SHOPPER_PACKAGE + MARKET_REFERRER_SUFFIX)));
     }

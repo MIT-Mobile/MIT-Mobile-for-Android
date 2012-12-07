@@ -10,7 +10,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.maps.GeoRect;
 import edu.mit.mitmobile2.maps.MapBaseActivity;
 import edu.mit.mitmobile2.tour.Tour.ParcelableGeoPoint;
 import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
@@ -39,7 +38,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 
 
@@ -77,13 +75,13 @@ public class TourMapActivity extends MapBaseActivity {
 	}
 	
 	@Override
-	protected void onCreate(Bundle savedState) {
+	public void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		
 		Intent i = getIntent();
 		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
-		List<ParcelableGeoPoint> geoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
+
 		mTourActive = i.getBooleanExtra(TOUR_ACTIVE_KEY, false);
 		mTourCurrentPosition = getCurrentPosition();
 				
@@ -91,9 +89,9 @@ public class TourMapActivity extends MapBaseActivity {
 		mShowingSidetrips = !mTourActive;
 		setTourItemsList(mShowingSidetrips);
 		
-		GeoRect geoRect = new GeoRect(geoPoints);
+
 		
-		mSiteMarkers = new TourRouteOverlay(this, mapView, mSiteTourMapItems, geoPoints);
+		//mSiteMarkers = new TourRouteOverlay(this, mapView, mSiteTourMapItems, geoPoints);
 		mSiteMarkers.setOnTourItemSelectedListener(new TourRouteOverlay.OnTourItemSelectedListener() {
 			@Override
 			public void onTourItemSelected(TourMapItem tourItem) {
@@ -104,12 +102,11 @@ public class TourMapActivity extends MapBaseActivity {
 			}
 		});
 		
-		setOverlays();
+		//setOverlays();
 		
-		mapView.getOverlays().add(mSiteMarkers);
+		//mapView.getOverlays().add(mSiteMarkers);
 		
-		mapView.getController().setCenter(geoRect.getCenter());
-		mapView.getController().zoomToSpan(geoRect.getLatitudeSpanE6(), geoRect.getLongitudeSpanE6());		
+		//mapView.getController().setCenter(geoRect.getCenter());
 		
 		TitleBar titleBar = (TitleBar) findViewById(R.id.mapTitleBar);
 		
@@ -133,7 +130,7 @@ public class TourMapActivity extends MapBaseActivity {
 			}
 		});
 		
-		mMapView = (MapView) findViewById(R.id.mapview);
+		//mMapView = (MapView) findViewById(R.id.mapview);
 		mMapListSwitch = (ImageView) findViewById(R.id.tourMapListSwitchImage);
 		mStartHelpActionRow = (TourStartHelpActionRow) findViewById(R.id.tourMapStartHelp);
 		mStartHelpActionRow.setOnClickListener(new View.OnClickListener() {
@@ -373,8 +370,8 @@ public class TourMapActivity extends MapBaseActivity {
 				return true;
 				
 			case MENU_MY_LOCATION: 
-				GeoPoint myLocation = myLocationOverlay.getMyLocation();
-				if (myLocation != null) mctrl.animateTo(myLocation);
+				//GeoPoint myLocation = myLocationOverlay.getMyLocation();
+				//if (myLocation != null) mctrl.animateTo(myLocation);
 				return true;
 				
 			case MENU_SHOW_OR_HIDE_SIDETRIPS:
@@ -470,6 +467,7 @@ public class TourMapActivity extends MapBaseActivity {
 			private static final long serialVersionUID = 1L;
 			protected static final int MAX_ENTRIES = 10;
 			
+			@Override
 			protected boolean removeEldestEntry(Map.Entry<String, View> eldest) {
 				return size() > MAX_ENTRIES;
 			}
@@ -547,8 +545,8 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 	}
 
-	@Override
-	protected int getLayoutId() {
-		return R.layout.tour_map;
-	}
+	//@Override
+	//protected int getLayoutId() {
+	//	return R.layout.tour_map;
+	//}
 }

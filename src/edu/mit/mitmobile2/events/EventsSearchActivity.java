@@ -2,8 +2,7 @@ package edu.mit.mitmobile2.events;
 
 import android.os.Handler;
 import android.widget.ArrayAdapter;
-
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
@@ -36,13 +35,27 @@ public class EventsSearchActivity extends SearchActivity<EventDetailsItem> {
 		return "Events";
 	}
 
-	@Override
-	protected Module getModule() {
-		return new EventsModule();
-	}
 
 	@Override
 	protected void onItemSelected(SearchResults<EventDetailsItem> results, EventDetailsItem event) {
 		MITEventsSliderActivity.launchSearchResults(EventsSearchActivity.this, event.id, results.getSearchTerm());		
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new EventsModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

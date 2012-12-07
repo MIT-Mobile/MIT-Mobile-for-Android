@@ -16,7 +16,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.FineListItem;
 
 public class LibraryFineDetail extends ModuleActivity{
@@ -74,7 +73,8 @@ public class LibraryFineDetail extends ModuleActivity{
 
     }
 
-    private void doSearch(String barcode) {
+    @SuppressWarnings("unused")
+	private void doSearch(String barcode) {
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();

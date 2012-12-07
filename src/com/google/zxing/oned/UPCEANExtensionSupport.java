@@ -44,7 +44,8 @@ final class UPCEANExtensionSupport {
     int end = decodeMiddle(row, extensionStartRange, result);
 
     String resultString = result.toString();
-    Hashtable extensionData = parseExtensionString(resultString);
+    @SuppressWarnings("rawtypes")
+	Hashtable extensionData = parseExtensionString(resultString);
 
     Result extensionResult =
         new Result(resultString,
@@ -132,7 +133,8 @@ final class UPCEANExtensionSupport {
    * @return formatted interpretation of raw content as a {@link Hashtable} mapping
    *  one {@link ResultMetadataType} to appropriate value, or <code>null</code> if not known
    */
-  private static Hashtable parseExtensionString(String raw) {
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+private static Hashtable parseExtensionString(String raw) {
     ResultMetadataType type;
     Object value;
     switch (raw.length()) {

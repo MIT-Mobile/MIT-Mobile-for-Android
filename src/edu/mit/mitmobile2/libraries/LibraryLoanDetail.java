@@ -21,7 +21,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryLoanDetail extends ModuleActivity{
@@ -102,7 +101,8 @@ public class LibraryLoanDetail extends ModuleActivity{
         loanRenewButton = (Button) findViewById(R.id.libraryBartonDetailRenewButton);
         loanRenewButton.setVisibility(View.VISIBLE);
         loanRenewButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	renewBook(item.getBarcode());
                 Log.d(TAG,"renew ");
             }

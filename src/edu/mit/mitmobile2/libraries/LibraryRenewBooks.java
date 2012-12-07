@@ -21,7 +21,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.classes.LoanData;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
 public class LibraryRenewBooks extends ModuleActivity  {
@@ -56,7 +55,8 @@ public class LibraryRenewBooks extends ModuleActivity  {
         //doSearch();
     }
 
-    private void doSearch() {
+    @SuppressWarnings("unused")
+	private void doSearch() {
         mLoanResults.setVisibility(View.GONE);
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
@@ -71,7 +71,7 @@ public class LibraryRenewBooks extends ModuleActivity  {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+               
                 LoanData loanData = (LoanData)msg.obj;
                 LibraryLoans.setLoanData((LoanData)msg.obj);
                 loanStatusTV.setText("You have " + loanData.getNumLoan() + " items on loan." + loanData.getNumOverdue() + " overdue.");
@@ -110,7 +110,8 @@ public class LibraryRenewBooks extends ModuleActivity  {
     }
 
     private class LibraryRenewBooksAdapter extends SimpleArrayAdapter<LoanListItem> {
-        private List<LoanListItem> libraryLoanItems;
+        @SuppressWarnings("unused")
+		private List<LoanListItem> libraryLoanItems;
         public LibraryRenewBooksAdapter(List<LoanListItem> items) {
             super(LibraryRenewBooks.this, items, R.layout.library_renew_books_action_row);
             libraryLoanItems = items;
@@ -157,7 +158,7 @@ public class LibraryRenewBooks extends ModuleActivity  {
         		loanStatusTV.setTextColor(Color.RED);
         	}
         	else {
-        		loanStatusTV.setTextColor(R.color.contents_text);
+        		loanStatusTV.setTextColor(getResources().getColor(R.color.contents_text));
         	}
         }
 

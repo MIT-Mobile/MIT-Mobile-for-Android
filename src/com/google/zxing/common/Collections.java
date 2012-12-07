@@ -36,7 +36,8 @@ public final class Collections {
    * @param vector vector to sort
    * @param comparator comparator to define sort ordering
    */
-  public static void insertionSort(Vector vector, Comparator comparator) {
+  @SuppressWarnings("unchecked")
+public static void insertionSort(@SuppressWarnings("rawtypes") Vector vector, Comparator comparator) {
     int max = vector.size();
     for (int i = 1; i < max; i++) {
       Object value = vector.elementAt(i);

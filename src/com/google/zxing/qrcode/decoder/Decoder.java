@@ -56,7 +56,7 @@ public final class Decoder {
    * @throws FormatException if the QR Code cannot be decoded
    * @throws ChecksumException if error correction fails
    */
-  public DecoderResult decode(boolean[][] image, Hashtable hints)
+  public DecoderResult decode(boolean[][] image, @SuppressWarnings("rawtypes") Hashtable hints)
       throws ChecksumException, FormatException, NotFoundException {
     int dimension = image.length;
     BitMatrix bits = new BitMatrix(dimension);
@@ -82,7 +82,7 @@ public final class Decoder {
    * @throws FormatException if the QR Code cannot be decoded
    * @throws ChecksumException if error correction fails
    */
-  public DecoderResult decode(BitMatrix bits, Hashtable hints) throws FormatException, ChecksumException {
+  public DecoderResult decode(BitMatrix bits, @SuppressWarnings("rawtypes") Hashtable hints) throws FormatException, ChecksumException {
 
     // Construct a parser and read version, error-correction level
     BitMatrixParser parser = new BitMatrixParser(bits);

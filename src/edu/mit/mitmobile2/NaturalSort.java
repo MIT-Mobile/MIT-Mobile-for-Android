@@ -76,6 +76,7 @@ public class NaturalSort {
 			return new LetterUnit(text.codePointAt(0));
 		}
 		
+		@Override
 		public int compare(SingleUnit other) {
 			LetterUnit otherLetter = (LetterUnit) other;
 			return (mCodePoint - otherLetter.mCodePoint);

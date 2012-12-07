@@ -15,13 +15,13 @@ import android.content.Context;
 public class StyledContentHTML {
 
 	public static String html(Context context, String bodyHTML) {
-		HashMap<String, String> content = new HashMap();
+		HashMap<String, String> content = new HashMap<String, String>();
 		content.put("BODY", bodyHTML);
 		return populateTemplate(context, "content_template.html", content);
 	}
 	
 	public static String imageHtml(Context context, String url) {
-		HashMap<String, String> content = new HashMap();
+		HashMap<String, String> content = new HashMap<String, String>();
 		content.put("URL", url);
 		return populateTemplate(context, "image_template.html", content);
 	}

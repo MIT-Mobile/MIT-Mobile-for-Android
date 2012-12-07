@@ -75,7 +75,8 @@ final class MultiFinderPatternFinder extends FinderPatternFinder {
    * A comparator that orders FinderPatterns by their estimated module size.
    */
   private static class ModuleSizeComparator implements Comparator {
-    public int compare(Object center1, Object center2) {
+    @Override
+	public int compare(Object center1, Object center2) {
       float value = ((FinderPattern) center2).getEstimatedModuleSize() -
                     ((FinderPattern) center1).getEstimatedModuleSize();
       return value < 0.0 ? -1 : value > 0.0 ? 1 : 0;
@@ -101,8 +102,10 @@ final class MultiFinderPatternFinder extends FinderPatternFinder {
    *         size differs from the average among those patterns the least
    * @throws NotFoundException if 3 such finder patterns do not exist
    */
-  private FinderPattern[][] selectBestPatterns() throws NotFoundException {
-    Vector possibleCenters = getPossibleCenters();
+  @SuppressWarnings("unchecked")
+private FinderPattern[][] selectBestPatterns() throws NotFoundException {
+    @SuppressWarnings("rawtypes")
+	Vector possibleCenters = getPossibleCenters();
     int size = possibleCenters.size();
 
     if (size < 3) {
@@ -141,7 +144,8 @@ final class MultiFinderPatternFinder extends FinderPatternFinder {
      * So, if the layout seems right, lets have the decoder try to decode.     
      */
 
-    Vector results = new Vector(); // holder for the results
+    @SuppressWarnings("rawtypes")
+	Vector results = new Vector(); // holder for the results
 
     for (int i1 = 0; i1 < (size - 2); i1++) {
       FinderPattern p1 = (FinderPattern) possibleCenters.elementAt(i1);
@@ -230,7 +234,8 @@ final class MultiFinderPatternFinder extends FinderPatternFinder {
     throw NotFoundException.getNotFoundInstance();
   }
 
-  public FinderPatternInfo[] findMulti(Hashtable hints) throws NotFoundException {
+  @SuppressWarnings("unchecked")
+public FinderPatternInfo[] findMulti(@SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException {
     boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
     BitMatrix image = getImage();
     int maxI = image.getHeight();
@@ -303,7 +308,8 @@ final class MultiFinderPatternFinder extends FinderPatternFinder {
       } // end if foundPatternCross
     } // for i=iSkip-1 ...
     FinderPattern[][] patternInfo = selectBestPatterns();
-    Vector result = new Vector();
+    @SuppressWarnings("rawtypes")
+	Vector result = new Vector();
     for (int i = 0; i < patternInfo.length; i++) {
       FinderPattern[] pattern = patternInfo[i];
       ResultPoint.orderBestPatterns(pattern);

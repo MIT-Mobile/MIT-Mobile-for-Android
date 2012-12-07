@@ -20,7 +20,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.classes.HoldData;
 import edu.mit.mitmobile2.objs.HoldListItem;
 
 public class LibraryHolds extends ModuleActivity  {
@@ -86,7 +85,7 @@ public class LibraryHolds extends ModuleActivity  {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
+                
                 HoldData holdData = (HoldData)msg.obj;
                 LibraryHolds.setHoldData((HoldData)msg.obj);
              
@@ -126,7 +125,8 @@ public class LibraryHolds extends ModuleActivity  {
     }
 
     private class LibraryHoldAdapter extends SimpleArrayAdapter<HoldListItem> {
-        private List<HoldListItem> libraryHoldItems;
+        @SuppressWarnings("unused")
+		private List<HoldListItem> libraryHoldItems;
         public LibraryHoldAdapter(List<HoldListItem> items) {
             super(LibraryHolds.this, items, R.layout.library_hold_action_row);
             libraryHoldItems = items;

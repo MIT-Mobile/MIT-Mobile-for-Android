@@ -169,7 +169,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		
 		
 		lb = new LoaderBar(mActivity);
-		topView.addView(lb);
+		topView.addView(lb, 0);
 		
 		addView(topView);
 		

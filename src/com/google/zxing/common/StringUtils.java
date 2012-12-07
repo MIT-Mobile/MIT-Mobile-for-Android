@@ -46,7 +46,7 @@ public final class StringUtils {
    *  {@link #SHIFT_JIS}, {@link #UTF8}, {@link #ISO88591}, or the platform
    *  default encoding if none of these can possibly be correct
    */
-  public static String guessEncoding(byte[] bytes, Hashtable hints) {
+  public static String guessEncoding(byte[] bytes, @SuppressWarnings("rawtypes") Hashtable hints) {
     if (hints != null) {
       String characterSet = (String) hints.get(DecodeHintType.CHARACTER_SET);
       if (characterSet != null) {

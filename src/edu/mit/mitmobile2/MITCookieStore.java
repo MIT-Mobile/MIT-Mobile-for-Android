@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class MITCookieStore implements CookieStore{
 
-	private List cookies = null;
+	private List<Cookie> cookies = null;
 	
 	@Override
 	public void addCookie(Cookie arg0) {

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -15,13 +14,12 @@ import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
-public class LibraryActivity extends ModuleActivity {
+public class LibraryActivity extends NewModuleActivity {
 
     private TwoLineActionRow accountRow;
     private TwoLineActionRow locationRow;
@@ -44,10 +42,6 @@ public class LibraryActivity extends ModuleActivity {
         setContentView(R.layout.library_main);
 
         mLinearLayout = (LinearLayout) findViewById(R.id.libraryMainLinearLayout);
-
-        SearchBar searchBar = (SearchBar) findViewById(R.id.librarySearchBar);
-        searchBar.setSearchHint(getString(R.string.library_search_hint));
-        searchBar.setSystemSearchInvoker(this);
 
         accountRow = (TwoLineActionRow) findViewById(R.id.libraryAccount);
         locationRow = (TwoLineActionRow) findViewById(R.id.libraryLocationHours);
@@ -88,19 +82,13 @@ public class LibraryActivity extends ModuleActivity {
     }
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
     @Override
     public boolean isModuleHomeActivity() {
         return true;
-    }
-
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SEARCH, Menu.NONE, MENU_SEARCH_TITLE)
-		.setIcon(R.drawable.menu_search);
     }
 
     private void doSearch() {
@@ -156,6 +144,18 @@ public class LibraryActivity extends ModuleActivity {
     static class LinkItem {
         public String title;
         public String url;
+    }
+
+
+    @Override
+    protected boolean isScrollable() {
+	return true;
+    }
+
+    @Override
+    protected void onOptionSelected(String optionId) {
+	// TODO Auto-generated method stub
+	
     }
 
 }

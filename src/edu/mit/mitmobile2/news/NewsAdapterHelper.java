@@ -3,9 +3,6 @@ package edu.mit.mitmobile2.news;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.objs.NewsItem;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -14,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TruncatingTextView;
+import edu.mit.mitmobile2.objs.NewsItem;
 
 public class NewsAdapterHelper  {
 
@@ -37,11 +36,13 @@ public class NewsAdapterHelper  {
 	public void populateView(View view, final NewsItem newsItem, boolean saveThumbnail) {
 		if (newsItem != null) {
 			view.setTag(new Integer(newsItem.story_id));
-			TextView newsTitleTV = (TextView) view.findViewById(R.id.newsRowTV);
+			TruncatingTextView newsTitleTV = (TruncatingTextView) view.findViewById(R.id.newsRowTV);
 			newsTitleTV.setText(newsItem.title);
+			newsTitleTV.requestLayout();
 			
-			TextView newsDeckTV = (TextView) view.findViewById(R.id.newsRowDeckTV);
+			TruncatingTextView newsDeckTV = (TruncatingTextView) view.findViewById(R.id.newsRowDeckTV);
 			newsDeckTV.setText(newsItem.description);
+			newsDeckTV.requestLayout();
 			//Log.d(TAG,"description = " + newsItem.description);
 			
 			// ImageView

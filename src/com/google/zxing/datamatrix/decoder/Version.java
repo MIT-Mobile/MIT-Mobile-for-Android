@@ -167,7 +167,8 @@ public final class Version {
     }
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return String.valueOf(versionNumber);
   }
 

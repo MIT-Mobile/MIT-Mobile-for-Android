@@ -29,8 +29,10 @@ import java.util.Vector;
  */
 final class EANManufacturerOrgSupport {
 
-  private final Vector ranges = new Vector();
-  private final Vector countryIdentifiers = new Vector();
+  @SuppressWarnings("rawtypes")
+private final Vector ranges = new Vector();
+  @SuppressWarnings("rawtypes")
+private final Vector countryIdentifiers = new Vector();
 
   String lookupCountryIdentifier(String productCode) {
     initIfNeeded();
@@ -50,7 +52,8 @@ final class EANManufacturerOrgSupport {
     return null;
   }
   
-  private void add(int[] range, String id) {
+  @SuppressWarnings("unchecked")
+private void add(int[] range, String id) {
     ranges.addElement(range);
     countryIdentifiers.addElement(id);
   }

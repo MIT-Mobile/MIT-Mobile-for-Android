@@ -13,6 +13,7 @@ public abstract class ActionRow extends FrameLayout {
 	private OnClickListener mOnClickListener;
 
 	// TEST
+	@SuppressWarnings("unused")
 	private int layoutId;
 	
 	protected abstract int getLayoutId();
@@ -53,7 +54,7 @@ public abstract class ActionRow extends FrameLayout {
 		LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflator.inflate(getLayoutId(), this);
 		
-		mSystemSelectionDrawable = context.getResources().getDrawable(android.R.drawable.list_selector_background);
+		mSystemSelectionDrawable = context.getResources().getDrawable(R.drawable.highlight_background);
 	}
 	
 	@Override

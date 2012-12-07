@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2;
+package edu.mit.mitmobile2; 
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import android.util.Log;
 
 public abstract class JSONParser  {
 	
-	private static final String TAG = "JSONParser";
+    private static final String TAG = "JSONParser";
 
 	private static final String HTTP_USER_AGENT = UserAgent.get();
 	
@@ -31,6 +31,7 @@ public abstract class JSONParser  {
 	
 	protected static String result;
 	
+	@SuppressWarnings("rawtypes")
 	public List items;
 	
 	public static JSONObject jItem;
@@ -63,7 +64,7 @@ public abstract class JSONParser  {
     	Thread thread = new Thread() {
     		@Override
     		public void run() {
-    			Log.d("JSONParser","url: "+getBaseUrl()+params);
+    			Log.d(TAG,"url: "+getBaseUrl()+params);
     			getJSON(getBaseUrl()+params,expectingObject);
     			saveData();  // callback...
     			if (h!=null) h.sendEmptyMessage(0);
@@ -111,12 +112,13 @@ public abstract class JSONParser  {
         }
     }
     
+	@SuppressWarnings("rawtypes")
 	public List parse(InputStream is, boolean expectObj) throws IOException, JSONException {
 
         JSONArray jArray = null;
         
     	result = convertStreamToString(is);
-        Log.d("JSONParser","JSONParser: " + result);
+        Log.d(TAG,"JSONParser: " + result);
 
         // self:  array = [] and each {} within is object
       

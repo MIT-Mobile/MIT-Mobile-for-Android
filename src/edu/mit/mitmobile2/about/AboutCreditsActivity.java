@@ -3,21 +3,20 @@ package edu.mit.mitmobile2.about;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class AboutCreditsActivity extends ModuleActivity {
+public class AboutCreditsActivity extends NewModuleActivity {
 	
 	private ListView mListView;
 	private ArrayList<CreditsItem> mCreditsArray;
@@ -56,6 +55,7 @@ public class AboutCreditsActivity extends ModuleActivity {
 			mContext = context;
 		}
 		
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
 			if (v == null) {
@@ -76,7 +76,7 @@ public class AboutCreditsActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new AboutModule();
 	}
 
@@ -86,6 +86,15 @@ public class AboutCreditsActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { }
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

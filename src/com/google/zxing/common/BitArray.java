@@ -233,7 +233,8 @@ public final class BitArray {
     return new int[(size + 31) >> 5];
   }
   
-  public String toString() {
+  @Override
+public String toString() {
     StringBuffer result = new StringBuffer(size);
     for (int i = 0; i < size; i++) {
       if ((i & 0x07) == 0) {

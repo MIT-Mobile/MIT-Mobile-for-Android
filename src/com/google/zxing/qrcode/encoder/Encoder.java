@@ -79,7 +79,7 @@ public final class Encoder {
     encode(content, ecLevel, null, qrCode);
   }
 
-  public static void encode(String content, ErrorCorrectionLevel ecLevel, Hashtable hints,
+  public static void encode(String content, ErrorCorrectionLevel ecLevel, @SuppressWarnings("rawtypes") Hashtable hints,
       QRCode qrCode) throws WriterException {
 
     String encoding = hints == null ? null : (String) hints.get(EncodeHintType.CHARACTER_SET);
@@ -346,7 +346,8 @@ public final class Encoder {
    * Interleave "bits" with corresponding error correction bytes. On success, store the result in
    * "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
    */
-  static void interleaveWithECBytes(BitArray bits, int numTotalBytes,
+  @SuppressWarnings("unchecked")
+static void interleaveWithECBytes(BitArray bits, int numTotalBytes,
       int numDataBytes, int numRSBlocks, BitArray result) throws WriterException {
 
     // "bits" must have "getNumDataBytes" bytes of data.
@@ -361,7 +362,8 @@ public final class Encoder {
     int maxNumEcBytes = 0;
 
     // Since, we know the number of reedsolmon blocks, we can initialize the vector with the number.
-    Vector blocks = new Vector(numRSBlocks);
+    @SuppressWarnings("rawtypes")
+	Vector blocks = new Vector(numRSBlocks);
 
     for (int i = 0; i < numRSBlocks; ++i) {
       int[] numDataBytesInBlock = new int[1];

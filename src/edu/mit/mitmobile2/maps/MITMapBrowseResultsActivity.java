@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import edu.mit.mitmobile2.objs.MapItem;
 
 public class MITMapBrowseResultsActivity extends ModuleActivity  {
 
+	static final String TAG = "MITMapBrowseResultsActivity";
 	static final int MENU_BROWSE_OR_BKS = MENU_SEARCH + 1;
 	static final int MENU_CLEAR_BKS = MENU_SEARCH + 2;
 	static final int MENU_VIEW_MAP = MENU_SEARCH + 3;
@@ -70,6 +72,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
+		Log.d(TAG,"onCreate");
 	    super.onCreate(savedInstanceState);
 	    
 	    ctx = this;
@@ -201,7 +204,9 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Action");
 		builder.setItems(options, new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int item) {
+				Log.d(TAG,"item = " + item);
 				Intent i;
 				switch (item) {
 				case 0:
@@ -238,6 +243,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		switch (item.getItemId()) {
 		
 		case MENU_MODULE_HOME: 
+			Log.d(TAG,"menu_module_home");
 			if (results==null) return false;
 			Intent i = new Intent(this, MITMapActivity.class);
 			i.putParcelableArrayListExtra(MITMapActivity.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
@@ -246,6 +252,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 			return true;
 			
 		case MENU_BROWSE_OR_BKS:
+			Log.d(TAG,"MENU_BROWSE_OR_BKS");
 
 			//Cursor c  = (Cursor) mListView.getSelectedItem();
 			int selected = mListView.getSelectedItemPosition();
@@ -270,6 +277,8 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 			return true;
 			
 		case MENU_VIEW_MAP: 
+			Log.d(TAG,"menu_view_map");
+			//MITMapActivity.launchNewMapItems(this, results);
 			MITMapActivity.launchNewMapItems(this, results);
 			break;
 		

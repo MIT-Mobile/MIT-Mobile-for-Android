@@ -10,21 +10,20 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.SmallActivityCache;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.libraries.BookItem.Holding.Availability;
 import edu.mit.mitmobile2.libraries.BookItem.Holding.Availabilitys;
 
-public class LibrariesHoldingsSliderActivity extends SliderActivity {
+public class LibrariesHoldingsSliderActivity extends SliderListNewModuleActivity {
 	
 	private static SmallActivityCache<Map<String, Availabilitys>> sListsOfHoldingsCache = 
 		new SmallActivityCache<Map<String, Availabilitys>>();
@@ -75,17 +74,14 @@ public class LibrariesHoldingsSliderActivity extends SliderActivity {
 	
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new LibrariesModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
-	}
-
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { }	
+	}	
 	
 	
 	private class MITLibraryBookHoldingsSliderInterface implements SliderInterface {
@@ -136,4 +132,7 @@ public class LibrariesHoldingsSliderActivity extends SliderActivity {
 			row.setSubtitle(status);
 		}
 	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

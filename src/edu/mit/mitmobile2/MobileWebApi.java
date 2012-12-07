@@ -190,6 +190,7 @@ public class MobileWebApi {
 		}		
 	}
 	
+	@SuppressWarnings("unused")
 	private LoadingDialogType mLoadingDialogType;
 	private boolean mShowErrors;
 	private Context mContext = null;
@@ -315,6 +316,7 @@ public class MobileWebApi {
 				
 				if(mShowErrors) {
 					mUIHandler.post(new Runnable() {
+						@Override
 						public void run () {
 							String errorMessage = null;
 							if(error == ErrorType.Network) {
@@ -336,6 +338,7 @@ public class MobileWebApi {
 				responseListener.onError();
 			}
 			
+			@SuppressWarnings("incomplete-switch")
 			@Override
 			public void onResponse(final InputStream stream) {
 				if(responseListener.wasRequestCancelled()) {
@@ -456,6 +459,8 @@ public class MobileWebApi {
 				if(query.length() > 0) {
 					query += "&";
 				}
+				Log.d("ZZZ","query = " + query);
+				Log.d("ZZZ","key = " + key);
 				query += key + "=" + java.net.URLEncoder.encode(parameters.get(key), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();

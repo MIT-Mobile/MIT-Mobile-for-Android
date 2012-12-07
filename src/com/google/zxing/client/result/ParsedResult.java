@@ -43,7 +43,8 @@ public abstract class ParsedResult {
 
   public abstract String getDisplayResult();
 
-  public String toString() {
+  @Override
+public String toString() {
     return getDisplayResult();
   }
 

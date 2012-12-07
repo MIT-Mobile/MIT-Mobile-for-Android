@@ -26,6 +26,7 @@ public class PeopleListAdapter extends SimpleArrayAdapter<PersonItem> {
 		);
 	}
 	
+	@Override
 	public void updateView(PersonItem person, View view) {			
 		TwoLineActionRow twoLineActionRow = (TwoLineActionRow) view;
 		twoLineActionRow.setTitle(person.getName());

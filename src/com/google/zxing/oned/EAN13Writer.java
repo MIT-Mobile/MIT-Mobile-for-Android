@@ -36,8 +36,9 @@ public final class EAN13Writer extends UPCEANWriter {
       (7 * 6) + // right bars
       3; // end guard
 
-  public BitMatrix encode(String contents, BarcodeFormat format, int width, int height,
-      Hashtable hints) throws WriterException {
+  @Override
+public BitMatrix encode(String contents, BarcodeFormat format, int width, int height,
+      @SuppressWarnings("rawtypes") Hashtable hints) throws WriterException {
     if (format != BarcodeFormat.EAN_13) {
       throw new IllegalArgumentException("Can only encode EAN_13, but got " + format);
     }
@@ -45,7 +46,8 @@ public final class EAN13Writer extends UPCEANWriter {
     return super.encode(contents, format, width, height, hints);
   }
 
-  public byte[] encode(String contents) {
+  @Override
+public byte[] encode(String contents) {
     if (contents.length() != 13) {
       throw new IllegalArgumentException(
           "Requested contents should be 13 digits long, but got " + contents.length());

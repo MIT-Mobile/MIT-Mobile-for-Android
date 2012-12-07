@@ -7,9 +7,10 @@
  	android:layout_height="wrap_content">
  	
 	<TextView
-		android:paddingLeft="@dimen/horizontalPadding"
-		android:paddingBottom="@dimen/horizontalPadding"
-		android:paddingTop="@dimen/verticalPadding"
+		android:paddingLeft="@dimen/standardPadding"
+		android:paddingRight="@dimen/standardPadding"
+		android:paddingBottom="@dimen/standardPadding"
+		android:paddingTop="@dimen/standardPadding"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:background="@android:color/transparent"

@@ -60,7 +60,8 @@ public final class CodaBarReader extends OneDReader {
   // some industries use a checksum standard but this is not part of the original codabar standard
   // for more information see : http://www.mecsw.com/specs/codabar.html
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints) throws NotFoundException {
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException {
     int[] start = findAsteriskPattern(row);
     start[1] = 0; // BAS: settings this to 0 improves the recognition rate somehow?
     int nextStart = start[1];

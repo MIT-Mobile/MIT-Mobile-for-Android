@@ -16,6 +16,12 @@
 
 package com.google.zxing.client.android;
 
+import edu.mit.mitmobile2.MITTitleBar;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.QRReaderModule;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -28,6 +34,7 @@ import java.util.Vector;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,12 +52,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -79,18 +83,16 @@ import edu.mit.mitmobile2.qrreader.QRReaderModule;
  *  written by Daniel Switkin which in turn was based on the CameraPreview
  *  example in the Android SDK.
  *
- * @author ian.gavalakis@modolabs.com 
+ * @author modified by MIT Mobile
  */
-public final class CaptureActivity extends ModuleActivity implements SurfaceHolder.Callback {
+@SuppressWarnings({ "unused", "deprecation" })
+public final class CaptureActivity extends NewModuleActivity implements SurfaceHolder.Callback {
 
   public static final int CAPTURE_QR_ACTIVITY_REQUEST_CODE = 1666;
 	  
   private static final String TAG = CaptureActivity.class.getSimpleName();
 
   //private static final int SHARE_ID = Menu.FIRST;
-
-  private static final int MENU_QR_HISTORY = Menu.FIRST;
-  private static final int MENU_QR_HELP = Menu.FIRST + 1;
   
   private static final int DIALOG_QR_HELP = 1;
 	
@@ -144,14 +146,16 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
    * When the beep has finished playing, rewind to queue up another one.
    */
   private final OnCompletionListener beepListener = new OnCompletionListener() {
-    public void onCompletion(MediaPlayer mediaPlayer) {
+    @Override
+	public void onCompletion(MediaPlayer mediaPlayer) {
       mediaPlayer.seekTo(0);
     }
   };
 
   private final DialogInterface.OnClickListener aboutListener =
       new DialogInterface.OnClickListener() {
-    public void onClick(DialogInterface dialogInterface, int i) {
+    @Override
+	public void onClick(DialogInterface dialogInterface, int i) {
       Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.zxing_url)));
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
       startActivity(intent);
@@ -170,11 +174,11 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
   public void onCreate(Bundle icicle) {
     super.onCreate(icicle);
 
+    ctx = this;
+    
     Window window = getWindow();
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.capture);
-
-    ctx = this;
     
     CameraManager.init(getApplication());
     viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
@@ -287,17 +291,6 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
     }
     return super.onKeyDown(keyCode, event);
   }
-
-  /*
-  // Don't display the share menu item if the result overlay is showing.
-  @Override
-  public boolean onPrepareOptionsMenu(Menu menu) {
-    super.onPrepareOptionsMenu(menu);
-    menu.findItem(SHARE_ID).setVisible(lastResult == null);
-    return true;
-  }
-*/
-
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -330,18 +323,21 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
     super.onConfigurationChanged(config);
   }
 
-  public void surfaceCreated(SurfaceHolder holder) {
+  @Override
+public void surfaceCreated(SurfaceHolder holder) {
     if (!hasSurface) {
       hasSurface = true;
       initCamera(holder);
     }
   }
 
-  public void surfaceDestroyed(SurfaceHolder holder) {
+  @Override
+public void surfaceDestroyed(SurfaceHolder holder) {
     hasSurface = false;
   }
 
-  public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+  @Override
+public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
   }
 
@@ -452,7 +448,8 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
     View metaTextViewLabel = findViewById(R.id.meta_text_view_label);
     metaTextView.setVisibility(View.GONE);
     metaTextViewLabel.setVisibility(View.GONE);
-    Map<ResultMetadataType,Object> metadata =
+    @SuppressWarnings("unchecked")
+	Map<ResultMetadataType,Object> metadata =
         (Map<ResultMetadataType,Object>) rawResult.getResultMetadata();
     if (metadata != null) {
       StringBuilder metadataText = new StringBuilder(20);
@@ -624,40 +621,24 @@ public final class CaptureActivity extends ModuleActivity implements SurfaceHold
     viewfinderView.drawViewfinder();
   }
 
-  
-  /*
-   * Additions added specifically for the MIT Android app
-   */
-  @Override
-  protected Module getModule() {
-	return new QRReaderModule();
-  }
-
-  @Override
-  public boolean isModuleHomeActivity() {
-	return true;
-  }
-
-   @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_QR_HISTORY:
-			Intent intent = new Intent(this, QRReaderHistoryActivity.class);
-			startActivity(intent);
-			return true;
-		case MENU_QR_HELP:
-			Intent helpIntent = new Intent(this, QRReaderHelpActivity.class);
-			startActivity(helpIntent);
-			return true;
-		}
+	/*
+	 * Additions added specifically for the MIT Android app
+	 */
+	@Override
+	public boolean isModuleHomeActivity() {
 		return true;
-	}
-   
+  	}
+
    @Override
-   protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_QR_HISTORY, Menu.NONE, "History")
-			.setIcon(R.drawable.menu_browse);
-		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-			.setIcon(R.drawable.menu_about);
-  }
+   protected NewModule getNewModule() {
+	   return new QRReaderModule();
+   }
+
+   @Override
+   protected boolean isScrollable() {
+	   return false;
+   }
+
+   @Override
+   protected void onOptionSelected(String optionId) { }
 }

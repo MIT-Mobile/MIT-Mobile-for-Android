@@ -48,7 +48,7 @@ public interface Writer {
    * @param hints Additional parameters to supply to the encoder
    * @return The generated barcode as a Matrix of unsigned bytes (0 == black, 255 == white)
    */
-  BitMatrix encode(String contents, BarcodeFormat format, int width, int height, Hashtable hints)
+  BitMatrix encode(String contents, BarcodeFormat format, int width, int height, @SuppressWarnings("rawtypes") Hashtable hints)
       throws WriterException;
 
 }

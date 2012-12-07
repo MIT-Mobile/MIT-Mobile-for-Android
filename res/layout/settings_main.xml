@@ -5,11 +5,6 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:background="@drawable/main_repeat" >         	
-  
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="Settings"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
 
     <!-- MIT Touchstone -->
 	<edu.mit.mitmobile2.SectionHeader
@@ -42,5 +37,12 @@
         	android:text="Touchstone is MIT's single sign-on authentication service." 
           	android:background="@drawable/main_repeat"          	
           	style="@style/Byline" />		
+
+   <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/arcgisTestButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"      
+  		android:background="@color/rowBackground"
+        android:text="ArcGIS Test" />
 
 </LinearLayout>

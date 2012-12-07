@@ -65,7 +65,8 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 		StopsParser sp;
 		boolean firstTime = true;
 		 
-	    protected Void doInBackground(String... urls) {
+	    @Override
+		protected Void doInBackground(String... urls) {
 
 	    	String url = urls[0];
 
@@ -95,7 +96,8 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	    	 
 	    }
 
-	    @Override
+	    @SuppressWarnings("unchecked")
+		@Override
 		protected void onProgressUpdate(Void... values) {
 			
 			super.onProgressUpdate(values);
@@ -125,7 +127,8 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 					 	
 					 	SectionListItemView itemBuilder = new SectionListItemView() {
 					 		
-					 		public View getView(Object item, View convertView, ViewGroup parent) {
+					 		@Override
+							public View getView(Object item, View convertView, ViewGroup parent) {
 					 			
 					 			View v = convertView;
 					 			if (v == null) {
@@ -378,7 +381,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
         topView.setMinimumHeight(height-30);
         
 		lb = new LoaderBar(ctx);
-		topView.addView(lb);
+		topView.addView(lb, 0);
 		
 		addView(topView);
 

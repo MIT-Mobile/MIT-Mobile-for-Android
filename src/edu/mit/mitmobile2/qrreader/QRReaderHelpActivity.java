@@ -10,6 +10,7 @@ import edu.mit.mitmobile2.R;
 
 public class QRReaderHelpActivity  extends ModuleActivity{
 
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.qrreader_help);

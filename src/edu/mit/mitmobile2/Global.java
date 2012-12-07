@@ -19,7 +19,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import edu.mit.mitmobile2.about.BuildSettings;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
-import edu.mit.mitmobile2.classes.SharedData;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
@@ -48,8 +47,7 @@ public class Global extends Application {
 
 	// Shared Data
 	public static SharedPreferences prefs;
-
-	public static final SharedData sharedData = new SharedData();
+	public static SharedData sharedData = new SharedData();
 	
 	// Facilities 
 	private static String problemType;
@@ -94,6 +92,8 @@ public class Global extends Application {
 	
 	public static void setMobileWebDomain(String mobileWebDomain) {
 		Global.mobileWebDomain = mobileWebDomain;
+		C2DMReceiver.clearDeviceRegistration(mContext);
+		C2DMReceiver.registerForNotifications(mContext);
 	}
 	
 	// Facilities Related
@@ -150,16 +150,18 @@ public class Global extends Application {
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 				SharedPreferences.Editor prefsEditor = prefs.edit();
 				try {
-					Iterator m = obj.keys();
+					@SuppressWarnings("unchecked")
+					Iterator<Object> m =  obj.keys();
 					while (m.hasNext()) {
 
 						module = (String)m.next();
 						Log.d(TAG,"module = " + module);
 	
-						JSONObject data = (JSONObject)obj.get(module);
-						Iterator d = data.keys();
+						JSONObject data = (JSONObject) obj.get(module);
+						@SuppressWarnings("unchecked")
+						Iterator<Object> d =  data.keys();
 						while (d.hasNext()) {
-							key = (String)d.next();
+							key = (String) d.next();
 							versionKey = "remote_" + module + "_" + key;
 							version = (String)data.getString(key);
 							Log.d(TAG,"key = " + key);
@@ -176,6 +178,7 @@ public class Global extends Application {
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 			
+			@SuppressWarnings("unused")
 			public void onError(JSONObject obj) {
 				Log.d(TAG,"error");				
 			}

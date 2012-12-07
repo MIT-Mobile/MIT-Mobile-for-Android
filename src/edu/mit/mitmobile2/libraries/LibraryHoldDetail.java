@@ -16,7 +16,6 @@ import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.HoldListItem;
 
 public class LibraryHoldDetail extends ModuleActivity{
@@ -32,7 +31,6 @@ public class LibraryHoldDetail extends ModuleActivity{
 	private TextView holdISBNTV;
 	private ImageView holdStatusIconIV;
 	private TextView holdStatusTV;
-	private TextView holdPickupLocationTV;
     private int index;
 
 	@Override
@@ -82,7 +80,8 @@ public class LibraryHoldDetail extends ModuleActivity{
 
     }
 
-    private void doSearch(String barcode) {
+    @SuppressWarnings("unused")
+	private void doSearch(String barcode) {
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
