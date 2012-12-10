@@ -50,41 +50,23 @@ public class MapBaseActivity extends NewModuleActivity {
 	private static final String TAG = "MapBaseActivity";
 	public static final String KEY_VIEW_PINS = "view_pins";
 	public MITMapView2 map;
-	LocationService ls;
     private FullScreenLoader mLoadingView;
-	ArcGISTiledMapServiceLayer serviceLayer;
 	protected String module;
-	//protected List<MapItem> mMapItems;
 	Context mContext;
-	QueryTask queryTask;
-	Query query;
-	FeatureSet featureSet;
 	Location location;
-	Button querybt;
-	EditText buildingQuery;
 	GraphicsLayer graphicsLayer;
 	Bundle extras;
-	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
-	public static int DEFAULT_PIN = R.drawable.map_red_pin;
-	PictureMarkerSymbol pms;
 	
 	protected ListView mListView;
 	ProgressDialog progress;
 
 	protected static final String MAP_ITEMS_KEY = "map_items";
-	public static final String MAP_DATA_KEY = "map_data";
-
-	final static int HAS_RESULTS = 1;
-	final static int NO_RESULT = 2;
-	final static int CLEAR_RESULT = 3;
-	
+	public static final String MAP_DATA_KEY = "map_data";	
 	private static final double INIT_SCALE = 10000;
-	
 	static int INIT_ZOOM = 17; // DELETE ?
 	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
 
-	
-	/** Called when the activity is first created. */
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"oncreate()");
 		super.onCreate(savedInstanceState);
@@ -97,9 +79,7 @@ public class MapBaseActivity extends NewModuleActivity {
 
 		map.setOnZoomListener(new MyOnZoomListener());
 		map.setOnSingleTapListener(new MyOnSingleTapListener());
-		
-		Criteria criteria = new Criteria();
-		
+				
 		//Retrieve the non-configuration instance data that was previously returned. 
 		Object init = getLastNonConfigurationInstance();
 		if (init != null) {
@@ -142,7 +122,7 @@ public class MapBaseActivity extends NewModuleActivity {
 				return;
 			}
 			
-    		GraphicsLayer gl = (GraphicsLayer)map.getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
+    		GraphicsLayer gl = (GraphicsLayer)map.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER);
     		int[] graphicId = gl.getGraphicIDs(x, y, 10,1);
     		
     		Log.d(TAG,"num graphics = " + graphicId.length);
@@ -217,13 +197,13 @@ public class MapBaseActivity extends NewModuleActivity {
                 ArrayList<MapBaseLayer> baseMaps = mapServerData.getBaseLayerGroup().get(defaultBasemap);
                 for (int i = 0; i < baseMaps.size(); i++) {
                 	MapLayer layer = baseMaps.get(i);
-            		serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
+                	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
             		map.addMapLayer(serviceLayer, layer.getLayerIdentifier());
                 }
                 
                 // Add general graphics layer
                 graphicsLayer  = new GraphicsLayer();
-        		map.addMapLayer(graphicsLayer, MapBaseActivity.DEFAULT_GRAPHICS_LAYER);
+        		map.addMapLayer(graphicsLayer, MITMapView2.DEFAULT_GRAPHICS_LAYER);
                 
         		// Define a listener that responds to location updates
         		LocationListener locationListener = new LocationListener() {
@@ -240,22 +220,25 @@ public class MapBaseActivity extends NewModuleActivity {
         				}
         		    }
 
-        			public void onStatusChanged(String provider, int status, Bundle extras) {}
+        			@Override
+					public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-        		    public void onProviderEnabled(String provider) {}
+        		    @Override
+					public void onProviderEnabled(String provider) {}
 
-        		    public void onProviderDisabled(String provider) {}
+        		    @Override
+					public void onProviderDisabled(String provider) {}
         		};
 
         		// Initialize location service
-        		ls = map.getLocationService();
-        		ls.setLocationListener(locationListener);
-        		ls.setAllowNetworkLocation(true);
-        		ls.start();
+        		map.ls = map.getLocationService();
+        		map.ls.setLocationListener(locationListener);
+        		map.ls.setAllowNetworkLocation(true);
+        		map.ls.start();
 
         		// zoom and center 
-        		if (ls.isStarted()) {
-        			map.zoomToScale(ls.getPoint(), MapBaseActivity.INIT_SCALE);
+        		if (map.ls.isStarted()) {
+        			map.zoomToScale(map.ls.getPoint(), MapBaseActivity.INIT_SCALE);
         		}
         		
         		 if (extras!=null){ 

@@ -12,7 +12,7 @@ public abstract class MapItem {
 	
 	public MapItem() {
 		mapItemClass = this.getClass().getName();
-		itemData = new HashMap();
+		itemData = new HashMap<String,Object>();
 		mapPoints = new ArrayList<MapPoint>();
 		geometryType = MapItem.TYPE_POINT;
 		symbol = MapItem.DEFAULT_SYMBOL;
@@ -24,7 +24,7 @@ public abstract class MapItem {
 	
 	protected String mapItemClass; // this is a hack to recreate MapItem objects that are extended from the abstract class
 	
-	protected HashMap itemData;
+	protected HashMap<String,Object> itemData;
 	
 	public static final int TYPE_POINT = 1;
 	public static final int TYPE_POLYLINE = 2;
@@ -44,11 +44,11 @@ public abstract class MapItem {
 	public long sql_id = -1;  // not to confuse with "id"
 
 
-	public HashMap getItemData() {
+	public HashMap<String,Object> getItemData() {
 		return itemData;
 	}
 
-	public void setItemData(HashMap itemData) {
+	public void setItemData(HashMap<String,Object> itemData) {
 		this.itemData = itemData;
 	}
 

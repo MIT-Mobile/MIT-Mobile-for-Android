@@ -14,6 +14,7 @@ import android.view.View;
 import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
+import com.esri.android.map.LocationService;
 import com.esri.android.map.MapView;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
@@ -38,9 +39,13 @@ public class MITMapView2 extends MapView  {
 	
 	private static SpatialReference mercatorWeb; // spatial reference used by the base map
 	private static SpatialReference wgs84; // spatial reference used by androids location service
+	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
+	public static int DEFAULT_PIN = R.drawable.map_red_pin;
+	PictureMarkerSymbol pms;
 	private GraphicsLayer gl;
 	private MapData mapData;
 	private Context mContext;
+	protected LocationService ls;
 	
 	public MITMapView2(Context context) {
 		super(context);
@@ -118,13 +123,10 @@ public class MITMapView2 extends MapView  {
 			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
 
 			Map attributes = new HashMap();
-			//attributes.put("mapItem", mapItem);
-			//attributes.put("pointX", point.getX() + "");
-			//attributes.put("pointY", point.getY() + "");
 			
 			Graphic g = new Graphic(point, pms,attributes, null);
 
-			gl = (GraphicsLayer)this.getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl = (GraphicsLayer)this.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
 			int Uid = gl.addGraphic(g);	
 	        return Uid;	
 			
@@ -153,7 +155,7 @@ public class MITMapView2 extends MapView  {
 			
 			Graphic g = new Graphic(polyline,new SimpleLineSymbol(mapItem.lineColor,mapItem.lineWidth));
 
-			gl = (GraphicsLayer)this.getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl = (GraphicsLayer)this.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
 			int Uid = gl.addGraphic(g);	
 	        return Uid;	
 		}
@@ -181,7 +183,7 @@ public class MITMapView2 extends MapView  {
 			
 			Graphic g = new Graphic(polygon,new SimpleLineSymbol(mapItem.lineColor,mapItem.lineWidth));
 
-			gl = (GraphicsLayer)this.getMapLayer(MapBaseActivity.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl = (GraphicsLayer)this.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
 			int Uid = gl.addGraphic(g);	
 	        return Uid;	
 		}

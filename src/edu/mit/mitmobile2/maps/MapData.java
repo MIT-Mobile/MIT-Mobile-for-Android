@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.esri.android.map.LocationService;
+
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
 
@@ -23,7 +25,7 @@ public class MapData {
 	public MapData() {
 		super();
 		this.mode = MapData.MODE_OVERWRITE;
-		this.layerName = MapBaseActivity.DEFAULT_GRAPHICS_LAYER;
+		this.layerName = MITMapView2.DEFAULT_GRAPHICS_LAYER;
 		this.mapItems = new ArrayList<MapItem>();
 	}
 	

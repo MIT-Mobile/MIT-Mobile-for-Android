@@ -170,8 +170,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 		}
 
 		mapData.getMapItems().add(route);
-		//i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData);
-		Log.d("ZZZ","launch map activity from MITRouteSliderActivity");
+		i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData.toJSON());
 		context.startActivity(i);
 	}
 	@Override

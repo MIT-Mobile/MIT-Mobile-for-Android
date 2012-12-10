@@ -129,9 +129,10 @@ public class MITMapActivity extends MapBaseActivity {
 
 	protected void onMyLocationRequested() {
 		// location is always displayed in Map. Selecting my location just centers map to that point
-		map.centerAt(ls.getPoint(),true);
+		map.centerAt(map.ls.getPoint(),true);
 	}
 	
+	@Override
 	public boolean onSearchRequested() {
 		if (MODULE_SHUTTLE.equals(module)) return false;
 		return super.onSearchRequested();
@@ -149,7 +150,6 @@ public class MITMapActivity extends MapBaseActivity {
 	
 	protected void processExtras(Bundle extras) {
 		Log.d(TAG,"processExtras");
-		debugLayerIdMap(TAG);
 		
         if (extras!=null){ 
 
