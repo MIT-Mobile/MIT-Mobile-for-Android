@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.alerts.C2DMReceiver.NoticeListener;
+import edu.mit.mitmobile2.alerts.GCMIntentService.NoticeListener;
 
 public class EmergencyInfoNoticeListener extends NoticeListener {
 
@@ -15,7 +15,7 @@ public class EmergencyInfoNoticeListener extends NoticeListener {
 		try {
 			String title = context.getString(R.string.emergency_alert_title);
 			String message;
-			message = object.getJSONObject("aps").getString("alert");
+			message = object.getString("alert");
 			notifyUser(context, title, title, message,R.drawable.alert_emergency, EmergencyActivity.class);		
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

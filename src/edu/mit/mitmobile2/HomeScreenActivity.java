@@ -31,6 +31,7 @@ import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.about.AboutActivity;
+import edu.mit.mitmobile2.alerts.GCMIntentService;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
@@ -286,6 +287,9 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 		Context mContext = this;
 		Handler uiHandler = new Handler();
 		if (key.equalsIgnoreCase(Global.MIT_MOBILE_SERVER_KEY)) {
+			GCMIntentService.clearDeviceRegistration(mContext);
+			GCMIntentService.registerForNotifications(mContext);
+			
 			Global.setMobileWebDomain(prefs.getString(Global.MIT_MOBILE_SERVER_KEY, null));
 
 			// Update the version map any time the Mobile server is changed

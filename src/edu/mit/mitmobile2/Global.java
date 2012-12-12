@@ -18,7 +18,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.alerts.C2DMReceiver;
+import edu.mit.mitmobile2.alerts.GCMIntentService;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
@@ -59,7 +59,7 @@ public class Global extends Application {
 		Log.d(TAG,"onCreate()");
 		mContext = this;
 		
-		C2DMReceiver.registerForNotifications(this);
+		GCMIntentService.registerForNotifications(this);
 		
 		// load Mobile Web Domain preferences
 		try {
@@ -92,8 +92,6 @@ public class Global extends Application {
 	
 	public static void setMobileWebDomain(String mobileWebDomain) {
 		Global.mobileWebDomain = mobileWebDomain;
-		C2DMReceiver.clearDeviceRegistration(mContext);
-		C2DMReceiver.registerForNotifications(mContext);
 	}
 	
 	// Facilities Related

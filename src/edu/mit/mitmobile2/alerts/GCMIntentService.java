@@ -7,6 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
+import com.google.android.gcm.GCMBaseIntentService;
+import com.google.android.gcm.GCMRegistrar;
+
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.ErrorResponseListener;
@@ -20,7 +23,6 @@ import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +30,7 @@ import android.content.SharedPreferences.Editor;
 
 import android.util.Log;
 
-public class C2DMReceiver extends BroadcastReceiver {
+public class GCMIntentService extends GCMBaseIntentService {
 
 	public static abstract class NoticeListener {
 		abstract public void onReceivedNotice(Context context, JSONObject object, int noticeCount);
@@ -64,64 +66,83 @@ public class C2DMReceiver extends BroadcastReceiver {
 	
 	// This only get set after the
 	// server has confirmed receipt of the registration id
-	private static String sRegistrationID;
 	private static String mPendingRegistrationID;
 	
 	public static void registerForNotifications(Context context) {
-		if (sRegistrationID == null) {
-			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-			registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0)); // boilerplate
-			registrationIntent.putExtra("sender", BuildSettings.C2DM_SENDER);
-			context.startService(registrationIntent);
+		GCMRegistrar.checkDevice(context);	
+	    GCMRegistrar.checkManifest(context);
+	 	final String regId = GCMRegistrar.getRegistrationId(context);
+	 	if (regId.equals("")) {
+	 		GCMRegistrar.register(context, BuildSettings.C2DM_SENDER);
+	 	} else if (getDevice(context) == null) {
+	 		registerDevice(context, regId);
+	 	}
+	}
+
+	@Override
+	protected void onRegistered(Context context, String registrationId) {
+		if (registrationId != null) {
+			if (mPendingRegistrationID == null || !registrationId.equals(mPendingRegistrationID)) {
+				mPendingRegistrationID = registrationId;
+				registerDevice(context, mPendingRegistrationID);
+			}
+		} else {
+			Log.d("C2DMReceiver", "failed to get a registration ID, probably an invalid GCM sender configuration");
 		}
+	}
+	
+	@Override
+	protected void onMessage(Context context, Intent intent) {
+		try {
+			final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+			long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
+			
+			JSONObject payloadObject = new JSONObject(intent.getExtras().getString("aps"));
+			String tag = intent.getExtras().getString("tag");
+			int recipientDeviceID = Integer.parseInt(intent.getExtras().getString("deviceID"));
+			if (recipientDeviceID != deviceID) {
+				// notice not intended for this recipient
+				// user probably uninstalled and reinstalled the app
+				return;
+			}
+
+			NoticeListener noticeListener = null;
+			if (tag.startsWith("emergencyinfo:")) {
+				noticeListener = new EmergencyInfoNoticeListener();
+			}
+			if (noticeListener != null) {
+				noticeListener.onReceivedNotice(context, payloadObject, incrementNoticeCount(context));
+			} else {
+				Log.d("C2DMReceiver", "Could not find a target for notification with tag=" + tag);
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.d("C2DMReceiver", "Failed at parsing incoming notification");
+		}	
+	}
+	
+	@Override
+	protected void onError(Context context, String errorId) {
+		// TODO Auto-generated method stub
+		Log.e("notifications", "Error registering device: error " + errorId);
 
 	}
 
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		Log.d("action", intent.getAction());
-		if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
-			String registration = intent.getStringExtra("registration_id");
-			if (registration != null) {
-				if (mPendingRegistrationID == null || !registration.equals(mPendingRegistrationID)) {
-					mPendingRegistrationID = registration;
-					registerDevice(context, mPendingRegistrationID);
-				}
-			} else {
-				Log.d("C2DMReceiver", "failed to get a registration ID, probably an invalid C2DM sender configuration");
-			}
-			
-		} else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
-			try {
-				final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-				long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
-				
-				JSONObject payloadObject = new JSONObject(intent.getExtras().getString("payload"));
-				String tag = payloadObject.getString("tag");
-				int recipientDeviceID = payloadObject.getInt("deviceID");
-				if (recipientDeviceID != deviceID) {
-					// notice not intended for this recipient
-					// user probably uninstalled and reinstalled the app
-					return;
-				}
+	protected boolean onRecoverableError(Context context, String errorId) {
+		// TODO Auto-generated method stub
+		Log.w("notifications", "Recoverable error registering device: error " + errorId);
 
-				NoticeListener noticeListener = null;
-				if (tag.startsWith("emergencyinfo:")) {
-					noticeListener = new EmergencyInfoNoticeListener();
-				}
-				if (noticeListener != null) {
-					noticeListener.onReceivedNotice(context, payloadObject, incrementNoticeCount(context));
-				} else {
-					Log.d("C2DMReceiver", "Could not find a target for notification with tag=" + tag);
-				}
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Log.d("C2DMReceiver", "Failed at parsing incoming notification");
-			}
-		}
-		
+		return true;
+	}
+	
+	@Override
+	protected void onUnregistered(Context context, String regId) {
+		// TODO Auto-generated method stub
+		Log.i("notifications", "Device unregistered from Google");
+
 	}
 	
 	private final static String PREFERENCES = "DeviceRegistration";
@@ -131,16 +152,15 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String NOTICE_COUNT_KEY = "notice_count"; 
 	
 	public static void clearDeviceRegistration(Context context) {
-		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		final SharedPreferences preferences = getPreferences(context);
 		Editor editor = preferences.edit();
 		editor.putLong(DEVICE_ID_KEY, -1);
 		editor.commit();
 		
-		sRegistrationID = null;
 	}
 	
-	private void registerDevice(final Context context, final String registrationID) {
-		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+	private static void registerDevice(final Context context, final String registrationID) {
+		final SharedPreferences preferences = getPreferences(context);
 		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
 		long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
 		String appID = BuildSettings.release_project_name;
@@ -152,6 +172,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 			params.put("device_type", "android");
 			params.put("app_id", appID);
 			params.put("device_token", registrationID);	
+			params.put("message_service", "gcm");
 			
 			api.requestJSONObject(params, new JSONObjectResponseListener(
 				new RegistrationErrorListener(), null)  {
@@ -163,7 +184,6 @@ public class C2DMReceiver extends BroadcastReceiver {
 					editor.putLong(DEVICE_PASS_KEY, object.getLong(DEVICE_PASS_KEY));
 					editor.putString(DEVICE_REGISTRATION_KEY, registrationID);
 					editor.commit();
-					sRegistrationID = registrationID;
 					mPendingRegistrationID = null;
 					
 					Global.onDeviceRegisterCompleted();
@@ -180,6 +200,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 				params.put("device_type", "android");
 				params.put("app_id", appID);
 				params.put("device_token", registrationID);	
+				params.put("message_service", "gcm");
 				params.put("device_id", Long.toString(deviceID));
 				params.put("pass_key", Long.toString(preferences.getLong(DEVICE_PASS_KEY, 0)));
 				api.requestJSONObject(params, new JSONObjectResponseListener(
@@ -194,8 +215,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 						if (object.getBoolean("success")) {
 							Editor editor = preferences.edit();
 							editor.putString(DEVICE_REGISTRATION_KEY, registrationID);
-							editor.commit();
-							sRegistrationID = registrationID;	
+							editor.commit();	
 							
 							Global.onDeviceRegisterCompleted();
 						} else {
@@ -207,7 +227,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		}
 	}
 
-	class RegistrationErrorListener implements ErrorResponseListener {
+	static class RegistrationErrorListener implements ErrorResponseListener {
 
 		@Override
 		public void onError() {
@@ -268,21 +288,32 @@ public class C2DMReceiver extends BroadcastReceiver {
 	}
 	
 	public static Device getDevice(Context context) {
-		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		final SharedPreferences preferences = getPreferences(context);
 		
-		return new Device(
-			preferences.getLong(DEVICE_ID_KEY, -1),
-			preferences.getLong(DEVICE_PASS_KEY, 0)
-		);
+		long deviceId = preferences.getLong(DEVICE_ID_KEY, -1);
+		long passKey = preferences.getLong(DEVICE_PASS_KEY, 0);
+		if (deviceId > 0) {
+			return new Device(
+				deviceId,
+				passKey
+			);
+		} else {
+			return null;
+		}
 	}
 	
 	
 	private int incrementNoticeCount(Context context) {
-		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		final SharedPreferences preferences = getPreferences(context);
 		int count = preferences.getInt(NOTICE_COUNT_KEY, 0);
 		Editor editor = preferences.edit();
 		editor.putInt(NOTICE_COUNT_KEY, count+1);
 		editor.commit();
 		return count+1;		
+	}
+
+	
+	private static SharedPreferences getPreferences(Context context) {
+		return context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE); 
 	}
 }

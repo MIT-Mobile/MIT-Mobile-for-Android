@@ -12,7 +12,7 @@ public class BootReceiver extends BroadcastReceiver {
 
 		Log.d("BootReceiver","BootReceiver");
 		
-		C2DMReceiver.registerForNotifications(context);
+		GCMIntentService.registerForNotifications(context);
 		
 	}
 
