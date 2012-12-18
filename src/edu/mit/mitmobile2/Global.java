@@ -1,13 +1,13 @@
 package edu.mit.mitmobile2;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +17,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.about.Config;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
@@ -42,7 +42,7 @@ public class Global extends Application {
 	// Mobile Server 
 	private static final String TAG = "Global";
 	public static final String MIT_MOBILE_SERVER_KEY = "mit_mobile_server"; // key for server variable in the preferences file
-	public static final String DEFAULT_MIT_MOBILE_SERVER = BuildSettings.MOBILE_WEB_DOMAIN; // key for server variable in the preferences file
+	public static final String DEFAULT_MIT_MOBILE_SERVER = Config.MOBILE_WEB_DOMAIN; // key for server variable in the preferences file
 	private static String mobileWebDomain = DEFAULT_MIT_MOBILE_SERVER;
 
 	// Shared Data
@@ -69,7 +69,7 @@ public class Global extends Application {
 		catch (RuntimeException e) {
 			Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 		}
-		// if the mobile server is not defined in the preferences, default it to the value in the BuildSettings.java file
+		// if the mobile server is not defined in the preferences, default it to the value in the Config.java file
 		if (Global.getMobileWebDomain() == null) {
 			Global.setMobileWebDomain(Global.DEFAULT_MIT_MOBILE_SERVER);
 		}

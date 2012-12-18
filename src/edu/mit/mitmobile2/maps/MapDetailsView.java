@@ -1,30 +1,19 @@
 package edu.mit.mitmobile2.maps;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Picture;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
-import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.LoadingUIHelper;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.R;

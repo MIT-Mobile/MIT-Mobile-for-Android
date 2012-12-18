@@ -8,10 +8,8 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 

@@ -1,10 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,11 +9,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
-import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
-import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
-import edu.mit.mitmobile2.MobileWebApi.DefaultCancelRequestListener;
-import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
 
 public class MapModel {
     public static String MODULE_MAP = "map";

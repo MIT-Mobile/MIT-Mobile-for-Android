@@ -1,9 +1,5 @@
 package edu.mit.mitmobile2.maps;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import android.app.Activity;
@@ -31,7 +27,6 @@ import com.esri.android.map.event.OnZoomListener;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
-import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.FeatureSet;
 import com.esri.core.map.Graphic;
@@ -45,8 +40,6 @@ import com.esri.core.tasks.ags.query.QueryTask;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
-
-import edu.mit.mitmobile2.objs.FineListItem;
 
 public class ArcGISActivity extends Activity {
 	

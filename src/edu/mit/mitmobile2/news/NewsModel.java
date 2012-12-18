@@ -20,16 +20,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import edu.mit.mitmobile2.ConnectionWrapper;
-import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
-import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
-import edu.mit.mitmobile2.FixedCache;
-import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.objs.SearchResults;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -41,6 +31,15 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+import edu.mit.mitmobile2.ConnectionWrapper;
+import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
+import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
+import edu.mit.mitmobile2.FixedCache;
+import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.about.Config;
+import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.objs.SearchResults;
 
 public class NewsModel {
 	// categorys
@@ -74,7 +73,7 @@ public class NewsModel {
 	private NewsDB mNewsDB;
 	private Context mContext;
 	private SharedPreferences mSharedPreferences;
-	static String NEWS_PATH = "/" + BuildSettings.NEWS_OFFICE_PATH;
+	static String NEWS_PATH = "/" + Config.NEWS_OFFICE_PATH;
 	
 	private static HashMap<String, SearchResults<NewsItem>> searchCache = new FixedCache<SearchResults<NewsItem>>(10);
 	
@@ -485,7 +484,7 @@ public class NewsModel {
 		String query = MobileWebApi.query(params);
 		
 		ConnectionWrapper connection = new ConnectionWrapper(mContext);
-		String searchURL = "http://" + Global.getMobileWebDomain() + "/api/" + BuildSettings.NEWS_OFFICE_PATH + "/";
+		String searchURL = "http://" + Global.getMobileWebDomain() + "/api/" + Config.NEWS_OFFICE_PATH + "/";
 		connection.openURL(searchURL + "?" + query, 
 			new ConnectionInterface() {
 				@Override
