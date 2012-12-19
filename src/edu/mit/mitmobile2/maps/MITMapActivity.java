@@ -31,6 +31,7 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapUpdater;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.people.PeopleDB;
 import edu.mit.mitmobile2.people.PeopleModule;
@@ -123,6 +124,9 @@ public class MITMapActivity extends MapBaseActivity {
 	}
 	
 	protected void onBrowseRequested() {
+		if (this.getMapUpdater() != null) {
+			this.getMapUpdater().stop();
+		}
 	    Intent i = new Intent(this,MITMapBrowseCatsActivity.class);  
 		startActivity(i);
 	}
@@ -134,6 +138,9 @@ public class MITMapActivity extends MapBaseActivity {
 	
 	@Override
 	public boolean onSearchRequested() {
+		if (this.getMapUpdater() != null) {
+			this.getMapUpdater().stop();
+		}
 		if (MODULE_SHUTTLE.equals(module)) return false;
 		return super.onSearchRequested();
 	}

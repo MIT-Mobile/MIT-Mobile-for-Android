@@ -49,7 +49,7 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
 
 	private int mSelectedPosition;
 	private int mStartPosition;
-	private static final String MAP_ITEMS_KEY = "map_items";
+	public static final String MAP_ITEMS_KEY = "map_items";
 	
 	public static void launchMapDetails(Context context, List<MapItem> mapItems, int position) {
 		Intent i = new Intent(context, MITMapDetailsSliderActivity.class);		

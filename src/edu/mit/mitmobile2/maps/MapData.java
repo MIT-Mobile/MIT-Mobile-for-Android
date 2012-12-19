@@ -1,12 +1,15 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.util.Log;
 
 import com.esri.android.map.LocationService;
 
@@ -18,7 +21,7 @@ public class MapData {
 	private int mode;
 	private String layerName;
 	protected ArrayList<MapItem> mapItems;
-
+	
 	public static int MODE_OVERWRITE = 1; // will clear the graphics layer before adding new graphics
 	public static int MODE_APPEND = 2; // appends graphics to the graphics layer
 
@@ -95,6 +98,7 @@ public class MapData {
 			e.printStackTrace();
 		}
 
+		Log.d("ZZZ","toJSON = " + jMapData.toString());
 		return jMapData.toString();
 	}
 	
@@ -104,7 +108,7 @@ public class MapData {
 			JSONObject jMapData = new JSONObject(mapDataJSON);
 			m.setLayerName(jMapData.getString("layerName"));
 			m.setMode(jMapData.getInt("mode"));
-
+			
 			// get mapItems
 			JSONArray jMapItems = jMapData.getJSONArray("mapItems");
             for (int i = 0; i < jMapItems.length(); i++) {
@@ -164,4 +168,5 @@ public class MapData {
 
 		return m;
 	}
+
 }

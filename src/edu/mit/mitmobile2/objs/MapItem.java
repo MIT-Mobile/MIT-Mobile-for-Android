@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.objs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ public abstract class MapItem {
 	}
 		
 	public abstract View getCallout(Context mContext);
+	//public abstract void initTimer(Context mContext);
 	
 	protected String mapItemClass; // this is a hack to recreate MapItem objects that are extended from the abstract class
 	
@@ -40,6 +42,7 @@ public abstract class MapItem {
 	public int symbol; // symbol to show for points
 	public int lineColor; // color to use for polylines and polygons
 	public int lineWidth; // width tu use for polylines and polygons
+	//protected Timer timer;
 	
 	public long sql_id = -1;  // not to confuse with "id"
 
@@ -99,5 +102,13 @@ public abstract class MapItem {
 	public void setSymbol(int symbol) {
 		this.symbol = symbol;
 	}
+
+//	public Timer getTimer() {
+//		return timer;
+//	}
+//
+//	public void setTimer(Timer timer) {
+//		this.timer = timer;
+//	}
 
 }

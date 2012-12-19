@@ -3,6 +3,8 @@ package edu.mit.mitmobile2.maps;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +30,8 @@ import com.esri.core.symbol.SimpleLineSymbol;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
+import edu.mit.mitmobile2.objs.MapUpdater;
+import edu.mit.mitmobile2.objs.ShuttleMapUpdater;
 
 
 
@@ -148,7 +152,7 @@ public class MITMapView2 extends MapView  {
 			polyline.startPath(startPoint);
 			for (int p = 0; p < mapItem.getMapPoints().size(); p++) {
 				MapPoint mapPoint = mapItem.getMapPoints().get(p);
-				Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
+				//Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
 				point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
 				polyline.lineTo(point);
 			}
@@ -176,7 +180,7 @@ public class MITMapView2 extends MapView  {
 			polygon.startPath(startPoint);
 			for (int p = 0; p < mapItem.getMapPoints().size(); p++) {
 				MapPoint mapPoint = mapItem.getMapPoints().get(p);
-				Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
+				//Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
 				point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
 				polygon.lineTo(point);
 			}
@@ -202,46 +206,6 @@ public class MITMapView2 extends MapView  {
         gl = (GraphicsLayer)this.getLayerByID(layerId);
         gl.addGraphic(g);
         return g.getUid();
-	}
-
-	protected void processMapData() {
-		getCallout().hide();
-
-		Log.d(TAG,"processMapData");
-		
-		int gId = 0; // ID of graphic object created by displayMapItem
-
-		// get Graphics Layer
-		gl = (GraphicsLayer)this.getMapLayer(mapData.getLayerName());
-		Log.d(TAG,"test id of gl = " + gl.getID());
-		
-		// clear the layer if mode == MODE_OVERWRITE
-		if (mapData.getMode() == MapData.MODE_OVERWRITE) {
-			gl.removeAll();	
-		}
-    	
-		Log.d("ZZZ","there are " + mapData.getMapItems().size() + " map items");
-    	for (int i = 0; i < mapData.getMapItems().size(); i++) {
-    		MapItem mapItem = mapData.getMapItems().get(i);
-
-    		Log.d(TAG,"displayName before display item = " + mapItem.getItemData().get("displayName"));
-    		
-    		Log.d("ZZZ","map item " + i + " has " + mapItem.getMapPoints().size() + " map points");
-
-    		// get the ID of the graphic once it has been added to the graphics layer
-    		gId = this.dislayMapItem(mapData.getLayerName(),mapItem);
-
-    		// store the index (i) of the mapItem in the graphicIdMap with the key of the graphic ID
-    		// this will let ut use the ID of the tapped graphic to get the corresponding mapItem and create the callout
-    		Log.d("ZZZ","graphic id " + gId + " maps to mapItem " + i);
-    		graphicIdMap.put(Integer.toString(gId),Integer.valueOf(i));
-    	}
-    	
-    	// If there is only one mapItem, display the callout
-    	if (mapData.getMapItems().size() == 1) {
-    		MapItem mapItem = mapData.getMapItems().get(0);
-    		displayCallout(mContext, mapItem);
-    	}
 	}
 
 	public void displayCallout(Context context, MapItem mapItem) {
@@ -303,7 +267,6 @@ public class MITMapView2 extends MapView  {
 	public void setMapData(MapData mapData) {
 		this.mapData = mapData;
 	}
-	
 
 }
 

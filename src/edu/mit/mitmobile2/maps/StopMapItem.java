@@ -1,23 +1,26 @@
 package edu.mit.mitmobile2.maps;
 
-import java.io.Serializable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.esri.android.map.Callout;
-import com.esri.core.geometry.Point;
-import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
 public class StopMapItem extends MapItem {
-	
+
+//	public StopMapItem() {
+//		super();
+//		timer = new Timer();
+//	}
+
 	public View getCallout(Context mContext) {
 
 		String buildingName = (String)this.getItemData().get("buildingName");
@@ -34,6 +37,26 @@ public class StopMapItem extends MapItem {
 		calloutBuildingName.setText(buildingName);
 		
 		return calloutLayout;
+	}
+	
+//	@Override
+//	public void initTimer(Context mContext) {
+//		// TODO Auto-generated method stub
+//		MyTimerTask myTask = new MyTimerTask();
+//		timer.schedule(myTask, 3000, 3000);        
+//	}
+
+	class MyTimerTask extends TimerTask {
+		 public void run() {
+			 // ERROR
+			 Log.d("ZZZ","timer");
+			 try {
+				 RouteItem route = ShuttleModel.getRoute((String)itemData.get("route_id"));
+			 }
+			 catch (Exception e) {
+				 Log.d("ZZZ","exception = " + e.getMessage());
+			 }
+		 }
 	}
 
 }

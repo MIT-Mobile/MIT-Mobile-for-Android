@@ -44,6 +44,9 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapUpdater;
+import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.shuttles.MITRoutesSliderActivity;
 
 public class MapBaseActivity extends NewModuleActivity {
 	
@@ -54,14 +57,21 @@ public class MapBaseActivity extends NewModuleActivity {
 	protected String module;
 	Context mContext;
 	Location location;
-	GraphicsLayer graphicsLayer;
+	GraphicsLayer gl;
+	//GraphicsLayer graphicsLayer;
 	Bundle extras;
+	private MapUpdater mapUpdater;
+	private HashMap params;
 	
 	protected ListView mListView;
 	ProgressDialog progress;
 
 	protected static final String MAP_ITEMS_KEY = "map_items";
 	public static final String MAP_DATA_KEY = "map_data";	
+	public static final String MAP_UPDATER_KEY = "map_updater";
+	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
+	
+
 	private static final double INIT_SCALE = 10000;
 	static int INIT_ZOOM = 17; // DELETE ?
 	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
@@ -181,7 +191,7 @@ public class MapBaseActivity extends NewModuleActivity {
 		
 	}
 	
-	private Handler uiHandler = new Handler() {
+	private Handler mapUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mLoadingView.setVisibility(View.GONE);
@@ -202,8 +212,8 @@ public class MapBaseActivity extends NewModuleActivity {
                 }
                 
                 // Add general graphics layer
-                graphicsLayer  = new GraphicsLayer();
-        		map.addMapLayer(graphicsLayer, MITMapView2.DEFAULT_GRAPHICS_LAYER);
+                gl  = new GraphicsLayer();
+        		map.addMapLayer(gl, MITMapView2.DEFAULT_GRAPHICS_LAYER);
                 
         		// Define a listener that responds to location updates
         		LocationListener locationListener = new LocationListener() {
@@ -241,16 +251,8 @@ public class MapBaseActivity extends NewModuleActivity {
         			map.zoomToScale(map.ls.getPoint(), MapBaseActivity.INIT_SCALE);
         		}
         		
-        		 if (extras!=null){ 
-        			 extras.setClassLoader(getClassLoader());
-        			 
-        	        	if (extras.containsKey(MAP_DATA_KEY)) {
-        	        		String mapDataJSON = (String)extras.get(MAP_DATA_KEY);
-        	        		map.setMapData(MapData.fromJSON(mapDataJSON));
-        	        		map.processMapData();
-        	        	}
-        		 }
-        		        		
+        		processExtras();
+       		        		
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
             } else if (msg.arg1 == MobileWebApi.CANCELLED) {
@@ -259,6 +261,27 @@ public class MapBaseActivity extends NewModuleActivity {
         }
     };
 	
+    
+    private Handler mapUpdateUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	try {
+            		map.setMapData((MapData)msg.obj);
+            		processMapData();
+            	}
+            	catch (Exception e) {
+            		
+            	}
+            } else if (msg.arg1 == MobileWebApi.ERROR) {
+            	Log.d("ZZZ","ShuttleMapUpdater error");  		        		
+            } else if (msg.arg1 == MobileWebApi.CANCELLED) {
+            	Log.d("ZZZ","ShuttleMapUpdater cancelled");  		        		
+            }
+        }
+    };
+    
     private void mapInit() {
     	Log.d(TAG,"mapInit");
 
@@ -279,7 +302,7 @@ public class MapBaseActivity extends NewModuleActivity {
 	        
 			mLoadingView.setVisibility(View.VISIBLE);
 	        mLoadingView.showLoading();
-	        MapModel.fetchMapServerData(this, uiHandler);    	
+	        MapModel.fetchMapServerData(this, mapUiHandler);    	
     	}
     }
 
@@ -373,15 +396,8 @@ public class MapBaseActivity extends NewModuleActivity {
 	 @Override
 	 protected void onNewIntent(Intent intent) {
 		 Log.d(TAG,"onNewIntent");
-	    Bundle extras = intent.getExtras();
-	    if (extras!=null){ 
-        	if (extras.containsKey(MAP_DATA_KEY)) {
-          		String mapDataJSON = (String)extras.get(MAP_DATA_KEY);
-        		map.setMapData(MapData.fromJSON(mapDataJSON));
-        		//mapData = extras.getParcelable(MAP_DATA_KEY);
-        		map.processMapData();
-        	}
-	    }
+	    this.extras = intent.getExtras();
+	    processExtras();
 	 } // End of onN
 
 	@Override
@@ -405,5 +421,105 @@ public class MapBaseActivity extends NewModuleActivity {
 	
 		return txtView;
 	}
-		 
+
+	public MapUpdater getMapUpdater() {
+		return mapUpdater;
+	}
+
+	public void setMapUpdater(MapUpdater mapUpdater) {
+		this.mapUpdater = mapUpdater;
+	}
+	
+	protected void processExtras() {
+		 if (extras!=null){ 
+			 
+	        	if (extras.containsKey(MAP_DATA_KEY)) {
+	        		String mapDataJSON = (String)extras.get(MAP_DATA_KEY);
+	        		map.setMapData(MapData.fromJSON(mapDataJSON));
+	        		processMapData();
+	        	}
+	        	else if (extras.containsKey(MAP_UPDATER_KEY)) {
+	        		Log.d("ZZZ","display map from updater");
+	   			 	extras.setClassLoader(getClassLoader());
+	    			try {
+	    				@SuppressWarnings("unchecked")
+	    				Class<Object> cls = (Class<Object>) Class.forName((String)extras.get(MapBaseActivity.MAP_UPDATER_KEY));
+	    				try {
+	    					Object o = cls.newInstance();
+	    					mapUpdater = (MapUpdater)o;
+	    					
+	    					// Get the map updater params
+	    					if (extras.containsKey(MAP_UPDATER_PARAMS_KEY)) {
+	    						params = (HashMap<String,Object>)extras.get(MAP_UPDATER_PARAMS_KEY); 
+	    					}
+	    					mapUpdater.init(mContext,params,mapUpdateUiHandler);
+	    				} catch (InstantiationException e) {
+	    					Log.d(TAG,"InstantiationException");
+	    					e.printStackTrace();
+	    				} catch (IllegalAccessException e) {
+	    					Log.d(TAG,"IllegalAccessException");
+	    					e.printStackTrace();
+	    				}
+	    			} catch (ClassNotFoundException e1) {
+	    				// TODO Auto-generated catch block
+	    				Log.d(TAG,"ClassNotFoundException");
+	    				Log.d(TAG,e1.getMessage());
+	    				e1.printStackTrace();
+	    			}
+	        		
+	        	}
+		 }
+	}
+	
+	protected void processMapData() {
+		map.getCallout().hide();
+
+		Log.d(TAG,"processMapData");
+		
+		int gId = 0; // ID of graphic object created by displayMapItem
+
+		// get Graphics Layer
+		gl = (GraphicsLayer)map.getMapLayer(map.getMapData().getLayerName());
+		Log.d(TAG,"test id of gl = " + gl.getID());
+		
+		// clear the layer if mode == MODE_OVERWRITE
+		if (map.getMapData().getMode() == MapData.MODE_OVERWRITE) {
+			gl.removeAll();	
+		}
+    	
+    	for (int i = 0; i < map.getMapData().getMapItems().size(); i++) {
+    		MapItem mapItem = map.getMapData().getMapItems().get(i);
+
+    		// get the ID of the graphic once it has been added to the graphics layer
+    		gId = map.dislayMapItem(map.getMapData().getLayerName(),mapItem);
+
+    		// store the index (i) of the mapItem in the graphicIdMap with the key of the graphic ID
+    		// this will let ut use the ID of the tapped graphic to get the corresponding mapItem and create the callout
+    		map.graphicIdMap.put(Integer.toString(gId),Integer.valueOf(i));
+    	}
+    	
+    	// If there is only one mapItem, display the callout
+    	if (map.getMapData().getMapItems().size() == 1) {
+    		MapItem mapItem = map.getMapData().getMapItems().get(0);
+    		map.displayCallout(mContext, mapItem);
+    	}
+	}
+
+	public HashMap getParams() {
+		return params;
+	}
+
+	public void setParams(HashMap params) {
+		this.params = params;
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.d(TAG,"onPause()");
+	}
+
+	
+	
 }

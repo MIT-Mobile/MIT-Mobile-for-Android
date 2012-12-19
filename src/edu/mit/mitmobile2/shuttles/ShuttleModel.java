@@ -187,8 +187,9 @@ public class ShuttleModel {
 			new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {					
 				@Override
 				public void onResponse(JSONObject object) throws JSONException {
-					updateRouteItem(RoutesParser.parseJSONRouteObject(object));
-					MobileWebApi.sendSuccessMessage(uiHandler);
+					RouteItem routeItem = RoutesParser.parseJSONRouteObject(object);
+					updateRouteItem(routeItem);
+					MobileWebApi.sendSuccessMessage(uiHandler,routeItem);
 				}
 			}
 		);		

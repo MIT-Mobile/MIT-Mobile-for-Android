@@ -29,5 +29,5 @@ public class RouteMapItem extends MapItem {
 		
 		return calloutLayout;
 	}
-
+	
 }

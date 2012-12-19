@@ -1,12 +1,17 @@
 package edu.mit.mitmobile2.objs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
+import edu.mit.mitmobile2.maps.MITMapBrowseResultsActivity;
+import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
 
 public class BuildingMapItem extends MapItem {
 	
@@ -16,7 +21,8 @@ public class BuildingMapItem extends MapItem {
 		// TODO Auto-generated constructor stub
 	}
 
-	public View getCallout(Context mContext) {
+	@Override
+	public View getCallout(final Context mContext) {
 
 		Log.d(TAG,"BuildingMapItem getCallout");
 		String buildingName = (String)this.getItemData().get("displayName");
@@ -31,7 +37,23 @@ public class BuildingMapItem extends MapItem {
 		TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.callout_building_name);
 		calloutBuildingName.setText(buildingName);
 		
+		//calloutLayout.on
+		calloutLayout.setOnClickListener(new View.OnClickListener() {
+
+	            @Override
+	            public void onClick(View v) {
+	            	Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
+	            	mContext.startActivity(i);
+	            }
+	        });
+		
 		return calloutLayout;
 	}
+
+//	@Override
+//	public void initTimer(Context mContext) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }
