@@ -2,9 +2,8 @@ package edu.mit.mitmobile2;
 
 import java.util.Date;
 
-import edu.mit.mitmobile2.about.BuildSettings;
-
 import android.util.Log;
+import edu.mit.mitmobile2.about.Config;
 
 public class DLog {
 	
@@ -31,7 +30,7 @@ public class DLog {
 	}
 	
 	public static void v(String tag, String msg) {
-		if(BuildSettings.VERBOSE_LOGGING) {
+		if(Config.VERBOSE_LOGGING) {
 			Log.v(tag, msg);
 		}
 	}

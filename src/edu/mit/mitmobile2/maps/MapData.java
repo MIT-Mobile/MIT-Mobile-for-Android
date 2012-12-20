@@ -9,10 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+<<<<<<< HEAD
 import android.util.Log;
 
 import com.esri.android.map.LocationService;
 
+=======
+>>>>>>> b1d41f7cd04b520a273992af5761a791f573e2ba
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
 

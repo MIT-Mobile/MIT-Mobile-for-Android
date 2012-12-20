@@ -4,17 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
-
-import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.PrefsActivity;
-import edu.mit.mitmobile2.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +14,8 @@ import android.gesture.Gesture;
 import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
-import android.gesture.Prediction;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.gesture.Prediction;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,6 +23,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.PrefsActivity;
+import edu.mit.mitmobile2.R;
 
 public class AboutActivity extends NewModuleActivity implements OnGesturePerformedListener {
 
@@ -61,7 +58,7 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 		tv.setText(this.getResources().getString(R.string.app_name));
 
 		tv = (TextView) findViewById(R.id.aboutAppVersion);
-		tv.setText("v" + BuildSettings.VERSION_NAME);
+		tv.setText("v" + Config.VERSION_NAME);
 		
 		mAboutImage = (ImageView) findViewById(R.id.aboutVersionImage);
 		if (sBitmap == null) {
@@ -72,30 +69,23 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 		mBuildSettingsView = findViewById(R.id.aboutSettingsList);
 		
 		tv = (TextView) findViewById(R.id.aboutVersionId);
-		String buildId = BuildSettings.BUILD_ID;
+		String buildId = Config.BUILD_ID;
 		if(buildId.length() > 6) {
 			buildId = buildId.substring(0, 6);
 		}
 		tv.setText("Version: " + buildId);
 		
 		TextView buildDateTV = (TextView) findViewById(R.id.aboutBuildDate);
-		String dateString = DateFormat.getDateTimeInstance().format(new Date(BuildSettings.BUILD_TIME));
-		buildDateTV.setText("Built: " + dateString);
+		buildDateTV.setVisibility(View.GONE);
 		
 		TextView buildSourceTV = (TextView) findViewById(R.id.aboutBuildSource);
-		String buildSourceText;
-		if(BuildSettings.BUILD_SOURCE.equals("repository")) {
-			buildSourceText = BuildSettings.TAG;
-		} else {
-			buildSourceText = BuildSettings.BUILD_SOURCE;
-		}
-		buildSourceTV.setText("Built from: " + buildSourceText);
 		
 		TextView buildTagTV = (TextView) findViewById(R.id.aboutBuildTag);
-		buildTagTV.setText("Built for: " + BuildSettings.BUILD_TAG);
+		buildTagTV.setVisibility(View.GONE);
+//		buildTagTV.setText("Built for: " + Config.BUILD_TAG);
 		
 		TextView serverDomainTV = (TextView) findViewById(R.id.aboutServerDomain);
-		//serverDomainTV.setText("Server: " + BuildSettings.MOBILE_WEB_DOMAIN);
+		//serverDomainTV.setText("Server: " + Config.MOBILE_WEB_DOMAIN);
 		serverDomainTV.setText("Server: " + app.getMobileWebDomain());
 
 		//mHeader = (LinearLayout) findViewById(R.id.aboutHeader);
@@ -177,8 +167,8 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 	    }
 	}
 	private BitmapDrawable getVersionBitmap() {
-		String dirpath = "/data/data/" + BuildSettings.release_project_name + "/about";
-		String buildId = BuildSettings.BUILD_ID;
+		String dirpath = "/data/data/" + Config.release_project_name + "/about";
+		String buildId = Config.BUILD_ID;
 		File dir = new File(dirpath);
 		if (!dir.exists())
 			dir.mkdir();

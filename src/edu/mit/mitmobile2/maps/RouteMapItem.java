@@ -1,8 +1,6 @@
 package edu.mit.mitmobile2.maps;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;

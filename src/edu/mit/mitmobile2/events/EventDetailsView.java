@@ -96,7 +96,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		EventDetailsItem eventDetails = mBriefMode ? mBriefDetails : mFullDetails;
 		
 		String url = eventDetails.infourl;
-		//String url  = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/e/" + IdEncoder.shortenId(eventDetails.id);
+		//String url  = "http://" + Config.MOBILE_WEB_DOMAIN + "/e/" + IdEncoder.shortenId(eventDetails.id);
 		CommonActions.shareContent(mActivity, eventDetails.title, eventDetails.description, url);
 	}
 	

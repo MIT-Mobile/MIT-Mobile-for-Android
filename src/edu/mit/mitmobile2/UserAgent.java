@@ -1,13 +1,13 @@
 package edu.mit.mitmobile2;
 
 import android.os.Build;
-import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.about.Config;
 
 public class UserAgent {
 	
 	public static String get() {
-		return "MIT Mobile/" + BuildSettings.VERSION_NAME + 
-			" (" + BuildSettings.BUILD_GIT_DESCRIBE + ";)" +
+		return "MIT Mobile/" + Config.VERSION_NAME + 
+			" (" + Config.BUILD_GIT_DESCRIBE + ";)" +
 			" Android/" + Build.VERSION.RELEASE + 
 				" (" + Build.CPU_ABI  + "; " +  Build.MANUFACTURER + " " + Build.MODEL + ";)";
 	}

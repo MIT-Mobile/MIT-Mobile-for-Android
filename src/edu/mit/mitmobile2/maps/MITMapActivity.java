@@ -4,40 +4,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
-import com.esri.android.map.GraphicsLayer;
-import com.esri.android.map.Layer;
-import com.esri.android.map.LocationService;
 import com.esri.core.geometry.Point;
 import com.google.android.maps.GeoPoint;
 
 import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
 import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.people.PeopleDB;
-import edu.mit.mitmobile2.people.PeopleModule;
-import edu.mit.mitmobile2.shuttles.RoutesParser;
-import edu.mit.mitmobile2.shuttles.ShuttlesActivity;
-import edu.mit.mitmobile2.shuttles.ShuttlesModule;
 
 public class MITMapActivity extends MapBaseActivity {
 
