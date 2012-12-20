@@ -1,25 +1,18 @@
 package edu.mit.mitmobile2.maps;
 
-<<<<<<< HEAD
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Context;
 import android.util.Log;
-=======
-import android.content.Context;
->>>>>>> b1d41f7cd04b520a273992af5761a791f573e2ba
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
-<<<<<<< HEAD
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
-=======
->>>>>>> b1d41f7cd04b520a273992af5761a791f573e2ba
 
 public class StopMapItem extends MapItem {
 

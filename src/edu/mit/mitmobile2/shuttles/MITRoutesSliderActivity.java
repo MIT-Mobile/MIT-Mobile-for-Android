@@ -1,17 +1,19 @@
 package edu.mit.mitmobile2.shuttles;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.HashMap;
-=======
->>>>>>> b1d41f7cd04b520a273992af5761a791f573e2ba
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import edu.mit.mitmobile2.CategoryNewModuleActivity;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
