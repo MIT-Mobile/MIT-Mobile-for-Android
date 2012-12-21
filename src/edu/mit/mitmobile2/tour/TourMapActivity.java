@@ -20,6 +20,7 @@ import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourSiteStatus;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
+import edu.mit.mitmobile2.tour.TourRouteMapData.OnTourSiteSelectedListener;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -40,7 +41,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class TourMapActivity extends MapBaseActivity {
+public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelectedListener {
 	
 	private static final String TOUR_STOPS_KEY = "tour_stops";
 	private static final String TOUR_PATH_KEY = "tour_path";
@@ -91,20 +92,6 @@ public class TourMapActivity extends MapBaseActivity {
 		// be default show sidetrips in list if tour not yet active
 		mShowingSidetrips = !mTourActive;
 		setTourItemsList(mShowingSidetrips);
-		
-
-		
-		/*
-		mSiteMarkers.setOnTourItemSelectedListener(new TourRouteOverlay.OnTourItemSelectedListener() {
-			@Override
-			public void onTourItemSelected(TourMapItem tourItem) {
-				if(tourItem.getClass() == SiteTourMapItem.class) {
-					SiteTourMapItem siteItem = (SiteTourMapItem) tourItem;
-					launchTour(siteItem);
-				}
-			}
-		});
-		*/
 		
 		//setOverlays();
 		
@@ -182,9 +169,17 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 	}
 	
+	@Override
+	public void onTourSiteSelected(TourMapItem tourMapItem) {
+		if(tourMapItem.getClass() == SiteTourMapItem.class) {
+			SiteTourMapItem siteItem = (SiteTourMapItem) tourMapItem;
+			launchTour(siteItem);
+		}
+	}
+	
 	@Override 
 	protected void onMapLoaded() {
-		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints);
+		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints, this);
 		map.setMapData(mMapData);
 		processMapData();
 		

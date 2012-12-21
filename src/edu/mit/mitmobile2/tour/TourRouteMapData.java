@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,12 +13,19 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapData;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
+import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourSiteStatus;
 
 public class TourRouteMapData extends MapData {
 	
-	public TourRouteMapData(List<? extends TourMapItem> tourMapItems, List<GeoPoint> geoPoints)  {
+	public interface OnTourSiteSelectedListener {
+		public void onTourSiteSelected(TourMapItem tourMapItem);
+	}
+	
+	OnTourSiteSelectedListener mSiteListener;
+	
+	public TourRouteMapData(List<? extends TourMapItem> tourMapItems, List<GeoPoint> geoPoints, OnTourSiteSelectedListener siteListener)  {
 		// add the route
 		TourRouteMapItem routeMapItem = new TourRouteMapItem();
 		routeMapItem.setGeometryType(MapItem.TYPE_POLYLINE);
@@ -30,6 +38,8 @@ public class TourRouteMapData extends MapData {
 			TourStopMapItem mapItem = new TourStopMapItem(tourMapItem);
 			mapItems.add(mapItem);
 		}
+		
+		mSiteListener = siteListener;
 	}
 
 	public MapItem getMapItem(TourMapItem mapItem) {
@@ -46,7 +56,7 @@ public class TourRouteMapData extends MapData {
 		return null;
 	}
 	
-	private static class TourStopMapItem extends MapItem {
+	private class TourStopMapItem extends MapItem {
 
 		private TourMapItem mTourMapItem;
 		
@@ -82,6 +92,14 @@ public class TourRouteMapData extends MapData {
 			TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.tour_callout_name);
 			calloutBuildingName.setText(mTourMapItem.getTitle());
 			
+			calloutLayout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mSiteListener.onTourSiteSelected(mTourMapItem);					
+				}
+				
+			});
 			return calloutLayout;
 		}
 		
