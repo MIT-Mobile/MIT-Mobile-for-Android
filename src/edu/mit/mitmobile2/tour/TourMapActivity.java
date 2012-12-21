@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
@@ -131,8 +132,6 @@ public class TourMapActivity extends MapBaseActivity {
 			}
 		});
 		
-		//mMapView = (MapView) findViewById(R.id.mapview);
-		
 		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
 		mMapListSwitch = new TitleBarSwitch(this);
 		mMapListSwitch.setLabels(MAP, LIST);
@@ -171,14 +170,14 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 		
 		if(mTourActive) {
-			//titleBar.setTitle("Tour Overview");
-			//mSiteMarkers.showBalloon(mSiteTourMapItems.get(mTourCurrentPosition));
+			mSecondaryTitleBar.setTitle("Tour Overview");
+			displayCallout(mSiteTourMapItems.get(mTourCurrentPosition));
 		} else {
 			
 			// tour not active, show information to help the user know where to start
 			mShowClosestBalloonInitialTime = System.currentTimeMillis();		
 			mStartHelpActionRow.setVisibility(View.VISIBLE);
-			//titleBar.setTitle("Starting Point");
+			mSecondaryTitleBar.setTitle("Starting Point");
 			mMapLegend.setVisibility(View.GONE);
 		}
 	}
@@ -231,13 +230,13 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 
 		@Override
-		public void onProviderDisabled(String provider) {} // TODO Auto-generated method stub
+		public void onProviderDisabled(String provider) {} 
 
 		@Override
-		public void onProviderEnabled(String provider) {} // TODO Auto-generated method stub
+		public void onProviderEnabled(String provider) {} 
 
 		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {} // TODO Auto-generated method stub		
+		public void onStatusChanged(String provider, int status, Bundle extras) {}		
 	};
 	
 	@Override
@@ -300,11 +299,15 @@ public class TourMapActivity extends MapBaseActivity {
 		if(requestCode == HELP_SELECT_STOP && resultCode == RESULT_OK) {
 			TourMapItem item = resultIntent.getParcelableExtra(TourStartHelpActivity.SELECTED_SITE);
 			item.setLocationSupplier(mLocationSupplier);
-			if (mMapData != null) {
-				MapItem mapItem = mMapData.getMapItem(item);
-				map.displayCallout(this, mapItem);
-			}
+			displayCallout(item);
 		}
+	}
+	
+	private void displayCallout(TourMapItem tourMapItem) {
+		if (mMapData != null) {
+			MapItem mapItem = mMapData.getMapItem(tourMapItem);
+			map.displayCallout(this, mapItem);
+		}		
 	}
 	
 	private int getCurrentPosition() {
@@ -360,76 +363,32 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 	}
 	
-	private static final int MENU_HOME = 0;
-	private static final int MENU_TOUR_HOME = 1;
-	private static final int MENU_MAP_LIST = 2;
-	private static final int MENU_MY_LOCATION = 3;
-	private static final int MENU_SHOW_OR_HIDE_SIDETRIPS = 4;
-	
-	/*
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case MENU_HOME:
-				HomeScreenActivity.goHome(this);
-				return true;
-				
-			case MENU_TOUR_HOME:
-				Intent intent = new Intent(this, new TourModule().getModuleHomeActivity());
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				this.startActivity(intent);
-				return true;
-				
-			case MENU_MAP_LIST:
-				toggleMapList();
-				return true;
-				
-			case MENU_MY_LOCATION: 
-				//GeoPoint myLocation = myLocationOverlay.getMyLocation();
-				//if (myLocation != null) mctrl.animateTo(myLocation);
-				return true;
-				
-			case MENU_SHOW_OR_HIDE_SIDETRIPS:
-				showOrHideSidetrips();
-				return true;
+	private boolean isListVisible() {
+		if (mTourListView != null) {
+			return (mTourListView.getVisibility() == View.VISIBLE);
 		}
-		
-		return super.onOptionsItemSelected(item);
+		return false;
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		Module tourModule = new TourModule();
-		
-		menu.clear();
-		
-		menu.add(0, MENU_HOME, Menu.NONE, "Home")
-			.setIcon(R.drawable.menu_home);
-		
-		menu.add(0, MENU_TOUR_HOME, Menu.NONE, tourModule.getMenuOptionTitle())
-			.setIcon(tourModule.getMenuIconResourceId());
-		
-		if(mListView.getVisibility() == View.GONE) {
-			// only show my location menu option, when in map mode
-			menu.add(0, MENU_MY_LOCATION, Menu.NONE, "My Location")
-				.setIcon(R.drawable.menu_mylocation);
-			
-			menu.add(0, MENU_MAP_LIST, Menu.NONE, "List")
-			  .setIcon(R.drawable.menu_view_as_list);
-			
-		} else {
-			menu.add(0, MENU_MAP_LIST, Menu.NONE, "Map")
-			  .setIcon(R.drawable.menu_view_on_map);
-			
-			String sidetripsAction = mShowingSidetrips ? "Hide Side Trips" : "Show Side Trips";
-			menu.add(0, MENU_SHOW_OR_HIDE_SIDETRIPS, Menu.NONE, sidetripsAction)
-				.setIcon(R.drawable.menu_sidetrips);
-		}
-		
-		return super.onPrepareOptionsMenu(menu);
-		
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+	    if (isListVisible()) {
+	    	if (mShowingSidetrips) {
+	    		items.add(new MITMenuItem("showsidetrips", "Show sidetrips", R.drawable.menu_view_on_map));
+	    	} else {
+	    		items.add(new MITMenuItem("hidesidetrips", "Hide sidetrips", R.drawable.menu_view_on_map));
+	    	}
+	    }
+	    return items;
 	}
-	*/
+	
+	@Override
+	protected void onOptionSelected(String optionId) {
+	    if (optionId.equals("showsidetrips") || optionId.equals("hidesidetrips")) {
+	    	showOrHideSidetrips();
+	    }
+	}
 	
 	private void toggleMapList(String selected) {
 		if(selected.equals(LIST)) {
@@ -451,6 +410,7 @@ public class TourMapActivity extends MapBaseActivity {
 				mStartHelpActionRow.setVisibility(View.VISIBLE);
 			}
 		}
+		refreshTitleBarOptions();
 	}
 	
 	/*
@@ -461,6 +421,7 @@ public class TourMapActivity extends MapBaseActivity {
 		mShowingSidetrips = !mShowingSidetrips;
 		setTourItemsList(mShowingSidetrips);
 		mTourListAdapter.notifyDataSetChanged();
+		refreshTitleBarOptions();
 	}
 	
 	private void setTourItemsList(boolean includeSidetrips) {
