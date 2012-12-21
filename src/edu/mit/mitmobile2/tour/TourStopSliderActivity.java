@@ -3,8 +3,6 @@ package edu.mit.mitmobile2.tour;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.zxing.client.android.CaptureActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,23 +12,22 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
 
 import edu.mit.mitmobile2.AudioPlayer;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderListAdapter;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.StartLocation;
 import edu.mit.mitmobile2.tour.Tour.TourItem;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 
-public class TourStopSliderActivity extends SliderActivity {
+public class TourStopSliderActivity extends SliderListNewModuleActivity {
 	
 	private static final String BEGIN_GUID_KEY = "start_guid";
 	private static final String SITE_GUID_KEY = "site_guid";
@@ -67,6 +64,8 @@ public class TourStopSliderActivity extends SliderActivity {
 	protected void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		
+		setScreenCaching(false);
+		
 		mTour = TourModel.getTour(this);	
 		
 		if(getIntent().hasExtra(BEGIN_GUID_KEY)) {
@@ -78,12 +77,13 @@ public class TourStopSliderActivity extends SliderActivity {
 			Site site = mTour.getSite(siteGuid);
 			mTourItems = mTour.getTourList(site);
 		}
-
+		refreshTitleBarOptions();
+		
 		// TODO need to remember what stops we visited if we leave Activity
 		
 		// Progress Bar
 		mSliderView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1f));
-		LinearLayout sliderTop = (LinearLayout) findViewById(R.id.ll_top);
+		LinearLayout sliderTop = (LinearLayout) findViewById(R.id.newSlider_ll_top);
 		progbar = new TourProgressBar(this);
 		progbar.init(mTour.getSites().size(), 0);
 		sliderTop.addView(progbar);
@@ -102,6 +102,7 @@ public class TourStopSliderActivity extends SliderActivity {
 				if((newPosition % 2) == 0) {
 					progbar.setProgress(newPosition/2);
 				}
+				refreshTitleBarOptions();
 			}
 		});
 		
@@ -196,7 +197,7 @@ public class TourStopSliderActivity extends SliderActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new TourModule();
 	}
 
@@ -205,15 +206,30 @@ public class TourStopSliderActivity extends SliderActivity {
 		return false;
 	}
 
-	private static final int MENU_SHOW_TOUR_MAP = MENU_LAST + 1;
-	private static final int MENU_REFRESH_IMAGES = MENU_LAST + 2;
-	//private static final int MENU_CAMERA = MENU_LAST + 2;
-	//private static final int MENU_SCAN_QR = MENU_LAST + 3;
-	//private static final int MENU_DOWNLOAD_AUDIO = MENU_LAST + 4;
+	private static String MENU_SHOW_TOUR_MAP = "showmap";
+	private static String MENU_REFRESH_IMAGES = "refreshimages";
+	
+	private boolean isRefreshableScreen() {
+		if (mTourItems == null) {
+			return false;
+		}
+		
+		return getPosition() < mTourItems.size();
+	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == MENU_SHOW_TOUR_MAP) {
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+	    items.add(new MITMenuItem(MENU_SHOW_TOUR_MAP, "Tour Map"));
+	    if (isRefreshableScreen()) {
+	    	items.add(new MITMenuItem(MENU_REFRESH_IMAGES, "Refresh"));
+	    }
+	    return items;
+	}
+	
+	@Override
+	protected void onOptionSelected(String optionId) {
+		if (optionId == MENU_SHOW_TOUR_MAP) {
 			int tourItemPosition;
 			if(getPosition() < mTourItems.size()) {
 				tourItemPosition = getPosition();
@@ -223,59 +239,14 @@ public class TourStopSliderActivity extends SliderActivity {
 			}
 			ArrayList<TourMapItem> tourMapItems = Tour.getTourMapItems(mTourItems, tourItemPosition);
 			TourMapActivity.launch(this, tourMapItems, mTour.getPathGeoPoints(), true);
-			return true;
-		} if(item.getItemId() == MENU_REFRESH_IMAGES) {
-			int position = getPosition();
-			if(position < mTourStopSliderInterfaces.size()) {
+
+		} if (optionId == MENU_REFRESH_IMAGES) {
+			if(isRefreshableScreen()) {
+				int position = getPosition();
 				mTourStopSliderInterfaces.get(position).refreshImages();
 			}
 		}
-		
-		/* 
-		else if (item.getItemId() == MENU_CAMERA) {
-			TourCameraActivity.takePict(this, "this could be Stop name");
-		} else if (item.getItemId() == MENU_SCAN_QR) {
-			i = new Intent("com.google.zxing.client.android.SCAN");
-			i.putExtra("SCAN_MODE", "QR_CODE_MODE");
-			startActivityForResult(i, CaptureActivity.CAPTURE_QR_ACTIVITY_REQUEST_CODE);
-		} else if (item.getItemId() == MENU_DOWNLOAD_AUDIO) {
-			ap.downloadTourItemAudio(mTourItems.get(getPosition()));
-		}
-		*/
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SHOW_TOUR_MAP, Menu.NONE, "Tour Map")
-			.setIcon(R.drawable.menu_maps);
-		
-		if(getPosition() < mTourStopSliderInterfaces.size()) {
-			menu.add(0, MENU_REFRESH_IMAGES, Menu.NONE, "Refresh")
-			.setIcon(R.drawable.menu_refresh);
-		}
-		//menu.add(0, MENU_CAMERA, Menu.NONE, "Camera")
-		//	.setIcon(R.drawable.menu_camera);
-		//menu.add(0, MENU_SCAN_QR, Menu.NONE, "Scan QR Code")
-		//	.setIcon(R.drawable.menu_scanqr);
-		//menu.add(0, MENU_DOWNLOAD_AUDIO, Menu.NONE, "Download Audio (Test)");
-	}
-
-	/*****************************************************************************/
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		if (requestCode == CaptureActivity.CAPTURE_QR_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-				String contents = intent.getStringExtra("SCAN_RESULT");
-				String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-				showDialog("Success", "Format: " + format + "\nContents: " + contents);
-			} else if (resultCode == RESULT_CANCELED) {
-				showDialog("Failed", "Failure msg");
-			}
-		} else if (requestCode == TourCameraActivity.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			TourCameraActivity.handleCameraResult(this);
-		}
-	}
+	}   
 
 	  private void showDialog(String title, String message) {
 	    AlertDialog.Builder builder = new AlertDialog.Builder(this);

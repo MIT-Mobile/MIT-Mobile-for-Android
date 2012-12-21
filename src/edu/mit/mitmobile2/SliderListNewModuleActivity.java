@@ -114,4 +114,8 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
 	protected String getCurrentHeaderTitle() {
 	    return getHeaderTitle(getPosition());
 	}
+	
+	protected void setScreenCaching(boolean cacheScreens) {
+		mSliderListAdapter.setCacheScreens(cacheScreens);
+	}
 }

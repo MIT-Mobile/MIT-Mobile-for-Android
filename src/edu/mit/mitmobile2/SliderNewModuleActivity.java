@@ -13,7 +13,7 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	protected Context ctx;
 	
 	protected MITSliderTitleBar mSliderTitleBar;
-	private SliderView mSliderView;
+	protected SliderView mSliderView;
 	
 	abstract protected SliderView.Adapter getSliderAdapter();
 	
