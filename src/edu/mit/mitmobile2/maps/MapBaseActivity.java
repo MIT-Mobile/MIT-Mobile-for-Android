@@ -38,10 +38,8 @@ import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
-import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.shuttles.MITRoutesSliderActivity;
 
-public class MapBaseActivity extends NewModuleActivity {
+public abstract class MapBaseActivity extends NewModuleActivity {
 	
 	private static final String TAG = "MapBaseActivity";
 	public static final String KEY_VIEW_PINS = "view_pins";
@@ -74,8 +72,8 @@ public class MapBaseActivity extends NewModuleActivity {
 		Log.d(TAG,"oncreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-		setContentView(R.layout.maps);
-        mLoadingView = (FullScreenLoader) findViewById(R.id.mapLoading);
+		setContentView(getLayoutID());
+        mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
 
         this.extras = this.getIntent().getExtras();
 		mapInit();
@@ -245,6 +243,8 @@ public class MapBaseActivity extends NewModuleActivity {
         		}
         		
         		processExtras();
+        		
+        		onMapLoaded();
        		        		
             } else if (msg.arg1 == MobileWebApi.ERROR) {
                 mLoadingView.showError();
@@ -281,7 +281,7 @@ public class MapBaseActivity extends NewModuleActivity {
     	if (map == null) {
     		    		
 	    	// Retrieve the map and initial extent from XML layout
-			map = (MITMapView2)findViewById(R.id.map);
+			map = (MITMapView2)findViewById(getMapViewID());
 
 	       	if (map.getLayerIdMap() == null) {
 	    		map.setLayerIdMap(new HashMap<String, Long>());
@@ -291,19 +291,13 @@ public class MapBaseActivity extends NewModuleActivity {
 	       		map.setGraphicIdMap(new HashMap<String, Integer>());
 	       	}
 	       	
-	        mLoadingView = (FullScreenLoader) findViewById(R.id.mapLoading);
+	        mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
 	        
 			mLoadingView.setVisibility(View.VISIBLE);
 	        mLoadingView.showLoading();
 	        MapModel.fetchMapServerData(this, mapUiHandler);    	
     	}
     }
-
-	@Override
-	protected NewModule getNewModule() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	protected boolean isScrollable() {
@@ -513,6 +507,19 @@ public class MapBaseActivity extends NewModuleActivity {
 		Log.d(TAG,"onPause()");
 	}
 
+	protected int getLayoutID() {
+		return R.layout.maps;
+	}
 	
+	protected int getMapViewID() {
+		return R.id.map;
+	}
+	
+    /* override this to handle the on map loaded event */
+	protected void onMapLoaded() { }
+	
+	protected int getMapLoadingViewID() {
+		return R.id.mapLoading;
+	}
 	
 }
