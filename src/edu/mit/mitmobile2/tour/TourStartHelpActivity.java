@@ -1,27 +1,26 @@
 package edu.mit.mitmobile2.tour;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.StyledContentHTML;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.StartLocation;
 import edu.mit.mitmobile2.tour.Tour.TourSiteStatus;
 
-public class TourStartHelpActivity extends ModuleActivity {
+public class TourStartHelpActivity extends NewModuleActivity {
 	
 	public static final String SELECTED_SITE = "selected_site";
 	
@@ -31,14 +30,9 @@ public class TourStartHelpActivity extends ModuleActivity {
 		super.onCreate(saveInstance);
 		final Tour tour = TourModel.getTour(this);
 		
-		setContentView(R.layout.boring_activity_layout);
-		TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
-		titleBar.setTitle("Suggested Points");
-		
 		// construct webview
-		LinearLayout rootLayout = (LinearLayout) findViewById(R.id.boringLayoutRoot);
 		WebView mainContent = new WebView(this);
-		rootLayout.addView(mainContent);
+		setContentView(mainContent, false);
 		mainContent.getSettings().setJavaScriptEnabled(true);
 		mainContent.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 		mainContent.setWebViewClient(new WebViewClient() {
@@ -70,6 +64,8 @@ public class TourStartHelpActivity extends ModuleActivity {
 		
 		String html = constructHtml(tour);
 		mainContent.loadDataWithBaseURL(null, StyledContentHTML.html(this, html), "text/html", "utf-8", null);
+		
+		addSecondaryTitle("Suggested Points");
 	}
 
 	private String constructHtml(Tour tour) {
@@ -112,7 +108,7 @@ public class TourStartHelpActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new TourModule();
 	}
 
@@ -120,22 +116,23 @@ public class TourStartHelpActivity extends ModuleActivity {
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
-
-	static final int MENU_SHOW_TOUR_MAP = MENU_MODULE_HOME + 1;
 	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.addSubMenu(0, MENU_SHOW_TOUR_MAP, Menu.NONE, "Tour Map")
-			.setIcon(R.drawable.menu_maps);
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+	    items.add(new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map));
+	    return items;
+	}
+	
+	@Override
+	protected void onOptionSelected(String optionId) {
+	    if (optionId.equals("viewmap")) {
+	    	finish();
+	    }
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_SHOW_TOUR_MAP:
-				finish();
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
+	protected boolean isScrollable() {
+		return false;
 	}
 }

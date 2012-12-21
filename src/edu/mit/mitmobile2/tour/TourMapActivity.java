@@ -5,16 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
-import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.TitleBarSwitch;
 import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.maps.MapBaseActivity;
+import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
@@ -31,10 +29,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -69,6 +64,7 @@ public class TourMapActivity extends MapBaseActivity {
 	private TourItemAdapter mTourListAdapter;
 	private ArrayList<GeoPoint> mGeoPoints;
 	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
+	private TourRouteMapData mMapData;
 	
 	private static int HELP_SELECT_STOP = 2;
 	
@@ -189,8 +185,8 @@ public class TourMapActivity extends MapBaseActivity {
 	
 	@Override 
 	protected void onMapLoaded() {
-		TourRouteMapData mapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints);
-		map.setMapData(mapData);
+		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints);
+		map.setMapData(mMapData);
 		processMapData();
 		
 		mSecondaryTitleBar.addActionView(mMapListSwitch);
@@ -304,7 +300,10 @@ public class TourMapActivity extends MapBaseActivity {
 		if(requestCode == HELP_SELECT_STOP && resultCode == RESULT_OK) {
 			TourMapItem item = resultIntent.getParcelableExtra(TourStartHelpActivity.SELECTED_SITE);
 			item.setLocationSupplier(mLocationSupplier);
-			//mSiteMarkers.showBalloon(item);
+			if (mMapData != null) {
+				MapItem mapItem = mMapData.getMapItem(item);
+				map.displayCallout(this, mapItem);
+			}
 		}
 	}
 	

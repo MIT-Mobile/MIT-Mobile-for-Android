@@ -32,6 +32,19 @@ public class TourRouteMapData extends MapData {
 		}
 	}
 
+	public MapItem getMapItem(TourMapItem mapItem) {
+		String id = mapItem.getId();
+		for(MapItem aMapItem : mapItems) {
+			if (aMapItem instanceof TourStopMapItem) {
+				TourStopMapItem aTourStopMapItem = (TourStopMapItem) aMapItem;
+				
+				if (aTourStopMapItem.getID().equals(id)) {
+					return aTourStopMapItem;
+				}
+			}
+		}
+		return null;
+	}
 	
 	private static class TourStopMapItem extends MapItem {
 
@@ -54,6 +67,10 @@ public class TourRouteMapData extends MapData {
 			setSymbol(markerId);
 			setGeometryType(MapItem.TYPE_POINT);
 			
+		}
+		
+		public String getID() {
+			return mTourMapItem.getId();
 		}
 		
 		@Override
