@@ -177,7 +177,7 @@ public class TourMapActivity extends MapBaseActivity {
 			// tour not active, show information to help the user know where to start
 			mShowClosestBalloonInitialTime = System.currentTimeMillis();		
 			mStartHelpActionRow.setVisibility(View.VISIBLE);
-			mSecondaryTitleBar.setTitle("Starting Point");
+			mSecondaryTitleBar.setTitle("Select a Starting Point");
 			mMapLegend.setVisibility(View.GONE);
 		}
 	}
@@ -371,13 +371,13 @@ public class TourMapActivity extends MapBaseActivity {
 	}
 	
 	@Override
-	protected List<MITMenuItem> getPrimaryMenuItems() {
+	protected List<MITMenuItem> getSecondaryMenuItems() {
 	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
 	    if (isListVisible()) {
-	    	if (mShowingSidetrips) {
-	    		items.add(new MITMenuItem("showsidetrips", "Show sidetrips", R.drawable.menu_view_on_map));
+	    	if (!mShowingSidetrips) {
+	    		items.add(new MITMenuItem("showsidetrips", "Show Side Trips"));
 	    	} else {
-	    		items.add(new MITMenuItem("hidesidetrips", "Hide sidetrips", R.drawable.menu_view_on_map));
+	    		items.add(new MITMenuItem("hidesidetrips", "Hide Side Trips"));
 	    	}
 	    }
 	    return items;
@@ -386,7 +386,7 @@ public class TourMapActivity extends MapBaseActivity {
 	@Override
 	protected void onOptionSelected(String optionId) {
 	    if (optionId.equals("showsidetrips") || optionId.equals("hidesidetrips")) {
-	    	showOrHideSidetrips();
+	    	showOrHideSidetrips(optionId);
 	    }
 	}
 	
@@ -417,8 +417,8 @@ public class TourMapActivity extends MapBaseActivity {
 	 * methods for hiding and showing the side trips in the list view
 	 */
 	private boolean mShowingSidetrips = true;
-	private void showOrHideSidetrips() {
-		mShowingSidetrips = !mShowingSidetrips;
+	private void showOrHideSidetrips(String optionId) {
+		mShowingSidetrips = optionId.equals("showsidetrips");
 		setTourItemsList(mShowingSidetrips);
 		mTourListAdapter.notifyDataSetChanged();
 		refreshTitleBarOptions();
