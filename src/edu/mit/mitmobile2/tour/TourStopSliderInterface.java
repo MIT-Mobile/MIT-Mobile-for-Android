@@ -32,16 +32,15 @@ import edu.mit.mitmobile2.OptimizedSliderInterface;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.ResizableImageView;
-import edu.mit.mitmobile2.maps.MapCanvasDrawer;
+import edu.mit.mitmobile2.tour.MapCanvasDrawer;
 import edu.mit.mitmobile2.tour.Tour.Directions;
+import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.HtmlContentNode;
 import edu.mit.mitmobile2.tour.Tour.PhotoInfo;
 import edu.mit.mitmobile2.tour.Tour.SideTrip;
 import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.TourItem;
 import edu.mit.mitmobile2.tour.Tour.TourItemContentNode;
-
-import com.google.android.maps.GeoPoint;
 
 public class TourStopSliderInterface implements OptimizedSliderInterface, OnClickListener {
 	

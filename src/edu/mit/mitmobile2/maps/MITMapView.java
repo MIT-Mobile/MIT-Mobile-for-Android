@@ -28,7 +28,7 @@ public class MITMapView extends MapView  {
 	int mLastZoomDrawn = -1;;
 
 	private static final int ZOOM_LEVEL_CORRECTION = -1;
-	static final int IMAGE_TILE_SIZE = 256;
+	public static final int IMAGE_TILE_SIZE = 256;
 	
 	private static final int MAX_ZOOM_LEVEL = 19;
 	private static final int MIN_ZOOM_LEVEL = 13;
@@ -449,11 +449,11 @@ public class MITMapView extends MapView  {
 		return (int) Math.round(phi * 180. / Math.PI * 1000000.);
 	}
 	
-	static double computeGoogleX(int longitudeE6, int zoomLevel) {		
+	public static double computeGoogleX(int longitudeE6, int zoomLevel) {		
 		return (180. + ((double)longitudeE6/1000000.))/(360.) * Math.pow(2.0, zoomLevel);
 	}
 	
-	static double computeGoogleY(int latitudeE6, int zoomLevel) {
+	public static double computeGoogleY(int latitudeE6, int zoomLevel) {
 		// convert to radians
 		double phi = (double)latitudeE6/1000000. * Math.PI / 180.;
 		

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.mit.mitmobile2.objs.MapPoint;
+
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.maps.GeoPoint;
 
 public class Tour {
 	
@@ -45,12 +45,12 @@ public class Tour {
 		return tourItems;
 	}
 
-	public ArrayList<ParcelableGeoPoint> getPathGeoPoints() {
-		ArrayList<ParcelableGeoPoint> geoPoints = new ArrayList<ParcelableGeoPoint>();
+	public ArrayList<GeoPoint> getPathGeoPoints() {
+		ArrayList<GeoPoint> geoPoints = new ArrayList<GeoPoint>();
 		
 		for(Site site : mSites) {
 			for(GeoPoint geoPoint : site.getExitDirections().getPath().getGeoPoints()) {
-				geoPoints.add(new ParcelableGeoPoint(geoPoint));
+				geoPoints.add(geoPoint);
 			}
 		}
 		
@@ -115,14 +115,14 @@ public class Tour {
 	public static class TourMapItem implements Parcelable {
 
 		private String mId;
-		private ParcelableGeoPoint mGeoPoint;
+		private GeoPoint mGeoPoint;
 		private String mTitle;
 		private String mPhotoUrl;
 		private TourSiteStatus mStatus;
 		
 		TourMapItem(String id, GeoPoint geoPoint, String title, String photoUrl, TourSiteStatus status) {
 			mId = id;
-			mGeoPoint = new ParcelableGeoPoint(geoPoint);
+			mGeoPoint = geoPoint;
 			mTitle = title;
 			mPhotoUrl = photoUrl;
 			mStatus = status;
@@ -130,7 +130,7 @@ public class Tour {
 
 		public static TourMapItem readItem(Parcel source) {
 			String id = source.readString();
-			ParcelableGeoPoint geoPoint = source.readParcelable(ParcelableGeoPoint.class.getClassLoader());
+			GeoPoint geoPoint = source.readParcelable(GeoPoint.class.getClassLoader());
 			String title = source.readString();
 			String photoUrl = source.readString();
 			TourSiteStatus status = TourSiteStatus.values()[source.readInt()];
@@ -210,42 +210,6 @@ public class Tour {
 			
 			Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, distance);
 			return distance[0];
-		}
-	}
-
-	public static class ParcelableGeoPoint extends GeoPoint implements Parcelable {
-		public ParcelableGeoPoint(int latitudeE6, int longitudeE6) {
-			super(latitudeE6, longitudeE6);
-		}
-
-		public ParcelableGeoPoint(GeoPoint geoPoint) {
-			super(geoPoint.getLatitudeE6(), geoPoint.getLongitudeE6());
-		}
-		
-		public static final Parcelable.Creator<ParcelableGeoPoint> CREATOR = new Parcelable.Creator<ParcelableGeoPoint>() {
-
-			@Override
-			public ParcelableGeoPoint createFromParcel(Parcel source) {
-				int latitudeE6 = source.readInt();
-				int longitudeE6 = source.readInt();
-				return new ParcelableGeoPoint(latitudeE6, longitudeE6);
-			}
-
-			@Override
-			public ParcelableGeoPoint[] newArray(int size) {
-				return new ParcelableGeoPoint[size];
-			}
-		};
-		
-		@Override
-		public int describeContents() {
-			return 0;
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeInt(getLatitudeE6());
-			dest.writeInt(getLongitudeE6());
 		}
 	}
 	
@@ -907,6 +871,54 @@ public class Tour {
 
 		public void setDistance(float distance) {
 			mDistance = distance;
+		}
+	}
+	
+	public static class GeoPoint implements Parcelable {
+		private int mLatitudeE6;
+		private int mLongitudeE6;
+		
+		public GeoPoint(int latitudeE6, int longitudeE6) {
+			mLatitudeE6 = latitudeE6;
+			mLongitudeE6 = longitudeE6;
+		}
+
+		public int getLatitudeE6() {
+			return mLatitudeE6;
+		}
+		
+		public int getLongitudeE6() {
+			return mLongitudeE6;
+		}
+		
+		public MapPoint getMapPoint() {
+			return new MapPoint(mLatitudeE6 / 1E6, mLongitudeE6 / 1E6);
+		}
+		
+		public static final Parcelable.Creator<GeoPoint> CREATOR = new Parcelable.Creator<GeoPoint>() {
+
+			@Override
+			public GeoPoint createFromParcel(Parcel source) {
+				int latitudeE6 = source.readInt();
+				int longitudeE6 = source.readInt();
+				return new GeoPoint(latitudeE6, longitudeE6);
+			}
+
+			@Override
+			public GeoPoint[] newArray(int size) {
+				return new GeoPoint[size];
+			}
+		};
+		
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(getLatitudeE6());
+			dest.writeInt(getLongitudeE6());
 		}
 	}
 }

@@ -12,13 +12,12 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.Path;
 import edu.mit.mitmobile2.tour.Tour.SideTrip;
 import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.TourHeader;
 import edu.mit.mitmobile2.tour.Tour.TourItemContent;
-
-import com.google.android.maps.GeoPoint;
 
 import android.content.Context;
 import android.os.Handler;
