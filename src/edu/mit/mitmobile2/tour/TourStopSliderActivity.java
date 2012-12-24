@@ -247,14 +247,6 @@ public class TourStopSliderActivity extends SliderListNewModuleActivity {
 			}
 		}
 	}   
-
-	  private void showDialog(String title, String message) {
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setTitle(title);
-	    builder.setMessage(message);
-	    builder.setPositiveButton("OK", null);
-	    builder.show();
-	  }
 	  
 	 @Override
 	 public boolean onKeyDown(int keyCode, KeyEvent event) {
