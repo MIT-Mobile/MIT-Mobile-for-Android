@@ -307,6 +307,7 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 		mWebView.setFocusable(false);
 		
 		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.getSettings().setLightTouchEnabled(true);
 		
 		mWebView.setWebViewClient(new WebViewClient() {
 			@Override
