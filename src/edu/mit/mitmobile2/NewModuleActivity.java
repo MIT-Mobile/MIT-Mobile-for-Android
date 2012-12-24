@@ -159,7 +159,7 @@ public abstract class NewModuleActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		mTitleBar.setTextForModuleBtn(getNewModule().getShortName());
+		mTitleBar.setTextForModuleBtn(getNewModule().getLongName());
 		mTitleBar.setModuleButtonEnabled(!isModuleHomeActivity());
 	}
 	
