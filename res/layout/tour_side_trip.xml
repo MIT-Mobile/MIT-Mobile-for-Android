@@ -5,18 +5,16 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content">
   
-  <edu.mit.mitmobile2.TitleBar
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content"
-  	android:id="@+id/tourSideTripTitleBar"
-  	android:text="Side Trip" />
-  	
-  <edu.mit.mitmobile2.LockingScrollView
-  	android:layout_width="fill_parent"
-  	android:layout_height="wrap_content">
   
+
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/tourSideTripBackRow"
+        android:text="Back to tour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    
     <include layout="@layout/tour_stop" />	
 
-  </edu.mit.mitmobile2.LockingScrollView>
  
  </LinearLayout>
