@@ -210,7 +210,7 @@ public class TourStopSliderActivity extends SliderListNewModuleActivity {
 	private static String MENU_REFRESH_IMAGES = "refreshimages";
 	
 	private boolean isRefreshableScreen() {
-		if (mTourItems == null) {
+		if (getPosition() < 0) {
 			return false;
 		}
 		
@@ -266,5 +266,18 @@ public class TourStopSliderActivity extends SliderListNewModuleActivity {
 		 }
 		 
 		 return super.onKeyDown(keyCode, event);
+	 }
+	 
+	 @Override
+	 protected String getHeaderTitle(int position) {
+		 if (position < 0) {
+			 return "";
+		 }
+		 
+		 if (position < mTourItems.size()) {
+			 return "" + (position+1) + " of " + mTourItems.size();
+		 } else {
+			 return "";
+		 }
 	 }
 }
