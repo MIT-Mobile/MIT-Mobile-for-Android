@@ -21,6 +21,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import edu.mit.mitmobile2.AttributesParser;
@@ -45,7 +46,7 @@ import edu.mit.mitmobile2.tour.Tour.TourItemContentNode;
 public class TourStopSliderInterface implements OptimizedSliderInterface, OnClickListener {
 	
 	private Context mContext;
-	private LockingScrollView mView;
+	private ScrollView mView;
 	private TourItem mTourItem;
 	private Tour mTour;
 	private AudioPlayer mAudioPlayer;
@@ -63,14 +64,14 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 	
 	@Override
 	public LockingScrollView getVerticalScrollView() {
-		return mView;
+		return null;
 	}
 
 	@Override
 	public View getView() {
 		if(mView == null) {
 			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			mView = (LockingScrollView) inflater.inflate(R.layout.tour_stop, null);
+			mView = (ScrollView) inflater.inflate(R.layout.tour_stop, null);
 			audioButton = (ImageButton) mView.findViewById(R.id.tourVoiceOverButton);
 			audioButton.setFocusable(false);
 			if(mTourItem.getAudioUrl() != null) {
