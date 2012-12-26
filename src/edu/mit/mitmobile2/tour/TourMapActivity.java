@@ -202,7 +202,15 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 		
 		@Override
 		public Location getLocation() {
-			return mLocation;
+			if (mLocation != null) {
+				return mLocation;
+			} else {
+				String provider = mBestLocationProviderName;
+				if (provider == null) {
+					provider = mWorstLocationProviderName;
+				}
+				return mLocationManager.getLastKnownLocation(provider);
+			}
 		}
 	};
 	
