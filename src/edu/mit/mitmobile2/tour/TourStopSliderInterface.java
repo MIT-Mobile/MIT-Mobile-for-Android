@@ -33,6 +33,7 @@ import edu.mit.mitmobile2.OptimizedSliderInterface;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.ResizableImageView;
+import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.tour.MapCanvasDrawer;
 import edu.mit.mitmobile2.tour.Tour.Directions;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
@@ -43,7 +44,7 @@ import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.TourItem;
 import edu.mit.mitmobile2.tour.Tour.TourItemContentNode;
 
-public class TourStopSliderInterface implements OptimizedSliderInterface, OnClickListener {
+public class TourStopSliderInterface implements SliderInterface, OnClickListener {
 	
 	private Context mContext;
 	private ScrollView mView;
@@ -82,6 +83,9 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 			
 			mWebView = (WebView) mView.findViewById(R.id.tourStopWebView);
 			mMainImageView = (RemoteImageView) mView.findViewById(R.id.tourStopPhoto);
+			
+			updateImage();
+			updateMap();
 		}
 		return mView;
 	}
@@ -124,6 +128,11 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 			mapImageView.setOnSizeChangedListener(new ResizableImageView.OnSizeChangedListener() {	
 				@Override
 				public void onSizeChanged(final int w, final int h, int oldw, int oldh) {
+					if (w == 0 || h == 0) {
+						// map not ready to be drawn
+						return;
+					}
+					
 					final List<GeoPoint> geoPoints = mTourItem.getPath().getGeoPoints();
 					int zoom = mTourItem.getPath().getZoom();
 					
@@ -270,26 +279,6 @@ public class TourStopSliderInterface implements OptimizedSliderInterface, OnClic
 				imageDividerView.setVisibility(View.VISIBLE);
 			}
 		}
-	}
-	
-	@Override
-	public void releaseLargeMemoryChunks() {
-		mMainImageView.setURL(null);
-		ResizableImageView mapImageView = (ResizableImageView) mView.findViewById(R.id.tourDirectionsMapIV);
-		mapImageView.setOverlay(null);
-		mapImageView.setImageDrawable(null);
-		if(mMapCanvasDrawer != null) {
-			mMapCanvasDrawer.cancelRequest();
-			mMapCanvasDrawer = null;
-		}
-		mMapStatus = MapStatus.NotStarted;
-	}
-	
-	@Override
-	public void completelyUpdateView() {
-		getView(); //insure view has already been inflated
-		updateMap();
-		updateImage();
 	}
 	
 	public void refreshImages() {
