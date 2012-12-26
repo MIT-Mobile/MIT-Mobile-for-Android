@@ -8,4 +8,10 @@
        		android:textColor="#FF000000"
             android:layout_width="wrap_content" android:id="@+id/tour_callout_name"
             android:textSize="14dip"/>
+       
+       <TextView android:layout_height="wrap_content"
+       		android:textColor="#FF000000"
+       		android:visibility="gone"
+            android:layout_width="wrap_content" android:id="@+id/tour_callout_distance"
+            android:textSize="14dip"/>
 </LinearLayout>

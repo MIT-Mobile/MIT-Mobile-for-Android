@@ -89,8 +89,19 @@ public class TourRouteMapData extends MapData {
 	   		LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.tour_callout, null);
 
-			TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.tour_callout_name);
-			calloutBuildingName.setText(mTourMapItem.getTitle());
+			TextView calloutStopName = (TextView)calloutLayout.findViewById(R.id.tour_callout_name);
+			calloutStopName.setText(mTourMapItem.getTitle());
+	
+			TextView calloutStopDistance = (TextView)calloutLayout.findViewById(R.id.tour_callout_distance);			
+			String distanceString = null;
+			Float meters = mTourMapItem.distance();
+			if (meters != null) {
+				distanceString = LocaleMeasurements.getDistance(meters);
+			}
+			if (distanceString != null) {
+				calloutStopDistance.setVisibility(View.VISIBLE);
+				calloutStopDistance.setText(distanceString);
+			}
 			
 			calloutLayout.setOnClickListener(new OnClickListener() {
 
