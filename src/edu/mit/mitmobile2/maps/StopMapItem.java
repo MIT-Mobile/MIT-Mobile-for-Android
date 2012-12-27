@@ -23,18 +23,36 @@ public class StopMapItem extends MapItem {
 
 	public View getCallout(Context mContext) {
 
-		String buildingName = (String)this.getItemData().get("buildingName");
-		String buildingNumber = (String)this.getItemData().get("buildingNumber");
+		String title = (String)this.getItemData().get("title");	
+		String arriving = null;
+		long curTime = System.currentTimeMillis();
+		int next = Integer.parseInt(this.getItemData().get("next").toString());
 
+		int mins = (int) (next*1000 - curTime)/1000/60;
+		int hours = mins / 60;
+
+		if (next==0) {
+			arriving = "";
+		} else if (hours>1) {
+			mins = mins - (hours*60);
+			arriving = "arriving in " + String.valueOf(hours) + " hrs " + String.valueOf(mins) + " mins";
+		} else if (hours>0) {
+			mins = mins - (hours*60);
+			arriving = "arriving in " + String.valueOf(hours) + " hr " + String.valueOf(mins) + " mins";
+		} else {
+			if (mins==0) arriving = "arriving now!";
+			else if (mins==1) arriving = "arriving in 1 min";
+			else arriving = "arriving in " + String.valueOf(mins) + " mins";
+		}
 
    		LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_building_callout, null);
+		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_shuttle_callout, null);
 		
-		TextView calloutBuildingNumber = (TextView)calloutLayout.findViewById(R.id.callout_building_number);
-		calloutBuildingNumber.setText(buildingNumber);
+		TextView calloutShuttleTitle = (TextView)calloutLayout.findViewById(R.id.callout_shuttle_title);
+		calloutShuttleTitle.setText(title);
 
-		TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.callout_building_name);
-		calloutBuildingName.setText(buildingName);
+		TextView calloutShuttleArriving = (TextView)calloutLayout.findViewById(R.id.callout_shuttle_arriving);
+		calloutShuttleArriving.setText(arriving);
 		
 		return calloutLayout;
 	}

@@ -124,21 +124,25 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 			}
 			
     		GraphicsLayer gl = (GraphicsLayer)map.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER);
-    		int[] graphicId = gl.getGraphicIDs(x, y, 10,1);
+    		int[] graphicId = gl.getGraphicIDs(x, y, 10);
     		
     		Log.d(TAG,"num graphics = " + graphicId.length);
     		if (graphicId.length > 0) {
-    			Graphic g = gl.getGraphic(graphicId[0]);
-    			
-    			// get the index of the mapItem from the GraphicIdMap
-    			Integer mapItemIndex = map.getGraphicIdMap().get(Integer.toString(g.getUid()));
-    			
-    			// get the mapItem
-    			MapItem mapItem = map.getMapData().getMapItems().get(mapItemIndex);
-    			
-    			// Display the Callout
- 	    		map.displayCallout(mContext, mapItem);
-
+    			for (int i = 0; i < graphicId.length; i++) {
+	    			Graphic g = gl.getGraphic(graphicId[i]);
+	    			
+	    			// get the index of the mapItem from the GraphicIdMap
+	    			Integer mapItemIndex = map.getGraphicIdMap().get(Integer.toString(g.getUid()));
+	    			
+	    			// get the mapItem
+	    			MapItem mapItem = map.getMapData().getMapItems().get(mapItemIndex);
+	    			
+	    			// Display the Callout if it is defined
+	    			if (mapItem.getCallout(mContext) != null) {
+	    				map.displayCallout(mContext, mapItem);
+	    				return; // quit after the first callout is displayed
+	    			}
+    			}
     		}
     		else {
     			callout.hide();

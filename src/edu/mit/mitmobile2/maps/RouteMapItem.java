@@ -10,22 +10,9 @@ import edu.mit.mitmobile2.objs.MapItem;
 
 public class RouteMapItem extends MapItem {
 	
+	@Override
 	public View getCallout(Context mContext) {
-
-		String buildingName = (String)this.getItemData().get("buildingName");
-		String buildingNumber = (String)this.getItemData().get("buildingNumber");
-
-
-   		LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_building_callout, null);
-		
-		TextView calloutBuildingNumber = (TextView)calloutLayout.findViewById(R.id.callout_building_number);
-		calloutBuildingNumber.setText(buildingNumber);
-
-		TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.callout_building_name);
-		calloutBuildingName.setText(buildingName);
-		
-		return calloutLayout;
+		return null;
 	}
 	
 }
