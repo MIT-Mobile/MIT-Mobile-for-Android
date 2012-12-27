@@ -460,6 +460,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 	
 	protected void processMapData() {
 		map.getCallout().hide();
+		map.pause();
 
 		Log.d(TAG,"processMapData");
 		
@@ -485,6 +486,8 @@ public abstract class MapBaseActivity extends NewModuleActivity {
     		map.graphicIdMap.put(Integer.toString(gId),Integer.valueOf(i));
     	}
     	
+		map.unpause();
+
     	// If there is only one mapItem, display the callout
     	if (map.getMapData().getMapItems().size() == 1) {
     		MapItem mapItem = map.getMapData().getMapItems().get(0);
