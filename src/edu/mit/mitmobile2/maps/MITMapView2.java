@@ -18,6 +18,7 @@ import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.Layer;
 import com.esri.android.map.LocationService;
 import com.esri.android.map.MapView;
+import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
@@ -68,7 +69,6 @@ public class MITMapView2 extends MapView  {
 
 	public void addMapLayer(Layer layer, String layerName) {
 		Long id = layer.getID();
-		Log.d(TAG,"layer id from addMapLayer = " + id);
 		layerIdMap.put(layerName, id);                	                	                   
         this.addLayer(layer);
 	}
@@ -76,7 +76,6 @@ public class MITMapView2 extends MapView  {
 	public Layer getMapLayer(String layerName) {
 		if (layerIdMap != null) {
 			Long id = layerIdMap.get(layerName);                	                	                   
-			Log.d(TAG,"get map layer id = " + id);
 			return this.getLayerByID(id);
 		}
 		else {
@@ -126,6 +125,7 @@ public class MITMapView2 extends MapView  {
 			BitmapDrawable libDrawable = new BitmapDrawable(libImage);
 			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
 
+			pms.setOffsetY( libDrawable.getIntrinsicHeight() / 2);
 			Map attributes = new HashMap();
 			
 			Graphic g = new Graphic(point, pms,attributes, null);
@@ -141,7 +141,6 @@ public class MITMapView2 extends MapView  {
 	}
 	
 	protected int displayMapPolyline(MapItem mapItem) {
-		Log.d(TAG,"displayMapPolyline");
 		Point point;
 		Point startPoint;
 		Polyline polyline = new Polyline();
@@ -152,7 +151,6 @@ public class MITMapView2 extends MapView  {
 			polyline.startPath(startPoint);
 			for (int p = 0; p < mapItem.getMapPoints().size(); p++) {
 				MapPoint mapPoint = mapItem.getMapPoints().get(p);
-				//Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
 				point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
 				polyline.lineTo(point);
 			}
@@ -169,7 +167,6 @@ public class MITMapView2 extends MapView  {
 	}
 	
 	protected int displayMapPolygon(MapItem mapItem) {
-		Log.d(TAG,"displayMapPolygon");
 		Point point;
 		Point startPoint;
 		Polygon polygon = new Polygon();
@@ -180,7 +177,6 @@ public class MITMapView2 extends MapView  {
 			polygon.startPath(startPoint);
 			for (int p = 0; p < mapItem.getMapPoints().size(); p++) {
 				MapPoint mapPoint = mapItem.getMapPoints().get(p);
-				//Log.d(TAG,"polyline point x:" + mapPoint.long_wgs84 + " point y:" + mapPoint.lat_wgs84);
 				point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
 				polygon.lineTo(point);
 			}
@@ -226,6 +222,69 @@ public class MITMapView2 extends MapView  {
 		// Ultimately, is should be modified to properly place callouts for lines and polygons
 		Point calloutPoint = MITMapView2.toWebmercator(mapItem.getMapPoints().get(0).lat_wgs84, mapItem.getMapPoints().get(0).long_wgs84); 
 		return calloutPoint;
+	}
+
+	public Polygon getGraphicExtent() {
+		//loops through all points for all map items and returns a polygon for the extent of those items
+		double minLong;
+		double minLat;
+		double maxLong;
+		double maxLat;
+		
+		MapPoint mapPoint;
+		
+		if (mapData != null) {
+			if (mapData.getMapItems().size() > 0) {
+				
+				// set min and max values to first point
+				minLong = mapData.getMapItems().get(0).getMapPoints().get(0).long_wgs84;
+				maxLong = mapData.getMapItems().get(0).getMapPoints().get(0).long_wgs84;
+				minLat = mapData.getMapItems().get(0).getMapPoints().get(0).lat_wgs84;
+				maxLat = mapData.getMapItems().get(0).getMapPoints().get(0).lat_wgs84;
+				
+				for (int i = 0; i < mapData.getMapItems().size(); i++) {
+					for (int p = 0; p < mapData.getMapItems().get(i).getMapPoints().size(); p++) {
+						 mapPoint = mapData.getMapItems().get(i).getMapPoints().get(p);
+						 if (mapPoint.lat_wgs84 <= minLat) {
+							 minLat = mapPoint.lat_wgs84;
+						 }
+						 
+						 if (mapPoint.lat_wgs84 >= maxLat) {
+							 maxLat = mapPoint.lat_wgs84;
+						 }
+						 
+						 if (mapPoint.long_wgs84 <= minLong) {
+							 minLong = mapPoint.long_wgs84;
+						 }
+						 
+						 if (mapPoint.long_wgs84 >= maxLong) {
+							 maxLong = mapPoint.long_wgs84;
+						 }
+					}
+				}
+				
+				// create Polygon from 4 points
+				// start of the south west point
+				Point SW = toWebmercator(minLat,minLong);
+				Point NW = toWebmercator(maxLat,minLong);
+				Point NE = toWebmercator(maxLat,maxLong);
+				Point SE = toWebmercator(minLat,maxLong);
+
+				Polygon polygon = new Polygon();
+				polygon.startPath(SW);
+				polygon.lineTo(SW);
+				polygon.lineTo(NW);
+				polygon.lineTo(NE);
+				polygon.lineTo(SE);
+				return polygon;
+			}
+			else {
+				return null;
+			}
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public Map<String, Long> getLayerIdMap() {

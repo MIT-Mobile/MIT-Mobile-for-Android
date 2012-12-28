@@ -19,8 +19,12 @@ public abstract class MapItem {
 		symbol = MapItem.DEFAULT_SYMBOL;
 		lineColor = MapItem.DEFAULT_LINE_COLOR;
 		lineWidth = MapItem.DEFAULT_LINE_WIDTH;
+		verticalAlign = MapItem.VALIGN_CENTER;
+		horizontalAlign = MapItem.ALIGN_CENTER;
 	}
 		
+	public long sql_id = -1;  // not to confuse with "id"
+	
 	public abstract View getCallout(Context mContext);
 	//public abstract void initTimer(Context mContext);
 	
@@ -36,17 +40,23 @@ public abstract class MapItem {
 	public static final int DEFAULT_LINE_COLOR = Color.RED; // 
 	public static final int DEFAULT_LINE_WIDTH = 1; //
 
+	public static final int VALIGN_BOTTOM = 1;
+	public static final int VALIGN_CENTER = 2;
+	public static final int VALIGN_TOP = 3;
+	
+	public static final int ALIGN_LEFT = 1;
+	public static final int ALIGN_CENTER = 2;
+	public static final int ALIGN_RIGHT = 3;
+
 	protected ArrayList<MapPoint> mapPoints; 
 	
 	public int geometryType;
 	public int symbol; // symbol to show for points
 	public int lineColor; // color to use for polylines and polygons
 	public int lineWidth; // width tu use for polylines and polygons
-	//protected Timer timer;
+	public int verticalAlign; // controls vertical alignment of image for map items of type point, default to center 
+	public int horizontalAlign; // controls horizontal alignment of image for map items of type point, default to center 
 	
-	public long sql_id = -1;  // not to confuse with "id"
-
-
 	public HashMap<String,Object> getItemData() {
 		return itemData;
 	}

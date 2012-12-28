@@ -4,7 +4,6 @@ import java.util.List;
 
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.ImageDiskCache;
-import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 
 import android.content.Context;
@@ -29,7 +28,9 @@ public class MapCanvasDrawer {
 	private int mTopRow;
 	private int mTopOffset;
 	
-	static final double DOUBLE_IMAGE_TILE_SIZE = MITMapView.IMAGE_TILE_SIZE;
+	public static final int IMAGE_TILE_SIZE = 256;
+
+	static final double DOUBLE_IMAGE_TILE_SIZE = IMAGE_TILE_SIZE;
 	static final int MAX_ZOOM = 19;
 	
 	static final double EARTH_RADIUS_METERS = 6370.0 * 1000.0;
@@ -38,16 +39,31 @@ public class MapCanvasDrawer {
 	
 	private boolean mRequestCanceled = false;
 	
+	public static double computeGoogleX(int longitudeE6, int zoomLevel) {		
+		return (180. + ((double)longitudeE6/1000000.))/(360.) * Math.pow(2.0, zoomLevel);
+	}
+	
+	public static double computeGoogleY(int latitudeE6, int zoomLevel) {
+		// convert to radians
+		double phi = (double)latitudeE6/1000000. * Math.PI / 180.;
+		
+		// calculate mercator coordinate
+		double mercatorY = Math.log(Math.tan(phi) + 1./Math.cos(phi));
+		
+		// rescale to google coordinate
+		return (Math.PI - mercatorY) / ( 2. * Math.PI)  * Math.pow(2.0, zoomLevel);
+	}
+
 	public MapCanvasDrawer(int width, int height, List<GeoPoint> geoPoints, Integer zoom) {
 		initCanvasBitmap(width, height);
 		
 		GeoRect geoRect = new GeoRect(geoPoints);
 		
 		// note maxLat corresponds to minY likewise minLat corresponds to maxY
-		double minY = MITMapView.computeGoogleY(geoRect.getMaxLatitudeE6(), 0);
-		double maxY = MITMapView.computeGoogleY(geoRect.getMinLatitudeE6(), 0);
-		double maxX = MITMapView.computeGoogleX(geoRect.getMaxLongitudeE6(), 0);
-		double minX = MITMapView.computeGoogleX(geoRect.getMinLongitudeE6(), 0);
+		double minY = MapCanvasDrawer.computeGoogleY(geoRect.getMaxLatitudeE6(), 0);
+		double maxY = MapCanvasDrawer.computeGoogleY(geoRect.getMinLatitudeE6(), 0);
+		double maxX = MapCanvasDrawer.computeGoogleX(geoRect.getMaxLongitudeE6(), 0);
+		double minX = MapCanvasDrawer.computeGoogleX(geoRect.getMinLongitudeE6(), 0);
 		
 		if(zoom != null) {
 			mZoom = zoom;
@@ -70,8 +86,8 @@ public class MapCanvasDrawer {
 		
 		mZoom = zoom;
 		
-		double centerY = MITMapView.computeGoogleY(geoPoint.getLatitudeE6(), mZoom);
-		double centerX = MITMapView.computeGoogleX(geoPoint.getLongitudeE6(), mZoom);
+		double centerY = MapCanvasDrawer.computeGoogleY(geoPoint.getLatitudeE6(), mZoom);
+		double centerX = MapCanvasDrawer.computeGoogleX(geoPoint.getLongitudeE6(), mZoom);
 		
 		initTileCoordinates(centerX, centerY, width, height);
 	}
@@ -92,11 +108,11 @@ public class MapCanvasDrawer {
 	}
 	
 	public Point getPoint(GeoPoint geoPoint) {
-		double x = MITMapView.computeGoogleX(geoPoint.getLongitudeE6(), mZoom);
-		double y = MITMapView.computeGoogleY(geoPoint.getLatitudeE6(), mZoom);
+		double x = MapCanvasDrawer.computeGoogleX(geoPoint.getLongitudeE6(), mZoom);
+		double y = MapCanvasDrawer.computeGoogleY(geoPoint.getLatitudeE6(), mZoom);
 		
-		int pixelX = (int) Math.round((x - mLeftCol) * MITMapView.IMAGE_TILE_SIZE) - mLeftOffset;
-		int pixelY = (int) Math.round((y - mTopRow) * MITMapView.IMAGE_TILE_SIZE) - mTopOffset;
+		int pixelX = (int) Math.round((x - mLeftCol) * MapCanvasDrawer.IMAGE_TILE_SIZE) - mLeftOffset;
+		int pixelY = (int) Math.round((y - mTopRow) * MapCanvasDrawer.IMAGE_TILE_SIZE) - mTopOffset;
 		
 		return new Point(pixelX, pixelY);
 	}
@@ -114,8 +130,8 @@ public class MapCanvasDrawer {
 			@Override
 			public void run() {
 				ImageDiskCache imageCache = new ImageDiskCache(context);
-				int columns = mCanvas.getWidth() / MITMapView.IMAGE_TILE_SIZE + 2;
-				int rows = mCanvas.getHeight() / MITMapView.IMAGE_TILE_SIZE + 2;
+				int columns = mCanvas.getWidth() / MapCanvasDrawer.IMAGE_TILE_SIZE + 2;
+				int rows = mCanvas.getHeight() / MapCanvasDrawer.IMAGE_TILE_SIZE + 2;
 				
 				// loop thru the rows and columns drawing the map tiles
 				for(int column = 0; column < columns; column++) {
@@ -155,8 +171,8 @@ public class MapCanvasDrawer {
 						
 						mCanvas.drawBitmap(
 							bitmap, 
-							MITMapView.IMAGE_TILE_SIZE * column - mLeftOffset, 
-							MITMapView.IMAGE_TILE_SIZE * row - mTopOffset,
+							MapCanvasDrawer.IMAGE_TILE_SIZE * column - mLeftOffset, 
+							MapCanvasDrawer.IMAGE_TILE_SIZE * row - mTopOffset,
 							null
 						);
 						bitmap.recycle();

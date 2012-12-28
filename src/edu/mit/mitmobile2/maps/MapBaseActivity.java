@@ -27,6 +27,7 @@ import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnZoomListener;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polygon;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.FeatureSet;
 import com.esri.core.map.Graphic;
@@ -62,12 +63,11 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 	public static final String MAP_UPDATER_KEY = "map_updater";
 	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
 	
-
-	private static final double INIT_SCALE = 10000;
+	private static final double INIT_RESOLUTION = 1.205;
+	private static int MAP_PADDING = 100;
 	static int INIT_ZOOM = 17; // DELETE ?
 	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
 
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"oncreate()");
 		super.onCreate(savedInstanceState);
@@ -98,6 +98,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 		public void postAction(float pivotX, float pivotY, double factor) {
 			Log.d(TAG,"zoom x:" + pivotX + " y:" + pivotY);
 			Log.d(TAG,"scale = " + map.getScale());
+			Log.d(TAG,"resolution = " + map.getResolution());
 			// TODO Auto-generated method stub
 			
 		}
@@ -126,7 +127,6 @@ public abstract class MapBaseActivity extends NewModuleActivity {
     		GraphicsLayer gl = (GraphicsLayer)map.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER);
     		int[] graphicId = gl.getGraphicIDs(x, y, 10);
     		
-    		Log.d(TAG,"num graphics = " + graphicId.length);
     		if (graphicId.length > 0) {
     			for (int i = 0; i < graphicId.length; i++) {
 	    			Graphic g = gl.getGraphic(graphicId[i]);
@@ -157,11 +157,8 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 		@Override
 		public void onCallback(Object objs) {
 			// TODO Auto-generated method stub
-			Log.d(TAG,"onCallback()");
 			if (objs != null)  {
-				Log.d(TAG,"class = " + objs.getClass());
 				FeatureSet featureSet = (FeatureSet)objs;
-				Log.d(TAG,featureSet.toString());
 	
 				if (featureSet.getObjectIds() != null) {
 					Integer objectIds[] = featureSet.getObjectIds();
@@ -220,8 +217,8 @@ public abstract class MapBaseActivity extends NewModuleActivity {
         		    private void makeUseOfNewLocation(Location location) {
         				// TODO Auto-generated method stub
         				if (location != null) {
-	        		    	Log.d(TAG,"lat = " + location.getLatitude());
-	        				Log.d(TAG,"lon = " + location.getLongitude());
+	        		    	//Log.d(TAG,"lat = " + location.getLatitude());
+	        				//Log.d(TAG,"lon = " + location.getLongitude());
         				}
         		    }
 
@@ -242,11 +239,16 @@ public abstract class MapBaseActivity extends NewModuleActivity {
         		map.ls.start();
 
         		// zoom and center 
-        		if (map.ls.isStarted()) {
-        			map.zoomToScale(map.ls.getPoint(), MapBaseActivity.INIT_SCALE);
-        		}
         		
         		processExtras();
+        		
+        		// if there are no map items, zoom and center to the init resolution
+          		if (map.ls.isStarted()) {
+        			if (map.getMapData() == null || map.getMapData().getMapItems().isEmpty()) {
+            			map.zoomToResolution(map.ls.getPoint(), MapBaseActivity.INIT_RESOLUTION);
+        			}
+        		}
+        		
         		
         		onMapLoaded();
        		        		
@@ -271,10 +273,12 @@ public abstract class MapBaseActivity extends NewModuleActivity {
             	catch (Exception e) {
             		
             	}
-            } else if (msg.arg1 == MobileWebApi.ERROR) {
-            	Log.d("ZZZ","ShuttleMapUpdater error");  		        		
-            } else if (msg.arg1 == MobileWebApi.CANCELLED) {
-            	Log.d("ZZZ","ShuttleMapUpdater cancelled");  		        		
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+
             }
         }
     };
@@ -490,7 +494,10 @@ public abstract class MapBaseActivity extends NewModuleActivity {
     		map.graphicIdMap.put(Integer.toString(gId),Integer.valueOf(i));
     	}
     	
-		map.unpause();
+    	// Get the extent of the map item graphics and zoom to that extent
+    	map.setExtent(map.getGraphicExtent(),MapBaseActivity.MAP_PADDING);
+  
+    	map.unpause();
 
     	// If there is only one mapItem, display the callout
     	if (map.getMapData().getMapItems().size() == 1) {

@@ -20,10 +20,10 @@
   		android:layout_width="fill_parent"
   		android:layout_height="fill_parent"
  		spacialReference = "102113" 
-  		initExtent = "-7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899" 
+ 		initExtent = "-7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899"    
  		calloutStyle="@xml/callout" >
   	</edu.mit.mitmobile2.maps.MITMapView2>
-     
+
     <ListView
 		android:id="@+id/mapListView"
 		android:layout_width="fill_parent"

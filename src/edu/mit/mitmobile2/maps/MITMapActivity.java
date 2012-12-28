@@ -51,8 +51,8 @@ public class MITMapActivity extends MapBaseActivity {
 	// Shuttle Menu
 
 
-	private MITMapShuttlesUpdaterTask mut;
-	private MITItemizedOverlay markers;
+	//private MITMapShuttlesUpdaterTask mut;
+	//private MITItemizedOverlay markers;
 	private GeoPoint ev_gpt;
 	private  RouteItem mRouteItem = null;
     private Context mContext;
