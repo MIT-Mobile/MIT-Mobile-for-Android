@@ -125,7 +125,8 @@ public class MITMapView2 extends MapView  {
 			BitmapDrawable libDrawable = new BitmapDrawable(libImage);
 			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
 
-			pms.setOffsetY( libDrawable.getIntrinsicHeight() / 2);
+			mapItem.offsetY = libDrawable.getIntrinsicHeight() / 2;
+			pms.setOffsetY(mapItem.offsetY);
 			Map attributes = new HashMap();
 			
 			Graphic g = new Graphic(point, pms,attributes, null);
@@ -206,7 +207,8 @@ public class MITMapView2 extends MapView  {
 
 	public void displayCallout(Context context, MapItem mapItem) {
 		View calloutView = mapItem.getCallout(mContext);
-		Callout callout = getCallout(); 	 
+		Callout callout = getCallout();
+		callout.setOffset(0, mapItem.offsetY * 2);
 		Point calloutPoint = getCalloutPoint(mapItem);
 		callout.setContent(calloutView);
     	callout.setCoordinates(calloutPoint);

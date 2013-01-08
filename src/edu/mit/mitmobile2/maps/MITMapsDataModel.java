@@ -37,15 +37,15 @@ public class MITMapsDataModel {
 			@Override
 			public void onResponse(JSONArray array) throws JSONException {
 				
-				List<MapItem> mapsItems = MapParser.parseMapItems(array);
+				List<MapItem> mapItems = MapParser.parseMapItems(array);
 				
-				for (MapItem m : mapsItems) {
+				for (MapItem m : mapItems) {
 					//m.query = searchTerm;
 				}
 				
-				sSearchCache.put(searchTerm, mapsItems); 
+				sSearchCache.put(searchTerm, mapItems); 
 				
-				MobileWebApi.sendSuccessMessage(uiHandler, new SearchResults<MapItem>(searchTerm, mapsItems));
+				MobileWebApi.sendSuccessMessage(uiHandler, mapItems);
 			}
 			
 		});

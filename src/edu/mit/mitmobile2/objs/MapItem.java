@@ -52,6 +52,7 @@ public abstract class MapItem {
 	
 	public int geometryType;
 	public int symbol; // symbol to show for points
+	public int offsetY; // the Y offset for displaying images and callouts, usually half the height of the image.
 	public int lineColor; // color to use for polylines and polygons
 	public int lineWidth; // width tu use for polylines and polygons
 	public int verticalAlign; // controls vertical alignment of image for map items of type point, default to center 

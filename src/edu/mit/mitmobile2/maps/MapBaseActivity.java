@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
+import edu.mit.mitmobile2.objs.SearchResults;
 
 public abstract class MapBaseActivity extends NewModuleActivity {
 	
@@ -197,11 +199,13 @@ public abstract class MapBaseActivity extends NewModuleActivity {
                 
                 // add the base layers to the map
                 ArrayList<MapBaseLayer> baseMaps = mapServerData.getBaseLayerGroup().get(defaultBasemap);
-                for (int i = 0; i < baseMaps.size(); i++) {
-                	MapLayer layer = baseMaps.get(i);
-                	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
-            		map.addMapLayer(serviceLayer, layer.getLayerIdentifier());
-                }
+                if (baseMaps != null) {
+	                for (int i = 0; i < baseMaps.size(); i++) {
+	                	MapLayer layer = baseMaps.get(i);
+	                	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
+	            		map.addMapLayer(serviceLayer, layer.getLayerIdentifier());
+	                }
+	            }
                 
                 // Add general graphics layer
                 gl  = new GraphicsLayer();
@@ -283,6 +287,33 @@ public abstract class MapBaseActivity extends NewModuleActivity {
         }
     };
     
+    private Handler mapSearchUiHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+		@Override
+        public void handleMessage(Message msg) {
+
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	try {
+            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+            		ArrayList mapItems = (ArrayList)msg.obj;
+            		map.setMapData(new MapData());
+            		map.getMapData().setMapItems(mapItems);
+            		processMapData();
+            	}
+            	catch (Exception e) {
+            		Log.d(TAG,"mapSearchUiHander exception");
+            		Log.d(TAG,e.getMessage());
+            	}
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+
+            }
+        }
+    };
+
     private void mapInit() {
     	Log.d(TAG,"mapInit");
 
@@ -390,9 +421,19 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 
 	 @Override
 	 protected void onNewIntent(Intent intent) {
-		 Log.d(TAG,"onNewIntent");
+		Log.d(TAG,"onNewIntent");
 	    this.extras = intent.getExtras();
-	    processExtras();
+	    
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	Log.d(TAG,"do search");
+	        String query = intent.getStringExtra(SearchManager.QUERY);
+	        Log.d(TAG,"query = " + query);
+	        MITMapsDataModel.executeSearch(query, mapSearchUiHandler, mContext); 
+	        //doMySearch(query);
+	    }
+	    else {
+	    	processExtras();
+	    }	    
 	 } // End of onN
 
 	@Override
@@ -403,6 +444,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 		map.unpause();
 	}
 
+	
 	//This is the view that will get added to the callout
 	//Create a text view and assign the text that should be visible in the callout		
 	public View getView(int position, View convertView, ViewGroup parent) {

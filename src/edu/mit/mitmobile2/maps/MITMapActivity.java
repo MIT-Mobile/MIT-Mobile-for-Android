@@ -8,6 +8,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 
@@ -21,6 +22,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
 import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.people.PeopleModel;
 
 public class MITMapActivity extends MapBaseActivity {
 
@@ -94,8 +96,7 @@ public class MITMapActivity extends MapBaseActivity {
 			startActivity(i);
 	    }
 	    if (id.equals(MITMapActivity.MENU_SEARCH)) {
-		    Intent i = new Intent(this,MITMapBrowseCatsActivity.class);  
-			startActivity(i);
+		    onSearchRequested();
 	    }
 
 	}
@@ -121,13 +122,17 @@ public class MITMapActivity extends MapBaseActivity {
 	
 	@Override
 	public boolean onSearchRequested() {
+		Log.d(TAG,"onSearchRequested");
 		if (this.getMapUpdater() != null) {
 			this.getMapUpdater().stop();
 		}
-		if (MODULE_SHUTTLE.equals(module)) return false;
+		if (MODULE_SHUTTLE.equals(module)) {
+			Log.d(TAG,"module_shuttle = module");
+			return false;
+		}
 		return super.onSearchRequested();
 	}
-
+	
 	public static void viewMapItem(Context context, MapItem focusedMapItem) {	
 		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 		mapItems.add(focusedMapItem);
@@ -162,5 +167,5 @@ public class MITMapActivity extends MapBaseActivity {
         	Log.d(TAG,"extras is null");
         }
 	}
-		
+	
 }
