@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -422,6 +423,12 @@ public class SliderView extends HorizontalScrollView {
 	private void addScreen(ScreenPosition screenPosition) {
 		FrameLayout wrapperView = new FrameLayout(mContext);
 		mLinearLayout.addView(wrapperView, new LayoutParams(mWidth, mHeight));
+		if (screenPosition == null) {
+			Log.d("ZZZ","screenposition is null");
+		}
+		if (mSliderAdapter == null) {
+			Log.d("ZZZ","mSliderAdapter is null");			
+		}
 		if (mSliderAdapter.hasScreen(screenPosition)) {
 			wrapperView.addView(mSliderAdapter.getScreen(screenPosition));
 		}		

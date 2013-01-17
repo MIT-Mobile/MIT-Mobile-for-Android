@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -26,6 +27,7 @@ import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnZoomListener;
+import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.Geometry;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
@@ -62,6 +64,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 
 	protected static final String MAP_ITEMS_KEY = "map_items";
 	public static final String MAP_DATA_KEY = "map_data";	
+	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
 	public static final String MAP_UPDATER_KEY = "map_updater";
 	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
 	
@@ -140,7 +143,22 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 	    			MapItem mapItem = map.getMapData().getMapItems().get(mapItemIndex);
 	    			
 	    			// Display the Callout if it is defined
-	    			if (mapItem.getCallout(mContext) != null) {
+	    			if (mapItem.getCallout(mContext,map.getMapData(),mapItemIndex.intValue()) != null) {
+	    	    		
+	    				// create a thumbnail image for the map item to display on the map details screen
+	    				Log.d(TAG,"isLoaded = " + map.isLoaded());
+	    				map.layout(0, 0, 1000, 100);
+	    				  /* Capture drawing cache as bitmap */  
+	    		        map.setDrawingCacheEnabled(true);  
+	    		        Bitmap bitmap = Bitmap.createBitmap(map.getDrawingCache());  
+	    		        map.setDrawingCacheEnabled(false);  
+	    				mapItem.setThumbnail(bitmap);
+	    				if (bitmap != null) {
+	    					Log.d(TAG,"width = " + mapItem.getThumbnail().getWidth());
+	    				}
+	    				else {
+	    					Log.d(TAG,"bitmap is null");
+	    				}
 	    				map.displayCallout(mContext, mapItem);
 	    				return; // quit after the first callout is displayed
 	    			}
@@ -213,12 +231,15 @@ public abstract class MapBaseActivity extends NewModuleActivity {
                 
         		// Define a listener that responds to location updates
         		LocationListener locationListener = new LocationListener() {
-        		    public void onLocationChanged(Location location) {
+
+        			@Override
+					public void onLocationChanged(Location location) {
         		      // Called when a new location is found by the network location provider.
         		      makeUseOfNewLocation(location);
         		    }
 
         		    private void makeUseOfNewLocation(Location location) {
+        		    	Log.d(TAG,"makeUseOfNewLocation");
         				// TODO Auto-generated method stub
         				if (location != null) {
 	        		    	//Log.d(TAG,"lat = " + location.getLatitude());
@@ -238,7 +259,9 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 
         		// Initialize location service
         		map.ls = map.getLocationService();
+    			Log.d(TAG,"new Locationistener");
         		map.ls.setLocationListener(locationListener);
+        		map.ls.setAutoPan(false);
         		map.ls.setAllowNetworkLocation(true);
         		map.ls.start();
 
@@ -442,6 +465,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 		super.onResume();
 		Log.d(TAG,"onResume");
 		map.unpause();
+		
 	}
 
 	
@@ -527,13 +551,14 @@ public abstract class MapBaseActivity extends NewModuleActivity {
     	
     	for (int i = 0; i < map.getMapData().getMapItems().size(); i++) {
     		MapItem mapItem = map.getMapData().getMapItems().get(i);
-
+    		mapItem.setIndex(i);
     		// get the ID of the graphic once it has been added to the graphics layer
     		gId = map.dislayMapItem(map.getMapData().getLayerName(),mapItem);
 
     		// store the index (i) of the mapItem in the graphicIdMap with the key of the graphic ID
     		// this will let ut use the ID of the tapped graphic to get the corresponding mapItem and create the callout
     		map.graphicIdMap.put(Integer.toString(gId),Integer.valueOf(i));
+    		
     	}
     	
     	// Get the extent of the map item graphics and zoom to that extent

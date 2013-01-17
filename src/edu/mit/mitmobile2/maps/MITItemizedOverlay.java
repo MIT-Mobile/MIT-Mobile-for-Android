@@ -199,7 +199,7 @@ public class MITItemizedOverlay extends MITBaseItemizedOverlay {
 		 } else if (p.getUserData() != null) {
 			ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 			mapItems.add((MapItem) p.getUserData());
-			MITMapDetailsSliderActivity.launchMapDetails(mContext, mapItems, 0);
+			//MITMapDetailsSliderActivity.launchMapDetails(mContext, mapItems, 0);
 		 }
 		
 	}

@@ -13,6 +13,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
 import edu.mit.mitmobile2.maps.MITMapBrowseResultsActivity;
 import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
+import edu.mit.mitmobile2.maps.MapData;
 
 public class VehicleMapItem extends MapItem {
 	
@@ -23,11 +24,11 @@ public class VehicleMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(final Context mContext) {
+	public View getCallout(final Context mContext, final MapData mapData) {
 		return null;
 	}
 
-    private static int[] shuttleMarkers = {
+	private static int[] shuttleMarkers = {
     	                                   R.drawable.shuttle_location_n,
     	                                   R.drawable.shuttle_location_ne,
     	                                   R.drawable.shuttle_location_e,
@@ -48,6 +49,18 @@ public class VehicleMapItem extends MapItem {
     	
     	if (dir==8) dir = 7; // not sure if 360 is allowed...
     	return shuttleMarkers[dir];	
+	}
+
+	@Override
+	public View getCallout(Context mContext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public View getCallout(Context mContext, MapData mapData, int position) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 //	@Override

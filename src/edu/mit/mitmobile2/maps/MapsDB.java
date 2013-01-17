@@ -1,5 +1,8 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.Date;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +12,8 @@ import android.util.Log;
 
 import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.PersonItem;
+import edu.mit.mitmobile2.people.PeopleDB;
 
 public class MapsDB {
 	private static final int DATABASE_VERSION = 1;
@@ -227,4 +232,5 @@ public class MapsDB {
 			// no old versions exists
 		}
 	}
+	
 }

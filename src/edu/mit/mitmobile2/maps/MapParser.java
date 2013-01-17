@@ -126,7 +126,8 @@ public class MapParser {
 	        	mi.getItemData().put("contents",contents);
 	        }
 
-	        mi.getItemData().put("displayName",jItem.optString("displayName",""));
+	        mi.getItemData().put("displayName",jItem.optString("name",""));
+	        Log.d(TAG,"name = " + jItem.optString("name",""));
 	        mi.getItemData().put("name", jItem.getString("name"));
 	        mi.getItemData().put("id",jItem.getString("id"));
 	        mi.getItemData().put("street",jItem.optString("street",""));

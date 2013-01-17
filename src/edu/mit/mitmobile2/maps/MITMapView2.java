@@ -206,7 +206,7 @@ public class MITMapView2 extends MapView  {
 	}
 
 	public void displayCallout(Context context, MapItem mapItem) {
-		View calloutView = mapItem.getCallout(mContext);
+		View calloutView = mapItem.getCallout(mContext,mapData,mapItem.getIndex());
 		Callout callout = getCallout();
 		callout.setOffset(0, mapItem.offsetY * 2);
 		Point calloutPoint = getCalloutPoint(mapItem);

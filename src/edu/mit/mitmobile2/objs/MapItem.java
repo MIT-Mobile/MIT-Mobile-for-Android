@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Timer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.View;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapData;
 
 public abstract class MapItem {
 	
@@ -26,9 +28,15 @@ public abstract class MapItem {
 	public long sql_id = -1;  // not to confuse with "id"
 	
 	public abstract View getCallout(Context mContext);
+	public abstract View getCallout(Context mContext, MapData mapData);
+	public abstract View getCallout(Context mContext, MapData mapData, int position);
+
 	//public abstract void initTimer(Context mContext);
 	
 	protected String mapItemClass; // this is a hack to recreate MapItem objects that are extended from the abstract class
+	
+	private int index;
+	private Bitmap thumbnail;
 	
 	protected HashMap<String,Object> itemData;
 	
@@ -113,13 +121,17 @@ public abstract class MapItem {
 	public void setSymbol(int symbol) {
 		this.symbol = symbol;
 	}
-
-//	public Timer getTimer() {
-//		return timer;
-//	}
-//
-//	public void setTimer(Timer timer) {
-//		this.timer = timer;
-//	}
+	public int getIndex() {
+		return index;
+	}
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	public Bitmap getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(Bitmap thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 
 }

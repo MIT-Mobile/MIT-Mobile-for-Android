@@ -21,7 +21,7 @@ public class StopMapItem extends MapItem {
 //		timer = new Timer();
 //	}
 
-	public View getCallout(Context mContext) {
+	public View getCallout(Context mContext, MapData mapData) {
 
 		String title = (String)this.getItemData().get("title");	
 		String arriving = null;
@@ -75,6 +75,18 @@ public class StopMapItem extends MapItem {
 				 Log.d("ZZZ","exception = " + e.getMessage());
 			 }
 		 }
+	}
+
+	@Override
+	public View getCallout(Context mContext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public View getCallout(Context mContext, MapData mapData, int position) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

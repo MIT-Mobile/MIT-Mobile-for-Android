@@ -113,6 +113,18 @@ public class TourRouteMapData extends MapData {
 			});
 			return calloutLayout;
 		}
+
+		@Override
+		public View getCallout(Context mContext, MapData mapData) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public View getCallout(Context mContext, MapData mapData, int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 		
 	}
 	
@@ -120,6 +132,18 @@ public class TourRouteMapData extends MapData {
 
 		@Override
 		public View getCallout(Context mContext) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public View getCallout(Context mContext, MapData mapData) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public View getCallout(Context mContext, MapData mapData, int position) {
 			// TODO Auto-generated method stub
 			return null;
 		}

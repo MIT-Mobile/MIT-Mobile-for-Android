@@ -64,7 +64,7 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		return new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
-				MITMapDetailsSliderActivity.launchMapDetails(mContext, mMapItems, position);
+				//MITMapDetailsSliderActivity.launchMapDetails(mContext, mMapItems, position);
 			}
 		};
 	}
