@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.objs;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -13,6 +15,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
 import edu.mit.mitmobile2.maps.MITMapBrowseResultsActivity;
 import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
+import edu.mit.mitmobile2.maps.MapAbstractionObject;
 import edu.mit.mitmobile2.maps.MapData;
 
 public class VehicleMapItem extends MapItem {
@@ -24,7 +27,7 @@ public class VehicleMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(final Context mContext, final MapData mapData) {
+	public View getCallout(final Context mContext, final ArrayList<MapItem> mapItems) {
 		return null;
 	}
 
@@ -58,7 +61,7 @@ public class VehicleMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(Context mContext, MapData mapData, int position) {
+	public View getCallout(Context mContext, ArrayList<MapItem> mapItems, int position) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -180,8 +180,8 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 	@Override 
 	protected void onMapLoaded() {
 		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints, this);
-		map.setMapData(mMapData);
-		processMapData();
+		//map.setMapData(mMapData);
+		//map.processMapData();
 		
 		mSecondaryTitleBar.addActionView(mMapListSwitch);
 	}

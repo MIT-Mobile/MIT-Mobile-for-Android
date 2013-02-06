@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.tour;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapAbstractionObject;
 import edu.mit.mitmobile2.maps.MapData;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
@@ -32,11 +34,11 @@ public class TourRouteMapData extends MapData {
 		for (GeoPoint geoPoint : geoPoints) {
 			routeMapItem.getMapPoints().add(geoPoint.getMapPoint());
 		}
-		mapItems.add(routeMapItem);
+		getMapItems().add(routeMapItem);
 		
 		for (TourMapItem tourMapItem : tourMapItems) {
 			TourStopMapItem mapItem = new TourStopMapItem(tourMapItem);
-			mapItems.add(mapItem);
+			getMapItems().add(mapItem);
 		}
 		
 		mSiteListener = siteListener;
@@ -44,7 +46,7 @@ public class TourRouteMapData extends MapData {
 
 	public MapItem getMapItem(TourMapItem mapItem) {
 		String id = mapItem.getId();
-		for(MapItem aMapItem : mapItems) {
+		for(MapItem aMapItem : getMapItems()) {
 			if (aMapItem instanceof TourStopMapItem) {
 				TourStopMapItem aTourStopMapItem = (TourStopMapItem) aMapItem;
 				
@@ -115,13 +117,13 @@ public class TourRouteMapData extends MapData {
 		}
 
 		@Override
-		public View getCallout(Context mContext, MapData mapData) {
+		public View getCallout(Context mContext, ArrayList<MapItem> mapItems) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public View getCallout(Context mContext, MapData mapData, int position) {
+		public View getCallout(Context mContext,  ArrayList<MapItem> mapItems, int position) {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -137,13 +139,13 @@ public class TourRouteMapData extends MapData {
 		}
 
 		@Override
-		public View getCallout(Context mContext, MapData mapData) {
+		public View getCallout(Context mContext,  ArrayList<MapItem> mapItems) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public View getCallout(Context mContext, MapData mapData, int position) {
+		public View getCallout(Context mContext,  ArrayList<MapItem> mapItems, int position) {
 			// TODO Auto-generated method stub
 			return null;
 		}

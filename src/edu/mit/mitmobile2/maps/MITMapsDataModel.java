@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
@@ -17,6 +18,7 @@ import edu.mit.mitmobile2.objs.SearchResults;
 
 public class MITMapsDataModel {
 
+	private static final String TAG = "MITMapsDataModel";
 	private static HashMap<String, List<MapItem>> sSearchCache = new HashMap<String, List<MapItem>>();
 	
 	private static HashMap<String, List<MapItem>> sCategoryCache = new HashMap<String, List<MapItem>>();
@@ -36,6 +38,7 @@ public class MITMapsDataModel {
 
 			@Override
 			public void onResponse(JSONArray array) throws JSONException {
+				Log.d(TAG,"map search result = " + array.toString());
 				
 				List<MapItem> mapItems = MapParser.parseMapItems(array);
 				

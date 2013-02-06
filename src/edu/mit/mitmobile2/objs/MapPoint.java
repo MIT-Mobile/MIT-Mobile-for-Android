@@ -1,7 +1,12 @@
 package edu.mit.mitmobile2.objs;
 
+import java.util.HashMap;
 
-public class MapPoint {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+
+public class MapPoint implements Parcelable {
 	
 	public MapPoint() {
 		
@@ -19,7 +24,40 @@ public class MapPoint {
 		this.long_wgs84 = lon.doubleValue();
 	}
 
+	public MapPoint(Parcel source){
+        super(); 
+        readFromParcel(source);
+	}
+	
 	public double long_wgs84;
 	public double lat_wgs84;
 
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int arg1) {
+		dest.writeDouble(long_wgs84);
+		dest.writeDouble(lat_wgs84);
+	}
+	
+	public void readFromParcel(Parcel source) {
+		long_wgs84 = source.readDouble();
+		lat_wgs84 = source.readDouble();
+	}
+	
+    public static final Parcelable.Creator<MapPoint> CREATOR = new Parcelable.Creator<MapPoint>() {
+        public MapPoint createFromParcel(Parcel in) {
+            return new MapPoint(in);
+        }
+
+        public MapPoint[] newArray(int size) {
+            return new MapPoint[size];
+        }
+
+    };
+	
 }

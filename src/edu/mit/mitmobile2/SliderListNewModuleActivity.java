@@ -8,6 +8,7 @@ import edu.mit.mitmobile2.SliderView.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public abstract class SliderListNewModuleActivity extends SliderNewModuleActivity implements OnPositionChangedListener {
@@ -79,6 +80,7 @@ public abstract class SliderListNewModuleActivity extends SliderNewModuleActivit
 	}
 	
 	protected View getScreen(int position) {
+		Log.d("ZZZ","screen position = " + position);
 		return mSliderListAdapter.getScreen(position);
 	}
 	

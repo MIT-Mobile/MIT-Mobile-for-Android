@@ -72,6 +72,7 @@ public class MapParser {
 	
 	public static List<MapItem> parseMapItems(JSONArray jArray) throws JSONException {
 	
+		Log.d(TAG,jArray.length() + " map items in JSONArray");
 		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 		try {
 			for(int i = 0; i < jArray.length(); i++) {
@@ -80,7 +81,7 @@ public class MapParser {
 			}
 		}
 		catch (JSONException e) {
-			
+			Log.d(TAG,"parseMapItems JSONException " + e.getMessage());
 		}
 		
 		return mapItems;

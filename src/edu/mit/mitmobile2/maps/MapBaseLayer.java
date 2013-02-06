@@ -1,7 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
 public class MapBaseLayer extends MapLayer {
-	
+
     private boolean enabled;
     
 	public boolean isEnabled() {

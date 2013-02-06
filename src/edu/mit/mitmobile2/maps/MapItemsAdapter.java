@@ -45,16 +45,16 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
 				Log.d(TAG,"adapter view click position = " + position + " id = " + id);
+				ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 				MapItem mapItem = getItem(position);
-				MapData mapData = new MapData();
-				mapData.getMapItems().add(mapItem);
+				mapItems.add(mapItem);
 				
 				//TEST JSON
 				//Log.d(TAG,"mapData json = " + mapData.toJSON());
 				// END TEST GSON
 				Intent i = new Intent(mContext, MITMapActivity.class); 
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData.toJSON());
+				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);
 				mContext.startActivity(i);
 			}
 		};

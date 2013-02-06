@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,7 @@ import edu.mit.mitmobile2.objs.MapItem;
 public class RouteMapItem extends MapItem {
 	
 	@Override
-	public View getCallout(Context mContext, MapData mapData) {
+	public View getCallout(Context mContext, ArrayList<MapItem> mapItems) {
 		return null;
 	}
 
@@ -22,7 +24,7 @@ public class RouteMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(Context mContext, MapData mapData, int position) {
+	public View getCallout(Context mContext, ArrayList<MapItem> mapItems, int position) {
 		// TODO Auto-generated method stub
 		return null;
 	}
