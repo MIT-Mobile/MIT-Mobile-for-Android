@@ -102,8 +102,10 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 		dest.writeString(mapItemClass);
 		dest.writeInt(offsetY);
 		dest.writeInt(symbol);
-		dest.writeInt(verticalAlign);		
+		dest.writeInt(verticalAlign);
+		dest.writeString(query);
 		dest.writeList(mapPoints);
+		dest.writeList(contents);
 	}
 	
 	public void readFromParcel(Parcel source) {
@@ -117,7 +119,9 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 		offsetY = source.readInt();
 		symbol = source.readInt();
 		verticalAlign = source.readInt();
+		query = source.readString();
 		mapPoints = source.readArrayList(MapPoint.class.getClassLoader());
+		contents = source.readArrayList(MapItemContent.class.getClassLoader());
 	}
 	
     public static final Parcelable.Creator<BuildingMapItem> CREATOR = new Parcelable.Creator<BuildingMapItem>() {

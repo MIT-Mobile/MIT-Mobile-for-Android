@@ -38,10 +38,12 @@ import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapItemContent;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 import edu.mit.mitmobile2.people.PeopleDetailActivity;
 import edu.mit.mitmobile2.people.PeopleDetailItemLayout;
@@ -57,14 +59,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 
 	private List<MapItem> mMapItems = Collections.emptyList();
 	private int mapItemIndex = 0;
-	
-	private final static int EDIT_CONTACT = 0;
-	private final static int EDIT_CONTACT_REQUEST = 1;
-	private final static String EDIT_CONTACT_TEXT = "Add to existing";
-	
-	private final static int NEW_CONTACT = 1;
-	private final static String NEW_CONTACT_TEXT = "Create new contact";
-	
+		
 	private Context mContext;
 	
 	private SpatialReference targetSpatialReference;
@@ -73,8 +68,13 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	TextView mapDetailsQueryTV;
 	TextView mapDetailsTitleTV;
 	TextView mapDetailsSubtitleTV;
-	ImageView mThumbnailView;
-		
+	RemoteImageView mThumbnailView;
+	String bbox;
+	String imgUrl;
+	TextView mapDetailsHereTV;
+	RemoteImageView mapDetailsPhotoView;
+	TextView mapDetailsPhotosTV;
+	
 	static void launchActivity(Context context, MapItem item, int viewMode, String extras) {
 		// load the activity that shows all the detail search results
 		Intent intent = new Intent(context, PeopleDetailActivity.class);
@@ -245,8 +245,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		
 		@Override
 		public View getView() {
-			MapItem mapItem = mMapItems.get(mapItemIndex);
-
+			//MapItem mapItem = mMapItems.get(getPosition());
 			LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			mMainLayout = inflator.inflate(R.layout.map_details, null);
 			TabHost tabHost;
@@ -262,22 +261,18 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			tabConfigurator.configureTabs();
 			
 			mapDetailsQueryTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsQueryTV);
-			mapDetailsQueryTV.setText("'query' was found in");
+			mapDetailsQueryTV.setText("'" + mMapItem.query + "' was found in");
 
 			mapDetailsTitleTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsTitleTV);
-			mapDetailsTitleTV.setText((String)mapItem.getItemData().get("name"));
+			mapDetailsTitleTV.setText((String)mMapItem.getItemData().get("name"));
 			
 			mapDetailsSubtitleTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsSubtitleTV);
-			mapDetailsSubtitleTV.setText((String)mapItem.getItemData().get("street"));
+			mapDetailsSubtitleTV.setText((String)mMapItem.getItemData().get("street"));
 			
-			mThumbnailView = (ImageView) mMainLayout.findViewById(R.id.mapDetailsThumbnailIV);
-			// show The Image
-
-			String bbox = mapItem.getBoundingBox(targetSpatialReference);
-			new DownloadImageTask(mThumbnailView)
-            .execute("http://ims-pub.mit.edu/ArcGIS/rest/services/base/WhereIs_Base/MapServer/export?format=png&transparent=false&f=image&bbox=" + bbox);
-			
-			MapModel.exportMapBitmap(mContext, mapItem.getBoundingBox(targetSpatialReference), true, mapBitmapUiHandler);
+			mThumbnailView = (RemoteImageView) mMainLayout.findViewById(R.id.mapDetailsThumbnailIV);
+			bbox = mMapItem.getBoundingBox(targetSpatialReference);
+			imgUrl = "http://ims-pub.mit.edu/ArcGIS/rest/services/base/WhereIs_Base/MapServer/export?format=png24&transparent=false&f=image&bbox=" + bbox;
+			mThumbnailView.setURL(imgUrl);				
 			
 			mThumbnailView.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -286,6 +281,33 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 				}
 			});
 
+			// What's Here Contents
+			mapDetailsHereTV = (TextView) tabHost.findViewById(R.id.mapDetailsHereTV);
+			String bullet = new String(new int[] {0x2022}, 0 ,1);
+			String text = "";
+			ArrayList<MapItemContent> contents = mMapItem.getContents();
+			for (int c = 0; c < contents.size(); c++) {
+				text += " "  + bullet + " " + contents.get(c).getName() + "\n";				
+			}
+			
+			if ("".equals(text)) text = "No Information Available";
+			mapDetailsHereTV.setText(text);
+			
+			// Photo
+			imgUrl = (String)mMapItem.getItemData().get("bldgimg") + "";
+			mapDetailsPhotoView = (RemoteImageView) tabHost.findViewById(R.id.mapDetailsPhotoView);
+			mapDetailsPhotosTV = (TextView) tabHost.findViewById(R.id.mapDetailsPhotosTV);
+			
+			if (imgUrl.isEmpty()) {
+				mapDetailsPhotosTV.setText("(No Photo Available)");
+				mapDetailsPhotoView.setVisibility(View.GONE);
+			}
+			else {
+				Log.d(TAG,"image url = " + imgUrl);
+				mapDetailsPhotoView.setURL(imgUrl);				
+				mapDetailsPhotosTV.setText("view from " + (String)mMapItem.getItemData().get("viewangle"));
+			}
+			
 			tabHost.setFocusable(false);	
 			
 			return mMainLayout;
@@ -353,59 +375,60 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	    return -1;
 	}
 	
-    private Handler mapBitmapUiHandler = new Handler() {
-        @SuppressWarnings("unchecked")
-		@Override
-        public void handleMessage(Message msg) {
-
-            if (msg.arg1 == MobileWebApi.SUCCESS) {
-            	try {
-            		// set bitmap
-            		mThumbnailView.setImageBitmap((Bitmap)msg.obj);
-            		//map.getMapData().getMapItems().get(0).setThumbnail((Bitmap)msg.obj);
-            	}
-            	catch (Exception e) {
-            		Log.d(TAG,"mapBitmapUiHander exception");
-            		Log.d(TAG,e.getMessage());
-            	}
-            }
-            else if (msg.arg1 == MobileWebApi.ERROR) {
-
-            } 
-            else if (msg.arg1 == MobileWebApi.CANCELLED) {
-
-            }
-        }
-    };
-
-	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-	    public DownloadImageTask(ImageView bmImage) {
-	    	mThumbnailView = bmImage;
-	    }
-
-	    protected Bitmap doInBackground(String... urls) {
-	        String urldisplay = urls[0];
-	        Bitmap mIcon11 = null;
-	        try {
-	            InputStream in = new java.net.URL(urldisplay).openStream();
-	            mIcon11 = BitmapFactory.decodeStream(in);
-	        } catch (Exception e) {
-	            Log.e("Error", e.getMessage());
-	            e.printStackTrace();
-	        }
-	        return mIcon11;
-	    }
-
-	    protected void onPostExecute(Bitmap result) {
-	        if (result == null) {
-	        	Log.d(TAG,"result is null");
-	        }
-	        else {
-	        	Log.d(TAG,"result height is " + result.getHeight());	        	
-	        	mThumbnailView.setImageBitmap(result);
-	        }
-	    }
-	}
+//    private Handler mapBitmapUiHandler = new Handler() {
+//        @SuppressWarnings("unchecked")
+//		@Override
+//        public void handleMessage(Message msg) {
+//
+//            if (msg.arg1 == MobileWebApi.SUCCESS) {
+//            	try {
+//            		// set bitmap
+//            		mThumbnailView.setImageBitmap((Bitmap)msg.obj);
+//            		//map.getMapData().getMapItems().get(0).setThumbnail((Bitmap)msg.obj);
+//            	}
+//            	catch (Exception e) {
+//            		Log.d(TAG,"mapBitmapUiHander exception");
+//            		Log.d(TAG,e.getMessage());
+//            	}
+//            }
+//            else if (msg.arg1 == MobileWebApi.ERROR) {
+//
+//            } 
+//            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+//
+//            }
+//        }
+//    };
+//
+//	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+//
+//	    public DownloadImageTask(ImageView bmImage) {
+//	    	mThumbnailView = bmImage;
+//	    }
+//
+//	    protected Bitmap doInBackground(String... urls) {
+//	    	Log.d(TAG,urls[0]);
+//	        String urldisplay = urls[0];
+//	        Bitmap mIcon11 = null;
+//	        try {
+//	            InputStream in = new java.net.URL(urldisplay).openStream();
+//	            mIcon11 = BitmapFactory.decodeStream(in);
+//	        } catch (Exception e) {
+//	            Log.e("Error", e.getMessage());
+//	            e.printStackTrace();
+//	        }
+//	        return mIcon11;
+//	    }
+//
+//	    protected void onPostExecute(Bitmap result) {
+//	        if (result == null) {
+//	        	Log.d(TAG,"result is null");
+//	        }
+//	        else {
+//	        	Log.d(TAG,"result height is " + result.getHeight());	        	
+//	        	mThumbnailView.setImageBitmap(result);
+//	        }
+//	    }
+//	}
 
 }

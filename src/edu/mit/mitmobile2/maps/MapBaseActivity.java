@@ -58,13 +58,11 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 	protected String module;
 	Context mContext;
 	Location location;
-	GraphicsLayer gl;
-	//GraphicsLayer graphicsLayer;
 	Bundle extras;
 	ArrayList<MapItem> mapItems;
 	private MapUpdater mapUpdater;
 	private HashMap params;
-	
+	private String query;
 	protected ListView mListView;
 	ProgressDialog progress;
 
@@ -473,7 +471,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 	    
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	    	Log.d(TAG,"do search");
-	        String query = intent.getStringExtra(SearchManager.QUERY);
+	        query = intent.getStringExtra(SearchManager.QUERY);
 	        Log.d(TAG,"query = " + query);
 	        MITMapsDataModel.executeSearch(query, map.mapSearchUiHandler, mContext); 
 	        //doMySearch(query);
@@ -482,6 +480,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
 			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView2.MAP_DATA_KEY);
 	    	map.addMapItems(mapItems);
 	    	map.syncGraphicsLayers();
+	    	map.fitMapItems();
 	    }
 	    
 	 } // End of onN

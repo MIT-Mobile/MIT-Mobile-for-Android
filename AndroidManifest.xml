@@ -82,7 +82,6 @@
 			      <meta-data android:name="android.app.searchable" android:resource="@xml/maps_searchable" />
 		</activity>
         
-        
         <activity android:name=".maps.ArcGISActivity" android:launchMode="singleTop"  android:process="map.test"
         		android:screenOrientation="portrait">
         </activity>
@@ -142,6 +141,8 @@
         <activity android:name=".shuttles.MITStopsSliderActivity" android:configChanges="orientation"/>
         <activity android:name=".shuttles.MITRoutesSliderActivity" android:configChanges="orientation"/>
 		
+        <activity android:name=".shuttles.ShuttlesMapActivity" android:launchMode="singleTop" android:screenOrientation="portrait" />
+        
 		<activity android:name=".people.PeopleActivity">
 			<meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
 		</activity>

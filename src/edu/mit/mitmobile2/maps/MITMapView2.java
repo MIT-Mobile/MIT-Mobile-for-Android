@@ -702,6 +702,7 @@ public class MITMapView2 extends MapView  {
             	
             	try {
             		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+            		clearMapItems();
             		ArrayList mapItems = (ArrayList)msg.obj;
             		addMapItems(mapItems);
             		syncLayers();

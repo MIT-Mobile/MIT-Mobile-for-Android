@@ -43,7 +43,7 @@ public class MITMapsDataModel {
 				List<MapItem> mapItems = MapParser.parseMapItems(array);
 				
 				for (MapItem m : mapItems) {
-					//m.query = searchTerm;
+					m.query = searchTerm;
 				}
 				
 				sSearchCache.put(searchTerm, mapItems); 

@@ -18,8 +18,8 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.maps.MapData;
-import edu.mit.mitmobile2.maps.RouteMapItem;
-import edu.mit.mitmobile2.maps.StopMapItem;
+import edu.mit.mitmobile2.objs.RouteMapItem;
+import edu.mit.mitmobile2.objs.StopMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
@@ -125,7 +125,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	}
     
 	static void launchShuttleRouteMap(Context context, RouteItem routeItem, List<Stops> stops, int bubblePos) {
-		Intent i = new Intent(context, MITMapActivity.class);
+		Intent i = new Intent(context, ShuttlesMapActivity.class);
 		
 		// prefetch to speed up first draw call
 //		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
@@ -139,10 +139,10 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 //		MapData mapData = MITRoutesSliderActivity.toMapData(updatedRouteItem);
 		
 //		i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData.toJSON());
-		i.putExtra(MITMapActivity.MAP_UPDATER_KEY, ShuttleMapUpdater.class.getName());
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("route_id", routeItem.route_id);
-		i.putExtra(MITMapActivity.MAP_UPDATER_PARAMS_KEY, params);
+//		i.putExtra(MITMapActivity.MAP_UPDATER_KEY, ShuttleMapUpdater.class.getName());
+//		HashMap<String,Object> params = new HashMap<String,Object>();
+//		params.put("route_id", routeItem.route_id);
+//		i.putExtra(MITMapActivity.MAP_UPDATER_PARAMS_KEY, params);
 
 		context.startActivity(i);
 	}

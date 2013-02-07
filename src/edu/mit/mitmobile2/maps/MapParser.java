@@ -13,6 +13,7 @@ import android.util.Log;
 
 import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapItemContent;
 import edu.mit.mitmobile2.objs.MapPoint;
 
 public class MapParser {
@@ -118,13 +119,14 @@ public class MapParser {
 	        if (temp!=null) {
 	        	ArrayList<String> contents = new ArrayList();
 	        	JSONObject j;
-	        	String it;
 	        	for (int index=0; index<temp.length(); index++) {
+	        		MapItemContent mapItemContent = new MapItemContent();
 	        		j = temp.getJSONObject(index);
-	        		it = j.getString("name");
-	    	        contents.add(it);
+	        		mapItemContent.setCategory(j.optString("category"));
+	        		mapItemContent.setName(j.optString("name"));
+	        		mapItemContent.setUrl(j.optString("url"));
+	        		mi.getContents().add(mapItemContent);
 	        	}
-	        	mi.getItemData().put("contents",contents);
 	        }
 
 	        mi.getItemData().put("displayName",jItem.optString("name",""));
@@ -150,7 +152,7 @@ public class MapParser {
 
 	        Log.d(TAG,"mappoint lat = " + mapPoint.lat_wgs84 + " long = " + mapPoint.long_wgs84);
 	        mi.getMapPoints().add(mapPoint);
-	        
+	        	        
 	        Log.d("ZZZ","parseMapItem: mapItem has " + mi.getMapPoints().size() + " points");
 	        //DEBUG itemData
 	        Iterator it = mi.getItemData().entrySet().iterator();

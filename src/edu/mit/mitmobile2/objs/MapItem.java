@@ -31,6 +31,7 @@ public abstract class MapItem {
 		mapItemClass = this.getClass().getName();
 		itemData = new HashMap<String,Object>();
 		mapPoints = new ArrayList<MapPoint>();
+		contents = new ArrayList<MapItemContent>();
 		geometryType = MapItem.TYPE_POINT;
 		symbol = MapItem.DEFAULT_SYMBOL;
 		lineColor = MapItem.DEFAULT_LINE_COLOR;
@@ -74,6 +75,7 @@ public abstract class MapItem {
 
 	protected int wkid; // the spatial reference the mapPoints are stored in, defaults to DEFAULT_WIKID 
 	protected ArrayList<MapPoint> mapPoints; 
+	protected ArrayList<MapItemContent> contents;
 	
 	public int geometryType;
 	public int symbol; // symbol to show for points
@@ -82,6 +84,7 @@ public abstract class MapItem {
 	public int lineWidth; // width tu use for polylines and polygons
 	public int verticalAlign; // controls vertical alignment of image for map items of type point, default to center 
 	public int horizontalAlign; // controls horizontal alignment of image for map items of type point, default to center 
+	public String query; // query used if this map item was the result of a map search
 	
 	public HashMap<String,Object> getItemData() {
 		return itemData;
@@ -283,6 +286,12 @@ public abstract class MapItem {
 		else {
 			return null;
 		}
+	}
+	public ArrayList<MapItemContent> getContents() {
+		return contents;
+	}
+	public void setContents(ArrayList<MapItemContent> contents) {
+		this.contents = contents;
 	}
 }
 
