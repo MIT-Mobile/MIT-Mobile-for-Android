@@ -9,12 +9,16 @@ import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView2;
 import edu.mit.mitmobile2.maps.MapBaseActivity;
 import edu.mit.mitmobile2.maps.MapBaseLayer;
 import edu.mit.mitmobile2.maps.MapData;
 import edu.mit.mitmobile2.maps.MapLayer;
 import edu.mit.mitmobile2.maps.MapServerData;
+import edu.mit.mitmobile2.objs.RouteItem.Loc;
+import edu.mit.mitmobile2.objs.RouteItem.Stops;
+import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
 import edu.mit.mitmobile2.shuttles.MITRoutesSliderActivity;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
@@ -69,7 +73,7 @@ public class ShuttleMapUpdater extends MapUpdater {
 		timer.cancel();
 	}
 
-	private Handler uiHandler = new Handler() {
+	public Handler uiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
@@ -79,20 +83,21 @@ public class ShuttleMapUpdater extends MapUpdater {
 
             	//RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);		
         		// Convert the routeItem to a mapData object
-            	mapData = MITRoutesSliderActivity.toMapData(routeItem);
-
+            	HashMap<String,ArrayList<? extends MapItem>> layers = ShuttleModel.buildShuttleItems(routeItem);
+            
             	// create a new message with the mapData object
             	Message mapMessage = new Message();
             	mapMessage.arg1 = MobileWebApi.SUCCESS;
-            	mapMessage.obj = mapData;
+            	mapMessage.obj = layers;
             	
             	// send the mapMessage to the mapUpdateUiHandler
         		handler.sendMessage(mapMessage);
-            } else if (msg.arg1 == MobileWebApi.ERROR) {
-            	Log.d("ZZZ","ShuttleMapUpdater error");  		        		
-            } else if (msg.arg1 == MobileWebApi.CANCELLED) {
-            	Log.d("ZZZ","ShuttleMapUpdater cancelled");  		        		
+            } 
+            else if (msg.arg1 == MobileWebApi.ERROR) {	
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
             }
         }
     };
+    
 }

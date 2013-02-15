@@ -27,7 +27,18 @@ public class VehicleMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(final Context mContext, final ArrayList<MapItem> mapItems) {
+	public View getCallout(Context mContext) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
+		return null;
+	}
+	
+	@Override
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int mapItemIndex) {
 		return null;
 	}
 
@@ -54,22 +65,4 @@ public class VehicleMapItem extends MapItem {
     	return shuttleMarkers[dir];	
 	}
 
-	@Override
-	public View getCallout(Context mContext) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public View getCallout(Context mContext, ArrayList<MapItem> mapItems, int position) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-//	@Override
-//	public void initTimer(Context mContext) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-	
 }

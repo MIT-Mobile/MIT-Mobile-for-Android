@@ -1,6 +1,9 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,12 +29,14 @@ import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.android.map.event.OnZoomListener;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
+import com.esri.core.portal.BaseMap;
 import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
 
@@ -39,8 +44,6 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
-
-
 
 public class MITMapView2 extends MapView  {
 
@@ -109,19 +112,19 @@ public class MITMapView2 extends MapView  {
 		return true;
 	}
 
-	public void addMapItems(ArrayList<MapItem> mapItems) {
+	public void addMapItems(ArrayList<? extends MapItem> mapItems) {
 		addMapItems(mapItems,MITMapView2.DEFAULT_GRAPHICS_LAYER,MapGraphicsLayer.MODE_OVERWRITE);		
 	}
 	
-	public void addMapItems(ArrayList<MapItem> mapItems, int mode) {
+	public void addMapItems(ArrayList<? extends MapItem> mapItems, int mode) {
 		addMapItems(mapItems,MITMapView2.DEFAULT_GRAPHICS_LAYER,mode);		
 	}
 
-	public void addMapItems(ArrayList<MapItem> mapItems, String layerName) {		
+	public void addMapItems(ArrayList<? extends MapItem> mapItems, String layerName) {		
 		addMapItems(mapItems,layerName,MapGraphicsLayer.MODE_OVERWRITE);		
 	}
-
-	public void addMapItems(ArrayList<MapItem> mapItems, String layerName, int mode) {
+	
+	public void addMapItems(ArrayList<? extends MapItem> mapItems, String layerName, int mode) {
 		if (mapItems != null) {
 			if (!mao.getGraphicsLayers().containsKey(layerName)) {
 				addMAOGraphicsLayer(layerName);
@@ -234,7 +237,7 @@ public class MITMapView2 extends MapView  {
 		
 			Graphic g = new Graphic(point, pms,attributes, null);
 
-			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); // this should be a parameter
+			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
 
 			int Uid = gl.addGraphic(g);	
 	        return Uid;				
@@ -262,7 +265,7 @@ public class MITMapView2 extends MapView  {
 			
 			Graphic g = new Graphic(polyline,new SimpleLineSymbol(mapItem.lineColor,mapItem.lineWidth));
 
-			gl = (GraphicsLayer)this.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
 			int Uid = gl.addGraphic(g);	
 	        return Uid;	
 		}
@@ -292,7 +295,7 @@ public class MITMapView2 extends MapView  {
 			
 			Graphic g = new Graphic(polygon,new SimpleLineSymbol(mapItem.lineColor,mapItem.lineWidth));
 
-			gl = (GraphicsLayer)this.getMapLayer(MITMapView2.DEFAULT_GRAPHICS_LAYER); // this should be a parameter
+			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
 			int Uid = gl.addGraphic(g);	
 	        return Uid;	
 		}
@@ -414,23 +417,9 @@ public class MITMapView2 extends MapView  {
 	    Log.d(TAG,"mapInit");
 	    mao = new MapAbstractionObject();
 	    		    		
-//       	if (layerIdMap == null) {
-//    		layerIdMap = new HashMap<String, Long>();
-//    	}
-//       	
-//       	if (graphicIdMap == null) {
-//       		graphicIdMap = new HashMap<String, Integer>();
-//       	}
-		       	
-        //mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
-        
-		//mLoadingView.setVisibility(View.VISIBLE);
-        //mLoadingView.showLoading();
-       
 	    // OnStatusChangedListener
         this.setOnStatusChangedListener(new OnStatusChangedListener() {
             public void onStatusChanged(Object source, STATUS status) {
-                //Log.d(TAG,"map status = " + status.getValue());
                 Log.d(TAG,source.getClass().getSimpleName() + " status = " + status.getValue());
             }
         });
@@ -470,6 +459,10 @@ public class MITMapView2 extends MapView  {
 	    	    	    			
 	    	    	    			// get the mapItem
 	    	    	    			MapItem mapItem = mapView.getMao().getGraphicsLayers().get(layerName).getMapItems().get(mapItemIndex);
+	    	    	    			Log.d(TAG,"tapped graphic: map item class = " + mapItem.getMapItemClass());
+									// center to the selected item
+	    	    	    			Point centerPt = mapView.projectMapPoint(mapItem.getCenter());
+	    	    	    			mapView.centerAt(centerPt, false);
 	    	    	    			
 	    	    	    			// Display the Callout if it is defined
 	    	    	    			if (mapItem.getCallout(mContext,mapGraphicsLayer.getMapItems(),mapItemIndex.intValue()) != null) {
@@ -528,7 +521,7 @@ public class MITMapView2 extends MapView  {
         		    }
 
         		    private void makeUseOfNewLocation(Location location) {
-        		    	Log.d(TAG,"makeUseOfNewLocation");
+        		    	//Log.d(TAG,"makeUseOfNewLocation");
         				// TODO Auto-generated method stub
         				if (location != null) {
 	        		    	//Log.d(TAG,"lat = " + location.getLatitude());
@@ -569,7 +562,6 @@ public class MITMapView2 extends MapView  {
 
     public void syncLayers() {
     	syncBaseLayers();
-    	syncGraphicsLayers();
     }
     
     public void syncBaseLayers() {
@@ -585,12 +577,15 @@ public class MITMapView2 extends MapView  {
 	        	// create and add the layer
             	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
             	serviceLayer.setName(layer.getLayerIdentifier());
-                serviceLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
-                    public void onStatusChanged(Object source, STATUS status) {
+            	Log.d(TAG,"adding service layer " + serviceLayer.getName());
+            	serviceLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
+                    @Override
+					public void onStatusChanged(Object source, STATUS status) {
                         if (OnStatusChangedListener.STATUS.INITIALIZED == status){
                         	Log.d(TAG,source.getClass().getName() + " " +  ((ArcGISTiledMapServiceLayer)source).getName() + " is initialized");
                         	if (baseLayersLoaded()) {
                         		Log.d(TAG,"all base layers loaded, ready to add graphics");
+                        		MobileWebApi.sendSuccessMessage(mapInitUiHandler);
                         	}
                         	else {
                         		Log.d(TAG,"still waiting for base layers to load");
@@ -605,11 +600,11 @@ public class MITMapView2 extends MapView  {
 		}
 		
     }
-
+    
     public void syncGraphicsLayers() {
     	// loops through all graphics layers defined in mao, adding them if they dont exist
     	// adds mapitem from each graphics layer in mao, overwriting mapitems
-    	
+
     	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
 		while (it.hasNext()) {
 	        Map.Entry glpairs = (Map.Entry)it.next();
@@ -620,6 +615,7 @@ public class MITMapView2 extends MapView  {
 	        	// create and add the layer
             	GraphicsLayer graphicsLayer = new GraphicsLayer();
             	graphicsLayer.setName(layerName);
+            	Log.d(TAG,"adding graphics layer " + layerName);
                 graphicsLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
                     public void onStatusChanged(Object source, STATUS status) {
                         if (OnStatusChangedListener.STATUS.INITIALIZED == status){
@@ -648,7 +644,7 @@ public class MITMapView2 extends MapView  {
 	        	}
 	        }
 		}
-    	
+		
     }
 
     final class MyOnStatusChangedListener implements OnStatusChangedListener {
@@ -663,28 +659,6 @@ public class MITMapView2 extends MapView  {
          }
     }
     
-//    public Handler mapUpdateUiHandler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//
-//            if (msg.arg1 == MobileWebApi.SUCCESS) {
-//            	try {
-//            		//setMaopData((MapData)msg.obj);
-//            		processMapData();
-//            	}
-//            	catch (Exception e) {
-//            		
-//            	}
-//            }
-//            else if (msg.arg1 == MobileWebApi.ERROR) {
-//
-//            } 
-//            else if (msg.arg1 == MobileWebApi.CANCELLED) {
-//
-//            }
-//        }
-//    };
-    
     public Handler mapSearchUiHandler = new Handler() {
         @SuppressWarnings("unchecked")
 		@Override
@@ -697,7 +671,7 @@ public class MITMapView2 extends MapView  {
             		clearMapItems();
             		ArrayList mapItems = (ArrayList)msg.obj;
             		addMapItems(mapItems);
-            		syncLayers();
+            		syncGraphicsLayers();
                 	fitMapItems();
             	}
             	catch (Exception e) {
@@ -714,7 +688,31 @@ public class MITMapView2 extends MapView  {
         }
     };
 
+    public Handler mapInitUiHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+		@Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"mapInitUiHandler success");
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	
+            	try {
+            		Log.d(TAG,"map is initialized, synching graphics");
+            		syncGraphicsLayers();     		
+            	}
+            	catch (Exception e) {
+            	}
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+
+            }
+        }
+    };
+
     private void onMapLoaded() {
+
     	
     }
     
@@ -782,6 +780,8 @@ public class MITMapView2 extends MapView  {
 	}
 
     private void processMapItems(final String layerName) {
+    	this.getCallout().hide();
+    	this.pause();
     	Log.d(TAG,"processing map Items for " + layerName);
 		int gId = 0; // ID of graphic object created by displayMapItem
     	
@@ -792,18 +792,19 @@ public class MITMapView2 extends MapView  {
 		// get MapGraphicsLayer
 		MapGraphicsLayer mapGraphicsLayer = mao.getGraphicsLayers().get(layerName);
 		ArrayList<MapItem> mapItems = mapGraphicsLayer.getMapItems();
+		
+		// sort map items by weight of  x and y coords
+		Collections.sort(mapItems, new CustomComparator());
+		
 		Log.d(TAG,"num map items = " + mapItems.size());
     	for (int i = 0; i < mapItems.size(); i++) {
     		try {
-    			Log.d(TAG,"1");
 	    		MapItem mapItem = mapItems.get(i);
-    			Log.d(TAG,"2");
 	    		mapItem.setIndex(i);
-    			Log.d(TAG,"3");
+	    		Log.d(TAG,"sorted weight = " + mapItem.getSortWeight());
 
 	    		// get the ID of the graphic once it has been added to the graphics layer
 	    		gId = dislayMapItem(mapItem);
-    			Log.d(TAG,"4");
 
 	    		// store the index (i) of the mapItem in the graphicIdMap with the key of the graphic ID
 	    		// this will let ut use the ID of the tapped graphic to get the corresponding mapItem and create the callout
@@ -815,7 +816,7 @@ public class MITMapView2 extends MapView  {
     		}
     		
     	}
-    	
+    	this.unpause();    	
     }
 
 	public MapAbstractionObject getMao() {
@@ -826,5 +827,22 @@ public class MITMapView2 extends MapView  {
 		this.mao = mao;
 	}
 	
+	public class CustomComparator implements Comparator<MapItem> {
+	    @Override
+	    public int compare(MapItem o1, MapItem o2) {
+	        return o2.getSortWeight().compareTo(o1.getSortWeight());
+	    }
+	}
+
+	public void debugMAO() {
+		Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry glpairs = (Map.Entry)it.next();
+	        final String layerName = (String)glpairs.getKey();
+	        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
+	        Log.d(TAG,"Graphics Layer: " + layerName);
+	        Log.d(TAG,layer.getMapItems().size() + " map Items for layer");
+		}
+	}
 }
 

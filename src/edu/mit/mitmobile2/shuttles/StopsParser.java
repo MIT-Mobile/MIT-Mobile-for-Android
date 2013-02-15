@@ -23,7 +23,6 @@ public class StopsParser extends JSONParser {
 	public StopsParser()
 	{
 		items = new ArrayList<Stops>();
-		//items = new ArrayList<RouteItem>();
 	}
 
 	/****************************************/

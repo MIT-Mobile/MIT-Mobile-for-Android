@@ -45,8 +45,8 @@ public abstract class MapItem {
 	public long sql_id = -1;  // not to confuse with "id"
 	
 	public abstract View getCallout(Context mContext);
-	public abstract View getCallout(Context mContext, ArrayList<MapItem> mapItems);
-	public abstract View getCallout(Context mContext, ArrayList<MapItem> mapItems, int position);
+	public abstract View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems);
+	public abstract View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position);
 
 	//public abstract void initTimer(Context mContext);
 	
@@ -287,11 +287,20 @@ public abstract class MapItem {
 			return null;
 		}
 	}
+	
+	public Double getSortWeight() {
+		MapPoint mapPoint = this.getCenter();
+		Double x = mapPoint.long_wgs84 * 10;
+		Double y = mapPoint.lat_wgs84 * 100;
+		return x + y;
+	}
+	
 	public ArrayList<MapItemContent> getContents() {
 		return contents;
 	}
 	public void setContents(ArrayList<MapItemContent> contents) {
 		this.contents = contents;
 	}
+	
 }
 

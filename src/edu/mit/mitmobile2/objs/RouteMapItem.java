@@ -13,7 +13,7 @@ import edu.mit.mitmobile2.objs.MapItem;
 public class RouteMapItem extends MapItem {
 	
 	@Override
-	public View getCallout(Context mContext, ArrayList<MapItem> mapItems) {
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
 		return null;
 	}
 
@@ -24,7 +24,7 @@ public class RouteMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(Context mContext, ArrayList<MapItem> mapItems, int position) {
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position) {
 		// TODO Auto-generated method stub
 		return null;
 	}

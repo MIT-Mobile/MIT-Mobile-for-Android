@@ -127,6 +127,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	static void launchShuttleRouteMap(Context context, RouteItem routeItem, List<Stops> stops, int bubblePos) {
 		Intent i = new Intent(context, ShuttlesMapActivity.class);
 		
+		i.putExtra(ShuttlesMapActivity.ROUTE_ID_KEY,routeItem.route_id);
 		// prefetch to speed up first draw call
 //		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
 		
@@ -162,89 +163,89 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	    return null;
 	}
 	
-	public static MapData toMapData(RouteItem updatedRouteItem) {
-		MapData mapData = new MapData();
-		RouteMapItem route = new RouteMapItem();
-
-		// create a polygon for route
-		// create shuttle pin + callout for each stop
-		// create shuttle location pin for each vehicle location
-		
-		route.setGeometryType(MapItem.TYPE_POLYGON);
-
-		// loop through all the stops
-		for (int s = 0; s < updatedRouteItem.stops.size(); s++) {
-			Stops stop = updatedRouteItem.stops.get(s);
-			
-			MapPoint mapPoint = new MapPoint();
-			mapPoint.lat_wgs84 = Double.valueOf(stop.lat);
-			mapPoint.long_wgs84 = Double.valueOf(stop.lon);
-			
-			// for each stop, add the paths to the route polygon
-			for (int p = 0; p < stop.path.size(); p++) {
-				Loc loc = (Loc)stop.path.get(p);
-				
-				// get a map point for the stop
-				MapPoint pathPoint = new MapPoint();
-				pathPoint.lat_wgs84 = Double.valueOf(loc.lat);
-				pathPoint.long_wgs84 = Double.valueOf(loc.lon);
-				
-				// add the map point to the route polygon
-				route.getMapPoints().add(pathPoint);
-			}
-
-			// Create a map item to show an icon at the stop
-			StopMapItem stopItem = new StopMapItem();
-			
-			// add itemData
-			stopItem.getItemData().put("alertSet", stop.alertSet);
-			stopItem.getItemData().put("direction", stop.direction);
-			stopItem.getItemData().put("gps", stop.gps);
-			stopItem.getItemData().put("id", stop.id);
-			stopItem.getItemData().put("lat", stop.lat);
-			stopItem.getItemData().put("lon", stop.lon);
-			stopItem.getItemData().put("next", stop.next);
-			stopItem.getItemData().put("now", stop.now);
-			stopItem.getItemData().put("route_id", stop.route_id);
-			stopItem.getItemData().put("title", stop.title);
-			stopItem.getItemData().put("upcoming",stop.upcoming);			
-			stopItem.setGeometryType(MapItem.TYPE_POINT);
-			
-			if (updatedRouteItem.isRunning) {
-				if (stop.upcoming) {
-					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete_next;
-				}
-				else {
-					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete;
-				}
-			}
-			else {
-				stopItem.symbol = R.drawable.shuttle_off;				
-			}	
-
-			stopItem.getItemData().put("displayName",stop.title);
-
-			stopItem.getMapPoints().add(mapPoint);
-
-			mapData.getMapItems().add(stopItem);
-		}
-
-		// add route
-		mapData.getMapItems().add(route);
-
-		// add vehicle locations
-		for (int v = 0; v < updatedRouteItem.vehicleLocations.size(); v++) {
-			Vehicle vehicle = updatedRouteItem.vehicleLocations.get(v);
-			VehicleMapItem vehicleItem = new VehicleMapItem();
-			vehicleItem.setGeometryType(MapItem.TYPE_POINT);
-			vehicleItem.setSymbol(VehicleMapItem.getShuttleMarkerForHeading(vehicle.heading));
-			vehicleItem.getMapPoints().add(new MapPoint(vehicle.lat,vehicle.lon));
-			vehicleItem.getItemData().put("heading", vehicle.heading);
-			vehicleItem.getItemData().put("lat", vehicle.lat);
-			vehicleItem.getItemData().put("lon", vehicle.lon);
-			mapData.getMapItems().add(vehicleItem);
-		}
-
-		return mapData;
-	}
+//	public static MapData toMapData(RouteItem updatedRouteItem) {
+//		MapData mapData = new MapData();
+//		RouteMapItem route = new RouteMapItem();
+//
+//		// create a polygon for route
+//		// create shuttle pin + callout for each stop
+//		// create shuttle location pin for each vehicle location
+//		
+//		route.setGeometryType(MapItem.TYPE_POLYGON);
+//
+//		// loop through all the stops
+//		for (int s = 0; s < updatedRouteItem.stops.size(); s++) {
+//			Stops stop = updatedRouteItem.stops.get(s);
+//			
+//			MapPoint mapPoint = new MapPoint();
+//			mapPoint.lat_wgs84 = Double.valueOf(stop.lat);
+//			mapPoint.long_wgs84 = Double.valueOf(stop.lon);
+//			
+//			// for each stop, add the paths to the route polygon
+//			for (int p = 0; p < stop.path.size(); p++) {
+//				Loc loc = (Loc)stop.path.get(p);
+//				
+//				// get a map point for the stop
+//				MapPoint pathPoint = new MapPoint();
+//				pathPoint.lat_wgs84 = Double.valueOf(loc.lat);
+//				pathPoint.long_wgs84 = Double.valueOf(loc.lon);
+//				
+//				// add the map point to the route polygon
+//				route.getMapPoints().add(pathPoint);
+//			}
+//
+//			// Create a map item to show an icon at the stop
+//			StopMapItem stopItem = new StopMapItem();
+//			
+//			// add itemData
+//			stopItem.getItemData().put("alertSet", stop.alertSet);
+//			stopItem.getItemData().put("direction", stop.direction);
+//			stopItem.getItemData().put("gps", stop.gps);
+//			stopItem.getItemData().put("id", stop.id);
+//			stopItem.getItemData().put("lat", stop.lat);
+//			stopItem.getItemData().put("lon", stop.lon);
+//			stopItem.getItemData().put("next", stop.next);
+//			stopItem.getItemData().put("now", stop.now);
+//			stopItem.getItemData().put("route_id", stop.route_id);
+//			stopItem.getItemData().put("title", stop.title);
+//			stopItem.getItemData().put("upcoming",stop.upcoming);			
+//			stopItem.setGeometryType(MapItem.TYPE_POINT);
+//			
+//			if (updatedRouteItem.isRunning) {
+//				if (stop.upcoming) {
+//					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete_next;
+//				}
+//				else {
+//					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete;
+//				}
+//			}
+//			else {
+//				stopItem.symbol = R.drawable.shuttle_off;				
+//			}	
+//
+//			stopItem.getItemData().put("displayName",stop.title);
+//
+//			stopItem.getMapPoints().add(mapPoint);
+//
+//			mapData.getMapItems().add(stopItem);
+//		}
+//
+//		// add route
+//		mapData.getMapItems().add(route);
+//
+//		// add vehicle locations
+//		for (int v = 0; v < updatedRouteItem.vehicleLocations.size(); v++) {
+//			Vehicle vehicle = updatedRouteItem.vehicleLocations.get(v);
+//			VehicleMapItem vehicleItem = new VehicleMapItem();
+//			vehicleItem.setGeometryType(MapItem.TYPE_POINT);
+//			vehicleItem.setSymbol(VehicleMapItem.getShuttleMarkerForHeading(vehicle.heading));
+//			vehicleItem.getMapPoints().add(new MapPoint(vehicle.lat,vehicle.lon));
+//			vehicleItem.getItemData().put("heading", vehicle.heading);
+//			vehicleItem.getItemData().put("lat", vehicle.lat);
+//			vehicleItem.getItemData().put("lon", vehicle.lon);
+//			mapData.getMapItems().add(vehicleItem);
+//		}
+//
+//		return mapData;
+//	}
 }

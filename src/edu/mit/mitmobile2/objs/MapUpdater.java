@@ -12,7 +12,6 @@ public abstract class MapUpdater {
 	Context context;
 	HashMap<String,Object> params;
 	Handler handler;
-	MapData mapData;
 
 	
 	public abstract void updateMap(Context mContext);
@@ -21,7 +20,6 @@ public abstract class MapUpdater {
 		this.context = mContext;
 		this.params = mParams;
 		this.handler = mHandler;
-		mapData = new MapData(); 
 	}
 
 	public abstract void stop(); 

@@ -39,7 +39,17 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	}
 	
 	@Override
-	public View getCallout(final Context mContext, final ArrayList<MapItem> mapItems, final int position) {
+	public View getCallout(Context mContext) {
+		return null;
+	}
+	
+	@Override
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
+		return null;
+	}
+
+	@Override
+	public View getCallout(final Context mContext, final ArrayList<? extends MapItem> mapItems, final int position) {
 
 		Log.d(TAG,"position = " + position);
 		Log.d(TAG,"BuildingMapItem getCallout");
@@ -71,18 +81,6 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	        });
 		
 		return calloutLayout;
-	}
-
-	@Override
-	public View getCallout(Context mContext) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public View getCallout(Context mContext, ArrayList<MapItem> mapItems) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

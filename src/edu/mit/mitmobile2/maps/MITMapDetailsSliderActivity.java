@@ -261,8 +261,12 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			tabConfigurator.configureTabs();
 			
 			mapDetailsQueryTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsQueryTV);
-			mapDetailsQueryTV.setText("'" + mMapItem.query + "' was found in");
-
+			if (mMapItem.query == null || mMapItem.query.isEmpty()) {
+				mapDetailsQueryTV.setVisibility(View.GONE);
+			}
+			else {
+				mapDetailsQueryTV.setText("'" + mMapItem.query + "' was found in");
+			}
 			mapDetailsTitleTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsTitleTV);
 			mapDetailsTitleTV.setText((String)mMapItem.getItemData().get("name"));
 			

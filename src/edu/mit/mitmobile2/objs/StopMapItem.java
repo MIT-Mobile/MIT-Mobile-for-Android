@@ -17,13 +17,18 @@ import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
 public class StopMapItem extends MapItem {
+	@Override
+	public View getCallout(Context mContext) {
+		return null;
+	}
+	
+	@Override
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
+		return null;
+	}
 
-//	public StopMapItem() {
-//		super();
-//		timer = new Timer();
-//	}
-
-	public View getCallout(Context mContext, MapAbstractionObject mao) {
+	@Override
+	public View getCallout(Context mContext,ArrayList<? extends MapItem> mapItems, int Index) {
 
 		String title = (String)this.getItemData().get("title");	
 		String arriving = null;
@@ -59,13 +64,6 @@ public class StopMapItem extends MapItem {
 		return calloutLayout;
 	}
 	
-//	@Override
-//	public void initTimer(Context mContext) {
-//		// TODO Auto-generated method stub
-//		MyTimerTask myTask = new MyTimerTask();
-//		timer.schedule(myTask, 3000, 3000);        
-//	}
-
 	class MyTimerTask extends TimerTask {
 		 public void run() {
 			 // ERROR
@@ -77,24 +75,6 @@ public class StopMapItem extends MapItem {
 				 Log.d("ZZZ","exception = " + e.getMessage());
 			 }
 		 }
-	}
-
-	@Override
-	public View getCallout(Context mContext) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public View getCallout(Context mContext, ArrayList<MapItem> mapItems, int position) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public View getCallout(Context mContext, ArrayList<MapItem> mapItems) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

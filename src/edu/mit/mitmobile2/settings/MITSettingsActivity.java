@@ -42,19 +42,6 @@ public class MITSettingsActivity extends NewModuleActivity {
 			}
 		});
 		
-		// ArcGIS Test
-		arcgisTestButton = (TwoLineActionRow)findViewById(R.id.arcgisTestButton);
-
-		arcgisTestButton.setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mContext, MITMapActivity.class);
-				startActivity(intent);
-			}
-		});
-
-		
-		
 	}
 
 	@Override
