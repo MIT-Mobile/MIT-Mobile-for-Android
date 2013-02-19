@@ -5,18 +5,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
+import edu.mit.mitmobile2.maps.MITMapView2;
 import edu.mit.mitmobile2.maps.MapAbstractionObject;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.shuttles.MITStopsSliderActivity;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
 public class StopMapItem extends MapItem {
+
 	@Override
 	public View getCallout(Context mContext) {
 		return null;
@@ -28,8 +34,8 @@ public class StopMapItem extends MapItem {
 	}
 
 	@Override
-	public View getCallout(Context mContext,ArrayList<? extends MapItem> mapItems, int Index) {
-
+	public View getCallout(final Context mContext, final ArrayList<? extends MapItem> mapItems, final int position) {
+		
 		String title = (String)this.getItemData().get("title");	
 		String arriving = null;
 		long curTime = System.currentTimeMillis();
@@ -60,6 +66,21 @@ public class StopMapItem extends MapItem {
 
 		TextView calloutShuttleArriving = (TextView)calloutLayout.findViewById(R.id.callout_shuttle_arriving);
 		calloutShuttleArriving.setText(arriving);
+		
+		//calloutLayout.on
+		calloutLayout.setOnClickListener(new View.OnClickListener() {
+		
+			@Override
+	        public void onClick(View v) {
+				Log.d("ZZZ","click stopMapItem");
+				Intent i = new Intent(mContext, MITStopsSliderActivity.class);  
+				i.putExtra(ShuttleModel.KEY_ROUTE_ID, (String)mapItems.get(position).getItemData().get("route_id")); 
+				i.putExtra(ShuttleModel.KEY_STOP_ID, (String)mapItems.get(position).getItemData().get("id")); 
+				Log.d("ZZZ","starting intent MITStopsSliderActivity");
+				mContext.startActivity(i);
+	        }
+	    });
+
 		
 		return calloutLayout;
 	}
