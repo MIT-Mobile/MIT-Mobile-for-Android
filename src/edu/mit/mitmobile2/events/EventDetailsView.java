@@ -87,7 +87,12 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		intent.putExtra("endTime", eventDetails.end * 1000);
 		intent.putExtra("title", eventDetails.title);
 		intent.putExtra("description", eventDetails.description);
-		intent.putExtra("eventLocation", eventDetails.location);
+
+		if (eventDetails.location.length() > 0) {
+			intent.putExtra("eventLocation", eventDetails.location);
+		} else {
+			intent.putExtra("eventLocation", eventDetails.shortloc);
+		}
 		
 		mActivity.startActivity(Intent.createChooser(intent, "Calendar"));
 	}
