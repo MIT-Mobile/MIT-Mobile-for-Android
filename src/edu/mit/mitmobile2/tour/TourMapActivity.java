@@ -7,11 +7,15 @@ import java.util.Map;
 
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBarSwitch;
 import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
+import edu.mit.mitmobile2.maps.MITMapView2;
 import edu.mit.mitmobile2.maps.MapBaseActivity;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
@@ -32,6 +36,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,7 +46,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelectedListener {
+public class TourMapActivity extends NewModuleActivity implements OnTourSiteSelectedListener {
 	
 	private static final String TOUR_STOPS_KEY = "tour_stops";
 	private static final String TOUR_PATH_KEY = "tour_path";
@@ -53,6 +58,7 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 	ListView mTourListView;
 	TitleBarSwitch mMapListSwitch;
 	View mMapLegend;
+	private MITMapView2 mMapView;
 	TourStartHelpActionRow mStartHelpActionRow;
 	boolean mTourActive;
 	int mTourCurrentPosition;
@@ -83,6 +89,11 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 		super.onCreate(savedState);
 		
 		Intent i = getIntent();
+		
+		setContentView(R.layout.tour_map);
+		
+		mMapView = (MITMapView2) findViewById(R.id.tourMapView);
+		mMapView.init(this, mMapView);
 		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
 		mGeoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
@@ -118,6 +129,9 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 				}
 			}
 		});
+		
+		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints, this);
+		mMapView.addMapItems(mMapData.getMapItems());
 		
 		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
 		mMapListSwitch = new TitleBarSwitch(this);
@@ -167,6 +181,8 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 			mSecondaryTitleBar.setTitle("Select a Starting Point");
 			mMapLegend.setVisibility(View.GONE);
 		}
+		
+		mSecondaryTitleBar.addActionView(mMapListSwitch);
 	}
 	
 	@Override
@@ -177,6 +193,7 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 		}
 	}
 	
+	/*
 	@Override 
 	protected void onMapLoaded() {
 		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints, this);
@@ -185,6 +202,7 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 		
 		mSecondaryTitleBar.addActionView(mMapListSwitch);
 	}
+	*/
 	
 	MapActivityLocationSupplier mLocationSupplier = new MapActivityLocationSupplier();
 	private class MapActivityLocationSupplier implements LocationSupplier {
@@ -209,7 +227,11 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 				if (provider == null) {
 					provider = mWorstLocationProviderName;
 				}
-				return mLocationManager.getLastKnownLocation(provider);
+				if (provider != null) {
+					return mLocationManager.getLastKnownLocation(provider);
+				} else {
+					return null;
+				}
 			}
 		}
 	};
@@ -309,7 +331,7 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 	private void displayCallout(TourMapItem tourMapItem) {
 		if (mMapData != null) {
 			MapItem mapItem = mMapData.getMapItem(tourMapItem);
-			map.displayCallout(this, mapItem);
+			mMapView.displayCallout(this, mapItem);
 		}		
 	}
 	
@@ -396,7 +418,7 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 	private void toggleMapList(String selected) {
 		if(selected.equals(LIST)) {
 			mTourListView.setVisibility(View.VISIBLE);
-			map.setVisibility(View.GONE);
+			mMapView.setVisibility(View.GONE);
 			
 			if(mTourActive) {
 				mMapLegend.setVisibility(View.GONE);
@@ -405,7 +427,7 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 			}
 		} else if(selected.equals(MAP)) {
 			mTourListView.setVisibility(View.GONE);
-			map.setVisibility(View.VISIBLE);
+			mMapView.setVisibility(View.VISIBLE);
 			
 			if(mTourActive) {
 				mMapLegend.setVisibility(View.VISIBLE);
@@ -527,19 +549,14 @@ public class TourMapActivity extends MapBaseActivity implements OnTourSiteSelect
 	protected NewModule getNewModule() {
 		return new TourModule();
 	}
+                       
+	@Override
+	public boolean isModuleHomeActivity() {
+		return true;
+	}
 
 	@Override
-	protected int getLayoutID() {
-		return R.layout.tour_map;
-	}
-	
-	@Override
-	protected int getMapViewID() {
-		return R.id.map;
-	}
-	
-	@Override
-	protected int getMapLoadingViewID() {
-		return R.id.mapLoading;
+	protected boolean isScrollable() {
+		return false;
 	}
 }

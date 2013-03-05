@@ -79,6 +79,9 @@ public class TourRouteMapData extends MapData {
 			setSymbol(markerId);
 			setGeometryType(MapItem.TYPE_POINT);
 			
+			verticalAlign = MapItem.VALIGN_CENTER;
+			horizontalAlign = MapItem.ALIGN_CENTER;
+			
 		}
 		
 		public String getID() {
@@ -124,10 +127,9 @@ public class TourRouteMapData extends MapData {
 
 		@Override
 		public View getCallout(Context mContext,  ArrayList<? extends MapItem> mapItems, int position) {
-			// TODO Auto-generated method stub
-			return null;
+			TourStopMapItem tourStopMapItem = (TourStopMapItem) mapItems.get(position);
+			return tourStopMapItem.getCallout(mContext);
 		}
-		
 	}
 	
 	private static class TourRouteMapItem extends MapItem {
