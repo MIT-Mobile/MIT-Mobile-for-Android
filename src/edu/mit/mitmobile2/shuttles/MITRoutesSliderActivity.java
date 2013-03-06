@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.shuttles;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.maps.MITMapActivity;
+import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
 import edu.mit.mitmobile2.maps.MapData;
 import edu.mit.mitmobile2.objs.RouteMapItem;
 import edu.mit.mitmobile2.objs.StopMapItem;
@@ -56,9 +58,11 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     		position = bundle.getInt(KEY_POSITION, 0);
     	}
     	
-    	/*
-    	getSecondaryBar().addMenuItem(new MITMenuItem("LIST_MAP", "", R.drawable.menu_view_as_list));
-    	getSecondaryBar().setOnMITMenuItemListener(new OnMITMenuItemListener() {
+
+//    	getSecondaryMenuItems().add(new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map));
+/*
+    	addMenuItem(new MITMenuItem("LIST_MAP", "", R.drawable.menu_view_as_list));
+    	getSecondaryMenuItems().setOnMITMenuItemListener(new OnMITMenuItemListener() {
 			@Override
 			public void onOptionItemSelected(String optionId) {
 				// TODO Auto-generated method stub
@@ -68,8 +72,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 				} 
 			}
 		});
-	*/
-    	
+  */  	
     	createViews();
 	}
     /****************************************************/
@@ -125,26 +128,9 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	}
     
 	static void launchShuttleRouteMap(Context context, RouteItem routeItem, List<Stops> stops, int bubblePos) {
-		Intent i = new Intent(context, ShuttlesMapActivity.class);
-		
+		Intent i = new Intent(context, ShuttlesMapActivity.class);		
 		i.putExtra(ShuttlesMapActivity.ROUTE_ID_KEY,routeItem.route_id);
-		// prefetch to speed up first draw call
-//		ShuttleModel.fetchRouteDetails(context, routeItem, new Handler());
-		
-//		RouteItem updatedRouteItem = ShuttleModel.getUpdatedRoute(routeItem);
-		
-//		String subtitle = updatedRouteItem.gpsActive ? GPS_ONLINE : GPS_OFFLINE;
 		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-		// convert routeItem and stops to MapData object
-//		MapData mapData = MITRoutesSliderActivity.toMapData(updatedRouteItem);
-		
-//		i.putExtra(MITMapActivity.MAP_DATA_KEY, mapData.toJSON());
-//		i.putExtra(MITMapActivity.MAP_UPDATER_KEY, ShuttleMapUpdater.class.getName());
-//		HashMap<String,Object> params = new HashMap<String,Object>();
-//		params.put("route_id", routeItem.route_id);
-//		i.putExtra(MITMapActivity.MAP_UPDATER_PARAMS_KEY, params);
-
 		context.startActivity(i);
 	}
 	@Override
@@ -156,11 +142,21 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	@Override
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
+		if (optionId.equals("viewmap")) {
+			String routeId = ShuttleModel.getSortedRoutes().get(position).route_id;
+			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), ShuttleModel.getRoute(routeId).stops, getPosition());
+		}
 	}
 	
 	@Override
 	protected String getHeaderTitle(int position) {
 	    return null;
+	}
+	@Override
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		return Arrays.asList(
+				new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map)
+		);
 	}
 	
 //	public static MapData toMapData(RouteItem updatedRouteItem) {
@@ -248,4 +244,6 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 //
 //		return mapData;
 //	}
+
+
 }

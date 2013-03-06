@@ -87,7 +87,7 @@ public abstract class MapBaseActivity extends NewModuleActivity {
         this.extras = this.getIntent().getExtras();
 		
         map = (MITMapView2)findViewById(getMapViewID());
-        map.init(mContext,map);
+        map.init(mContext);
 				
 		//Retrieve the non-configuration instance data that was previously returned. 
 		Object init = getLastNonConfigurationInstance();

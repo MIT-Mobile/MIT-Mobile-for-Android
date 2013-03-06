@@ -412,11 +412,14 @@ public class MITMapView2 extends MapView  {
 		MITMapView2.wgs84 = wgs84;
 	}
 
-	public void init(final Context mContext,final MITMapView2 mapView) {
+	public void init(final Context mContext) {
 		
 	    Log.d(TAG,"mapInit");
+	    
 	    mao = new MapAbstractionObject();
-	    		    		
+		final MITMapView2 mapView = this;
+
+	    
 	    // OnStatusChangedListener
         this.setOnStatusChangedListener(new OnStatusChangedListener() {
             public void onStatusChanged(Object source, STATUS status) {
@@ -716,65 +719,6 @@ public class MITMapView2 extends MapView  {
     	
     }
     
-    public void processMapData(String graphicsLayer) {
-    	
-    }
-
-    public void processMapData() {
-		getCallout().hide();
-		pause();
-
-		Log.d(TAG,"processMapData");
-		
-		int gId = 0; // ID of graphic object created by displayMapItem
-
-//		Iterator it = mapData.getMapGraphicsLayers().entrySet().iterator();
-//		while (it.hasNext()) {
-//	        Map.Entry glpairs = (Map.Entry)it.next();
-//	        String layerName = (String)glpairs.getKey();
-//	        Log.d(TAG,"procesMapItem: layer " + layerName);
-//	        processMapItems(layerName);
-//		}
-
-		unpause();
-
-		
-//		// get Graphics Layer
-//		gl = (GraphicsLayer)getMapLayer(mapData.getLayerName());
-//		Log.d(TAG,"test id of gl = " + gl.getID());
-//		
-//		// clear the layer if mode == MODE_OVERWRITE
-//		if (getMapData().getMode() == MapData.MODE_OVERWRITE) {
-//			gl.removeAll();	
-//		}
-//    	
-//    	for (int i = 0; i < mapData.getMapItems().size(); i++) {
-//    		MapItem mapItem = mapData.getMapItems().get(i);
-//    		mapItem.setIndex(i);
-//    		// get the ID of the graphic once it has been added to the graphics layer
-//    		gId = dislayMapItem(mapData.getLayerName(),mapItem);
-//
-//    		// store the index (i) of the mapItem in the graphicIdMap with the key of the graphic ID
-//    		// this will let ut use the ID of the tapped graphic to get the corresponding mapItem and create the callout
-//    		graphicIdMap.put(Integer.toString(gId),Integer.valueOf(i));
-//    		
-//    	}
-    	
-    	// Get the extent of the map item graphics and zoom to that extent
-    	setExtent(getGraphicExtent(),MAP_PADDING);
-  
-    	// If there is only one mapItem, display the callout
-    	if (mao.getGraphicsLayers() != null && mao.getGraphicsLayers().size() == 1) {
-    		Iterator it = mao.getGraphicsLayers().entrySet().iterator();
-    	    Map.Entry glpairs = (Map.Entry)it.next();
-    	    String layerName = (String)glpairs.getKey();
-    	    if (mao.getGraphicsLayers().get(layerName).getMapItems().size() == 1) {
-        		MapItem mapItem = mao.getGraphicsLayers().get(layerName).getMapItems().get(0);
-        		displayCallout(mContext, mapItem);    	    	
-    	    }
-    	}
-	}
-
 	public void fitMapItems() {
 	    setExtent(getGraphicExtent(),MAP_PADDING);		
 	}
@@ -844,5 +788,21 @@ public class MITMapView2 extends MapView  {
 	        Log.d(TAG,layer.getMapItems().size() + " map Items for layer");
 		}
 	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		super.pause();
+		Log.d(TAG,"pause map");
+	}
+
+	@Override
+	public void unpause() {
+		// TODO Auto-generated method stub
+		super.unpause();
+		Log.d(TAG,"unpause map");
+	}
+	
+	
 }
 

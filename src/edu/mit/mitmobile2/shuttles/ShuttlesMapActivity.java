@@ -63,11 +63,11 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		setContentView(getLayoutID());
-		mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
+		//mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
 		this.extras = this.getIntent().getExtras();
 		map = (MITMapView2) findViewById(getMapViewID());
-		map.init(mContext, map);
-
+		map.init(mContext);
+		
 		if (extras.containsKey(ShuttlesMapActivity.ROUTE_ID_KEY)) {
 			routeId = extras.getString(ShuttlesMapActivity.ROUTE_ID_KEY);
 			displayRoute(routeId);
