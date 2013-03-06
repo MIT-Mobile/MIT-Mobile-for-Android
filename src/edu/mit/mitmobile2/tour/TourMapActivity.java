@@ -93,7 +93,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 		setContentView(R.layout.tour_map);
 		
 		mMapView = (MITMapView2) findViewById(R.id.tourMapView);
-		mMapView.init(this, mMapView);
+		mMapView.init(this);
 		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
 		mGeoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
