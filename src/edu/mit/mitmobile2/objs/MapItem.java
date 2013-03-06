@@ -36,7 +36,7 @@ public abstract class MapItem {
 		symbol = MapItem.DEFAULT_SYMBOL;
 		lineColor = MapItem.DEFAULT_LINE_COLOR;
 		lineWidth = MapItem.DEFAULT_LINE_WIDTH;
-		verticalAlign = MapItem.VALIGN_CENTER;
+		verticalAlign = MapItem.VALIGN_BOTTOM;
 		horizontalAlign = MapItem.ALIGN_CENTER;
 		graphicsLayer = MITMapView2.DEFAULT_GRAPHICS_LAYER;
 		wkid = MapAbstractionObject.DEFAULT_WKID;
@@ -79,7 +79,8 @@ public abstract class MapItem {
 	
 	public int geometryType;
 	public int symbol; // symbol to show for points
-	public int offsetY; // the Y offset for displaying images and callouts, usually half the height of the image.
+	public int offsetX;
+	public int offsetY; // the Y offset for displaying images and callouts, usually half the height of the image.	public int offset
 	public int lineColor; // color to use for polylines and polygons
 	public int lineWidth; // width tu use for polylines and polygons
 	public int verticalAlign; // controls vertical alignment of image for map items of type point, default to center 

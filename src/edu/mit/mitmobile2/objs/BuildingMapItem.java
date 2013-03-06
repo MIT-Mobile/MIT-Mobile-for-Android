@@ -98,6 +98,7 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 		dest.writeInt(lineColor);
 		dest.writeInt(lineWidth);
 		dest.writeString(mapItemClass);
+		dest.writeInt(offsetX);		
 		dest.writeInt(offsetY);
 		dest.writeInt(symbol);
 		dest.writeInt(verticalAlign);
@@ -114,6 +115,7 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 		lineColor = source.readInt();
 		lineWidth = source.readInt();
 		mapItemClass = source.readString();
+		offsetX = source.readInt();		
 		offsetY = source.readInt();
 		symbol = source.readInt();
 		verticalAlign = source.readInt();

@@ -229,9 +229,46 @@ public class MITMapView2 extends MapView  {
 			BitmapDrawable libDrawable = new BitmapDrawable(libImage);
 			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
 
-			mapItem.offsetY = libDrawable.getIntrinsicHeight() / 2;
+			switch (mapItem.verticalAlign) {
+				case MapItem.VALIGN_TOP:
+					mapItem.offsetY = -(libDrawable.getIntrinsicHeight() / 2);
+				break;
+				
+				case MapItem.VALIGN_CENTER:
+					mapItem.offsetY = 0;
+				break;
+				
+				case MapItem.VALIGN_BOTTOM:
+					mapItem.offsetY = libDrawable.getIntrinsicHeight() / 2;
+				break;
+				
+				default:
+					mapItem.offsetY = libDrawable.getIntrinsicHeight() / 2;
+				break;
+				
+			}
+
+			switch (mapItem.horizontalAlign) {
+			case MapItem.ALIGN_LEFT:
+				mapItem.offsetX = -(libDrawable.getIntrinsicWidth() / 2);
+			break;
+			
+			case MapItem.ALIGN_CENTER:
+				mapItem.offsetX = 0;
+			break;
+			
+			case MapItem.ALIGN_RIGHT:
+				mapItem.offsetX = libDrawable.getIntrinsicWidth() / 2;
+			break;
+			
+			default:
+				mapItem.offsetX = 0;
+			break;
+			
+		}
 
 			pms.setOffsetY(mapItem.offsetY);
+			pms.setOffsetX(mapItem.offsetX);
 
 			Map attributes = new HashMap();
 		
