@@ -1,6 +1,9 @@
 package edu.mit.mitmobile2.objs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,7 +38,7 @@ public class StopMapItem extends MapItem {
 
 	@Override
 	public View getCallout(final Context mContext, final ArrayList<? extends MapItem> mapItems, final int position) {
-		
+
 		String title = (String)this.getItemData().get("title");	
 		String arriving = null;
 		long curTime = System.currentTimeMillis();
@@ -69,14 +72,13 @@ public class StopMapItem extends MapItem {
 		
 		//calloutLayout.on
 		calloutLayout.setOnClickListener(new View.OnClickListener() {
-		
+				 
 			@Override
 	        public void onClick(View v) {
-				Log.d("ZZZ","click stopMapItem");
 				Intent i = new Intent(mContext, MITStopsSliderActivity.class);  
 				i.putExtra(ShuttleModel.KEY_ROUTE_ID, (String)mapItems.get(position).getItemData().get("route_id")); 
 				i.putExtra(ShuttleModel.KEY_STOP_ID, (String)mapItems.get(position).getItemData().get("id")); 
-				Log.d("ZZZ","starting intent MITStopsSliderActivity");
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				mContext.startActivity(i);
 	        }
 	    });

@@ -377,7 +377,7 @@ public class ShuttleModel {
 			stopItem.getItemData().put("lon", stop.lon);
 			stopItem.getItemData().put("next", stop.next);
 			stopItem.getItemData().put("now", stop.now);
-			stopItem.getItemData().put("route_id", stop.route_id);
+			stopItem.getItemData().put("route_id", updatedRouteItem.route_id);
 			stopItem.getItemData().put("title", stop.title);
 			stopItem.getItemData().put("upcoming", stop.upcoming);
 			stopItem.setGeometryType(MapItem.TYPE_POINT);

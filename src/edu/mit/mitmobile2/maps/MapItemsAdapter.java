@@ -49,9 +49,6 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 				MapItem mapItem = getItem(position);
 				mapItems.add(mapItem);
 				
-				//TEST JSON
-				//Log.d(TAG,"mapData json = " + mapData.toJSON());
-				// END TEST GSON
 				Intent i = new Intent(mContext, MITMapActivity.class); 
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);

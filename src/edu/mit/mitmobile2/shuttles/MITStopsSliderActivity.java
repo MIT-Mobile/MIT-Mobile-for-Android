@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 
 import edu.mit.mitmobile2.Global;
@@ -21,6 +22,7 @@ import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 public class MITStopsSliderActivity extends SliderListNewModuleActivity implements OnPositionChangedListener {
 	
+	final static String TAG = "MITStopsSliderActivity";
 	// Alarm related
 	static public HashMap<String,HashMap <String,Long>> alertIdx;  // <Stop,<Routes,Times>>
 	
@@ -40,7 +42,7 @@ public class MITStopsSliderActivity extends SliderListNewModuleActivity implemen
    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-
+		Log.d(TAG,"onCreate()");
     	super.onCreate(savedInstanceState);
 
     	Bundle extras = getIntent().getExtras();
@@ -48,6 +50,8 @@ public class MITStopsSliderActivity extends SliderListNewModuleActivity implemen
         if (extras!=null){ 
         	routeId = extras.getString(ShuttleModel.KEY_ROUTE_ID);
         	stopId = extras.getString(ShuttleModel.KEY_STOP_ID);
+        	Log.d(TAG,"routeId = " + routeId);
+        	Log.d(TAG,"stopID = " + stopId);
         }
         
         RouteItem route = ShuttleModel.getRoute(routeId);

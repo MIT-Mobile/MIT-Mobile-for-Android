@@ -505,7 +505,7 @@ public class MITMapView2 extends MapView  {
 	    	    	    			mapView.centerAt(centerPt, false);
 	    	    	    			
 	    	    	    			// Display the Callout if it is defined
-	    	    	    			if (mapItem.getCallout(mContext,mapGraphicsLayer.getMapItems(),mapItemIndex.intValue()) != null) {
+	    	    	    			if (mapItem.getCallout(mapView.getContext(),mapGraphicsLayer.getMapItems(),mapItemIndex.intValue()) != null) {
 	    	    	    	    		
 	    	    	    				mapView.displayCallout(mContext, mapItem);
 	    	    	    				return; // quit after the first callout is displayed
