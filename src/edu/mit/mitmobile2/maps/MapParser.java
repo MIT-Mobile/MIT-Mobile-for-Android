@@ -51,7 +51,7 @@ public class MapParser {
 			}
 			
 			JSONArray array = jobject.getJSONArray("features");
-			Log.d("MapBaseActivity","num features = " + array.length());
+			Log.d("MITMapActivity","num features = " + array.length());
 			for (int i = 0; i < array.length(); i++) {
 				JSONObject map = array.getJSONObject(i);
 				MapFeatureLayer layer = new MapFeatureLayer();

@@ -16,7 +16,7 @@ import android.util.Log;
 
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapView2;
+import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
@@ -421,7 +421,7 @@ public class ShuttleModel {
 			vehicleItems.add(vehicleItem);
 		}
 
-		layers.put(MITMapView2.DEFAULT_GRAPHICS_LAYER, vehicleItems);
+		layers.put(MITMapView.DEFAULT_GRAPHICS_LAYER, vehicleItems);
 		return layers;
 	}
 

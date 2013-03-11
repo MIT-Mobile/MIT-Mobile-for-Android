@@ -1,101 +1,261 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 
+import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.esri.android.map.Callout;
+import com.esri.android.map.GraphicsLayer;
+import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
+import com.esri.android.map.event.OnSingleTapListener;
+import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.android.map.event.OnZoomListener;
+import com.esri.android.map.event.OnStatusChangedListener.STATUS;
+import com.esri.core.geometry.Envelope;
+import com.esri.core.geometry.Geometry;
+import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
-import com.google.android.maps.GeoPoint;
+import com.esri.core.geometry.Polygon;
+import com.esri.core.geometry.SpatialReference;
+import com.esri.core.map.CallbackListener;
+import com.esri.core.map.FeatureSet;
+import com.esri.core.map.Graphic;
+import com.esri.core.tasks.ags.geoprocessing.Geoprocessor;
 
+import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.HomeScreenActivity;
-import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
-import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.people.PeopleModel;
+import edu.mit.mitmobile2.objs.SearchResults;
 
-public class MITMapActivity extends MapBaseActivity {
-
+public class MITMapActivity extends NewModuleActivity {
+	
 	private static final String TAG = "MITMapActivity";
-	
-	// parameters for shuttles
-	public static final String KEY_SHUTTLE_STOPS = "shuttle_stops";
-	public static final String KEY_ROUTE = "shuttle_route";
-
-	// sent only by Event:
-	public static final String KEY_LON = "lon";
-	public static final String KEY_LAT = "lat";
-	public static final String KEY_LOCATION = "location";
-	
-	// TODO may not need (activityForResult)
-	public static final String MODULE_SHUTTLE = "shuttle";
-	//public static final String MODULE_CALENDAR = "calendar";
+	public static final String KEY_VIEW_PINS = "view_pins";
+	public MITMapView map;
+    private FullScreenLoader mLoadingView;
+	protected String module;
+	Context mContext;
+	Location location;
+	Bundle extras;
+	ArrayList<MapItem> mapItems;
+	private MapUpdater mapUpdater;
+	private HashMap params;
+	private String query;
+	protected ListView mListView;
+	ProgressDialog progress;
+	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
 
 	private static String MENU_HOME = "home";
 	private static String MENU_MY_LOCATION = "my_location";
 	private static String MENU_BROWSE = "browse";
 	private static String MENU_BOOKMARKS = "bookmarks";
-	private static String MENU_SEARCH = "search";
+	private static String MENU_SEARCH = "search";	
+	protected static final String MAP_ITEMS_KEY = "map_items";
+	public static final String MAP_DATA_KEY = "map_data";	
+	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
+	public static final String MAP_UPDATER_KEY = "map_updater";
+	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
+	
+	public static final double INIT_RESOLUTION = 1.205;
+	private static int MAP_PADDING = 100;
+	static int INIT_ZOOM = 17; // DELETE ?
+	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
 
-	// Generic Menu
-	static final int MENU_MYLOC  = Menu.FIRST+2;
-
-	// Shuttle Menu
-
-
-	//private MITMapShuttlesUpdaterTask mut;
-	//private MITItemizedOverlay markers;
-	private GeoPoint ev_gpt;
-	private  RouteItem mRouteItem = null;
-    private Context mContext;
-	/****************************************************/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	
+		Log.d(TAG,"oncreate()");
+		super.onCreate(savedInstanceState);
 		mContext = this;
-		Log.d(TAG,"onCreate() " + this.hashCode());
-	    super.onCreate(savedInstanceState);
+		setContentView(getLayoutID());
+        mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
+
+        this.extras = this.getIntent().getExtras();
+		
+        map = (MITMapView)findViewById(getMapViewID());
+        map.init(mContext);
+				
+		//Retrieve the non-configuration instance data that was previously returned. 
+		Object init = getLastNonConfigurationInstance();
+		if (init != null) {
+			map.restoreState((String) init);
+		}
+		
+	}
+		
+	
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
-	protected List<MITMenuItem> getSecondaryMenuItems() {
-		return Arrays.asList(
-			new MITMenuItem("browse", "Browse", R.drawable.menu_browse),
-	     	new MITMenuItem("search", "Search", R.drawable.menu_search)
-		);
+	/*
+	 * launches a new map activity with pins already set
+	 */
+	public static void launchNewMapItems(Context context, List<MapItem> mapItems) {
+		Log.d(TAG,"launchNewMapItems");
+		Intent i = new Intent(context, MITMapActivity.class); 
+		i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		context.startActivity(i);
+	}
+	
+	public static void launchNewMapItem(Context context, MapItem mapItem) {
+		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
+		mapItems.add(mapItem);
+		launchNewMapItems(context, mapItems);
+	}
+
+	@Override
+	public void onDestroy() {
+	    Log.i(TAG, "onDestroy()");
+	    super.onDestroy();
+	}
+	
+	 @Override
+	 protected void onNewIntent(Intent intent) {
+		Log.d(TAG,"onNewIntent");
+	    this.extras = intent.getExtras();
+	    
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	Log.d(TAG,"do search");
+	        query = intent.getStringExtra(SearchManager.QUERY);
+	        Log.d(TAG,"query = " + query);
+	        MITMapsDataModel.executeSearch(query, map.mapSearchUiHandler, mContext); 
+	        //doMySearch(query);
+	    }
+	    else if(extras.containsKey(MITMapView.MAP_DATA_KEY)) {
+			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
+	    	map.addMapItems(mapItems);
+	    	map.syncGraphicsLayers();
+	    	map.fitMapItems();
+	    }
+	    
+	 } // End of onN
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.d(TAG,"onResume");
+		map.unpause();
+		
+	}
+
+	public MapUpdater getMapUpdater() {
+		return mapUpdater;
+	}
+
+	public void setMapUpdater(MapUpdater mapUpdater) {
+		this.mapUpdater = mapUpdater;
+	}
+	
+	public HashMap getParams() {
+		return params;
+	}
+
+	public void setParams(HashMap params) {
+		this.params = params;
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.d(TAG,"onPause()");
+	}
+
+	protected int getLayoutID() {
+		return R.layout.maps;
+	}
+	
+	protected int getMapViewID() {
+		return R.id.map;
+	}
+	
+    /* override this to handle the on map loaded event */
+	protected void onMapLoaded() { }
+	
+    /* override this to set the extent of the map */
+	protected void setExtent(double minX,double minY,double maxX, double maxY) { 
+
+		Polygon initialExtent = new Polygon();
+
+		// set start point
+		initialExtent.startPath(new Point(minX,minY));
+
+		// left side
+		initialExtent.lineTo(minX,maxY);
+
+		// top
+		initialExtent.lineTo(maxX,maxY);
+
+		// right
+		initialExtent.lineTo(maxX,minY);
+	
+		//bottom
+		initialExtent.lineTo(minX,minY);
+
+		map.setExtent(initialExtent);
+
+	}
+
+	protected int getMapLoadingViewID() {
+		return R.id.mapLoading;
 	}
 	
 	@Override
 	protected NewModule getNewModule() {
 		return new MapsModule();
 	}
-	
+
 	@Override
 	protected void onOptionSelected(String id) {
 		Log.d(TAG,"option selected = " + id);
-	    if (id.equals(MITMapActivity.MENU_HOME)) {
+	    if (id.equals(MENU_HOME)) {
 	    	onHomeRequested();
 	    }
-		if (id.equals(MITMapActivity.MENU_MY_LOCATION)) {
+		if (id.equals(MENU_MY_LOCATION)) {
 	    	onMyLocationRequested();
 	    }
-	    if (id.equals(MITMapActivity.MENU_BROWSE)) {
+	    if (id.equals(MENU_BROWSE)) {
 	    	onBrowseRequested();
 	    }
-	    if (id.equals(MITMapActivity.MENU_BOOKMARKS)) {
+	    if (id.equals(MENU_BOOKMARKS)) {
 		    Intent i = new Intent(this,MITMapBrowseCatsActivity.class);  
 			startActivity(i);
 	    }
-	    if (id.equals(MITMapActivity.MENU_SEARCH)) {
+	    if (id.equals(MENU_SEARCH)) {
 		    onSearchRequested();
 	    }
 
@@ -126,46 +286,14 @@ public class MITMapActivity extends MapBaseActivity {
 		if (this.getMapUpdater() != null) {
 			this.getMapUpdater().stop();
 		}
-		if (MODULE_SHUTTLE.equals(module)) {
-			Log.d(TAG,"module_shuttle = module");
-			return false;
-		}
 		return super.onSearchRequested();
 	}
-	
-	public static void viewMapItem(Context context, MapItem focusedMapItem) {	
-		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
-		mapItems.add(focusedMapItem);
-		Intent i = new Intent(context, MITMapActivity.class);  
-		i.putExtra(MAP_ITEMS_KEY, mapItems);
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		i.putExtra(KEY_VIEW_PINS, true);
-		context.startActivity(i);
-	};	
-	
-	protected void processExtras(Bundle extras) {
-		Log.d(TAG,"processExtras");
-		
-        if (extras!=null){ 
 
-        	Iterator it = extras.keySet().iterator();
-	   		while (it.hasNext()) {
-	   			Object o = it.next();
-	   			Log.d(TAG,o.getClass().getCanonicalName());
-	   			//Map.Entry pairs = (Bundle.Entry)it.next();
-	   			//Log.d(TAG,"extras: " + pairs.getKey() + " = " + pairs.getValue());
-	   		}
-	   		
-	   		String findLoc = null;
-        	Point point;
-//
-        	findLoc = extras.getString(KEY_LOCATION); 
-        	
-	
-        }
-        else {
-        	Log.d(TAG,"extras is null");
-        }
-	}
-	
+//	protected Point getMyLocation() {
+//		double lat = location.getLatitude();
+//		double lon = location.getLongitude();
+//		Point myLocation = MITMapView.toWebmercator(lat,lon);
+//		return myLocation;
+//	}	
+
 }

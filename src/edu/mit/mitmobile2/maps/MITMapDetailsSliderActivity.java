@@ -105,18 +105,13 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		Bundle extras = getIntent().getExtras();
 		if(extras != null) {
 			List<MapItem> mapItems = null;
-			if(extras.containsKey(MapBaseActivity.MAP_DATA_KEY)) {
-				//String mapDataJson = extras.getString(MapBaseActivity.MAP_DATA_KEY);
-				//mapData = MapData.fromJSON(mapDataJson);	
-				
-				//mapItems = (ArrayList)extras.get(MapBaseActivity.MAP_DATA_KEY);
-				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView2.MAP_DATA_KEY);
+			if(extras.containsKey(MITMapActivity.MAP_DATA_KEY)) {
+				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
 				Log.d(TAG,"number of map items = " + mapItems.size());
-
 			} 	
 
-			if(extras.containsKey(MapBaseActivity.MAP_ITEM_INDEX_KEY)) {
-				mapItemIndex = extras.getInt(MapBaseActivity.MAP_ITEM_INDEX_KEY);
+			if(extras.containsKey(MITMapActivity.MAP_ITEM_INDEX_KEY)) {
+				mapItemIndex = extras.getInt(MITMapActivity.MAP_ITEM_INDEX_KEY);
 			}
 
 			setMapItems(mapItems,mapItemIndex);

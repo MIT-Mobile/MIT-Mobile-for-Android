@@ -1,534 +1,845 @@
 package edu.mit.mitmobile2.maps;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.os.Build;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.WindowManager;
-import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.View;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.Projection;
+import com.esri.android.map.Callout;
+import com.esri.android.map.GraphicsLayer;
+import com.esri.android.map.Layer;
+import com.esri.android.map.LocationService;
+import com.esri.android.map.MapView;
+import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
+import com.esri.android.map.event.OnSingleTapListener;
+import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.android.map.event.OnZoomListener;
+import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polygon;
+import com.esri.core.geometry.Polyline;
+import com.esri.core.geometry.SpatialReference;
+import com.esri.core.map.Graphic;
+import com.esri.core.portal.BaseMap;
+import com.esri.core.symbol.PictureMarkerSymbol;
+import com.esri.core.symbol.SimpleLineSymbol;
+
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 
 public class MITMapView extends MapView  {
-	
-	boolean touched = false;
-	boolean mPinchZoom = false;
-	int mLastZoomDrawn = -1;;
 
-	private static final int ZOOM_LEVEL_CORRECTION = -1;
-	public static final int IMAGE_TILE_SIZE = 256;
-	
-	private static final int MAX_ZOOM_LEVEL = 19;
-	private static final int MIN_ZOOM_LEVEL = 13;
-	
-	private static final int WEST_LONGITUDE_E6  = -71132032;
-	private static final int EAST_LONGITUDE_E6  = -71004543;
-	private static final int NORTH_LATITUDE_E6  =  42385049;
-	private static final int SOUTH_LATITUDE_E6  =  42339688;
-	
-	boolean tapped_overlay = false;
-	
-	int mTopY = -1;
-	int mLeftX = -1;
-	
-	// Memory related
-	ActivityManager.MemoryInfo mInfo;
-	ActivityManager am;
-	long lastMem = 0;
-	
-	SimpleOnGestureListener mTapDetector;
-	
-	static double kRadiusOfEarthInMeters	=      6378100.0d;
-	
-	int mNumRows = 3;
-	int mNumColumns = 3;
-	
-	int orientation ;
-	
-	Context ctx;
+	private static final String TAG = "MITMapView";
+	private MapAbstractionObject mao;
+	private static SpatialReference mercatorWeb; // spatial reference used by the base map
+	private static SpatialReference wgs84; // spatial reference used by androids location service
+	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
+	public static int DEFAULT_PIN = R.drawable.map_red_pin;
+	PictureMarkerSymbol pms;
+	private static int MAP_PADDING = 100;
+	private GraphicsLayer gl;
+	private Context mContext;
+	protected LocationService ls;
 
-	
-	class LatLon {
-		double lat;
-		double lon;
+	protected static final String MAP_ITEMS_KEY = "map_items";
+	public static final String MAP_DATA_KEY = "map_data";	
+	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
+
+	public MITMapView(Context context) {
+		super(context);
+		mContext = context;
 	}
-	
-	
-	MapTilesManager mtm;
 
-	public boolean lowMemory = false;  // TODO drop? tried to catch low memory event from MapActivity
-	
-	class TileOverlay extends Overlay {
-		private int mTileX;
-		private int mTileY;
-		
-		
-		@Override
-		public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-		
-			super.draw(canvas, mapView, shadow);
-			
-			boolean drawCompleted;
-			
-			if (!shadow) {
-
-            	//Log.d("MITMapView","draw");
-            	
-            	// we subtract 1 from the zoom level because
-            	// google map tiles are 128 pixels but the mit
-            	// map tiles are 256 pixels
-            	int zLevel = mapView.getZoomLevel() + ZOOM_LEVEL_CORRECTION;
-            	
-              	if (( zLevel > MAX_ZOOM_LEVEL ) || (zLevel < MIN_ZOOM_LEVEL)) {
-              		return;
-            	} 
-            	
-              	int tileSize = computeTileSize(mapView, zLevel);
-              	
-            	if(mPinchZoom) {            		
-            		int longitudeE6 = computeLongitudeE6(mTileX, zLevel);
-            		int latitudeE6 = computeLatitudeE6(mTileY, zLevel);
-            		GeoPoint geoPoint = new GeoPoint(latitudeE6, longitudeE6);
-            		Point offsetPoint = mapView.getProjection().toPixels(geoPoint, null);
-            		drawCompleted = drawTiles(canvas, mTileX, mTileY, offsetPoint.x, offsetPoint.y, zLevel, tileSize, false);
-            		
-            		
-            	} else {
-            		// it is more important to be precise when at integer zoom level
-            		// than when zooming in and out, so if its close to the actual
-            		// tile size assume we are at integer zoom
-            		if((tileSize >= IMAGE_TILE_SIZE - 20) && (tileSize <= IMAGE_TILE_SIZE + 20)) {
-            			tileSize = IMAGE_TILE_SIZE;
-            		}
-            		
-            		GeoPoint topLeftGeoPoint = mapView.getProjection().fromPixels(0, 0);
-            		
-            		double googleX = computeGoogleX(topLeftGeoPoint.getLongitudeE6(), zLevel);
-            		double googleY = computeGoogleY(topLeftGeoPoint.getLatitudeE6(), zLevel);
-            		
-            		mTileX = (int) Math.floor(googleX);
-            		int offsetX = -(int) Math.round((googleX - mTileX) * tileSize);
-            		
-            		mTileY = (int) Math.floor(googleY);
-            		int offsetY = -(int) Math.round((googleY - mTileY) * tileSize);            			
-            		
-            		drawCompleted = drawTiles(canvas, mTileX, mTileY, offsetX, offsetY, zLevel, tileSize, true);
-            		
-            	}
-            	
-  
-            	if(drawCompleted && tileSize != IMAGE_TILE_SIZE) {
-            		if(!mPinchZoom && drawCompleted && tileSize < 10) {
-            			mapView.getController().zoomIn();
-            			mapView.getController().zoomOut();
-            			Log.d("MapView", "resetting tile size");
-            		}
-            	}
-			}
-            
-		}	
-
-		/************************************************/
-		
-		
-		boolean drawTiles(Canvas canvas,int tileX, int tileY, int offsetX, int offsetY, int zoomLevel, int tileSize, boolean fillScreen) {	
-
-	        Rect src = new Rect();
-			Rect dest = new Rect();
-			
-			int tileRow, tileCol;
-			Bitmap bm;
-
-			
-			int numRows;
-			int numColumns;
-			if(fillScreen && tileSize < IMAGE_TILE_SIZE - 2) {
-				// this a crude way to do the calculation
-				// but anything else seems to be noticably slow
-				numRows = mNumRows+1;
-				numColumns = mNumColumns+2;
-			} else {
-				numRows = mNumRows;
-				numColumns = mNumColumns;
-			}
-			
-			// this flag is used to see 
-			// it the view was drawn with zero cache misses
-			boolean noCacheMisses = true;
-			
-			for (int row=0; row < numRows + 1; row++) {
-				for (int col=0; col< numColumns + 1; col++) {
-
-					tileRow = row + tileY;
-					tileCol = col + tileX;
-					
-					if(!isTileOnMap(tileCol, tileRow, zoomLevel)) {
-						continue;
-					}
-					
-					if(mtm.TileOutOfBounds(tileCol, numRows, zoomLevel)) {
-						continue;
-					}
-					
-					int tileOriginX = col * tileSize + offsetX;
-					int tileOriginY = row * tileSize + offsetY;
-
-					bm = mtm.getBitmap(tileCol, tileRow, zoomLevel, true);
-					
-					if (bm!=null) {
-	                	
-						src.bottom = IMAGE_TILE_SIZE; 
-						src.left   = 0; 
-						src.right  = IMAGE_TILE_SIZE; 
-						src.top    = 0; 
-						
-						dest.bottom = tileOriginY + tileSize; 
-						dest.left   = tileOriginX; 
-						dest.right  = tileOriginX + tileSize; 
-						dest.top    = tileOriginY; 
-
-						canvas.drawBitmap (bm,  src,  dest, null);
-						
-					} else {
-						
-						noCacheMisses = false;
-						
-						if(mLastZoomDrawn > -1 && zoomLevel > mLastZoomDrawn) {
-							int factor = integerPowerOfTwo(zoomLevel - mLastZoomDrawn);
-							int lastX = tileCol / factor;
-							int lastY = tileRow / factor;
-							bm = mtm.getBitmap(lastX, lastY, mLastZoomDrawn, false);
-							
-							if(bm != null) {
-								// now need to calculate which portion of
-								// the low res tile to crop
-								src.left = (tileCol % factor) * IMAGE_TILE_SIZE / factor;
-								src.right = src.left + IMAGE_TILE_SIZE / factor;
-								src.top = (tileRow % factor) * IMAGE_TILE_SIZE / factor;
-								src.bottom = src.top + IMAGE_TILE_SIZE / factor;
-								
-								
-								dest.bottom = tileOriginY + tileSize; 
-								dest.left   = tileOriginX; 
-								dest.right  = tileOriginX + tileSize; 
-								dest.top    = tileOriginY; 
-
-								canvas.drawBitmap (bm,  src,  dest, null);	
-								Log.d("MITMapView", "pixelating tile col: " + lastX + "row: " + lastY + "zoom-level: " + zoomLevel);
-							}
-						}
-													
-						boolean block = (tileSize != IMAGE_TILE_SIZE) && (bm == null);
-							
-						bm = mtm.fetchBitmapOnThread(tileCol, tileRow, zoomLevel, block);
-							
-						if(bm != null) {
-							src.bottom = IMAGE_TILE_SIZE; 
-							src.left   = 0; 
-							src.right  = IMAGE_TILE_SIZE; 
-							src.top    = 0; 
-							
-							dest.bottom = tileOriginY + tileSize; 
-							dest.left   = tileOriginX; 
-							dest.right  = tileOriginX + tileSize; 
-							dest.top    = tileOriginY; 
-
-							canvas.drawBitmap (bm,  src,  dest, null);
-						}
-					}
-				}
-				
-				if(noCacheMisses) {
-					mLastZoomDrawn = zoomLevel;
-				}
-			}
-
-			lowMemory = false;
-			
-			return noCacheMisses;
-			
-		}  // drawTile()
-		
-	
-	}
-	
-	/****************************************************/
-	
-	public MITMapView(Context context, String key) {
-		super(context, key);
-		ctx = context;
-		setup();
-	}
-	
-	public MITMapView(Context context,AttributeSet attrs) {
+	public MITMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		ctx = context;
-		setup();
-	}
-	
-	public MITMapView(Context context, AttributeSet attrs, int defStyle) {
-		super( context,  attrs,  defStyle);
-		ctx = context;
-		setup();
+		mContext = context;
 	}
 
-	//////////////////////////////////////////////
+	public void addMAOBaseLayer(MapBaseLayer mapBaseLayer) {
+		mao.getBaseLayers().put(mapBaseLayer.getLayerIdentifier(), mapBaseLayer);
+	}
+
+	public void addMAOGraphicsLayer(String layerName) {
+		MapGraphicsLayer mapGraphicsLayer = new MapGraphicsLayer(layerName);
+		mao.getGraphicsLayers().put(layerName, mapGraphicsLayer);
+	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
+	public void addMapLayer(Layer layer, String layerName) {
+		this.addLayer(layer);
+		mao.getLayerIdMap().put(layerName, layer.getID());
+	}
+	
+	public Layer getMapLayer(String layerName) {
+		if (mao.getLayerIdMap() != null) {
+			Long id = mao.getLayerIdMap().get(layerName);                	                	                   
+			return this.getLayerByID(id);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public boolean baseLayersLoaded() {
+		// loop through base layers
+		Iterator it = mao.getBaseLayers().entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry glpairs = (Map.Entry)it.next();
+	        String layerName = (String)glpairs.getKey();
+	        Layer layer = this.getMapLayer(layerName);
+	        if (!layer.isInitialized()) {
+	        	return false;
+	        }
+		}
 		
-		int action = ev.getAction();
-        switch (action)
-        {
-            case MotionEvent.ACTION_DOWN:
-            {
-            	touched = true;
-            	//postInvalidate();
-            	invalidate();
-            }
-            case MotionEvent.ACTION_UP:
-            {	
-            	touched = false;  // draw!
-            }
-            case MotionEvent.ACTION_MOVE:
-            {	
-            	int count = ev.getPointerCount();
-            	if (count>1) {
-            		mPinchZoom = true;
-            		touched = true;
-            	}
-            	else {
-            		mPinchZoom = false;
-            		touched = false;
-            	}
-            }
-        }
-
-		
-        try {
-        	boolean consumedTouch = super.onTouchEvent(ev);
-        	// FIXME something is always consuming event even when overlay not tapped
-        	/*
-        	if (!consumedTouch) {
-        		if (mTapDetector.onSingleTapUp(ev)) removeAllViews();
-        	}
-        	*/
-        	if (tapped_overlay) {
-        		tapped_overlay = false;  // ignore and reset flag
-        	} else {
-        		if (mTapDetector.onSingleTapUp(ev)) {
-        			removeAllViews();  // remove bubble bcos non-overlay was tapped
-        		}	
-        	}
-        	return consumedTouch;
-        } catch (OutOfMemoryError memoryError) {
-        	Log.d("MapView", "Memory error in onTouch handler");
-        	memoryError.printStackTrace();
-        	System.gc();
-        	return false;
-        }
+		return true;
 	}
 
-	//////////////////////////////////////////////
+	public void addMapItems(ArrayList<? extends MapItem> mapItems) {
+		addMapItems(mapItems,MITMapView.DEFAULT_GRAPHICS_LAYER,MapGraphicsLayer.MODE_OVERWRITE);		
+	}
 	
-	void setup() {
+	public void addMapItems(ArrayList<? extends MapItem> mapItems, int mode) {
+		addMapItems(mapItems,MITMapView.DEFAULT_GRAPHICS_LAYER,mode);		
+	}
 
-		mTapDetector = new SimpleOnGestureListener() {
-
-			@Override
-			public boolean onSingleTapConfirmed(MotionEvent e) {
-				// TODO Auto-generated method stub
-				return super.onSingleTapConfirmed(e);
-			}
-
-			@Override
-			public boolean onSingleTapUp(MotionEvent e) {
-				return true;
-				//return super.onSingleTapUp(e);
+	public void addMapItems(ArrayList<? extends MapItem> mapItems, String layerName) {		
+		addMapItems(mapItems,layerName,MapGraphicsLayer.MODE_OVERWRITE);		
+	}
+	
+	public void addMapItems(ArrayList<? extends MapItem> mapItems, String layerName, int mode) {
+		if (mapItems != null) {
+			if (!mao.getGraphicsLayers().containsKey(layerName)) {
+				addMAOGraphicsLayer(layerName);
 			}
 			
-		};
-		
-		mtm = new MapTilesManager(this,ctx);
-		
-		mtm.initFirstTime();
-		
-		// Initialize...
-		List<Overlay>  ovrlys = getOverlays();
-		
-		TileOverlay mTileOverlay = new TileOverlay();
-		
-		if(isFroyo()) {
-			// Add overlays...
-			ovrlys.add(mTileOverlay);
+			if (mao.getGraphicsLayers().get(layerName).getMapItems() != null && mode == MapGraphicsLayer.MODE_OVERWRITE) {
+				mao.getGraphicsLayers().get(layerName).getMapItems().clear();
+			}
+			
+			for (int i = 0; i < mapItems.size(); i++) {
+				MapItem mapItem = mapItems.get(i);
+				mapItem.setGraphicsLayer(layerName);
+				addMapItem(mapItems.get(i),layerName);
+			}
+		}
+	}
+
+	public void addMapItem(MapItem mapItem) {
+		mapItem.setGraphicsLayer(MITMapView.DEFAULT_GRAPHICS_LAYER);
+		addMapItem(mapItem,MITMapView.DEFAULT_GRAPHICS_LAYER);
+	}
+
+	public void addMapItem(MapItem mapItem, String layerName) {
+		mapItem.setGraphicsLayer(layerName);
+		if (!mao.getGraphicsLayers().containsKey(layerName)) {
+			addMAOGraphicsLayer(layerName);
 		}
 		
-		setRowsCols();		
-
-		// Memory...
-		am = (ActivityManager) ctx.getSystemService( Context.ACTIVITY_SERVICE );
-		mInfo = new ActivityManager.MemoryInfo ();
+		mapItem.setIndex(mao.getGraphicsLayers().get(layerName).getMapItems().size());
+		mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);
 		
 	}
-	
-	public void clearItemOverlays() {
-		List<Overlay> overlays = getOverlays();
-		
-		// if froyou dont clear the first overlay (since that overlay is just
-		// the overlay that draws the custom map tiles
-		int minimumNumberOfOverlays = isFroyo() ? 1 : 0;
-		while(overlays.size() > minimumNumberOfOverlays) {
-			overlays.remove(overlays.size()-1);
-		}		
+
+	public void clearMapItems() {
+		// clears all graphics layers
+		Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry glpairs = (Map.Entry)it.next();
+		    String layerName = (String)glpairs.getKey();
+		    clearMapItems(layerName);
+		}
+
 	}
 	
-	
-	int mDisplayWidth;
-	
-	void setRowsCols() {
-
-		Display display = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
-		int w = display.getWidth();
-		int h = display.getHeight();
-		
-		mNumRows = h / IMAGE_TILE_SIZE;
-		mNumColumns = w / IMAGE_TILE_SIZE;
-		
-		if(h % IMAGE_TILE_SIZE != 0) {
-			mNumRows++;
+	public void clearMapItems(String layerName) {
+		// clears specified graphics layer
+		if (mao.getGraphicsLayers().get(layerName) != null) {
+			mao.getGraphicsLayers().get(layerName).getMapItems().clear();
 		}
+	}
+	
+	protected int dislayMapItem(MapItem mapItem) {
+		Log.d(TAG,"displaying map item on layer " + mapItem.getGraphicsLayer());
+		int gId = 0;
 		
-		if(w % IMAGE_TILE_SIZE != 0) {
-			mNumColumns++;
+		switch (mapItem.getGeometryType()) {
+			case MapItem.TYPE_POINT:
+				gId = displayMapPoint(mapItem);
+			break;
+			
+			case MapItem.TYPE_POLYLINE:
+				gId = displayMapPolyline(mapItem);
+			break;
+			
+			case MapItem.TYPE_POLYGON:
+				gId = displayMapPolygon(mapItem);
+			break;
+			
+			default:
+				gId = 0;
+			break;
+			
 		}
+
+		return gId;
+
+	}
+	
+	public static Point toWebmercator(double lat, double lon) {
+		Point point = new Point();
+		point = (Point)GeometryEngine.project(new Point(lon,lat), wgs84,mercatorWeb);
+		return point;
+	}
+	
+	private Point projectMapPoint(MapPoint mapPoint) {
+		Point point = (Point)GeometryEngine.project(new Point(mapPoint.long_wgs84,mapPoint.lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());		
+		return point;
+	}
+
+	private Point projectMapPoint(Double lat,Double lon) {
+		MapPoint mapPoint = new MapPoint(lat,lon);
+		return projectMapPoint(mapPoint);
+	}
+
+	protected int displayMapPoint(MapItem mapItem) {
+		if (mapItem.getMapPoints().size() > 0) {
+			MapPoint mapPoint = mapItem.getMapPoints().get(0);
+
+			Point point = projectMapPoint(mapPoint);
+			
+			Bitmap libImage = BitmapFactory.decodeResource(getResources(), mapItem.symbol);
+			BitmapDrawable libDrawable = new BitmapDrawable(libImage);
+			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
+
+			switch (mapItem.verticalAlign) {
+				case MapItem.VALIGN_TOP:
+					mapItem.offsetY = -(libDrawable.getIntrinsicHeight() / 2);
+				break;
+				
+				case MapItem.VALIGN_CENTER:
+					mapItem.offsetY = 0;
+				break;
+				
+				case MapItem.VALIGN_BOTTOM:
+					mapItem.offsetY = libDrawable.getIntrinsicHeight() / 2;
+				break;
+				
+				default:
+					mapItem.offsetY = libDrawable.getIntrinsicHeight() / 2;
+				break;
+				
+			}
+
+			switch (mapItem.horizontalAlign) {
+			case MapItem.ALIGN_LEFT:
+				mapItem.offsetX = -(libDrawable.getIntrinsicWidth() / 2);
+			break;
+			
+			case MapItem.ALIGN_CENTER:
+				mapItem.offsetX = 0;
+			break;
+			
+			case MapItem.ALIGN_RIGHT:
+				mapItem.offsetX = libDrawable.getIntrinsicWidth() / 2;
+			break;
+			
+			default:
+				mapItem.offsetX = 0;
+			break;
+			
+		}
+
+			pms.setOffsetY(mapItem.offsetY);
+			pms.setOffsetX(mapItem.offsetX);
+
+			Map attributes = new HashMap();
 		
+			Graphic g = new Graphic(point, pms,attributes, null);
+
+			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
+
+			int Uid = gl.addGraphic(g);	
+	        return Uid;				
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	protected int displayMapPolyline(MapItem mapItem) {
+		Point point;
+		Point startPoint;
+		Polyline polyline = new Polyline();
+
+		if (mapItem.getMapPoints().size() > 0) {
+			
+			startPoint = projectMapPoint(mapItem.getMapPoints().get(0));
+
+			polyline.startPath(startPoint);
+			for (int p = 0; p < mapItem.getMapPoints().size(); p++) {
+				MapPoint mapPoint = mapItem.getMapPoints().get(p);
+				point = (Point)GeometryEngine.project(new Point(mapPoint.long_wgs84,mapPoint.lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());
+				polyline.lineTo(point);
+			}
+			
+			Graphic g = new Graphic(polyline,new SimpleLineSymbol(mapItem.lineColor,mapItem.lineWidth));
+
+			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
+			int Uid = gl.addGraphic(g);	
+	        return Uid;	
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	protected int displayMapPolygon(MapItem mapItem) {
+		Point point;
+		Point startPoint;
+		Polygon polygon = new Polygon();
+	   
+		if (mapItem.getMapPoints().size() > 0) {
+			
+			//startPoint = toWebmercator(mapItem.getMapPoints().get(0).lat_wgs84,mapItem.getMapPoints().get(0).long_wgs84);
+			startPoint = (Point)GeometryEngine.project(new Point(mapItem.getMapPoints().get(0).long_wgs84,mapItem.getMapPoints().get(0).lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());
+
+			polygon.startPath(startPoint);
+			for (int p = 0; p < mapItem.getMapPoints().size(); p++) {
+				MapPoint mapPoint = mapItem.getMapPoints().get(p);
+				//point = toWebmercator(mapPoint.lat_wgs84,mapPoint.long_wgs84);
+				point = (Point)GeometryEngine.project(new Point(mapPoint.long_wgs84,mapPoint.lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());
+
+				polygon.lineTo(point);
+			}
+			
+			Graphic g = new Graphic(polygon,new SimpleLineSymbol(mapItem.lineColor,mapItem.lineWidth));
+
+			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
+			int Uid = gl.addGraphic(g);	
+	        return Uid;	
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	public void displayCallout(Context context, MapItem mapItem) {
+		View calloutView = mapItem.getCallout(mContext,mao.getGraphicsLayers().get(mapItem.getGraphicsLayer()).getMapItems(),mapItem.getIndex());
+		Callout callout = getCallout();
+		callout.setOffset(0, mapItem.offsetY * 2);
+		Point calloutPoint = getCalloutPoint(mapItem);
+		callout.setContent(calloutView);
+    	callout.setCoordinates(calloutPoint);
+    	callout.setStyle(R.xml.callout);
+		callout.refresh();
+		callout.show();		
+	}
+	
+	public Point getCalloutPoint(MapItem mapItem) {
 		
+		// return a Point object with the coordinates to display a callout at
+		// For now, method just uses the first point in the MapPoints array
+		// Ultimately, is should be modified to properly place callouts for lines and polygons
+		//Point calloutPoint = MITMapView.toWebmercator(mapItem.getMapPoints().get(0).lat_wgs84, mapItem.getMapPoints().get(0).long_wgs84); 
+		Point calloutPoint = (Point)GeometryEngine.project(new Point(mapItem.getMapPoints().get(0).long_wgs84,mapItem.getMapPoints().get(0).lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());
+
+		return calloutPoint;
+	}
+
+	public Polygon getGraphicExtent() {
+		//loops through all points for all map items and returns a polygon for the extent of those items
+		Double minLong = null;
+		Double minLat = null;
+		Double maxLong = null;
+		Double maxLat = null;
+		
+		MapPoint mapPoint;
+		
+		if (mao != null) {
+			Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry glpairs = (Map.Entry)it.next();
+			    String layerName = (String)glpairs.getKey();
+				MapGraphicsLayer mgl = mao.getGraphicsLayers().get(layerName);
+				ArrayList<MapItem> mapItems = mgl.getMapItems();	
+				if (mapItems.size() > 0) {
+											
+					for (int i = 0; i < mapItems.size(); i++) {
+						for (int p = 0; p < mapItems.get(i).getMapPoints().size(); p++) {
+							 mapPoint = mapItems.get(i).getMapPoints().get(p);
+							 if (minLong == null) {
+								minLong = mapPoint.long_wgs84;
+								minLat = mapPoint.lat_wgs84;
+								maxLong = mapPoint.long_wgs84;
+								maxLat = mapPoint.lat_wgs84;
+							 }
+							 else {
+								 if (mapPoint.lat_wgs84 <= minLat) {
+									 minLat = mapPoint.lat_wgs84;
+								 }
+								 
+								 if (mapPoint.lat_wgs84 >= maxLat) {
+									 maxLat = mapPoint.lat_wgs84;
+								 }
+								 
+								 if (mapPoint.long_wgs84 <= minLong) {
+									 minLong = mapPoint.long_wgs84;
+								 }
+								 
+								 if (mapPoint.long_wgs84 >= maxLong) {
+									 maxLong = mapPoint.long_wgs84;
+								 }
+							 }
+						}
+					}
+				}
+			}
+			
+			// create Polygon from 4 points
+			// start of the south west point
+			Point SW = projectMapPoint(minLat,minLong);
+			Point NW = projectMapPoint(maxLat,minLong);
+			Point NE = projectMapPoint(maxLat,maxLong);
+			Point SE = projectMapPoint(minLat,maxLong);
+
+			Polygon polygon = new Polygon();
+			polygon.startPath(SW);
+			polygon.lineTo(SW);
+			polygon.lineTo(NW);
+			polygon.lineTo(NE);
+			polygon.lineTo(SE);
+			return polygon;
+		}
+		else {
+			return null;
+		}
+	}
+							
+	public SpatialReference getMercatorWeb() {
+		return mercatorWeb;
+	}
+
+	public SpatialReference getWgs84() {
+		return wgs84;
+	}
+
+	public void setMercatorWeb(SpatialReference mercatorWeb) {
+		MITMapView.mercatorWeb = mercatorWeb;
+	}
+
+	public void setWgs84(SpatialReference wgs84) {
+		MITMapView.wgs84 = wgs84;
+	}
+
+	public void init(final Context mContext) {
+		
+	    Log.d(TAG,"mapInit");
 	    
+	    mao = new MapAbstractionObject();
+		final MITMapView mapView = this;
+
+	    
+	    // OnStatusChangedListener
+        this.setOnStatusChangedListener(new OnStatusChangedListener() {
+            public void onStatusChanged(Object source, STATUS status) {
+                Log.d(TAG,source.getClass().getSimpleName() + " status = " + status.getValue());
+            }
+        });
+        // END OnStatusChangedListener
+
+        // OnSingleTapListener
+        this.setOnSingleTapListener(new OnSingleTapListener() {
+    		private static final long serialVersionUID = 1L;
+    		
+    		@Override
+    		public void onSingleTap(float x, float y) {
+    			Log.d(TAG,"x: " + x + " y:" + y);
+    			Callout callout = mapView.getCallout(); 
+
+    			if (!mapView.isLoaded()) {
+    				return;
+    			}
+    			Log.d(TAG,"spatial reference = " + mapView.getSpatialReference().getID());
+    			
+    			if (mao.getGraphicsLayers() != null) {
+    		    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+    				while (it.hasNext()) {
+    			        Map.Entry glpairs = (Map.Entry)it.next();
+    			        String layerName = (String)glpairs.getKey();
+    			        MapGraphicsLayer mapGraphicsLayer = mapView.getMao().getGraphicsLayers().get(layerName);
+    	    			GraphicsLayer gl = (GraphicsLayer)mapView.getMapLayer(layerName);
+    	    			
+    	    			if (gl != null) {
+	    	    			int[] graphicId = gl.getGraphicIDs(x, y, 10);
+	    	    			
+	    	    			if (graphicId.length > 0) {
+	    	    				for (int i = 0; i < graphicId.length; i++) {
+	    	    	    			Graphic g = gl.getGraphic(graphicId[i]);
+	    	    	    			
+	    	    	    			// get the index of the mapItem from the GraphicIdMap
+	    	    	    			Integer mapItemIndex = mapView.getMao().getGraphicsLayers().get(layerName).getGraphicIdMap().get(Integer.toString(g.getUid()));
+	    	    	    			
+	    	    	    			// get the mapItem
+	    	    	    			MapItem mapItem = mapView.getMao().getGraphicsLayers().get(layerName).getMapItems().get(mapItemIndex);
+	    	    	    			Log.d(TAG,"tapped graphic: map item class = " + mapItem.getMapItemClass());
+									// center to the selected item
+	    	    	    			Point centerPt = mapView.projectMapPoint(mapItem.getCenter());
+	    	    	    			mapView.centerAt(centerPt, false);
+	    	    	    			
+	    	    	    			// Display the Callout if it is defined
+	    	    	    			if (mapItem.getCallout(mapView.getContext(),mapGraphicsLayer.getMapItems(),mapItemIndex.intValue()) != null) {
+	    	    	    	    		
+	    	    	    				mapView.displayCallout(mContext, mapItem);
+	    	    	    				return; // quit after the first callout is displayed
+	    	    	    			}
+	    	    				}
+	    	    			}
+	    	    			else {
+	    	    				callout.hide();
+	    	    			}
+    	    			} // end if gl != null
+    				} // end while
+    			} // end if mao.getGraphicsLayers() != null
+    		}
+        	
+        });
+        // END OnSingleTapListener
+        
+        MapModel.fetchMapServerData(mContext, mapUiHandler);    			        
 	}
 	
 	
-	private int computeTileSize(MapView mapView, int zoomLevel) {
-		Projection projection = mapView.getProjection();
-		
-		// use the top corner and the tile one next to it
-		// to calculate tile size, we use X because in the mercator projection
-		// X is linear, so its easier to work with than Y
-		
-		GeoPoint topLeftPoint = projection.fromPixels(0, 0);
-		double googleX = computeGoogleX(topLeftPoint.getLongitudeE6(), zoomLevel);
-		double nextTileGoogleX = googleX + 1;
-		int nextTileLongitudeE6 = computeLongitudeE6(nextTileGoogleX, zoomLevel);
-		GeoPoint nextPoint = new GeoPoint(topLeftPoint.getLatitudeE6(), nextTileLongitudeE6);
-		Point nextTilePoint = projection.toPixels(nextPoint, null);
-		return nextTilePoint.x;
-	}
-	
-	private static int computeLongitudeE6(double googleX, int zoomLevel) {
-		double longitude = -180. + (360. * googleX) / Math.pow(2.0, zoomLevel);
-		return (int) Math.round(longitude * 1000000.);
-	}
-	
-	private static int computeLatitudeE6(double googleY, int zoomLevel) {
-		double mercatorY =  Math.PI * ( 1 - 2 * (googleY / Math.pow(2.0, zoomLevel) ) );
-		double phi = Math.atan( Math.sinh(mercatorY));
-		
-		// convert from radians to  microdegrees
-		return (int) Math.round(phi * 180. / Math.PI * 1000000.);
-	}
-	
-	public static double computeGoogleX(int longitudeE6, int zoomLevel) {		
-		return (180. + ((double)longitudeE6/1000000.))/(360.) * Math.pow(2.0, zoomLevel);
-	}
-	
-	public static double computeGoogleY(int latitudeE6, int zoomLevel) {
-		// convert to radians
-		double phi = (double)latitudeE6/1000000. * Math.PI / 180.;
-		
-		// calculate mercator coordinate
-		double mercatorY = Math.log(Math.tan(phi) + 1./Math.cos(phi));
-		
-		// rescale to google coordinate
-		return (Math.PI - mercatorY) / ( 2. * Math.PI)  * Math.pow(2.0, zoomLevel);
-	}
-	
-	
-	/*
-	 *  tile boundary cache to minimize the number of times
-	 *  we need to do complicated mercator type calculations
-	 */
-	private int[] mWestX = new int[21];
-	private int[] mEastX = new int[21];
-	private int[] mNorthY = new int[21];
-	private int[] mSouthY = new int[21];	
-		
-	private boolean isTileOnMap(int tileX, int tileY, int zoomLevel) {
-			initZoomLevel(zoomLevel);
-			
-			if(tileX < mWestX[zoomLevel]) {
-				return false;
-			}
-		
-			if(tileX > mEastX[zoomLevel]) {
-				return false;
-			}
-		
-			if(tileY < mNorthY[zoomLevel]) {
-				return false;
-			}
-		
-			if(tileY > mSouthY[zoomLevel]) {
-				return false;
-			}
-		
-			return true;
-	}
-			
-	private void initZoomLevel(int zoomLevel) {
-			if(mWestX[zoomLevel] == 0) {
-				mWestX[zoomLevel] = (int) Math.floor(computeGoogleX(WEST_LONGITUDE_E6, zoomLevel));
-			}
-		
-			if(mEastX[zoomLevel] == 0) {
-				mEastX[zoomLevel] = (int) Math.ceil(computeGoogleX(EAST_LONGITUDE_E6, zoomLevel));
-			}
-		
-			if(mNorthY[zoomLevel] == 0) {
-				mNorthY[zoomLevel] = (int) Math.floor(computeGoogleY(NORTH_LATITUDE_E6, zoomLevel));
-			}
-		
-			if(mSouthY[zoomLevel] == 0) {
-				mSouthY[zoomLevel] = (int) Math.ceil(computeGoogleY(SOUTH_LATITUDE_E6, zoomLevel));
-			}
-	}	
-	
-	private static int integerPowerOfTwo(int exponent) {
-		int factor = 1;
-		for(int i = 0; i < exponent; i++) {
-			factor = factor * 2;
+	public Handler mapUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //mLoadingView.setVisibility(View.GONE);
+
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	Log.d(TAG,"MobileWebApi success");
+                @SuppressWarnings("unchecked")
+                MapServerData mapServerData = (MapServerData)msg.obj;
+                // get the layers for the default group
+                String defaultBasemap = mapServerData.getDefaultBasemap();
+                
+                // add the base layers to the map
+                ArrayList<MapBaseLayer> baseMaps = mapServerData.getBaseLayerGroup().get(defaultBasemap);
+                if (baseMaps != null) {
+	                for (int i = 0; i < baseMaps.size(); i++) {
+	                	MapBaseLayer layer = baseMaps.get(i);
+	                	addMAOBaseLayer(layer);
+	                }
+	            }
+                                
+                // add all defined base layers to the mapView 
+                syncLayers();
+                                
+        		// Define a listener that responds to location updates
+        		LocationListener locationListener = new LocationListener() {
+
+        			@Override
+					public void onLocationChanged(Location location) {
+        		      // Called when a new location is found by the network location provider.
+        		      makeUseOfNewLocation(location);
+        		    }
+
+        		    private void makeUseOfNewLocation(Location location) {
+        		    	//Log.d(TAG,"makeUseOfNewLocation");
+        				// TODO Auto-generated method stub
+        				if (location != null) {
+	        		    	//Log.d(TAG,"lat = " + location.getLatitude());
+	        				//Log.d(TAG,"lon = " + location.getLongitude());
+        				}
+        		    }
+
+        			@Override
+					public void onStatusChanged(String provider, int status, Bundle extras) {
+        				//Log.d(TAG,"map status = " + status);
+        				//Log.d(TAG,"initialized = " + OnStatusChangedListener.STATUS.INITIALIZED);
+        			}
+
+        		    @Override
+					public void onProviderEnabled(String provider) {}
+
+        		    @Override
+					public void onProviderDisabled(String provider) {}
+        		};
+
+        		// Initialize location service
+        		ls = getLocationService();
+    			Log.d(TAG,"new Locationistener");
+        		ls.setLocationListener(locationListener);
+        		ls.setAutoPan(false);
+        		ls.setAllowNetworkLocation(true);
+        		ls.start();
+        		
+        		onMapLoaded();
+       		        		
+            } else if (msg.arg1 == MobileWebApi.ERROR) {
+                //mLoadingView.showError();
+            } else if (msg.arg1 == MobileWebApi.CANCELLED) {
+                //mLoadingView.showError();
+            }
+        }
+    };
+
+    public void syncLayers() {
+    	syncBaseLayers();
+    }
+    
+    public void syncBaseLayers() {
+    	// loops through all base layers defined in the map abstraction object, mao, and adds them to the mapView if they don't already exists
+
+    	Iterator it = mao.getBaseLayers().entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry glpairs = (Map.Entry)it.next();
+	        String layerName = (String)glpairs.getKey();
+	        MapBaseLayer layer = mao.getBaseLayers().get(layerName);
+	        Long layerId = mao.getLayerIdMap().get(layerName);
+	        if (layerId == null) {
+	        	// create and add the layer
+            	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
+            	serviceLayer.setName(layer.getLayerIdentifier());
+            	Log.d(TAG,"adding service layer " + serviceLayer.getName());
+            	serviceLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
+                    @Override
+					public void onStatusChanged(Object source, STATUS status) {
+                        if (OnStatusChangedListener.STATUS.INITIALIZED == status){
+                        	Log.d(TAG,source.getClass().getName() + " " +  ((ArcGISTiledMapServiceLayer)source).getName() + " is initialized");
+                        	if (baseLayersLoaded()) {
+                        		Log.d(TAG,"all base layers loaded, ready to add graphics");
+                        		MobileWebApi.sendSuccessMessage(mapInitUiHandler);
+                        	}
+                        	else {
+                        		Log.d(TAG,"still waiting for base layers to load");
+                        	}
+                        }
+                    }
+                });
+
+                addMapLayer(serviceLayer, serviceLayer.getName());
+      	
+	        }
 		}
-		return factor;
+		
+    }
+    
+    public void syncGraphicsLayers() {
+    	// loops through all graphics layers defined in mao, adding them if they dont exist
+    	// adds mapitem from each graphics layer in mao, overwriting mapitems
+
+    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry glpairs = (Map.Entry)it.next();
+	        final String layerName = (String)glpairs.getKey();
+	        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
+	        Long layerId = mao.getLayerIdMap().get(layerName);
+	        if (layerId == null) {
+	        	// create and add the layer
+            	GraphicsLayer graphicsLayer = new GraphicsLayer();
+            	graphicsLayer.setName(layerName);
+            	Log.d(TAG,"adding graphics layer " + layerName);
+                graphicsLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
+                    public void onStatusChanged(Object source, STATUS status) {
+                        if (OnStatusChangedListener.STATUS.INITIALIZED == status){
+                        	Log.d(TAG,source.getClass().getName() + " " +  ((GraphicsLayer)source).getName() + " is initialized");
+                        	if (baseLayersLoaded()) {
+                        		Log.d(TAG,"all base layers loaded, ready to add graphics");
+                        		processMapItems(layerName);
+                        	}
+                        	else {
+                        		Log.d(TAG,"still waiting for base layers to load");
+                        	}
+                        }
+                    }
+                });
+
+                addMapLayer(graphicsLayer, layerName);
+      	
+	        }
+	        else {
+	        	if (baseLayersLoaded()) {
+	        		Log.d(TAG,"all base layers loaded, ready to add graphics");
+	        		processMapItems(layerName);
+	        	}
+	        	else {
+	        		Log.d(TAG,"still waiting for base layers to load");
+	        	}
+	        }
+		}
+		
+    }
+
+    final class MyOnStatusChangedListener implements OnStatusChangedListener {
+
+    	private static final long serialVersionUID = 1L;
+
+        public void onStatusChanged(Object source, STATUS status) {
+            //conditional checks if mapView's status has changed to initialized 
+             if (OnStatusChangedListener.STATUS.INITIALIZED == status && source == this) { 
+            	 Log.d(TAG,"mapView is initiallized");
+             }
+         }
+    }
+    
+    public Handler mapSearchUiHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+		@Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"mapSearchUiHandler success");
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	
+            	try {
+            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+            		clearMapItems();
+            		ArrayList mapItems = (ArrayList)msg.obj;
+            		addMapItems(mapItems);
+            		syncGraphicsLayers();
+                	fitMapItems();
+            	}
+            	catch (Exception e) {
+            		Log.d(TAG,"mapSearchUiHander exception");
+            		Log.d(TAG,e.getStackTrace().toString());
+            	}
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+
+            }
+        }
+    };
+
+    public Handler mapInitUiHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+		@Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"mapInitUiHandler success");
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	
+            	try {
+            		Log.d(TAG,"map is initialized, synching graphics");
+            		syncGraphicsLayers();     		
+            	}
+            	catch (Exception e) {
+            	}
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+
+            }
+        }
+    };
+
+    private void onMapLoaded() {
+
+    	
+    }
+    
+	public void fitMapItems() {
+	    setExtent(getGraphicExtent(),MAP_PADDING);		
+	}
+
+    private void processMapItems(final String layerName) {
+    	this.getCallout().hide();
+    	this.pause();
+    	Log.d(TAG,"processing map Items for " + layerName);
+		int gId = 0; // ID of graphic object created by displayMapItem
+    	
+		// clear the graphics layer
+		gl = (GraphicsLayer)getMapLayer(layerName);
+		gl.removeAll();
+		
+		// get MapGraphicsLayer
+		MapGraphicsLayer mapGraphicsLayer = mao.getGraphicsLayers().get(layerName);
+		ArrayList<MapItem> mapItems = mapGraphicsLayer.getMapItems();
+		
+		// sort map items by weight of  x and y coords
+		Collections.sort(mapItems, new CustomComparator());
+		
+		Log.d(TAG,"num map items = " + mapItems.size());
+    	for (int i = 0; i < mapItems.size(); i++) {
+    		try {
+	    		MapItem mapItem = mapItems.get(i);
+	    		mapItem.setIndex(i);
+	    		Log.d(TAG,"sorted weight = " + mapItem.getSortWeight());
+
+	    		// get the ID of the graphic once it has been added to the graphics layer
+	    		gId = dislayMapItem(mapItem);
+
+	    		// store the index (i) of the mapItem in the graphicIdMap with the key of the graphic ID
+	    		// this will let ut use the ID of the tapped graphic to get the corresponding mapItem and create the callout
+    			mapGraphicsLayer.getGraphicIdMap().put(Integer.toString(gId),Integer.valueOf(i));    		
+    		}
+    		catch (Exception e) {
+    			Log.d(TAG, "error processing map items");
+    			Log.d(TAG, e.getStackTrace().toString());
+    		}
+    		
+    	}
+    	this.unpause();    	
+    }
+
+	public MapAbstractionObject getMao() {
+		return mao;
+	}
+
+	public void setMao(MapAbstractionObject mao) {
+		this.mao = mao;
 	}
 	
-	/****************************************************/
-	private static boolean isFroyo () {		
-		return Build.VERSION.SDK_INT > Build.VERSION_CODES.ECLAIR_MR1;	    
+	public class CustomComparator implements Comparator<MapItem> {
+	    @Override
+	    public int compare(MapItem o1, MapItem o2) {
+	        return o2.getSortWeight().compareTo(o1.getSortWeight());
+	    }
+	}
+
+	public void debugMAO() {
+		Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry glpairs = (Map.Entry)it.next();
+	        final String layerName = (String)glpairs.getKey();
+	        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
+	        Log.d(TAG,"Graphics Layer: " + layerName);
+	        Log.d(TAG,layer.getMapItems().size() + " map Items for layer");
+		}
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		super.pause();
+		Log.d(TAG,"pause map");
+	}
+
+	@Override
+	public void unpause() {
+		// TODO Auto-generated method stub
+		super.unpause();
+		Log.d(TAG,"unpause map");
 	}
 	
-	public void stop() {
-		mtm.stop();
-	}
+	
 }
 

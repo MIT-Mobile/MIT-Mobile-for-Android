@@ -10,8 +10,8 @@ import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapView2;
-import edu.mit.mitmobile2.maps.MapBaseActivity;
+import edu.mit.mitmobile2.maps.MITMapView;
+import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.maps.MapBaseLayer;
 import edu.mit.mitmobile2.maps.MapData;
 import edu.mit.mitmobile2.maps.MapLayer;

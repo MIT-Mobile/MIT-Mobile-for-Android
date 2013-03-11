@@ -15,7 +15,7 @@
 
     
     <!-- MapView layout and initial extent -->
-    <edu.mit.mitmobile2.maps.MITMapView2
+    <edu.mit.mitmobile2.maps.MITMapView
   		android:id="@+id/map"
   		android:layout_width="fill_parent"
   		android:layout_height="fill_parent"
@@ -23,7 +23,7 @@
  		initExtent = "-7914314.738504024 5214534.8430830045 -7913764.950289598 5215325.163641242"
  		calloutStyle="@xml/callout" >
  		<!--  -7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899"   --> 		
-  	</edu.mit.mitmobile2.maps.MITMapView2>
+  	</edu.mit.mitmobile2.maps.MITMapView>
 
     <ListView
 		android:id="@+id/mapListView"

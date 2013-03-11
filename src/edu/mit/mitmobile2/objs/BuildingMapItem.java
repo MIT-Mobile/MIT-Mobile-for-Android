@@ -19,9 +19,9 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
 import edu.mit.mitmobile2.maps.MITMapBrowseResultsActivity;
 import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
-import edu.mit.mitmobile2.maps.MITMapView2;
+import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.maps.MapBaseActivity;
+import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.maps.MapData;
 
 public class BuildingMapItem extends MapItem implements Parcelable {
@@ -73,9 +73,9 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	            @Override
 	            public void onClick(View v) {
 	            	Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
-	            	//i.putExtra(MapBaseActivity.MAP_DATA_KEY, mapItems);
-	            	i.putParcelableArrayListExtra(MITMapView2.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
-	            	i.putExtra(MITMapView2.MAP_ITEM_INDEX_KEY, position);
+	            	//i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);
+	            	i.putParcelableArrayListExtra(MITMapView.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
+	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
 	            	mContext.startActivity(i);
 	            }
 	        });

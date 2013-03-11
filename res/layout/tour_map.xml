@@ -21,14 +21,14 @@
 		android:background="#ffffff"
 		android:visibility="gone" />
 		   		
-	<edu.mit.mitmobile2.maps.MITMapView2
+	<edu.mit.mitmobile2.maps.MITMapView
   		android:id="@+id/tourMapView"
   		android:layout_width="fill_parent"
   		android:layout_height="fill_parent"
   		initExtent = "-7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899" 
  		spacialReference = "102113" 
  		calloutStyle="@xml/callout" >
-  	</edu.mit.mitmobile2.maps.MITMapView2>
+  	</edu.mit.mitmobile2.maps.MITMapView>
   	
 	    
 	<include layout="@layout/tour_map_legend" />

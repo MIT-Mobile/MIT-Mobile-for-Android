@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
-import edu.mit.mitmobile2.maps.MITMapView2;
+import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapAbstractionObject;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.RouteItem;

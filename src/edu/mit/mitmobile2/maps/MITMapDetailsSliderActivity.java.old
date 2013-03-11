@@ -82,8 +82,8 @@ public class MITMapDetailsSliderActivity extends SliderActivity {
         mDB =  MapsDB.getInstance(this);
         
         extras = getIntent().getExtras();
-    	if (extras.containsKey(MapBaseActivity.MAP_DATA_KEY)) {
-    		String mapDataJSON = (String)extras.get(MapBaseActivity.MAP_DATA_KEY);
+    	if (extras.containsKey(MITMapActivity.MAP_DATA_KEY)) {
+    		String mapDataJSON = (String)extras.get(MITMapActivity.MAP_DATA_KEY);
     		mapData = MapData.fromJSON(mapDataJSON);
     	}
         //mapDetails = (List<MapItem>) extras.get(MAP_ITEMS_KEY);
