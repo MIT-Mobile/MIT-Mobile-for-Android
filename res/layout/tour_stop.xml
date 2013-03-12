@@ -37,7 +37,7 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 		
-			<edu.mit.mitmobile2.maps.MITMapView2
+			<edu.mit.mitmobile2.maps.MITMapView
   				android:id="@+id/tourStopDirectionsMapView"
   				android:layout_width="fill_parent"
   				android:layout_height="190dip"

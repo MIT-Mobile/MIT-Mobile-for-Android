@@ -34,7 +34,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.ResizableImageView;
 import edu.mit.mitmobile2.SliderInterface;
-import edu.mit.mitmobile2.maps.MITMapView2;
+import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.tour.MapCanvasDrawer;
 import edu.mit.mitmobile2.tour.Tour.Directions;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
@@ -120,7 +120,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	
 	private void initializeMap() {
 		mView.findViewById(R.id.tourDirectionsMapContainer).setVisibility(View.VISIBLE);
-		MITMapView2 mapImageView = (MITMapView2) mView.findViewById(R.id.tourStopDirectionsMapView);
+		MITMapView mapImageView = (MITMapView) mView.findViewById(R.id.tourStopDirectionsMapView);
 		mapImageView.init(mContext); 
 			
 			/*
