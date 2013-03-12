@@ -209,7 +209,7 @@ public class MITMapView extends MapView  {
 		return point;
 	}
 	
-	private Point projectMapPoint(MapPoint mapPoint) {
+	Point projectMapPoint(MapPoint mapPoint) {
 		Point point = (Point)GeometryEngine.project(new Point(mapPoint.long_wgs84,mapPoint.lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());		
 		return point;
 	}
@@ -699,34 +699,34 @@ public class MITMapView extends MapView  {
          }
     }
     
-    public Handler mapSearchUiHandler = new Handler() {
-        @SuppressWarnings("unchecked")
-		@Override
-        public void handleMessage(Message msg) {
-        	Log.d(TAG,"mapSearchUiHandler success");
-            if (msg.arg1 == MobileWebApi.SUCCESS) {
-            	
-            	try {
-            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
-            		clearMapItems();
-            		ArrayList mapItems = (ArrayList)msg.obj;
-            		addMapItems(mapItems);
-            		syncGraphicsLayers();
-                	fitMapItems();
-            	}
-            	catch (Exception e) {
-            		Log.d(TAG,"mapSearchUiHander exception");
-            		Log.d(TAG,e.getStackTrace().toString());
-            	}
-            }
-            else if (msg.arg1 == MobileWebApi.ERROR) {
-
-            } 
-            else if (msg.arg1 == MobileWebApi.CANCELLED) {
-
-            }
-        }
-    };
+//    public Handler mapSearchUiHandler = new Handler() {
+//        @SuppressWarnings("unchecked")
+//		@Override
+//        public void handleMessage(Message msg) {
+//        	Log.d(TAG,"mapSearchUiHandler success");
+//            if (msg.arg1 == MobileWebApi.SUCCESS) {
+//            	
+//            	try {
+//            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+//            		clearMapItems();
+//            		ArrayList mapItems = (ArrayList)msg.obj;
+//            		addMapItems(mapItems);
+//            		syncGraphicsLayers();
+//                	fitMapItems();
+//            	}
+//            	catch (Exception e) {
+//            		Log.d(TAG,"mapSearchUiHander exception");
+//            		Log.d(TAG,e.getStackTrace().toString());
+//            	}
+//            }
+//            else if (msg.arg1 == MobileWebApi.ERROR) {
+//
+//            } 
+//            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+//
+//            }
+//        }
+//    };
 
     public Handler mapInitUiHandler = new Handler() {
         @SuppressWarnings("unchecked")
@@ -831,6 +831,7 @@ public class MITMapView extends MapView  {
 		// TODO Auto-generated method stub
 		super.pause();
 		Log.d(TAG,"pause map");
+		
 	}
 
 	@Override

@@ -476,6 +476,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 		RowViewHashMap mViewCache = new RowViewHashMap();
 		
 		private Context mContext;
+		
 		public TourItemAdapter(Context context, List<TourMapItem> items) {
 			super(context, 0, 0, items);
 			mContext = context;

@@ -38,6 +38,16 @@
 				android:layout_height="@dimen/mapThumbnailInner"
 				android:layout_gravity="center" />
 			
+			<!--  
+			<edu.mit.mitmobile2.maps.MITMapView
+  				android:id="@+id/mapDetailsThumbnailIV"
+  				android:layout_width="@dimen/mapThumbnailInner"
+  				android:layout_height="@dimen/mapThumbnailInner"
+  				initExtent = "-7914314.738504024 5214534.8430830045 -7913764.950289598 5215325.163641242"
+ 				spacialReference = "102113" >
+  			</edu.mit.mitmobile2.maps.MITMapView>
+			-->
+			
 		</FrameLayout>
 	
 		<LinearLayout

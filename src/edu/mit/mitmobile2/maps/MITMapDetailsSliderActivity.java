@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.esri.core.geometry.Envelope;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
@@ -44,6 +45,7 @@ import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapItemContent;
+import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 import edu.mit.mitmobile2.people.PeopleDetailActivity;
 import edu.mit.mitmobile2.people.PeopleDetailItemLayout;
@@ -69,6 +71,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	TextView mapDetailsTitleTV;
 	TextView mapDetailsSubtitleTV;
 	RemoteImageView mThumbnailView;
+	//MITMapView mThumbnailView;
+	
 	String bbox;
 	String imgUrl;
 	TextView mapDetailsHereTV;
@@ -268,9 +272,14 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			mapDetailsSubtitleTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsSubtitleTV);
 			mapDetailsSubtitleTV.setText((String)mMapItem.getItemData().get("street"));
 			
+			//mThumbnailView = (MITMapView) mMainLayout.findViewById(R.id.mapDetailsThumbnailIV);
+			//Envelope envelope = new Envelope(mThumbnailView.toWebmercator(mMapItem.getCenter().lat_wgs84,mMapItem.getCenter().long_wgs84),100,100);
+			//mThumbnailView.setExtent(envelope);
+			//mThumbnailView.init(mContext);
 			mThumbnailView = (RemoteImageView) mMainLayout.findViewById(R.id.mapDetailsThumbnailIV);
+			
 			bbox = mMapItem.getBoundingBox(targetSpatialReference);
-			imgUrl = "http://ims-pub.mit.edu/ArcGIS/rest/services/base/WhereIs_Base/MapServer/export?format=png24&transparent=false&f=image&bbox=" + bbox;
+			imgUrl = "http://maps.mit.edu/pub/rest/services/basemap/WhereIs_Base_Topo/MapServer/export?format=png24&transparent=false&f=image&bbox=" + bbox;
 			mThumbnailView.setURL(imgUrl);				
 			
 			mThumbnailView.setOnClickListener(new View.OnClickListener() {

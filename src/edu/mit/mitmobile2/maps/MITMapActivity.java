@@ -15,10 +15,12 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,9 +49,16 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TitleBarSwitch;
+import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
 import edu.mit.mitmobile2.objs.SearchResults;
+import edu.mit.mitmobile2.tour.TourMapActivity;
+import edu.mit.mitmobile2.tour.TourSideTripActivity;
+import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
+import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
+import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 
 public class MITMapActivity extends NewModuleActivity {
 	
@@ -66,7 +75,9 @@ public class MITMapActivity extends NewModuleActivity {
 	private HashMap params;
 	private String query;
 	protected ListView mListView;
+	MapItemsAdapter adapter;
 	ProgressDialog progress;
+	TitleBarSwitch mMapListSwitch;
 	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
 
 	private static String MENU_HOME = "home";
@@ -81,7 +92,8 @@ public class MITMapActivity extends NewModuleActivity {
 	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
 	
 	public static final double INIT_RESOLUTION = 1.205;
-	private static int MAP_PADDING = 100;
+	private static String LIST = "List";
+	private static String MAP = "Map";
 	static int INIT_ZOOM = 17; // DELETE ?
 	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
 
@@ -91,11 +103,33 @@ public class MITMapActivity extends NewModuleActivity {
 		super.onCreate(savedInstanceState);
 		mContext = this;
 		setContentView(getLayoutID());
+		
+		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
+
+		// hide the title bar initially since there are no results to display
+		mSecondaryTitleBar.setVisibility(View.GONE);
+		mMapListSwitch = new TitleBarSwitch(this);
+		mMapListSwitch.setLabels(MAP, LIST);
+		mMapListSwitch.setSelected(MAP);
+		mMapListSwitch.setOnToggledListener(new OnToggledListener() {
+			@Override
+			public void onToggled(String selected) {
+				toggleMapList(selected);
+			}
+		});
+		
+		mSecondaryTitleBar.addActionView(mMapListSwitch);
+		
+		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
+		
         mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
 
         this.extras = this.getIntent().getExtras();
 		
         map = (MITMapView)findViewById(getMapViewID());
+        
+        mListView = (ListView) findViewById(R.id.mapListView);
+
         map.init(mContext);
 				
 		//Retrieve the non-configuration instance data that was previously returned. 
@@ -151,11 +185,14 @@ public class MITMapActivity extends NewModuleActivity {
 	    	Log.d(TAG,"do search");
 	        query = intent.getStringExtra(SearchManager.QUERY);
 	        Log.d(TAG,"query = " + query);
-	        MITMapsDataModel.executeSearch(query, map.mapSearchUiHandler, mContext); 
-	        //doMySearch(query);
+	        MITMapsDataModel.executeSearch(query, mapSearchUiHandler, mContext);
 	    }
 	    else if(extras.containsKey(MITMapView.MAP_DATA_KEY)) {
 			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
+			if (mapItems.size() > 0) {
+				mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + " results");
+				mSecondaryTitleBar.setVisibility(View.VISIBLE);
+			}
 	    	map.addMapItems(mapItems);
 	    	map.syncGraphicsLayers();
 	    	map.fitMapItems();
@@ -289,6 +326,63 @@ public class MITMapActivity extends NewModuleActivity {
 		return super.onSearchRequested();
 	}
 
+    public Handler mapSearchUiHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+		@Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"mapSearchUiHandler success");
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	
+            	try {
+            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+            		map.clearMapItems();
+            		ArrayList mapItems = (ArrayList)msg.obj;
+         			mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + "  results");
+         			mSecondaryTitleBar.setVisibility(View.VISIBLE);
+            		
+         			adapter = new MapItemsAdapter(mContext, mapItems);
+         			mListView.setAdapter(adapter);
+         			
+         			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+         				@Override
+         				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+         					ArrayList<MapItem> mapItems = map.getMao().getGraphicsLayers().get(MITMapView.DEFAULT_GRAPHICS_LAYER).getMapItems(); 					
+         					MapItem mapItem = mapItems.get(position);
+         		  			Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
+        	            	i.putParcelableArrayListExtra(MITMapView.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
+        	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
+        	            	mContext.startActivity(i);
+         				}
+         			});
+
+         			map.addMapItems(mapItems);
+            		map.syncGraphicsLayers();
+                	map.fitMapItems();
+            	}
+            	catch (Exception e) {
+            		Log.d(TAG,"mapSearchUiHander exception");
+            		Log.d(TAG,e.getStackTrace().toString());
+            	}
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
+
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
+
+            }
+        }
+    };
+	
+    private void toggleMapList(String selected) {
+		if(selected.equals(LIST)) {
+			mListView.setVisibility(View.VISIBLE);
+			map.setVisibility(View.GONE);			
+		} else if(selected.equals(MAP)) {
+			mListView.setVisibility(View.GONE);
+			map.setVisibility(View.VISIBLE);
+		}
+	}
 //	protected Point getMyLocation() {
 //		double lat = location.getLatitude();
 //		double lon = location.getLongitude();
