@@ -33,7 +33,7 @@ public class MapData {
 		super();
 		this.mode = MapData.MODE_OVERWRITE;
 		this.mapGraphicsLayers = new LinkedHashMap<String,MapGraphicsLayer>();
-		this.mapGraphicsLayers.put(MITMapView2.DEFAULT_GRAPHICS_LAYER,new MapGraphicsLayer());
+		this.mapGraphicsLayers.put(MITMapView.DEFAULT_GRAPHICS_LAYER,new MapGraphicsLayer());
 		this.spatialReference = SpatialReference.create(MapData.DEFAULT_WKID); // wgs84(4326) is the default spatial reference for our mapdata items
 	}
 	
@@ -51,7 +51,7 @@ public class MapData {
 //	}
 	
 	public ArrayList<MapItem> getMapItems() {
-		return getMapItems(MITMapView2.DEFAULT_GRAPHICS_LAYER);
+		return getMapItems(MITMapView.DEFAULT_GRAPHICS_LAYER);
 	}
 
 	public ArrayList<MapItem> getMapItems(String layerName) {
@@ -59,7 +59,7 @@ public class MapData {
 	}
 	
 	public void setMapItems(ArrayList<MapItem> mapItems) {
-		this.mapGraphicsLayers.get(MITMapView2.DEFAULT_GRAPHICS_LAYER).mapItems = mapItems;
+		this.mapGraphicsLayers.get(MITMapView.DEFAULT_GRAPHICS_LAYER).mapItems = mapItems;
 	}
 	
 	public void setMapItems(String layerName,ArrayList<MapItem> mapItems) {

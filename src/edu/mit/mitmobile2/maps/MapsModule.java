@@ -17,7 +17,7 @@ public class MapsModule extends NewModule {
 
 	@Override
 	public String getLongName() {
-		return "Campus Map";
+		return "Map";
 	}
 
 
@@ -66,21 +66,19 @@ public class MapsModule extends NewModule {
 
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
-		// TODO Auto-generated method stub
 		return Arrays.asList(
-			new MITMenuItem("home", "Home", R.drawable.menu_home),
-			new MITMenuItem("my_location", "My Location", R.drawable.map_current),
-			new MITMenuItem("bookmarks", "Bookmarks", R.drawable.menu_bookmarks)
-		);
+				new MITMenuItem("browse", "Browse", R.drawable.menu_browse),
+		     	new MITMenuItem("search", "Search", R.drawable.menu_search)
+			);
 	}
-
 
 	@Override
 	public List<MITMenuItem> getSecondaryOptions() {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(
+				//new MITMenuItem("my_location", "My Location", R.drawable.map_current),
+				new MITMenuItem("bookmarks", "Bookmarks")
+			);
 	}
-
 
 	@Override
 	public boolean onItemSelected(Activity activity, String id) {

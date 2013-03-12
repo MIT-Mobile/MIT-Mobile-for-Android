@@ -18,9 +18,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapView2;
+import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.maps.MapBaseActivity;
+import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.maps.MapData;
 import edu.mit.mitmobile2.maps.MapModel;
 
@@ -38,7 +38,7 @@ public abstract class MapItem {
 		lineWidth = MapItem.DEFAULT_LINE_WIDTH;
 		verticalAlign = MapItem.VALIGN_BOTTOM;
 		horizontalAlign = MapItem.ALIGN_CENTER;
-		graphicsLayer = MITMapView2.DEFAULT_GRAPHICS_LAYER;
+		graphicsLayer = MITMapView.DEFAULT_GRAPHICS_LAYER;
 		wkid = MapAbstractionObject.DEFAULT_WKID;
 	}
 		
@@ -197,10 +197,10 @@ public abstract class MapItem {
 				
 			// create Polygon from 4 points
 			// start of the south west point
-			Point SW = MITMapView2.toWebmercator(minLat,minLong);
-			Point NW = MITMapView2.toWebmercator(maxLat,minLong);
-			Point NE = MITMapView2.toWebmercator(maxLat,maxLong);
-			Point SE = MITMapView2.toWebmercator(minLat,maxLong);
+			Point SW = MITMapView.toWebmercator(minLat,minLong);
+			Point NW = MITMapView.toWebmercator(maxLat,minLong);
+			Point NE = MITMapView.toWebmercator(maxLat,maxLong);
+			Point SE = MITMapView.toWebmercator(minLat,maxLong);
 
 			Polygon polygon = new Polygon();
 			polygon.startPath(SW);

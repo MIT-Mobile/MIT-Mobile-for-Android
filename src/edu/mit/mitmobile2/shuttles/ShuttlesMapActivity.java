@@ -23,7 +23,7 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapView2;
+import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapGraphicsLayer;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
@@ -40,7 +40,7 @@ import edu.mit.mitmobile2.objs.VehicleMapItem;
 public class ShuttlesMapActivity extends NewModuleActivity {
 
 	private static final String TAG = "ShuttlesMapActivity";
-	public MITMapView2 map;
+	public MITMapView map;
 	private FullScreenLoader mLoadingView;
 	protected String module;
 	Context mContext;
@@ -65,7 +65,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		setContentView(getLayoutID());
 		//mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
 		this.extras = this.getIntent().getExtras();
-		map = (MITMapView2) findViewById(getMapViewID());
+		map = (MITMapView) findViewById(getMapViewID());
 		map.init(mContext);
 		
 		if (extras.containsKey(ShuttlesMapActivity.ROUTE_ID_KEY)) {
@@ -122,9 +122,9 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 			// MITMapsDataModel.executeSearch(query, map.mapSearchUiHandler,
 			// mContext);
 			// doMySearch(query);
-		} else if (extras.containsKey(MITMapView2.MAP_DATA_KEY)) {
+		} else if (extras.containsKey(MITMapView.MAP_DATA_KEY)) {
 			mapItems = (ArrayList) extras
-					.getParcelableArrayList(MITMapView2.MAP_DATA_KEY);
+					.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
 			map.addMapItems(mapItems);
 			map.syncGraphicsLayers();
 		}
@@ -197,7 +197,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		
 		map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
 		map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
-		map.addMapItems(layers.get(MITMapView2.DEFAULT_GRAPHICS_LAYER),MITMapView2.DEFAULT_GRAPHICS_LAYER);		
+		map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);		
 	}
 	
 	public Handler routeUiHandler = new Handler() {
@@ -264,7 +264,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 					Log.d(TAG,"adding vehicle locations from updater");
 					map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
 					map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
-					map.addMapItems(layers.get(MITMapView2.DEFAULT_GRAPHICS_LAYER),MITMapView2.DEFAULT_GRAPHICS_LAYER);		
+					map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);		
 					map.syncGraphicsLayers();
 				} catch (Exception e) {
 					Log.d(TAG, "mapSearchUiHander exception");

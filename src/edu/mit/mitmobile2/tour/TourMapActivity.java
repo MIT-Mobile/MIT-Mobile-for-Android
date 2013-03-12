@@ -15,8 +15,8 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBarSwitch;
 import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
-import edu.mit.mitmobile2.maps.MITMapView2;
-import edu.mit.mitmobile2.maps.MapBaseActivity;
+import edu.mit.mitmobile2.maps.MITMapView;
+import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
@@ -58,7 +58,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 	ListView mTourListView;
 	TitleBarSwitch mMapListSwitch;
 	View mMapLegend;
-	private MITMapView2 mMapView;
+	private MITMapView mMapView;
 	TourStartHelpActionRow mStartHelpActionRow;
 	boolean mTourActive;
 	int mTourCurrentPosition;
@@ -92,7 +92,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 		
 		setContentView(R.layout.tour_map);
 		
-		mMapView = (MITMapView2) findViewById(R.id.tourMapView);
+		mMapView = (MITMapView) findViewById(R.id.tourMapView);
 		mMapView.init(this);
 		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
@@ -476,6 +476,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 		RowViewHashMap mViewCache = new RowViewHashMap();
 		
 		private Context mContext;
+		
 		public TourItemAdapter(Context context, List<TourMapItem> items) {
 			super(context, 0, 0, items);
 			mContext = context;

@@ -9,7 +9,6 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.touchstone.TouchstonePrefsActivity;
 
 public class MITSettingsActivity extends NewModuleActivity {
