@@ -34,6 +34,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.ResizableImageView;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.maps.MITMapView2;
 import edu.mit.mitmobile2.tour.MapCanvasDrawer;
 import edu.mit.mitmobile2.tour.Tour.Directions;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
@@ -85,7 +86,9 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 			mMainImageView = (RemoteImageView) mView.findViewById(R.id.tourStopPhoto);
 			
 			updateImage();
-			updateMap();
+			if (mTourItem.getPath() != null) {
+				initializeMap();
+			}
 		}
 		return mView;
 	}
@@ -115,14 +118,12 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	private WebView mWebView;
 	
 	
-	private void updateMap() {
-		if( (mMapStatus == MapStatus.NotStarted  || mMapStatus == MapStatus.Failed) && 
-			mTourItem.getPath() != null ) {
+	private void initializeMap() {
+		mView.findViewById(R.id.tourDirectionsMapContainer).setVisibility(View.VISIBLE);
+		MITMapView2 mapImageView = (MITMapView2) mView.findViewById(R.id.tourStopDirectionsMapView);
+		mapImageView.init(mContext); 
 			
-			
-			mMapStatus = MapStatus.InProgress;
-			
-			mView.findViewById(R.id.tourDirectionsMapContainer).setVisibility(View.VISIBLE);
+			/*
 			final ResizableImageView mapImageView = (ResizableImageView) mView.findViewById(R.id.tourDirectionsMapIV);
 			
 			mapImageView.setOnSizeChangedListener(new ResizableImageView.OnSizeChangedListener() {	
@@ -220,7 +221,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 			if(mapImageView.getHeight() > 0) {
 				mapImageView.notifyOnSizeChangedListener();
 			}
-		}
+			*/
 		
 	}
 
@@ -284,7 +285,6 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	public void refreshImages() {
 		mWebView.loadUrl("javascript:refreshImages()");
 		mMainImageView.refresh();
-		updateMap();
 	}
 	
 	@SuppressLint("SetJavaScriptEnabled")
@@ -366,8 +366,8 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 		mLocation = location;
 		if(mMapStatus == MapStatus.Succeeded) {
 			// map image needs to be refreshed
-			ImageView mapImageView = (ImageView) mView.findViewById(R.id.tourDirectionsMapIV);
-			mapImageView.invalidate();
+			//ImageView mapImageView = (ImageView) mView.findViewById(R.id.tourDirectionsMapIV);
+			//mapImageView.invalidate();
 		}
 	}
 }

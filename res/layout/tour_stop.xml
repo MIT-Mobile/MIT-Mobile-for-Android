@@ -37,12 +37,14 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 		
-			<edu.mit.mitmobile2.ResizableImageView	
-				android:id="@+id/tourDirectionsMapIV"
-				android:background="@color/dividerColor"
-				android:layout_width="fill_parent"
-				android:layout_height="190dip" 
-				android:scaleType="center" />
+			<edu.mit.mitmobile2.maps.MITMapView2
+  				android:id="@+id/tourStopDirectionsMapView"
+  				android:layout_width="fill_parent"
+  				android:layout_height="190dip"
+  				initExtent = "-7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899" 
+ 				spacialReference = "102113" 
+ 				calloutStyle="@xml/callout" />
+  	
 				
 		</LinearLayout>
 		
