@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -352,15 +353,16 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	
 	private static final int WEBMERC_WKID = 102113;
 	private static final int WGS84_WKID = 4326;		
-	private final int BASE_ZOOM = 16;
+	private final int BASE_ZOOM = 17;
 	private com.esri.core.geometry.Point mTopLeft;
 	private com.esri.core.geometry.Point mBottomRight; 
 	
 	private String getMapURL(int width, int height) {
 		
+		DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
 		int zoom = mTourItem.getPath().getZoom();
-		double widthExtent = width * Math.pow(2, BASE_ZOOM - zoom);
-		double heightExtent = height * Math.pow(2, BASE_ZOOM - zoom);
+		double widthExtent = width * Math.pow(2, BASE_ZOOM - zoom) / metrics.density;
+		double heightExtent = height * Math.pow(2, BASE_ZOOM - zoom) / metrics.density;
 		
 		double minX = mCenterPoint.getX() - widthExtent/2;
 		double minY = mCenterPoint.getY() - heightExtent/2;
