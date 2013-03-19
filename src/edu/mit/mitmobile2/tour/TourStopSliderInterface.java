@@ -13,7 +13,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -84,7 +82,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 			mMainImageView = (RemoteImageView) mView.findViewById(R.id.tourStopPhoto);
 			
 			updateImage();
-			updateMap();
+			initializeMap();
 		}
 		return mView;
 	}
@@ -100,33 +98,22 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 		refreshImages();
 	}
 	
-	enum MapStatus {
-		NotStarted,
-		InProgress,
-		Succeeded,
-		Failed
-	}
-	
-	MapStatus mMapStatus = MapStatus.NotStarted;
 	
 	private WebView mWebView;
 	protected com.esri.core.geometry.Point mCenterPoint;
 	private SpatialReference mSpatialReferenceWGS84;
 	private SpatialReference mSpatialReferenceWebMerc;
+	private ResizableImageView mMapImageView;
 	
 	
-	private void updateMap() {
-		if( (mMapStatus == MapStatus.NotStarted  || mMapStatus == MapStatus.Failed) && 
-			mTourItem.getPath() != null ) {
-			
-			
-			mMapStatus = MapStatus.InProgress;
+	private void initializeMap() {
+		if(mTourItem.getPath() != null) {
 			
 			mSpatialReferenceWGS84 = SpatialReference.create(WGS84_WKID);
 			mSpatialReferenceWebMerc = SpatialReference.create(WEBMERC_WKID);
 			
 			mView.findViewById(R.id.tourDirectionsMapContainer).setVisibility(View.VISIBLE);
-			final ResizableImageView mapImageView = (ResizableImageView) mView.findViewById(R.id.tourDirectionsMapIV);
+			mMapImageView = (ResizableImageView) mView.findViewById(R.id.tourDirectionsMapIV);
 			
 			final List<GeoPoint> geoPoints = mTourItem.getPath().getGeoPoints();
 			GeoRect geoRect = new GeoRect(geoPoints);
@@ -134,7 +121,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 			mCenterPoint = (com.esri.core.geometry.Point)GeometryEngine.project(new com.esri.core.geometry.Point(center.getLongitudeE6()/1000000., center.getLatitudeE6()/1000000.), 
 					mSpatialReferenceWGS84, mSpatialReferenceWebMerc);
 			
-			mapImageView.setOnSizeChangedListener(new ResizableImageView.OnSizeChangedListener() {	
+			mMapImageView.setOnSizeChangedListener(new ResizableImageView.OnSizeChangedListener() {	
 				@Override
 				public void onSizeChanged(final int w, final int h, int oldw, int oldh) {
 					if (w == 0 || h == 0) {
@@ -149,10 +136,10 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 					int height = h - 2 * padding;
 					
 					String url = getMapURL( width, height);
-					mapImageView.setURL(url);
+					mMapImageView.setURL(url);
 							
 					// add the current location dot overlay
-					mapImageView.setOverlay(new ResizableImageView.Overlay() {
+					mMapImageView.setOverlay(new ResizableImageView.Overlay() {
 						@Override
 						public void draw(Canvas canvas) {
 							
@@ -209,8 +196,8 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 				}
 			});
 			
-			if(mapImageView.getHeight() > 0) {
-				mapImageView.notifyOnSizeChangedListener();
+			if(mMapImageView.getHeight() > 0) {
+				mMapImageView.notifyOnSizeChangedListener();
 			}
 		}
 		
@@ -276,7 +263,9 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	public void refreshImages() {
 		mWebView.loadUrl("javascript:refreshImages()");
 		mMainImageView.refresh();
-		updateMap();
+		if (mMapImageView != null) {
+			mMapImageView.refresh();
+		}
 	}
 	
 	@SuppressLint("SetJavaScriptEnabled")
@@ -356,10 +345,8 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	Location mLocation;
 	public void onLocationChanged(Location location) {
 		mLocation = location;
-		if(mMapStatus == MapStatus.Succeeded) {
-			// map image needs to be refreshed
-			ImageView mapImageView = (ImageView) mView.findViewById(R.id.tourDirectionsMapIV);
-			mapImageView.invalidate();
+		if (mMapImageView != null) {
+			mMapImageView.invalidate();
 		}
 	}
 	
