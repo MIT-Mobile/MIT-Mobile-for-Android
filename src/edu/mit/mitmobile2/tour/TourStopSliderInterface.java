@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.tour;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.esri.core.geometry.GeometryEngine;
@@ -136,8 +137,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 					int width = w - 2 * padding;
 					int height = h - 2 * padding;
 					
-					String url = getMapURL( width, height);
-					mMapImageView.setURL(url);
+					mMapImageView.setURLs(getMapURLs(width, height));
 							
 					// add the current location dot overlay
 					mMapImageView.setOverlay(new ResizableImageView.Overlay() {
@@ -355,7 +355,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	private com.esri.core.geometry.Point mTopLeft;
 	private com.esri.core.geometry.Point mBottomRight; 
 	
-	private String getMapURL(int width, int height) {
+	private List<String> getMapURLs(int width, int height) {
 		
 		DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
 		int zoom = mTourItem.getPath().getZoom();
@@ -374,7 +374,10 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 		mBottomRight = (com.esri.core.geometry.Point)GeometryEngine.project(new com.esri.core.geometry.Point(maxX, maxY), 
 				mSpatialReferenceWebMerc, mSpatialReferenceWGS84);
 		
-		return "http://maps.mit.edu/pub/rest/services/basemap/WhereIs_Base_Topo/MapServer/export?format=png24&transparent=false&f=image&bbox=" + bbox + "&size=" + width + "," + height;
+		ArrayList<String> urls = new ArrayList<String>();
+		urls.add("http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/export?format=png24&transparent=false&f=image&bbox=" + bbox + "&size=" + width + "," + height);
+		urls.add("http://maps.mit.edu/pub/rest/services/basemap/WhereIs_Base_Topo/MapServer/export?format=png24&transparent=true&f=image&bbox=" + bbox + "&size=" + width + "," + height);
+		return urls;
 	}
 	
 	/*
