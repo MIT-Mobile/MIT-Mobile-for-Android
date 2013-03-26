@@ -167,9 +167,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 								Paint errorCirclePaint = new Paint();
 								errorCirclePaint.setARGB(127, 0, 0, 255);
 								errorCirclePaint.setAntiAlias(true);
-								//float errorRadius = canvasDrawer.metersToPixels(mLocation.getAccuracy(), location);
-								// TODO a real errorRadius
-								float errorRadius = 30;
+								float errorRadius = metersToPixels(mLocation.getAccuracy(), location);
 								
 								// do not show location if not on map or error radius is bigger than map
 								if(
@@ -353,7 +351,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	
 	private static final int WEBMERC_WKID = 102113;
 	private static final int WGS84_WKID = 4326;		
-	private final int BASE_ZOOM = 17;
+	private final int BASE_ZOOM = 18;
 	private com.esri.core.geometry.Point mTopLeft;
 	private com.esri.core.geometry.Point mBottomRight; 
 	
@@ -389,5 +387,15 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 		int x = (int) ((fractionX) * width);
 		int y = (int) ((1-fractionY) * height);
 		return new Point(x, y);
+	}
+	
+	static final double EARTH_RADIUS_METERS = 6370.0 * 1000.0;
+	
+	public float metersToPixels(float meters, GeoPoint geoPoint) {		
+		int zoom = mTourItem.getPath().getZoom();
+		DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+		double meterPerPixel = Math.pow(2, BASE_ZOOM - zoom) / metrics.density;
+
+		return (float) (meterPerPixel * meters);
 	}
 }

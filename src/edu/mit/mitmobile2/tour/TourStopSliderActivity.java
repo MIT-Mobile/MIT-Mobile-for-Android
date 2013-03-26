@@ -113,11 +113,16 @@ public class TourStopSliderActivity extends SliderListNewModuleActivity {
 	}
 	
 	List<TourStopSliderInterface> mTourStopSliderInterfaces;
+	private Location lastKnownLocation;
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		if(mLocationProviderName != null) {
+			lastKnownLocation = mLocationManager.getLastKnownLocation(mLocationProviderName);
+			if (lastKnownLocation != null) {
+				mLocationListener.onLocationChanged(lastKnownLocation);
+			}
 			mLocationManager.requestLocationUpdates(mLocationProviderName, 5 * 1000, 0, mLocationListener);
 		}
 	}
