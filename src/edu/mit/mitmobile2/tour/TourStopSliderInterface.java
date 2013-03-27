@@ -351,7 +351,7 @@ public class TourStopSliderInterface implements SliderInterface, OnClickListener
 	
 	private static final int WEBMERC_WKID = 102113;
 	private static final int WGS84_WKID = 4326;		
-	private final int BASE_ZOOM = 18;
+	private final float BASE_ZOOM = 17.1f;
 	private com.esri.core.geometry.Point mTopLeft;
 	private com.esri.core.geometry.Point mBottomRight; 
 	
