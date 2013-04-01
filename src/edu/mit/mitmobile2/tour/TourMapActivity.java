@@ -24,7 +24,7 @@ import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourSiteStatus;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
-import edu.mit.mitmobile2.tour.TourRouteMapData.OnTourSiteSelectedListener;
+import edu.mit.mitmobile2.tour.TourStopsMapData.OnTourSiteSelectedListener;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -72,7 +72,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 	private TourItemAdapter mTourListAdapter;
 	private ArrayList<GeoPoint> mGeoPoints;
 	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
-	private TourRouteMapData mMapData;
+	private TourStopsMapData mStopsData;
 	
 	private static int HELP_SELECT_STOP = 2;
 	
@@ -129,8 +129,10 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 			}
 		});
 		
-		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints, this);
-		mMapView.addMapItems(mMapData.getMapItems());
+		TourRouteMapData routeData = new TourRouteMapData(mGeoPoints);
+		mMapView.addMapItems(routeData.getMapItems(), "route");
+		mStopsData = new TourStopsMapData(mSiteTourMapItems, this);
+		mMapView.addMapItems(mStopsData.getMapItems(), "stops");
 		mMapView.fitMapItems();
 
 		
@@ -193,17 +195,6 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 			launchTour(siteItem);
 		}
 	}
-	
-	/*
-	@Override 
-	protected void onMapLoaded() {
-		mMapData = new TourRouteMapData(mSiteTourMapItems, mGeoPoints, this);
-		//map.setMapData(mMapData);
-		//map.processMapData();
-		
-		mSecondaryTitleBar.addActionView(mMapListSwitch);
-	}
-	*/
 	
 	MapActivityLocationSupplier mLocationSupplier = new MapActivityLocationSupplier();
 	private class MapActivityLocationSupplier implements LocationSupplier {
@@ -330,8 +321,8 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 	}
 	
 	private void displayCallout(TourMapItem tourMapItem) {
-		if (mMapData != null) {
-			MapItem mapItem = mMapData.getMapItem(tourMapItem);
+		if (mStopsData != null) {
+			MapItem mapItem = mStopsData.getMapItem(tourMapItem);
 			mMapView.displayCallout(this, mapItem);
 		}		
 	}
