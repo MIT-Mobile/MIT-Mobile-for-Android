@@ -44,15 +44,15 @@ public class MapsDB {
 	
 	SQLiteOpenHelper mMapsDBHelper;
 	
-	private static MapsDB newsDBInstance = null;
+	private static MapsDB mapsDBInstance = null;
 
 	/********************************************************************/
 	public static MapsDB getInstance(Context context) {
-		if(newsDBInstance == null) {
-			newsDBInstance = new MapsDB(context);
-			return newsDBInstance;
+		if(mapsDBInstance == null) {
+			mapsDBInstance = new MapsDB(context);
+			return mapsDBInstance;
 		} else {
-			return newsDBInstance;
+			return mapsDBInstance;
 		}
 	}
 	

@@ -311,6 +311,17 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 				}
 			});
 			
+			// Bookmark Button
+			mapBookmarkBtn = (Button) mMainLayout.findViewById(R.id.mapBookmarkBtn);
+
+			mapBookmarkBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
+				}
+			});
+
+			
 			// What's Here Contents
 			mapDetailsHereTV = (TextView) tabHost.findViewById(R.id.mapDetailsHereTV);
 			String bullet = new String(new int[] {0x2022}, 0 ,1);

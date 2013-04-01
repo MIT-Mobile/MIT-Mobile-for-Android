@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.news.NewsDB;
 import edu.mit.mitmobile2.news.NewsModel;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.PersonItem;
@@ -27,6 +28,7 @@ public class MapModel {
 	public static final int FETCH_SUCCESSFUL = 1;
 	public static final int FETCH_FAILED = 2;
 
+	
     public static void fetchMapServerData(final Context context, final Handler uiHandler) {
 
         HashMap<String, String> parameters = new HashMap<String, String>();
