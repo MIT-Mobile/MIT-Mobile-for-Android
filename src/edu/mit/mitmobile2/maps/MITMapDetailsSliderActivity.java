@@ -31,21 +31,30 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
+import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapItemContent;
 import edu.mit.mitmobile2.objs.MapPoint;
+import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 import edu.mit.mitmobile2.people.PeopleDetailActivity;
 import edu.mit.mitmobile2.people.PeopleDetailItemLayout;
@@ -58,6 +67,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	public static final String SEARCH_TERM_KEY = "search_term";
 	public static final String RECENTLY_VIEWED_FLAG = "show_recents";
 	public static final int TARGET_WKID = 102113; // the wikid of the map used to export images 
+	private static final String MENU_BOOKMARKED = "menu_bookmark";
+	private static final String MENU_SHARE = "menu_share";
 
 	private List<MapItem> mMapItems = Collections.emptyList();
 	private int mapItemIndex = 0;
@@ -72,6 +83,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	TextView mapDetailsSubtitleTV;
 	RemoteImageView mThumbnailView;
 	//MITMapView mThumbnailView;
+	Button mapGoogleMapBtn;
+	Button mapBookmarkBtn;
 	
 	String bbox;
 	String imgUrl;
@@ -240,13 +253,15 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		public void onSelected() {
 			//MapModel.markAsRecentlyViewed(mMapItem, mContext);
 		}
-	
-		
+			
 		@Override
 		public View getView() {
 			//MapItem mapItem = mMapItems.get(getPosition());
 			LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			mMainLayout = inflator.inflate(R.layout.map_details, null);
+			
+			//initSecondaryTitleBar();
+			
 			TabHost tabHost;
 			TabHost.TabSpec specHere;
 			TabHost.TabSpec specPhotos;
@@ -272,10 +287,6 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			mapDetailsSubtitleTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsSubtitleTV);
 			mapDetailsSubtitleTV.setText((String)mMapItem.getItemData().get("street"));
 			
-			//mThumbnailView = (MITMapView) mMainLayout.findViewById(R.id.mapDetailsThumbnailIV);
-			//Envelope envelope = new Envelope(mThumbnailView.toWebmercator(mMapItem.getCenter().lat_wgs84,mMapItem.getCenter().long_wgs84),100,100);
-			//mThumbnailView.setExtent(envelope);
-			//mThumbnailView.init(mContext);
 			mThumbnailView = (RemoteImageView) mMainLayout.findViewById(R.id.mapDetailsThumbnailIV);
 			
 			bbox = mMapItem.getBoundingBox(targetSpatialReference);
@@ -285,10 +296,21 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			mThumbnailView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					//MITMapActivity.viewMapItem(mActivity, mapItem);
+					//MITMapActivity.viewMapItem(mActivity, mMapItem);
 				}
 			});
 
+			// Google Map Button
+			mapGoogleMapBtn = (Button) mMainLayout.findViewById(R.id.mapGoogleMapBtn);
+
+			mapGoogleMapBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent mapCall = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + mMapItem.getCenter().lat_wgs84 + "," + mMapItem.getCenter().long_wgs84 + "?z=17"));
+					startActivity(mapCall);  
+				}
+			});
+			
 			// What's Here Contents
 			mapDetailsHereTV = (TextView) tabHost.findViewById(R.id.mapDetailsHereTV);
 			String bullet = new String(new int[] {0x2022}, 0 ,1);

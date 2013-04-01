@@ -8,39 +8,18 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.esri.android.map.Callout;
-import com.esri.android.map.GraphicsLayer;
-import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
-import com.esri.android.map.event.OnSingleTapListener;
-import com.esri.android.map.event.OnStatusChangedListener;
-import com.esri.android.map.event.OnZoomListener;
-import com.esri.android.map.event.OnStatusChangedListener.STATUS;
-import com.esri.core.geometry.Envelope;
-import com.esri.core.geometry.Geometry;
-import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
-import com.esri.core.geometry.SpatialReference;
-import com.esri.core.map.CallbackListener;
-import com.esri.core.map.FeatureSet;
-import com.esri.core.map.Graphic;
-import com.esri.core.tasks.ags.geoprocessing.Geoprocessor;
 
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.HomeScreenActivity;
@@ -53,12 +32,6 @@ import edu.mit.mitmobile2.TitleBarSwitch;
 import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapUpdater;
-import edu.mit.mitmobile2.objs.SearchResults;
-import edu.mit.mitmobile2.tour.TourMapActivity;
-import edu.mit.mitmobile2.tour.TourSideTripActivity;
-import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
-import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
-import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 
 public class MITMapActivity extends NewModuleActivity {
 	
@@ -130,7 +103,7 @@ public class MITMapActivity extends NewModuleActivity {
         
         mListView = (ListView) findViewById(R.id.mapListView);
 
-        map.init(mContext);
+        //map.init(mContext);
 				
 		//Retrieve the non-configuration instance data that was previously returned. 
 		Object init = getLastNonConfigurationInstance();

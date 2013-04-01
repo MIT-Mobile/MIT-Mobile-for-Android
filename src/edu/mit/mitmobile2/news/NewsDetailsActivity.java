@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.MITMenuItem;
@@ -87,6 +88,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 	
 	@SuppressWarnings("unused")
 	private void initSecondaryTitleBar() {
+		Log.d(TAG,"initSecondaryTitleBar()");
 		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
 		mSecondaryTitleBar.setTitle(newsCategoryTitle());
 		mSecondaryTitleBar.addMenuItem(new MITMenuItem(MENU_SHARE, "", R.drawable.menu_share));

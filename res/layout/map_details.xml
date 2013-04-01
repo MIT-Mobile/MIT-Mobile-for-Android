@@ -73,14 +73,30 @@
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"/>	
 		
-		</LinearLayout>
-		
-
 			
+	</LinearLayout>
+								
 	</RelativeLayout>
 	
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent">
+			
+			<Button
+					android:id="@+id/mapGoogleMapBtn"
+					android:text="@string/map_google_map"
+					android:layout_width="150dip" 
+					android:layout_height="wrap_content"/>
+			
+			<Button
+					android:id="@+id/mapBookmarkBtn"
+					android:text="@string/map_bookmark"
+					android:layout_width="150dip" 
+					android:layout_height="wrap_content"/>		
+		</LinearLayout>
 	
-	<LinearLayout 
+		<LinearLayout 
   		android:orientation="vertical"
 		android:layout_weight="1"
 		android:layout_width="fill_parent" 

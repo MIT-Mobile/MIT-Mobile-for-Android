@@ -53,12 +53,14 @@ public class MITMapView extends MapView  {
 	private static SpatialReference wgs84; // spatial reference used by androids location service
 	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
 	public static int DEFAULT_PIN = R.drawable.map_red_pin;
+	private Polygon selectedExtent; // selected extent for use with fitMapItems
 	PictureMarkerSymbol pms;
 	private static int MAP_PADDING = 100;
+	private static Double WGS84_PADDING = 0.0005; // use to padd wgs84 map points before they are projects to webmercator
 	private GraphicsLayer gl;
 	private Context mContext;
 	protected LocationService ls;
-
+	protected boolean baseLayersLoaded = false;
 	protected static final String MAP_ITEMS_KEY = "map_items";
 	public static final String MAP_DATA_KEY = "map_data";	
 	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
@@ -66,11 +68,13 @@ public class MITMapView extends MapView  {
 	public MITMapView(Context context) {
 		super(context);
 		mContext = context;
+		init(context);
 	}
 
 	public MITMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
+		init(context);
 	}
 
 	public void addMAOBaseLayer(MapBaseLayer mapBaseLayer) {
@@ -97,7 +101,7 @@ public class MITMapView extends MapView  {
 		}
 	}
 
-	public boolean baseLayersLoaded() {
+	public void updateBaseLayersStatus() {
 		// loop through base layers
 		Iterator it = mao.getBaseLayers().entrySet().iterator();
 		while (it.hasNext()) {
@@ -105,11 +109,11 @@ public class MITMapView extends MapView  {
 	        String layerName = (String)glpairs.getKey();
 	        Layer layer = this.getMapLayer(layerName);
 	        if (!layer.isInitialized()) {
-	        	return false;
+	        	this.baseLayersLoaded = false;
 	        }
 		}
-		
-		return true;
+    	this.baseLayersLoaded = true;
+    	MobileWebApi.sendSuccessMessage(mapInitUiHandler);
 	}
 
 	public void addMapItems(ArrayList<? extends MapItem> mapItems) {
@@ -137,8 +141,20 @@ public class MITMapView extends MapView  {
 			for (int i = 0; i < mapItems.size(); i++) {
 				MapItem mapItem = mapItems.get(i);
 				mapItem.setGraphicsLayer(layerName);
-				addMapItem(mapItems.get(i),layerName);
+				//addMapItem(mapItems.get(i),layerName);
+				if (!mao.getGraphicsLayers().containsKey(layerName)) {
+					addMAOGraphicsLayer(layerName);
+				}
+				
+				mapItem.setIndex(mao.getGraphicsLayers().get(layerName).getMapItems().size());
+				mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);				
 			}
+			
+			// add the graphic for the map item if the base layers are loaded
+			//if (baseLayersLoaded()) {
+		    //	syncGraphicsLayers();
+		    //}
+
 		}
 	}
 
@@ -155,6 +171,11 @@ public class MITMapView extends MapView  {
 		
 		mapItem.setIndex(mao.getGraphicsLayers().get(layerName).getMapItems().size());
 		mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);
+
+		// add the graphic for the map item if the base layers are loaded
+		//if (baseLayersLoaded()) {
+	    //	syncGraphicsLayers();
+	    //}
 		
 	}
 
@@ -217,6 +238,11 @@ public class MITMapView extends MapView  {
 	private Point projectMapPoint(Double lat,Double lon) {
 		MapPoint mapPoint = new MapPoint(lat,lon);
 		return projectMapPoint(mapPoint);
+	}
+
+	Polygon projectMapPolygon(Polygon mapPolygon) {
+		Polygon polygon = (Polygon)GeometryEngine.project(mapPolygon, mao.getSpatialReference(),this.getSpatialReference());		
+		return polygon;
 	}
 
 	protected int displayMapPoint(MapItem mapItem) {
@@ -370,7 +396,6 @@ public class MITMapView extends MapView  {
 		Double minLat = null;
 		Double maxLong = null;
 		Double maxLat = null;
-		
 		MapPoint mapPoint;
 		
 		if (mao != null) {
@@ -410,15 +435,31 @@ public class MITMapView extends MapView  {
 							 }
 						}
 					}
+
+					// if there is only 1 map point, add padding to create the polygon
+					if( mapItems.size() == 1) {
+						minLat -= WGS84_PADDING;
+						maxLat += WGS84_PADDING;
+						minLong -= WGS84_PADDING;
+						maxLong += WGS84_PADDING;					
+					}
+
 				}
+
+
 			}
 			
 			// create Polygon from 4 points
 			// start of the south west point
-			Point SW = projectMapPoint(minLat,minLong);
-			Point NW = projectMapPoint(maxLat,minLong);
-			Point NE = projectMapPoint(maxLat,maxLong);
-			Point SE = projectMapPoint(minLat,maxLong);
+			Log.d(TAG,"fitMapItems minLat = " + minLat);
+			Log.d(TAG,"fitMapItems maxLat = " + maxLat);
+			Log.d(TAG,"fitMapItems minLong = " + minLong);
+			Log.d(TAG,"fitMapItems maxLong = " + maxLong);
+
+			Point SW = new Point(minLong,minLat);
+			Point NW = new Point(minLong,maxLat);
+			Point NE = new Point(maxLong,maxLat);
+			Point SE = new Point(maxLong,minLat);
 
 			Polygon polygon = new Polygon();
 			polygon.startPath(SW);
@@ -456,11 +497,12 @@ public class MITMapView extends MapView  {
 	    mao = new MapAbstractionObject();
 		final MITMapView mapView = this;
 
-	    
 	    // OnStatusChangedListener
         this.setOnStatusChangedListener(new OnStatusChangedListener() {
-            public void onStatusChanged(Object source, STATUS status) {
-                Log.d(TAG,source.getClass().getSimpleName() + " status = " + status.getValue());
+            @Override
+			public void onStatusChanged(Object source, STATUS status) {
+            	Log.d(TAG,"map status changed: " + source.getClass().getSimpleName() + " status = " + status.getValue());
+            	updateBaseLayersStatus();
             }
         });
         // END OnStatusChangedListener
@@ -618,22 +660,6 @@ public class MITMapView extends MapView  {
             	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
             	serviceLayer.setName(layer.getLayerIdentifier());
             	Log.d(TAG,"adding service layer " + serviceLayer.getName());
-            	serviceLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
-                    @Override
-					public void onStatusChanged(Object source, STATUS status) {
-                        if (OnStatusChangedListener.STATUS.INITIALIZED == status){
-                        	Log.d(TAG,source.getClass().getName() + " " +  ((ArcGISTiledMapServiceLayer)source).getName() + " is initialized");
-                        	if (baseLayersLoaded()) {
-                        		Log.d(TAG,"all base layers loaded, ready to add graphics");
-                        		MobileWebApi.sendSuccessMessage(mapInitUiHandler);
-                        	}
-                        	else {
-                        		Log.d(TAG,"still waiting for base layers to load");
-                        	}
-                        }
-                    }
-                });
-
                 addMapLayer(serviceLayer, serviceLayer.getName());
       	
 	        }
@@ -642,6 +668,7 @@ public class MITMapView extends MapView  {
     }
     
     public void syncGraphicsLayers() {
+    	Log.d(TAG,"syncGraphicsLayers()");
     	// loops through all graphics layers defined in mao, adding them if they dont exist
     	// adds mapitem from each graphics layer in mao, overwriting mapitems
 
@@ -660,7 +687,7 @@ public class MITMapView extends MapView  {
                     public void onStatusChanged(Object source, STATUS status) {
                         if (OnStatusChangedListener.STATUS.INITIALIZED == status){
                         	Log.d(TAG,source.getClass().getName() + " " +  ((GraphicsLayer)source).getName() + " is initialized");
-                        	if (baseLayersLoaded()) {
+                        	if (baseLayersLoaded) {
                         		Log.d(TAG,"all base layers loaded, ready to add graphics");
                         		processMapItems(layerName);
                         	}
@@ -675,7 +702,7 @@ public class MITMapView extends MapView  {
       	
 	        }
 	        else {
-	        	if (baseLayersLoaded()) {
+	        	if (baseLayersLoaded) {
 	        		Log.d(TAG,"all base layers loaded, ready to add graphics");
 	        		processMapItems(layerName);
 	        	}
@@ -699,35 +726,6 @@ public class MITMapView extends MapView  {
          }
     }
     
-//    public Handler mapSearchUiHandler = new Handler() {
-//        @SuppressWarnings("unchecked")
-//		@Override
-//        public void handleMessage(Message msg) {
-//        	Log.d(TAG,"mapSearchUiHandler success");
-//            if (msg.arg1 == MobileWebApi.SUCCESS) {
-//            	
-//            	try {
-//            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
-//            		clearMapItems();
-//            		ArrayList mapItems = (ArrayList)msg.obj;
-//            		addMapItems(mapItems);
-//            		syncGraphicsLayers();
-//                	fitMapItems();
-//            	}
-//            	catch (Exception e) {
-//            		Log.d(TAG,"mapSearchUiHander exception");
-//            		Log.d(TAG,e.getStackTrace().toString());
-//            	}
-//            }
-//            else if (msg.arg1 == MobileWebApi.ERROR) {
-//
-//            } 
-//            else if (msg.arg1 == MobileWebApi.CANCELLED) {
-//
-//            }
-//        }
-//    };
-
     public Handler mapInitUiHandler = new Handler() {
         @SuppressWarnings("unchecked")
 		@Override
@@ -737,7 +735,10 @@ public class MITMapView extends MapView  {
             	
             	try {
             		Log.d(TAG,"map is initialized, synching graphics");
-            		syncGraphicsLayers();     		
+            		syncGraphicsLayers(); 
+            		if (selectedExtent != null) {
+            			setExtent(projectMapPolygon(selectedExtent),MAP_PADDING);		
+            		}
             	}
             	catch (Exception e) {
             	}
@@ -757,7 +758,13 @@ public class MITMapView extends MapView  {
     }
     
 	public void fitMapItems() {
-	    setExtent(getGraphicExtent(),MAP_PADDING);		
+
+		if (baseLayersLoaded) {
+			setExtent(projectMapPolygon(getGraphicExtent()),MAP_PADDING);		
+		}
+		else {
+			this.selectedExtent = getGraphicExtent();		
+		}
 	}
 
     private void processMapItems(final String layerName) {
