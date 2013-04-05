@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import edu.mit.mitmobile2.LockingScrollView;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
@@ -83,6 +85,12 @@ public class LibrariesHoldingsSliderActivity extends SliderListNewModuleActivity
 		return false;
 	}	
 	
+	@Override
+	public List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
+		return items;
+	}
 	
 	private class MITLibraryBookHoldingsSliderInterface implements SliderInterface {
 

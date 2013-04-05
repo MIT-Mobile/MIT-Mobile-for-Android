@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.libraries;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -42,14 +41,11 @@ public class LibrariesModule extends NewModule {
 
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
-		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
-		return items;
+		return null;
 	}
 
 	@Override
 	public List<MITMenuItem> getSecondaryOptions() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

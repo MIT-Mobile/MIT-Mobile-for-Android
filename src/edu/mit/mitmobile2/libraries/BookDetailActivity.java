@@ -1,12 +1,15 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.SmallActivityCache;
 
@@ -69,6 +72,13 @@ public class BookDetailActivity extends SliderListNewModuleActivity {
         return false;
     }
 
+	@Override
+	public List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
+		return items;
+	}
+	
     @Override
     protected void onOptionSelected(String optionId) { }
 

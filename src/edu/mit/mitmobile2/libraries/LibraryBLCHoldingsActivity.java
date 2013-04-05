@@ -1,5 +1,8 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -95,7 +99,13 @@ public class LibraryBLCHoldingsActivity extends NewModuleActivity {
 	    return true;
 	}
 
-
+	@Override
+	public List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
+		return items;
+	}
+	
 	@Override
 	protected void onOptionSelected(String optionId) {
 	    // TODO Auto-generated method stub
