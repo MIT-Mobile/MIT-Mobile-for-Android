@@ -7,18 +7,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
-public class LibraryRenewDetail extends ModuleActivity{
+public class LibraryRenewDetail extends NewModuleActivity{
 	public static final String TAG = "LibraryRenewDetail";
 
     Context mContext;
@@ -105,19 +104,20 @@ public class LibraryRenewDetail extends ModuleActivity{
         }
     };
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new LibrariesModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isScrollable() {
+		return false;
 	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

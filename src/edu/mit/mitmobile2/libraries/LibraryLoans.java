@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,14 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.objs.LoanListItem;
 import edu.mit.mitmobile2.objs.RenewResponseItem;
 
-public class LibraryLoans extends ModuleActivity  {
+public class LibraryLoans extends NewModuleActivity  {
 	
 	public static final String TAG = "LibraryLoans";
 
@@ -82,6 +81,7 @@ public class LibraryLoans extends ModuleActivity  {
         mContext = this;
 
         setContentView(R.layout.library_loans);
+        addSecondaryTitle("Loans");
         
         mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
@@ -293,18 +293,13 @@ public class LibraryLoans extends ModuleActivity  {
     };
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
     @Override
     public boolean isModuleHomeActivity() {
         return false;
-    }
-
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-
     }
 
     private class LibraryLoanAdapter extends SimpleArrayAdapter<LoanListItem> {
@@ -446,5 +441,14 @@ public class LibraryLoans extends ModuleActivity  {
         	
         }
     }
+
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {	}
 
 }

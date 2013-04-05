@@ -33,7 +33,6 @@ import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.objs.FineListItem;
 import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
@@ -47,7 +46,6 @@ public class LibraryYourAccount extends NewModuleActivity {
 	private static final int HOLDS_TAB = 2;
 	private int currentTab = 0;
 	
-	protected TitleBar mTitleBar;
 	protected TabHost tabHost;	
 	protected Activity mActivity;		
 	protected int ADD_NEW_TAB = Menu.FIRST;
@@ -274,7 +272,6 @@ public class LibraryYourAccount extends NewModuleActivity {
     		renewButtonRow.setVisibility(View.VISIBLE);
 			// Hide tabs
 			tabHost.getTabWidget().setVisibility(View.GONE);
-			mTitleBar.setTitle("Renew");
 			
 			LibraryYourAccount.setMode(LibraryYourAccount.RENEW_MODE);
     	}
@@ -285,7 +282,6 @@ public class LibraryYourAccount extends NewModuleActivity {
 			
 			// Show Tabs
 			tabHost.getTabWidget().setVisibility(View.VISIBLE);
-			mTitleBar.setTitle("Your Account");
 			
 			if (currentMode == LibraryYourAccount.RENEW_RESULTS_MODE) {
 				loanListView.setAdapter(libraryLoanAdapter);

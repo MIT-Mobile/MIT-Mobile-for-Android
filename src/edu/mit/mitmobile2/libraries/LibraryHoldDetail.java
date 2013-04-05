@@ -6,24 +6,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.objs.HoldListItem;
 
-public class LibraryHoldDetail extends ModuleActivity{
+public class LibraryHoldDetail extends NewModuleActivity{
 	public static final String TAG = "LibraryHoldDetail";
 
     Context mContext;
     private FullScreenLoader mLoadingView;
-    private TitleBar holdTitleBar;
     private TextView holdTitleTV;
     private TextView holdAuthorTV;
     private TextView holdCallNoTV;
@@ -44,8 +41,7 @@ public class LibraryHoldDetail extends ModuleActivity{
         Log.d(TAG,"index = " + index);
         final HoldListItem hold = LibraryHolds.getHoldData().getHolds().get(index);
         
-        holdTitleBar = (TitleBar) findViewById(R.id.libraryBartonDetailTitleBar);
-        holdTitleBar.setTitle("Hold");
+        addSecondaryTitle("Hold");
         
         holdTitleTV = (TextView)findViewById(R.id.libraryBartonDetailTitleTV);
         holdTitleTV.setText(hold.getTitle());
@@ -117,19 +113,20 @@ public class LibraryHoldDetail extends ModuleActivity{
     };
 
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new LibrariesModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isScrollable() {
+		return false;
 	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

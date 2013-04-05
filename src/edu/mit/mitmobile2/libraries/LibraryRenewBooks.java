@@ -10,20 +10,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
-public class LibraryRenewBooks extends ModuleActivity  {
+public class LibraryRenewBooks extends NewModuleActivity  {
 	
 	public static final String TAG = "LibraryLoans";
 
@@ -42,6 +41,7 @@ public class LibraryRenewBooks extends ModuleActivity  {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.library_loans);
+        addSecondaryTitle("Loans");
         
     	mLoanResults = (View) findViewById(R.id.loanResults);
         loanStatusTV = (TextView) findViewById(R.id.loanStatusTV);
@@ -95,7 +95,7 @@ public class LibraryRenewBooks extends ModuleActivity  {
     };
 
     @Override
-    protected Module getModule() {
+    protected NewModule getNewModule() {
         return new LibrariesModule();
     }
 
@@ -103,11 +103,14 @@ public class LibraryRenewBooks extends ModuleActivity  {
     public boolean isModuleHomeActivity() {
         return false;
     }
+    
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
 
-    @Override
-    protected void prepareActivityOptionsMenu(Menu menu) {
-
-    }
+	@Override
+	protected void onOptionSelected(String optionId) { }
 
     private class LibraryRenewBooksAdapter extends SimpleArrayAdapter<LoanListItem> {
         @SuppressWarnings("unused")
