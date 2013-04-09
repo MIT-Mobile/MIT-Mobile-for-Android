@@ -83,9 +83,9 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
         if (extras!=null){  
         	cat = extras.getString(KEY_CAT); 
         	mCategoryName = extras.getString(CATEGORY_NAME_KEY);
-        	//bookmark_action = BK_ADD;
+        	bookmark_action = BK_ADD;
         } else {
-        	//bookmark_action = BK_RM;
+        	bookmark_action = BK_RM;
         }
 	    
 

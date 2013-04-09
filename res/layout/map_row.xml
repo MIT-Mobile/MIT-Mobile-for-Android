@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="wrap_content"
+  android:layout_height="103dip">
+  
+<!-- 
+    <ImageView android:id="@+id/newsRowIV"
+				android:src="@drawable/news_placeholder"	
+				android:layout_gravity="center"
+				android:layout_width="103dip" 
+				android:layout_height="103dip"/>
+ -->			
+  <LinearLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:paddingRight="@dimen/standardPadding"
+		android:paddingLeft="@dimen/standardPadding" >
+		
+		<edu.mit.mitmobile2.TruncatingTextView
+			android:id="@+id/mapRowTV"
+			android:paddingTop="@dimen/standardPadding"
+			style="@style/ListItemPrimary"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"/>
+					
+	</LinearLayout>
+
+</LinearLayout>

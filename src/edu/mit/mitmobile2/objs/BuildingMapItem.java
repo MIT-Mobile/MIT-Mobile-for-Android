@@ -67,7 +67,10 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 		TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.callout_building_name);
 		calloutBuildingName.setText(buildingName);
 		
-		//calloutLayout.on
+		if (buildingNumber.equalsIgnoreCase(buildingName)) {
+			calloutBuildingName.setVisibility(View.GONE);
+		}
+
 		calloutLayout.setOnClickListener(new View.OnClickListener() {
 		
 	            @Override

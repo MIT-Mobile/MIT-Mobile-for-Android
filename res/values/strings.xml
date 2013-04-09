@@ -41,7 +41,7 @@
 	<string name="map_no_bookmarks">You don\'t have any map locations bookmarked. To bookmark a location, navigate to that location, press your device\'s Menu button, and tap the \'Add Bookmark\' menu item.</string>
 	<string name="map_google_map">Google Map</string>
 	<string name="map_bookmark">Bookmark</string>
-	
+		
 	<string name="news_search_label"></string>
 	<string name="news_search_hint">Search articles</string>
 	<string name="no_news_bookmarks">You don\'t have any articles bookmarked. To bookmark an article, navigate to that article, press your device\'s Menu button, and tap the \'Add Bookmark\' menu item.</string>

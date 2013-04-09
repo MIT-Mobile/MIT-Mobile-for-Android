@@ -96,7 +96,9 @@
         </activity>
 		<provider android:name=".maps.MapsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.maps.SuggestionsProvider" />
         
-        
+        <activity android:name=".maps.MapBookmarksActivity" android:launchMode="singleTop"  android:theme="@style/PlainBackground" />
+		
+		
         <activity android:name=".maps.NewMapActivity">
         	<intent-filter>
 				<action android:name="android.intent.action.SEARCH"/>
@@ -300,8 +302,8 @@
 	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 	
 	<!-- targetSdkVersion must remain < 11 in order for the menu to work correctly on 4.0+ devices -->
-	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="10"></uses-sdk>
-
+	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="10"></uses-sdk>
+	
    	<!-- Only this application can receive the messages and registration result --> 
    	<permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" android:protectionLevel="signature" />
    	<uses-permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" />

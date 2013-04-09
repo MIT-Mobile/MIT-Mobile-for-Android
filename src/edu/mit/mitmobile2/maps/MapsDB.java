@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,18 +9,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.PersonItem;
 import edu.mit.mitmobile2.people.PeopleDB;
 
 public class MapsDB {
+	private static final String TAG = "MapsDB";
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "maps.db";
 	private static final String MAPS_TABLE = "map_items";
-	//private static final String MAPS_VIEW = "map_items_view";
+	private static final String MAPS_VIEW = "map_items_view";
 
 	
 	// map table field names
@@ -113,21 +118,21 @@ public class MapsDB {
 		long row_id;
 		int rows;
 		String id = (String)mi.getItemData().get("id");
+		Log.d(TAG,"checking map id " + id);
 		if(miExists(id)) {
 			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			Log.d("MapDB","MapDB: updating "+rows);
+			Log.d(TAG,"MapDB: updating "+rows);
 		} else {
 			row_id = db.insert(MAPS_TABLE, SNIPPETS, mapValues);
-			//mi.sql_id = row_id;
-			//rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			Log.d("MapDB","MapDB: adding "+row_id);
+			mi.sql_id = row_id;
+			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
+			Log.d(TAG,"MapDB: adding "+row_id);
 		}
 		db.close();
 		mMapsDBHelper.close();
 		
 	}
 	/********************************************************************/
-	/*
 	public Cursor getMapsCursor(String name) {
 		return getMapsCursor(name, null);
 	}
@@ -139,14 +144,30 @@ public class MapsDB {
 		Cursor cursor = db.query(MAPS_VIEW, fields, NAME + "=" + name, null, null, null, ID + " DESC", limit);
 		return cursor;
 	}
-	*/
+
 	public Cursor getMapsCursor() {
 		SQLiteDatabase db = mMapsDBHelper.getReadableDatabase();
-		String[] fields = new String[] {ID, MAP_ID, NAME, DISPLAY_NAME, SNIPPETS, STREET, FLOORPLANS, BLDGIMG, VIEWANGLE, BLDGNUM, LONG_WGS84, LAT_WGS84};
+		String[] fields = new String[] {
+										ID, 
+										MAP_ID, 
+										NAME, 
+										DISPLAY_NAME, 
+										SNIPPETS, 
+										STREET, 
+										FLOORPLANS, 
+										BLDGIMG, 
+										VIEWANGLE, 
+										BLDGNUM, 
+										LONG_WGS84, 
+										LAT_WGS84
+									    };
 		
 		Cursor cursor = db.query(MAPS_TABLE, fields, null, null, null, null, NAME + " DESC", null);
+		Log.d(TAG,"num map items in cursor = " + cursor.getCount());
 		return cursor;
 	}
+	
+	
 	/********************************************************************/
 	static MapItem retrieveMapItem(Cursor cursor) {
 		BuildingMapItem item = new BuildingMapItem();
@@ -161,8 +182,11 @@ public class MapsDB {
 		item.getItemData().put("bldgnum",cursor.getString(cursor.getColumnIndex(BLDGNUM)));
 		item.getItemData().put("bldgimg", cursor.getString(cursor.getColumnIndex(BLDGIMG)));
 		item.getItemData().put("viewangle",cursor.getString(cursor.getColumnIndex(VIEWANGLE)));
-		item.getMapPoints().get(0).long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
-		item.getMapPoints().get(0).lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
+		item.setMapPoints(new ArrayList<MapPoint>());
+		MapPoint mapPoint = new MapPoint();
+		mapPoint.lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
+		mapPoint.long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
+		item.getMapPoints().add(mapPoint);
 		
 		return item;
 	}
@@ -210,6 +234,7 @@ public class MapsDB {
 		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			Log.d(TAG,"creating maps table");
 			db.execSQL("CREATE TABLE " + MAPS_TABLE + " ("
 					+ ID + " INTEGER PRIMARY KEY,"
 					+ MAP_ID + " TEXT,"
@@ -232,5 +257,21 @@ public class MapsDB {
 			// no old versions exists
 		}
 	}
-	
+
+	synchronized void clearAllBookmarks() {
+		this.clearAll();
+	}
+
+	public ArrayList<MapItem> getMapItems() {
+		Cursor cursor = this.getMapsCursor();
+		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
+		if(cursor != null && cursor.moveToFirst()) {
+			while (cursor.isAfterLast() == false) {
+				MapItem mapItem = MapsDB.retrieveMapItem(cursor);
+				mapItems.add(mapItem);
+				cursor.moveToNext();
+			}
+		}
+		return mapItems;
+	}
 }

@@ -32,11 +32,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
+import android.widget.ToggleButton;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -74,6 +78,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	private int mapItemIndex = 0;
 		
 	private Context mContext;
+	final MapsDB db = MapsDB.getInstance(this);
 	
 	private SpatialReference targetSpatialReference;
 	Activity mActivity;
@@ -84,7 +89,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	RemoteImageView mThumbnailView;
 	//MITMapView mThumbnailView;
 	Button mapGoogleMapBtn;
-	Button mapBookmarkBtn;
+	ImageView mapBookmarkBtn;
 	
 	String bbox;
 	String imgUrl;
@@ -273,7 +278,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			tabConfigurator.addTab("What's Here", R.id.mapDetailsHereLL);
 			tabConfigurator.addTab("Photo", R.id.mapDetailsPhotosLL);
 			tabConfigurator.configureTabs();
-			
+					
 			mapDetailsQueryTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsQueryTV);
 			if (mMapItem.query == null || mMapItem.query.isEmpty()) {
 				mapDetailsQueryTV.setVisibility(View.GONE);
@@ -312,12 +317,36 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			});
 			
 			// Bookmark Button
-			mapBookmarkBtn = (Button) mMainLayout.findViewById(R.id.mapBookmarkBtn);
+			mapBookmarkBtn = (ImageView) mMainLayout.findViewById(R.id.mapBookmarkBtn);
+			MapItem dbItem = db.retrieveMapItem((String)mMapItem.getItemData().get("id"));
+			if (dbItem == null) {
+				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is not bookmarked");
+				mapBookmarkBtn.setImageResource(R.drawable.bookmark_off);
+				mapBookmarkBtn.setTag("off");
+			}
+			else {
+				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is bookmarked");
+				mapBookmarkBtn.setImageResource(R.drawable.bookmark_on);
+				mapBookmarkBtn.setTag("on");
 
+			}
+
+			
 			mapBookmarkBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
+					if (v.getTag() == "off") {	
+						MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
+						((ImageView)v).setImageResource(R.drawable.bookmark_on);
+						v.setTag("on");
+						Toast.makeText(mContext, "map item saved", 1).show();
+					}
+					else {
+						MapsDB.getInstance(mContext).delete(mMapItem);
+						((ImageView)v).setImageResource(R.drawable.bookmark_off);
+						v.setTag("off");
+						Toast.makeText(mContext, "map item removed", 1).show();						
+					}
 				}
 			});
 

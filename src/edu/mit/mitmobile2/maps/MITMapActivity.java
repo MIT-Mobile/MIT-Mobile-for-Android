@@ -160,7 +160,7 @@ public class MITMapActivity extends NewModuleActivity {
 	        Log.d(TAG,"query = " + query);
 	        MITMapsDataModel.executeSearch(query, mapSearchUiHandler, mContext);
 	    }
-	    else if(extras.containsKey(MITMapView.MAP_DATA_KEY)) {
+	    else if(extras != null && extras.containsKey(MITMapView.MAP_DATA_KEY)) {
 			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
 			if (mapItems.size() > 0) {
 				mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + " results");
@@ -262,7 +262,11 @@ public class MITMapActivity extends NewModuleActivity {
 	    	onBrowseRequested();
 	    }
 	    if (id.equals(MENU_BOOKMARKS)) {
-		    Intent i = new Intent(this,MITMapBrowseCatsActivity.class);  
+			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
+			//i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			mContext.startActivity(i);
+
 			startActivity(i);
 	    }
 	    if (id.equals(MENU_SEARCH)) {

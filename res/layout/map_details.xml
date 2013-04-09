@@ -88,13 +88,14 @@
 					android:text="@string/map_google_map"
 					android:layout_width="150dip" 
 					android:layout_height="wrap_content"/>
-			
-			<Button
-					android:id="@+id/mapBookmarkBtn"
-					android:text="@string/map_bookmark"
-					android:layout_width="150dip" 
-					android:layout_height="wrap_content"/>		
-		</LinearLayout>
+						
+			<ImageView android:src="@drawable/bookmark_off"
+			    android:id="@+id/mapBookmarkBtn" 
+			    android:layout_height="wrap_content"
+				android:layout_width="wrap_content"/>
+		
+		
+			</LinearLayout>
 	
 		<LinearLayout 
   		android:orientation="vertical"
