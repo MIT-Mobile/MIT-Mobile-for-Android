@@ -103,12 +103,6 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 		mShowingSidetrips = !mTourActive;
 		setTourItemsList(mShowingSidetrips);
 		
-		//setOverlays();
-		
-		//mapView.getOverlays().add(mSiteMarkers);
-		
-		//mapView.getController().setCenter(geoRect.getCenter());
-		
 		mTourListView = (ListView) findViewById(R.id.mapListView);
 		mTourListAdapter = new TourItemAdapter(this, mTourMapItems);
 		mTourListView.setAdapter(mTourListAdapter);
