@@ -65,8 +65,8 @@ public class MITMapActivity extends NewModuleActivity {
 	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
 	
 	public static final double INIT_RESOLUTION = 1.205;
-	private static String LIST = "List";
-	private static String MAP = "Map";
+	private static String LIST = "LIST";
+	private static String MAP = "MAP";
 	static int INIT_ZOOM = 17; // DELETE ?
 	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
 

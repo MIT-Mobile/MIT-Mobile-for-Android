@@ -7,8 +7,6 @@ import java.util.Map;
 
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -16,7 +14,6 @@ import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBarSwitch;
 import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.maps.MITMapView;
-import edu.mit.mitmobile2.maps.MITMapActivity;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
@@ -36,7 +33,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -52,8 +48,8 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 	private static final String TOUR_PATH_KEY = "tour_path";
 	private static final String TOUR_ACTIVE_KEY = "tour_active";
 	
-	private static String LIST = "List";
-	private static String MAP = "Map";
+	private static String LIST = "LIST";
+	private static String MAP = "MAP";
 	
 	ListView mTourListView;
 	TitleBarSwitch mMapListSwitch;
