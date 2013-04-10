@@ -119,7 +119,11 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 			}
 		});
 		
-		TourRouteMapData routeData = new TourRouteMapData(mGeoPoints);
+		
+		float density = getResources().getDisplayMetrics().density;
+		float routeWidth = getResources().getDimension(R.dimen.tourPathWidth) / density;
+		
+		TourRouteMapData routeData = new TourRouteMapData(mGeoPoints, routeWidth);
 		mMapView.addMapItems(routeData.getMapItems(), "route");
 		mStopsData = new TourStopsMapData(mSiteTourMapItems, this);
 		mMapView.addMapItems(mStopsData.getMapItems(), "stops");

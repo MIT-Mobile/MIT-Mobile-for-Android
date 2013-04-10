@@ -11,10 +11,11 @@ import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 
 public class TourRouteMapData extends MapData {
 	
-	public TourRouteMapData(List<GeoPoint> geoPoints) {
+	public TourRouteMapData(List<GeoPoint> geoPoints, float width) {
 		// add the route
 		TourRouteMapItem routeMapItem = new TourRouteMapItem();
 		routeMapItem.setGeometryType(MapItem.TYPE_POLYLINE);
+		routeMapItem.setLineWidth((int) width);
 		for (GeoPoint geoPoint : geoPoints) {
 			routeMapItem.getMapPoints().add(geoPoint.getMapPoint());
 		}
