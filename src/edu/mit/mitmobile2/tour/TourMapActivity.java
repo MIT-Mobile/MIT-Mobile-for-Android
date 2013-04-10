@@ -539,7 +539,7 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
                        
 	@Override
 	public boolean isModuleHomeActivity() {
-		return true;
+		return false;
 	}
 
 	@Override
