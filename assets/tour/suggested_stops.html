@@ -90,7 +90,6 @@ _ITEMS_
        this.className = "";
    }
    for (var i=0; i < links.length; i++) {
-       console.log(links[i]);
        links[i].addEventListener('mousedown', press);
        links[i].addEventListener('mouseup', unpress);
        links[i].addEventListener('touchstart', press);
@@ -107,7 +106,6 @@ _ITEMS_
    function hideLoader(e) {
        this.style.background = "url()";
    }
-   console.log("ssss");
    for(var i=0; i < images.length; i++) {
       images[i].addEventListener('error', hideImage);
       images[i].addEventListener('load', hideLoader);
