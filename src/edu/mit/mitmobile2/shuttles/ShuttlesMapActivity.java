@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.shuttles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import android.app.ProgressDialog;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import com.esri.android.map.GraphicsLayer;
 
 import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -87,6 +89,13 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	}
 
 	@Override
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
+		menuItems.add(new MITMenuItem("list", "List", R.drawable.menu_browse));		
+		return menuItems;
+	}
+	
+	@Override
 	protected boolean isScrollable() {
 		// TODO Auto-generated method stub
 		return false;
@@ -94,8 +103,9 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 
 	@Override
 	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
-
+		if (optionId.equals("list")) {
+			finish();
+		}
 	}
 
 	@Override
