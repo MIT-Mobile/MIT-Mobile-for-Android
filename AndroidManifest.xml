@@ -140,7 +140,7 @@
         <activity android:name=".shuttles.MITStopsSliderActivity" android:screenOrientation="portrait"/>
         <activity android:name=".shuttles.MITRoutesSliderActivity" android:screenOrientation="portrait"/>
 		
-        <activity android:name=".shuttles.ShuttlesMapActivity" android:launchMode="singleTop" android:screenOrientation="portrait" />
+        <activity android:name=".shuttles.ShuttlesMapActivity" android:launchMode="singleTop" android:configChanges="orientation"/>
         
 		<activity android:name=".people.PeopleActivity">
 			<meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
