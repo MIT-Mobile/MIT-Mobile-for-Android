@@ -1,15 +1,20 @@
 package edu.mit.mitmobile2.events;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import edu.mit.mitmobile2.AbstractSliderViewAdapter;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderView.ScreenPosition;
 import edu.mit.mitmobile2.events.EventsModel.EventType;
+import edu.mit.mitmobile2.events.EventsTopActivity.MenuItemHandler;
 
-public class EventDayListSliderAdapter extends AbstractSliderViewAdapter{
+public class EventDayListSliderAdapter extends AbstractSliderViewAdapter implements MenuItemHandler {
 
 	private long mDayTime; //unix timestamp for currently selected day
 	private long mToday;
@@ -54,7 +59,7 @@ public class EventDayListSliderAdapter extends AbstractSliderViewAdapter{
 	public boolean hasScreen(ScreenPosition screenPosition) {
 		return true;
 	}
-
+	
 	@Override
 	public SliderInterface getSliderInterface(ScreenPosition screenPosition) {
 		long dayTime = mDayTime;
@@ -97,5 +102,20 @@ public class EventDayListSliderAdapter extends AbstractSliderViewAdapter{
 		}
 		
 		return sDateFormat.format(new Date(dayTime*1000));
+	}
+
+	@Override
+	public List<MITMenuItem> getExtraPrimaryItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("map", "Map", R.drawable.menu_view_on_map));
+		return items;
+	}
+
+	@Override
+	public void onOptionSelected(String optionId) {
+		if (optionId.equals("map")) {
+			EventsListSliderInterface eventsListSliderInterface = (EventsListSliderInterface) getCurrentInterface();
+			eventsListSliderInterface.launchMapActivity();
+		}
 	}
 }

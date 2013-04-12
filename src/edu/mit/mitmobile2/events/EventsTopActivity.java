@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.events;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -39,6 +40,14 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 	
     private long mCurrentTimestamp;
 	private MITSliderTitleBar mSecondarySliderBar;
+	
+	private MenuItemHandler mMenuItemHandler;
+	
+	public interface MenuItemHandler {
+		public List<MITMenuItem> getExtraPrimaryItems();
+		//public List<MITMenuItem> getExtraSecondaryItems();
+		public void onOptionSelected(String optionId);
+	}
 	 
 	
 	@Override
@@ -92,6 +101,26 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 	}
 
 	@Override
+	protected List<MITMenuItem> getPrimaryMenuItems() {
+		if (mMenuItemHandler != null) {
+			List<MITMenuItem> baseItems = super.getPrimaryMenuItems();
+			ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+			items.addAll(baseItems);
+			items.addAll(mMenuItemHandler.getExtraPrimaryItems());
+			return items;
+		} else {
+			return super.getPrimaryMenuItems();
+		}
+	}
+	
+	@Override
+	protected void onOptionSelected(String optionId) { 
+		if (mMenuItemHandler != null) {
+			mMenuItemHandler.onOptionSelected(optionId);
+		}
+	}
+	
+	@Override
 	protected NewModule getNewModule() {
 		return new EventsModule();
 	}
@@ -107,11 +136,9 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 	}
 
 	@Override
-	protected void onOptionSelected(String optionId) { }
-
-	@Override
 	public void onOptionItemSelected(String optionId) {
 		getTitleBar().removeSliderBar();
+		mMenuItemHandler = null;
 		
 		EventType eventType = EventsModel.getEventType(optionId);
 		if (eventType != null) {
@@ -123,12 +150,14 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 		} else if (optionId.equals("Holidays_Calendar")) {
 			loadHolidays();
 		}
+		
+		refreshTitleBarOptions();
 	}
 
 	private void loadEvents(EventType eventType) {
 		getTitleBar().addSliderBar(mSecondarySliderBar);
 		final SliderView sliderView = new SliderView(mContext);
-		sliderView.setAdapter(new EventDayListSliderAdapter(this, eventType, mCurrentTimestamp, 
+		EventDayListSliderAdapter eventDayListSliderAdapter = new EventDayListSliderAdapter(this, eventType, mCurrentTimestamp,
 			new OnDayChangeListener() {
 				@Override
 				public void onDayChangeListener(String previous,String current, String next) {
@@ -136,7 +165,8 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 					mSecondarySliderBar.setAllTitles(previous, current, next);
 				}
 			}	
-		));
+		);
+		sliderView.setAdapter(eventDayListSliderAdapter);
 		mSecondarySliderBar.setPreviousNextListener(new OnPreviousNextListener() {
 			@Override
 			public void onPreviousClicked() {
@@ -149,6 +179,7 @@ public class EventsTopActivity extends NewModuleActivity implements OnMITMenuIte
 			}
 		});
 		setContentView(sliderView, false);		
+		mMenuItemHandler = eventDayListSliderAdapter;
 	}
 
 	private void loadAcademicCalendar() {

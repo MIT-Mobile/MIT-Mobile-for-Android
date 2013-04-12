@@ -130,6 +130,13 @@
         <activity android:name=".events.MITEventsSliderActivity" android:configChanges="orientation">
         	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
         </activity>
+        <activity android:name=".events.EventsMapActivity" android:configChanges="orientation">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>        
+  	    <activity android:name=".events.EventsDetailsSliderActivity" android:configChanges="orientation">
+        	<meta-data android:name="android.app.default_searchable" android:value=".events.EventsSearchActivity" />
+        </activity>    
+        
 		<provider android:name=".events.EventsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.events.SuggestionsProvider" />
 
 

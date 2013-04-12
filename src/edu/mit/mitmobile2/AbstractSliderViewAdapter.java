@@ -75,4 +75,15 @@ public abstract class AbstractSliderViewAdapter implements SliderView.Adapter{
 		
 	}
 
+	protected SliderInterface getPreviousInterface() {
+		return mPreviousInterface;
+	}
+	
+	protected SliderInterface getCurrentInterface() {
+		return mCurrentInterface;
+	}
+	
+	protected SliderInterface getNextInterface() {
+		return mNextInterface;
+	}
 }

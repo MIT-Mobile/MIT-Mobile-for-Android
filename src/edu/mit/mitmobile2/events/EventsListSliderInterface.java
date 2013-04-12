@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.events.EventsModel.EventType;
+import edu.mit.mitmobile2.events.EventsTopActivity.MenuItemHandler;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.EventDetailsItem.TimeSummaryMode;
 
@@ -36,6 +38,9 @@ public class EventsListSliderInterface implements SliderInterface {
 	private int mYear = -1;
 	
 	private boolean mLoadingCompleted = false;
+	
+	private List<EventDetailsItem> mEvents;
+	
 
 	private EventsListSliderInterface() {
 		
@@ -128,20 +133,19 @@ public class EventsListSliderInterface implements SliderInterface {
 				if(message.arg1 == MobileWebApi.SUCCESS) {
 					mLoadingCompleted = true;
 					
-					List<EventDetailsItem> events = null;
 					if(mCategoryId > -1) {
-						events = EventsModel.getCategoryDayEvents(mDayTime, mCategoryId, mEventType);
+						mEvents = EventsModel.getCategoryDayEvents(mDayTime, mCategoryId, mEventType);
 					} else if(mAcademicCalendar) {
-						events = EventsModel.getAcademicCalendar(mYear, mMonth);
+						mEvents = EventsModel.getAcademicCalendar(mYear, mMonth);
 					} else {
-						events = EventsModel.getDayEvents(mDayTime, mEventType);
+						mEvents = EventsModel.getDayEvents(mDayTime, mEventType);
 					}
 					
 					TimeSummaryMode timeSummaryMode = mAcademicCalendar ? EventDetailsItem.SHORT_DAYS_ONLY : EventDetailsItem.TIMES_ONLY;
-					EventsArrayAdapter arrayAdapter = new EventsArrayAdapter(mContext, R.layout.events_row, 0, events, timeSummaryMode);
+					EventsArrayAdapter arrayAdapter = new EventsArrayAdapter(mContext, R.layout.events_row, 0, mEvents, timeSummaryMode);
 				
 					mLoadingView.setVisibility(View.GONE);
-					if(events.size() > 0 ) {
+					if(mEvents.size() > 0 ) {
 						mDayListView.setVisibility(View.VISIBLE);
 						mDayListView.setAdapter(arrayAdapter);
 					} else {
@@ -154,6 +158,12 @@ public class EventsListSliderInterface implements SliderInterface {
 		};
 	}
 
+	public void launchMapActivity() {
+		if (mEvents != null) {
+			EventsMapActivity.launch(mContext, mEvents);
+		}
+	}
+	
 	@Override
 	public void updateView() {
 		// TODO Auto-generated method stub
