@@ -77,7 +77,6 @@ public class EventsMapActivity extends NewModuleActivity {
 
 		@Override
 		public View getCallout(Context mContext) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
