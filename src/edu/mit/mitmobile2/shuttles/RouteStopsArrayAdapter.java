@@ -1,13 +1,8 @@
 package edu.mit.mitmobile2.shuttles;
 
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 import java.util.List;
-
-
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 public class RouteStopsArrayAdapter extends ArrayAdapter<Stops> {
 
@@ -60,16 +57,8 @@ public class RouteStopsArrayAdapter extends ArrayAdapter<Stops> {
 			////////////
 			
 			ImageView routeIV = (ImageView) v.findViewById(R.id.routesRowIV);
-			//routeIV.setImageResource(R.drawable.shuttle_stop_dot);
-			
-			if (s.upcoming) {
-				routeIV.setImageResource(R.drawable.shuttle_stop_dot_next);
-				nextTV.setTextAppearance(ctx, R.style.BoldRed);
-			} else {
-				routeIV.setImageResource(R.drawable.shuttle_stop_dot);
-				nextTV.setTextAppearance(ctx, R.style.ListValue);
-			}
-			
+			routeIV.setImageResource(s.upcoming ? R.drawable.shuttle_stop_dot_next : R.drawable.shuttle_stop_dot);
+			nextTV.setTextAppearance(ctx, s.upcoming ? R.style.BoldRed : R.style.ListValue);
 		}
 		
 		

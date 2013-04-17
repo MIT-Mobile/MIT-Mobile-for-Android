@@ -45,15 +45,15 @@ public class StopsParser extends JSONParser {
                 	
                 	si.id = jStop.getString("id");
                 	//si.title = jStop.getString("title");  // no such?
-                	si.lat = jStop.getString("lat");
-                	si.lon = jStop.getString("lon");
+                	si.lat = jStop.getDouble("lat");
+                	si.lon = jStop.getDouble("lon");
                 	si.next = jStop.getInt("next");  // TODO long?
                 	si.now = now;
 
                 	//si.path = jStop.optJSONArray("path");
-                	si.direction = jStop.optString("direction");
+//                	si.direction = jStop.optString("direction");
                 	si.route_id = jStop.optString("route_id");
-                	si.gps = jStop.getBoolean("gps");
+//                	si.gps = jStop.getBoolean("gps");
                 	
                 	
                 	// predicted delays
@@ -62,8 +62,10 @@ public class StopsParser extends JSONParser {
                 		int delay;
                         for(int p=0; p<predictions.length(); p++)
                         {
+                        	/*
                         	delay = predictions.getInt(p);
                         	si.predictions.add(delay);
+                        	*/
                         }
                 	}
                 	

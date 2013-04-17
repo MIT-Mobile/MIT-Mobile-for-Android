@@ -135,8 +135,8 @@ public class ShuttlesActivity extends ModuleActivity {
 		
 		shuttleRouteLoader.setVisibility(View.GONE);
 		
-		List<RouteItem> dayRoutes = ShuttleModel.getRoutes(false);
-		List<RouteItem> nightRoutes = ShuttleModel.getRoutes(true);
+		List<RouteItem> dayRoutes = ShuttleModel.getRoutes("Daytime Shuttles");
+		List<RouteItem> nightRoutes = ShuttleModel.getRoutes("Nighttime Saferide Shuttles");
 		
 		SectionListItemView itemBuilder = new SectionListItemView() {
 			public View getView(Object item, View convertView, ViewGroup parent) {
@@ -152,7 +152,7 @@ public class ShuttlesActivity extends ModuleActivity {
 				routeTV.setText(routeItem.title);
 			
 				ImageView routeIV = (ImageView) v.findViewById(R.id.shuttleRowRouteIV);
-				if (routeItem.isRunning) {
+				if (routeItem.active) {
 					routeIV.setImageResource(R.drawable.shuttle);
 				} else {
 					routeIV.setImageResource(R.drawable.shuttle_off);

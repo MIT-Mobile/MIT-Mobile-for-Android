@@ -8,61 +8,24 @@ import android.os.Parcelable;
 
 public class RouteItem implements Parcelable {
 	
+	public String id;
+	public String url;
+	public String title;
+	public String description;
+	public String group;
+	public boolean active;
+	public boolean predictable;
+	public int interval;
+	
+	public List<Stops> stops;
+	public List<Vehicle> vehicles;
+	public Path path;
+	
+	
 	public RouteItem () {
 		stops = new ArrayList<Stops>();
-		vehicleLocations = new ArrayList<Vehicle>();
-	}
-	
-	public String route_id;
-	public String title;
-	public int interval;
-	public boolean isSafeRide;
-	public boolean isRunning;
-	public boolean gpsActive;
-	public List<Vehicle> vehicleLocations;
-	public String summary;
-	public List<Stops> stops;
-	
-	public static class Vehicle implements Parcelable {
-		//public String lat;
-		//public String lon;
-		public double lat;
-		public double lon;
-		public int heading;
-		
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeDouble(lat);
-			dest.writeDouble(lon);
-			dest.writeInt(heading);
-		}
-		
-		private void readFromParcel(Parcel in) {
-			lat = in.readDouble();
-			lon = in.readDouble();
-			heading = in.readInt();
-		}
-		public static final Parcelable.Creator<Vehicle> CREATOR = new Parcelable.Creator<Vehicle>() {
-
-			@Override
-			public Vehicle createFromParcel(Parcel source) {
-				Vehicle vehicle = new Vehicle();
-				vehicle.readFromParcel(source);
-				return vehicle;
-			}
-
-			@Override
-			public Vehicle[] newArray(int size) {
-				return new Vehicle[size];
-			}
-			 
-		};
-	
-
-		@Override
-		public int describeContents() {
-			return 0;
-		}
+		path = new Path();
+		vehicles = new ArrayList<Vehicle>();
 	}
 	
 	@Override
@@ -72,30 +35,34 @@ public class RouteItem implements Parcelable {
 	
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(route_id);
+		dest.writeString(id);
+		dest.writeString(url);
 		dest.writeString(title);
+		dest.writeString(description);
+		dest.writeString(group);
+		writeBool(dest, active);
+		writeBool(dest, predictable);
 		dest.writeInt(interval);
-		writeBool(dest, isSafeRide);
-		writeBool(dest, isRunning);
-		writeBool(dest, gpsActive);
-		dest.writeList(vehicleLocations);
-		dest.writeString(summary);
 		dest.writeList(stops);
+		dest.writeList(vehicles);
+		dest.writeValue(path);
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	private void readFromParcel(Parcel in) {
-		route_id = in.readString();
+		id = in.readString();
+		url = in.readString();
 		title = in.readString();
+		description = in.readString();
+		group = in.readString();
+		active = readBool(in);
+		predictable = readBool(in);
 		interval = in.readInt();
-		isSafeRide = readBool(in);
-		isRunning = readBool(in);
-		gpsActive = readBool(in);
-		vehicleLocations = in.readArrayList(RouteItem.class.getClassLoader());
-		summary = in.readString();
 		stops = in.readArrayList(Stops.class.getClassLoader());
+		vehicles = in.readArrayList(Vehicle.class.getClassLoader());
+		path = (Path) in.readValue(Path.class.getClassLoader());
 	}
+	
 	
 	public static final Parcelable.Creator<RouteItem> CREATOR = new Parcelable.Creator<RouteItem>() {
 
@@ -111,6 +78,66 @@ public class RouteItem implements Parcelable {
 			return new RouteItem[size];
 		}
 	};
+	
+	
+	private static void writeBool(Parcel dest, boolean bool) {
+		dest.writeInt(bool ? 1 : 0);
+	}
+
+	private static boolean readBool(Parcel in) {
+		return (in.readInt() == 1);
+	}
+	
+	
+	public static class Vehicle implements Parcelable {
+
+		public String id;
+		public double lat;
+		public double lon;
+		public int heading;
+		public double speed;
+		public int lastReport;
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(id);
+			dest.writeDouble(lat);
+			dest.writeDouble(lon);
+			dest.writeInt(heading);
+			dest.writeDouble(speed);
+			dest.writeInt(lastReport);
+		}
+
+		private void readFromParcel(Parcel in) {
+			id = in.readString();
+			lat = in.readDouble();
+			lon = in.readDouble();
+			heading = in.readInt();
+			speed = in.readDouble();
+			lastReport = in.readInt();
+		}
+
+		public static final Parcelable.Creator<Vehicle> CREATOR = new Parcelable.Creator<Vehicle>() {
+
+			@Override
+			public Vehicle createFromParcel(Parcel source) {
+				Vehicle vehicle = new Vehicle();
+				vehicle.readFromParcel(source);
+				return vehicle;
+			}
+
+			@Override
+			public Vehicle[] newArray(int size) {
+				return new Vehicle[size];
+			}
+
+		};
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+	}
 	
 	
 	public static class Loc implements Parcelable {
@@ -146,32 +173,41 @@ public class RouteItem implements Parcelable {
 		}
 	}
 	
+	
 	public static class Stops implements Parcelable {
 		
+		public boolean alertSet = false;
+		
+		public String route_id;  // needed if not enclosed by RouteItem
+		public long now; // reference time for predictions
+//		public String direction;
+		
+//		public long next;  // next arrival unixtime
+//		public boolean upcoming = false;
+//		public boolean gps;
+		
+		
+		public String id;
+		public String url;
+		public String title;
+		public double lat;
+		public double lon;
+		public List<Prediction> predictions;
+		private List<Long> schedule;
+		
+		public long next;
+		public boolean upcoming = false;
+		
+		
 		public Stops () {
-			path = new ArrayList<Loc>();
-			predictions = new ArrayList<Integer>();
+			predictions = new ArrayList<Prediction>();
+			schedule = new ArrayList<Long>();
 		}
 		
 		public Stops(Parcel in) {
 			readFromParcel(in);
 		}
 		
-		public boolean alertSet = false;
-		
-		public String route_id;  // needed if not enclosed by RouteItem
-		public String id;
-		public String title;
-		public String lat;
-		public String lon;
-		public long next;  // next arrival unixtime
-		public long now; // reference time for predictions
-		public ArrayList<Integer> predictions;
-		public String direction;
-		public ArrayList<Loc> path;
-
-		public boolean upcoming = false;
-		public boolean gps;
 		
 		public static final Parcelable.Creator<Stops> CREATOR = new Parcelable.Creator<Stops>() {
 
@@ -189,59 +225,181 @@ public class RouteItem implements Parcelable {
 		
 		@Override
 		public void writeToParcel(Parcel out, int flags) {
-			out.writeString(route_id);
 			out.writeString(id);
+			out.writeString(url);
 			out.writeString(title);
-			out.writeString(lat);
-			out.writeString(lon);
-			out.writeLong(next);
+			out.writeDouble(lat);
+			out.writeDouble(lon);
 			out.writeList(predictions);
-			out.writeString(direction);
-			out.writeList(path);
+			out.writeList(schedule);
+			out.writeLong(next);
 			writeBool(out, upcoming);
-			writeBool(out, gps);
+			
+			out.writeString(route_id);
+//			out.writeString(lat);
+//			out.writeString(lon);
+//			out.writeString(direction);
+//			writeBool(out, gps);
 		}
 		
 		@SuppressWarnings("unchecked")
 		public void readFromParcel(Parcel in) {
-			route_id = in.readString();
 			id = in.readString();
+			url = in.readString();
 			title = in.readString();
-			lat = in.readString();
-			lon = in.readString();
+			lat = in.readDouble();
+			lon = in.readDouble();
+			predictions = (ArrayList<Prediction>) in.readArrayList(Prediction.class.getClassLoader());
+			schedule = (ArrayList<Long>) in.readArrayList(Long.class.getClassLoader());
 			next = in.readLong();
-			
-			predictions = (ArrayList<Integer>) in.readArrayList(Integer.class.getClassLoader());
-			
-			direction = in.readString();
-						
-			path = in.readArrayList(Loc.class.getClassLoader());
-			
 			upcoming = readBool(in);
-			gps = readBool(in);
+			
+			route_id = in.readString();
+//			id = in.readString();
+//			title = in.readString();
+//			lat = in.readString();
+//			lon = in.readString();
+//			predictions = (ArrayList<Prediction>) in.readArrayList(Prediction.class.getClassLoader());
+//			direction = in.readString();
+//			gps = readBool(in);
 		}
 
 		@Override
 		public int describeContents() {
 			return 0;
 		}
-	}
-	
-	/**************************/
-	void parseListView() {
+		
+		
+		public void setSchedule(List<Long> schedule) {
+			int index = -1;
+			long diff = now;
+			
+			for (int i = 0; i < schedule.size(); i++) {
+				long value = schedule.get(i);
+				if (value > now && (value - now < diff)) {
+					diff = value - now;
+					index = i;
+				}
+			}
+			if (index != -1)
+				next = schedule.get(index);
+			this.schedule = schedule;
+		}
+		
+		public List<Long> getSchedule() {
+			return schedule;
+		}
 		
 	}
-	void parseDetails() {
+	
+	
+	public static class Prediction implements Parcelable {
+		
+		public String vehicleID;
+		public long timestamp;
+		public int seconds;
+		
+		public Prediction() {
+		}
+		
+		public Prediction(Parcel in) {
+			readFromParcel(in);
+		}
+		
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(vehicleID);
+			dest.writeLong(timestamp);
+			dest.writeInt(seconds);
+		}
+		
+		public void readFromParcel(Parcel in) {
+			vehicleID = in.readString();
+			timestamp = in.readLong();
+			seconds = in.readInt();
+		}
+		
+		public static final Parcelable.Creator<Prediction> CREATOR = new Parcelable.Creator<Prediction>() {
+
+			@Override
+			public Prediction createFromParcel(Parcel source) {
+				return new Prediction(source);
+			}
+
+			@Override
+			public Prediction[] newArray(int size) {
+				return new Prediction[size];
+			}
+			
+		};
 		
 	}
 	
-	private static void writeBool(Parcel dest, boolean bool) {
-		dest.writeInt(bool ? 1 : 0);
+	
+	
+	public static class Path implements Parcelable {
+		
+		public ArrayList<Loc> segments;
+		
+		public float minLat;
+		public float minLon;
+		public float maxLat;
+		public float maxLon;
+		
+		
+		public Path () {
+			segments = new ArrayList<Loc>();
+		}
+		
+		public Path(Parcel in) {
+			readFromParcel(in);
+		}
+		
+		public static final Parcelable.Creator<Path> CREATOR = new Parcelable.Creator<Path>() {
+
+			@Override
+			public Path createFromParcel(Parcel source) {
+				return new Path(source);
+			}
+
+			@Override
+			public Path[] newArray(int size) {
+				return new Path[size];
+			}
+			
+		};
+		
+		
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeList(segments);
+			dest.writeFloat(minLat);
+			dest.writeFloat(minLon);
+			dest.writeFloat(maxLat);
+			dest.writeFloat(maxLon);
+		}
+		
+		public void readFromParcel(Parcel in) {
+			segments = in.readArrayList(Loc.class.getClassLoader());
+			minLat = in.readFloat();
+			minLon = in.readFloat();
+			maxLat = in.readFloat();
+			maxLon = in.readFloat();
+		}
+		
 	}
 	
-	private static boolean readBool(Parcel in) {
-		return (in.readInt() == 1);
-	}
+	
 }
 
 /*

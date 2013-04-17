@@ -11,9 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
-import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,11 +19,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
+import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
 
 public class MobileWebApi {
 
 	private static final String TAG = "MobileWebApi";
-	public static final String BASE_PATH = "/api";
+	public static final String BASE_PATH = "/apis";
 
 	public static enum HttpClientType {
 		Default,
@@ -420,7 +419,7 @@ public class MobileWebApi {
 			connection = new ConnectionWrapper();
 		}
 		
-		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path + "/?" + query(parameters);
+		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path;
 		Log.d(TAG, "requesting " + urlString);
 		boolean isStarted = connection.openURL(urlString, callback);
 		

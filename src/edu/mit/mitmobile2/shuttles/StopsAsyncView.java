@@ -270,7 +270,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
     				Integer p;
 	    			for (int z=0; z<s.predictions.size(); z++) {
 				
-	    				p = s.predictions.get(z);
+	    				p = s.predictions.get(z).seconds;
 	    				
 	    				pi = new Predicted();
 	    				pi.next = s.now + p.longValue();
@@ -300,7 +300,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 				// TODO move this somewhere less transient than this
 				HashMap<String, String> routeTitles = new HashMap<String, String>();
 				for (RouteItem aRouteItem : ShuttleModel.getSortedRoutes()) {
-					routeTitles.put(aRouteItem.route_id, aRouteItem.title);
+					routeTitles.put(aRouteItem.id, aRouteItem.title);
 				}
 	    		 
 				
@@ -398,6 +398,10 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 		
 		stopsTask = new CheckStopsTask();
 		RoutesParser rp = new RoutesParser();
+		
+		// TODO change to current API 
+		Log.d("StopsAsuncView", "stopTask execute: " + rp.getBaseUrl() + "?command=stopInfo&id="+si.id);
+		
 		stopsTask.execute(rp.getBaseUrl()+"?command=stopInfo&id="+si.id, null, null);
 		
 	}

@@ -13,8 +13,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
-
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
@@ -28,7 +28,7 @@ public class ShuttleModel {
 	
 	
 	
-	static final String BASE_PATH = "/shuttles";
+	static final String BASE_PATH = "/shuttles/routes";
 	
 	static private long lastRouteFetchTime = -1;
 	static private long ROUTE_CACHE_TIMEOUT = 20 * 60 * 1000; // 20 minutes
@@ -50,11 +50,11 @@ public class ShuttleModel {
 		}
 	}
 	
-	public static List<RouteItem> getRoutes(boolean isSafeRide) {
+	public static List<RouteItem> getRoutes(String group) {
 		ArrayList<RouteItem> routes = new ArrayList<RouteItem>();
 		
 		for (RouteItem aRouteItem : getRoutes()) {	
-			if (aRouteItem.isSafeRide == isSafeRide) {
+			if (aRouteItem.group.equals(group)) {
 				routes.add(aRouteItem);
 			}
 		}
@@ -65,14 +65,14 @@ public class ShuttleModel {
 		// reorder the routes 
 		// so that day time shuttles proceed night time saferides
 		ArrayList<RouteItem> reorderedRoutes = new ArrayList<RouteItem>();
-		reorderedRoutes.addAll(getRoutes(false));
-		reorderedRoutes.addAll(getRoutes(true));
+		reorderedRoutes.addAll(getRoutes("Daytime Shuttles"));
+		reorderedRoutes.addAll(getRoutes("Nighttime Saferide Shuttles"));
 		return reorderedRoutes;
 	}
 	
 	public static RouteItem getRoute(String routeId) {
 		for(RouteItem routeItem : getRoutes()) {
-			if(routeItem.route_id.equals(routeId)) {
+			if(routeItem.id.equals(routeId)) {
 				return routeItem;
 			}
 		}
@@ -80,7 +80,7 @@ public class ShuttleModel {
 	}
 	
 	public static RouteItem getUpdatedRoute(RouteItem routeItem) {
-		return getRoute(routeItem.route_id);
+		return getRoute(routeItem.id);
 	}
 	
 	public static List<Stops> getStops(String stopId) {
@@ -112,7 +112,7 @@ public class ShuttleModel {
 		}
 		
 		for(int index=0; index < routes.size(); index++) {
-			if(routes.get(index).route_id.equals(routeItem.route_id)) {
+			if(routes.get(index).id.equals(routeItem.id)) {
 				routes.set(index, routeItem);
 				return;
 			}
@@ -127,7 +127,7 @@ public class ShuttleModel {
 	private static void updateRouteItem(RouteItem routeItem) {
 		if(routes != null) {
 			for(int index=0; index < routes.size(); index++) {
-				if(routes.get(index).route_id.equals(routeItem.route_id)) {
+				if(routes.get(index).id.equals(routeItem.id)) {
 					routes.set(index, routeItem);
 					return;
 				}
@@ -143,17 +143,13 @@ public class ShuttleModel {
 				return;
 		}
 		
-		HashMap<String, String> routesParameters = new HashMap<String, String>();
-		routesParameters.put("command", "routes");
-		routesParameters.put("compact", "true");
-		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Shuttle Routes", context, uiHandler);
-		webApi.requestJSONArray(BASE_PATH, routesParameters,
-			new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {			
+		webApi.requestJSONObject(BASE_PATH, null,
+			new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 				@Override
-				public void onResponse(JSONArray array) throws JSONException {
+				public void onResponse(JSONObject object) throws JSONException {
 					routes = new ArrayList<RouteItem>();
-					routes.addAll(RoutesParser.routesParser(array));
+					routes.addAll(RoutesParser.routesParser(object));
 					lastRouteFetchTime = System.currentTimeMillis();
 					MobileWebApi.sendSuccessMessage(uiHandler);
 				}
@@ -165,7 +161,6 @@ public class ShuttleModel {
 		// determine if any predictions for route details data exists
 		// if some predictions exists do a silent request (i.e. dont show error or loading messages);
 		
-
 		boolean silent = true;
 		/*
 		RouteItem cachedRouteItem = getRoute(routeItem.route_id);
@@ -176,21 +171,26 @@ public class ShuttleModel {
 			}
 		}
 		*/
-		HashMap<String, String> routeInfoParameters = new HashMap<String, String>();
-		routeInfoParameters.put("command", "routeInfo");
-		routeInfoParameters.put("full", "true");
-		routeInfoParameters.put("id", routeItem.route_id);
 		
 		MobileWebApi webApi = new MobileWebApi(!silent, !silent, "Shuttle Route", context, uiHandler);
-		webApi.requestJSONObject(BASE_PATH, routeInfoParameters, 
-			new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {					
-				@Override
-				public void onResponse(JSONObject object) throws JSONException {
-					updateRouteItem(RoutesParser.parseJSONRouteObject(object));
-					MobileWebApi.sendSuccessMessage(uiHandler);
-				}
-			}
-		);		
+		webApi.requestJSONArray(BASE_PATH + "/" + routeItem.id, null, 
+				new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+					
+					@Override
+					public void onResponse(JSONArray array) throws ServerResponseException,
+							JSONException {
+						
+						try {
+							JSONObject object = array.getJSONObject(0);
+							updateRouteItem(RoutesParser.parseJSONRouteObject(object));
+							MobileWebApi.sendSuccessMessage(uiHandler);
+						} catch (JSONException e) {
+							e.printStackTrace();
+							MobileWebApi.sendErrorMessage(uiHandler);
+						}
+						
+					}
+				});
 	}
 	
 	public static void fetchStopDetails(final String stopId, final Handler handler) {

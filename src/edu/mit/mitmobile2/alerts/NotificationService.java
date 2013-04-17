@@ -25,6 +25,7 @@ import edu.mit.mitmobile2.emergency.EmergencyActivity;
 import edu.mit.mitmobile2.emergency.EmergencyParser;
 import edu.mit.mitmobile2.objs.EmergencyItem;
 import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.objs.RouteItem.Prediction;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 import edu.mit.mitmobile2.shuttles.RoutesParser;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
@@ -194,14 +195,13 @@ public class NotificationService extends Service {
 				
 				// given route, now find closest time 
 				next = match.next*1000;
-				for (int p : match.predictions) {
+				for (Prediction prediction : match.predictions) {
 					Log.d("NotificationService","shuttle-alert: closest: " + String.valueOf(next));
 					if (alarmTime<next) {
 						break;
 					}
-					next =+ p;
+					next =+ prediction.seconds;
 				}
-
 				alarmTime = next;
 			}
 

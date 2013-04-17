@@ -126,44 +126,35 @@ public class MITMapShuttlesUpdaterTask  extends AsyncTask<String, Void, Void> {
 	
 	/***************************************************/
 	void addPath(Stops s) {
-		if (s.path.size() == 0) {
-			// nothing to do
+		if (mRoute.path.segments.size() == 0) 
 			return;
-		}
-		
-		// TODO sampling
-		int maxLon = (int) (s.path.get(0).lon * 1000000.0);
-		int maxLat = (int) (s.path.get(0).lat * 1000000.0);
-		int minLon = maxLon;
-		int minLat = maxLat;
 		
 		int step = 1;
-		for (int index=0; index<s.path.size(); index+=step) {
-			Loc l = s.path.get(index);
-			lat = (int) (l.lat * 1000000.0);
-			lon = (int) (l.lon * 1000000.0);
-			
-			maxLat = Math.max(maxLat, lat);
-			maxLon = Math.max(maxLon, lon);
-			minLat = Math.min(minLat, lat);
-			minLon = Math.min(minLon, lon);
-			
-			gpt = new GeoPoint(lat,lon);
-	        oi.detailed_path.add(gpt);
+		for (int index = 0; index < mRoute.path.segments.size(); index += step) {
+			Loc l = mRoute.path.segments.get(index);
+			lat = (int) (l.lat * 1000000);
+			lon = (int) (l.lon * 1000000);
+			gpt = new GeoPoint(lat, lon);
+			oi.detailed_path.add(gpt);
 		}
+		
+		int maxLon = (int) (mRoute.path.maxLon * 1000000.0);
+		int maxLat = (int) (mRoute.path.maxLat * 1000000.0);
+		int minLon = (int) (mRoute.path.minLon * 1000000.0);
+		int minLat = (int) (mRoute.path.minLat * 1000000.0);
 		
 		if (updatePathBounds(maxLat, maxLon, minLat, minLon)) {
-				new Handler().post(new Runnable() {
-					@Override
-					public void run() {
-						mapView.getController().zoomToSpan(mMaxLat-mMinLat, mMaxLon-mMinLon);
-						mapView.getController().setCenter(new GeoPoint((mMaxLat+mMinLat)/2, (mMaxLon+mMinLon)/2));	
-					}
-				});
+			new Handler().post(new Runnable() {
+				@Override
+				public void run() {
+					mapView.getController().zoomToSpan(mMaxLat-mMinLat, mMaxLon-mMinLon);
+					mapView.getController().setCenter(new GeoPoint((mMaxLat+mMinLat)/2, (mMaxLon+mMinLon)/2));	
+				}
+			});
 		}
 		addedPath = true;
-		
 	}
+	
 	/***************************************************/
 	@Override
 	protected Void doInBackground(String... urls) {
@@ -232,7 +223,7 @@ public class MITMapShuttlesUpdaterTask  extends AsyncTask<String, Void, Void> {
 
 		stopsMarkers = new MITItemizedOverlay(pin, ctx, mapView);
 		stopsMarkers.shuttleMode = true;
-		stopsMarkers.shuttleRouteId = mRoute.route_id;
+		stopsMarkers.shuttleRouteId = mRoute.id;
 		
 		vehicleMarkers = new MapVehicleOverlay(shuttleDrawable,ctx);
 		
@@ -290,31 +281,31 @@ public class MITMapShuttlesUpdaterTask  extends AsyncTask<String, Void, Void> {
 			
 			index++;
 		}
-
+		
 		if (!upcoming) {
-			if (mRoute.vehicleLocations.size()>0) {
-				Log.e("MapUpdaterTask","upcoming all false");
-				throw new RuntimeException("upcoming all false");
-			}
+//			if (mRoute.vehicleLocations.size()>0) {
+//				Log.e("MapUpdaterTask","upcoming all false");
+//				throw new RuntimeException("upcoming all false");
+//			}
 			// TODO 
 			//Stops ss = mStops.get(last_upcoming);
 			//if (last_upcoming>-1) ss.upcoming = true;
 		}
 		
-		if (mRoute.vehicleLocations==null) {
-			Log.e("MapUpdaterTask","vehicleLocations null");
-		}
+//		if (mRoute.vehicleLocations==null) {
+//			Log.e("MapUpdaterTask","vehicleLocations null");
+//		}
 		
 		// Vehicles
 		VehicleOverlayItem voi;
-		for (Vehicle v : mRoute.vehicleLocations) {
-			lat = (int) (v.lat * 1000000.0);
-			lon = (int) (v.lon * 1000000.0);
-			gpt = new GeoPoint(lat,lon);
-			voi = new VehicleOverlayItem(gpt,"","");
-			voi.v = v;
-			vehicleMarkers.addOverlay(voi);
-		}
+//		for (Vehicle v : mRoute.vehicleLocations) {
+//			lat = (int) (v.lat * 1000000.0);
+//			lon = (int) (v.lon * 1000000.0);
+//			gpt = new GeoPoint(lat,lon);
+//			voi = new VehicleOverlayItem(gpt,"","");
+//			voi.v = v;
+//			vehicleMarkers.addOverlay(voi);
+//		}
 
 		if (stopsMarkers==null) {
 			Log.e("MapUpdaterTask","stopsMarkers null");
