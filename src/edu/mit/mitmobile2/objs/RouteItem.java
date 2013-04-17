@@ -178,15 +178,6 @@ public class RouteItem implements Parcelable {
 		
 		public boolean alertSet = false;
 		
-		public String route_id;  // needed if not enclosed by RouteItem
-		public long now; // reference time for predictions
-//		public String direction;
-		
-//		public long next;  // next arrival unixtime
-//		public boolean upcoming = false;
-//		public boolean gps;
-		
-		
 		public String id;
 		public String url;
 		public String title;
@@ -197,6 +188,8 @@ public class RouteItem implements Parcelable {
 		
 		public long next;
 		public boolean upcoming = false;
+		public String route_id;  // needed if not enclosed by RouteItem
+		public long now; // reference time for predictions
 		
 		
 		public Stops () {
@@ -234,12 +227,9 @@ public class RouteItem implements Parcelable {
 			out.writeList(schedule);
 			out.writeLong(next);
 			writeBool(out, upcoming);
-			
 			out.writeString(route_id);
-//			out.writeString(lat);
-//			out.writeString(lon);
-//			out.writeString(direction);
-//			writeBool(out, gps);
+			out.writeLong(now);
+			writeBool(out, alertSet);
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -253,15 +243,9 @@ public class RouteItem implements Parcelable {
 			schedule = (ArrayList<Long>) in.readArrayList(Long.class.getClassLoader());
 			next = in.readLong();
 			upcoming = readBool(in);
-			
 			route_id = in.readString();
-//			id = in.readString();
-//			title = in.readString();
-//			lat = in.readString();
-//			lon = in.readString();
-//			predictions = (ArrayList<Prediction>) in.readArrayList(Prediction.class.getClassLoader());
-//			direction = in.readString();
-//			gps = readBool(in);
+			now = in.readLong();
+			alertSet = readBool(in);
 		}
 
 		@Override
@@ -283,6 +267,8 @@ public class RouteItem implements Parcelable {
 			}
 			if (index != -1)
 				next = schedule.get(index);
+			else
+				next = schedule.get(0);
 			this.schedule = schedule;
 		}
 		

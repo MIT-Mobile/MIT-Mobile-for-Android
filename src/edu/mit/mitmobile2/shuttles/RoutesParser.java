@@ -98,94 +98,115 @@ public class RoutesParser {
 		JSONArray segments = jPath.optJSONArray("segments");
 		
 		RouteItem.Path path = new RouteItem.Path();
-		for (int index = 0; index < segments.length(); index++) {
-			JSONArray segment = segments.getJSONArray(index);
-			
-			RouteItem.Loc location = new RouteItem.Loc();
-			location.lat = (float) segment.getDouble(0);
-			location.lon = (float) segment.getDouble(1);
-			
-			path.segments.add(location);
+		if (segments != null) {
+			for (int index = 0; index < segments.length(); index++) {
+				JSONArray segment = segments.getJSONArray(index);
+				
+				RouteItem.Loc location = new RouteItem.Loc();
+				location.lat = (float) segment.getDouble(1);
+				location.lon = (float) segment.getDouble(0);
+				
+				path.segments.add(location);
+			}
 		}
 		
 		JSONArray bbox = jPath.getJSONArray("bbox");
 		if (bbox.length() == 4) {
-			path.minLat = (float) bbox.getDouble(0);
-			path.minLon = (float) bbox.getDouble(1);
-			path.maxLat = (float) bbox.getDouble(2);
-			path.maxLon = (float) bbox.getDouble(3);
+			path.minLat = (float) bbox.getDouble(1);
+			path.minLon = (float) bbox.getDouble(0);
+			path.maxLat = (float) bbox.getDouble(3);
+			path.maxLon = (float) bbox.getDouble(2);
 		}
 		
 		return path;
 	}
 	
 	
-	static List<Stops> parseJSONStopsArray(JSONObject jsonObject) throws JSONException {
+	static List<Stops> parseJSONStopsArray(JSONObject jRoute) throws JSONException {
 
 		ArrayList<Stops> stops = new ArrayList<Stops>();
-		JSONArray jStops = jsonObject.getJSONArray("stops");
+		JSONArray jStops = jRoute.getJSONArray("stops");
 		
-		long now = new Date().getTime() / 1000;
-
 		for (int s = 0; s < jStops.length(); s++) {
 			JSONObject jStop = jStops.getJSONObject(s);
-
-			Stops stopItem = new Stops();
-
-			stopItem.id = jStop.getString("id");
-			stopItem.url = jStop.getString("url");
-			stopItem.title = jStop.getString("title");
-			stopItem.lat = jStop.getDouble("lat");
-			stopItem.lon = jStop.getDouble("lon");
-
-			stopItem.upcoming = jStop.optBoolean("upcoming", false);
-
-			stopItem.next = jStop.optInt("next", 0);
-			stopItem.now = now;
-
-			stopItem.route_id = jStop.optString("route_id", null);
-
-			// predicted delays
-			if (jStop.has("predictions")) {
-				JSONArray predictions = jStop.optJSONArray("predictions");
-				if (predictions != null) {
-					for (int p = 0; p < predictions.length(); p++) {
-						JSONObject jPrediction = predictions.getJSONObject(p);
-
-						Prediction prediction = new Prediction();
-						prediction.vehicleID = jPrediction
-								.getString("vehicle_id");
-						prediction.timestamp = jPrediction.getLong("timestamp");
-						prediction.seconds = jPrediction.getInt("seconds");
-
-						stopItem.predictions.add(prediction);
-					}
-				}
-			}
-			
-			// Schedule
-			if (jStop.has("schedule")) {
-				JSONArray jSchedule = jStop.getJSONArray("schedule");
-				List<Long> schedule = new ArrayList<Long>();
-				for (int i = 0; i < jSchedule.length(); i++) {
-					try {
-						long value = Long.parseLong(jSchedule.getString(i));
-						schedule.add(value);
-					} catch (NumberFormatException e) {
-						Log.e("", "EROR value: " + jSchedule.getString(i));
-					}
-					
-//					schedule.add(jSchedule.getLong(i));
-				}
-				stopItem.setSchedule(schedule);
-			}
-			
-			
+			Stops stopItem = parseJSONStop(jStop, jRoute);
 			stops.add(stopItem);
 		}
-
+		
+		if (jRoute.getBoolean("active")) {
+			long minTimestamp = stops.get(0).next;
+			long now = new Date().getTime() / 1000;
+			int upcomingIndex = 0;
+			for (int i = 0; i < stops.size(); i++) {
+				Stops stop = stops.get(i);
+				if (stop.next < minTimestamp && stop.next > now) {
+					minTimestamp = stop.next;
+					upcomingIndex = i;
+				}
+			}
+			stops.get(upcomingIndex).upcoming = true;
+		}
+		
 		return stops;
 	}
 	
+	
+	static Stops parseJSONStop(JSONObject jStop, JSONObject jRoute) throws JSONException {
+		Stops stopItem = new Stops();
+
+		stopItem.id = jStop.getString("id");
+		stopItem.url = jStop.getString("url");
+		stopItem.title = jStop.getString("title");
+		stopItem.lat = jStop.getDouble("lat");
+		stopItem.lon = jStop.getDouble("lon");
+		
+		// TODO non exist in :stop item
+		stopItem.upcoming = jStop.optBoolean("upcoming", false);
+		stopItem.next = jStop.optInt("next", 0);
+		stopItem.now = new Date().getTime() / 1000;
+		if (jRoute != null) {
+			stopItem.route_id = jRoute.getString("id");
+		} else {
+			int startPos = stopItem.url.indexOf("/routes/") + "/routes/".length();
+			int endPos = stopItem.url.length() - stopItem.id.length() - "/stops/".length();
+			String routeID = stopItem.url.substring(startPos, endPos);
+			stopItem.route_id = routeID;
+		}
+
+		// predicted delays
+		if (jStop.has("predictions")) {
+			JSONArray predictions = jStop.optJSONArray("predictions");
+			if (predictions != null) {
+				for (int p = 0; p < predictions.length(); p++) {
+					JSONObject jPrediction = predictions.getJSONObject(p);
+
+					Prediction prediction = new Prediction();
+					prediction.vehicleID = jPrediction
+							.getString("vehicle_id");
+					prediction.timestamp = jPrediction.getLong("timestamp");
+					prediction.seconds = jPrediction.getInt("seconds");
+
+					stopItem.predictions.add(prediction);
+				}
+			}
+		}
+		
+		// Schedule
+		if (jStop.has("schedule")) {
+			JSONArray jSchedule = jStop.getJSONArray("schedule");
+			List<Long> schedule = new ArrayList<Long>();
+			for (int i = 0; i < jSchedule.length(); i++) {
+				try {
+					long value = Long.parseLong(jSchedule.getString(i));
+					schedule.add(value);
+				} catch (NumberFormatException e) {
+					Log.e("", "EROR value: " + jSchedule.get(i));
+				}
+			}
+			stopItem.setSchedule(schedule);
+		}
+		
+		return stopItem;
+	}
 	
 }

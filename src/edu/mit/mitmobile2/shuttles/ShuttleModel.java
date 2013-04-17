@@ -210,6 +210,53 @@ public class ShuttleModel {
 
 	}
 	
+	
+	public static void fetchAllStops(final String stopID, final Handler handler) {
+		
+		MobileWebApi webApi = new MobileWebApi();
+		
+		stops.remove(stopID);
+		
+		for (final RouteItem routeItem : routes) {
+			webApi.requestJSONObject(BASE_PATH + "/" + routeItem.id + "/stops/" + stopID, null, 
+					new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(handler), null) {
+				
+				@Override
+				public void onResponse(JSONObject object) throws JSONException {
+					
+					try {
+						if (object != null && object.has("id")) {
+							List<Stops> mStops = getStops(stopID);
+							stops.remove(stopID);
+							if (mStops == null) mStops = new ArrayList<RouteItem.Stops>();
+							
+							Stops newStop = RoutesParser.parseJSONStop(object, null);
+							
+							boolean isExist = false;
+							for (Stops mStop : mStops) {
+								if (mStop.url.equals(newStop.url)) {
+									mStops.remove(mStop);
+									mStops.add(newStop);
+									isExist = true;
+									break;
+								}
+							}
+							if (!isExist) {
+								mStops.add(newStop);
+							}
+							
+							stops.put(stopID, mStops);
+							MobileWebApi.sendSuccessMessage(handler);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+	}
+	
+	
 	/****************************************************/
 	public static HashMap<String, HashMap<String, Long>> getAlerts(SharedPreferences pref) {
 

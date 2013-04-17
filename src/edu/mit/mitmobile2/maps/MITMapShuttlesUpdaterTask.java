@@ -292,21 +292,21 @@ public class MITMapShuttlesUpdaterTask  extends AsyncTask<String, Void, Void> {
 			//if (last_upcoming>-1) ss.upcoming = true;
 		}
 		
-//		if (mRoute.vehicleLocations==null) {
-//			Log.e("MapUpdaterTask","vehicleLocations null");
-//		}
+		if (mRoute.vehicles == null) {
+			Log.e("MapUpdaterTask","vehicle locations null");
+		}
 		
 		// Vehicles
 		VehicleOverlayItem voi;
-//		for (Vehicle v : mRoute.vehicleLocations) {
-//			lat = (int) (v.lat * 1000000.0);
-//			lon = (int) (v.lon * 1000000.0);
-//			gpt = new GeoPoint(lat,lon);
-//			voi = new VehicleOverlayItem(gpt,"","");
-//			voi.v = v;
-//			vehicleMarkers.addOverlay(voi);
-//		}
-
+		for (Vehicle v : mRoute.vehicles) {
+			lat = (int) (v.lat * 1000000.0);
+			lon = (int) (v.lon * 1000000.0);
+			gpt = new GeoPoint(lat,lon);
+			voi = new VehicleOverlayItem(gpt,"","");
+			voi.v = v;
+			vehicleMarkers.addOverlay(voi);
+		}
+		
 		if (stopsMarkers==null) {
 			Log.e("MapUpdaterTask","stopsMarkers null");
 		}
