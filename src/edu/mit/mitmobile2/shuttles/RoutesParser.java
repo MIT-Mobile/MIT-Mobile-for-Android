@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.shuttles;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -9,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Prediction;
@@ -66,6 +64,8 @@ public class RoutesParser {
 		if (jItem.has("path")) {
 			routeItem.path = parseJSONPath(jItem.getJSONObject("path"));
 		}
+		
+		routeItem.calculateUpcoming();
 		
 		return routeItem;
 	}
@@ -133,20 +133,6 @@ public class RoutesParser {
 			stops.add(stopItem);
 		}
 		
-		if (jRoute.getBoolean("active")) {
-			long minTimestamp = stops.get(0).next;
-			long now = new Date().getTime() / 1000;
-			int upcomingIndex = 0;
-			for (int i = 0; i < stops.size(); i++) {
-				Stops stop = stops.get(i);
-				if (stop.next < minTimestamp && stop.next > now) {
-					minTimestamp = stop.next;
-					upcomingIndex = i;
-				}
-			}
-			stops.get(upcomingIndex).upcoming = true;
-		}
-		
 		return stops;
 	}
 	
@@ -160,10 +146,6 @@ public class RoutesParser {
 		stopItem.lat = jStop.getDouble("lat");
 		stopItem.lon = jStop.getDouble("lon");
 		
-		// TODO non exist in :stop item
-		stopItem.upcoming = jStop.optBoolean("upcoming", false);
-		stopItem.next = jStop.optInt("next", 0);
-		stopItem.now = new Date().getTime() / 1000;
 		if (jRoute != null) {
 			stopItem.route_id = jRoute.getString("id");
 		} else {
@@ -175,10 +157,11 @@ public class RoutesParser {
 
 		// predicted delays
 		if (jStop.has("predictions")) {
-			JSONArray predictions = jStop.optJSONArray("predictions");
-			if (predictions != null) {
-				for (int p = 0; p < predictions.length(); p++) {
-					JSONObject jPrediction = predictions.getJSONObject(p);
+			JSONArray jPredictions = jStop.optJSONArray("predictions");
+			List<Prediction> predictions = new ArrayList<RouteItem.Prediction>();
+			if (jPredictions != null) {
+				for (int p = 0; p < jPredictions.length(); p++) {
+					JSONObject jPrediction = jPredictions.getJSONObject(p);
 
 					Prediction prediction = new Prediction();
 					prediction.vehicleID = jPrediction
@@ -186,9 +169,10 @@ public class RoutesParser {
 					prediction.timestamp = jPrediction.getLong("timestamp");
 					prediction.seconds = jPrediction.getInt("seconds");
 
-					stopItem.predictions.add(prediction);
+					predictions.add(prediction);
 				}
 			}
+			stopItem.setPredictions(predictions, predictions.size() > 0);
 		}
 		
 		// Schedule
@@ -203,7 +187,7 @@ public class RoutesParser {
 					Log.e("", "EROR value: " + jSchedule.get(i));
 				}
 			}
-			stopItem.setSchedule(schedule);
+			stopItem.setSchedule(schedule, stopItem.getPredictions().size() == 0);
 		}
 		
 		return stopItem;

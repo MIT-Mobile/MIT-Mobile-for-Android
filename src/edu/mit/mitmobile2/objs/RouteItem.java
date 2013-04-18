@@ -1,7 +1,10 @@
 package edu.mit.mitmobile2.objs;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -86,6 +89,53 @@ public class RouteItem implements Parcelable {
 
 	private static boolean readBool(Parcel in) {
 		return (in.readInt() == 1);
+	}
+	
+	
+	public void calculateUpcoming() {
+		for (Stops stop : stops) {
+			stop.upcoming = false;
+		}
+		
+		for (Vehicle vehicle : vehicles) {
+			
+			int upcommingIndex = 0;
+			String upcomingID = "";
+			long vehicleMin = stops.get(0).now * 2;
+			boolean hasUpcoming = false;
+			
+			for (int i = 0; i < stops.size(); i++) {
+				Stops stop = stops.get(i);
+				long predictionMin = vehicleMin;
+				boolean hasMinTime = false;
+				
+				for (Prediction prediction : stop.predictions) {
+					long predictionTime = prediction.timestamp / 1000;
+					if (prediction.vehicleID.equals(vehicle.id) && 
+							predictionTime < predictionMin &&
+							predictionTime > stop.now) {
+						predictionMin = predictionTime;
+						hasMinTime = true;
+					}
+				}
+				
+				if (hasMinTime && predictionMin < vehicleMin) {
+					vehicleMin = predictionMin;
+					upcommingIndex = i;
+					upcomingID = stop.id;
+					hasUpcoming = true;
+				}
+			}
+			
+//			if (hasUpcoming)
+//				stops.get(upcommingIndex).upcoming = true;
+			if (hasUpcoming) {
+				for (Stops stop : stops) {
+					if (stop.id.equals(upcomingID))
+						stop.upcoming = true;
+				}
+			}
+		}
 	}
 	
 	
@@ -183,7 +233,7 @@ public class RouteItem implements Parcelable {
 		public String title;
 		public double lat;
 		public double lon;
-		public List<Prediction> predictions;
+		private List<Prediction> predictions;
 		private List<Long> schedule;
 		
 		public long next;
@@ -195,6 +245,9 @@ public class RouteItem implements Parcelable {
 		public Stops () {
 			predictions = new ArrayList<Prediction>();
 			schedule = new ArrayList<Long>();
+			upcoming = false;
+			next = 0;
+			now = new Date().getTime() / 1000;
 		}
 		
 		public Stops(Parcel in) {
@@ -254,26 +307,49 @@ public class RouteItem implements Parcelable {
 		}
 		
 		
-		public void setSchedule(List<Long> schedule) {
-			int index = -1;
-			long diff = now;
-			
-			for (int i = 0; i < schedule.size(); i++) {
-				long value = schedule.get(i);
-				if (value > now && (value - now < diff)) {
-					diff = value - now;
-					index = i;
-				}
-			}
-			if (index != -1)
-				next = schedule.get(index);
-			else
-				next = schedule.get(0);
+		public void setSchedule(List<Long> schedule, boolean isPredictable) {
 			this.schedule = schedule;
+			if (schedule.size() == 0)
+				return;
+			
+			if (!isPredictable) {
+				int index = -1;
+				long diff = now;
+				
+				for (int i = 0; i < schedule.size(); i++) {
+					long value = schedule.get(i);
+					if (value > now && (value - now < diff)) {
+						diff = value - now;
+						index = i;
+					}
+				}
+				
+				next = schedule.get(index != -1 ? index : 0);
+			}
 		}
 		
 		public List<Long> getSchedule() {
 			return schedule;
+		}
+		
+		public void setPredictions(List<Prediction> predictions, boolean isPredictable) {
+			this.predictions = predictions;
+			
+			if (predictions.size() == 0)
+				return;
+			
+			if (isPredictable) {
+				for (Prediction prediction : predictions) {
+					if (prediction.timestamp / 1000 > now) {
+						next = prediction.timestamp / 1000;
+						break;
+					}
+				}
+			}
+		}
+		
+		public List<Prediction> getPredictions() {
+			return predictions;
 		}
 		
 	}

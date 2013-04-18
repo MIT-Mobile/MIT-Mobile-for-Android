@@ -95,8 +95,8 @@ public class StopsParser extends JSONParser {
 	
 	@Override
 	protected void parseObj() {
+		/*
 		try {
-			
 			JSONArray jStops = jItem.optJSONArray("stops");
 			
 			long now = new Date().getTime() / 1000;
@@ -152,17 +152,16 @@ public class StopsParser extends JSONParser {
 							Log.e("", "EROR value: " + jSchedule.get(i));
 						}
 					}
-					stopItem.setSchedule(schedule);
+					stopItem.setSchedule(schedule, false);
 				}
 				
 				
 				items.add(stopItem);
 			}
-		
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
+		*/
 	}
 	
 	

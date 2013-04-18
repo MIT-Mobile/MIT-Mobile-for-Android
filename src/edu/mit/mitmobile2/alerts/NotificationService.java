@@ -195,7 +195,7 @@ public class NotificationService extends Service {
 				
 				// given route, now find closest time 
 				next = match.next*1000;
-				for (Prediction prediction : match.predictions) {
+				for (Prediction prediction : match.getPredictions()) {
 					Log.d("NotificationService","shuttle-alert: closest: " + String.valueOf(next));
 					if (alarmTime<next) {
 						break;
