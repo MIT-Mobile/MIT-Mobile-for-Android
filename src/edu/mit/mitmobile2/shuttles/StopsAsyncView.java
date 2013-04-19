@@ -49,7 +49,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	
 	MITStopsSliderActivity top;
 	
-	CheckStopsTask stopsTask;
+//	CheckStopsTask stopsTask;
 	
 	TextView routeTV;
 	ListView stopsLV;
@@ -69,6 +69,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	
 	
 	/****************************************************/
+	/*
 	class CheckStopsTask extends AsyncTask<String, Void, Void> {
 		
 		StopsParser sp;
@@ -111,23 +112,24 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	    }
 	
 	} 
+	*/
 	
 	/****************************************************/
 	void terminate() {
-		if (stopsTask!=null) {
-			boolean isCanceled;
-			isCanceled = stopsTask.cancel(true);
-			while (!isCanceled) {
-				 // Sleep...
-				 try {
-					 Thread.sleep(1000*10);
-				 } catch (InterruptedException e) {
-					 e.printStackTrace();
-				 }
-				isCanceled = stopsTask.cancel(true);
-			}
-			stopsTask = null;
-		}
+//		if (stopsTask!=null) {
+//			boolean isCanceled;
+//			isCanceled = stopsTask.cancel(true);
+//			while (!isCanceled) {
+//				 // Sleep...
+//				 try {
+//					 Thread.sleep(1000*10);
+//				 } catch (InterruptedException e) {
+//					 e.printStackTrace();
+//				 }
+//				isCanceled = stopsTask.cancel(true);
+//			}
+//			stopsTask = null;
+//		}
 	}
 	
 	/**
@@ -613,12 +615,14 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 
 	@Override
 	public void updateView() {
+		if (updateTimer != null) getData();
 		//if (!updateThreadRunning) getData();
 	}
 	
 	@Override
 	public void onSelected() {
-		if (stopsTask==null) {
+		if (updateTimer == null) {
+//		if (stopsTask==null) {
 			lb.startLoading();
 			getData();
 		}

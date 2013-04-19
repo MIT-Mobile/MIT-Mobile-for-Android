@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import edu.mit.mitmobile2.shuttles.ShuttleModel;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -97,9 +95,15 @@ public class RouteItem implements Parcelable {
 			stop.upcoming = false;
 		}
 		
+		if (predictable) {
+			setUpcomingByPredictions();
+		} else {
+			setUpcomingBySchedule();
+		}
+	}
+	
+	private void setUpcomingByPredictions() {
 		for (Vehicle vehicle : vehicles) {
-			
-			int upcommingIndex = 0;
 			String upcomingID = "";
 			long vehicleMin = stops.get(0).now * 2;
 			boolean hasUpcoming = false;
@@ -121,21 +125,35 @@ public class RouteItem implements Parcelable {
 				
 				if (hasMinTime && predictionMin < vehicleMin) {
 					vehicleMin = predictionMin;
-					upcommingIndex = i;
 					upcomingID = stop.id;
 					hasUpcoming = true;
 				}
 			}
 			
-//			if (hasUpcoming)
-//				stops.get(upcommingIndex).upcoming = true;
 			if (hasUpcoming) {
 				for (Stops stop : stops) {
-					if (stop.id.equals(upcomingID))
+					if (stop.id.equals(upcomingID)) {
 						stop.upcoming = true;
+						break;
+					}
 				}
 			}
 		}
+	}
+	
+	private void setUpcomingBySchedule() {
+		long minTimestamp = stops.get(0).next;
+		long now = new Date().getTime() / 1000;
+		int upcomingIndex = 0;
+		
+		for (int i = 0; i < stops.size(); i++) {
+			Stops stop = stops.get(i);
+			if (stop.next < minTimestamp && stop.next > now) {
+				minTimestamp = stop.next;
+				upcomingIndex = i;
+			}
+		}
+		stops.get(upcomingIndex).upcoming = true;
 	}
 	
 	
@@ -306,7 +324,11 @@ public class RouteItem implements Parcelable {
 			return 0;
 		}
 		
-		
+		/**
+		 * 
+		 * @param schedule
+		 * @param isPredictable If false set a next arrival time value using schedule.
+		 */
 		public void setSchedule(List<Long> schedule, boolean isPredictable) {
 			this.schedule = schedule;
 			if (schedule.size() == 0)
@@ -332,6 +354,11 @@ public class RouteItem implements Parcelable {
 			return schedule;
 		}
 		
+		/**
+		 * 
+		 * @param predictions
+		 * @param isPredictable If true set a next arrival time value using predictions.
+		 */
 		public void setPredictions(List<Prediction> predictions, boolean isPredictable) {
 			this.predictions = predictions;
 			

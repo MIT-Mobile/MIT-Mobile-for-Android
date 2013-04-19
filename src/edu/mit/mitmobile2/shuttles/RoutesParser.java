@@ -187,7 +187,7 @@ public class RoutesParser {
 					Log.e("", "EROR value: " + jSchedule.get(i));
 				}
 			}
-			stopItem.setSchedule(schedule, stopItem.getPredictions().size() == 0);
+			stopItem.setSchedule(schedule, stopItem.getPredictions().size() > 0);
 		}
 		
 		return stopItem;
