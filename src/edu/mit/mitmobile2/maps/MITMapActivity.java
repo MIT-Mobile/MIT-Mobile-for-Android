@@ -267,7 +267,7 @@ public class MITMapActivity extends NewModuleActivity {
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			mContext.startActivity(i);
 
-			startActivity(i);
+//			startActivity(i);
 	    }
 	    if (id.equals(MENU_SEARCH)) {
 		    onSearchRequested();

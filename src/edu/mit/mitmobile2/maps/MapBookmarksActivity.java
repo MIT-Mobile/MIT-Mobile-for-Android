@@ -25,6 +25,8 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
+import edu.mit.mitmobile2.TitleBarSwitch;
+import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapBookmarksActivity extends NewModuleActivity {
@@ -34,6 +36,8 @@ public class MapBookmarksActivity extends NewModuleActivity {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public MITMapView map;
 
 	private MapModel mMapModel;
 	Cursor mMapsCursor;
@@ -45,6 +49,11 @@ public class MapBookmarksActivity extends NewModuleActivity {
 	ArrayList<MapItem> mapItems;
 	MapsDB db;
 	Context context;
+	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
+	TitleBarSwitch mMapListSwitch;
+	private static String LIST = "LIST";
+	private static String MAP = "MAP";
+
 	
 	private final static String TAG = "MapBookmarksActivity";
 	private final static String MENU_CLEAR_BOOKMARKS = "menu_clear_bookmarks";
@@ -57,7 +66,9 @@ public class MapBookmarksActivity extends NewModuleActivity {
 		mapItems = new ArrayList<MapItem>();
 
 		setContentView(R.layout.map_bookmarks_list);	
-		initSecondaryTitleBar();
+        map = (MITMapView)findViewById(R.id.map);
+
+		initSecondaryTitleBar();		
 		mListView = (ListView)findViewById(R.id.mapBookmarksLV);
 		mEmptyMessageTV = (TextView)findViewById(R.id.mapBookmarksListEmptyTV);
 		mLoaderView = (FullScreenLoader)findViewById(R.id.mapBookmarksListLoader);
@@ -68,7 +79,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
 		mLoaderView.setVisibility(View.VISIBLE);
 		mListView.setVisibility(View.GONE);
 		mMapModel = new MapModel(context);
-		mMapModel.getBookmarks(getBookmarksHandler);						
+		mMapModel.getBookmarks(getBookmarksHandler);
 	}
 	
 	@Override
@@ -82,8 +93,23 @@ public class MapBookmarksActivity extends NewModuleActivity {
 	
 	private void initSecondaryTitleBar() {
 		final MITPlainSecondaryTitleBar titleBar = new MITPlainSecondaryTitleBar(this);
-		titleBar.setTitle("Bookmarks");
+		titleBar.setTitle("Bookmarks");		
+		
+		mMapListSwitch = new TitleBarSwitch(this);
+		mMapListSwitch.setLabels(MAP, LIST);
+		mMapListSwitch.setSelected(LIST);
+
+		mMapListSwitch.setOnToggledListener(new OnToggledListener() {
+			@Override
+			public void onToggled(String selected) {
+				toggleMapList(selected);
+			}
+		});
+
+		titleBar.addActionView(mMapListSwitch);
+
 		getTitleBar().addSecondaryBar(titleBar);
+				
 	}
 
 	@Override
@@ -120,10 +146,12 @@ public class MapBookmarksActivity extends NewModuleActivity {
 		if (mapItems.size() > 0) {
 			mListView.setVisibility(View.VISIBLE);			
 			mEmptyMessageTV.setVisibility(View.GONE);
+			mSecondaryTitleBar.setVisibility(View.VISIBLE);
 		}
 		else {
 			mEmptyMessageTV.setVisibility(View.VISIBLE);
 			mListView.setVisibility(View.GONE);			
+			mSecondaryTitleBar.setVisibility(View.GONE);
 		}
 		
 		mLoaderView.setVisibility(View.GONE);
@@ -169,6 +197,10 @@ public class MapBookmarksActivity extends NewModuleActivity {
             	try {
             		mapItems = (ArrayList<MapItem>)msg.obj;
             		Toast.makeText(context, mapItems.size() + " bookmarks", Toast.LENGTH_LONG).show();
+            		if (mapItems != null && mapItems.size() > 0) {
+            			map.addMapItems(mapItems);
+            			map.fitMapItems();
+            		}
             		updateUI();
             	}
             	catch (Exception e) {
@@ -177,5 +209,15 @@ public class MapBookmarksActivity extends NewModuleActivity {
             	}
         }
     };
+    
+    private void toggleMapList(String selected) {
+		if(selected.equals(LIST)) {
+			mListView.setVisibility(View.VISIBLE);
+			map.setVisibility(View.GONE);			
+		} else if(selected.equals(MAP)) {
+			mListView.setVisibility(View.GONE);
+			map.setVisibility(View.VISIBLE);
+		}
+	}
 
 }

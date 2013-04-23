@@ -71,7 +71,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	public static final String SEARCH_TERM_KEY = "search_term";
 	public static final String RECENTLY_VIEWED_FLAG = "show_recents";
 	public static final int TARGET_WKID = 102113; // the wikid of the map used to export images 
-	private static final String MENU_BOOKMARKED = "menu_bookmark";
+	private static final String MENU_BOOKMARKS = "bookmarks";
 	private static final String MENU_SHARE = "menu_share";
 
 	private List<MapItem> mMapItems = Collections.emptyList();
@@ -89,7 +89,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	RemoteImageView mThumbnailView;
 	//MITMapView mThumbnailView;
 	Button mapGoogleMapBtn;
-	ImageView mapBookmarkBtn;
+	Button mapBookmarkBtn;
 	
 	String bbox;
 	String imgUrl;
@@ -280,7 +280,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			tabConfigurator.configureTabs();
 					
 			mapDetailsQueryTV = (TextView) mMainLayout.findViewById(R.id.mapDetailsQueryTV);
-			if (mMapItem.query == null || mMapItem.query.isEmpty()) {
+			if (mMapItem.query == null || mMapItem.query.trim().length() == 0) {
 				mapDetailsQueryTV.setVisibility(View.GONE);
 			}
 			else {
@@ -317,18 +317,17 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			});
 			
 			// Bookmark Button
-			mapBookmarkBtn = (ImageView) mMainLayout.findViewById(R.id.mapBookmarkBtn);
+			mapBookmarkBtn = (Button) mMainLayout.findViewById(R.id.mapBookmarkBtn);
 			MapItem dbItem = db.retrieveMapItem((String)mMapItem.getItemData().get("id"));
 			if (dbItem == null) {
 				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is not bookmarked");
-				mapBookmarkBtn.setImageResource(R.drawable.bookmark_off);
+				mapBookmarkBtn.setBackgroundResource(R.drawable.button_bookmark_off);
 				mapBookmarkBtn.setTag("off");
 			}
 			else {
 				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is bookmarked");
-				mapBookmarkBtn.setImageResource(R.drawable.bookmark_on);
+				mapBookmarkBtn.setBackgroundResource(R.drawable.button_bookmark_on);
 				mapBookmarkBtn.setTag("on");
-
 			}
 
 			
@@ -337,13 +336,13 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 				public void onClick(View v) {
 					if (v.getTag() == "off") {	
 						MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
-						((ImageView)v).setImageResource(R.drawable.bookmark_on);
+						v.setBackgroundResource(R.drawable.button_bookmark_on);
 						v.setTag("on");
 						Toast.makeText(mContext, "map item saved", 1).show();
 					}
 					else {
 						MapsDB.getInstance(mContext).delete(mMapItem);
-						((ImageView)v).setImageResource(R.drawable.bookmark_off);
+						v.setBackgroundResource(R.drawable.button_bookmark_off);
 						v.setTag("off");
 						Toast.makeText(mContext, "map item removed", 1).show();						
 					}
@@ -368,7 +367,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			mapDetailsPhotoView = (RemoteImageView) tabHost.findViewById(R.id.mapDetailsPhotoView);
 			mapDetailsPhotosTV = (TextView) tabHost.findViewById(R.id.mapDetailsPhotosTV);
 			
-			if (imgUrl.isEmpty()) {
+			if (imgUrl == null || imgUrl.trim().length() == 0) {
 				mapDetailsPhotosTV.setText("(No Photo Available)");
 				mapDetailsPhotoView.setVisibility(View.GONE);
 			}
@@ -415,7 +414,12 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 
 	@Override
 	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
+		Log.d(TAG,"optionId = " + optionId);
+	    if (optionId.equals(MENU_BOOKMARKS)) {
+			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			mContext.startActivity(i);
+	    }
 		
 	}
 	
