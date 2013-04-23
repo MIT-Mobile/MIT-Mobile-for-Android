@@ -26,7 +26,7 @@ public class LibraryItem {
         public Date range_end;
         public List<Hours> hours;
         public String name;
-        public String termday;
+        public Date termday;
     }
 
     public static class Hours {

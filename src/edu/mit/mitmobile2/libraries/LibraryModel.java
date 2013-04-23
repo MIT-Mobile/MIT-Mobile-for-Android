@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
 import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
@@ -28,18 +29,21 @@ public class LibraryModel {
     public static String MODULE_LIBRARY = "libraries";
 	public static final String TAG = "LibraryModel";
 
+	private static final String BASE_PATH = "/libraries";
+	private static final String LINKS_PATH = "/links";
+	private static final String LOCATIONS_PATH = "/locations";
+	private static final String WORLDCAT_PATH = "/worldcat";
+	
+	private static final String LOANS_PATH = "/account/loans";
+	private static final String HOLDS_PATH = "/account/holds";
+	private static final String FINES_PATH = "/account/fines";
 
     // private static HashMap<String, SearchResults<BookItem>> searchCache = new
     // FixedCache<SearchResults<BookItem>>(10);
 
     public static void fetchLocationsAndHours(final Context context, final Handler uiHandler) {
-
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        parameters.put("command", "locations");
-        parameters.put("module", MODULE_LIBRARY);
-
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
+        webApi.requestJSONArray(BASE_PATH + LOCATIONS_PATH, null, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -53,13 +57,9 @@ public class LibraryModel {
     }
 
     public static void fetchLibraryDetail(final LibraryItem libraryItem, final Context context, final Handler uiHandler) {
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        parameters.put("module", MODULE_LIBRARY);
-        parameters.put("command", "locationDetail");
-        parameters.put("library", libraryItem.library);
-
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(BASE_PATH + LOCATIONS_PATH + "/" + libraryItem.library.replace(" ", "%20"), 
+        		null, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
             @Override
@@ -74,18 +74,19 @@ public class LibraryModel {
     public static void searchBooks(final String searchTerm, boolean showErrors, final LibrarySearchResults previousResults,
             final Context context, final Handler uiHandler) {
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        parameters.put("command", "search");
-        parameters.put("module", MODULE_LIBRARY);
-        parameters.put("q", searchTerm);
+        HashMap<String, String> parameters = null;
         if (previousResults != null) {
+        	parameters = new HashMap<String, String>();
             parameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
         }
-
+        
+        String requestUrl = BASE_PATH + WORLDCAT_PATH + "/q=" + searchTerm;
+        
         MobileWebApi webApi = new MobileWebApi(false, showErrors, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
         webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-        webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(requestUrl, parameters, 
+        		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -117,13 +118,11 @@ public class LibraryModel {
     }
     
     public static void fetchWorldCatBookDetails(final BookItem book, Context context, final Handler uiHandler) {
-    	HashMap<String, String> parameters = new HashMap<String, String>();
-    	parameters.put("command", "detail");
-    	parameters.put("module", MODULE_LIBRARY);
-    	parameters.put("id", book.id);
+    	String requestUrl = BASE_PATH + WORLDCAT_PATH + "/" + book.id;
     	
     	MobileWebApi webApi = new MobileWebApi(false, true, "Book Details", context, uiHandler);
-    	webApi.requestJSONObject(parameters, new JSONObjectResponseListener(
+    	webApi.requestJSONObject(requestUrl, null, 
+    			new JSONObjectResponseListener(
     		new DefaultErrorListener(uiHandler), new DefaultCancelRequestListener(uiHandler)) {
 				@Override
 				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
@@ -135,13 +134,8 @@ public class LibraryModel {
     }
 
     public static void fetchLinks(final Context context, final Handler uiHandler) {
-
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        parameters.put("command", "links");
-        parameters.put("module", MODULE_LIBRARY);
-
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler);
-        webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
+        webApi.requestJSONArray(BASE_PATH + LINKS_PATH, null, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -202,7 +196,7 @@ public class LibraryModel {
         searchParameters.put("subject", subject);
         searchParameters.put("question", question);
         searchParameters.put("ask_type", askType);
-        searchParameters.put("module", MODULE_LIBRARY);
+//        searchParameters.put("module", MODULE_LIBRARY);
         if (phone != null) {
         	searchParameters.put("phone", phone);
         }
@@ -214,7 +208,9 @@ public class LibraryModel {
         }
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+//        webApi.requestJSONObject(searchParameters,
+        webApi.requestJSONObject(BASE_PATH + "/forms/askUs", searchParameters, 
+        		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -224,21 +220,24 @@ public class LibraryModel {
                     MobileWebApi.sendSuccessMessage(uiHandler, FormResult.factory(object));
                 }
             }
+            
         });
     }
     
     public static void sendTellUsInfo(final Context context, final Handler uiHandler, String status, String feedback) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "sendTellUsEmail");
+//        searchParameters.put("command", "sendTellUsEmail");
         if (status != null && !"".equals(status)) {
             searchParameters.put("status", status);
         }
         searchParameters.put("feedback", feedback);
-        searchParameters.put("module", MODULE_LIBRARY);
+//        searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(BASE_PATH + "/forms/tellUs", searchParameters,
+//        webApi.requestJSONObject(searchParameters, 
+        		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
@@ -326,17 +325,14 @@ public class LibraryModel {
             	MobileWebApi.sendSuccessMessage(uiHandler, identity);
             }
             
-         });    	
+         });
     }
     
 	public static void fetchLoanDetail(final Context context, final Handler uiHandler) {
-		Log.d(TAG,"getLoanData()");
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "libraries");
-		params.put("command", "loans");
+		String requestUrl = BASE_PATH + LOANS_PATH;
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-    	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+    	webApi.requestJSONObject(requestUrl, null, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override
@@ -353,7 +349,6 @@ public class LibraryModel {
 
 			@Override
 			public void onError() {
-				// TODO Auto-generated method stub
 				Log.d(TAG,"onError()");
 			}
 			

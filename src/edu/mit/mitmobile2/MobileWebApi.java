@@ -419,7 +419,8 @@ public class MobileWebApi {
 			connection = new ConnectionWrapper();
 		}
 		
-		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path;
+		String parametersStr = parameters != null ? "?" + query(parameters) : "";
+		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path + parametersStr;
 		Log.d(TAG, "requesting " + urlString);
 		boolean isStarted = connection.openURL(urlString, callback);
 		

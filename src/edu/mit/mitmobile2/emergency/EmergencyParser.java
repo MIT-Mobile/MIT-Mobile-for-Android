@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.emergency;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -12,7 +11,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
-
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.alerts.NotificationService;
@@ -27,6 +25,10 @@ public class EmergencyParser {
 	private static final int CONTACTS_CACHE_HOURS = 72;
 	
 	private static EmergencyItem sEmergencyItem = null;
+	
+	private static final String BASE_PATH = "/emergency_info";
+	private static final String CONTACTS_PATH = "/contacts";
+	private static final String ANNOUNCEMENT_PATH = "/announcement";
 
 	public static EmergencyItem getStatus() {
 		return sEmergencyItem;
@@ -42,11 +44,8 @@ public class EmergencyParser {
 			MobileWebApi.sendSuccessMessage(uiHandler);
 		} else {
 			MobileWebApi api = new MobileWebApi(false, true, "Emergency", context, uiHandler);
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "emergency");
-			params.put("command", "contacts");
 			final EmergencyDB db = EmergencyDB.getInstance(context);
-			api.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+			api.requestJSONArray(BASE_PATH + CONTACTS_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 	                new MobileWebApi.DefaultErrorListener(uiHandler),
 	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 				@Override
@@ -74,9 +73,7 @@ public class EmergencyParser {
 		} else {
 			api = new MobileWebApi(false, true, "Emergency", context, handler);
 		}
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "emergency");
-		api.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+		api.requestJSONArray(BASE_PATH + ANNOUNCEMENT_PATH, null, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(handler),
                 new MobileWebApi.DefaultCancelRequestListener(handler)) {
 			@Override
@@ -99,7 +96,7 @@ public class EmergencyParser {
 		EmergencyItem item = new EmergencyItem();
     	
 		try {
-			JSONObject jsonObj = (JSONObject) array.get(0);
+			JSONObject jsonObj = array.getJSONObject(0);
 			item.text = jsonObj.getString("text");
 			item.title = jsonObj.getString("title");
 			

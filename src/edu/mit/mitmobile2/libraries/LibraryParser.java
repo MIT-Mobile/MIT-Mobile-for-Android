@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.libraries;
 
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,11 +76,16 @@ public class LibraryParser {
     
     private static Schedule getSchedule(JSONObject object, boolean isCurrentTerm) throws JSONException {
         Schedule schedule = new Schedule();
-        schedule.range_start = new Date(object.getJSONObject("range").getLong("start") * 1000);
-        schedule.range_end = new Date(object.getJSONObject("range").getLong("end") * 1000);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
+        try {
+			schedule.range_start = dateFormatter.parse(object.getJSONObject("range").getString("start"));
+			schedule.range_end = dateFormatter.parse(object.getJSONObject("range").getString("end"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
         schedule.name = object.getString("name");
         if(!isCurrentTerm) {
-            schedule.termday = object.getString("termday");
+        	schedule.termday = new Date(object.getLong("termday"));
         }
         
         JSONArray hoursArray = object.getJSONArray("hours");
