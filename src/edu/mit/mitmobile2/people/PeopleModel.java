@@ -17,6 +17,7 @@ import android.os.Handler;
 public class PeopleModel {
 	
 	private static int MAX_RESULTS = 100;
+	private static String BASE_PATH = "/people";
 	
 	private static HashMap<String, SearchResults<PersonItem>> searchCache = new FixedCache<SearchResults<PersonItem>>(10);
 	
@@ -27,14 +28,15 @@ public class PeopleModel {
 		}
 		
 		HashMap<String, String> searchParameters = new HashMap<String, String>();
-		searchParameters.put("module", "people");
 		searchParameters.put("q", searchTerm);
-
+		
 		MobileWebApi webApi = new MobileWebApi(false, true, "People", context, uiHandler);
 		webApi.setIsSearchQuery(true);
 		webApi.setLoadingDialogType(MobileWebApi.LoadingDialogType.Search);
-		webApi.requestJSONArray(searchParameters, new MobileWebApi.JSONArrayResponseListener(
-			new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
+		webApi.requestJSONArray(BASE_PATH, searchParameters, 
+				new MobileWebApi.JSONArrayResponseListener(
+						new MobileWebApi.DefaultErrorListener(uiHandler), 
+						new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			
 			@Override
 			public void onResponse(JSONArray array) {
