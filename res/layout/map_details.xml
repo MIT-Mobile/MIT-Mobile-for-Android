@@ -89,11 +89,13 @@
 					android:layout_width="150dip" 
 					android:layout_height="wrap_content"/>
 						
-			<ImageView android:src="@drawable/bookmark_off"
-			    android:id="@+id/mapBookmarkBtn" 
+			<Button 
+			    android:id="@+id/mapBookmarkBtn"
+			    android:text="@string/map_bookmark_off"
+			    android:gravity="center"
+			    android:layout_gravity="center_vertical"
 			    android:layout_height="wrap_content"
 				android:layout_width="wrap_content"/>
-		
 		
 			</LinearLayout>
 	

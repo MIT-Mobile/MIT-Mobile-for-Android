@@ -74,7 +74,12 @@ public class MapsDB {
 	}
 	
 	private String[] whereArgs(MapItem MapItem) {
-		return new String[] {Long.toString(MapItem.sql_id)};
+		String id = (String)MapItem.getItemData().get("id");
+		Log.d(TAG,"delete id = " + id);
+		String[] args = new String[1];
+		args[0] = id;
+		return args;
+		//return new String[] {(String)MapItem.getItemData().get("id")};
 	}
 	/********************************************************************/
 	synchronized void clearAll() {
@@ -84,7 +89,9 @@ public class MapsDB {
 	
 	synchronized void delete(MapItem mi) {
 		SQLiteDatabase db = mMapsDBHelper.getWritableDatabase();
-		db.delete(MAPS_TABLE, ID_WHERE, whereArgs(mi));
+		int result = db.delete(MAPS_TABLE, MAP_ID_WHERE, whereArgs(mi));
+		Log.d(TAG,"delete result = " + result);
+
 		db.close();
 		mMapsDBHelper.close();
 	}
