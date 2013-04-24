@@ -222,7 +222,10 @@
 
 		<!-- LIBRARIES -->
 		<activity android:name=".libraries.LibrariesActivity" />
-
+		
+		<!-- DINING -->
+		<activity android:name=".dining.DiningHomeActivity" />
+		
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
 		<activity android:name=".about.AboutCreditsActivity" />

@@ -32,6 +32,7 @@ import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.about.AboutActivity;
 import edu.mit.mitmobile2.alerts.NotificationsHelper;
+import edu.mit.mitmobile2.dining.DiningModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
@@ -122,6 +123,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 				new FacilitiesModule(),
 				new QRReaderModule(),
 				new LinksModule(),
+				new DiningModule(),
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);
