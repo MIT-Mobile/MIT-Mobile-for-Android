@@ -11,4 +11,74 @@
 		android:layout_height="fill_parent" 
 		android:id="@+id/diningHomeLoader" />
 	
+	<TabHost 
+		    android:id="@+id/diningHomeTabHost"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"> 
+		    
+	    <LinearLayout
+		        android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"> 
+				
+	        <TabWidget
+		            android:id="@android:id/tabs"
+		            android:layout_width="fill_parent"
+		            android:layout_height="@dimen/tabHeight"/>
+		
+	        <ScrollView
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"
+					>
+	           
+	   	    	<LinearLayout
+		         	android:orientation="vertical"
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content"> 
+	   	         	    
+			        <TextView 
+			            	android:id="@+id/diningHomeMessage"
+			            	android:textColor="#000"
+			            	android:background="#FAF796"
+							android:paddingLeft="@dimen/standardPadding"
+							android:paddingRight="@dimen/standardPadding"
+							android:paddingTop="20dip"
+							android:paddingBottom="20dip"		
+							android:singleLine="true"
+										
+							android:layout_width="fill_parent" 
+							android:layout_height="wrap_content"/>	
+							
+			        
+			        <FrameLayout
+					        android:id="@android:id/tabcontent"
+							android:layout_width="fill_parent" 
+							android:layout_height="wrap_content">
+							
+			               <LinearLayout android:id="@+id/diningHomeHouseContent"  
+											android:orientation="vertical"
+											android:layout_width="fill_parent" 
+											android:layout_height="wrap_content">
+		
+						   </LinearLayout> 
+		
+			               <LinearLayout android:id="@+id/diningHomeRetailContent"  
+											android:orientation="vertical"
+											android:layout_width="fill_parent" 
+											android:layout_height="wrap_content">
+						   </LinearLayout> 
+		
+			       </FrameLayout>
+			       
+			       <TextView android:id="@+id/diningHomeResources" 
+						android:text="Footer\nFooter\nFooter\nFooter"
+						android:layout_width="fill_parent" 
+						android:layout_height="wrap_content"/>	
+						
+			    </LinearLayout>
+			</ScrollView>	
+	    </LinearLayout>
+	</TabHost>
+	
+	
 </LinearLayout>

@@ -1,12 +1,188 @@
 {
   "uri": "http://m.mit.edu/apis/dining/",
-  "announcements_html": "<ul><li><a href=\"https://odysseyhms-web.mit.edu/hmswebstudent/\">ENROLL in the Spring Meal Plan Program today!</a></li><li><a href=\"/sites/default/files/u185/April_2013_Calendar_MIT.pdf\">Check out the House Dining events that are happening in APRIL!</a></li><li>Discover MIT's Farmer's Market in the Gates Lobby in Stata - Tuesdays from 10am-4pm.</li><li>DID YOU KNOW...</li><li>You can reserve the R&amp;D Pub for your event? Call Ashley at 617-253-2735 for more information!</li></ul>",
+  "announcements_html": "<ul><li><a href=\"https://odysseyhms-web.mit.edu/hmswebstudent/\">ENROLL in the Spring Meal Plan Program today!</a></li><li> <a href=\"/sites/default/files/u185/April_2013_Calendar_MIT.pdf\">Check out the House Dining events that are happening in APRIL!</a></li><li>Discover MIT's Farmer's Market in the Gates Lobby in Stata - Tuesdays from 10am-4pm.</li><li>DID YOU KNOW...</li><li>You can reserve the R&amp;D Pub for your event? Call Ashley at 617-253-2735 for more information!</li></ul>",
   "venues": {
     "house": [
+      {
+        "id": "baker",
+        "uri": "http://m.mit.edu/apis/dining/venues/house/baker",
+        "name": "Baker",
+        "location": {
+          "description": "W71 - Next House",
+          "latitude": "42.3556715",
+          "longitude": "-71.1019165",
+          "street": "500 Memorial Drive",
+          "city": "Cambridge",
+          "state": "MA",
+          "zipcode": "02139"
+        },
+        "meals_by_day": [
+          {
+            "date": "2013-04-08",
+            "message": "Closed due to Institute holiday"
+          },
+          {
+            "date": "2013-04-09",
+            "meals": [
+              {
+                "name": "Breakfast",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
+                "items": [
+                  {
+                    "station": "market grill",
+                    "name": "vegan burger",
+                    "description": "served with fries",
+                    "dietary_flags": [
+                      "vegan"
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Lunch",
+                "message": "No lunch today"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "maseeh",
+        "uri": "http://m.mit.edu/apis/dining/venues/house/maseeh",
+        "name": "The Howard Dining Hall at Maseeh",
+        "location": {
+          "description": "W71 - Next House",
+          "latitude": "42.3556715",
+          "longitude": "-71.1019165",
+          "street": "500 Memorial Drive",
+          "city": "Cambridge",
+          "state": "MA",
+          "zipcode": "02139"
+        },
+        "meals_by_day": [
+          {
+            "date": "2013-04-08",
+            "message": "Closed due to Institute holiday"
+          },
+          {
+            "date": "2013-04-09",
+            "meals": [
+              {
+                "name": "Breakfast",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
+                "items": [
+                  {
+                    "station": "market grill",
+                    "name": "vegan burger",
+                    "description": "served with fries",
+                    "dietary_flags": [
+                      "vegan"
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Lunch",
+                "message": "No lunch today"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mccormick",
+        "uri": "http://m.mit.edu/apis/dining/venues/house/mccormick",
+        "name": "McCormick",
+        "location": {
+          "description": "W71 - Next House",
+          "latitude": "42.3556715",
+          "longitude": "-71.1019165",
+          "street": "500 Memorial Drive",
+          "city": "Cambridge",
+          "state": "MA",
+          "zipcode": "02139"
+        },
+        "meals_by_day": [
+          {
+            "date": "2013-04-08",
+            "message": "Closed due to Institute holiday"
+          },
+          {
+            "date": "2013-04-09",
+            "meals": [
+              {
+                "name": "Breakfast",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
+                "items": [
+                  {
+                    "station": "market grill",
+                    "name": "vegan burger",
+                    "description": "served with fries",
+                    "dietary_flags": [
+                      "vegan"
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Lunch",
+                "message": "No lunch today"
+              }
+            ]
+          }
+        ]
+      },
       {
         "id": "next",
         "uri": "http://m.mit.edu/apis/dining/venues/house/next",
         "name": "Next",
+        "location": {
+          "description": "W71 - Next House",
+          "latitude": "42.3556715",
+          "longitude": "-71.1019165",
+          "street": "500 Memorial Drive",
+          "city": "Cambridge",
+          "state": "MA",
+          "zipcode": "02139"
+        },
+        "meals_by_day": [
+          {
+            "date": "2013-04-08",
+            "message": "Closed due to Institute holiday"
+          },
+          {
+            "date": "2013-04-09",
+            "meals": [
+              {
+                "name": "Breakfast",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
+                "items": [
+                  {
+                    "station": "market grill",
+                    "name": "vegan burger",
+                    "description": "served with fries",
+                    "dietary_flags": [
+                      "vegan"
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Lunch",
+                "message": "No lunch today"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "simmons",
+        "uri": "http://m.mit.edu/apis/dining/venues/house/simmons",
+        "name": "Simmons",
         "location": {
           "description": "W71 - Next House",
           "latitude": "42.3556715",

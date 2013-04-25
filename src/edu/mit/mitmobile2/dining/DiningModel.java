@@ -8,15 +8,18 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.Html;
 
 public class DiningModel {
 
@@ -107,9 +110,26 @@ public class DiningModel {
 				mRetailVenues.add(new RetailDiningHall(jsonRetail.getJSONObject(i)));
 			}
 		}
+
+
+		public List<? extends DiningHall> getHouses() {
+			return mHouseVenues;
+		}
+
+		public List<? extends DiningHall> getRetail() {
+			return mRetailVenues;
+		}
+		
+		public String getAnnouncementsPlainText() {
+			return Html.fromHtml(mAnnouncementsHtml).toString();
+		}
+		
+		public String getAnnouncementsHtml() {
+			return mAnnouncementsHtml;
+		}
 	}
 	
-	public static class DiningHall {
+	public static abstract class DiningHall {
 		private String mId;
 		private String mName;
 		private String mUri;
@@ -121,6 +141,19 @@ public class DiningModel {
 			mName = object.getString("name");
 			mLocation = new DiningHallLocation(object.getJSONObject("location"));
 		}
+		
+		public enum Status {
+			CLOSED,
+			OPEN
+		}
+		
+		public String getName() {
+			return mName;
+		}
+		
+		public abstract String getTodaysHoursSummary(long currentTime);
+		
+		public abstract Status getCurrentStatus(long currentTime);				
 	}
 	
 	public static class HouseDiningHall extends DiningHall {
@@ -132,6 +165,16 @@ public class DiningModel {
 			for (int i = 0; i < jsonSchedule.length(); i++) {
 				mSchedule.add(new DailyMeals(jsonSchedule.optJSONObject(i)));
 			}
+		}
+
+		@Override
+		public String getTodaysHoursSummary(long currentTime) {
+			return "8am-10:59am, 11am-3pm";
+		}
+
+		@Override
+		public Status getCurrentStatus(long currentTime) {
+			return Status.CLOSED;
 		}		
 	}
 	
@@ -202,6 +245,16 @@ public class DiningModel {
 			for (int i = 0; i < jsonPayment.length(); i++) {
 				mPayment.add(jsonPayment.getString(i));
 			}			
+		}
+
+		@Override
+		public String getTodaysHoursSummary(long currentTime) {
+			return "8am-8pm";
+		}
+
+		@Override
+		public Status getCurrentStatus(long currentTime) {
+			return Status.OPEN;
 		}		
 	}
 	
