@@ -1,8 +1,9 @@
 package edu.mit.mitmobile2.tour;
 
 import edu.mit.mitmobile2.AudioPlayer;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.TitleBar;
@@ -11,14 +12,13 @@ import edu.mit.mitmobile2.tour.Tour.Site;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 
-public class TourSideTripActivity extends ModuleActivity {
+public class TourSideTripActivity extends NewModuleActivity {
 
 	private String mTitle;
 	private String mHtml; 
@@ -61,8 +61,8 @@ public class TourSideTripActivity extends ModuleActivity {
 		TextView titleView = (TextView) findViewById(R.id.tourStopTitle);
 		titleView.setText(mTitle);
 		
-		TitleBar titleBar = (TitleBar) findViewById(R.id.tourSideTripTitleBar);
-		titleBar.enableBackButtonListener(new View.OnClickListener() {
+		View backRow = findViewById(R.id.tourSideTripBackRow);
+		backRow.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				TourSideTripActivity.this.finish();				
@@ -98,20 +98,13 @@ public class TourSideTripActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new TourModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -121,4 +114,12 @@ public class TourSideTripActivity extends ModuleActivity {
 			mAudioPlayer.stop();
 		}
 	}
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

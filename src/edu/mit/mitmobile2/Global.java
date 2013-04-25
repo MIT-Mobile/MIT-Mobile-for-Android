@@ -1,13 +1,13 @@
 package edu.mit.mitmobile2;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,9 +17,8 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import edu.mit.mitmobile2.about.BuildSettings;
+import edu.mit.mitmobile2.about.Config;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
-import edu.mit.mitmobile2.classes.SharedData;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
 import edu.mit.mitmobile2.objs.NewsItem;
@@ -43,13 +42,12 @@ public class Global extends Application {
 	// Mobile Server 
 	private static final String TAG = "Global";
 	public static final String MIT_MOBILE_SERVER_KEY = "mit_mobile_server"; // key for server variable in the preferences file
-	public static final String DEFAULT_MIT_MOBILE_SERVER = BuildSettings.MOBILE_WEB_DOMAIN; // key for server variable in the preferences file
+	public static final String DEFAULT_MIT_MOBILE_SERVER = Config.MOBILE_WEB_DOMAIN; // key for server variable in the preferences file
 	private static String mobileWebDomain = DEFAULT_MIT_MOBILE_SERVER;
 
 	// Shared Data
 	public static SharedPreferences prefs;
-
-	public static final SharedData sharedData = new SharedData();
+	public static SharedData sharedData = new SharedData();
 	
 	// Facilities 
 	private static String problemType;
@@ -71,7 +69,7 @@ public class Global extends Application {
 		catch (RuntimeException e) {
 			Log.d(TAG,"error getting prefs: " + e.getMessage() + "\n" + e.getStackTrace());
 		}
-		// if the mobile server is not defined in the preferences, default it to the value in the BuildSettings.java file
+		// if the mobile server is not defined in the preferences, default it to the value in the Config.java file
 		if (Global.getMobileWebDomain() == null) {
 			Global.setMobileWebDomain(Global.DEFAULT_MIT_MOBILE_SERVER);
 		}
@@ -94,6 +92,8 @@ public class Global extends Application {
 	
 	public static void setMobileWebDomain(String mobileWebDomain) {
 		Global.mobileWebDomain = mobileWebDomain;
+		C2DMReceiver.clearDeviceRegistration(mContext);
+		C2DMReceiver.registerForNotifications(mContext);
 	}
 	
 	// Facilities Related
@@ -150,16 +150,18 @@ public class Global extends Application {
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 				SharedPreferences.Editor prefsEditor = prefs.edit();
 				try {
-					Iterator m = obj.keys();
+					@SuppressWarnings("unchecked")
+					Iterator<Object> m =  obj.keys();
 					while (m.hasNext()) {
 
 						module = (String)m.next();
 						Log.d(TAG,"module = " + module);
 	
-						JSONObject data = (JSONObject)obj.get(module);
-						Iterator d = data.keys();
+						JSONObject data = (JSONObject) obj.get(module);
+						@SuppressWarnings("unchecked")
+						Iterator<Object> d =  data.keys();
 						while (d.hasNext()) {
-							key = (String)d.next();
+							key = (String) d.next();
 							versionKey = "remote_" + module + "_" + key;
 							version = (String)data.getString(key);
 							Log.d(TAG,"key = " + key);
@@ -176,6 +178,7 @@ public class Global extends Application {
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
 			
+			@SuppressWarnings("unused")
 			public void onError(JSONObject obj) {
 				Log.d(TAG,"error");				
 			}

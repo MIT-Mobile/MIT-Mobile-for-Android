@@ -22,6 +22,7 @@ package com.google.zxing;
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
+@SuppressWarnings("serial")
 public final class WriterException extends Exception {
 
   public WriterException() {

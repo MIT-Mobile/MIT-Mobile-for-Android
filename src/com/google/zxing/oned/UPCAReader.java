@@ -36,29 +36,35 @@ public final class UPCAReader extends UPCEANReader {
 
   private final UPCEANReader ean13Reader = new EAN13Reader();
 
-  public Result decodeRow(int rowNumber, BitArray row, int[] startGuardRange, Hashtable hints)
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, int[] startGuardRange, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, FormatException, ChecksumException {
     return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, startGuardRange, hints));
   }
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints)
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, FormatException, ChecksumException {
     return maybeReturnResult(ean13Reader.decodeRow(rowNumber, row, hints));
   }
 
-  public Result decode(BinaryBitmap image) throws NotFoundException, FormatException {
+  @Override
+public Result decode(BinaryBitmap image) throws NotFoundException, FormatException {
     return maybeReturnResult(ean13Reader.decode(image));
   }
 
-  public Result decode(BinaryBitmap image, Hashtable hints) throws NotFoundException, FormatException {
+  @Override
+public Result decode(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException, FormatException {
     return maybeReturnResult(ean13Reader.decode(image, hints));
   }
 
-  BarcodeFormat getBarcodeFormat() {
+  @Override
+BarcodeFormat getBarcodeFormat() {
     return BarcodeFormat.UPC_A;
   }
 
-  protected int decodeMiddle(BitArray row, int[] startRange, StringBuffer resultString)
+  @Override
+protected int decodeMiddle(BitArray row, int[] startRange, StringBuffer resultString)
       throws NotFoundException {
     return ean13Reader.decodeMiddle(row, startRange, resultString);
   }

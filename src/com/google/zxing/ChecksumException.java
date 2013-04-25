@@ -22,6 +22,7 @@ package com.google.zxing;
  *
  * @author Sean Owen
  */
+@SuppressWarnings("serial")
 public final class ChecksumException extends ReaderException {
 
   private static final ChecksumException instance = new ChecksumException();

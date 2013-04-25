@@ -53,7 +53,7 @@ public interface Reader {
    * @return String which the barcode encodes
    * @throws NotFoundException if the barcode cannot be located or decoded for any reason
    */
-  Result decode(BinaryBitmap image, Hashtable hints) throws NotFoundException, ChecksumException, FormatException;
+  Result decode(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException, ChecksumException, FormatException;
 
   /**
    * Resets any internal state the implementation has after a decode, to prepare it

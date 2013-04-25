@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,15 +16,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 
-public class FacilitiesUseMyLocationActivity extends ModuleActivity {
+public class FacilitiesUseMyLocationActivity extends NewModuleActivity {
 
 	public static final String TAG = "FacilitiesLocationsNearByActivity";
 	private static final int REASONABLE_LOCATION_AGE = 90 * 1000; // 90 seconds
@@ -54,6 +53,7 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 		uiHandler = new Handler();
 		uiHandler.postDelayed(
 			new Runnable() {
+				@Override
 				public void run() {
 					loadLocations();
 				}
@@ -133,6 +133,7 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 			}
 			
 			new Thread() {
+				@Override
 				public void run() {					
 					FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 					List<LocationRecord> allLocations = db.getLocationsNearLocation(mLocation);
@@ -162,10 +163,11 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 	}
 	
 	public void createViews() {
-		
 		setContentView(R.layout.boring_list_layout);
 		TitleBar titleBar = (TitleBar) findViewById(R.id.boringListTitleBar);
-		titleBar.setTitle("Nearby Locations");
+		titleBar.setVisibility(View.GONE);
+		
+		addSecondaryTitle("Nearby Locations");
 		
 		mLoader = (FullScreenLoader) findViewById(R.id.boringListLoader);
 		mLoader.showLoading();
@@ -187,6 +189,7 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 	public class MyLocationListener implements LocationListener {
 
 
+			@Override
 			public void onLocationChanged(Location loc){
 				loc.getLatitude();
 				loc.getLongitude();
@@ -221,19 +224,6 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 	     		
 	}
 
-	
-
-		
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-	}
-	
-
-	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-	
 	@Override
 	public boolean isModuleHomeActivity() {
 		// TODO Auto-generated method stub
@@ -260,6 +250,27 @@ public class FacilitiesUseMyLocationActivity extends ModuleActivity {
 			LocationAdapter.populateView(item, convertView);
 			return convertView;
 		}
+	}
+
+
+
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 	

@@ -40,7 +40,8 @@ public class ResultPoint {
     return y;
   }
 
-  public boolean equals(Object other) {
+  @Override
+public boolean equals(Object other) {
     if (other instanceof ResultPoint) {
       ResultPoint otherPoint = (ResultPoint) other;
       return x == otherPoint.x && y == otherPoint.y;
@@ -48,11 +49,13 @@ public class ResultPoint {
     return false;
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return 31 * Float.floatToIntBits(x) + Float.floatToIntBits(y);
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     StringBuffer result = new StringBuffer(25);
     result.append('(');
     result.append(x);

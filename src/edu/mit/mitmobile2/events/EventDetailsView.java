@@ -50,6 +50,25 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 			mFullDetails = mBriefDetails;
 		}
 		
+		// configure action buttons
+		findViewById(R.id.eventDetailsShareButton).setOnClickListener(
+			new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					shareEvent();
+				}					
+			}
+		);
+		
+		findViewById(R.id.eventDetailsAddToCalendarButton).setOnClickListener(
+			new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					addEvent();
+				}					
+			}
+		);
+		
 	}
 
 	public boolean hasLoadingCompleted() {
@@ -68,7 +87,12 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		intent.putExtra("endTime", eventDetails.end * 1000);
 		intent.putExtra("title", eventDetails.title);
 		intent.putExtra("description", eventDetails.description);
-		intent.putExtra("eventLocation", eventDetails.location);
+
+		if (eventDetails.location.length() > 0) {
+			intent.putExtra("eventLocation", eventDetails.location);
+		} else {
+			intent.putExtra("eventLocation", eventDetails.shortloc);
+		}
 		
 		mActivity.startActivity(Intent.createChooser(intent, "Calendar"));
 	}
@@ -77,12 +101,13 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		EventDetailsItem eventDetails = mBriefMode ? mBriefDetails : mFullDetails;
 		
 		String url = eventDetails.infourl;
-		//String url  = "http://" + BuildSettings.MOBILE_WEB_DOMAIN + "/e/" + IdEncoder.shortenId(eventDetails.id);
+		//String url  = "http://" + Config.MOBILE_WEB_DOMAIN + "/e/" + IdEncoder.shortenId(eventDetails.id);
 		CommonActions.shareContent(mActivity, eventDetails.title, eventDetails.description, url);
 	}
 	
 	@Override
 	public void updateView() {
+		int rowBackgroundColor = mActivity.getResources().getColor(R.color.rowBackground);
 		
 		TextView titleView = (TextView) findViewById(R.id.eventDetailsTitleTV);
 		titleView.setText(mBriefDetails.title);
@@ -95,6 +120,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		// add the location row				
 		if(mBriefDetails.getLocationName() != null) {
 			TwoLineActionRow locationRow = new TwoLineActionRow(mActivity);
+			locationRow.setBackgroundColor(rowBackgroundColor);
 			locationRow.setTitle(mBriefDetails.getLocationName());
 			
 			if (mBriefDetails.coordinates != null) {
@@ -120,7 +146,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 			mLoaderView = new FullScreenLoader(mActivity, null);
 			mLoaderView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, AttributesParser.parseDimension("200dip", mActivity)));
 			mLinearLayout.addView(mLoaderView);
-		}
+		} 
 	}
 	
 	@Override
@@ -162,9 +188,12 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 
 
 	private void populateFullDetails() {
-		// add the location row
+		int rowBackgroundColor = mActivity.getResources().getColor(R.color.rowBackground);
+		
+		// add the phone row
 		if(!mFullDetails.infophone.equals("")) {
 			TwoLineActionRow phoneRow = new TwoLineActionRow(mActivity);
+			phoneRow.setBackgroundColor(rowBackgroundColor);
 			phoneRow.setTitle(mFullDetails.infophone);
 			phoneRow.setActionIconResource(R.drawable.action_phone);
 			phoneRow.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +210,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 		// add the external link row
 		if(!mFullDetails.infourl.equals("")) {
 			TwoLineActionRow urlRow = new TwoLineActionRow(mActivity);
+			urlRow.setBackgroundColor(rowBackgroundColor);
 			urlRow.setTitle(mFullDetails.infourl);
 			urlRow.setActionIconResource(R.drawable.action_external);
 			urlRow.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +242,7 @@ public class EventDetailsView extends LockingScrollView implements SliderInterfa
 	
 	@Override
 	public LockingScrollView getVerticalScrollView() {
-		return this;
+		return null;
 	}
 
 	@Override

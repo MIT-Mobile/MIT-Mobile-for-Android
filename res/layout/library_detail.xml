@@ -48,9 +48,9 @@
         <TextView android:id="@+id/libraryDetailInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/verticalPadding"
-            android:paddingLeft="@dimen/horizontalPadding"
-            android:paddingRight="@dimen/horizontalPadding"
+            android:paddingTop="@dimen/standardPadding"
+            android:paddingLeft="@dimen/standardPadding"
+            android:paddingRight="@dimen/standardPadding"
             android:visibility="gone" 
             android:textColor="#000000"/>
              

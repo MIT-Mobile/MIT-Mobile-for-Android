@@ -6,11 +6,6 @@
     android:layout_height="fill_parent"
     android:background="#ffffffff" >
   
-    <edu.mit.mitmobile2.TitleBar
-        android:text="Loans"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />  
- 
 		<!-- Renew Button Row -->
 		<RelativeLayout
 	  			android:id="@+id/renewButtonRow"

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 class EmergencyContactsAdapter extends CursorAdapter {
@@ -27,6 +26,7 @@ class EmergencyContactsAdapter extends CursorAdapter {
 		mContext = context;
 		mContactStyle = new TextAppearanceSpan(mContext, R.style.ListItemPrimary);
 		mPhoneStyle = new TextAppearanceSpan(mContext, R.style.ListItemSecondary);
+		
 	}
 	
 	private void setupRow(Cursor cursor, View row) {
@@ -62,14 +62,14 @@ class EmergencyContactsAdapter extends CursorAdapter {
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
-		LinearLayout row = (LinearLayout) view;
+		View row = view;
 		setupRow(cursor, row);
 	}
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout row = (LinearLayout) inflater.inflate(R.layout.emergency_row, null);
+		View row = inflater.inflate(R.layout.emergency_row, null);
 		setupRow(cursor, row);
 		return row;
 	}

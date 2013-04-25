@@ -81,6 +81,13 @@ public final class ViewfinderView extends View {
     int width = canvas.getWidth();
     int height = canvas.getHeight();
 
+    // these are modifications to force the
+    // view frame to be centered vertically
+    frame = new Rect(frame);
+    int frameHeight = frame.height();
+    frame.top = (height-frame.height())/2;
+    frame.bottom = frame.top + frameHeight;
+    
     // Draw the exterior (i.e. outside the framing rect) darkened
     paint.setColor(resultBitmap != null ? resultColor : maskColor);
     canvas.drawRect(0, 0, width, frame.top, paint);

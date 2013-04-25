@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class TwoLineActionRow extends ActionRow {
 	private TextView mTitleView;
 	private TextView mSubtitleView;
-	private ImageView mActionIconView;
+	private ImageView mActionIconView;	
 	
 	private static final String NAMESPACE = "http://schemas.android.com/apk/res/android";
 	public TwoLineActionRow(Context context, AttributeSet attrs) {
@@ -48,6 +48,7 @@ public class TwoLineActionRow extends ActionRow {
 		mTitleView = (TextView) findViewById(R.id.simpleRowTitle);
 		mSubtitleView = (TextView) findViewById(R.id.simpleRowSubtitle);
 		mActionIconView = (ImageView) findViewById(R.id.simpleRowActionIcon);	
+		
 	}
 	
 	public void setTitle(CharSequence title, int color) {

@@ -5,19 +5,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import edu.mit.mitmobile2.HomeScreenActivity;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
-import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.maps.GeoRect;
-import edu.mit.mitmobile2.maps.MapBaseActivity;
-import edu.mit.mitmobile2.tour.Tour.ParcelableGeoPoint;
+import edu.mit.mitmobile2.TitleBarSwitch;
+import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
+import edu.mit.mitmobile2.maps.MITMapView;
+import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.SideTripTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.SiteTourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem;
 import edu.mit.mitmobile2.tour.Tour.TourSiteStatus;
 import edu.mit.mitmobile2.tour.Tour.TourMapItem.LocationSupplier;
+import edu.mit.mitmobile2.tour.TourStopsMapData.OnTourSiteSelectedListener;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,8 +33,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,20 +41,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
 
-
-public class TourMapActivity extends MapBaseActivity {
+public class TourMapActivity extends NewModuleActivity implements OnTourSiteSelectedListener {
 	
 	private static final String TOUR_STOPS_KEY = "tour_stops";
 	private static final String TOUR_PATH_KEY = "tour_path";
 	private static final String TOUR_ACTIVE_KEY = "tour_active";
 	
+	private static String LIST = "LIST";
+	private static String MAP = "MAP";
+	
 	ListView mTourListView;
-	MapView mMapView;
-	ImageView mMapListSwitch;
+	TitleBarSwitch mMapListSwitch;
 	View mMapLegend;
+	private MITMapView mMapView;
 	TourStartHelpActionRow mStartHelpActionRow;
 	boolean mTourActive;
 	int mTourCurrentPosition;
@@ -63,12 +65,14 @@ public class TourMapActivity extends MapBaseActivity {
 	String mWorstLocationProviderName;
 	Long mShowClosestBalloonInitialTime;
 	
-	TourRouteOverlay mSiteMarkers;
 	private TourItemAdapter mTourListAdapter;
+	private ArrayList<GeoPoint> mGeoPoints;
+	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
+	private TourStopsMapData mStopsData;
 	
 	private static int HELP_SELECT_STOP = 2;
 	
-	public static void launch(Context context, ArrayList<TourMapItem> tourItems, ArrayList<ParcelableGeoPoint> geoPoints, boolean tourActive) {
+	public static void launch(Context context, ArrayList<TourMapItem> tourItems, ArrayList<GeoPoint> geoPoints, boolean tourActive) {
 		Intent intent = new Intent(context, TourMapActivity.class);
 		intent.putParcelableArrayListExtra(TOUR_STOPS_KEY, tourItems);
 		intent.putParcelableArrayListExtra(TOUR_PATH_KEY, geoPoints);
@@ -77,41 +81,23 @@ public class TourMapActivity extends MapBaseActivity {
 	}
 	
 	@Override
-	protected void onCreate(Bundle savedState) {
+	public void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		
 		Intent i = getIntent();
 		
+		setContentView(R.layout.tour_map);
+		
+		mMapView = (MITMapView) findViewById(R.id.tourMapView);
+		
 		mSiteTourMapItems = i.getParcelableArrayListExtra(TOUR_STOPS_KEY);
-		List<ParcelableGeoPoint> geoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
+		mGeoPoints = i.getParcelableArrayListExtra(TOUR_PATH_KEY);
 		mTourActive = i.getBooleanExtra(TOUR_ACTIVE_KEY, false);
 		mTourCurrentPosition = getCurrentPosition();
 				
 		// be default show sidetrips in list if tour not yet active
 		mShowingSidetrips = !mTourActive;
 		setTourItemsList(mShowingSidetrips);
-		
-		GeoRect geoRect = new GeoRect(geoPoints);
-		
-		mSiteMarkers = new TourRouteOverlay(this, mapView, mSiteTourMapItems, geoPoints);
-		mSiteMarkers.setOnTourItemSelectedListener(new TourRouteOverlay.OnTourItemSelectedListener() {
-			@Override
-			public void onTourItemSelected(TourMapItem tourItem) {
-				if(tourItem.getClass() == SiteTourMapItem.class) {
-					SiteTourMapItem siteItem = (SiteTourMapItem) tourItem;
-					launchTour(siteItem);
-				}
-			}
-		});
-		
-		setOverlays();
-		
-		mapView.getOverlays().add(mSiteMarkers);
-		
-		mapView.getController().setCenter(geoRect.getCenter());
-		mapView.getController().zoomToSpan(geoRect.getLatitudeSpanE6(), geoRect.getLongitudeSpanE6());		
-		
-		TitleBar titleBar = (TitleBar) findViewById(R.id.mapTitleBar);
 		
 		mTourListView = (ListView) findViewById(R.id.mapListView);
 		mTourListAdapter = new TourItemAdapter(this, mTourMapItems);
@@ -133,8 +119,29 @@ public class TourMapActivity extends MapBaseActivity {
 			}
 		});
 		
-		mMapView = (MapView) findViewById(R.id.mapview);
-		mMapListSwitch = (ImageView) findViewById(R.id.tourMapListSwitchImage);
+		
+		float density = getResources().getDisplayMetrics().density;
+		float routeWidth = getResources().getDimension(R.dimen.tourPathWidth) / density;
+		
+		TourRouteMapData routeData = new TourRouteMapData(mGeoPoints, routeWidth);
+		mMapView.addMapItems(routeData.getMapItems(), "route");
+		mStopsData = new TourStopsMapData(mSiteTourMapItems, this);
+		mMapView.addMapItems(mStopsData.getMapItems(), "stops");
+		mMapView.fitMapItems();
+
+		
+		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
+		mMapListSwitch = new TitleBarSwitch(this);
+		mMapListSwitch.setLabels(MAP, LIST);
+		mMapListSwitch.setSelected(MAP);
+		mMapListSwitch.setOnToggledListener(new OnToggledListener() {
+			@Override
+			public void onToggled(String selected) {
+				toggleMapList(selected);
+			}
+		});
+		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
+		
 		mStartHelpActionRow = (TourStartHelpActionRow) findViewById(R.id.tourMapStartHelp);
 		mStartHelpActionRow.setOnClickListener(new View.OnClickListener() {
 			
@@ -161,27 +168,26 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 		
 		if(mTourActive) {
-			titleBar.setTitle("Tour Overview");
-			mSiteMarkers.showBalloon(mSiteTourMapItems.get(mTourCurrentPosition));
+			mSecondaryTitleBar.setTitle("Tour Overview");
+			displayCallout(mSiteTourMapItems.get(mTourCurrentPosition));
 		} else {
 			
 			// tour not active, show information to help the user know where to start
 			mShowClosestBalloonInitialTime = System.currentTimeMillis();		
 			mStartHelpActionRow.setVisibility(View.VISIBLE);
-			titleBar.setTitle("Starting Point");
+			mSecondaryTitleBar.setTitle("Select a Starting Point");
 			mMapLegend.setVisibility(View.GONE);
 		}
 		
-		View.OnClickListener mapListSwitchListener = new View.OnClickListener() {		
-			@Override
-			public void onClick(View v) {
-				toggleMapList();
-			}
-		};
-		
-		mMapListSwitch.setOnClickListener(mapListSwitchListener);
-		findViewById(R.id.tourMapListSwitchListLabel).setOnClickListener(mapListSwitchListener);
-		findViewById(R.id.tourMapListSwitchMapLabel).setOnClickListener(mapListSwitchListener);
+		mSecondaryTitleBar.addActionView(mMapListSwitch);
+	}
+	
+	@Override
+	public void onTourSiteSelected(TourMapItem tourMapItem) {
+		if(tourMapItem.getClass() == SiteTourMapItem.class) {
+			SiteTourMapItem siteItem = (SiteTourMapItem) tourMapItem;
+			launchTour(siteItem);
+		}
 	}
 	
 	MapActivityLocationSupplier mLocationSupplier = new MapActivityLocationSupplier();
@@ -200,7 +206,19 @@ public class TourMapActivity extends MapBaseActivity {
 		
 		@Override
 		public Location getLocation() {
-			return mLocation;
+			if (mLocation != null) {
+				return mLocation;
+			} else {
+				String provider = mBestLocationProviderName;
+				if (provider == null) {
+					provider = mWorstLocationProviderName;
+				}
+				if (provider != null) {
+					return mLocationManager.getLastKnownLocation(provider);
+				} else {
+					return null;
+				}
+			}
 		}
 	};
 	
@@ -223,13 +241,13 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 
 		@Override
-		public void onProviderDisabled(String provider) {} // TODO Auto-generated method stub
+		public void onProviderDisabled(String provider) {} 
 
 		@Override
-		public void onProviderEnabled(String provider) {} // TODO Auto-generated method stub
+		public void onProviderEnabled(String provider) {} 
 
 		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {} // TODO Auto-generated method stub		
+		public void onStatusChanged(String provider, int status, Bundle extras) {}		
 	};
 	
 	@Override
@@ -277,13 +295,13 @@ public class TourMapActivity extends MapBaseActivity {
 		// check to see if we are so far away that we rather use the default first stop
 		// dont show closest if we are further than 2km
 		if(closest.distance() > 2000) {
-			mSiteMarkers.showBalloon(mSiteTourMapItems.get(0));
+			//mSiteMarkers.showBalloon(mSiteTourMapItems.get(0));
 			return true;
 		}
 				
 		// now that we have survived all the sanity checks actually show the balloon
 		// for the closest tour site;
-		mSiteMarkers.showBalloon(closest);
+		//mSiteMarkers.showBalloon(closest);
 		return true;
 	}
 	
@@ -292,8 +310,15 @@ public class TourMapActivity extends MapBaseActivity {
 		if(requestCode == HELP_SELECT_STOP && resultCode == RESULT_OK) {
 			TourMapItem item = resultIntent.getParcelableExtra(TourStartHelpActivity.SELECTED_SITE);
 			item.setLocationSupplier(mLocationSupplier);
-			mSiteMarkers.showBalloon(item);
+			displayCallout(item);
 		}
+	}
+	
+	private void displayCallout(TourMapItem tourMapItem) {
+		if (mStopsData != null) {
+			MapItem mapItem = mStopsData.getMapItem(tourMapItem);
+			mMapView.displayCallout(this, mapItem);
+		}		
 	}
 	
 	private int getCurrentPosition() {
@@ -349,90 +374,46 @@ public class TourMapActivity extends MapBaseActivity {
 		}
 	}
 	
-	private static final int MENU_HOME = 0;
-	private static final int MENU_TOUR_HOME = 1;
-	private static final int MENU_MAP_LIST = 2;
-	private static final int MENU_MY_LOCATION = 3;
-	private static final int MENU_SHOW_OR_HIDE_SIDETRIPS = 4;
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case MENU_HOME:
-				HomeScreenActivity.goHome(this);
-				return true;
-				
-			case MENU_TOUR_HOME:
-				Intent intent = new Intent(this, new TourModule().getModuleHomeActivity());
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				this.startActivity(intent);
-				return true;
-				
-			case MENU_MAP_LIST:
-				toggleMapList();
-				return true;
-				
-			case MENU_MY_LOCATION: 
-				GeoPoint myLocation = myLocationOverlay.getMyLocation();
-				if (myLocation != null) mctrl.animateTo(myLocation);
-				return true;
-				
-			case MENU_SHOW_OR_HIDE_SIDETRIPS:
-				showOrHideSidetrips();
-				return true;
+	private boolean isListVisible() {
+		if (mTourListView != null) {
+			return (mTourListView.getVisibility() == View.VISIBLE);
 		}
-		
-		return super.onOptionsItemSelected(item);
+		return false;
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		Module tourModule = new TourModule();
-		
-		menu.clear();
-		
-		menu.add(0, MENU_HOME, Menu.NONE, "Home")
-			.setIcon(R.drawable.menu_home);
-		
-		menu.add(0, MENU_TOUR_HOME, Menu.NONE, tourModule.getMenuOptionTitle())
-			.setIcon(tourModule.getMenuIconResourceId());
-		
-		if(mListView.getVisibility() == View.GONE) {
-			// only show my location menu option, when in map mode
-			menu.add(0, MENU_MY_LOCATION, Menu.NONE, "My Location")
-				.setIcon(R.drawable.menu_mylocation);
-			
-			menu.add(0, MENU_MAP_LIST, Menu.NONE, "List")
-			  .setIcon(R.drawable.menu_view_as_list);
-			
-		} else {
-			menu.add(0, MENU_MAP_LIST, Menu.NONE, "Map")
-			  .setIcon(R.drawable.menu_view_on_map);
-			
-			String sidetripsAction = mShowingSidetrips ? "Hide Side Trips" : "Show Side Trips";
-			menu.add(0, MENU_SHOW_OR_HIDE_SIDETRIPS, Menu.NONE, sidetripsAction)
-				.setIcon(R.drawable.menu_sidetrips);
-		}
-		
-		return super.onPrepareOptionsMenu(menu);
-		
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+	    ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+	    if (isListVisible()) {
+	    	if (!mShowingSidetrips) {
+	    		items.add(new MITMenuItem("showsidetrips", "Show Side Trips"));
+	    	} else {
+	    		items.add(new MITMenuItem("hidesidetrips", "Hide Side Trips"));
+	    	}
+	    }
+	    return items;
 	}
 	
-	private void toggleMapList() {
-		if(mListView.getVisibility() == View.GONE) {
-			mListView.setVisibility(View.VISIBLE);
+	@Override
+	protected void onOptionSelected(String optionId) {
+	    if (optionId.equals("showsidetrips") || optionId.equals("hidesidetrips")) {
+	    	showOrHideSidetrips(optionId);
+	    }
+	}
+	
+	private void toggleMapList(String selected) {
+		if(selected.equals(LIST)) {
+			mTourListView.setVisibility(View.VISIBLE);
 			mMapView.setVisibility(View.GONE);
-			mMapListSwitch.setImageDrawable(getResources().getDrawable(R.drawable.tour_toggle_right));
 			
 			if(mTourActive) {
 				mMapLegend.setVisibility(View.GONE);
 			} else {
 				mStartHelpActionRow.setVisibility(View.GONE);
 			}
-		} else {
-			mListView.setVisibility(View.GONE);
+		} else if(selected.equals(MAP)) {
+			mTourListView.setVisibility(View.GONE);
 			mMapView.setVisibility(View.VISIBLE);
-			mMapListSwitch.setImageDrawable(getResources().getDrawable(R.drawable.tour_toggle_left));
 			
 			if(mTourActive) {
 				mMapLegend.setVisibility(View.VISIBLE);
@@ -440,16 +421,18 @@ public class TourMapActivity extends MapBaseActivity {
 				mStartHelpActionRow.setVisibility(View.VISIBLE);
 			}
 		}
+		refreshTitleBarOptions();
 	}
 	
 	/*
 	 * methods for hiding and showing the side trips in the list view
 	 */
 	private boolean mShowingSidetrips = true;
-	private void showOrHideSidetrips() {
-		mShowingSidetrips = !mShowingSidetrips;
+	private void showOrHideSidetrips(String optionId) {
+		mShowingSidetrips = optionId.equals("showsidetrips");
 		setTourItemsList(mShowingSidetrips);
 		mTourListAdapter.notifyDataSetChanged();
+		refreshTitleBarOptions();
 	}
 	
 	private void setTourItemsList(boolean includeSidetrips) {
@@ -470,6 +453,7 @@ public class TourMapActivity extends MapBaseActivity {
 			private static final long serialVersionUID = 1L;
 			protected static final int MAX_ENTRIES = 10;
 			
+			@Override
 			protected boolean removeEldestEntry(Map.Entry<String, View> eldest) {
 				return size() > MAX_ENTRIES;
 			}
@@ -478,6 +462,7 @@ public class TourMapActivity extends MapBaseActivity {
 		RowViewHashMap mViewCache = new RowViewHashMap();
 		
 		private Context mContext;
+		
 		public TourItemAdapter(Context context, List<TourMapItem> items) {
 			super(context, 0, 0, items);
 			mContext = context;
@@ -548,7 +533,17 @@ public class TourMapActivity extends MapBaseActivity {
 	}
 
 	@Override
-	protected int getLayoutId() {
-		return R.layout.tour_map;
+	protected NewModule getNewModule() {
+		return new TourModule();
+	}
+                       
+	@Override
+	public boolean isModuleHomeActivity() {
+		return false;
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
 	}
 }

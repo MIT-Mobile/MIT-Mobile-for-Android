@@ -2,20 +2,22 @@ package edu.mit.mitmobile2.maps;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
 import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
-public class MapsModule extends Module {
+public class MapsModule extends NewModule {
 
 	@Override
 	public String getLongName() {
-		return "Campus Map";
+		return "Map";
 	}
 
 
@@ -60,4 +62,27 @@ public class MapsModule extends Module {
 			context.startActivity(i);
 		}
 	}
+
+
+	@Override
+	public List<MITMenuItem> getPrimaryOptions() {
+		return Arrays.asList(
+				new MITMenuItem("browse", "Browse", R.drawable.menu_browse),
+		     	new MITMenuItem("search", "Search", R.drawable.menu_search)
+			);
+	}
+
+	@Override
+	public List<MITMenuItem> getSecondaryOptions() {
+		return Arrays.asList(
+				//new MITMenuItem("my_location", "My Location", R.drawable.map_current),
+				new MITMenuItem("bookmarks", "Bookmarks")
+			);
+	}
+
+	@Override
+	public boolean onItemSelected(Activity activity, String id) {
+		return false;
+	}
+		
 }

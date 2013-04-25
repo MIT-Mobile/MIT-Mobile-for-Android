@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.people;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,34 +16,27 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Intents.Insert;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
-
 import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.HighlightEffects;
 import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.SliderActivity;
 import edu.mit.mitmobile2.SliderInterface;
+import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.objs.PersonItem;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailItem;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 
 
-public class PeopleDetailActivity extends SliderActivity {
+public class PeopleDetailActivity extends SliderListNewModuleActivity {
 	
 	public static final String UID_KEY = "uid";
 	public static final String SEARCH_TERM_KEY = "search_term";
 	public static final String RECENTLY_VIEWED_FLAG = "show_recents";
-	
-	private static final int MENU_ADD_CONTACT = MENU_LAST + 1;
 	
 	private List<PersonItem> mPeople = Collections.emptyList();
 	
@@ -98,51 +92,14 @@ public class PeopleDetailActivity extends SliderActivity {
 		} 
 	}
 	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(MENU_MAIN_GROUP, MENU_ADD_CONTACT, Menu.NONE, "Add to Contacts")
-			.setIcon(R.drawable.menu_add_to_contacts);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case MENU_ADD_CONTACT:
-				
-				final PersonItem person = mPeople.get(getPosition());
-				// create a dialog asking to create or add contact
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle("Add Contact");
-				builder.setItems(new String[] {EDIT_CONTACT_TEXT, NEW_CONTACT_TEXT}, 
-					new DialogInterface.OnClickListener() {
-					
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							if(which == EDIT_CONTACT) {
-								Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-								mPersonToAddToContacts = person;
-								PeopleDetailActivity.this.startActivityForResult(intent, EDIT_CONTACT_REQUEST);
-							} else if(which == NEW_CONTACT) {
-								Intent intent = new Intent(Insert.ACTION, ContactsContract.Contacts.CONTENT_URI);
-								populateAddContactIntent(intent, person, false);
-								PeopleDetailActivity.this.startActivity(intent);
-							}
-						}
-					}
-				);
-	
-				builder.setNegativeButton("Cancel", null);
-				builder.create().show();
-				return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
 	private void setPeople(List<PersonItem> people, String uid) {
 		mPeople = people;
-		for(PersonItem person : mPeople) {
-			addScreen(new PersonSliderInterface(person), person.getName(), "People Directory Detail");
+		int totalPersons = mPeople.size();
+		
+		for(int index = 0; index < totalPersons; ++index) {
+			PersonItem person = mPeople.get(index);
+			String headerTitle = Integer.toString(index+1) + " of " + Integer.toString(totalPersons);
+			addScreen(new PersonSliderInterface(person), person.getName(), headerTitle);
 		}
 		
 		int position = PeopleModel.getPosition(mPeople, uid);
@@ -178,6 +135,7 @@ public class PeopleDetailActivity extends SliderActivity {
 		}
 	}
 	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode != 0) {
 			Cursor result = getContentResolver().query(data.getData(), new String[] {ContactsContract.Contacts._ID}, null, null, null);
@@ -209,65 +167,42 @@ public class PeopleDetailActivity extends SliderActivity {
 		}
 	}
 	
+	private void addToContact() {
+		final PersonItem person = mPeople.get(getPosition());
+		// create a dialog asking to create or add contact
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Add Contact");
+		builder.setItems(new String[] {EDIT_CONTACT_TEXT, NEW_CONTACT_TEXT}, 
+			new DialogInterface.OnClickListener() {
+			
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(which == EDIT_CONTACT) {
+						Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+						mPersonToAddToContacts = person;
+						PeopleDetailActivity.this.startActivityForResult(intent, EDIT_CONTACT_REQUEST);
+					} else if(which == NEW_CONTACT) {
+						Intent intent = new Intent(Insert.ACTION, ContactsContract.Contacts.CONTENT_URI);
+						populateAddContactIntent(intent, person, false);
+						PeopleDetailActivity.this.startActivity(intent);
+					}
+				}
+			}
+		);
+
+		builder.setNegativeButton("Cancel", null);
+		builder.create().show();
+	}
+	
 	private class PersonSliderInterface implements SliderInterface {
 		private PersonItem mPerson;
-		private View mHeaderView;
+		private View mMainLayout;
+		private ViewGroup mListItemsLayout;
 		
 		PersonSliderInterface(PersonItem person) {
 			mPerson = person;
 		}
 		
-		private class PersonView extends LinearLayout {
-			PersonView(Context context, PersonItem person) {
-				super(context);
-				LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				inflator.inflate(R.layout.people_detail, this);
-				
-				mHeaderView = inflator.inflate(R.layout.people_detail_header, null);
-				HighlightEffects.turnOffHighlightingEffects(mHeaderView);
-				
-				mPerson = person;
-			
-				populateView();
-			}
-
-			private void populateView() {
-				TextView nameView = (TextView) mHeaderView.findViewById(R.id.personName);
-				nameView.setText(mPerson.getName());
-				
-				TextView titleView = (TextView) mHeaderView.findViewById(R.id.personTitle);
-				if(mPerson.getTitle() != null) {
-					titleView.setText(mPerson.getTitle());
-				} else {
-					titleView.setVisibility(GONE);
-				}
-				
-				List<PersonDetailItem> detailItems = mPerson.getPersonDetails();
-				ListView listView = (ListView) findViewById(R.id.peopleDetailItems);
-				
-				PersonDetailsItemAdapter adapter = new PersonDetailsItemAdapter(detailItems);
-				adapter.setOnItemClickListener(listView,
-						new SimpleArrayAdapter.OnItemClickListener<PersonDetailItem>() {
-							@Override
-							public void onItemSelected(PersonDetailItem item) {
-								if(item.getType().equals("email")) {
-									CommonActions.composeEmail(ctx, item.getValue());
-								} else if(item.getType().equals("phone")) {
-									CommonActions.callPhone(ctx, item.getValue());
-								} else if(item.getType().equals("office")) {
-									CommonActions.searchMap(ctx, item.getValue());
-								}
-							}
-					}
-				);
-				
-				adapter.setHasHeader(true);
-				listView.addHeaderView(mHeaderView);
-				
-				listView.setAdapter(new PersonDetailsItemAdapter(detailItems));
-			}
-		}
-
 		@Override
 		public void onSelected() {
 			PeopleModel.markAsRecentlyViewed(mPerson, mContext);
@@ -276,43 +211,55 @@ public class PeopleDetailActivity extends SliderActivity {
 		
 		@Override
 		public View getView() {
-			return new PersonView(PeopleDetailActivity.this, mPerson);
-		}
-		
-		
-		private class PersonDetailsItemAdapter extends SimpleArrayAdapter<PersonDetailItem> {
-
-			public PersonDetailsItemAdapter(List<PersonDetailItem> items) {
-				super(PeopleDetailActivity.this, items, R.layout.single_line_action_row);
+			LayoutInflater inflator = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			mMainLayout = inflator.inflate(R.layout.people_detail, null);
+			
+			TextView nameView = (TextView) mMainLayout.findViewById(R.id.personName);
+			nameView.setText(mPerson.getName());
+			
+			View addContactBtn = mMainLayout.findViewById(R.id.personAddButton);
+			addContactBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					addToContact();
+				}
+			});
+			
+			TextView titleView = (TextView) mMainLayout.findViewById(R.id.personTitle);
+			if(mPerson.getTitle() != null) {
+				titleView.setText(mPerson.getTitle());
+			} else {
+				titleView.setVisibility(View.GONE);
 			}
 			
-			@Override
-			public void updateView(PersonDetailItem item, View view) {
-				((TextView) view.findViewById(R.id.singleLineActionRowLabel)).setText(item.getType());
-				
-				((TextView) view.findViewById(R.id.singleLineActionRowValue)).setText(item.getValue());
-				
-				ImageView actionIcon = (ImageView) view.findViewById(R.id.singleLineActionRowIcon);
+			
+			mListItemsLayout = (ViewGroup) mMainLayout.findViewById(R.id.peopleDetailListItemsWrapper);
+			
+			List<PersonDetailItem> detailItems = mPerson.getPersonDetails();
+			
+			for (final PersonDetailItem item : detailItems) {
+				PeopleDetailItemLayout itemLayout = new PeopleDetailItemLayout(PeopleDetailActivity.this);
+				itemLayout.setContentType(item.getType());
+				itemLayout.setContentValue(item.getValue());
 				
 				String type = item.getType();
-				
-				actionIcon.setVisibility(View.VISIBLE);
-				
-				HighlightEffects.restoreDefaultHighlightingEffects(view);
-				if(type.equals("email")) {
-					actionIcon.setImageResource(R.drawable.action_email);					
-				} else if(type.equals("phone")) {
-					actionIcon.setImageResource(R.drawable.action_phone);
-				} else if(type.equals("office")) {
-					actionIcon.setImageResource(R.drawable.action_map);
+				if (hasAction(type)) {
+				    itemLayout.setActionIconResource(getActionIconResourceId(item.getType()));
+				    itemLayout.setOnItemClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View view) {
+					    performAction(item);
+					}
+				    });
 				} else {
-					// not one of the actionable types of data
-					actionIcon.setVisibility(View.GONE);
-					HighlightEffects.turnOffHighlightingEffects(view);
-				}
+				    itemLayout.hideActionIcon();
+				}				
+				mListItemsLayout.addView(itemLayout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			}
+			return mMainLayout;
 		}
-
+		
 		@Override
 		public void updateView() {
 			// all the populating of view is done in the constructor
@@ -333,12 +280,45 @@ public class PeopleDetailActivity extends SliderActivity {
 	}
 
 	@Override
-	protected Module getModule() {
+	public boolean isModuleHomeActivity() {
+		return false;
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
 		return new PeopleModule();
 	}
 
 	@Override
-	public boolean isModuleHomeActivity() {
-		return false;
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private boolean hasAction(String type) {
+	    List<String> typesWithActions = Arrays.asList("email", "phone", "office");
+	    return typesWithActions.contains(type);
+	}
+	
+	private void performAction(PersonDetailItem item) {
+	    if(item.getType().equals("email")) {
+		CommonActions.composeEmail(mContext, item.getValue());
+	    } else if(item.getType().equals("phone")) {
+		CommonActions.callPhone(mContext, item.getValue());
+	    } else if(item.getType().equals("office")) {
+		CommonActions.searchMap(mContext, item.getValue());
+	    }
+	}
+	
+	private int getActionIconResourceId(String type) {
+	    if (type.equals("email")) {
+		return R.drawable.action_email;					
+	    } else if(type.equals("phone")) {
+		return R.drawable.action_phone;
+	    } else if(type.equals("office")) {
+		return R.drawable.action_map;
+	    }
+	    return -1;
 	}
 }

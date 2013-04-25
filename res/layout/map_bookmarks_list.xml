@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="fill_parent">
+  
+	<ListView android:id="@+id/mapBookmarksLV"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:visibility="gone"
+		style="@style/Lists" />
+		
+	<TextView android:id="@+id/mapBookmarksListEmptyTV"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#ffffffff"
+		android:paddingLeft="@dimen/horizontalPadding"
+		android:paddingRight="@dimen/horizontalPadding"
+		android:paddingTop="@dimen/verticalPadding"
+		android:text="@string/map_no_bookmarks"
+		android:visibility="gone"
+		style="@style/BodyText" />
+	
+	<!-- MapView layout and initial extent -->
+    <edu.mit.mitmobile2.maps.MITMapView
+        android:visibility="gone"
+  		android:id="@+id/map"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+ 		spacialReference = "102113" 
+ 		initExtent = "-7914314.738504024 5214534.8430830045 -7913764.950289598 5215325.163641242"
+ 		calloutStyle="@xml/callout" >
+  	</edu.mit.mitmobile2.maps.MITMapView>
+	
+	<edu.mit.mitmobile2.DividerView
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight" />
+
+	<edu.mit.mitmobile2.FullScreenLoader
+		android:id="@+id/mapBookmarksListLoader"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+			
+</LinearLayout>

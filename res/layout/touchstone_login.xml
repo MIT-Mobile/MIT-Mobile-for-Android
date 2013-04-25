@@ -5,11 +5,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     
-    <edu.mit.mitmobile2.TitleBar
-  		android:text="MIT Touchstone"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
-
 	<LinearLayout
 		android:id="@+id/touchstoneContents"
 	    android:layout_width="fill_parent"

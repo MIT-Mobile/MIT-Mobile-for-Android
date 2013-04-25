@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<calloutViewStyle
+    textColor="#000000"
+	backgroundColor="#ffffff"
+	backgroundAlpha="255"
+	frameColor="#000000"	
+	cornerCurve="10"  
+	anchor="5" />
+</resources>

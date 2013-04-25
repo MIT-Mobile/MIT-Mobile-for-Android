@@ -6,6 +6,7 @@
 
   <ImageView
   	android:background="#00000000"
+  	android:visibility="gone"
     android:id="@+id/remoteImageViewContent"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" />

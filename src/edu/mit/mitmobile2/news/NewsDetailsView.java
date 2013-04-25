@@ -5,38 +5,38 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Handler;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.webkit.JsResult;
+
 import android.webkit.WebChromeClient;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.JsResult;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.VideoView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.IdEncoder;
-import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.NewModuleActivity.OnBackPressedListener;
+import edu.mit.mitmobile2.NewModuleActivity.OnPausedListener;
+
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
-import edu.mit.mitmobile2.SliderActivity.OnBackPressedListener;
-import edu.mit.mitmobile2.SliderActivity.OnPausedListener;
 import edu.mit.mitmobile2.objs.NewsItem;
 
-public class NewsDetailsView extends LockingScrollView {
+public class NewsDetailsView extends WebView {
 	private Handler mHandler = new Handler();
-	private WebView webview;
-	
-	ModuleActivity mModuleActivity;
+
+
+	NewModuleActivity mModuleActivity;
 	NewsItem mNewsItem;
 	static final String TAG = "NewsDetailsView";
 	
@@ -45,29 +45,24 @@ public class NewsDetailsView extends LockingScrollView {
     SliderActivity mSliderActivity;
 	
 	/****************************************************/
-	public NewsDetailsView(final Context context, NewsItem newsItem) {
+	public NewsDetailsView(Context context, NewsItem newsItem) {
 		super(context);
-		mModuleActivity = (ModuleActivity) context;
+		mModuleActivity = (NewModuleActivity) context;
 		mNewsItem = newsItem;
-		mSliderActivity = (SliderActivity) context;
-
-		LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		vi.inflate(R.layout.news_details, this);
+		
+		populateView();
 	}
 	
 
-	public void populateView() {
+	private void populateView() {
 		// standard view
 			
-		NewsModel newsModel = new NewsModel(mSliderActivity);
+		NewsModel newsModel = new NewsModel(mModuleActivity);
 		newsModel.populateImages(mNewsItem);
 		
 		// Web template
-		webview = (WebView) findViewById(R.id.newsDetailsWV);
-		webview.setFocusable(false);
+		setFocusable(false);
 		String templateHtml = readTextFromResource(R.raw.news_detail);
-		webview.getSettings().setPluginsEnabled(true);
-//		webview.getSettings().setPluginState(WebSettings.PluginState.ON);
 		
 		// Set Title
 		templateHtml = templateHtml.replace("__TITLE__", mNewsItem.title);
@@ -92,14 +87,20 @@ public class NewsDetailsView extends LockingScrollView {
 		
 		// Set Body
 		templateHtml = templateHtml.replace("__BODY__", mNewsItem.body);
+		
+		String bookmarkClass = newsModel.isBookmarked(mNewsItem) ? "on" : "off";
+		templateHtml = templateHtml.replace("__BOOKMARK__", bookmarkClass);
 
 		Log.d(TAG,"html = " + templateHtml);
 		
-		webview.getSettings().setJavaScriptEnabled(true);
-		webview.getSettings().setSupportZoom(false);
-		webview.setWebChromeClient(new MyWebChromeClient());			
-		webview.addJavascriptInterface(new JavaScriptInterface(), "newsDetail");
-		webview.loadDataWithBaseURL( "file:///android_asset/", templateHtml, "text/html", "UTF-8", null);
+		getSettings().setJavaScriptEnabled(true);
+		getSettings().setSupportZoom(false);
+		setWebChromeClient(new MyWebChromeClient());			
+		addJavascriptInterface(new JavaScriptInterface(), "newsDetail");
+		getSettings().setPluginsEnabled(true);
+		//getSettings().setPluginState(PluginState.ON);
+
+		loadDataWithBaseURL( "file:///android_asset/", templateHtml, "text/html", "UTF-8", null);
 
 	}
 		
@@ -120,19 +121,10 @@ public class NewsDetailsView extends LockingScrollView {
 	    }
 	    return stream.toString();
 	}
-
-	public void destroy() {
-		WebView wv = (WebView) findViewById(R.id.newsDetailsWV);
-		wv.destroy();
-		
-		removeAllViews();
-	}
 	
-	public ScrollView getScrollView() {
-		return (ScrollView) findViewById(R.id.newsDetailScrollView);
-	}
-	
+	@SuppressWarnings("unused")
 	private static class PictureFailedToLoadHandler extends WebViewClient {
+		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 			view.setVisibility(View.GONE);
 		}
@@ -154,19 +146,19 @@ public class NewsDetailsView extends LockingScrollView {
             result.confirm();
             return true;
         }
-        
+
         private void stopVideo() {
 			if (mVideoView != null) {
 				mVideoView.stopPlayback();
 			}
 			mVideoView = null;
-			mSliderActivity.setOnBackPressedListener(null);
-			mSliderActivity.setOnPausedListener(null);
-			mSliderActivity.hideFullScreen();
+			mModuleActivity.setOnBackPressedListener(null);
+			mModuleActivity.setOnPausedListener(null);
+			mModuleActivity.hideFullScreen();
 			mCustomViewCallback.onCustomViewHidden();       	
         }
         
-        @Override
+		@Override
 		public boolean onError(MediaPlayer mp, int what, int extra) {
 			stopVideo();
 			return false;
@@ -175,9 +167,9 @@ public class NewsDetailsView extends LockingScrollView {
 		@Override
 		public void onCompletion(MediaPlayer mp) {
 			stopVideo();
-			
 		}
-        
+        		
+        // http://stackoverflow.com/questions/3815090/webview-and-html5-video
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
             super.onShowCustomView(view, callback);
@@ -193,15 +185,15 @@ public class NewsDetailsView extends LockingScrollView {
                     mVideoView.start();
                 }
             }
-            mSliderActivity.showFullScreen(view);
-            mSliderActivity.setOnBackPressedListener(new OnBackPressedListener() {
+            mModuleActivity.showFullScreen(view);
+            mModuleActivity.setOnBackPressedListener(new OnBackPressedListener() {
 				@Override
 				public boolean onBackPressed() {
 					stopVideo();
 					return true;
 				}
             });
-            mSliderActivity.setOnPausedListener(new OnPausedListener() {
+            mModuleActivity.setOnPausedListener(new OnPausedListener() {
 				@Override
 				public void onPaused() {
 					if (mVideoView == null) {
@@ -209,19 +201,32 @@ public class NewsDetailsView extends LockingScrollView {
 					}
 				}
             });
-            
-            
-        }
-		
-        
-		@Override
-        public View getVideoLoadingProgressView() { 
-                ProgressBar bar = new ProgressBar(mSliderActivity); 
-                return bar; 
-        } 
-        
-    }
 
+        }
+        
+        @Override 
+        public View getVideoLoadingProgressView() { 
+                ProgressBar bar = new ProgressBar(mModuleActivity); 
+                return bar; 
+        }       
+    }
+	   
+    @Override
+    public void onSizeChanged(final int w, int h, int oldw, int oldh) {
+    	super.onSizeChanged(w, h, oldw, oldh);
+    	
+    	new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+		    	if (w > 0) {
+		    		loadUrl("javascript:resizeVideos(" + w + ")");
+		    	}
+			}
+    		
+    	}, 200);
+    }
+    
     final class JavaScriptInterface {
 
         JavaScriptInterface() {
@@ -231,7 +236,6 @@ public class NewsDetailsView extends LockingScrollView {
          * This is not called on the UI thread. Post a runnable to invoke
          * loadUrl on the UI thread.
          */
-        
         public void clickBookmarkButton(String status) {
         	NewsModel newsModel = new NewsModel(mModuleActivity);
         	boolean bookmarkStatus = status.equals("on");
@@ -240,18 +244,21 @@ public class NewsDetailsView extends LockingScrollView {
  
         public void clickShareButton() {
             mHandler.post(new Runnable() {
-                public void run() {
+                @Override
+				public void run() {
         			String url  = "http://" + Global.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(mNewsItem.story_id);
         			CommonActions.shareCustomContent(mModuleActivity, mNewsItem.title, mNewsItem.description, url);
                 }
             });
         }
         
-        
+
         public void clickViewImage() {
             mHandler.post(new Runnable() {
-                public void run() {
-					NewsImageActivity.launchActivity(mSliderActivity, mNewsItem);
+                @Override
+				public void run() {
+					NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
+
                 }
             });
         }

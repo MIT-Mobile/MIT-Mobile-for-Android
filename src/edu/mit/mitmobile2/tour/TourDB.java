@@ -15,12 +15,11 @@ import edu.mit.mitmobile2.tour.Tour.StartLocation;
 import edu.mit.mitmobile2.tour.Tour.TourHeader;
 
 import edu.mit.mitmobile2.tour.Tour.FooterLink;
+import edu.mit.mitmobile2.tour.Tour.GeoPoint;
 import edu.mit.mitmobile2.tour.Tour.HtmlContentNode;
 import edu.mit.mitmobile2.tour.Tour.Path;
 import edu.mit.mitmobile2.tour.Tour.TourItemContent;
 import edu.mit.mitmobile2.tour.Tour.TourItemContentNode;
-
-import com.google.android.maps.GeoPoint;
 
 public class TourDB {
 	private static final long TOUR_CACHE_EXPIRES = 24 * 60 * 60 * 1000;

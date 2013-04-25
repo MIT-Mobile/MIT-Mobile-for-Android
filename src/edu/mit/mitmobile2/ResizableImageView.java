@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class ResizableImageView extends ImageView {
+public class ResizableImageView extends RemoteImageView {
 
 	public ResizableImageView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -43,10 +43,10 @@ public class ResizableImageView extends ImageView {
 	}
 	
 	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
+	protected void dispatchDraw(Canvas canvas) {
+		super.dispatchDraw(canvas);
 		
-		if(mOverlay != null) {
+		if(mOverlay != null && mContentView.getVisibility() == VISIBLE) {
 			mOverlay.draw(canvas);
 		}
 	}

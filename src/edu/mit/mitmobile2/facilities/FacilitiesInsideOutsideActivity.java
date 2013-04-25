@@ -4,24 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class FacilitiesInsideOutsideActivity extends ModuleActivity {
+public class FacilitiesInsideOutsideActivity extends NewModuleActivity {
 
 	// this is a test 
-	private Button reportButton;
+	
 	//private ImageView callButton;
 	
 
@@ -41,14 +37,15 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        Handler uiHandler = new Handler();
+
 
 		createViews();
 	}
 
 	private void createViews() {
 		setContentView(R.layout.facilities_inside_outside);
-
+		addSecondaryTitle("Facilities");
+		
 		// Inside
 		TwoLineActionRow insideLocationActionRow = (TwoLineActionRow) findViewById(R.id.facilitiesInsideLocationActionRow);
 		insideLocationActionRow.setOnClickListener(new View.OnClickListener() {
@@ -78,25 +75,26 @@ public class FacilitiesInsideOutsideActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

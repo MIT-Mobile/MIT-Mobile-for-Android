@@ -18,9 +18,7 @@ public class MultiLineActionRow extends TwoLineActionRow {
 		initHelper(context);	
 		
 		if(attrs != null) {
-			String initialText = attrs.getAttributeValue(NAMESPACE, "text");
-			//(initialText);
-			
+						
 			int actionResId = attrs.getAttributeResourceValue(NAMESPACE, "src", -1);
 			if(actionResId > 0) {
 				//setActionIconResource(actionResId);
@@ -28,6 +26,7 @@ public class MultiLineActionRow extends TwoLineActionRow {
 			
 			int textColorResId = attrs.getAttributeResourceValue(NAMESPACE, "textColor", -1);
 			if(textColorResId > 0) {
+				@SuppressWarnings("unused")
 				int textColor = context.getResources().getColor(textColorResId);
 				//mTitleView.setTextColor(textColor);
 			} else {
@@ -104,6 +103,7 @@ public class MultiLineActionRow extends TwoLineActionRow {
 		return this.layoutId;
 	}
 	
+	@Override
 	public void setLayoutId(int layoutId) {
 		this.layoutId = layoutId;
 	}

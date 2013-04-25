@@ -41,7 +41,8 @@ final class AI01393xDecoder extends AI01decoder {
     super(information);
   }
 
-  public String parseInformation() throws NotFoundException {
+  @Override
+public String parseInformation() throws NotFoundException {
     if(this.information.size < headerSize + gtinSize) {
       throw NotFoundException.getNotFoundInstance();
     }

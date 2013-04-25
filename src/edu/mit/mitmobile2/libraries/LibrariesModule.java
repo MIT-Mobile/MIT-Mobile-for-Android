@@ -1,11 +1,13 @@
 package edu.mit.mitmobile2.libraries;
 
-import android.app.Activity;
+import java.util.List;
 
-import edu.mit.mitmobile2.Module;
+import android.app.Activity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
-public class LibrariesModule extends Module {
+public class LibrariesModule extends NewModule {
 
 	@Override
 	public String getLongName() {
@@ -35,5 +37,23 @@ public class LibrariesModule extends Module {
 	@Override
 	public int getHomeIconResourceId() {
 		return R.drawable.home_libraries;
+	}
+
+	@Override
+	public List<MITMenuItem> getPrimaryOptions() {
+		return null;
+	}
+
+	@Override
+	public List<MITMenuItem> getSecondaryOptions() {
+		return null;
+	}
+
+	@Override
+	public boolean onItemSelected(Activity activity, String id) {
+	    if (id.equals("search")) {
+		return activity.onSearchRequested();
+	    }
+	    return false;
 	}
 }

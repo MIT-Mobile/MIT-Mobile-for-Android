@@ -1,63 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
-  android:id="@+id/mapLL"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-  
-   	<edu.mit.mitmobile2.TitleBar
-   		android:id="@+id/mapTitleBar"
-   		android:layout_width="fill_parent"
-   		android:layout_height="wrap_content"  />
-   		
-   	<LinearLayout
-   		android:id="@+id/mapHeader"
-   		android:background="@drawable/main_repeat"
-   		android:orientation="vertical"
-   		android:layout_width="fill_parent"
-   		android:layout_height="wrap_content"
-   		android:paddingTop="@dimen/verticalPadding"
-   		android:paddingBottom="@dimen/verticalPadding"
-   		android:visibility="gone">
-   		
-   		<TextView
-   			android:id="@+id/mapHeaderTitle"
-   			android:layout_width="fill_parent"
-   			android:layout_height="wrap_content"
-   			android:paddingLeft="@dimen/horizontalPadding"
-   			android:paddingRight="@dimen/horizontalPadding"
-   			style="@style/ContentTitle" />
-   			
-   		<TextView
-   			android:id="@+id/mapHeaderSubtitle"
-   			android:layout_width="fill_parent"
-   			android:layout_height="wrap_content"
-   			android:paddingLeft="@dimen/horizontalPadding"
-   			android:paddingRight="@dimen/horizontalPadding"
-   			style="@style/SmallPrint" />   		
-   	</LinearLayout>
-   	
-	<edu.mit.mitmobile2.maps.MITMapView
-	    android:id="@+id/mapview"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
-	    android:clickable="true"
-	    android:apiKey="@string/googleMapsApiKey"
-	/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:id="@+id/newModuleMain">
 	
-	<edu.mit.mitmobile2.LoaderBar
-		android:visibility="gone" 
-		android:id="@+id/mapSearchLoader"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
-		
-	<ListView
+    <FrameLayout
+        android:id="@+id/newModuleMainFullScreenFrameLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />  
+
+    
+    <!-- MapView layout and initial extent -->
+    <edu.mit.mitmobile2.maps.MITMapView
+  		android:id="@+id/map"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+ 		spacialReference = "102113" 
+ 		initExtent = "-7914314.738504024 5214534.8430830045 -7913764.950289598 5215325.163641242"
+ 		calloutStyle="@xml/callout" >
+ 		<!--  -7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899"   --> 		
+  	</edu.mit.mitmobile2.maps.MITMapView>
+
+    <ListView
 		android:id="@+id/mapListView"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:visibility="gone"
 		style="@style/Lists" />
-
- </LinearLayout>
+    	
+    <edu.mit.mitmobile2.FullScreenLoader
+            android:id="@+id/mapLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" 
+            android:layout_weight="1"
+    />
+    
+</LinearLayout>

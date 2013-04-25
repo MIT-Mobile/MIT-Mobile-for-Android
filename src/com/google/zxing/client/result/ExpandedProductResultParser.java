@@ -44,7 +44,8 @@ final class ExpandedProductResultParser extends ResultParser {
 
   // Treat all RSS EXPANDED, in the sense that they are all
   // product barcodes with complementary data.
-  public static ExpandedProductParsedResult parse(Result result) {
+  @SuppressWarnings("unchecked")
+public static ExpandedProductParsedResult parse(Result result) {
     BarcodeFormat format = result.getBarcodeFormat();
     if (!(BarcodeFormat.RSS_EXPANDED.equals(format))) {
       // ExtendedProductParsedResult NOT created. Not a RSS Expanded barcode
@@ -70,7 +71,8 @@ final class ExpandedProductResultParser extends ResultParser {
     String price = "-";
     String priceIncrement = "-";
     String priceCurrency = "-";
-    Hashtable uncommonAIs = new Hashtable();
+    @SuppressWarnings("rawtypes")
+	Hashtable uncommonAIs = new Hashtable();
 
     int i = 0;
 

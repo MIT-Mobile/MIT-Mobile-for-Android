@@ -7,15 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
 
-import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
-import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
-import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
-import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
-import edu.mit.mitmobile2.about.BuildSettings;
-import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,8 +15,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-
 import android.util.Log;
+import edu.mit.mitmobile2.Global;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.MobileWebApi.ErrorResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.IgnoreErrorListener;
+import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.about.Config;
+import edu.mit.mitmobile2.emergency.EmergencyInfoNoticeListener;
 
 public class C2DMReceiver extends BroadcastReceiver {
 
@@ -64,12 +63,13 @@ public class C2DMReceiver extends BroadcastReceiver {
 	// This only get set after the
 	// server has confirmed receipt of the registration id
 	private static String sRegistrationID;
+	private static String mPendingRegistrationID;
 	
 	public static void registerForNotifications(Context context) {
 		if (sRegistrationID == null) {
 			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 			registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(), 0)); // boilerplate
-			registrationIntent.putExtra("sender", BuildSettings.C2DM_SENDER);
+			registrationIntent.putExtra("sender", Config.C2DM_SENDER);
 			context.startService(registrationIntent);	
 		}
 
@@ -79,9 +79,14 @@ public class C2DMReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.d("action", intent.getAction());
 		if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
-			String registrationID = intent.getStringExtra("registration_id");
-			if (registrationID != null) {
-				registerDevice(context, registrationID);
+			String registration = intent.getStringExtra("registration_id");
+			if (registration != null) {
+				if (mPendingRegistrationID == null || !registration.equals(mPendingRegistrationID)) {
+					mPendingRegistrationID = registration;
+					registerDevice(context, mPendingRegistrationID);
+				}
+			} else {
+				Log.d("C2DMReceiver", "failed to get a registration ID, probably an invalid C2DM sender configuration");
 			}
 			
 		} else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
@@ -120,13 +125,23 @@ public class C2DMReceiver extends BroadcastReceiver {
 	private final static String PREFERENCES = "DeviceRegistration";
 	private final static String DEVICE_ID_KEY = "device_id";
 	private final static String DEVICE_PASS_KEY = "pass_key";
+	private final static String DEVICE_REGISTRATION_KEY = "device_registration";
 	private final static String NOTICE_COUNT_KEY = "notice_count"; 
+	
+	public static void clearDeviceRegistration(Context context) {
+		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putLong(DEVICE_ID_KEY, -1);
+		editor.commit();
+		
+		sRegistrationID = null;
+	}
 	
 	private void registerDevice(final Context context, final String registrationID) {
 		final SharedPreferences preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
 		MobileWebApi api = new MobileWebApi(false, false, null, context, null);
 		long deviceID = preferences.getLong(DEVICE_ID_KEY, -1);
-		String appID = BuildSettings.release_project_name;
+		String appID = Config.release_project_name;
 		if (deviceID == -1) {
 			// need register the device
 			HashMap<String, String> params = new HashMap<String, String>();
@@ -137,47 +152,68 @@ public class C2DMReceiver extends BroadcastReceiver {
 			params.put("device_token", registrationID);	
 			
 			api.requestJSONObject(params, new JSONObjectResponseListener(
-				new IgnoreErrorListener(), null)  {
+				new RegistrationErrorListener(), null)  {
 
 				@Override
 				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
 					Editor editor = preferences.edit();
 					editor.putLong(DEVICE_ID_KEY, object.getLong(DEVICE_ID_KEY));
 					editor.putLong(DEVICE_PASS_KEY, object.getLong(DEVICE_PASS_KEY));
+					editor.putString(DEVICE_REGISTRATION_KEY, registrationID);
 					editor.commit();
 					sRegistrationID = registrationID;
+					mPendingRegistrationID = null;
 					
 					Global.onDeviceRegisterCompleted();
 				}
 			});
 		} else {
-			// need to change our token
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "push");
-			params.put("command", "newDeviceToken");
-			params.put("device_type", "android");
-			params.put("app_id", appID);
-			params.put("device_token", registrationID);	
-			params.put("device_id", Long.toString(deviceID));
-			params.put("pass_key", Long.toString(preferences.getLong(DEVICE_PASS_KEY, 0)));
-			api.requestJSONObject(params, new JSONObjectResponseListener(
-				new IgnoreErrorListener(), null)  {
-
-				@Override
-				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
-					// nothing to do
-					if (object.getBoolean("success")) {
-						sRegistrationID = registrationID;	
+			// may need to change our token
+			String oldRegistrationID = preferences.getString(DEVICE_REGISTRATION_KEY, "");
+			
+			if (!oldRegistrationID.equals(registrationID)) {
+				HashMap<String, String> params = new HashMap<String, String>();
+				params.put("module", "push");
+				params.put("command", "newDeviceToken");
+				params.put("device_type", "android");
+				params.put("app_id", appID);
+				params.put("device_token", registrationID);	
+				params.put("device_id", Long.toString(deviceID));
+				params.put("pass_key", Long.toString(preferences.getLong(DEVICE_PASS_KEY, 0)));
+				api.requestJSONObject(params, new JSONObjectResponseListener(
+					new RegistrationErrorListener(), null)  {
+	
+					@Override
+					public void onResponse(JSONObject object) throws ServerResponseException, JSONException {
+						// nothing to do
 						
-						Global.onDeviceRegisterCompleted();
-					} else {
-						Log.d("C2DMReceiver", "Device token failed to registered");
+						mPendingRegistrationID = null;
+						
+						if (object.getBoolean("success")) {
+							Editor editor = preferences.edit();
+							editor.putString(DEVICE_REGISTRATION_KEY, registrationID);
+							editor.commit();
+							sRegistrationID = registrationID;	
+							
+							Global.onDeviceRegisterCompleted();
+						} else {
+							Log.d("C2DMReceiver", "Device token failed to registered");
+						}
 					}
-				}
-			});		
+				});	
+			}
 		}
 	}
 
+	class RegistrationErrorListener implements ErrorResponseListener {
+
+		@Override
+		public void onError() {
+			mPendingRegistrationID = null;			
+		}
+		
+	};
+	
 	public static void markNotificationAsRead(Context context, String tag) {
 		JSONStringer encoder = new JSONStringer();
 		try {
@@ -196,7 +232,7 @@ public class C2DMReceiver extends BroadcastReceiver {
 		params.put("command", "markNotificationsAsRead");
 		params.put("tags", encoder.toString());
 		params.put("device_type", "android");
-		params.put("app_id", BuildSettings.release_project_name);	
+		params.put("app_id", Config.release_project_name);	
 		params.put("device_id", Long.toString(device.mDeviceId));
 		params.put("pass_key", Long.toString(device.mPassKey));
 		

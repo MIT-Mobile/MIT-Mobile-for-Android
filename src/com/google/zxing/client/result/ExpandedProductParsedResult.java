@@ -51,9 +51,11 @@ public class ExpandedProductParsedResult extends ParsedResult {
   private final String priceIncrement;
   private final String priceCurrency;
   // For AIS that not exist in this object
-  private final Hashtable uncommonAIs;
+  @SuppressWarnings("rawtypes")
+private final Hashtable uncommonAIs;
 
-  ExpandedProductParsedResult() {
+  @SuppressWarnings("rawtypes")
+ExpandedProductParsedResult() {
     super(ParsedResultType.PRODUCT);
     this.productID = "";
     this.sscc = "";
@@ -75,7 +77,7 @@ public class ExpandedProductParsedResult extends ParsedResult {
       String lotNumber, String productionDate, String packagingDate,
       String bestBeforeDate, String expirationDate, String weight,
       String weightType, String weightIncrement, String price,
-      String priceIncrement, String priceCurrency, Hashtable uncommonAIs) {
+      String priceIncrement, String priceCurrency, @SuppressWarnings("rawtypes") Hashtable uncommonAIs) {
     super(ParsedResultType.PRODUCT);
     this.productID = productID;
     this.sscc = sscc;
@@ -93,7 +95,8 @@ public class ExpandedProductParsedResult extends ParsedResult {
     this.uncommonAIs = uncommonAIs;
   }
 
-  public boolean equals(Object o){
+  @Override
+public boolean equals(Object o){
     if (!(o instanceof ExpandedProductParsedResult)) {
       return false;
     }
@@ -115,7 +118,8 @@ public class ExpandedProductParsedResult extends ParsedResult {
       && this.uncommonAIs.equals(     other.uncommonAIs);
   }
 
-  public int hashCode(){
+  @Override
+public int hashCode(){
     int hash1 = this.productID.hashCode();
     hash1 = 31 * hash1 + this.sscc.hashCode();
     hash1 = 31 * hash1 + this.lotNumber.hashCode();
@@ -185,11 +189,13 @@ public class ExpandedProductParsedResult extends ParsedResult {
     return priceCurrency;
   }
 
-  public Hashtable getUncommonAIs() {
+  @SuppressWarnings("rawtypes")
+public Hashtable getUncommonAIs() {
     return uncommonAIs;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     return productID;
   }
 }

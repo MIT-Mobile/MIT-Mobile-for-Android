@@ -41,7 +41,8 @@ final class AI01AndOtherAIs extends AI01decoder {
     super(information);
   }
 
-  public String parseInformation() throws NotFoundException {
+  @Override
+public String parseInformation() throws NotFoundException {
     StringBuffer buff = new StringBuffer();
 
     buff.append("(01)");

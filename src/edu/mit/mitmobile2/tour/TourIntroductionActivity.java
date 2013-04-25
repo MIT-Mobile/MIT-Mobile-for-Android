@@ -2,34 +2,25 @@ package edu.mit.mitmobile2.tour;
 
 import java.util.HashMap;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
-import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.StyledContentHTML;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.tour.Tour.TourHeader;
 
-public class TourIntroductionActivity extends ModuleActivity {
+public class TourIntroductionActivity extends NewModuleActivity {
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		
-		setContentView(R.layout.boring_activity_layout);
-		
 		TourHeader header = TourModel.getTour(this).getHeader();
 		
-		TitleBar titleBar = (TitleBar) findViewById(R.id.boringLayoutTitleBar);
-		titleBar.setTitle(header.getTitle());
-		
-		LinearLayout rootView = (LinearLayout) findViewById(R.id.boringLayoutRoot);
 		WebView webView = new WebView(this);
 		webView.getSettings().setJavaScriptEnabled(true);
 		
@@ -39,7 +30,8 @@ public class TourIntroductionActivity extends ModuleActivity {
 		
 		String html = StyledContentHTML.populateTemplate(this, "tour/intro_template.html", content);
 		webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
-		rootView.addView(webView);
+		setContentView(webView, false);
+		addSecondaryTitle(header.getTitle());
 		
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
@@ -55,7 +47,7 @@ public class TourIntroductionActivity extends ModuleActivity {
 	}
 	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new TourModule();
 	}
 
@@ -63,28 +55,17 @@ public class TourIntroductionActivity extends ModuleActivity {
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
-
-	private static final int MENU_SHOW_TOUR_MAP = MENU_MODULE_HOME + 1;
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_SHOW_TOUR_MAP, Menu.NONE, "Tour Map")
-				.setIcon(R.drawable.menu_maps);		
-	}
-	
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case MENU_SHOW_TOUR_MAP:
-				showMap();
-				return true;			
-		}
-		return super.onOptionsItemSelected(item);
-	}
 	
 	private void showMap() {
 		Tour tour = TourModel.getTour();
 		TourMapActivity.launch(this, tour.getDefaultTourMapItems(), tour.getPathGeoPoints(), false);
 	}
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

@@ -6,20 +6,18 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.FacilitiesItem.LocationRecord;
 
 //public class FacilitiesActivity extends ModuleActivity implements OnClickListener {
-public class FacilitiesActivity extends ModuleActivity {
+public class FacilitiesActivity extends NewModuleActivity {
 	
 
 	private Context mContext;	
@@ -103,26 +101,9 @@ public class FacilitiesActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected Module getModule() {
-		return new FacilitiesModule();
-	}
-
-	@Override
 	public boolean isModuleHomeActivity() {
 		return true;
 	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-	}
-
 
 	public static void launchActivityForLocation(Context context, LocationRecord location) {
 		Global.sharedData.getFacilitiesData().setLocationId(location.id);
@@ -141,5 +122,23 @@ public class FacilitiesActivity extends ModuleActivity {
 			Intent intent = new Intent(context, FacilitiesRoomLocationsActivity.class);
 			context.startActivity(intent);
 		}
+	}
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new FacilitiesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

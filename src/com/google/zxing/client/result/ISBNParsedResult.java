@@ -32,7 +32,8 @@ public final class ISBNParsedResult extends ParsedResult {
     return isbn;
   }
 
-  public String getDisplayResult() {
+  @Override
+public String getDisplayResult() {
     return isbn;
   }
 

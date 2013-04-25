@@ -131,7 +131,7 @@ public class CommonActions {
 	/*************************************************************************************/
 	static String FB = "com.facebook.katana.ShareLinkActivity";
 	
-	public static void shareCustomContent(final Activity ctx, String subject, String summary, final String url) {
+	public static void shareCustomContent(final Context ctx, String subject, String summary, final String url) {
 		
 		
 		String extraText = summary;
@@ -205,7 +205,8 @@ public class CommonActions {
 		lv.setAdapter(adapter);
 		
 		OnItemClickListener listener = new OnItemClickListener() {
-		    public void onItemClick(AdapterView<?> parent, View v, int position, long id)
+		    @Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id)
 		    {
 				ResolveInfo launchable = activityList.get(position); 
 				ActivityInfo act = launchable.activityInfo; 

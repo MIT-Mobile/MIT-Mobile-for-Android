@@ -7,24 +7,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.FineListItem;
 
-public class LibraryFineDetail extends ModuleActivity{
+public class LibraryFineDetail extends NewModuleActivity{
 	public static final String TAG = "LibraryFineDetail";
 
     Context mContext;
     private FullScreenLoader mLoadingView;
-    private TitleBar fineTitleBar;
 	private TextView fineTitleTV;
     private TextView fineAuthorTV;
     private TextView fineCallNoTV;
@@ -44,8 +40,7 @@ public class LibraryFineDetail extends ModuleActivity{
         Log.d(TAG,"index = " + index);
         final FineListItem fine = LibraryFines.getFineData().getFines().get(index);
         
-        fineTitleBar = (TitleBar)findViewById(R.id.libraryBartonDetailTitleBar);
-        fineTitleBar.setTitle("Fine");
+        addSecondaryTitle("Fine");
         
         fineTitleTV = (TextView)findViewById(R.id.libraryBartonDetailTitleTV);
         fineTitleTV.setText(fine.getTitle());
@@ -74,7 +69,8 @@ public class LibraryFineDetail extends ModuleActivity{
 
     }
 
-    private void doSearch(String barcode) {
+    @SuppressWarnings("unused")
+	private void doSearch(String barcode) {
 
         mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.showLoading();
@@ -110,19 +106,20 @@ public class LibraryFineDetail extends ModuleActivity{
     };
 
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new LibrariesModule();
 	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isScrollable() {
+		return false;
 	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

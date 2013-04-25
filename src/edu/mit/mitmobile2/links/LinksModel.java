@@ -20,7 +20,7 @@ public class LinksModel {
 		HashMap<String, String> parameters = new HashMap<String, String>();
 		parameters.put("module", "links");
 		
-		MobileWebApi webApi = new MobileWebApi(false, true, "People", context, uiHandler);
+		MobileWebApi webApi = new MobileWebApi(false, false, "Links", context, uiHandler);
 		webApi.setIsSearchQuery(false);
 		webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
 				new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {

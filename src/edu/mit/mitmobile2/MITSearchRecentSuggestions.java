@@ -31,7 +31,8 @@ public class MITSearchRecentSuggestions extends SearchRecentSuggestions {
     private String mAuthority;
     private boolean mTwoLineDisplay;
     private Uri mSuggestionsUri;
-    private String[] mQueriesProjection;
+    @SuppressWarnings("unused")
+	private String[] mQueriesProjection;
     
     private static final int MAX_HISTORY_COUNT = 250;
 	
@@ -61,7 +62,8 @@ public class MITSearchRecentSuggestions extends SearchRecentSuggestions {
     };
     
 
-    public void saveRecentQuery(String queryString, String line2) {
+    @Override
+	public void saveRecentQuery(String queryString, String line2) {
         if (TextUtils.isEmpty(queryString)) {
             return;
         }
@@ -91,7 +93,8 @@ public class MITSearchRecentSuggestions extends SearchRecentSuggestions {
         truncateHistory(cr, MAX_HISTORY_COUNT);
     }
 
-    protected void truncateHistory(ContentResolver cr, int maxEntries) {
+    @Override
+	protected void truncateHistory(ContentResolver cr, int maxEntries) {
         if (maxEntries < 0) {
             throw new IllegalArgumentException();
         }

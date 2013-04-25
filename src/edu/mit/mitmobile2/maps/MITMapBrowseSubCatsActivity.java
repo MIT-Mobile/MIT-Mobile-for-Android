@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import edu.mit.mitmobile2.objs.MapCatItem;
 
 public class MITMapBrowseSubCatsActivity extends ModuleActivity {
 
+	static final String TAG = "MITMapBrowseSubCatsActivity";
 	static final int MENU_BOOKMARKS  = MENU_SEARCH + 1;
 	
 	static final String CATEGORY_NAME_KEY = "category_name";
@@ -36,7 +38,8 @@ public class MITMapBrowseSubCatsActivity extends ModuleActivity {
 	/****************************************************/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
+		Log.d(TAG,"onCreate()");
+	
 	    super.onCreate(savedInstanceState);
 	    
     	Bundle extras = getIntent().getExtras();
@@ -55,8 +58,8 @@ public class MITMapBrowseSubCatsActivity extends ModuleActivity {
         createView();
 		
 	}
-	
-	/****************************************************/
+		
+
 	void createView() {
 		
 		setContentView(R.layout.boring_list_layout);

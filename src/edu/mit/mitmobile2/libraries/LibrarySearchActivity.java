@@ -1,8 +1,13 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Handler;
 import android.widget.ArrayAdapter;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SearchActivity;
 import edu.mit.mitmobile2.objs.SearchResults;
 
@@ -34,11 +39,6 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
     }
 
     @Override
-    protected Module getModule() {
-        return new LibrariesModule();
-    }
-
-    @Override
     protected boolean supportsMoreResult() {
         return true;
     }
@@ -53,5 +53,25 @@ public class LibrarySearchActivity extends SearchActivity<BookItem> {
 	protected void onItemSelected(SearchResults<BookItem> results, BookItem item) {
 		BookDetailActivity.launchActivity(this, results.getResultsList(), results.getItemPosition(item));
 	}
+
+	@Override
+	protected NewModule getNewModule() {
+		return new LibrariesModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	public List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
+		return items;
+	}
+	
+	@Override
+	protected void onOptionSelected(String optionId) {	}
 
 }

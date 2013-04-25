@@ -1,11 +1,17 @@
 package edu.mit.mitmobile2;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -16,7 +22,7 @@ public class RemoteImageView extends FrameLayout {
 	private ImageView mBusyBox;
 	private ImageView mErrorImage;
 	protected ImageView mContentView;
-	private String mUrl;
+	private List<String> mUrls;
 	private ImageDiskCache mDiskCache;
 	
 	private BitmapFactory.Options mBitmapDecodeOptions;
@@ -59,31 +65,57 @@ public class RemoteImageView extends FrameLayout {
 	
 	public void refresh() {
 		if(mErrorImage.getVisibility()  == VISIBLE) {
-			setURL(mUrl, true);
+			setURLs(mUrls, true);
 		}
 	}
 	
 	public void setURL(String url) {
-		setURL(url, false);
+		ArrayList<String> urls = new ArrayList<String>();
+		urls.add(url);
+		setURLs(urls, false);
 	}
 	
-	private synchronized void setURL(final String url, boolean forceRefresh) {
+	public void setURLs(List<String> urls) {
+		setURLs(urls, false);
+	}
+	
+	private static boolean compareURLs(List<String> urls1, List<String> urls2) {
+		if (urls1 == null || urls2 == null) {
+			// only way to be equal is both objects are null
+			return urls1 == urls2;
+		}
+		
+		if (urls1.size() == urls2.size()) {
+			for (int i = 0; i < urls1.size(); i++) {
+				if (!urls1.get(i).equals(urls2.get(i))) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private synchronized void setURLs(final List<String> urls, boolean forceRefresh) {
 
-		if(url == null) {
+		if(urls == null) {
 			mContentView.setImageDrawable(null);
-			mUrl = null;
+			mUrls = null;
 			return;
 		}
 		
-		if(url.equals(mUrl) && !forceRefresh) {
-			// nothing to update
-			return;
+		if (!forceRefresh) {
+			if (compareURLs(mUrls, urls)) {
+				// nothing to update
+				return;
+			}
 		}
 		
 		// clear the old contents first
 		mContentView.setImageDrawable(null);
 		
-		mUrl = url;
+		mUrls = urls;
 		
 		mErrorImage.setVisibility(GONE);
 	   	mBusyBox.setVisibility(VISIBLE);
@@ -95,26 +127,58 @@ public class RemoteImageView extends FrameLayout {
 			
 			@Override
 			public void run() {
-				final byte[] imageBytes = mDiskCache.getImageBytes(url);
+				int width = -1;
+				int height = -1;
+				Bitmap image = null;		
+				Canvas canvas = null;
+				for (String url : urls) {
+					final Bitmap layerImage;
+					final byte[] imageBytes = mDiskCache.getImageBytes(url);
+					if(imageBytes != null) {
+						layerImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, mBitmapDecodeOptions);
+					} else {
+						layerImage = null;
+						Log.d("RemoteImageView", "Failed to decode image: " + url);
+						break;
+					}
+					
+					if (urls.size() > 1) {
+						if (image == null) {
+							// dont worry about
+							width = layerImage.getWidth();
+							height = layerImage.getHeight();
+							image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+							canvas = new Canvas(image);
+							canvas.drawBitmap(layerImage, 0, 0, new Paint());
+						} else {
+							if (width != layerImage.getWidth() || height != layerImage.getHeight()) {
+								image = null;
+								Log.d("RemoteImageView", "Image Size for " + url + " does not match the size of base image " + urls.get(0));
+							} else {
+								canvas.drawBitmap(layerImage, 0, 0, new Paint());
+							}
+						}
+					} else {
+						// for a single image no need to do any fancy canvas 
+						// drawing
+						image = layerImage;
+					}
+				}
+				
 
 				synchronized (RemoteImageView.this) {
-					if(url.equals(mUrl)) {  // check to make sure URL has not changed
-						final Bitmap image;
-						if(imageBytes != null) {
-							image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length, mBitmapDecodeOptions);
-						} else {
-							image = null;
-						}
+					if(compareURLs(mUrls, urls)) {  // check to make sure URL has not changed						
 						
+						final Bitmap finalImage = image;
 						
 						uiHandler.post(new Runnable() {
 							@Override
 							public void run() {
-								if(url.equals(mUrl)) { // check to make sure URL has not changed
-									if(image != null) {
+								if(compareURLs(mUrls, urls)) { // check to make sure URL has not changed
+									if(finalImage != null) {
 										mBusyBox.setVisibility(GONE);
 										mErrorImage.setVisibility(GONE);
-										updateImage(image);
+										updateImage(finalImage);
 										mContentView.setVisibility(VISIBLE);					
 									} else {
 										mBusyBox.setVisibility(GONE);

@@ -14,10 +14,6 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import edu.mit.mitmobile2.MITClient;
-import edu.mit.mitmobile2.classes.FineData;
-import edu.mit.mitmobile2.classes.HoldData;
-import edu.mit.mitmobile2.classes.LoanData;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 import edu.mit.mitmobile2.libraries.LibraryItem.Hours;
@@ -31,47 +27,38 @@ public class LibraryParser {
 
 	public static final String TAG = "LibraryParser";
 
-	static ArrayList<LibraryItem> parseLibrary(JSONArray array) {
+	static ArrayList<LibraryItem> parseLibrary(JSONArray array) throws JSONException {
         ArrayList<LibraryItem> libraries = new ArrayList<LibraryItem>();
 
-        try {
-            for (int index = 0; index < array.length(); index++) {
-                JSONObject object = array.getJSONObject(index);
-                LibraryItem library = new LibraryItem();
-                library.library = object.getString("library");
-                library.status = object.getString("status");
-                libraries.add(library);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error parsing libraries");
+        for (int index = 0; index < array.length(); index++) {
+            JSONObject object = array.getJSONObject(index);
+            LibraryItem library = new LibraryItem();
+            library.library = object.getString("library");
+            library.status = object.getString("status");
+            libraries.add(library);
         }
 
         return libraries;
     }
     
     
-    static void parseLibraryDetail(JSONObject object, LibraryItem container) {
-        try {
-            container.hoursToday = object.getString("hours_today");
-            container.tel = object.getString("tel");
-            container.location = object.getString("location");
-            JSONObject temp = object.getJSONObject("schedule");
-            if(temp.has("current_term")) {
-                container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
-            }
-            if(temp.has("previous_terms")) {
-                container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
-            }
-            if(temp.has("next_terms")) {
-                container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
-            }
-            
-            container.isDetailLoaded = true;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error parsing library details");
+    static void parseLibraryDetail(JSONObject object, LibraryItem container) throws JSONException {
+    	
+        container.hoursToday = object.getString("hours_today");
+        container.tel = object.getString("tel");
+        container.location = object.getString("location");
+        JSONObject temp = object.getJSONObject("schedule");
+        if(temp.has("current_term")) {
+            container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
         }
+        if(temp.has("previous_terms")) {
+            container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
+        }
+        if(temp.has("next_terms")) {
+            container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
+        }
+        
+        container.isDetailLoaded = true;
     }
     
     private static Schedule getSchedule(JSONObject object, boolean isCurrentTerm) throws JSONException {

@@ -5,18 +5,17 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.DateStrings;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 
-public class QRReaderHistoryActivity extends ModuleActivity {
+public class QRReaderHistoryActivity extends NewModuleActivity {
 
 	private QRCodeDB mQRCodeDB;
 	private ArrayList<QRCode> mQRCodes;
@@ -34,7 +33,6 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 		mListAdapter = new QRCodeArrayAdapter(this, mQRCodes);
 		
 		setContentView(R.layout.qrreader_history);
-		View noHistory = findViewById(R.id.qrreaderNoHistory);
 		mHistoryListView = (ListView) findViewById(R.id.qrreaderMainHistoryLV);
 		mHistoryListView.setAdapter(mListAdapter);
 		mListAdapter.setOnItemClickListener(mHistoryListView,
@@ -47,7 +45,6 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 		);
 		
 		if(mQRCodes.size() > 0) {
-			noHistory.setVisibility(View.GONE);
 			mHistoryListView.setVisibility(View.VISIBLE);
 		}
 	}
@@ -70,8 +67,16 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 		}
 	}
 
+	// dont show history option in history activity
 	@Override
-	protected Module getModule() {
+	protected List<String> getMenuItemBlackList() {
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("history"); 
+		return items;
+	}
+	
+	@Override
+	protected NewModule getNewModule() {
 		return new QRReaderModule();
 	}
 
@@ -81,8 +86,11 @@ public class QRReaderHistoryActivity extends ModuleActivity {
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isScrollable() { 
+		return false;
 	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
+
 }

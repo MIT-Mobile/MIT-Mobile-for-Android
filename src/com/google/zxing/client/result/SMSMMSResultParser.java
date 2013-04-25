@@ -52,7 +52,8 @@ final class SMSMMSResultParser extends ResultParser {
     }
 
     // Check up front if this is a URI syntax string with query arguments
-    Hashtable nameValuePairs = parseNameValuePairs(rawText);
+    @SuppressWarnings("rawtypes")
+	Hashtable nameValuePairs = parseNameValuePairs(rawText);
     String subject = null;
     String body = null;
     boolean querySyntax = false;
@@ -74,8 +75,10 @@ final class SMSMMSResultParser extends ResultParser {
 
     int lastComma = -1;
     int comma;
-    Vector numbers = new Vector(1);
-    Vector vias = new Vector(1);
+    @SuppressWarnings("rawtypes")
+	Vector numbers = new Vector(1);
+    @SuppressWarnings("rawtypes")
+	Vector vias = new Vector(1);
     while ((comma = smsURIWithoutQuery.indexOf(',', lastComma + 1)) > lastComma) {
       String numberPart = smsURIWithoutQuery.substring(lastComma + 1, comma);
       addNumberVia(numbers, vias, numberPart);
@@ -86,7 +89,8 @@ final class SMSMMSResultParser extends ResultParser {
     return new SMSParsedResult(toStringArray(numbers), toStringArray(vias), subject, body);
   }
 
-  private static void addNumberVia(Vector numbers, Vector vias, String numberPart) {
+  @SuppressWarnings("unchecked")
+private static void addNumberVia(@SuppressWarnings("rawtypes") Vector numbers, @SuppressWarnings("rawtypes") Vector vias, String numberPart) {
     int numberEnd = numberPart.indexOf(';');
     if (numberEnd < 0) {
       numbers.addElement(numberPart);

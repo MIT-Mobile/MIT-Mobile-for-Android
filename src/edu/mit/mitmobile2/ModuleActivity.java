@@ -67,6 +67,7 @@ public abstract class ModuleActivity extends Activity {
 	
 	abstract protected void prepareActivityOptionsMenu(Menu menu);
 	
+	@SuppressWarnings("static-access")
 	public String getMobileWebDomain() {
 		return app.getMobileWebDomain();
 	}

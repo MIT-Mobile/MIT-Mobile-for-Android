@@ -1,141 +1,139 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.location.Location;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.android.maps.GeoPoint;
+import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polygon;
+
+import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.HomeScreenActivity;
-import edu.mit.mitmobile2.Module;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
+import edu.mit.mitmobile2.TitleBarSwitch;
+import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.shuttles.RoutesParser;
-import edu.mit.mitmobile2.shuttles.ShuttlesActivity;
-import edu.mit.mitmobile2.shuttles.ShuttlesModule;
+import edu.mit.mitmobile2.objs.MapUpdater;
 
-public class MITMapActivity extends MapBaseActivity {
-
-	// parameters for shuttles
-	public static final String KEY_SHUTTLE_STOPS = "shuttle_stops";
-	public static final String KEY_ROUTE = "shuttle_route";
-
-	// sent only by Event:
-	public static final String KEY_LON = "lon";
-	public static final String KEY_LAT = "lat";
-	public static final String KEY_LOCATION = "location";
+public class MITMapActivity extends NewModuleActivity {
 	
-	// TODO may not need (activityForResult)
-	public static final String MODULE_SHUTTLE = "shuttle";
-	//public static final String MODULE_CALENDAR = "calendar";
+	private static final String TAG = "MITMapActivity";
+	public static final String KEY_VIEW_PINS = "view_pins";
+	public MITMapView map;
+    private FullScreenLoader mLoadingView;
+	protected String module;
+	Context mContext;
+	Location location;
+	Bundle extras;
+	ArrayList<MapItem> mapItems;
+	private MapUpdater mapUpdater;
+	private HashMap params;
+	private String query;
+	protected ListView mListView;
+	MapItemsAdapter adapter;
+	ProgressDialog progress;
+	TitleBarSwitch mMapListSwitch;
+	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
 
-	// Generic Menu
-	static final int MENU_SEARCH = Menu.FIRST+1;
-	static final int MENU_MYLOC  = Menu.FIRST+2;
-	static final int MENU_BOOKMARKS = Menu.FIRST+3;
-	static final int MENU_BROWSE = Menu.FIRST+4;
+	private static String MENU_HOME = "home";
+	private static String MENU_MY_LOCATION = "my_location";
+	private static String MENU_BROWSE = "browse";
+	private static String MENU_BOOKMARKS = "bookmarks";
+	private static String MENU_SEARCH = "search";	
+	protected static final String MAP_ITEMS_KEY = "map_items";
+	public static final String MAP_DATA_KEY = "map_data";	
+	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
+	public static final String MAP_UPDATER_KEY = "map_updater";
+	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
+	
+	public static final double INIT_RESOLUTION = 1.205;
+	private static String LIST = "LIST";
+	private static String MAP = "MAP";
+	static int INIT_ZOOM = 17; // DELETE ?
+	static int INIT_ZOOM_ONE_ITEM = 18; // DELETE ?
 
-	// Shuttle Menu
-	static final int MENU_SHUTTLES = Menu.FIRST+5;
-	//static final int MENU_REFRESH  = Menu.FIRST+6;
-	static final int MENU_SHUTTLE_LIST_VIEW = Menu.FIRST+7;
-	static final int MENU_MAP_LIST_VIEW = Menu.FIRST+8;
-	static final int MENU_CALL_SAFERIDE = Menu.FIRST+9;
-
-	private MITMapShuttlesUpdaterTask mut;
-	private MITItemizedOverlay markers;
-	private GeoPoint ev_gpt;
-	private  RouteItem mRouteItem = null;
-
-	/****************************************************/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG,"oncreate()");
+		super.onCreate(savedInstanceState);
+		mContext = this;
+		setContentView(getLayoutID());
 		
-	    super.onCreate(savedInstanceState);
-	    
-    	Bundle extras = getIntent().getExtras();
-    	
-    	String findLoc = null;
-        if (extras!=null){ 
+		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
 
-        	findLoc = extras.getString(KEY_LOCATION); 
-        	
-        	// used by Events:
-        	if(extras.containsKey(KEY_LON) && extras.containsKey(KEY_LAT)) {
-            	int lon,lat;
-            	lon = extras.getInt(KEY_LON);   
-            	lat = extras.getInt(KEY_LAT); 
-            	ev_gpt = new GeoPoint(lon,lat);
-        	}
-        	
-        	if (ev_gpt!=null) {
-        		mMapItems = new ArrayList<MapItem>();
-        		MapItem m = new MapItem();
-        		m.name = title;
-        		m.snippets = snippet;
-        		mMapItems.add(m);
-        	}
-        	
-        	
-        	if(module != null && module.equals(MODULE_SHUTTLE)) {
-        		mRouteItem = extras.getParcelable(KEY_ROUTE);
-        	}
-        	
-        } 
-        
-        
-        // Three cases:
-        //
-        // 1 - Events sends LAT/LON
-        // 2 - Map Search sends many buildings
-        // 3 - Shuttle sends many stops
-        
-     
-    	center = new GeoPoint(42359238,-71093109);	// MIT
-	    
-    	
-	    mListView = (ListView) findViewById(R.id.mapListView);
-
-	    TitleBar titleBar = (TitleBar) findViewById(R.id.mapTitleBar);
-	    if(module != null) {
-	    	if(module.equals(MODULE_SHUTTLE)) {
-	    		titleBar.setTitle("Route Map");
-	    	}
-	    } else {
-	    	titleBar.setTitle("Campus Map");
-	    }
-	    
-
-		if (findLoc==null) {
-			if (mMapItems==null) {
-				
-				mMapItems = loadMapItems(getIntent()); // passed from Browse or Search?
-				if (mMapItems==null) {
-					mMapItems = new ArrayList<MapItem>();  // empty ok
-				}
+		// hide the title bar initially since there are no results to display
+		mSecondaryTitleBar.setVisibility(View.GONE);
+		mMapListSwitch = new TitleBarSwitch(this);
+		mMapListSwitch.setLabels(MAP, LIST);
+		mMapListSwitch.setSelected(MAP);
+		mMapListSwitch.setOnToggledListener(new OnToggledListener() {
+			@Override
+			public void onToggled(String selected) {
+				toggleMapList(selected);
 			}
-			setOverlays();  	
-		} else {
-			doSearch(findLoc);
+		});
+		
+		mSecondaryTitleBar.addActionView(mMapListSwitch);
+		
+		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
+		
+        mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
+
+        this.extras = this.getIntent().getExtras();
+		
+        map = (MITMapView)findViewById(getMapViewID());
+        
+        mListView = (ListView) findViewById(R.id.mapListView);
+
+        //map.init(mContext);
+				
+		//Retrieve the non-configuration instance data that was previously returned. 
+		Object init = getLastNonConfigurationInstance();
+		if (init != null) {
+			map.restoreState((String) init);
 		}
-	
+		
 	}
+		
+	
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	/*
 	 * launches a new map activity with pins already set
 	 */
 	public static void launchNewMapItems(Context context, List<MapItem> mapItems) {
+		Log.d(TAG,"launchNewMapItems");
 		Intent i = new Intent(context, MITMapActivity.class); 
-		i.putParcelableArrayListExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+		i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(i);
 	}
 	
@@ -144,303 +142,229 @@ public class MITMapActivity extends MapBaseActivity {
 		mapItems.add(mapItem);
 		launchNewMapItems(context, mapItems);
 	}
+
+	@Override
+	public void onDestroy() {
+	    Log.i(TAG, "onDestroy()");
+	    super.onDestroy();
+	}
 	
-	/*
-	 *  goes to currently running map activity and puts pins on it
-	 */
-	public static void viewMapItem(Context context, MapItem focusedMapItem) {	
-		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
-		mapItems.add(focusedMapItem);
-		Intent i = new Intent(context, MITMapActivity.class);  
-		i.putParcelableArrayListExtra(MAP_ITEMS_KEY, mapItems);
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		i.putExtra(KEY_VIEW_PINS, true);
-		context.startActivity(i);
-	};
-	/****************************************************/
+	 @Override
+	 protected void onNewIntent(Intent intent) {
+		Log.d(TAG,"onNewIntent");
+	    this.extras = intent.getExtras();
+	    
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	Log.d(TAG,"do search");
+	        query = intent.getStringExtra(SearchManager.QUERY);
+	        Log.d(TAG,"query = " + query);
+	        MITMapsDataModel.executeSearch(query, mapSearchUiHandler, mContext);
+	    }
+	    else if(extras != null && extras.containsKey(MITMapView.MAP_DATA_KEY)) {
+			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
+			if (mapItems.size() > 0) {
+				mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + " results");
+				mSecondaryTitleBar.setVisibility(View.VISIBLE);
+			}
+	    	map.addMapItems(mapItems);
+	    	map.syncGraphicsLayers();
+	    	map.fitMapItems();
+	    }
+	    
+	 } // End of onN
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Log.d(TAG,"onResume");
+		map.unpause();
+		
+	}
+
+	public MapUpdater getMapUpdater() {
+		return mapUpdater;
+	}
+
+	public void setMapUpdater(MapUpdater mapUpdater) {
+		this.mapUpdater = mapUpdater;
+	}
+	
+	public HashMap getParams() {
+		return params;
+	}
+
+	public void setParams(HashMap params) {
+		this.params = params;
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.d(TAG,"onPause()");
+	}
+
+	protected int getLayoutID() {
+		return R.layout.maps;
+	}
+	
+	protected int getMapViewID() {
+		return R.id.map;
+	}
+	
+    /* override this to handle the on map loaded event */
+	protected void onMapLoaded() { }
+	
+    /* override this to set the extent of the map */
+	protected void setExtent(double minX,double minY,double maxX, double maxY) { 
+
+		Polygon initialExtent = new Polygon();
+
+		// set start point
+		initialExtent.startPath(new Point(minX,minY));
+
+		// left side
+		initialExtent.lineTo(minX,maxY);
+
+		// top
+		initialExtent.lineTo(maxX,maxY);
+
+		// right
+		initialExtent.lineTo(maxX,minY);
+	
+		//bottom
+		initialExtent.lineTo(minX,minY);
+
+		map.setExtent(initialExtent);
+
+	}
+
+	protected int getMapLoadingViewID() {
+		return R.id.mapLoading;
+	}
+	
+	@Override
+	protected NewModule getNewModule() {
+		return new MapsModule();
+	}
+
+	@Override
+	protected void onOptionSelected(String id) {
+		Log.d(TAG,"option selected = " + id);
+	    if (id.equals(MENU_HOME)) {
+	    	onHomeRequested();
+	    }
+		if (id.equals(MENU_MY_LOCATION)) {
+	    	onMyLocationRequested();
+	    }
+	    if (id.equals(MENU_BROWSE)) {
+	    	onBrowseRequested();
+	    }
+	    if (id.equals(MENU_BOOKMARKS)) {
+			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
+			//i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			mContext.startActivity(i);
+
+//			startActivity(i);
+	    }
+	    if (id.equals(MENU_SEARCH)) {
+		    onSearchRequested();
+	    }
+
+	}
+	
+	protected void onHomeRequested() {
+		Intent i = new Intent(this, HomeScreenActivity.class);  
+		startActivity(i);
+		finish();
+	}
+	
+	protected void onBrowseRequested() {
+		if (this.getMapUpdater() != null) {
+			this.getMapUpdater().stop();
+		}
+	    Intent i = new Intent(this,MITMapBrowseCatsActivity.class);  
+		startActivity(i);
+	}
+
+	protected void onMyLocationRequested() {
+		// location is always displayed in Map. Selecting my location just centers map to that point
+		map.centerAt(map.ls.getPoint(),true);
+	}
+	
 	@Override
 	public boolean onSearchRequested() {
-		if (MODULE_SHUTTLE.equals(module)) return false;
+		Log.d(TAG,"onSearchRequested");
+		if (this.getMapUpdater() != null) {
+			this.getMapUpdater().stop();
+		}
 		return super.onSearchRequested();
 	}
 
-	/****************************************************/
-	@Override
-	protected void setOverlays() {
+    public Handler mapSearchUiHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+		@Override
+        public void handleMessage(Message msg) {
+        	Log.d(TAG,"mapSearchUiHandler success");
+            if (msg.arg1 == MobileWebApi.SUCCESS) {
+            	
+            	try {
+            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+            		map.clearMapItems();
+            		ArrayList mapItems = (ArrayList)msg.obj;
+         			mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + "  results");
+         			mSecondaryTitleBar.setVisibility(View.VISIBLE);
+            		
+         			adapter = new MapItemsAdapter(mContext, mapItems);
+         			mListView.setAdapter(adapter);
+         			
+         			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-		super.setOverlays();
+         				@Override
+         				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+         					ArrayList<MapItem> mapItems = map.getMao().getGraphicsLayers().get(MITMapView.DEFAULT_GRAPHICS_LAYER).getMapItems(); 					
+         					MapItem mapItem = mapItems.get(position);
+         		  			Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
+        	            	i.putParcelableArrayListExtra(MITMapView.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
+        	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
+        	            	mContext.startActivity(i);
+         				}
+         			});
 
-		if (markers!=null) {
-			mapView.removeAllViews();
-			ovrlys.remove(markers);
-		}
-		
-		int size = 0;
-		
-		// Building or Shuttle?
-		if (MODULE_SHUTTLE.equals(module)) {
-			
-		    setTitle("Shuttles Map");
+         			map.addMapItems(mapItems);
+            		map.syncGraphicsLayers();
+                	map.fitMapItems();
+            	}
+            	catch (Exception e) {
+            		Log.d(TAG,"mapSearchUiHander exception");
+            		Log.d(TAG,e.getStackTrace().toString());
+            	}
+            }
+            else if (msg.arg1 == MobileWebApi.ERROR) {
 
-			if (mut!=null) mut.cancel(true); 
-			
-		    mut = new MITMapShuttlesUpdaterTask(ctx, mapView, mRouteItem);
-		    
-		    RoutesParser rp = new RoutesParser();
-		    mut.execute(rp.getBaseUrl()+"?command=routeInfo&full=true", null, null);
-		    
-		    markers = mut.stopsMarkers;
-		    
-			size = markers.size();
-			
-		} else {
+            } 
+            else if (msg.arg1 == MobileWebApi.CANCELLED) {
 
-			Drawable pin;
-			GeoPoint gpt;
-			
-			pin = this.getResources().getDrawable(R.drawable.map_red_pin);
-			markers = new MITItemizedOverlay(pin, this, mapView);
-
-
-			// Convert MapItem to PinItems
-			int lat,lon;
-			String title,name;
-			for (MapItem m : mMapItems) {
-				lat = (int) (m.lat_wgs84 * 1000000.0);
-				lon = (int) (m.long_wgs84 * 1000000.0);
-				gpt = new GeoPoint(lat,lon);
-				
-				if ("".equals(m.bldgnum)) title = m.name;
-				else title = "Building " + m.bldgnum;
-				
-				if (title.equals(m.name)) name = "";
-				else name = m.name;
-				
-				PinItem p = new PinItem(gpt, title, name, m);
-				markers.addOverlay(p);
-			}
-			
-			size = markers.size();
-			
-			if (size>0) ovrlys.add(markers);
-			
-		}
-		
-		
-		// Show balloon if single item or direct from shuttle stop details view
-		if (size==1) {
-			PinItem p = (PinItem) markers.getItem(0);
-			markers.makeBalloon(p); 
-		} else if (bubble_pos>-1) {
-			PinItem p = (PinItem) markers.getItem(bubble_pos);
-			markers.makeBalloon(p); 
-		}
-		
-		// Try to center map...
-		if (size>1) {
-			int latSpanE6 = 10000;
-			int lonSpanE6 = 10000;
-			// #1 TODO? seems unreliable (only computes after rendered?)
-			//center = markers.getCenter();
-			//int latSpan = markers.getLatSpanE6();
-			//int lonSpan = markers.getLonSpanE6();
-			// #2
-			PinItem p = (PinItem) markers.getItem(0);
-			GeoPoint g = p.getPoint();
-			int maxLat = g.getLatitudeE6();
-			int minLat = maxLat;
-			int maxLon = g.getLongitudeE6();
-			int minLon = maxLon;
-			int lat,lon;
-			for (int x=1; x<size; x++) {
-				p = (PinItem) markers.getItem(x);
-				g = p.getPoint();
-				lat = g.getLatitudeE6();
-				lon = g.getLongitudeE6();
-				if (lat<minLat) minLat = lat;
-				if (lat>maxLat) maxLat = lat;
-				if (lon<minLon) minLon = lon;
-				if (lon>maxLon) maxLon = lon;
-			}
-			lat = (maxLat-minLat)/2 + minLat;
-			lon = (maxLon-minLon)/2 + minLon;
-	    	center = new GeoPoint(lat,lon);
-			mctrl.setCenter(center);
-			if (maxLat-minLat>0) latSpanE6 = maxLat-minLat;
-			if (maxLon-minLon>0) lonSpanE6 = maxLon-minLon;
-			//mctrl.zoomToSpan(latSpanE6, lonSpanE6);
-			final int latSpan = (int) (latSpanE6*0.90);
-			final int lonSpan = (int) (lonSpanE6*0.90);
-			mapView.post(new Runnable() {
-				@Override
-				public void run() {
-					// MapView ignores following unless using post() (needs to render first)
-					mctrl.zoomToSpan(latSpan, lonSpan);
-					int z = mapView.getZoomLevel();
-					if (z<15) {
-						mctrl.setZoom(15);
-					}
-				}
-			});
-			
-		} else if (size==1) {
-			mctrl.setCenter(center);
-			mapView.post(new Runnable() {
-				@Override
-				public void run() {
-					// MapView ignores following unless using post() (needs to render first)
-					mctrl.setZoom(INIT_ZOOM_ONE_ITEM);
-				}
-			});
-		} else {
-			
-			// Initial zoom out
-			mctrl.setCenter(center);
-			mapView.post(new Runnable() {
-				@Override
-				public void run() {
-					mctrl.setZoom(INIT_ZOOM_ONE_ITEM);
-				}
-			});
-			
-			myLocationOverlay.snapFirstTime = true;
-		}
-		
-		
-	}
-	/****************************************************/
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (mut!=null) mut.pause = false;  
-		//if (mut!=null) mut.notify();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		//if (mut!=null) mut.cancel(true); // would need to recreate in onResume()
-		if (mut!=null) mut.pause = true;  // TODO maybe wait()
-	}
+            }
+        }
+    };
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (mut!=null) mut.cancel(true); 
-	}
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i;
-		
-		switch (item.getItemId()) {
-		case MENU_HOME:
-			i = new Intent(this, HomeScreenActivity.class);  
-			startActivity(i);
-			finish();
-			break;
-		case MENU_SEARCH: 
-			//SearchManager sm = (SearchManager) ctx.getSystemService(Context.SEARCH_SERVICE);
-			//sm.startSearch(null, false, null, false);
-			onSearchRequested();
-			break;
-		case MENU_MYLOC: 
-			GeoPoint me = myLocationOverlay.getMyLocation();
-			if (me!=null) mctrl.animateTo(me);
-			break;
-		case MENU_BOOKMARKS: 
-			i = new Intent(this,MITMapBrowseResultsActivity.class);  
-			startActivity(i);
-			break;
-		case MENU_BROWSE: 
-			i = new Intent(this,MITMapBrowseCatsActivity.class);  
-			startActivity(i);
-			break;
-			
-		case MENU_SHUTTLES: 
-			i = new Intent(this,ShuttlesActivity.class);  
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(i);
-			finish();
-			break; 
-			
-		case MENU_SHUTTLE_LIST_VIEW:
-			finish();
-			break;
-			
-		case MENU_MAP_LIST_VIEW:
-			if(mListView.getVisibility() == View.GONE) {
-				MapItemsAdapter adapter = new MapItemsAdapter(this, mMapItems);
-				mListView.setAdapter(adapter);
-				mListView.setOnItemClickListener(adapter.showMapDetailsOnItemClickListener());
-				mapView.setVisibility(View.GONE);
-				mListView.setVisibility(View.VISIBLE);
-			} else {
-				mListView.setVisibility(View.GONE);
-				mapView.setVisibility(View.VISIBLE);
-			}
-			break;
-			// FIXME
-			/*
-		case MENU_MAP_LIST_VIEW: 
-			i = new Intent(this, MITMapActivity.class);
-			i.putExtra(MITMapActivity.KEY_MODULE, MITMapActivity.MODULE_SHUTTLE); 
-			RoutesAsyncListView sv = (RoutesAsyncListView) getScreen(getSelectedIndex());
-			i.putExtra(MITMapActivity.KEY_HEADER_TITLE, sv.ri.title);
-			Global.curStops = (ArrayList<Stops>) sv.m_stops;
-			startActivity(i);
-			break;
-			*/
-		case MENU_CALL_SAFERIDE: 
-			i = new Intent(Intent.ACTION_DIAL);
-			i.setData(Uri.parse("tel:617-253-2997"));
-			startActivity(i);
-			break;
-
+    private void toggleMapList(String selected) {
+		if(selected.equals(LIST)) {
+			mListView.setVisibility(View.VISIBLE);
+			map.setVisibility(View.GONE);			
+		} else if(selected.equals(MAP)) {
+			mListView.setVisibility(View.GONE);
+			map.setVisibility(View.VISIBLE);
 		}
+	}
+//	protected Point getMyLocation() {
+//		double lat = location.getLatitude();
+//		double lon = location.getLongitude();
+//		Point myLocation = MITMapView.toWebmercator(lat,lon);
+//		return myLocation;
+//	}	
 
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		
-		menu.clear();
-		
-		menu.add(0, MENU_HOME, Menu.NONE, "Home")
-		  .setIcon(R.drawable.menu_home);
-		
-		if (module != null && module.equals(MODULE_SHUTTLE)) {
-			Module shuttleModule = new ShuttlesModule();
-			menu.add(0, MENU_SHUTTLES, Menu.NONE, shuttleModule.getMenuOptionTitle())
-			  .setIcon(shuttleModule.getMenuIconResourceId());
-			menu.add(0, MENU_SHUTTLE_LIST_VIEW, Menu.NONE, "List View")
-			  .setIcon(R.drawable.menu_browse);
-			//menu.add(0, MENU_CALL_SAFERIDE, Menu.NONE, "Saferide")
-			//	.setIcon(android.R.drawable.ic_menu_call);
-		} else {
-			menu.add(0, MENU_SEARCH, Menu.NONE, "Search")
-			  .setIcon(R.drawable.menu_search);
-			menu.add(0, MENU_MYLOC, Menu.NONE, "My Location") 
-			  .setIcon(R.drawable.menu_mylocation);
-			menu.add(0, MENU_BOOKMARKS, Menu.NONE, "Bookmarks")
-			  .setIcon(R.drawable.menu_bookmarks);
-			menu.add(0, MENU_BROWSE, Menu.NONE, "Browse")
-			  .setIcon(R.drawable.menu_browse);
-			
-			if(mMapItems.size() > 0) {
-				if(mListView.getVisibility() == View.GONE) {
-					menu.add(0, MENU_MAP_LIST_VIEW, Menu.NONE, "List")
-					  .setIcon(R.drawable.menu_view_as_list);
-				} else {
-					menu.add(0, MENU_MAP_LIST_VIEW, Menu.NONE, "Map")
-					  .setIcon(R.drawable.menu_view_on_map);
-				}
-			}
-		}
-		
-		return super.onPrepareOptionsMenu(menu);
-	}
-	
-	
 }

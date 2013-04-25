@@ -9,26 +9,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.links.LinkListItem.LinkItem;
 
-public class LinksActivity extends ModuleActivity {
+public class LinksActivity extends NewModuleActivity {
 
 	Context mContext;
 	FullScreenLoader mLoader;
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		// TODO Auto-generated method stub
 		return new LinksModule();
 	}
@@ -38,16 +37,12 @@ public class LinksActivity extends ModuleActivity {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
-	}
 	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.links_main);
+		setTitle("Links");
 		LinksModel.fetchLinks(this, uiHandler);
 		mContext = this;
 		mLoader = (FullScreenLoader) findViewById(R.id.links_loader);
@@ -57,6 +52,7 @@ public class LinksActivity extends ModuleActivity {
 	private Handler uiHandler = new Handler() {
 
 		
+		@Override
 		public void handleMessage(Message msg) {
 			ArrayList<LinkListItem> linkSections = null;
 			LinearLayout container = (LinearLayout) findViewById(R.id.link_list_container);
@@ -100,4 +96,15 @@ public class LinksActivity extends ModuleActivity {
 		}
 	};
 
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
+		
+	}
 }

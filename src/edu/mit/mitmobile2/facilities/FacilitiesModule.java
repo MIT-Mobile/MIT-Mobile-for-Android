@@ -1,11 +1,13 @@
 package edu.mit.mitmobile2.facilities;
 
-import android.app.Activity;
+import java.util.List;
 
-import edu.mit.mitmobile2.Module;
+import android.app.Activity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
-public class FacilitiesModule extends Module {
+public class FacilitiesModule extends NewModule {
 
 	@Override
 	public String getLongName() {
@@ -35,5 +37,25 @@ public class FacilitiesModule extends Module {
 	@Override
 	public int getHomeIconResourceId() {
 		return R.drawable.home_facilities;
+	}
+
+	@Override
+	public List<MITMenuItem> getPrimaryOptions() {
+		// TODO Auto-generated method stub
+
+		return null;
+	}
+
+	@Override
+	public List<MITMenuItem> getSecondaryOptions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean onItemSelected(Activity activity, String id) {
+		// TODO Auto-generated method stub
+
+		return false;
 	}
 }

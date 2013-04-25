@@ -9,7 +9,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
 
 public class ConnectionWrapper {
 	public static enum ErrorType {
@@ -90,6 +90,7 @@ public class ConnectionWrapper {
 					} else if(msg.arg1 == CONNECTION_RESPONSE) {
 						Log.d(TAG,"ON RESPONSE");
 						Log.d(TAG,"msg = " + msg.obj.getClass());
+						@SuppressWarnings("unused")
 						InputStream i = (InputStream)msg.obj;
 						//Log.d(TAG,"stream = " + MobileWebApi.convertStreamToString(i));						
 						callback.onResponse((InputStream) msg.obj);

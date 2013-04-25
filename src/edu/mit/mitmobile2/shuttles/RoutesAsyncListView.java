@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.shuttles;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -13,11 +14,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -83,20 +85,18 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 				super.handleMessage(msg);
 				lb.setLastLoaded(new Date());
 				lb.endLoading();
-				if (msg.arg1 == MobileWebApi.SUCCESS) {
-					ri = ShuttleModel.getUpdatedRoute(ri);
-					mStops = ri.stops;
-					ra.clear();
-					
-					for (Stops s : mStops) {
-						ra.add(s);
-					}
+				if(msg.arg1 == MobileWebApi.SUCCESS) {
+			    	 ri = ShuttleModel.getUpdatedRoute(ri);
+			    		mStops = ri.stops;
+			    		ra.clear();
+				    	for (Stops s : mStops) {
+				    		 ra.add(s);
+				    	}
 
-					ra.notifyDataSetChanged();
+			    	 ra.notifyDataSetChanged();
 				} else if (msg.arg1 == MobileWebApi.ERROR) {
-					Toast.makeText(mActivity, MobileWebApi.NETWORK_ERROR,
-							Toast.LENGTH_LONG).show();
-					lb.errorLoading();
+					Toast.makeText(mActivity, MobileWebApi.NETWORK_ERROR, Toast.LENGTH_LONG).show();
+	    			lb.errorLoading();
 				}
 			}
 		};
@@ -134,30 +134,45 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		lv = (ListView) topView.findViewById(R.id.routesLV);
 		lv.setOnItemClickListener(this);
 		
-		TextView routeTitle = (TextView) topView.findViewById(R.id.routesTitleTV);
-		routeTitle.setText(ri.title);
+		TextView tv;
 		
-		TextView routeInfo = (TextView) topView.findViewById(R.id.routesInfoTV);
+		
+		tv = (TextView) topView.findViewById(R.id.routesTitleTV);
+		tv.setText(ri.title);
+
+		////////////////////
+		
+		tv = (TextView) topView.findViewById(R.id.routesInfoTV);
+
 		String text = "";
-		if (ri.active) {
-			text = ri.predictable ? MITRoutesSliderActivity.GPS_ONLINE : MITRoutesSliderActivity.GPS_OFFLINE;
-		} else 
-			text = MITRoutesSliderActivity.NOT_RUNNING;
+		if (ri.isRunning) {
+			text = ri.gpsActive ? MITRoutesSliderActivity.GPS_ONLINE : MITRoutesSliderActivity.GPS_OFFLINE;
+		} 
+		else text = MITRoutesSliderActivity.NOT_RUNNING;
+		text += "\n";
 		
-		text += "\n" + ri.description + (ri.description.endsWith(".") ? "\n" : ".\n");
+		if (ri.summary.endsWith(".")) text += ri.summary + "\n";
+		else text += ri.summary + ".\n";
 		
 		text += "Route loop repeats every " + ri.interval + " minutes.";
-		routeInfo.setText(text);
+		tv.setText(text);
+
+		////////////////////
+		
 		
 		// FIXME HACK!!! neither FILL not layout_weight=1 with WRAP work 
         Display display = mActivity.getWindowManager().getDefaultDisplay(); 
         int height = display.getHeight();
         topView.setMinimumHeight(height-30);
-        
+
+		
+		
 		
 		lb = new LoaderBar(mActivity);
-		topView.addView(lb);
+		topView.addView(lb, 0);
+		
 		addView(topView);
+		
 	}
 	 
 	public List<Stops> getStops() {
@@ -180,7 +195,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		
 		
 		Intent i = new Intent(mActivity, MITStopsSliderActivity.class);  
-		i.putExtra(ShuttleModel.KEY_ROUTE_ID, ri.id); 
+		i.putExtra(ShuttleModel.KEY_ROUTE_ID, ri.route_id); 
 		i.putExtra(ShuttleModel.KEY_STOP_ID, s.id); 
 		mActivity.startActivity(i);
 		

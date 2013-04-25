@@ -57,11 +57,13 @@ public class QRCodeReader implements Reader {
    * @throws FormatException if a QR code cannot be decoded
    * @throws ChecksumException if error correction fails
    */
-  public Result decode(BinaryBitmap image) throws NotFoundException, ChecksumException, FormatException {
+  @Override
+public Result decode(BinaryBitmap image) throws NotFoundException, ChecksumException, FormatException {
     return decode(image, null);
   }
 
-  public Result decode(BinaryBitmap image, Hashtable hints)
+  @Override
+public Result decode(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, ChecksumException, FormatException {
     DecoderResult decoderResult;
     ResultPoint[] points;
@@ -85,7 +87,8 @@ public class QRCodeReader implements Reader {
     return result;
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     // do nothing
   }
 

@@ -23,6 +23,7 @@ package com.google.zxing;
  *
  * @author Sean Owen
  */
+@SuppressWarnings("serial")
 public final class FormatException extends ReaderException {
 
   private static final FormatException instance = new FormatException();

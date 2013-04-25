@@ -34,8 +34,10 @@ import java.util.Vector;
  */
 public final class MultiFormatReader implements Reader {
 
-  private Hashtable hints;
-  private Vector readers;
+  @SuppressWarnings("rawtypes")
+private Hashtable hints;
+  @SuppressWarnings("rawtypes")
+private Vector readers;
 
   /**
    * This version of decode honors the intent of Reader.decode(BinaryBitmap) in that it
@@ -46,7 +48,8 @@ public final class MultiFormatReader implements Reader {
    * @return The contents of the image
    * @throws NotFoundException Any errors which occurred
    */
-  public Result decode(BinaryBitmap image) throws NotFoundException {
+  @Override
+public Result decode(BinaryBitmap image) throws NotFoundException {
     setHints(null);
     return decodeInternal(image);
   }
@@ -59,7 +62,8 @@ public final class MultiFormatReader implements Reader {
    * @return The contents of the image
    * @throws NotFoundException Any errors which occurred
    */
-  public Result decode(BinaryBitmap image, Hashtable hints) throws NotFoundException {
+  @Override
+public Result decode(BinaryBitmap image, @SuppressWarnings("rawtypes") Hashtable hints) throws NotFoundException {
     setHints(hints);
     return decodeInternal(image);
   }
@@ -87,11 +91,16 @@ public final class MultiFormatReader implements Reader {
    *
    * @param hints The set of hints to use for subsequent calls to decode(image)
    */
-  public void setHints(Hashtable hints) {
+
+
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public void setHints(Hashtable hints) {
     this.hints = hints;
 
     boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
-    Vector formats = hints == null ? null : (Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS);
+   
+	
+	Vector formats = hints == null ? null : (Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS);
     readers = new Vector();
     if (formats != null) {
       boolean addOneDReader =
@@ -141,7 +150,8 @@ public final class MultiFormatReader implements Reader {
     }
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     int size = readers.size();
     for (int i = 0; i < size; i++) {
       Reader reader = (Reader) readers.elementAt(i);

@@ -22,6 +22,7 @@ package com.google.zxing;
  *
  * @author Sean Owen
  */
+@SuppressWarnings("serial")
 public final class NotFoundException extends ReaderException {
 
   private static final NotFoundException instance = new NotFoundException();

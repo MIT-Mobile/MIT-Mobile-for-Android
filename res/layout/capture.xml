@@ -19,7 +19,7 @@
    written by Daniel Switkin which in turn was based on the CameraPreview
    example in the Android SDK.
  
-  @author ian.gavalakis@modolabs.com 
+  Modified for MIT Mobile
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
@@ -35,12 +35,6 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:background="@color/transparent"/>
-
-
-  	<edu.mit.mitmobile2.TitleBar
-  		android:text="Scanner"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
   		
   <LinearLayout android:id="@+id/result_view"
                 android:orientation="vertical"

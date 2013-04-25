@@ -1,13 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="wrap_content"
-  android:orientation="vertical">  		
-  		
-  	<ListView android:id="@+id/peopleDetailItems"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		style="@style/Lists" />
-		
-</LinearLayout>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    >
+
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical">  		
+  	
+		<LinearLayout
+	  		android:layout_width="fill_parent"
+	  		android:layout_height="wrap_content"
+	  		android:padding="@dimen/standardPadding"
+	  		android:orientation="vertical">
+	  
+	  		<TextView android:id="@+id/personName"
+	  			android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content" 
+	  			style="@style/ContentTitle"/>
+	  		
+	  		<TextView android:id="@+id/personTitle"
+	  			android:layout_width="wrap_content"
+	  			android:layout_height="wrap_content" 
+	  			style="@style/SmallPrint"/>
+		</LinearLayout>
+	
+		<FrameLayout
+	    	android:layout_height="1dip"
+	    	android:layout_width="fill_parent"
+	    	android:paddingLeft="@dimen/halfStandardPadding"
+	    	android:paddingRight="@dimen/halfStandardPadding"
+	    	>
+	  		
+			<View
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="fill_parent"
+		    	android:background="@color/dividerColor" />
+	    
+		</FrameLayout>
+
+
+		<FrameLayout
+		    android:paddingLeft="@dimen/halfStandardPadding"
+		    android:paddingRight="@dimen/halfStandardPadding"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    >
+	   
+			<LinearLayout
+		    	android:id="@+id/personAddButton" 
+	  			android:layout_width="fill_parent"
+	  			android:layout_height="wrap_content"
+	  			android:paddingLeft="@dimen/halfStandardPadding"
+	  			android:paddingRight="@dimen/halfStandardPadding"
+	  			android:background="@drawable/highlight_background"
+	  			android:orientation="horizontal">
+	  
+	    		<ImageView
+	    	    	android:layout_height="wrap_content"
+	    	    	android:layout_width="wrap_content"
+	    	    	android:src="@drawable/action_button_add_to_contact"
+	    	    	android:contentDescription="add to contacts button"
+	    	    	/>
+	    	
+	  			<TextView
+	  				android:layout_width="wrap_content"
+	  				android:layout_height="fill_parent"
+	  				android:text="Add to Contacts"
+	  				android:gravity="center_vertical" 
+	  				style="@style/ActionButtons"/>
+	  		
+			</LinearLayout>
+		</FrameLayout>
+
+		<LinearLayout
+	    	android:id="@+id/peopleDetailListItemsWrapper"
+  			android:layout_width="fill_parent"
+  			android:layout_height="fill_parent"
+  			android:background="@color/rowBackground"
+  			android:orientation="vertical" 
+  			/>  	
+  
+	</LinearLayout>
+</ScrollView>

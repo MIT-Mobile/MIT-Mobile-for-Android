@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,19 +16,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.classes.RenewBookResponse;
 import edu.mit.mitmobile2.objs.LoanListItem;
 
-public class LibraryLoanDetail extends ModuleActivity{
+public class LibraryLoanDetail extends NewModuleActivity{
 	public static final String TAG = "LibraryLoanDetail";
 
     Context mContext;
     private FullScreenLoader mLoadingView;
-    private TitleBar loanTitleBar;
 	private TextView loanTitleTV;
     private TextView loanAuthorTV;
     private TextView loanCallNoTV;
@@ -56,8 +52,7 @@ public class LibraryLoanDetail extends ModuleActivity{
         index = extras.getInt("index");
         final LoanListItem item = LibraryYourAccount.getLoanData().getLoans().get(index);
         
-        loanTitleBar = (TitleBar)findViewById(R.id.libraryBartonDetailTitleBar);
-        loanTitleBar.setTitle("Loan");
+        addSecondaryTitle("Loan");
         
         loanDetailLayout = (LinearLayout)findViewById(R.id.libraryBartonDetailLayout);
         loanTitleTV = (TextView)findViewById(R.id.libraryBartonDetailTitleTV);
@@ -102,7 +97,8 @@ public class LibraryLoanDetail extends ModuleActivity{
         loanRenewButton = (Button) findViewById(R.id.libraryBartonDetailRenewButton);
         loanRenewButton.setVisibility(View.VISIBLE);
         loanRenewButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            @Override
+			public void onClick(View v) {
             	renewBook(item.getBarcode());
                 Log.d(TAG,"renew ");
             }
@@ -148,7 +144,7 @@ public class LibraryLoanDetail extends ModuleActivity{
     };
 
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new LibrariesModule();
 	}
 
@@ -159,8 +155,10 @@ public class LibraryLoanDetail extends ModuleActivity{
 	}
 
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isScrollable() {
+		return false;
 	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

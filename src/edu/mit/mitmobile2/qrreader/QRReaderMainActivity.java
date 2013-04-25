@@ -8,17 +8,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.R;
 
 
-public class QRReaderMainActivity extends ModuleActivity {
+public class QRReaderMainActivity extends NewModuleActivity {
 
 	private static final int MAXIMUM_SAVED_QR_CODES = 10;
 	
@@ -29,19 +28,25 @@ public class QRReaderMainActivity extends ModuleActivity {
 	
 	private Bitmap mBitmap;
 	
-	 private static final int MENU_QR_HELP = Menu.FIRST;
+	 //private static final int MENU_QR_HELP = Menu.FIRST;
 	
 	private static final String LAUNCH_SCHEDULED_KEY = "launch_scheduled";
 	private static final String FINISH_SCHEDULED_KEY = "finish_scheduled";
 	
 	private boolean mLaunchScanScheduled;
 	private boolean mFinishScheduled;
+
+	@SuppressWarnings("unused")
+	private FullScreenLoader mLoader;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		mLoader = new FullScreenLoader(this, null);	
 		setContentView(R.layout.camera_not_found);
+		
+		mQRCodeDB = QRCodeDB.getInstance(getApplicationContext());	
 		
 		mLaunchScanScheduled = true;
 		mFinishScheduled = false;
@@ -73,18 +78,38 @@ public class QRReaderMainActivity extends ModuleActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == RESULT_OK) {
 			Bundle extras = data.getExtras();
-			
 			byte[] bitmapBytes = extras.getByteArray(com.google.zxing.client.android.Intents.Scan.RESULT_BITMAP_BYTES);
 			mBitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
-			String result = extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT);
 			
+			String result = extras.getString(com.google.zxing.client.android.Intents.Scan.RESULT);
 			QRCode qrcode = updateDB(result);
+			
 			QRReaderDetailActivity.launch(QRReaderMainActivity.this, qrcode);
 			mLaunchScanScheduled = false;
 			mFinishScheduled = false;
 		}
 	}
 	
+	@Override
+	public boolean isModuleHomeActivity() {
+		return true;
+	}
+	
+
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new QRReaderModule();
+	}
+
+	@Override
+	protected boolean isScrollable() {
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -125,32 +150,5 @@ public class QRReaderMainActivity extends ModuleActivity {
 			mQRCodeDB.removeOldestQRCode();
 		}
 		return qrcode;
-	}
-	
-	@Override
-	protected Module getModule() {
-		return new QRReaderModule();
-	}
-
-	@Override
-	public boolean isModuleHomeActivity() {
-		return true;
-	}
-
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_QR_HELP, Menu.NONE, "Help")
-		.setIcon(R.drawable.menu_about);
-	}
-	
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_QR_HELP:
-			Intent intent = new Intent(this, QRReaderHelpActivity.class);
-			startActivity(intent);
-			return true;
-		}
-		return true;
-		
 	}
 }

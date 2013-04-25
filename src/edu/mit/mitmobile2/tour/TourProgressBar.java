@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.tour;
 
+import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.R;
 
 import android.content.Context;
@@ -11,6 +12,7 @@ public class TourProgressBar extends LinearLayout {
 	private Context ctx;
 	
 	private int total = 0;
+	@SuppressWarnings("unused")
 	private int done = 0;
 	
 	/*****************************************************************************/
@@ -20,11 +22,8 @@ public class TourProgressBar extends LinearLayout {
 		
 		ctx = context;
 		
-		//LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
-		//LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT,10);  // should be this but hdpi disappears
-		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT,20);  // works for hdpi but not mdpi
-		
-		//lp.setMargins(6, 0, 6, 2);  // this does not extend background but does push segments inside
+		int progressBarHeight = AttributesParser.parseDimension("20dip", context);
+		LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT, progressBarHeight); 
 		
 		setLayoutParams(lp);
 

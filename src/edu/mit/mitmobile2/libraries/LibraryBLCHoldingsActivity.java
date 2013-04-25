@@ -1,17 +1,20 @@
 package edu.mit.mitmobile2.libraries;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.MITMenuItem;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.SectionHeader.Prominence;
@@ -19,7 +22,7 @@ import edu.mit.mitmobile2.SmallActivityCache;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.libraries.BookItem.Holding;
 
-public class LibraryBLCHoldingsActivity extends ModuleActivity {
+public class LibraryBLCHoldingsActivity extends NewModuleActivity {
 
 	static SmallActivityCache<BookItem> sBookItemsCache = new SmallActivityCache<BookItem>();
 	
@@ -80,9 +83,8 @@ public class LibraryBLCHoldingsActivity extends ModuleActivity {
 		}	
 	}
 	
-	
 	@Override
-	protected Module getModule() {
+	protected NewModule getNewModule() {
 		return new LibrariesModule();
 	}
 
@@ -91,10 +93,23 @@ public class LibraryBLCHoldingsActivity extends ModuleActivity {
 		return false;
 	}
 
+
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		
+	protected boolean isScrollable() {
+	    return true;
+	}
+
+	@Override
+	public List<MITMenuItem> getPrimaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("search", "Search", R.drawable.menu_search));
+		return items;
+	}
+	
+	@Override
+	protected void onOptionSelected(String optionId) {
+	    // TODO Auto-generated method stub
+	    
 	}
 
 }

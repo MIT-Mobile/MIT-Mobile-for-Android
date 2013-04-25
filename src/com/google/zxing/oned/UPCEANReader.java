@@ -121,7 +121,8 @@ public abstract class UPCEANReader extends OneDReader {
     return startRange;
   }
 
-  public Result decodeRow(int rowNumber, BitArray row, Hashtable hints)
+  @Override
+public Result decodeRow(int rowNumber, BitArray row, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, ChecksumException, FormatException {
     return decodeRow(rowNumber, row, findStartGuardPattern(row), hints);
   }
@@ -131,7 +132,7 @@ public abstract class UPCEANReader extends OneDReader {
    * allows caller to inform method about where the UPC/EAN start pattern is
    * found. This allows this to be computed once and reused across many implementations.</p>
    */
-  public Result decodeRow(int rowNumber, BitArray row, int[] startGuardRange, Hashtable hints)
+  public Result decodeRow(int rowNumber, BitArray row, int[] startGuardRange, @SuppressWarnings("rawtypes") Hashtable hints)
       throws NotFoundException, ChecksumException, FormatException {
 
     ResultPointCallback resultPointCallback = hints == null ? null :

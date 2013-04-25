@@ -1,8 +1,11 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -13,6 +16,7 @@ import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 
+	static final String TAG = "MapItemsAdapter"; 
 	List<MapItem> mMapItems;
 	Context mContext;
 	
@@ -26,10 +30,13 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 	public void updateView(MapItem mapItem, View view) {
 		TwoLineActionRow row = (TwoLineActionRow) view;
 		
-		if(mapItem.displayName != null && !mapItem.displayName.equals("")) {
-			row.setTitle(mapItem.displayName);
+		String displayName = (String)mapItem.getItemData().get("displayName");
+		String name = (String)mapItem.getItemData().get("name");
+		
+		if(displayName != null && !displayName.equals("")) {
+			row.setTitle(displayName);
 		} else {
-			row.setTitle(mapItem.name);
+			row.setTitle(name);
 		}
 	}
 	
@@ -37,8 +44,15 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		return new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
+				Log.d(TAG,"adapter view click position = " + position + " id = " + id);
+				ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 				MapItem mapItem = getItem(position);
-				MITMapActivity.launchNewMapItem(mContext, mapItem);
+				mapItems.add(mapItem);
+				
+				Intent i = new Intent(mContext, MITMapActivity.class); 
+				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);
+				mContext.startActivity(i);
 			}
 		};
 	}
@@ -47,7 +61,7 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		return new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
-				MITMapDetailsSliderActivity.launchMapDetails(mContext, mMapItems, position);
+				//MITMapDetailsSliderActivity.launchMapDetails(mContext, mMapItems, position);
 			}
 		};
 	}

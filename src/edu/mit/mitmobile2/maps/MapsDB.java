@@ -1,19 +1,30 @@
 package edu.mit.mitmobile2.maps;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
+import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
+import edu.mit.mitmobile2.objs.PersonItem;
+import edu.mit.mitmobile2.people.PeopleDB;
 
 public class MapsDB {
+	private static final String TAG = "MapsDB";
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "maps.db";
 	private static final String MAPS_TABLE = "map_items";
-	//private static final String MAPS_VIEW = "map_items_view";
+	private static final String MAPS_VIEW = "map_items_view";
 
 	
 	// map table field names
@@ -38,15 +49,15 @@ public class MapsDB {
 	
 	SQLiteOpenHelper mMapsDBHelper;
 	
-	private static MapsDB newsDBInstance = null;
+	private static MapsDB mapsDBInstance = null;
 
 	/********************************************************************/
 	public static MapsDB getInstance(Context context) {
-		if(newsDBInstance == null) {
-			newsDBInstance = new MapsDB(context);
-			return newsDBInstance;
+		if(mapsDBInstance == null) {
+			mapsDBInstance = new MapsDB(context);
+			return mapsDBInstance;
 		} else {
-			return newsDBInstance;
+			return mapsDBInstance;
 		}
 	}
 	
@@ -58,10 +69,17 @@ public class MapsDB {
 		mMapsDBHelper = new MapsDatabaseHelper(context); 
 	}
 	private String[] whereMapIdArgs(MapItem MapItem) {
-		return new String[] {MapItem.id};
+		//return new String[] {MapItem.id};
+		return new String[]{""};
 	}
+	
 	private String[] whereArgs(MapItem MapItem) {
-		return new String[] {Long.toString(MapItem.sql_id)};
+		String id = (String)MapItem.getItemData().get("id");
+		Log.d(TAG,"delete id = " + id);
+		String[] args = new String[1];
+		args[0] = id;
+		return args;
+		//return new String[] {(String)MapItem.getItemData().get("id")};
 	}
 	/********************************************************************/
 	synchronized void clearAll() {
@@ -71,7 +89,9 @@ public class MapsDB {
 	
 	synchronized void delete(MapItem mi) {
 		SQLiteDatabase db = mMapsDBHelper.getWritableDatabase();
-		db.delete(MAPS_TABLE, ID_WHERE, whereArgs(mi));
+		int result = db.delete(MAPS_TABLE, MAP_ID_WHERE, whereArgs(mi));
+		Log.d(TAG,"delete result = " + result);
+
 		db.close();
 		mMapsDBHelper.close();
 	}
@@ -90,35 +110,36 @@ public class MapsDB {
 		SQLiteDatabase db = mMapsDBHelper.getWritableDatabase();
 		
 		ContentValues mapValues = new ContentValues();
-		mapValues.put(MAP_ID, mi.id);
-		mapValues.put(NAME, mi.name);
-		mapValues.put(DISPLAY_NAME, mi.displayName);
-		mapValues.put(SNIPPETS, mi.snippets);
-		mapValues.put(STREET, mi.street);
-		mapValues.put(FLOORPLANS, mi.floorplans);
-		mapValues.put(BLDGIMG, mi.bldgimg);
-		mapValues.put(VIEWANGLE, mi.viewangle);
-		mapValues.put(BLDGNUM, mi.bldgnum);
-		mapValues.put(LONG_WGS84, mi.long_wgs84);
-		mapValues.put(LAT_WGS84, mi.lat_wgs84);
+		mapValues.put(MAP_ID, (String)mi.getItemData().get("id"));
+		mapValues.put(NAME, (String)mi.getItemData().get("name"));
+		mapValues.put(DISPLAY_NAME, (String)mi.getItemData().get("displayName"));
+		mapValues.put(SNIPPETS, (String)mi.getItemData().get("snippets"));
+		mapValues.put(STREET, (String)mi.getItemData().get("street"));
+		mapValues.put(FLOORPLANS, (String)mi.getItemData().get("floorplans"));
+		mapValues.put(BLDGIMG, (String)mi.getItemData().get("bldgimg"));
+		mapValues.put(VIEWANGLE, (String)mi.getItemData().get("viewangle"));
+		mapValues.put(BLDGNUM, (String)mi.getItemData().get("bldgnum"));
+		mapValues.put(LONG_WGS84, mi.getMapPoints().get(0).long_wgs84);
+		mapValues.put(LAT_WGS84, mi.getMapPoints().get(0).lat_wgs84);
 		
 		long row_id;
 		int rows;
-		if(miExists(mi.id)) {
+		String id = (String)mi.getItemData().get("id");
+		Log.d(TAG,"checking map id " + id);
+		if(miExists(id)) {
 			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			Log.d("MapDB","MapDB: updating "+rows);
+			Log.d(TAG,"MapDB: updating "+rows);
 		} else {
 			row_id = db.insert(MAPS_TABLE, SNIPPETS, mapValues);
-			//mi.sql_id = row_id;
-			//rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			Log.d("MapDB","MapDB: adding "+row_id);
+			mi.sql_id = row_id;
+			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
+			Log.d(TAG,"MapDB: adding "+row_id);
 		}
 		db.close();
 		mMapsDBHelper.close();
 		
 	}
 	/********************************************************************/
-	/*
 	public Cursor getMapsCursor(String name) {
 		return getMapsCursor(name, null);
 	}
@@ -130,30 +151,49 @@ public class MapsDB {
 		Cursor cursor = db.query(MAPS_VIEW, fields, NAME + "=" + name, null, null, null, ID + " DESC", limit);
 		return cursor;
 	}
-	*/
+
 	public Cursor getMapsCursor() {
 		SQLiteDatabase db = mMapsDBHelper.getReadableDatabase();
-		String[] fields = new String[] {ID, MAP_ID, NAME, DISPLAY_NAME, SNIPPETS, STREET, FLOORPLANS, BLDGIMG, VIEWANGLE, BLDGNUM, LONG_WGS84, LAT_WGS84};
+		String[] fields = new String[] {
+										ID, 
+										MAP_ID, 
+										NAME, 
+										DISPLAY_NAME, 
+										SNIPPETS, 
+										STREET, 
+										FLOORPLANS, 
+										BLDGIMG, 
+										VIEWANGLE, 
+										BLDGNUM, 
+										LONG_WGS84, 
+										LAT_WGS84
+									    };
 		
 		Cursor cursor = db.query(MAPS_TABLE, fields, null, null, null, null, NAME + " DESC", null);
+		Log.d(TAG,"num map items in cursor = " + cursor.getCount());
 		return cursor;
 	}
+	
+	
 	/********************************************************************/
 	static MapItem retrieveMapItem(Cursor cursor) {
-		MapItem item = new MapItem();
+		BuildingMapItem item = new BuildingMapItem();
 		
 		item.sql_id = cursor.getLong(cursor.getColumnIndex(ID));
-		item.id = cursor.getString(cursor.getColumnIndex(MAP_ID));
-		item.name = cursor.getString(cursor.getColumnIndex(NAME));
-		item.displayName = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
-		item.snippets = cursor.getString(cursor.getColumnIndex(SNIPPETS));
-		item.street = cursor.getString(cursor.getColumnIndex(STREET));
-		item.floorplans = cursor.getString(cursor.getColumnIndex(FLOORPLANS));
-		item.bldgnum = cursor.getString(cursor.getColumnIndex(BLDGNUM));
-		item.bldgimg = cursor.getString(cursor.getColumnIndex(BLDGIMG));
-		item.viewangle = cursor.getString(cursor.getColumnIndex(VIEWANGLE));
-		item.long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
-		item.lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
+		item.getItemData().put("id", cursor.getString(cursor.getColumnIndex(MAP_ID)));
+		item.getItemData().put("name",cursor.getString(cursor.getColumnIndex(NAME)));
+		item.getItemData().put("displayName",cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+		item.getItemData().put("snippets",cursor.getString(cursor.getColumnIndex(SNIPPETS)));
+		item.getItemData().put("street",cursor.getString(cursor.getColumnIndex(STREET)));
+		item.getItemData().put("floorplans",cursor.getString(cursor.getColumnIndex(FLOORPLANS)));
+		item.getItemData().put("bldgnum",cursor.getString(cursor.getColumnIndex(BLDGNUM)));
+		item.getItemData().put("bldgimg", cursor.getString(cursor.getColumnIndex(BLDGIMG)));
+		item.getItemData().put("viewangle",cursor.getString(cursor.getColumnIndex(VIEWANGLE)));
+		item.setMapPoints(new ArrayList<MapPoint>());
+		MapPoint mapPoint = new MapPoint();
+		mapPoint.lat_wgs84 = cursor.getDouble(cursor.getColumnIndex(LAT_WGS84));
+		mapPoint.long_wgs84 = cursor.getDouble(cursor.getColumnIndex(LONG_WGS84));
+		item.getMapPoints().add(mapPoint);
 		
 		return item;
 	}
@@ -201,6 +241,7 @@ public class MapsDB {
 		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			Log.d(TAG,"creating maps table");
 			db.execSQL("CREATE TABLE " + MAPS_TABLE + " ("
 					+ ID + " INTEGER PRIMARY KEY,"
 					+ MAP_ID + " TEXT,"
@@ -222,5 +263,22 @@ public class MapsDB {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			// no old versions exists
 		}
+	}
+
+	synchronized void clearAllBookmarks() {
+		this.clearAll();
+	}
+
+	public ArrayList<MapItem> getMapItems() {
+		Cursor cursor = this.getMapsCursor();
+		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
+		if(cursor != null && cursor.moveToFirst()) {
+			while (cursor.isAfterLast() == false) {
+				MapItem mapItem = MapsDB.retrieveMapItem(cursor);
+				mapItems.add(mapItem);
+				cursor.moveToNext();
+			}
+		}
+		return mapItems;
 	}
 }

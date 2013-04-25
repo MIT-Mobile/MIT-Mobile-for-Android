@@ -32,12 +32,22 @@
 			android:layout_width="@dimen/mapThumbnailOuter"
 			android:layout_height="@dimen/mapThumbnailOuter">
 			
-			<ImageView
+			<edu.mit.mitmobile2.RemoteImageView
 				android:id="@+id/mapDetailsThumbnailIV"
 				android:layout_width="@dimen/mapThumbnailInner"
 				android:layout_height="@dimen/mapThumbnailInner"
 				android:layout_gravity="center" />
-
+			
+			<!--  
+			<edu.mit.mitmobile2.maps.MITMapView
+  				android:id="@+id/mapDetailsThumbnailIV"
+  				android:layout_width="@dimen/mapThumbnailInner"
+  				android:layout_height="@dimen/mapThumbnailInner"
+  				initExtent = "-7914314.738504024 5214534.8430830045 -7913764.950289598 5215325.163641242"
+ 				spacialReference = "102113" >
+  			</edu.mit.mitmobile2.maps.MITMapView>
+			-->
+			
 		</FrameLayout>
 	
 		<LinearLayout
@@ -63,14 +73,33 @@
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"/>	
 		
-		</LinearLayout>
-		
-
 			
+	</LinearLayout>
+								
 	</RelativeLayout>
 	
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent">
+			
+			<Button
+					android:id="@+id/mapGoogleMapBtn"
+					android:text="@string/map_google_map"
+					android:layout_width="150dip" 
+					android:layout_height="wrap_content"/>
+						
+			<Button 
+			    android:id="@+id/mapBookmarkBtn"
+			    android:text="@string/map_bookmark_off"
+			    android:gravity="center"
+			    android:layout_gravity="center_vertical"
+			    android:layout_height="wrap_content"
+				android:layout_width="wrap_content"/>
+		
+			</LinearLayout>
 	
-	<LinearLayout 
+		<LinearLayout 
   		android:orientation="vertical"
 		android:layout_weight="1"
 		android:layout_width="fill_parent" 
@@ -114,24 +143,19 @@
 									android:orientation="vertical"
 									android:layout_width="fill_parent" 
 									android:layout_height="fill_parent">
-								<WebView android:id="@+id/mapDetailsPhotosWV" android:padding="3px"
-									android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-									
-							   <ImageView
+	
+						    	<edu.mit.mitmobile2.RemoteImageView
   									android:layout_width="fill_parent"
-  									android:layout_height="300dip"
-  									android:id="@+id/mapDetailsImageLoadingView"
-  									android:scaleType="center"
-  									android:background="#FFFFFF"
-  									android:visibility="gone"
-  									android:src="@drawable/busybox" />
-  									
+    								android:layout_height="fill_parent" 
+  									android:id="@+id/mapDetailsPhotoView"
+  									android:scaleType="center" />
+  								
 								<TextView android:id="@+id/mapDetailsPhotosTV" 
 									style="@style/Caption"
 									android:padding="3px"
 									android:gravity="center_horizontal"
 									android:layout_width="fill_parent" 
-									android:layout_height="wrap_content"/>	
+									android:layout_height="wrap_content"/>
 						</LinearLayout>
 						
 						

@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,12 +28,12 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITClient;
 import edu.mit.mitmobile2.MITClientData;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
-public class TouchstoneActivity extends ModuleActivity implements OnSharedPreferenceChangeListener {
+public class TouchstoneActivity extends NewModuleActivity implements OnSharedPreferenceChangeListener {
 	
 	private Context mContext;	
 
@@ -55,8 +54,9 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 	AlertDialog alert;
 	public static SharedPreferences prefs;
 	public static final String TAG = "TouchstoneActivity";
+	@SuppressWarnings("unused")
 	private static final int MENU_INFO = 0;
-	private static final int MENU_PREFS = 1;
+	
 	
 	Bundle extras;
 	
@@ -68,7 +68,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		mContext = this;
-        Handler uiHandler = new Handler();
+        @SuppressWarnings("unused")
+		Handler uiHandler = new Handler();
 
         createViews(); 
 	}
@@ -121,7 +122,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		builder.setMessage("Please enter a valid username and password.")
 		       .setCancelable(false)
 		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
+		           @Override
+				public void onClick(DialogInterface dialog, int id) {
 		                Log.d(TAG,"finish");
 		           }
 		       });
@@ -139,7 +141,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		
 	}
 	
-    private Handler loginUiHandler = new Handler() {
+    @SuppressWarnings("unused")
+	private Handler loginUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
         	Log.d(TAG,"handleMessage");
@@ -148,8 +151,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
-            	UserIdentity identity = (UserIdentity)msg.obj;
+                UserIdentity identity = (UserIdentity)msg.obj;
                 Log.d(TAG,"identity = " + identity.getUsername());
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {
@@ -164,8 +166,8 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
     };
  
 	@Override
-	protected Module getModule() {
-		return null;
+	protected NewModule getNewModule() {
+		return new TouchstoneModule();
 	}
 
 	@Override
@@ -189,17 +191,6 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		}
 	}
 	*/
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) { 
-		/*
-		menu.add(0, MENU_INFO, Menu.NONE, "Info")
-		  .setIcon(R.drawable.menu_about);
-		
-		menu.add(1, MENU_PREFS, Menu.NONE, "Prefs")
-		  .setIcon(R.drawable.main_repeat);
-		 */
-	}
     
 
 	
@@ -223,6 +214,7 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		}
 	}
 	
+	@Override
 	public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 	}
 
@@ -234,5 +226,13 @@ public class TouchstoneActivity extends ModuleActivity implements OnSharedPrefer
 		((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
 		finish();
 	}
+
+	@Override
+	protected boolean isScrollable() {
+		return true;
+	}
+
+	@Override
+	protected void onOptionSelected(String optionId) { }
 
 }

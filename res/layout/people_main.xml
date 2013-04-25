@@ -4,20 +4,10 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
  	android:layout_height="wrap_content">
-  
-  	<edu.mit.mitmobile2.TitleBar
-  		android:text="People Directory"
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content" />
-  		
-  	<edu.mit.mitmobile2.SearchBar
-  		android:layout_width="fill_parent"
-  		android:layout_height="wrap_content"
-  		android:id="@+id/peopleSearchBar" />
 		
 	<ListView android:id="@+id/peopleRecentlyViewed"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		android:layout_height="wrap_content"
 		style="@style/Lists" />
 			
 </LinearLayout>

@@ -15,8 +15,17 @@ import android.os.Handler;
 import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MITMapView;
+import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.objs.RouteMapItem;
+import edu.mit.mitmobile2.objs.StopMapItem;
+import edu.mit.mitmobile2.objs.VehicleMapItem;
+import edu.mit.mitmobile2.objs.RouteItem.Loc;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
+import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
 
 public class ShuttleModel {
 	
@@ -366,5 +375,100 @@ public class ShuttleModel {
 		
 		
 	}
+    
+	public static HashMap<String,ArrayList<? extends MapItem>> buildShuttleItems(RouteItem updatedRouteItem) {
+		HashMap<String,ArrayList<? extends MapItem>> layers = new HashMap<String,ArrayList<? extends MapItem>>();
+		ArrayList<RouteMapItem> routeItems = new ArrayList<RouteMapItem>();
+		ArrayList<VehicleMapItem> vehicleItems = new ArrayList<VehicleMapItem>();
+		ArrayList<StopMapItem> stopItems = new ArrayList<StopMapItem>();
+
+		RouteMapItem route = new RouteMapItem();
+		// create a polygon for route
+		// create shuttle pin + callout for each stop
+		// create shuttle location pin for each vehicle location
+
+		route.setGeometryType(MapItem.TYPE_POLYGON);
+
+		// loop through all the stops
+		for (int s = 0; s < updatedRouteItem.stops.size(); s++) {
+			Stops stop = updatedRouteItem.stops.get(s);
+
+			MapPoint mapPoint = new MapPoint();
+			mapPoint.lat_wgs84 = Double.valueOf(stop.lat);
+			mapPoint.long_wgs84 = Double.valueOf(stop.lon);
+
+			// for each stop, add the paths to the route polygon
+			for (int p = 0; p < stop.path.size(); p++) {
+				Loc loc = (Loc) stop.path.get(p);
+
+				// get a map point for the stop
+				MapPoint pathPoint = new MapPoint();
+				pathPoint.lat_wgs84 = Double.valueOf(loc.lat);
+				pathPoint.long_wgs84 = Double.valueOf(loc.lon);
+
+				// add the map point to the route polygon
+				route.getMapPoints().add(pathPoint);
+			}
+
+			// Create a map item to show an icon at the stop
+			StopMapItem stopItem = new StopMapItem();
+
+			// add itemData
+			stopItem.getItemData().put("alertSet", stop.alertSet);
+			stopItem.getItemData().put("direction", stop.direction);
+			stopItem.getItemData().put("gps", stop.gps);
+			stopItem.getItemData().put("id", stop.id);
+			stopItem.getItemData().put("lat", stop.lat);
+			stopItem.getItemData().put("lon", stop.lon);
+			stopItem.getItemData().put("next", stop.next);
+			stopItem.getItemData().put("now", stop.now);
+			stopItem.getItemData().put("route_id", updatedRouteItem.route_id);
+			stopItem.getItemData().put("title", stop.title);
+			stopItem.getItemData().put("upcoming", stop.upcoming);
+			stopItem.setGeometryType(MapItem.TYPE_POINT);
+
+			if (updatedRouteItem.isRunning) {
+				if (stop.upcoming) {
+					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete_next;
+				} else {
+					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete;
+				}
+			} else {
+				stopItem.symbol = R.drawable.shuttle_off;
+			}
+
+			stopItem.getItemData().put("displayName", stop.title);
+
+			stopItem.getMapPoints().add(mapPoint);
+
+			stopItems.add(stopItem);
+		}
+
+		// add route
+		routeItems.add(route);
+		layers.put(ShuttlesMapActivity.SHUTTLE_ROUTE_LAYER, routeItems);
+		
+		// add stops
+		layers.put(ShuttlesMapActivity.SHUTTLE_STOPS_LAYER, stopItems);
+
+		// add vehicle locations
+		for (int v = 0; v < updatedRouteItem.vehicleLocations.size(); v++) {
+			Vehicle vehicle = updatedRouteItem.vehicleLocations.get(v);
+			VehicleMapItem vehicleItem = new VehicleMapItem();
+			vehicleItem.setGeometryType(MapItem.TYPE_POINT);
+			vehicleItem.setSymbol(VehicleMapItem
+					.getShuttleMarkerForHeading(vehicle.heading));
+			vehicleItem.getMapPoints().add(
+					new MapPoint(vehicle.lat, vehicle.lon));
+			vehicleItem.getItemData().put("heading", vehicle.heading);
+			vehicleItem.getItemData().put("lat", vehicle.lat);
+			vehicleItem.getItemData().put("lon", vehicle.lon);
+			vehicleItems.add(vehicleItem);
+		}
+
+		layers.put(MITMapView.DEFAULT_GRAPHICS_LAYER, vehicleItems);
+		return layers;
+	}
+
 	
 }

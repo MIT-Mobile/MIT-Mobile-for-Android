@@ -40,7 +40,8 @@ import java.util.Vector;
 final class AlignmentPatternFinder {
 
   private final BitMatrix image;
-  private final Vector possibleCenters;
+  @SuppressWarnings("rawtypes")
+private final Vector possibleCenters;
   private final int startX;
   private final int startY;
   private final int width;
@@ -59,7 +60,8 @@ final class AlignmentPatternFinder {
    * @param height height of region to search
    * @param moduleSize estimated module size so far
    */
-  AlignmentPatternFinder(BitMatrix image,
+  @SuppressWarnings("rawtypes")
+AlignmentPatternFinder(BitMatrix image,
                          int startX,
                          int startY,
                          int width,
@@ -252,7 +254,8 @@ final class AlignmentPatternFinder {
    * @param j end of possible alignment pattern in row
    * @return {@link AlignmentPattern} if we have found the same pattern twice, or null if not
    */
-  private AlignmentPattern handlePossibleCenter(int[] stateCount, int i, int j) {
+  @SuppressWarnings("unchecked")
+private AlignmentPattern handlePossibleCenter(int[] stateCount, int i, int j) {
     int stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
     float centerJ = centerFromEnd(stateCount, j);
     float centerI = crossCheckVertical(i, (int) centerJ, 2 * stateCount[1], stateCountTotal);

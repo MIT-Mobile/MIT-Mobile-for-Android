@@ -4,6 +4,7 @@
 		<item name="android:windowBackground">@drawable/main_repeat</item>
 		<item name="android:background">@android:color/transparent</item>
 		<item name="android:windowNoTitle">true</item>
+		<item name="android:listViewStyle">@style/Lists</item>
 	</style>
 	
 	<style name="PlainBackground" parent="@style/Main">
@@ -17,12 +18,13 @@
 		
 		<item name="android:divider">@color/dividerColor</item>
 		<item name="android:dividerHeight">@dimen/dividerHeight</item>
+		<item name="android:listSelector">@drawable/highlight_background</item>
 	</style>
 	
 	<style name="PageTitle">
 		<item name="android:textStyle">normal</item>
-		<item name="android:textSize">18sp</item>
-		<item name="android:textColor">#ffd5d5d5</item>
+		<item name="android:textSize">17sp</item>
+		<item name="android:textColor">#ffffffff</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
@@ -34,16 +36,16 @@
 	</style>
 	
 	<style name="ListItemPrimary">
-		<item name="android:textStyle">bold</item>
+		<item name="android:textStyle">normal</item>
 		<item name="android:textSize">17sp</item>
-		<item name="android:textColor">@color/list_item_primary_color</item>
+		<item name="android:textColor">#ff222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
 	<style name="ListItemSecondary">
 		<item name="android:textStyle">normal</item>
 		<item name="android:textSize">13sp</item>
-		<item name="android:textColor">#ff8c8c8c</item>
+		<item name="android:textColor">#8c222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
@@ -66,15 +68,15 @@
 		<item name="android:textSize">17sp</item>
 		<item name="android:textColor">#ff333333</item>
 		<item name="android:typeface">sans</item>
-		<item name="android:paddingTop">3dip</item>
-		<item name="android:paddingBottom">5dip</item>
+		<item name="android:paddingTop">@dimen/halfStandardPadding</item>
+		<item name="android:paddingBottom">@dimen/halfStandardPadding</item>
 	</style>
 	
 	<!--  content styles -->
 	<style name="ContentTitle">
 		<item name="android:textStyle">normal</item>
-		<item name="android:textSize">22sp</item>
-		<item name="android:textColor">#ff000000</item>
+		<item name="android:textSize">24sp</item>
+		<item name="android:textColor">#ff222222</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
@@ -114,19 +116,62 @@
 	</style>
 	
 	<style name="SubHead">
-		<item name="android:textStyle">bold</item>
-		<item name="android:textSize">13sp</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
 		<item name="android:textColor">#ffffffff</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
 	<style name="SmallPrint">
 		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#8c222222</item>
+		<item name="android:typeface">sans</item>
+	</style>
+
+	<style name="ToolbarTappable">
+		<item name="android:textStyle">normal</item>
 		<item name="android:textSize">14sp</item>
-		<item name="android:textColor">#ff505050</item>
+		<item name="android:textColor">#ffffffff</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	<color name="ToolbarTappableDisabled">#ff999999</color>
+
+	<style name="ToolbarTitle">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">#ffffffff</item>
 		<item name="android:typeface">sans</item>
 	</style>
 	
+	<style name="ActionButtons">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">#ff4b4b4b</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+	<style name="InfoTitle">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#8c222222</item>
+		<item name="android:typeface">sans</item>
+	</style>			
+    	
+	<style name="TabTitle">
+		<item name="android:textStyle">bold</item>
+		<item name="android:textSize">14sp</item>
+		<item name="android:textColor">@color/tab_text_color</item>
+		<item name="android:typeface">sans</item>
+	</style>		
+
+	<style name="MenuItemLabel">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">#ffffff</item>
+		<item name="android:typeface">sans</item>
+	</style>	
+		
 	<style name="BoldRed">
 	    <item name="android:textColor">#ff990000</item>
 	    <item name="android:textStyle">bold</item>
@@ -154,5 +199,11 @@
 		<item name="android:typeface">sans</item>
 	</style>
 	
-	<color name="homeButtonBackgroundColor">#993333</color>
+	<dimen name="standardPadding">12dip</dimen>
+	<dimen name="halfStandardPadding">6dip</dimen>
+	
+	<dimen name="moduleHomeUnderlineWidth">2dip</dimen>
+        <color name="moduleHomeUnderlineColor">#993333</color>
+        <color name="homeButtonBackgroundColor">#993333</color>
+
 </resources>
