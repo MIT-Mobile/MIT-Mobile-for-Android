@@ -129,7 +129,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     
 	static void launchShuttleRouteMap(Context context, RouteItem routeItem, List<Stops> stops, int bubblePos) {
 		Intent i = new Intent(context, ShuttlesMapActivity.class);		
-		i.putExtra(ShuttlesMapActivity.ROUTE_ID_KEY,routeItem.route_id);
+		i.putExtra(ShuttlesMapActivity.ROUTE_ID_KEY,routeItem.id);
 		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		context.startActivity(i);
 	}
@@ -143,7 +143,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		if (optionId.equals("viewmap")) {
-			String routeId = ShuttleModel.getSortedRoutes().get(position).route_id;
+			String routeId = ShuttleModel.getSortedRoutes().get(position).id;
 			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), ShuttleModel.getRoute(routeId).stops, getPosition());
 		}
 	}

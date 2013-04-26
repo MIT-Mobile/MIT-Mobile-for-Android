@@ -20,13 +20,30 @@ public class MapParser {
 	
 	private static final String TAG = "MapParser"; 
 
+	// FIXME hardcoded defaultBasemap.. Is group needless ?
 	public static MapServerData parseMapServerData(JSONObject jobject) throws JSONException {
 		MapServerData mapServerData = new MapServerData();
 		try {
 			// Get the default basemap set
-			mapServerData.setDefaultBasemap(jobject.getString("defaultBasemap"));
+//			mapServerData.setDefaultBasemap(jobject.getString("defaultBasemap"));
+			mapServerData.setDefaultBasemap(jobject.optString("defaultBasemap", "default"));
 			
 			// populate the baseLayer groups
+			JSONArray layers = jobject.getJSONArray("basemaps");
+			ArrayList<MapBaseLayer> baseMaps = new ArrayList<MapBaseLayer>();
+			for (int i = 0; i < layers.length(); i++) {
+				JSONObject map = layers.getJSONObject(i);
+				MapBaseLayer layer = new MapBaseLayer();
+				layer.setLayerIdentifier(map.optString("layerIdentifier"));
+				layer.setDisplayName(map.optString("displayName"));
+				layer.setUrl(map.optString("url"));
+				layer.setEnabled(map.optBoolean("isEnabled"));
+				baseMaps.add(layer);
+			}
+			String group = "default"; // name of the layer group, i.e. "default"
+			mapServerData.getBaseLayerGroup().put(group, baseMaps);
+			
+			/*
 			JSONObject layerGroups = jobject.getJSONObject("basemaps");
 			
 			// loop through the layer groups
@@ -49,6 +66,7 @@ public class MapParser {
 				// add the baseMaps array to the baseLayerGroup hashmap
 				mapServerData.getBaseLayerGroup().put(group, baseMaps);
 			}
+			*/
 			
 			JSONArray array = jobject.getJSONArray("features");
 			Log.d("MITMapActivity","num features = " + array.length());

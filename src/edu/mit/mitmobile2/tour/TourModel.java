@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.os.Handler;
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
@@ -19,12 +22,12 @@ import edu.mit.mitmobile2.tour.Tour.Site;
 import edu.mit.mitmobile2.tour.Tour.TourHeader;
 import edu.mit.mitmobile2.tour.Tour.TourItemContent;
 
-import android.content.Context;
-import android.os.Handler;
-
 public class TourModel {
 	
 	private static String TOUR_GUID = "mit150";
+	private static String BASE_PATH = "/tours";
+	private static String IMAGES_PATH = "/images";
+	private static String AUDIO_PATH = "/audio";
 	
 	private static Tour sTour;
 	
@@ -124,12 +127,10 @@ public class TourModel {
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Tour", context, uiHandler);
 		
-		HashMap<String, String> query = new HashMap<String, String>();
-		query.put("module", "tours");
-		query.put("command", "tourDetails");
-		query.put("tourId", TOUR_GUID);
+		String requestUrl = BASE_PATH + "/" + TOUR_GUID;
 		
-		webApi.requestJSONObject(query, new JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONObject(requestUrl, null, 
+				new JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 
 			@Override
 			public void onResponse(JSONObject object)
@@ -159,12 +160,13 @@ public class TourModel {
 				
 				for(int siteIndex = 0; siteIndex < sites.length(); siteIndex++) {
 					JSONObject siteJson = sites.getJSONObject(siteIndex);
+					
 					Site site = tour.addSite(
 						siteJson.getString("id"),
 						siteJson.getString("title"),
-						siteJson.getString("photo-url"),
-						siteJson.getString("thumbnail156-url"),
-						optString(siteJson, "audio-url"),
+						getPhotoUrl(siteJson.optString("photo-id", null)),
+						getPhotoUrl(siteJson.optString("thumbnail156-id", null)),
+						getAudioUrl(siteJson.optString("audio-id", null)),
 						parseLatLon(siteJson.getJSONObject("latlon"))
 					);
 					
@@ -187,9 +189,8 @@ public class TourModel {
 						populateContent(site.getExitDirections().getContent(), exitDirectionsJson);
 						populatePath(site.getExitDirections().getPath(), exitDirectionsJson);
 						
-
-						site.getExitDirections().setPhotoUrl(optString(exitDirectionsJson, "photo-url"));
-						site.getExitDirections().setAudioUrl(optString(exitDirectionsJson, "audio-url"));
+						site.getExitDirections().setPhotoUrl(getPhotoUrl(exitDirectionsJson.optString("photo-id", null)));
+						site.getExitDirections().setAudioUrl(getAudioUrl(exitDirectionsJson.optString("audio-id", null)));
 					}
 					
 					populateContent(site.getContent(), siteJson);
@@ -206,7 +207,7 @@ public class TourModel {
 						startLocationJson.getString("id"), 
 						startLocationJson.getString("start-site"), 
 						startLocationJson.getString("content"), 
-						optString(startLocationJson, "photo-url"),
+						getPhotoUrl(startLocationJson.optString("photo-id", null)),
 						parseLatLon(startLocationJson.getJSONObject("latlon"))
 					);
 				}
@@ -240,11 +241,7 @@ public class TourModel {
 			} else if(contentNodeType.equals("sidetrip")) {
 				
 				// optional fields
-				String thumbUrl = null;
 				GeoPoint geoPoint = null;
-				if(contentNodeJson.has("thumbnail156-url")) {
-					thumbUrl = contentNodeJson.getString("thumbnail156-url");
-				}
 				if(contentNodeJson.has("latlon")) {
 					geoPoint = parseLatLon(contentNodeJson.getJSONObject("latlon"));
 				} else {
@@ -256,13 +253,23 @@ public class TourModel {
 					contentNodeJson.getString("id"),
 					contentNodeJson.getString("title"),
 					contentNodeJson.getString("html"),
-					optString(contentNodeJson, "photo-url"),
-					thumbUrl,
-					optString(contentNodeJson, "audio-url"),
+					getPhotoUrl(contentNodeJson.optString("photo-id", null)),
+					getPhotoUrl(contentNodeJson.optString("thumbnail156-id", null)),
+					getAudioUrl(contentNodeJson.optString("audio-id", null)),
 					geoPoint
 				));
 			}
 		}
+	}
+	
+	private static String getPhotoUrl(String photoID) {
+		return "http://" + Global.getMobileWebDomain() + MobileWebApi.BASE_PATH + 
+				TourModel.BASE_PATH + "/" + TOUR_GUID + TourModel.IMAGES_PATH + "/" + photoID;
+	}
+	
+	private static String getAudioUrl(String audioID) {
+		return "http://" + Global.getMobileWebDomain() + MobileWebApi.BASE_PATH + 
+				TourModel.BASE_PATH + "/" + TOUR_GUID + TourModel.AUDIO_PATH + "/" + audioID;
 	}
 	
 	private static void populatePath(Path path, JSONObject json) throws JSONException {
@@ -270,14 +277,6 @@ public class TourModel {
 		for(int i=0; i < jsonPath.length(); i++) {
 			GeoPoint geoPoint = parseLatLon(jsonPath.getJSONObject(i));
 			path.addGeoPoint(geoPoint);
-		}
-	}
-	
-	private static String optString(JSONObject json, String keyName) throws JSONException {
-		if(json.has(keyName)) {
-			return json.getString(keyName);
-		} else {
-			return null;
 		}
 	}
 	

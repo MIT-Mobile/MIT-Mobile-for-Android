@@ -189,7 +189,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 
 	private void displayRoute(String routeId) {
 		routeItem = new RouteItem();
-		routeItem.route_id = routeId;
+		routeItem.id = routeId;
 		ShuttleModel.fetchRouteDetails(mContext, routeItem, routeUiHandler);
 	}
 

@@ -190,9 +190,9 @@ public class ShuttleModel {
 							JSONException {
 						
 						try {
-							JSONObject object = array.getJSONObject(0);
-							updateRouteItem(RoutesParser.parseJSONRouteObject(object));
-							MobileWebApi.sendSuccessMessage(uiHandler);
+							RouteItem route = RoutesParser.parseJSONRouteObject(array.getJSONObject(0)); 
+							updateRouteItem(route);
+							MobileWebApi.sendSuccessMessage(uiHandler, route);
 						} catch (JSONException e) {
 							e.printStackTrace();
 							MobileWebApi.sendErrorMessage(uiHandler);
@@ -377,6 +377,7 @@ public class ShuttleModel {
 	}
     
 	public static HashMap<String,ArrayList<? extends MapItem>> buildShuttleItems(RouteItem updatedRouteItem) {
+		
 		HashMap<String,ArrayList<? extends MapItem>> layers = new HashMap<String,ArrayList<? extends MapItem>>();
 		ArrayList<RouteMapItem> routeItems = new ArrayList<RouteMapItem>();
 		ArrayList<VehicleMapItem> vehicleItems = new ArrayList<VehicleMapItem>();
@@ -388,6 +389,18 @@ public class ShuttleModel {
 		// create shuttle location pin for each vehicle location
 
 		route.setGeometryType(MapItem.TYPE_POLYGON);
+		
+		for (int p = 0; p < updatedRouteItem.path.segments.size(); p++) {
+			Loc loc = (Loc) updatedRouteItem.path.segments.get(p);
+			
+			// get a map point for the stop
+			MapPoint pathPoint = new MapPoint();
+			pathPoint.lat_wgs84 = Double.valueOf(loc.lat);
+			pathPoint.long_wgs84 = Double.valueOf(loc.lon);
+
+			// add the map point to the route polygon
+			route.getMapPoints().add(pathPoint);
+		}
 
 		// loop through all the stops
 		for (int s = 0; s < updatedRouteItem.stops.size(); s++) {
@@ -398,6 +411,7 @@ public class ShuttleModel {
 			mapPoint.long_wgs84 = Double.valueOf(stop.lon);
 
 			// for each stop, add the paths to the route polygon
+			/*
 			for (int p = 0; p < stop.path.size(); p++) {
 				Loc loc = (Loc) stop.path.get(p);
 
@@ -409,25 +423,27 @@ public class ShuttleModel {
 				// add the map point to the route polygon
 				route.getMapPoints().add(pathPoint);
 			}
+			*/
 
 			// Create a map item to show an icon at the stop
 			StopMapItem stopItem = new StopMapItem();
 
 			// add itemData
 			stopItem.getItemData().put("alertSet", stop.alertSet);
-			stopItem.getItemData().put("direction", stop.direction);
-			stopItem.getItemData().put("gps", stop.gps);
+//			stopItem.getItemData().put("direction", stop.direction);
+//			stopItem.getItemData().put("gps", stop.gps);
+			stopItem.getItemData().put("gps", updatedRouteItem.predictable);
 			stopItem.getItemData().put("id", stop.id);
 			stopItem.getItemData().put("lat", stop.lat);
 			stopItem.getItemData().put("lon", stop.lon);
 			stopItem.getItemData().put("next", stop.next);
 			stopItem.getItemData().put("now", stop.now);
-			stopItem.getItemData().put("route_id", updatedRouteItem.route_id);
+			stopItem.getItemData().put("route_id", updatedRouteItem.id);
 			stopItem.getItemData().put("title", stop.title);
 			stopItem.getItemData().put("upcoming", stop.upcoming);
 			stopItem.setGeometryType(MapItem.TYPE_POINT);
 
-			if (updatedRouteItem.isRunning) {
+			if (updatedRouteItem.active) {
 				if (stop.upcoming) {
 					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete_next;
 				} else {
@@ -452,8 +468,8 @@ public class ShuttleModel {
 		layers.put(ShuttlesMapActivity.SHUTTLE_STOPS_LAYER, stopItems);
 
 		// add vehicle locations
-		for (int v = 0; v < updatedRouteItem.vehicleLocations.size(); v++) {
-			Vehicle vehicle = updatedRouteItem.vehicleLocations.get(v);
+		for (int v = 0; v < updatedRouteItem.vehicles.size(); v++) {
+			Vehicle vehicle = updatedRouteItem.vehicles.get(v);
 			VehicleMapItem vehicleItem = new VehicleMapItem();
 			vehicleItem.setGeometryType(MapItem.TYPE_POINT);
 			vehicleItem.setSymbol(VehicleMapItem

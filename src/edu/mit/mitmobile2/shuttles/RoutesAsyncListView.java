@@ -145,14 +145,14 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		tv = (TextView) topView.findViewById(R.id.routesInfoTV);
 
 		String text = "";
-		if (ri.isRunning) {
-			text = ri.gpsActive ? MITRoutesSliderActivity.GPS_ONLINE : MITRoutesSliderActivity.GPS_OFFLINE;
+		if (ri.active) {
+			text = ri.predictable ? MITRoutesSliderActivity.GPS_ONLINE : MITRoutesSliderActivity.GPS_OFFLINE;
 		} 
 		else text = MITRoutesSliderActivity.NOT_RUNNING;
 		text += "\n";
 		
-		if (ri.summary.endsWith(".")) text += ri.summary + "\n";
-		else text += ri.summary + ".\n";
+		if (ri.description.endsWith(".")) text += ri.description + "\n";
+		else text += ri.description + ".\n";
 		
 		text += "Route loop repeats every " + ri.interval + " minutes.";
 		tv.setText(text);
@@ -195,7 +195,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		
 		
 		Intent i = new Intent(mActivity, MITStopsSliderActivity.class);  
-		i.putExtra(ShuttleModel.KEY_ROUTE_ID, ri.route_id); 
+		i.putExtra(ShuttleModel.KEY_ROUTE_ID, ri.id); 
 		i.putExtra(ShuttleModel.KEY_STOP_ID, s.id); 
 		mActivity.startActivity(i);
 		

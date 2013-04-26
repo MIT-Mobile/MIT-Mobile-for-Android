@@ -43,7 +43,7 @@ public class ShuttleMapUpdater extends MapUpdater {
 	public void updateMap(Context mContext) {
 		Log.d(TAG,"updateMap()");
 		routeItem = new RouteItem();
-		routeItem.route_id = (String)params.get("route_id"); // debug
+		routeItem.id = (String)params.get("route_id"); // debug
 		ShuttleModel.fetchRouteDetails(mContext, routeItem, uiHandler);
 	}
 
