@@ -85,6 +85,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
 	@Override
 	protected List<MITMenuItem> getSecondaryMenuItems() {
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		Log.d(TAG,"mapItems size = " + mapItems.size());
 		if (mapItems.size() > 0) {
 			items.add(new MITMenuItem(MENU_CLEAR_BOOKMARKS, "Clear Bookmarks"));
 		}
@@ -92,8 +93,9 @@ public class MapBookmarksActivity extends NewModuleActivity {
 	}
 	
 	private void initSecondaryTitleBar() {
-		final MITPlainSecondaryTitleBar titleBar = new MITPlainSecondaryTitleBar(this);
-		titleBar.setTitle("Bookmarks");		
+		//final MITPlainSecondaryTitleBar titleBar = new MITPlainSecondaryTitleBar(this);
+		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
+		mSecondaryTitleBar.setTitle("Bookmarks");		
 		
 		mMapListSwitch = new TitleBarSwitch(this);
 		mMapListSwitch.setLabels(MAP, LIST);
@@ -106,9 +108,9 @@ public class MapBookmarksActivity extends NewModuleActivity {
 			}
 		});
 
-		titleBar.addActionView(mMapListSwitch);
+		mSecondaryTitleBar.addActionView(mMapListSwitch);
 
-		getTitleBar().addSecondaryBar(titleBar);
+		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
 				
 	}
 
@@ -125,7 +127,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
 	}
 	
 	private void updateUI() {				
-	
+
 		MapItemArrayAdapter adapter = new MapItemArrayAdapter(context, mapItems, null);
 		mListView.setAdapter(adapter);
 
@@ -155,7 +157,6 @@ public class MapBookmarksActivity extends NewModuleActivity {
 		}
 		
 		mLoaderView.setVisibility(View.GONE);
-
 		refreshTitleBarOptions();
 	}
 	
@@ -201,7 +202,9 @@ public class MapBookmarksActivity extends NewModuleActivity {
             			map.addMapItems(mapItems);
             			map.fitMapItems();
             		}
+            		Log.d(TAG,mapItems.size() + " mapItems before updateUI");
             		updateUI();
+            		Log.d(TAG,mapItems.size() + " mapItems after updateUI");
             	}
             	catch (Exception e) {
             		Log.d(TAG,"getBookmarksHandler exception");
