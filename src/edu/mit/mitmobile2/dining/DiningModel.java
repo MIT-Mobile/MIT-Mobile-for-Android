@@ -25,7 +25,7 @@ public class DiningModel {
 
 	protected static DiningVenues sVenues;
 
-	public static void fetchDiningVenus(final Context context, final Handler uiHandler) {
+	public static void fetchDiningData(final Context context, final Handler uiHandler) {
 		uiHandler.postDelayed(new Runnable() {
 
 			@Override
@@ -52,6 +52,14 @@ public class DiningModel {
 	
 	public static DiningVenues getDiningVenues() {
 		return sVenues;
+	}
+	
+	public static List<DiningLink> getDiningLinks() {
+		ArrayList<DiningLink> links = new ArrayList<DiningLink>();
+		links.add(new DiningLink("Comments for MIT Dining", "http://web.mit.edu/dining/comments"));
+		links.add(new DiningLink("Food to Go", "http://web.mit.edu/dining/food-to-go"));
+		links.add(new DiningLink("Full MIT Dining website", "http://web.mit.edu/dining"));
+		return links;
 	}
 	
 	private static String convertStreamToString(InputStream is) throws IOException {
@@ -338,6 +346,25 @@ public class DiningModel {
 			mCity = object.getString("city");
 			mState = object.getString("state");
 			mZipcode = object.getString("zipcode");
+		}
+	}
+	
+	public static class DiningLink {
+		private String mTitle;
+		//private String mSubtitle;
+		private String mUrl;
+		
+		public DiningLink(String title, String url) {
+			mTitle = title;
+			mUrl = url;
+		}
+		
+		public String getTitle() {
+			return mTitle;
+		}
+		
+		public String getUrl() {
+			return mUrl;
 		}
 	}
 }

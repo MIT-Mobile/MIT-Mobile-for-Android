@@ -7,10 +7,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -19,7 +21,9 @@ import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
+import edu.mit.mitmobile2.dining.DiningModel.DiningLink;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 
 public class DiningHomeActivity extends NewModuleActivity {
@@ -34,13 +38,17 @@ public class DiningHomeActivity extends NewModuleActivity {
 		mLoader = (FullScreenLoader) findViewById(R.id.diningHomeLoader);
 		mLoader.showLoading();
 		
-		DiningModel.fetchDiningVenus(this, new Handler() {
+		DiningModel.fetchDiningData(this, new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.arg1 == MobileWebApi.SUCCESS) {
 					mLoader.setVisibility(View.GONE);
+
 					DiningVenues venues = DiningModel.getDiningVenues(); 
 					displayDiningHalls(venues);
+					
+					List<DiningLink> links = DiningModel.getDiningLinks();
+					displayDiningLinks(links);
 				} else {
 					mLoader.showError();
 				}
@@ -104,9 +112,26 @@ public class DiningHomeActivity extends NewModuleActivity {
 			
 			layout.addView(row, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
-		}
-		
+		}		
 	}
+	
+	private void displayDiningLinks(List<DiningLink> links) {
+		LinearLayout resourcesLayout = (LinearLayout) findViewById(R.id.diningHomeResources);
+		for (final DiningLink link : links) {
+			resourcesLayout.addView(new DividerView(this, null));
+			TwoLineActionRow row = new TwoLineActionRow(this);
+			row.setTitle(link.getTitle());
+			row.setActionIconResource(R.drawable.action_external);
+			row.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					CommonActions.viewURL(DiningHomeActivity.this, link.getUrl());
+				}				
+			});
+			resourcesLayout.addView(row);
+		}
+	}
+	
 	@Override
 	protected NewModule getNewModule() {
 		return new DiningModule();
