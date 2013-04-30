@@ -82,7 +82,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 		
 		boolean first = true;
 		LayoutInflater inflater = getLayoutInflater();
-		for (DiningHall diningHall : list) {
+		for (final DiningHall diningHall : list) {
 
 			// add seperator
 			if (!first) {
@@ -109,6 +109,13 @@ public class DiningHomeActivity extends NewModuleActivity {
 					statusView.setTextColor(getResources().getColor(R.color.dining_closed));
 					break;
 			}
+			
+			row.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
+				}				
+			});
 			
 			layout.addView(row, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 

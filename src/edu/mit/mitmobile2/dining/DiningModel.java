@@ -128,6 +128,23 @@ public class DiningModel {
 			return mRetailVenues;
 		}
 		
+		public HouseDiningHall getHouseDiningHall(String id) {
+			return (HouseDiningHall) findDiningHall(mHouseVenues, id);
+		}
+		
+		public RetailDiningHall getRetailDiningHall(String id) {
+			return (RetailDiningHall) findDiningHall(mRetailVenues, id);
+		}
+		
+		private DiningHall findDiningHall(List<? extends DiningHall> halls, String id) {
+			for (DiningHall hall : halls) {
+				if (hall.getID().equals(id)) {
+					return hall;
+				}
+			}
+			throw new RuntimeException("Dining hall with id=" + id + " not found");
+		}
+		
 		public String getAnnouncementsPlainText() {
 			return Html.fromHtml(mAnnouncementsHtml).toString();
 		}
@@ -155,13 +172,19 @@ public class DiningModel {
 			OPEN
 		}
 		
+		public String getID() {
+			return mId;
+		}
+		
 		public String getName() {
 			return mName;
 		}
 		
 		public abstract String getTodaysHoursSummary(long currentTime);
 		
-		public abstract Status getCurrentStatus(long currentTime);				
+		public abstract Status getCurrentStatus(long currentTime);	
+		
+		public abstract String getCurrentStatusSummary(long currentTime);
 	}
 	
 	public static class HouseDiningHall extends DiningHall {
@@ -183,7 +206,12 @@ public class DiningModel {
 		@Override
 		public Status getCurrentStatus(long currentTime) {
 			return Status.CLOSED;
-		}		
+		}
+		
+		@Override
+		public String getCurrentStatusSummary(long currentTime) {
+			return "Opens at 5:30pm";
+		}	
 	}
 	
 	public static class RetailDiningHall extends DiningHall {
@@ -263,7 +291,12 @@ public class DiningModel {
 		@Override
 		public Status getCurrentStatus(long currentTime) {
 			return Status.OPEN;
-		}		
+		}	
+		
+		@Override
+		public String getCurrentStatusSummary(long currentTime) {
+			return "Open till 8pm";
+		}	
 	}
 	
 	public static class DailyMeals {

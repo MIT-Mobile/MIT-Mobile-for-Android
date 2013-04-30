@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@color/rowBackground">
+  
+  <ImageView
+      android:id="@+id/diningHallHeaderImage"
+      android:layout_width="46dip"
+      android:layout_height="46dip"
+      android:layout_marginLeft="@dimen/standardPadding"
+      android:layout_marginTop="16dip"
+      android:background="#aaa" 
+      />
+  
+  <ImageView
+      android:id="@+id/diningHallActionImage"
+      android:layout_width="46dip"
+      android:layout_height="46dip"
+      android:layout_marginRight="@dimen/standardPadding"
+	  android:layout_centerVertical="true"
+	  android:layout_alignParentRight="true"
+	  android:background="@drawable/highlight_background"
+      />
+  
+  <TextView 
+      android:id="@+id/diningHallHeaderTitle"
+      android:layout_toRightOf="@id/diningHallHeaderImage"
+      android:layout_toLeftOf="@id/diningHallActionImage"
+      android:layout_alignTop="@id/diningHallHeaderImage"
+      android:layout_alignBottom="@id/diningHallHeaderImage"
+      android:layout_width="wrap_content"
+  	  android:layout_height="wrap_content"
+  	  android:gravity="center_vertical"
+  	  android:paddingLeft="@dimen/standardPadding"
+  	  android:paddingRight="@dimen/standardPadding"
+      style="@style/ListItemPrimary"
+      />
+
+   <TextView
+      android:id="@+id/diningHallHeaderSubtitle"  
+      android:layout_width="wrap_content"
+  	  android:layout_height="wrap_content"
+  	  android:layout_alignLeft="@id/diningHallHeaderImage"
+  	  android:layout_below="@id/diningHallHeaderImage"
+  	  android:paddingTop="@dimen/standardPadding"
+  	  android:paddingBottom="@dimen/standardPadding"
+      style="@style/ListItemSecondary"
+       />
+</RelativeLayout>
+  

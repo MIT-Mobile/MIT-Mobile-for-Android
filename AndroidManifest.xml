@@ -225,6 +225,7 @@
 		
 		<!-- DINING -->
 		<activity android:name=".dining.DiningHomeActivity" />
+		<activity android:name=".dining.DiningScheduleActivity" />		
 		
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
