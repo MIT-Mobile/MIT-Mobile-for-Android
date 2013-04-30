@@ -268,6 +268,7 @@ public class TourModel {
 	}
 	
 	private static String getAudioUrl(String audioID) {
+		if (audioID == null) return null;
 		return "http://" + Global.getMobileWebDomain() + MobileWebApi.BASE_PATH + 
 				TourModel.BASE_PATH + "/" + TOUR_GUID + TourModel.AUDIO_PATH + "/" + audioID;
 	}

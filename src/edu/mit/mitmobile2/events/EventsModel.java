@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.events;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,10 +20,17 @@ import edu.mit.mitmobile2.objs.SearchResults;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 public class EventsModel {
 
+	private static final String BASE_PATH = "/calendars";
+	private static final String CATEGORIES_PATH = "/events_calendar/categories";
+	private static final String EVENTS_PATH = "/events_calendar/events";
+	private static final String EXHIBITS_PATH = "/events_calendar/exhibits";
+	
+	
 	private static int TIME_ZONE_OFFSET = 5;
 	
 	private static HashMap<String, EventDetailsItem> sBriefEventsCache = new HashMap<String, EventDetailsItem>();
@@ -66,13 +75,7 @@ public class EventsModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "calendar");
-		params.put("command", "extraTopLevels");
-		params.put("version", "2");
-	
-		webApi.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+		webApi.requestJSONArray(BASE_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 				new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 			
 			@Override
@@ -84,18 +87,12 @@ public class EventsModel {
 				
 				for(int i = 0; i < array.length(); i++) {
 					JSONObject eventType = array.getJSONObject(i);
-					
 					// server may not yet be returning verion 2 of the api
-					boolean hasCategories = false;
-					if(eventType.has("hasCategories")) {
-						hasCategories = eventType.getBoolean("hasCategories");
-					}
-					
 					sEventTypes.add(new EventType(
 						eventType.getString("type"),
 						eventType.getString("longName"),
 						eventType.getString("shortName"),
-						hasCategories
+						eventType.optBoolean("hasCategories", false)
 					));
 				}
 				
@@ -128,25 +125,59 @@ public class EventsModel {
 			return;
 		}
 		
+		if (eventType.mId.equals("Exhibits")) {
+			fetchExhibits(unixtime, eventType, context, uiHandler);
+			return;
+		}
+		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("module", "calendar");
-		eventParameters.put("command", "day");
-		eventParameters.put("time", Long.toString(unixtime));
-		eventParameters.put("type", eventType.getTypeId());
+		eventParameters.put("q", "2");
+		eventParameters.put("start_date", Long.toString(unixtime));
+		eventParameters.put("end_date", Long.toString(unixtime + 86400));
 		
-		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
-			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
-			
-			@Override
-			public void onResponse(JSONArray jArray) {
-				List<EventDetailsItem> events = parseDetailArray(jArray);
-				putInDayEventsCache(unixtime, eventType, events);
-				MobileWebApi.sendSuccessMessage(uiHandler);
-			}
-		});
+		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH, eventParameters, 
+				new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+					
+					@Override
+					public void onResponse(JSONObject object) throws ServerResponseException,
+							JSONException {
+						
+						List<EventDetailsItem> events = parseDetailArray(object.getJSONArray("events"));
+						putInDayEventsCache(unixtime, eventType, events);
+						MobileWebApi.sendSuccessMessage(uiHandler);
+					}
+				});
 	}
+	
+	public static void fetchExhibits(final long unixtime, final EventType eventType, Context context, final Handler uiHandler) {
+		
+		if(getDayEvents(unixtime, eventType) != null) {
+			MobileWebApi.sendSuccessMessage(uiHandler);
+			return;
+		}
+		
+		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
+		
+		HashMap<String, String> eventParameters = new HashMap<String, String>();
+		eventParameters.put("q", "2");
+		eventParameters.put("start_date", Long.toString(unixtime));
+		eventParameters.put("end_date", Long.toString(unixtime + 86400));
+		
+		webApi.requestJSONArray(BASE_PATH + EXHIBITS_PATH, eventParameters, 
+				new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+					
+					@Override
+					public void onResponse(JSONArray array)
+							throws ServerResponseException, JSONException {
+						List<EventDetailsItem> events = parseDetailArray(array);
+						putInDayEventsCache(unixtime, eventType, events);
+						MobileWebApi.sendSuccessMessage(uiHandler);
+					}
+				});
+	}
+	
 	
 	private static List<EventDetailsItem> parseDetailArray(JSONArray jArray) {
 		ArrayList<EventDetailsItem> events = new ArrayList<EventDetailsItem>();
@@ -169,9 +200,36 @@ public class EventsModel {
         try {
         	item.id = jItem.getString("id");
         	item.title = jItem.getString("title");
-        	item.start = jItem.getLong("start");
-	        item.end = optLong(jItem, "end");
-	        
+        	
+			if (jItem.get("start") instanceof JSONObject) {
+				SimpleDateFormat dateFormatter = new SimpleDateFormat(
+						"yyyy-MM-dd-HH-mm");
+
+				JSONObject jStart = jItem.getJSONObject("start");
+				String startStr = jStart.getString("year") + "-"
+						+ jStart.getString("month") + "-"
+						+ jStart.getString("day") + "-"
+						+ jStart.getString("hour") + "-"
+						+ jStart.getString("minute");
+
+				JSONObject jEnd = jItem.getJSONObject("end");
+				String endStr = jEnd.getString("year") + "-"
+						+ jEnd.getString("month") + "-" + jEnd.getString("day")
+						+ "-" + jEnd.getString("hour") + "-"
+						+ jEnd.getString("minute");
+
+				try {
+					item.start = dateFormatter.parse(startStr).getTime();
+					item.end = dateFormatter.parse(endStr).getTime();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+        	} else {
+        		item.start = jItem.getLong("start");
+    	        item.end = optLong(jItem, "end");
+        	}
+        	
+        	
         	item.owner = optString(jItem, "owner");
         	item.shortloc = optString(jItem, "shortloc");
         	item.location = optString(jItem, "location");
@@ -284,14 +342,9 @@ public class EventsModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
-		
-		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("command", "categories");
-		eventParameters.put("module", "calendar");
-		eventParameters.put("type", type.getTypeId());
-		
-		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
-			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
+		webApi.requestJSONArray(BASE_PATH + CATEGORIES_PATH, null, 
+				new MobileWebApi.JSONArrayResponseListener(
+						new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
 			@Override
 			public void onResponse(JSONArray jArray) {
@@ -364,18 +417,18 @@ public class EventsModel {
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("module", "calendar");
-		eventParameters.put("command", "category");
-		eventParameters.put("type", eventType.getTypeId());
-		eventParameters.put("id", Integer.toString(categoryId));
-		eventParameters.put("start", Long.toString(unixtime));
+		eventParameters.put("q", "2");
+		eventParameters.put("start_date", Long.toString(unixtime));
+		eventParameters.put("end_date", Long.toString(unixtime + 86400));
+		eventParameters.put("category", Integer.toString(categoryId));
 		
-		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
-			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
-			
+		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH, eventParameters, 
+				new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+
 			@Override
-			public void onResponse(JSONArray jArray) {
-				List<EventDetailsItem> events = parseDetailArray(jArray);
+			public void onResponse(JSONObject object)
+					throws ServerResponseException, JSONException {
+				List<EventDetailsItem> events = parseDetailArray(object.getJSONArray("events"));
 				putInCategoryDayEventsCache(unixtime, categoryId, eventType, events);
 				MobileWebApi.sendSuccessMessage(uiHandler);
 			}
@@ -437,11 +490,9 @@ public class EventsModel {
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("module", "calendar");
-		eventParameters.put("command", "search");
 		eventParameters.put("q", searchTerms);
 		
-		webApi.requestJSONObject(eventParameters, new MobileWebApi.JSONObjectResponseListener(
+		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH, eventParameters, new MobileWebApi.JSONObjectResponseListener(
 			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
 			@Override
@@ -575,13 +626,14 @@ public class EventsModel {
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
-		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("module", "calendar");
-		eventParameters.put("command", "detail");
-		eventParameters.put("id", eventId);
+//		HashMap<String, String> eventParameters = new HashMap<String, String>();
+//		eventParameters.put("module", "calendar");
+//		eventParameters.put("command", "detail");
+//		eventParameters.put("id", eventId);
 		
-		webApi.requestJSONObject(eventParameters, new MobileWebApi.JSONObjectResponseListener(
-			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
+		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH + "/" + eventId, null, 
+				new MobileWebApi.JSONObjectResponseListener(
+						new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 				
 			@Override
 			public void onResponse(JSONObject jObject) {
@@ -624,7 +676,6 @@ public class EventsModel {
 			try {
 				return jObject.getLong(fieldName);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

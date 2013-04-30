@@ -302,12 +302,9 @@ public class LibraryModel {
     }
     
     public static void getUserIdentity(final Context context, final Handler uiHandler) {
-    	HashMap<String, String> parameters = new HashMap<String, String>();
-    	parameters.put("module", "libraries");
-    	parameters.put("command", "getUserIdentity");
-    	
+    	String requestUrl = "/secure/apps/user";
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler, HttpClientType.MIT); 
-    	webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
+    	webApi.requestJSONObject(requestUrl, null, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 
