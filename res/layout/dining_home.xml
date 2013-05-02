@@ -55,6 +55,37 @@
 							android:layout_width="fill_parent" 
 							android:layout_height="wrap_content">
 							
+			               <LinearLayout android:id="@+id/diningHomeHouseTab"
+			                    android:orientation="vertical"
+			                    android:layout_width="fill_parent" 
+								android:layout_height="wrap_content">
+										                   
+			               		<LinearLayout android:id="@+id/diningHomeHouseContent"  
+											android:orientation="vertical"
+											android:layout_width="fill_parent" 
+											android:layout_height="wrap_content">
+		
+						   		</LinearLayout> 		
+						   		
+						       <LinearLayout android:id="@+id/diningHomeResources"  
+										android:orientation="vertical"
+										android:layout_width="fill_parent" 
+										android:layout_height="wrap_content">
+						               
+						           		<edu.mit.mitmobile2.SectionHeader 
+												android:layout_width="fill_parent" 
+												android:layout_height="wrap_content"	
+												android:text="Resources" />
+						           		
+						           		<edu.mit.mitmobile2.TwoLineActionRow
+						           		    	android:layout_width="fill_parent" 
+												android:layout_height="wrap_content"	
+												android:text="Meal Plan Balance"
+												android:src="@drawable/action_secure"
+												/>
+						        </LinearLayout>	                   
+			                   
+			               </LinearLayout>
 			               <LinearLayout android:id="@+id/diningHomeHouseContent"  
 											android:orientation="vertical"
 											android:layout_width="fill_parent" 
@@ -69,24 +100,6 @@
 						   </LinearLayout> 
 		
 			       </FrameLayout>
-			       
-			       <LinearLayout android:id="@+id/diningHomeResources"  
-							android:orientation="vertical"
-							android:layout_width="fill_parent" 
-							android:layout_height="wrap_content">
-			               
-			           		<edu.mit.mitmobile2.SectionHeader 
-									android:layout_width="fill_parent" 
-									android:layout_height="wrap_content"	
-									android:text="Resources" />
-			           		
-			           		<edu.mit.mitmobile2.TwoLineActionRow
-			           		    	android:layout_width="fill_parent" 
-									android:layout_height="wrap_content"	
-									android:text="Meal Plan Balance"
-									android:src="@drawable/action_secure"
-									/>
-			        </LinearLayout>
 						
 			    </LinearLayout>
 			</ScrollView>	

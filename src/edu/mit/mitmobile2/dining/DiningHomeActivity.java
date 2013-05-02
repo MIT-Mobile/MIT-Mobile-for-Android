@@ -62,7 +62,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 		TabHost tabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
 		tabHost.setup();
 		TabConfigurator tabConfigurator = new TabConfigurator(this, tabHost);
-		tabConfigurator.addTab("HOUSE DINING", R.id.diningHomeHouseContent);
+		tabConfigurator.addTab("HOUSE DINING", R.id.diningHomeHouseTab);
 		tabConfigurator.addTab("RETAIL", R.id.diningHomeRetailContent);
 		tabConfigurator.configureTabs();
 		
