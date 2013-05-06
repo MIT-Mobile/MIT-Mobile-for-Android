@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:padding="@dimen/standardPadding"
+  android:background="@color/rowBackground">
+  
+  <TextView
+      android:id="@+id/diningMealItemRowStation"
+      android:layout_alignParentLeft="true"
+      android:paddingRight="@dimen/standardPadding"
+      android:layout_width="120dip"
+      android:layout_height="wrap_content"
+      style="@style/ListItemPrimary"
+      />
+  
+  <TableLayout
+      android:id="@+id/diningMealItemRowDietaryFlagsTable"
+      android:layout_alignParentRight="true"
+      android:layout_width="100dip"
+      android:layout_height="wrap_content"
+      />
+  
+  <TextView
+      android:id="@+id/diningMealItemRowName"
+      android:layout_toRightOf="@id/diningMealItemRowStation"
+      android:layout_toLeftOf="@id/diningMealItemRowDietaryFlagsTable"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/ListItemPrimary"
+      />
+  
+    <TextView
+      android:id="@+id/diningMealItemRowDescription"
+      android:layout_toRightOf="@id/diningMealItemRowStation"
+      android:layout_toLeftOf="@id/diningMealItemRowDietaryFlagsTable"
+      android:layout_below="@id/diningMealItemRowName"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/ListItemSecondary"
+      />
+  
+ </RelativeLayout>      
+      
+      

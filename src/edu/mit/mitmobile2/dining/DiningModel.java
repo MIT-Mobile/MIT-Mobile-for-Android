@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -91,8 +93,7 @@ public class DiningModel {
 			String[] timeParts = time.split(":");
 			int hourOfDay = Integer.parseInt(timeParts[0]);
 			int minute = Integer.parseInt(timeParts[1]);
-			int second = Integer.parseInt(timeParts[2]);
-			calendar.set(year, month, day, hourOfDay, minute, second);
+			calendar.set(year, month, day, hourOfDay, minute);
 		}
 		return calendar;
 	}
@@ -157,12 +158,12 @@ public class DiningModel {
 	public static abstract class DiningHall {
 		private String mId;
 		private String mName;
-		private String mUri;
+		private String mUrl;
 		private DiningHallLocation mLocation;
 		
 		public DiningHall(JSONObject object) throws JSONException {
 			mId = object.getString("id");
-			mUri = object.getString("uri");
+			mUrl = object.getString("url");
 			mName = object.getString("name");
 			mLocation = new DiningHallLocation(object.getJSONObject("location"));
 		}
@@ -211,7 +212,11 @@ public class DiningModel {
 		@Override
 		public String getCurrentStatusSummary(long currentTime) {
 			return "Opens at 5:30pm";
-		}	
+		}
+		
+		public List<DailyMeals> getSchedule() {
+			return mSchedule;
+		}				
 	}
 	
 	public static class RetailDiningHall extends DiningHall {
@@ -273,14 +278,19 @@ public class DiningModel {
 				mHomepageUrl = object.getString("homepage_url");
 			}
 			
-			JSONArray jsonCuisine = object.getJSONArray("cuisine");
-			for (int i = 0; i < jsonCuisine.length(); i++) {
-				mCuisine.add(jsonCuisine.getString(i));
+			if (object.has("cuisine")) {
+				JSONArray jsonCuisine = object.getJSONArray("cuisine");
+				for (int i = 0; i < jsonCuisine.length(); i++) {
+					mCuisine.add(jsonCuisine.getString(i));
+				}
 			}
-			JSONArray jsonPayment = object.getJSONArray("payment");
-			for (int i = 0; i < jsonPayment.length(); i++) {
-				mPayment.add(jsonPayment.getString(i));
-			}			
+			
+			if (object.has("payment")) {
+				JSONArray jsonPayment = object.getJSONArray("payment");
+				for (int i = 0; i < jsonPayment.length(); i++) {
+					mPayment.add(jsonPayment.getString(i));
+				}
+			}
 		}
 
 		@Override
@@ -319,6 +329,21 @@ public class DiningModel {
 			}
 		}
 		
+		public String getMessage() {
+			return mMessage;
+		}
+		
+		public Calendar getDay() {
+			return mDay;
+		}
+
+		public List<Meal> getMeals() {
+			if (mMeals != null) {
+				return mMeals;
+			} else {
+				return Collections.emptyList();
+			}
+		}
 	}
 	
 	public static class Meal {
@@ -345,6 +370,26 @@ public class DiningModel {
 				}
 			}
 		}
+
+		public String getName() {
+			return mName;
+		}
+		
+		public String getMessage() {
+			return mMessage;
+		}
+		
+		public Calendar getStart() {
+			return mStart;
+		}
+		
+		public Calendar getEnd() {
+			return mEnd;
+		}
+		
+		public List<MenuItem> getMenuItems() {
+			return mMenuItems;
+		}
 	}
 	
 	public static class MenuItem {
@@ -355,30 +400,65 @@ public class DiningModel {
 		
 		public MenuItem(JSONObject object) throws JSONException {
 			mName = object.getString("name");
-			mDescription = object.getString("description");
+			mDescription = object.optString("description", null);
 			mStation = object.getString("station");
-			JSONArray flags = object.getJSONArray("dietary_flags");
-			for (int i = 0; i < flags.length(); i++) {
-				mDietaryFlags.add(flags.getString(i));
+			if (object.has("dietary_flags")) {
+				JSONArray flags = object.getJSONArray("dietary_flags");
+				for (int i = 0; i < flags.length(); i++) {
+					mDietaryFlags.add(flags.getString(i));
+				}
 			}
+		}		
+		
+		public String getStation() {
+			return mStation;
+		}
+		
+		public String getName() {
+			return mName;
+		}
+		
+		public String getDescription() {
+			return mDescription;
+		}
+		
+		public List<String> getDietaryFlags() {
+			return mDietaryFlags;
 		}
 	}
 	
 	public static class DiningHallLocation {
-		String mDescription;
-		float mLatitude;
-		float mLongitude;
+		
+		// required
+		String mStreet;
 		String mCity;
 		String mState;
 		String mZipcode;
 		
+		// optional
+		String mDescription;
+		String mRoomNumber;
+		float mLatitude;
+		float mLongitude;
+		
 		public DiningHallLocation(JSONObject object) throws JSONException {
-			mDescription = object.getString("description");
-			mLatitude = (float) object.getDouble("latitude");
-			mLongitude = (float) object.getDouble("longitude");
+			mStreet = object.getString("street");
 			mCity = object.getString("city");
 			mState = object.getString("state");
 			mZipcode = object.getString("zipcode");
+			
+			if (object.has("description")) {
+				mDescription = object.getString("description");
+			}
+			
+			if (object.has("mit_room_number")) {
+				mRoomNumber = object.getString("mit_room_number");
+			}
+			
+			if (object.has("latitude") && object.has("longitude")) {
+				mLatitude = (float) object.getDouble("latitude");
+				mLongitude = (float) object.getDouble("longitude");
+			}
 		}
 	}
 	

@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
@@ -62,6 +64,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		setContentView(mMainLayout, false);
 		
 		addHeader();
+		addSliderView();
 	}
 	
 	protected void addHeader() {
@@ -75,6 +78,12 @@ public class DiningScheduleActivity extends NewModuleActivity {
 			}			
 		});
 		mMainLayout.addView(headerView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+	}
+	
+	protected void addSliderView() {
+		SliderView sliderView = new SliderView(this);
+		mMainLayout.addView(sliderView);
+		sliderView.setAdapter(new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), System.currentTimeMillis()));
 	}
 	
 	@Override
