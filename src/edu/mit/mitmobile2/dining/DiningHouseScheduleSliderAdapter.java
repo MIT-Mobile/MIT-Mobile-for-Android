@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -224,10 +225,12 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 				
 				List<String> flags = menuItem.getDietaryFlags();
 				TableRow tableRow = null;
+				int columns = 2; 
 				for (int i = 0; i < flags.size(); i++) {
-					if (i % 2 == 0) {
+					if (i % columns == 0) {
 						// lets make new row
 						tableRow = new TableRow(mContext);
+						tableRow.setGravity(Gravity.RIGHT);
 						dietaryFlags.addView(tableRow);
 					}
 					ImageView flagImageView = new ImageView(mContext);
