@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -14,6 +15,9 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderView;
+import edu.mit.mitmobile2.SliderView.Adapter;
+import edu.mit.mitmobile2.SliderView.OnSeekListener;
+import edu.mit.mitmobile2.SliderView.ScreenPosition;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
@@ -81,14 +85,47 @@ public class DiningScheduleActivity extends NewModuleActivity {
 	}
 	
 	protected void addSliderView() {
-		SliderView sliderView = new SliderView(this);
+		LayoutInflater inflater = getLayoutInflater();
+		View diningSliderBar = inflater.inflate(R.layout.dining_slider_bar, null);
+		final View leftArrow = diningSliderBar.findViewById(R.id.diningSliderLeftArrow);
+		final View rightArrow = diningSliderBar.findViewById(R.id.diningSliderRightArrow);
+		
+		mMainLayout.addView(diningSliderBar);
+		
+		final SliderView sliderView = new SliderView(this);
 		mMainLayout.addView(sliderView);
 		
 		// test time
 		long currentTime = 1367351565000L;
 		// real time
 		//long currentTime = System.currentTimeMillis();
-		sliderView.setAdapter(new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), currentTime));
+		
+		DiningHouseScheduleSliderAdapter adapter = new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), currentTime);
+		sliderView.setAdapter(adapter);
+		leftArrow.setEnabled(adapter.hasScreen(ScreenPosition.Previous));
+		rightArrow.setEnabled(adapter.hasScreen(ScreenPosition.Next));
+		
+		leftArrow.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sliderView.slideLeft();
+			}			
+		});
+		rightArrow.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sliderView.slideRight();
+			}			
+		});
+		
+		sliderView.setOnSeekListener(new OnSeekListener() {
+
+			@Override
+			public void onSeek(SliderView view, Adapter adapter) {
+				leftArrow.setEnabled(adapter.hasScreen(ScreenPosition.Previous));
+				rightArrow.setEnabled(adapter.hasScreen(ScreenPosition.Next));
+			}			
+		});
 	}
 	
 	@Override
