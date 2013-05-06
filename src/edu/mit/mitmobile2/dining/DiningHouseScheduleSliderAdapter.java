@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.dining;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -31,19 +33,22 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 	ScreenIndices mScreenIndices = new ScreenIndices();
 	
 	private List<DailyMeals> mSchedule;
+	private String mCurrentDateString;
+	private DateFormat mFormat;
+	private Date mCurrentDate;
 	
 	public DiningHouseScheduleSliderAdapter(Context context, List<DailyMeals> schedule, long currentTime) {
 		mContext = context;
 		mSchedule = schedule;
 		
-		Date currentDate = new Date(currentTime);
-		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-		format.setCalendar(new GregorianCalendar());
+		mCurrentDate = new Date(currentTime);
+		mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+		mFormat.setCalendar(new GregorianCalendar());
+		mCurrentDateString = mFormat.format(mCurrentDate);
 		
 		for (int dayIndex = 0; dayIndex < schedule.size(); dayIndex++) {
-			String currentDateString = format.format(currentDate);
-			String scheduleDateString = format.format(schedule.get(dayIndex).getDay().getTime());
-			if (scheduleDateString.equals(currentDateString)) {
+			String scheduleDateString = mFormat.format(schedule.get(dayIndex).getDay().getTime());
+			if (scheduleDateString.equals(mCurrentDateString)) {
 				mScreenIndices.mDayIndex = dayIndex;
 				break;
 			}
@@ -144,6 +149,8 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 					}
 					return new ScreenIndices(dayIndex, mealIndex);
 				}
+			default:
+				break;
 		}
 		return new ScreenIndices(dayIndex, mealIndex);
 	}
@@ -168,6 +175,32 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		}
 	}
 
+
+
+	public CharSequence getCurrentTitle() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("LLLL d", Locale.US);
+		
+		ScreenIndices screenIndices = mScreenIndices;
+		
+		if (screenIndices.mDayIndex != null) {
+			DailyMeals dailyMeals = mSchedule.get(screenIndices.mDayIndex);
+			Calendar day = dailyMeals.getDay();
+			String title = dateFormat.format(day.getTime());
+			
+			if (screenIndices.mMealIndex != null) {
+				String mealName = dailyMeals.getMeals().get(screenIndices.mMealIndex).getCapitalizedName();
+				title = mealName + ", " + title;
+				// check if the meal is today
+				if (mCurrentDateString.equals(mFormat.format(day.getTime()))) {
+					title = "Today's " + title;
+				}
+			}
+			return title;
+		} else {
+			return dateFormat.format(mCurrentDate.getTime());
+		}
+	}
+
 	private View noMealsTodayScreen(String message) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dining_meal_message, null);
@@ -189,11 +222,7 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		View mealHeader = inflater.inflate(R.layout.dining_meal_header, null);	
 		TextView mealTitleView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTitle);
 		TextView mealTimeView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTime);
-		
-		// capitalize meal name
-		String mealName = meal.getName();
-		mealName = mealName.substring(0, 1).toUpperCase(Locale.US) + mealName.substring(1);
-		mealTitleView.setText(mealName);
+		mealTitleView.setText(meal.getCapitalizedName());
 		
 		if ((meal.getStart() != null) && (meal.getEnd() != null)) {
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("h:mma", Locale.US);
@@ -267,5 +296,4 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

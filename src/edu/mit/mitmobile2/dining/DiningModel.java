@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -369,6 +370,10 @@ public class DiningModel {
 			}
 		}
 
+		public String getCapitalizedName() {
+			return mName.substring(0, 1).toUpperCase(Locale.US) + mName.substring(1);
+		}
+		
 		public String getName() {
 			return mName;
 		}

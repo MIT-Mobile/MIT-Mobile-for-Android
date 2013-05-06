@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.TextView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -89,6 +89,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		View diningSliderBar = inflater.inflate(R.layout.dining_slider_bar, null);
 		final View leftArrow = diningSliderBar.findViewById(R.id.diningSliderLeftArrow);
 		final View rightArrow = diningSliderBar.findViewById(R.id.diningSliderRightArrow);
+		final TextView sliderTitle = (TextView) diningSliderBar.findViewById(R.id.diningSliderTitle);
 		
 		mMainLayout.addView(diningSliderBar);
 		
@@ -100,10 +101,11 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		// real time
 		//long currentTime = System.currentTimeMillis();
 		
-		DiningHouseScheduleSliderAdapter adapter = new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), currentTime);
-		sliderView.setAdapter(adapter);
-		leftArrow.setEnabled(adapter.hasScreen(ScreenPosition.Previous));
-		rightArrow.setEnabled(adapter.hasScreen(ScreenPosition.Next));
+		final DiningHouseScheduleSliderAdapter diningAdapter = new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), currentTime);
+		sliderView.setAdapter(diningAdapter);
+		leftArrow.setEnabled(diningAdapter.hasScreen(ScreenPosition.Previous));
+		rightArrow.setEnabled(diningAdapter.hasScreen(ScreenPosition.Next));
+		sliderTitle.setText(diningAdapter.getCurrentTitle());
 		
 		leftArrow.setOnClickListener(new OnClickListener() {
 			@Override
@@ -124,6 +126,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 			public void onSeek(SliderView view, Adapter adapter) {
 				leftArrow.setEnabled(adapter.hasScreen(ScreenPosition.Previous));
 				rightArrow.setEnabled(adapter.hasScreen(ScreenPosition.Next));
+				sliderTitle.setText(diningAdapter.getCurrentTitle());
 			}			
 		});
 	}
