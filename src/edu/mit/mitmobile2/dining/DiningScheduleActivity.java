@@ -83,7 +83,12 @@ public class DiningScheduleActivity extends NewModuleActivity {
 	protected void addSliderView() {
 		SliderView sliderView = new SliderView(this);
 		mMainLayout.addView(sliderView);
-		sliderView.setAdapter(new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), System.currentTimeMillis()));
+		
+		// test time
+		long currentTime = 1367351565000L;
+		// real time
+		//long currentTime = System.currentTimeMillis();
+		sliderView.setAdapter(new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), currentTime));
 	}
 	
 	@Override
