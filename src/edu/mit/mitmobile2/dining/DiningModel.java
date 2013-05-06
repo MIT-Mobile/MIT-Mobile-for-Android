@@ -88,13 +88,13 @@ public class DiningModel {
 		int month = Integer.parseInt(dateParts[1]) - 1;
 		int day = Integer.parseInt(dateParts[2]);
 		if (time == null) {
-			calendar.set(year, month, day);
+			calendar.set(year, month, day, 0, 0);
 		} else {
 			String[] timeParts = time.split(":");
 			int hourOfDay = Integer.parseInt(timeParts[0]);
 			int minute = Integer.parseInt(timeParts[1]);
-			calendar.set(year, month, day, hourOfDay, minute);
-		}
+			calendar.set(year, month, day, hourOfDay, minute, 0);
+		}		
 		return calendar;
 	}
 	

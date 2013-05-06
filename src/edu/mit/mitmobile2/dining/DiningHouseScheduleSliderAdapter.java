@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.dining;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -37,9 +38,9 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		
 		Date currentDate = new Date(currentTime);
 		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-
+		format.setCalendar(new GregorianCalendar());
+		
 		for (int dayIndex = 0; dayIndex < schedule.size(); dayIndex++) {
-			format.setCalendar(schedule.get(dayIndex).getDay());
 			String currentDateString = format.format(currentDate);
 			String scheduleDateString = format.format(schedule.get(dayIndex).getDay().getTime());
 			if (scheduleDateString.equals(currentDateString)) {
