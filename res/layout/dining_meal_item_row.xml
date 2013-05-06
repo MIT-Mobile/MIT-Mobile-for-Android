@@ -19,7 +19,8 @@
   <TableLayout
       android:id="@+id/diningMealItemRowDietaryFlagsTable"
       android:layout_alignParentRight="true"
-      android:layout_width="50dip"
+      android:paddingLeft="@dimen/standardPadding"
+      android:layout_width="62dip"
       android:layout_height="wrap_content"
       />
   

@@ -221,6 +221,8 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 				nameView.setText(menuItem.getName());
 				if (menuItem.getDescription() != null) {
 					descriptionView.setText(menuItem.getDescription());
+				} else {
+					descriptionView.setVisibility(View.GONE);
 				}
 				
 				List<String> flags = menuItem.getDietaryFlags();
