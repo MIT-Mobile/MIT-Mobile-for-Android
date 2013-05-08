@@ -61,7 +61,7 @@ public class MITMapsDataModel {
 	public static void fetchCategory(final String categoryId, final Handler uiHandler, Context context) {
 		
 		HashMap<String, String> params = new HashMap<String, String>();
-
+		Log.d("ZZZ","categoryId = " + categoryId);		
 		params.put("id", categoryId);
 		params.put("command", "category");
 		MobileWebApi webApi = new MobileWebApi(false, true, "Campus map", context, uiHandler);

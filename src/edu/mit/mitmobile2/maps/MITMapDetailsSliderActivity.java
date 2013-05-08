@@ -127,13 +127,13 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		Bundle extras = getIntent().getExtras();
 		if(extras != null) {
 			List<MapItem> mapItems = null;
-			if(extras.containsKey(MITMapActivity.MAP_DATA_KEY)) {
-				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
+			if(extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
+				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
 				Log.d(TAG,"number of map items = " + mapItems.size());
 			} 	
 
-			if(extras.containsKey(MITMapActivity.MAP_ITEM_INDEX_KEY)) {
-				mapItemIndex = extras.getInt(MITMapActivity.MAP_ITEM_INDEX_KEY);
+			if(extras.containsKey(MITMapView.MAP_ITEM_INDEX_KEY)) {
+				mapItemIndex = extras.getInt(MITMapView.MAP_ITEM_INDEX_KEY);
 			}
 
 			setMapItems(mapItems,mapItemIndex);
@@ -311,7 +311,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			mapGoogleMapBtn.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent mapCall = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + mMapItem.getCenter().lat_wgs84 + "," + mMapItem.getCenter().long_wgs84 + "?z=17"));
+					String uri = "geo:0,0?q="+(String)mMapItem.getItemData().get("name")+"+near+"+ (String)mMapItem.getItemData().get("street")+",Cambridge,MA";
+					Intent mapCall = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
 					startActivity(mapCall);  
 				}
 			});

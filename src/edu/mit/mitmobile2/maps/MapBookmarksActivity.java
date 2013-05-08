@@ -137,7 +137,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
 					public void onItemClick(AdapterView<?> listView, View view, int position, long id) {					
 					
 						Intent i = new Intent(context, MITMapDetailsSliderActivity.class);
-    	            	i.putParcelableArrayListExtra(MITMapView.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
+    	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
     	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
     	            	context.startActivity(i);
 					}

@@ -131,30 +131,6 @@ public class MITMapBrowseSubCatsActivity extends ModuleActivity {
 }
 
 
-/*
-[{"id":"object-33",
-	"name":"Guggenheim Laboratory",
-	"lat_wgs84":42.36017974,"long_wgs84":-71.09374216,
-	"altname":["Aeronautics & Astronautics Library"],
-	"bldgnum":"33",
-	"category":["building"],
-	"street":"125 Massachusetts Avenu",
-	"mailing":"77 Massachusetts Avenue",
-	"viewangle":"west side",
-	"bldgimg":"http:\/\/web.mit.edu\/campus-map\/objimgs\/object-33.jpg",
-	"architect":"Coolidge & Carlson",
-	"floorplans":{"floor":["0","1","2","3","4","5"]},
-	"contents":[{"name":"Aeronautics & Astronautics Library","url":"http:\/\/libraries.mit.edu\/aero\/index.html","category":["library"]},
-		{"name":"Communications and Networking Research Group","url":"http:\/\/web.mit.edu\/aeroastro\/labs\/cnrg\/"},
-			{"name":"Aeronautics and Astronautics, Dept. of","url":"http:\/\/web.mit.edu\/aeroastro\/"},
-			{"name":"Global Airline Industry Program","url":"http:\/\/web.mit.edu\/airlines\/"},
-			{"name":"International Center for Air Transportation (ICAT)","url":"http:\/\/web.mit.edu\/aeroastro\/www\/labs\/ICAT\/"},
-			{"name":"Technology Laboratory for Advanced Materials and Structures (TELAMS)","url":"http:\/\/web.mit.edu\/telams\/"}],"city":"Cambridge, MA","displayName":"Aeronautics & Astronautics Library"},
-	
-	{"id":"object-10","name":"Maclaurin Buildings (10)",
-*/
-
-
 
 
 
