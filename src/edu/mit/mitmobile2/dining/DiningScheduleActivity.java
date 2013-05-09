@@ -101,7 +101,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		// real time
 		//long currentTime = System.currentTimeMillis();
 		
-		final DiningHouseScheduleSliderAdapter diningAdapter = new DiningHouseScheduleSliderAdapter(this, mSelectedHouse.getSchedule(), currentTime);
+		final DiningHouseScheduleSliderAdapter diningAdapter = new DiningHouseScheduleSliderAdapter(this, mSelectedHouse, currentTime);
 		sliderView.setAdapter(diningAdapter);
 		leftArrow.setEnabled(diningAdapter.hasScreen(ScreenPosition.Previous));
 		rightArrow.setEnabled(diningAdapter.hasScreen(ScreenPosition.Next));

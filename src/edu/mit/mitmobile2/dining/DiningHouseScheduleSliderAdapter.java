@@ -2,10 +2,10 @@ package edu.mit.mitmobile2.dining;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,181 +23,97 @@ import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.SliderView.ScreenPosition;
-import edu.mit.mitmobile2.dining.DiningModel.DailyMeals;
+import edu.mit.mitmobile2.dining.DiningMealIterator.MealOrEmptyDay;
+import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.Meal;
 import edu.mit.mitmobile2.dining.DiningModel.MenuItem;
 
 public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 	
 	Context mContext;
-	ScreenIndices mScreenIndices = new ScreenIndices();
 	
-	private List<DailyMeals> mSchedule;
+	private String mHallID;
+	private DiningMealIterator mMealIterator;
 	private String mCurrentDateString;
 	private DateFormat mFormat;
 	private Date mCurrentDate;
 	
-	public DiningHouseScheduleSliderAdapter(Context context, List<DailyMeals> schedule, long currentTime) {
+	public DiningHouseScheduleSliderAdapter(Context context, HouseDiningHall hall, long currentTime) {		
 		mContext = context;
-		mSchedule = schedule;
+		mHallID = hall.getID();
+		
+		GregorianCalendar day = new GregorianCalendar();
+		day.setTimeInMillis(currentTime);
+		ArrayList<HouseDiningHall> halls = new ArrayList<HouseDiningHall>();
+		halls.add(hall);
+		mMealIterator = new DiningMealIterator(day, halls);
 		
 		mCurrentDate = new Date(currentTime);
 		mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 		mFormat.setCalendar(new GregorianCalendar());
 		mCurrentDateString = mFormat.format(mCurrentDate);
 		
-		for (int dayIndex = 0; dayIndex < schedule.size(); dayIndex++) {
-			String scheduleDateString = mFormat.format(schedule.get(dayIndex).getDay().getTime());
-			if (scheduleDateString.equals(mCurrentDateString)) {
-				mScreenIndices.mDayIndex = dayIndex;
-				break;
-			}
-		}
-		
-		if (mScreenIndices.mDayIndex != null) {
-			// find the first meal today which is not done
-			List<Meal> meals = schedule.get(mScreenIndices.mDayIndex).getMeals();
-			for (int mealIndex = 0; mealIndex < meals.size() ; mealIndex++) {
-				Meal meal = meals.get(mealIndex);
-				if (currentTime < meal.getEnd().getTimeInMillis()) {
-					mScreenIndices.mMealIndex = mealIndex;
-				}
-			}
-		
-			if (mScreenIndices.mMealIndex == null && (meals.size() > 0)) {
-				// all the meals are over so just select the
-				// last meal in the day
-				mScreenIndices.mMealIndex = meals.size()-1;
-			}
-		}
 	}
 
 	
 	@Override
 	public boolean hasScreen(ScreenPosition screenPosition) {
-		Integer dayIndex = mScreenIndices.mDayIndex;
-		Integer mealIndex = mScreenIndices.mMealIndex;
-
-		
 		switch (screenPosition) {
 			case Previous:
-				if (dayIndex == null) {
-					return false;
-				}
-				if (dayIndex > 0) {
-					return true;
-				}
-				return (mealIndex != null) && 
-						(mealIndex > 0);
+				return mMealIterator.hasPrevious();
 				
 			case Current:
 				return true;
 				
 			case Next:
-				if (dayIndex == null) {
-					return false;
-				}
-				if (dayIndex + 1 < mSchedule.size()) {
-					return true;
-				}
-				return (mealIndex != null) && 
-						(mealIndex + 1 < mSchedule.get(dayIndex).getMeals().size());				
+				return mMealIterator.hasNext();			
 		}
 		return false;
 	}
 
-	private static class ScreenIndices {
-		Integer mDayIndex;
-		Integer mMealIndex;
-		
-		ScreenIndices(Integer dayIndex, Integer mealIndex) {
-			mDayIndex = dayIndex;
-			mMealIndex = mealIndex;
-		}
-
-		public ScreenIndices() {
-			// TODO Auto-generated constructor stub
-		}
-	}
-	
-	private ScreenIndices getScreenIndices(ScreenPosition screenPosition) {
-		Integer dayIndex = mScreenIndices.mDayIndex;
-		Integer mealIndex = mScreenIndices.mMealIndex;
-		switch (screenPosition) {
-			case Previous:
-				if ((mealIndex != null) && (mealIndex > 0)) {
-					return new ScreenIndices(dayIndex, mealIndex-1);
-				} else {
-					dayIndex--;
-					if (mSchedule.get(dayIndex).getMeals().size() > 0) {
-						mealIndex = mSchedule.get(dayIndex).getMeals().size() - 1;
-					} else {
-						mealIndex = null;
-					}
-					return new ScreenIndices(dayIndex, mealIndex);
-				}
-				
-			case Next:
-				if ((mealIndex != null) && (mealIndex + 1 < mSchedule.get(dayIndex).getMeals().size())) {
-					return new ScreenIndices(dayIndex, mealIndex+1);
-				} else {
-					dayIndex++;
-					if (mSchedule.get(dayIndex).getMeals().size() > 0) {
-						mealIndex = 0;
-					} else {
-						mealIndex = null;
-					}
-					return new ScreenIndices(dayIndex, mealIndex);
-				}
-			default:
-				break;
-		}
-		return new ScreenIndices(dayIndex, mealIndex);
-	}
-
 	@Override
 	public View getScreen(ScreenPosition screenPosition) {
-		ScreenIndices screenIndices = getScreenIndices(screenPosition);
-		if (screenIndices.mDayIndex == null || 
-		   (mSchedule.get(screenIndices.mDayIndex).getMeals().size() == 0)) {
-			String dayMessage;
-			if (screenIndices.mDayIndex == null)  {
-				dayMessage = "No information available";
-			} else {
-				DailyMeals day = mSchedule.get(screenIndices.mDayIndex);
-				dayMessage = day.getMessage();
-			}
+		MealOrEmptyDay mealOrEmptyDay = null;
+		switch (screenPosition) {
+			case Previous:
+				mealOrEmptyDay = mMealIterator.getPrevious();
+				break;
 			
-			return noMealsTodayScreen(dayMessage);
-		} else {
-			Meal meal = mSchedule.get(screenIndices.mDayIndex).getMeals().get(screenIndices.mMealIndex);
-			return mealScreen(meal);
+			case Current:
+				mealOrEmptyDay = mMealIterator.getCurrent();
+				break;
+			
+			case Next:
+				mealOrEmptyDay = mMealIterator.getNext();
+				break;
 		}
+		
+		if (mealOrEmptyDay.isEmpty()) {
+			return noMealsTodayScreen(mealOrEmptyDay.getDayMessage());
+		} else {
+			return mealScreen(mealOrEmptyDay.getMeal(mHallID));
+		}
+		
 	}
 
-
-
 	public CharSequence getCurrentTitle() {
+		MealOrEmptyDay mealOrEmptyDay = mMealIterator.getCurrent();
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("LLLL d", Locale.US);
+		Calendar day = mealOrEmptyDay.getDay();
 		
-		ScreenIndices screenIndices = mScreenIndices;
-		
-		if (screenIndices.mDayIndex != null) {
-			DailyMeals dailyMeals = mSchedule.get(screenIndices.mDayIndex);
-			Calendar day = dailyMeals.getDay();
+		if (!mealOrEmptyDay.isEmpty()) {
 			String title = dateFormat.format(day.getTime());
+			String mealName = mealOrEmptyDay.getCapitalizedMealName();
+			title = mealName + ", " + title;
 			
-			if (screenIndices.mMealIndex != null) {
-				String mealName = dailyMeals.getMeals().get(screenIndices.mMealIndex).getCapitalizedName();
-				title = mealName + ", " + title;
-				// check if the meal is today
-				if (mCurrentDateString.equals(mFormat.format(day.getTime()))) {
+			// check if the meal is today
+			if (mCurrentDateString.equals(mFormat.format(day.getTime()))) {
 					title = "Today's " + title;
-				}
 			}
 			return title;
 		} else {
-			return dateFormat.format(mCurrentDate.getTime());
+			return dateFormat.format(day.getTime());
 		}
 	}
 
@@ -288,12 +204,21 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 
 	@Override
 	public void seek(ScreenPosition screenPosition) {
-		mScreenIndices = getScreenIndices(screenPosition);
+		switch (screenPosition) {
+			case Previous:
+				mMealIterator.moveToPrevious();
+				break;
+				
+			case Next:
+				mMealIterator.moveToNext();
+				break;
+				
+			case Current:
+				// nothing to do
+				break;
+		}
 	}
 
 	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void destroy() { }
 }

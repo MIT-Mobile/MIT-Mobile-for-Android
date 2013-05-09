@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -188,14 +189,16 @@ public class DiningModel {
 	}
 	
 	public static class HouseDiningHall extends DiningHall {
-		ArrayList<DailyMeals> mSchedule = new ArrayList<DailyMeals>();
+		DailyMealsSchedule mSchedule;
 		
 		public HouseDiningHall(JSONObject object) throws JSONException {
 			super(object);
 			JSONArray jsonSchedule = object.getJSONArray("meals_by_day");
+			ArrayList<DailyMeals> dailyMealsList = new ArrayList<DailyMeals>();
 			for (int i = 0; i < jsonSchedule.length(); i++) {
-				mSchedule.add(new DailyMeals(jsonSchedule.optJSONObject(i)));
+				dailyMealsList.add(new DailyMeals(jsonSchedule.optJSONObject(i)));
 			}
+			mSchedule = new DailyMealsSchedule(dailyMealsList);
 		}
 
 		@Override
@@ -213,13 +216,12 @@ public class DiningModel {
 			return "Opens at 5:30pm";
 		}
 		
-		public List<DailyMeals> getSchedule() {
+		public DailyMealsSchedule getSchedule() {
 			return mSchedule;
 		}				
 	}
 	
 	public static class RetailDiningHall extends DiningHall {
-		ArrayList<DailyMeals> mSchedule = new ArrayList<DailyMeals>();
 		
 		static class DailyHours {
 			int mDayOfWeek;
@@ -308,10 +310,62 @@ public class DiningModel {
 		}	
 	}
 	
+	public static class DailyMealsSchedule {
+		
+		static SimpleDateFormat sFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+		private List<DailyMeals> mDailyMealsList;
+		
+		public DailyMealsSchedule(List<DailyMeals> dailyMealsList) {
+			mDailyMealsList = dailyMealsList;
+		}
+		
+		public DailyMeals getDailyMeals(Calendar day) {
+			String dayString = sFormat.format(day.getTime());
+			for (DailyMeals dailyMeals : mDailyMealsList) {
+				String dailyMealsDayString = sFormat.format(dailyMeals.mDay.getTime());
+				if (dailyMealsDayString.equals(dayString)) {
+					return dailyMeals;
+				}
+			}
+			return null;
+		}
+		
+		/*
+		 * Compare only the date (ignore hours/minutes/seconds etc...)
+		 */
+		private static long compareDates(Calendar a, Calendar b) {
+			String aString = sFormat.format(a.getTime());
+			String bString = sFormat.format(b.getTime());
+			if (aString.equals(bString)) {
+				return 0;
+			}
+			return a.getTimeInMillis() - b.getTimeInMillis();
+		}
+
+		public boolean isBeforeAllDays(Calendar day) {
+			if (mDailyMealsList.size() > 0) {
+				Calendar firstDay = mDailyMealsList.get(0).mDay;
+				return (compareDates(firstDay, day) > 0);
+			} else {
+				return true;
+			}
+		}
+		
+		public boolean isAfterAllDays(Calendar day) {
+			if (mDailyMealsList.size() > 0) {
+				Calendar lastDay = mDailyMealsList.get(mDailyMealsList.size()-1).mDay;
+				return (compareDates(lastDay, day) < 0);
+			} else {
+				return true;
+			}
+		}
+	}
+	
 	public static class DailyMeals {
 		Calendar mDay;
 		String mMessage;
-		ArrayList<Meal> mMeals;
+		HashMap<String, Meal> mMeals = new HashMap<String, Meal>();
+		static String[] sMealNames = new String[] {"breakfast", "brunch", "lunch", "dinner"};
 		
 		public DailyMeals(JSONObject object) throws JSONException {
 			String date = object.getString("date");
@@ -320,10 +374,10 @@ public class DiningModel {
 				mMessage = object.getString("message");
 			}
 			if (!object.isNull("meals")) {
-				mMeals = new ArrayList<Meal>();
 				JSONArray jsonMeals = object.getJSONArray("meals");
 				for (int i = 0; i < jsonMeals.length(); i++) {
-					mMeals.add(new Meal(jsonMeals.getJSONObject(i), date));
+					Meal meal = new Meal(jsonMeals.getJSONObject(i), date);
+					mMeals.put(meal.getName(), meal);
 				}
 			}
 		}
@@ -336,12 +390,52 @@ public class DiningModel {
 			return mDay;
 		}
 
-		public List<Meal> getMeals() {
+		public int getMealCount() {
 			if (mMeals != null) {
-				return mMeals;
-			} else {
-				return Collections.emptyList();
+				return mMeals.size();
 			}
+			return 0;
+		}
+		
+		public Meal getMeal(String name) {
+			return mMeals.get(name);
+		}
+		
+		private static int getMealIndex(String name) {
+			for(int i = 0; i < sMealNames.length; i++) {
+				if (sMealNames[i].equals(name)) {
+					return i;
+				}
+			}
+			throw new RuntimeException("'" + name + "' is not a valid meal name");
+		}
+		
+		public static String getPreviousMealName(String name) {
+			if (name != null) {
+				int index = getMealIndex(name) - 1;
+				if (index >= 0) {
+					return sMealNames[index];
+				}
+			}
+			return null;
+		}
+		
+		public static String getNextMealName(String name) {
+			if (name != null) {
+				int index = getMealIndex(name) + 1;
+				if (index < sMealNames.length) {
+					return sMealNames[index];
+				} 
+			}
+			return null;
+		}
+		
+		public static String getFirstMealName() {
+			return sMealNames[0];
+		}
+		
+		public static String getLastMealName() {
+			return sMealNames[sMealNames.length-1];
 		}
 	}
 	
@@ -392,6 +486,28 @@ public class DiningModel {
 		
 		public List<MenuItem> getMenuItems() {
 			return mMenuItems;
+		}
+
+		public boolean isFinished(Calendar day) {
+			if (mEnd != null) {
+				return (day.getTimeInMillis() > mEnd.getTimeInMillis());
+			}
+			return false;
+		}
+
+		public boolean isUpcoming(Calendar day) {
+			if (mStart != null) {
+				return (day.getTimeInMillis() < mStart.getTimeInMillis());
+			}
+			return false;
+		}
+
+		public boolean isInProgress(Calendar day) {
+			if (mStart != null && mEnd != null) {
+				return (day.getTimeInMillis() > mStart.getTimeInMillis()) &&
+						(day.getTimeInMillis() < mEnd.getTimeInMillis());
+			}
+			return false;
 		}
 	}
 	
