@@ -77,6 +77,7 @@ public abstract class NewModuleActivity extends Activity {
 			}
 		}
 		mTitleBar.requestLayout();
+
 	}
 
 	// default implementation for primary, and secondary menu items.
@@ -84,6 +85,8 @@ public abstract class NewModuleActivity extends Activity {
 		return getNewModule().getPrimaryOptions();
 	}
 	
+	
+
 	protected List<MITMenuItem> getSecondaryMenuItems() {
 		return getNewModule().getSecondaryOptions();
 	}

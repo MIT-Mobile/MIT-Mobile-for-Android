@@ -58,9 +58,9 @@ public class MITMapActivity extends NewModuleActivity {
 	private static String MENU_BROWSE = "browse";
 	private static String MENU_BOOKMARKS = "bookmarks";
 	private static String MENU_SEARCH = "search";	
-	protected static final String MAP_ITEMS_KEY = "map_items";
-	public static final String MAP_DATA_KEY = "map_data";	
-	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
+	//protected static final String MAP_ITEMS_KEY = "map_items";
+	//public static final String MAP_DATA_KEY = "map_data";	
+	//public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
 	public static final String MAP_UPDATER_KEY = "map_updater";
 	public static final String MAP_UPDATER_PARAMS_KEY = "map_updater_params";
 	
@@ -111,6 +111,8 @@ public class MITMapActivity extends NewModuleActivity {
 			map.restoreState((String) init);
 		}
 		
+		handleIntent();
+		
 	}
 		
 	
@@ -130,10 +132,10 @@ public class MITMapActivity extends NewModuleActivity {
 	 * launches a new map activity with pins already set
 	 */
 	public static void launchNewMapItems(Context context, List<MapItem> mapItems) {
-		Log.d(TAG,"launchNewMapItems");
 		Intent i = new Intent(context, MITMapActivity.class); 
-		i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
-		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		i.putExtra(MITMapView.MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(i);
 	}
 	
@@ -145,31 +147,14 @@ public class MITMapActivity extends NewModuleActivity {
 
 	@Override
 	public void onDestroy() {
-	    Log.i(TAG, "onDestroy()");
+	    Log.d(TAG, "onDestroy()");
 	    super.onDestroy();
 	}
 	
 	 @Override
 	 protected void onNewIntent(Intent intent) {
 		Log.d(TAG,"onNewIntent");
-	    this.extras = intent.getExtras();
-	    
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	    	Log.d(TAG,"do search");
-	        query = intent.getStringExtra(SearchManager.QUERY);
-	        Log.d(TAG,"query = " + query);
-	        MITMapsDataModel.executeSearch(query, mapSearchUiHandler, mContext);
-	    }
-	    else if(extras != null && extras.containsKey(MITMapView.MAP_DATA_KEY)) {
-			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
-			if (mapItems.size() > 0) {
-				mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + " results");
-				mSecondaryTitleBar.setVisibility(View.VISIBLE);
-			}
-	    	map.addMapItems(mapItems);
-	    	map.syncGraphicsLayers();
-	    	map.fitMapItems();
-	    }
+		handleIntent(intent);
 	    
 	 } // End of onN
 
@@ -202,7 +187,7 @@ public class MITMapActivity extends NewModuleActivity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Log.d(TAG,"onPause()");
+		//Log.d(TAG,"onPause()");
 	}
 
 	protected int getLayoutID() {
@@ -251,7 +236,7 @@ public class MITMapActivity extends NewModuleActivity {
 
 	@Override
 	protected void onOptionSelected(String id) {
-		Log.d(TAG,"option selected = " + id);
+		//Log.d(TAG,"option selected = " + id);
 	    if (id.equals(MENU_HOME)) {
 	    	onHomeRequested();
 	    }
@@ -263,11 +248,8 @@ public class MITMapActivity extends NewModuleActivity {
 	    }
 	    if (id.equals(MENU_BOOKMARKS)) {
 			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
-			//i.putExtra(MAP_ITEMS_KEY, new ArrayList<MapItem>(mapItems));
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			mContext.startActivity(i);
-
-//			startActivity(i);
 	    }
 	    if (id.equals(MENU_SEARCH)) {
 		    onSearchRequested();
@@ -327,12 +309,13 @@ public class MITMapActivity extends NewModuleActivity {
          					ArrayList<MapItem> mapItems = map.getMao().getGraphicsLayers().get(MITMapView.DEFAULT_GRAPHICS_LAYER).getMapItems(); 					
          					MapItem mapItem = mapItems.get(position);
          		  			Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
-        	            	i.putParcelableArrayListExtra(MITMapView.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
+        	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
         	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
         	            	mContext.startActivity(i);
          				}
          			});
 
+         			mLoadingView.setVisibility(View.GONE);
          			map.addMapItems(mapItems);
             		map.syncGraphicsLayers();
                 	map.fitMapItems();
@@ -360,11 +343,49 @@ public class MITMapActivity extends NewModuleActivity {
 			map.setVisibility(View.VISIBLE);
 		}
 	}
-//	protected Point getMyLocation() {
-//		double lat = location.getLatitude();
-//		double lon = location.getLongitude();
-//		Point myLocation = MITMapView.toWebmercator(lat,lon);
-//		return myLocation;
-//	}	
 
+    private void handleIntent() {
+    	handleIntent(getIntent());
+    }
+
+    private void handleIntent(Intent intent) {
+	    this.extras = intent.getExtras();
+	    
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	//Log.d(TAG,"do search");
+	        query = intent.getStringExtra(SearchManager.QUERY);
+	        MITMapsDataModel.executeSearch(query, mapSearchUiHandler, mContext);
+	    }
+	    else if(extras != null && extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
+	    	Log.d(TAG,"extras contains map_items_key");
+	    	query = "";
+			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
+			mSecondaryTitleBar.setTitle("");
+			mSecondaryTitleBar.setVisibility(View.VISIBLE);
+			    		
+			// Update the list view
+			adapter = new MapItemsAdapter(mContext, mapItems);
+ 			mListView.setAdapter(adapter);
+ 			
+ 			mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+ 				@Override
+ 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+ 					ArrayList<MapItem> mapItems = map.getMao().getGraphicsLayers().get(MITMapView.DEFAULT_GRAPHICS_LAYER).getMapItems(); 					
+ 					MapItem mapItem = mapItems.get(position);
+ 		  			Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
+	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
+	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
+	            	mContext.startActivity(i);
+ 				}
+ 			});
+
+ 			mLoadingView.setVisibility(View.GONE);
+			map.addMapItems(mapItems);
+	    	if (mapItems.size() == 1) {
+	    		map.displayCallout(mContext, mapItems.get(0));
+	    	}
+	    	map.fitMapItems();
+	    }    	
+    }
 }

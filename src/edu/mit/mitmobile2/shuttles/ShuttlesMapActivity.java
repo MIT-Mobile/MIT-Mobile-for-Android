@@ -129,14 +129,9 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 			Log.d(TAG, "do search");
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			Log.d(TAG, "query = " + query);
-			// MITMapsDataModel.executeSearch(query, map.mapSearchUiHandler,
-			// mContext);
-			// doMySearch(query);
-		} else if (extras.containsKey(MITMapView.MAP_DATA_KEY)) {
-			mapItems = (ArrayList) extras
-					.getParcelableArrayList(MITMapView.MAP_DATA_KEY);
+		} else if (extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
+			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
 			map.addMapItems(mapItems);
-			map.syncGraphicsLayers();
 		}
 
 	} // End of onN

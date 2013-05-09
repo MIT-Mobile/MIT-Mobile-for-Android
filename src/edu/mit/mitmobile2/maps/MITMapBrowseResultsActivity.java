@@ -177,8 +177,10 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 	
 	/****************************************************/
 	void createView() {
-		
-		adapter = new MapItemsAdapter(this, results);
+    	Log.d(TAG,"cat = " + cat);
+    	Log.d(TAG,"mCategoryName = " + mCategoryName);
+
+		adapter = new MapItemsAdapter(this, results,mCategoryName);
 		
 		mLoaderView.setVisibility(View.GONE);
 		
@@ -245,8 +247,8 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 			Log.d(TAG,"menu_module_home");
 			if (results==null) return false;
 			Intent i = new Intent(this, MITMapActivity.class);
-			i.putExtra(MITMapActivity.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
-			
+			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			i.putExtra(MITMapView.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
 			startActivity(i);
 			return true;
 			
