@@ -117,6 +117,11 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		}
 	}
 
+	public Calendar getSelectedDate() {
+		MealOrEmptyDay mealOrEmptyDay = mMealIterator.getCurrent();
+		return mealOrEmptyDay.getDay();
+	}
+	
 	private View noMealsTodayScreen(String message) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dining_meal_message, null);
