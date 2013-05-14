@@ -4,20 +4,12 @@ import java.util.GregorianCalendar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderView;
-import edu.mit.mitmobile2.SliderView.Adapter;
-import edu.mit.mitmobile2.SliderView.OnSeekListener;
-import edu.mit.mitmobile2.SliderView.ScreenPosition;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
@@ -28,7 +20,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 	private static String HOUSE_DINING_HALL_ID_KEY = "hall_id";
 	
 	LinearLayout mMainLayout;
-	private PortraitDiningScheduleScreen mDiningScheduleScreen;
+	private DiningScheduleScreen mDiningScheduleScreen;
 
 	public static void launch(Context context, DiningHall diningHall) {
 		if (diningHall instanceof HouseDiningHall) {
@@ -60,7 +52,18 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		GregorianCalendar selectedDate = new GregorianCalendar();
 		selectedDate.setTimeInMillis(selectedTime);
 		
-		mDiningScheduleScreen = new PortraitDiningScheduleScreen(venues, selectedHouse, selectedDate);
+		int orientation = getResources().getConfiguration().orientation;
+		switch (orientation) {
+			case Configuration.ORIENTATION_LANDSCAPE:
+				mDiningScheduleScreen = new LandscapeDiningScheduleScreen();
+				break;
+				
+			case Configuration.ORIENTATION_PORTRAIT:
+			default:
+				mDiningScheduleScreen = new PortraitDiningScheduleScreen(venues, selectedHouse, selectedDate);
+				break;
+		}
+		
 		View view = mDiningScheduleScreen.initializeView(this);
 
 		setContentView(view, false);

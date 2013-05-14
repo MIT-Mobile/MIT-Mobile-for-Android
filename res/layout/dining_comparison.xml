@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#f00"
+  >
+  
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="20dip"
+      android:text="DATE HERE" 
+      android:background="#0f0"
+      />
+  
+  <edu.mit.mitmobile2.dining.DiningSliderView
+      android:id="@+id/diningComparisonSliderView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#00f"
+      />
+  
+  </LinearLayout>
+  

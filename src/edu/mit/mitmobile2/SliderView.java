@@ -114,11 +114,11 @@ public class SliderView extends HorizontalScrollView {
 	private float mLastX;
 	private float mLastY;
 	
-	private final static int TOUCH_STATE_REST = 0;
-    private final static int TOUCH_STATE_HORIZONTAL_SCROLLING = 1;
-    private final static int TOUCH_STATE_VERTICAL_SCROLLING = 2;
+    protected final static int TOUCH_STATE_REST = 0;
+    protected final static int TOUCH_STATE_HORIZONTAL_SCROLLING = 1;
+    protected final static int TOUCH_STATE_VERTICAL_SCROLLING = 2;
 
-    private int mTouchState = TOUCH_STATE_REST;
+    protected int mTouchState = TOUCH_STATE_REST;
     
 	
 	@Override
@@ -291,7 +291,7 @@ public class SliderView extends HorizontalScrollView {
 		throw new RuntimeException("scroll position not found, must have received null for screen position");
 	}
 	
-	private void snapToPosition(final ScreenPosition screenPosition) {
+	protected void snapToPosition(final ScreenPosition screenPosition) {
 		
 		isAnimatingScroll = true;
 		
