@@ -76,12 +76,7 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 		final SliderView sliderView = new SliderView(mContext);
 		mMainLayout.addView(sliderView);
 		
-		// test time
-		long currentTime = 1367351565000L;
-		// real time
-		//long currentTime = System.currentTimeMillis();
-		
-		mDiningAdapter = new DiningHouseScheduleSliderAdapter(mContext, mSelectedHouse, currentTime);
+		mDiningAdapter = new DiningHouseScheduleSliderAdapter(mContext, mSelectedHouse, mInitialDate.getTimeInMillis());
 		sliderView.setAdapter(mDiningAdapter);
 		leftArrow.setEnabled(mDiningAdapter.hasScreen(ScreenPosition.Previous));
 		rightArrow.setEnabled(mDiningAdapter.hasScreen(ScreenPosition.Next));

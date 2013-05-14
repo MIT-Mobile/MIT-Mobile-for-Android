@@ -47,7 +47,9 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		if (savedInstanceState != null) {
 			selectedTime = savedInstanceState.getLong(SELECTED_DATE_KEY);
 		} else {
-			selectedTime = System.currentTimeMillis();
+			// test time
+			selectedTime = 1367351565000L;
+			//selectedTime = System.currentTimeMillis();
 		}
 		GregorianCalendar selectedDate = new GregorianCalendar();
 		selectedDate.setTimeInMillis(selectedTime);
@@ -55,7 +57,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		int orientation = getResources().getConfiguration().orientation;
 		switch (orientation) {
 			case Configuration.ORIENTATION_LANDSCAPE:
-				mDiningScheduleScreen = new LandscapeDiningScheduleScreen();
+				mDiningScheduleScreen = new LandscapeDiningScheduleScreen(venues, selectedDate);
 				break;
 				
 			case Configuration.ORIENTATION_PORTRAIT:

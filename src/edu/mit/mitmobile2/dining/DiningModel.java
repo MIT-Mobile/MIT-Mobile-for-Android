@@ -440,6 +440,9 @@ public class DiningModel {
 	}
 	
 	public static class Meal {
+		static SimpleDateFormat sHourMinuteFormat = new SimpleDateFormat("h:mm", Locale.US);
+		static SimpleDateFormat sAmPmFormat = new SimpleDateFormat("a", Locale.US);
+		
 		String mName;
 		String mMessage;
 		Calendar mStart;
@@ -482,6 +485,16 @@ public class DiningModel {
 		
 		public Calendar getEnd() {
 			return mEnd;
+		}
+		
+		public String getTimesSummary() {
+			if (mStart != null && mEnd != null) {
+				return sHourMinuteFormat.format(mStart.getTime()) + " " +
+						sHourMinuteFormat.format(mEnd.getTime()) +
+						sAmPmFormat.format(mEnd.getTime()).toLowerCase(Locale.US);
+			} else {
+				return null;
+			}
 		}
 		
 		public List<MenuItem> getMenuItems() {
