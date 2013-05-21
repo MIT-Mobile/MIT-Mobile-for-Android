@@ -158,6 +158,7 @@ public class DiningModel {
 	public static abstract class DiningHall {
 		private String mId;
 		private String mName;
+		private String mShortName;
 		private String mUrl;
 		private DiningHallLocation mLocation;
 		
@@ -165,6 +166,7 @@ public class DiningModel {
 			mId = object.getString("id");
 			mUrl = object.getString("url");
 			mName = object.getString("name");
+			mShortName = object.getString("short_name");
 			mLocation = new DiningHallLocation(object.getJSONObject("location"));
 		}
 		
@@ -179,6 +181,10 @@ public class DiningModel {
 		
 		public String getName() {
 			return mName;
+		}
+		
+		public String getShortName() {
+			return mShortName;
 		}
 		
 		public abstract String getTodaysHoursSummary(long currentTime);
@@ -489,8 +495,8 @@ public class DiningModel {
 		
 		public String getTimesSummary() {
 			if (mStart != null && mEnd != null) {
-				return sHourMinuteFormat.format(mStart.getTime()) + " " +
-						sHourMinuteFormat.format(mEnd.getTime()) +
+				return sHourMinuteFormat.format(mStart.getTime()) + " - " +
+						sHourMinuteFormat.format(mEnd.getTime()) + " " +
 						sAmPmFormat.format(mEnd.getTime()).toLowerCase(Locale.US);
 			} else {
 				return null;

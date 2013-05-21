@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<edu.mit.mitmobile2.dining.DiningColumnLinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="#f00"
+  android:background="#fff"
   >
   
   <TextView
       android:id="@+id/diningComparisonHallColumnTitle"
       android:layout_width="match_parent"
-      android:layout_height="20dip"
+      android:layout_height="30dip"
+      android:gravity="center"
+      android:textColor="#000"
+      android:textSize="17sp"
+      android:background="#AAA"
       />
   
   <TextView
       android:id="@+id/diningComparisonHallColumnSubtitle"
       android:layout_width="match_parent"
-      android:layout_height="20dip"
+      android:layout_height="30dip"
+      android:gravity="center"
+      android:textColor="#fff"
+      android:textSize="15sp"
+      android:background="#222222"
       />
-  
-    <TextView
-      android:id="@+id/diningComparisonHallColumnDescription"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:visibility="gone"
-      />
+
     
     <TextView
       android:id="@+id/diningComparisonHallColumnClosed"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
+      android:padding="@dimen/standardPadding"      
       android:text="This hall is closed"
       android:visibility="gone"
+      style="@style/ListItemSecondary"
       />
   
-</LinearLayout>
+</edu.mit.mitmobile2.dining.DiningColumnLinearLayout>

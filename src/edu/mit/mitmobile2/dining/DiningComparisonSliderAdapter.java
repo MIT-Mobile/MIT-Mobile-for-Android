@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderView;
@@ -88,43 +91,74 @@ class DiningComparisionSliderAdapter implements SliderView.Adapter {
 
 	private View mealComparisonScreen(MealOrEmptyDay mealOrEmptyDay) {
 		ScrollView mealParent = new ScrollView(mContext);
+		mealParent.setFillViewport(true);
 		LinearLayout mealLayout = new LinearLayout(mContext);
 		mealLayout.setOrientation(LinearLayout.HORIZONTAL);
 		mealParent.addView(mealLayout, new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		
-		for (HouseDiningHall hall : mHalls) {
+		for (int i = 0; i < mHalls.size(); i++) {
+			HouseDiningHall hall = mHalls.get(i);
 			Meal meal = mealOrEmptyDay.getMeal(hall.getID());
-			View hallMealView = hallMealView(hall, meal); 
-			mealLayout.addView(hallMealView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0f));
+			DiningColumnLinearLayout hallMealView = hallMealView(hall, meal); 
+			if (i == 0) {
+				hallMealView.setLeftBorderEnabled(false);
+			}
+			if (i == mHalls.size()-1) {
+				hallMealView.setRightBorderEnabled(false);
+			}
+			mealLayout.addView(hallMealView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f));
 		}
 		
 		return mealParent;
 	}
 	
-	private View hallMealView(HouseDiningHall hall, Meal meal) {
+	private DiningColumnLinearLayout hallMealView(HouseDiningHall hall, Meal meal) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.dining_comparison_hall_column, null);
+		DiningColumnLinearLayout view = (DiningColumnLinearLayout) inflater.inflate(R.layout.dining_comparison_hall_column, null);
 		TextView titleView = (TextView) view.findViewById(R.id.diningComparisonHallColumnTitle);
 		TextView subtitleView = (TextView) view.findViewById(R.id.diningComparisonHallColumnSubtitle);
-		TextView descriptionView = (TextView) view.findViewById(R.id.diningComparisonHallColumnDescription);
 		View hallClosedView = view.findViewById(R.id.diningComparisonHallColumnClosed);
 		
-		titleView.setText(hall.getName());
+		titleView.setText(hall.getShortName());
 		if (meal != null) {
 			subtitleView.setText(meal.getTimesSummary());
-			String descriptionText = "";
 			for (MenuItem menuItem : meal.getMenuItems()) {
-				descriptionText = menuItem.getName() + "\n";
-				if (menuItem.getDescription() != null) {
-					descriptionText += menuItem.getDescription();
-				}
+				view.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 			}
-			descriptionView.setText(descriptionText);
-			descriptionView.setVisibility(View.VISIBLE);
 		} else {
 			hallClosedView.setVisibility(View.VISIBLE);
 		}
 		return view;
+	}
+	
+	private View getMenuItemView(MenuItem menuItem) {
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.dining_comparison_meal_item, null);
+		TextView nameView = (TextView) view.findViewById(R.id.diningComparisonMealItemRowName);
+		TextView descriptionView = (TextView) view.findViewById(R.id.diningComparisonMealItemRowDescription);
+		LinearLayout dietaryFlags = (LinearLayout) view.findViewById(R.id.diningComparisonMealItemRowDietaryFlagsTable);
+		
+		nameView.setText(menuItem.getName());
+		if (menuItem.getDescription() != null) {
+			descriptionView.setText(menuItem.getDescription());
+		} else {
+			descriptionView.setVisibility(View.GONE);
+		}
+		
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+		for (String flag : menuItem.getDietaryFlags()) {
+			ImageView flagImageView = new ImageView(mContext);
+			flagImageView.setImageResource(getDietaryFlagResId(flag));
+			dietaryFlags.addView(flagImageView, layoutParams);
+		}
+		
+		return view;
+	}
+	
+	private int getDietaryFlagResId(String flag) {
+		String safeID = "dining_" + flag.replace(" ", "_");
+		return mContext.getResources().getIdentifier(safeID, "drawable", "edu.mit.mitmobile2");
 	}
 	
 	private View noMealsTodayScreen(String message) {
