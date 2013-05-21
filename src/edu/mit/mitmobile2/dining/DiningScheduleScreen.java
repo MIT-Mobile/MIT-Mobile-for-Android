@@ -10,4 +10,8 @@ public abstract class DiningScheduleScreen {
 	public abstract View initializeView(Context context);
 	
 	public abstract Calendar getSelectedDate();
+	
+	public boolean titleBarHidden() {
+		return false;
+	}
 }

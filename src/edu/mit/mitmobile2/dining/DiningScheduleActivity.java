@@ -69,6 +69,10 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		View view = mDiningScheduleScreen.initializeView(this);
 
 		setContentView(view, false);
+		
+		if (mDiningScheduleScreen.titleBarHidden()) {
+			getTitleBar().setVisibility(View.GONE);
+		}
 	}
 	
 	@Override

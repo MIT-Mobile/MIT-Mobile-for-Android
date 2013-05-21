@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.SliderView.Adapter;
@@ -28,6 +29,7 @@ public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 	
 	@Override
 	public View initializeView(Context context) {
+		
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dining_comparison, null);
 		DiningSliderView sliderView = (DiningSliderView) view.findViewById(R.id.diningComparisonSliderView);
@@ -55,6 +57,10 @@ public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 	@Override
 	public Calendar getSelectedDate() {
 		return mInitialDate;
+	}
+	
+	public boolean titleBarHidden() {
+		return true;
 	}
 
 }
