@@ -1,10 +1,7 @@
 package edu.mit.mitmobile2.dining;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -21,24 +18,20 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderView;
-import edu.mit.mitmobile2.SliderView.ScreenPosition;
 import edu.mit.mitmobile2.dining.DiningMealIterator.MealOrEmptyDay;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.Meal;
 import edu.mit.mitmobile2.dining.DiningModel.MenuItem;
 
-public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
+public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderAdapter {
 	
 	Context mContext;
 	
 	private String mHallID;
-	private DiningMealIterator mMealIterator;
-	private String mCurrentDateString;
-	private DateFormat mFormat;
-	private Date mCurrentDate;
 	
-	public DiningHouseScheduleSliderAdapter(Context context, HouseDiningHall hall, long currentTime) {		
+	public DiningHouseScheduleSliderAdapter(Context context, HouseDiningHall hall, long currentTime) {
+		super(context, currentTime);
+		
 		mContext = context;
 		mHallID = hall.getID();
 		
@@ -46,80 +39,17 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		day.setTimeInMillis(currentTime);
 		ArrayList<HouseDiningHall> halls = new ArrayList<HouseDiningHall>();
 		halls.add(hall);
-		mMealIterator = new DiningMealIterator(day, halls);
-		
-		mCurrentDate = new Date(currentTime);
-		mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-		mFormat.setCalendar(new GregorianCalendar());
-		mCurrentDateString = mFormat.format(mCurrentDate);
-		
-	}
-
-	
-	@Override
-	public boolean hasScreen(ScreenPosition screenPosition) {
-		switch (screenPosition) {
-			case Previous:
-				return mMealIterator.hasPrevious();
-				
-			case Current:
-				return true;
-				
-			case Next:
-				return mMealIterator.hasNext();			
-		}
-		return false;
+		DiningMealIterator mealIterator = new DiningMealIterator(day, halls);
+		setMealIterator(mealIterator);
 	}
 
 	@Override
-	public View getScreen(ScreenPosition screenPosition) {
-		MealOrEmptyDay mealOrEmptyDay = null;
-		switch (screenPosition) {
-			case Previous:
-				mealOrEmptyDay = mMealIterator.getPrevious();
-				break;
-			
-			case Current:
-				mealOrEmptyDay = mMealIterator.getCurrent();
-				break;
-			
-			case Next:
-				mealOrEmptyDay = mMealIterator.getNext();
-				break;
-		}
-		
+	protected View viewForMealOrDay(MealOrEmptyDay mealOrEmptyDay) {
 		if (mealOrEmptyDay.isEmpty()) {
 			return noMealsTodayScreen(mealOrEmptyDay.getDayMessage());
 		} else {
 			return mealScreen(mealOrEmptyDay.getMeal(mHallID));
-		}
-		
-	}
-
-	public CharSequence getCurrentTitle() {
-		MealOrEmptyDay mealOrEmptyDay = mMealIterator.getCurrent();
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("LLLL d", Locale.US);
-		Calendar day = mealOrEmptyDay.getDay();
-		
-		if (!mealOrEmptyDay.isEmpty()) {
-			String title = dateFormat.format(day.getTime());
-			String mealName = mealOrEmptyDay.getCapitalizedMealName();
-			title = mealName + ", " + title;
-			
-			// check if the meal is today
-			if (mCurrentDateString.equals(mFormat.format(day.getTime()))) {
-					title = "Today's " + title;
-			}
-			return title;
-		} else {
-			return dateFormat.format(day.getTime());
-		}
-	}
-
-	public Calendar getSelectedDate() {
-		MealOrEmptyDay mealOrEmptyDay = mMealIterator.getCurrent();
-		return mealOrEmptyDay.getDay();
+		}		
 	}
 	
 	private View noMealsTodayScreen(String message) {
@@ -198,32 +128,4 @@ public class DiningHouseScheduleSliderAdapter implements SliderView.Adapter {
 		
 		return scrollWrapper;
 	}
-	
-	private int getDietaryFlagResId(String flag) {
-		String safeID = "dining_" + flag.replace(" ", "_");
-		return mContext.getResources().getIdentifier(safeID, "drawable", "edu.mit.mitmobile2");
-	}
-	
-	@Override
-	public void destroyScreen(ScreenPosition screenPosition) { }
-
-	@Override
-	public void seek(ScreenPosition screenPosition) {
-		switch (screenPosition) {
-			case Previous:
-				mMealIterator.moveToPrevious();
-				break;
-				
-			case Next:
-				mMealIterator.moveToNext();
-				break;
-				
-			case Current:
-				// nothing to do
-				break;
-		}
-	}
-
-	@Override
-	public void destroy() { }
 }
