@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,8 @@ class DiningComparisionSliderAdapter implements SliderView.Adapter {
 	}
 	
 	private Context mContext;
+	private int mDarkColor;
+	private int mLightColor;
 	public DiningComparisionSliderAdapter(Context context) {
 		mContext = context;
 	}
@@ -90,46 +93,69 @@ class DiningComparisionSliderAdapter implements SliderView.Adapter {
 	}
 
 	private View mealComparisonScreen(MealOrEmptyDay mealOrEmptyDay) {
-		ScrollView mealParent = new ScrollView(mContext);
-		mealParent.setFillViewport(true);
-		LinearLayout mealLayout = new LinearLayout(mContext);
-		mealLayout.setOrientation(LinearLayout.HORIZONTAL);
-		mealParent.addView(mealLayout, new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		
-		for (int i = 0; i < mHalls.size(); i++) {
-			HouseDiningHall hall = mHalls.get(i);
-			Meal meal = mealOrEmptyDay.getMeal(hall.getID());
-			DiningColumnLinearLayout hallMealView = hallMealView(hall, meal); 
-			if (i == 0) {
-				hallMealView.setLeftBorderEnabled(false);
-			}
-			if (i == mHalls.size()-1) {
-				hallMealView.setRightBorderEnabled(false);
-			}
-			mealLayout.addView(hallMealView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f));
-		}
-		
-		return mealParent;
-	}
-	
-	private DiningColumnLinearLayout hallMealView(HouseDiningHall hall, Meal meal) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		DiningColumnLinearLayout view = (DiningColumnLinearLayout) inflater.inflate(R.layout.dining_comparison_hall_column, null);
-		TextView titleView = (TextView) view.findViewById(R.id.diningComparisonHallColumnTitle);
-		TextView subtitleView = (TextView) view.findViewById(R.id.diningComparisonHallColumnSubtitle);
-		View hallClosedView = view.findViewById(R.id.diningComparisonHallColumnClosed);
+		View view = inflater.inflate(R.layout.dining_comparison_meal, null);
+		DiningDividerLinearLayout hallTitles = (DiningDividerLinearLayout) view.findViewById(R.id.diningComparisonMealHallTitles);
+		DiningDividerLinearLayout hallSubtitles = (DiningDividerLinearLayout) view.findViewById(R.id.diningComparisonMealHallSubtitles);
+		DiningDividerLinearLayout menus = (DiningDividerLinearLayout) view.findViewById(R.id.diningComparisonMealMenus);
 		
-		titleView.setText(hall.getShortName());
-		if (meal != null) {
-			subtitleView.setText(meal.getTimesSummary());
-			for (MenuItem menuItem : meal.getMenuItems()) {
-				view.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		// TODO get the colors from resources
+		mDarkColor = mContext.getResources().getColor(R.color.diningGray);
+		mLightColor = Color.WHITE;
+		hallTitles.setDividerColor(mDarkColor);
+		hallSubtitles.setDividerColor(mLightColor);
+		menus.setDividerColor(mDarkColor);
+		
+		
+		LayoutParams columnLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
+
+		for (HouseDiningHall hall : mHalls) {
+			Meal meal = mealOrEmptyDay.getMeal(hall.getID());
+			
+			TextView titleView = new TextView(mContext);
+			titleView.setGravity(Gravity.CENTER);
+			titleView.setText(hall.getShortName());
+			titleView.setTextAppearance(mContext, R.style.DiningComparisonHallTitle);
+			hallTitles.addView(titleView, columnLayoutParams);
+			
+			TextView subtitleView = new TextView(mContext);
+			subtitleView.setGravity(Gravity.CENTER);
+			subtitleView.setTextAppearance(mContext, R.style.DiningComparisonHallSubtitle);
+			hallSubtitles.addView(subtitleView, columnLayoutParams);
+			
+			View menuView;
+			if (meal != null) {
+				subtitleView.setText(meal.getTimesSummary());
+				menuView = getMenuView(meal);
+			} else {
+				menuView = getEmptyMenuView();
 			}
-		} else {
-			hallClosedView.setVisibility(View.VISIBLE);
+			menus.addView(menuView, columnLayoutParams);
 		}
+		
 		return view;
 	}
+	
+	private View getMenuView(Meal meal) {
+		DiningDividerLinearLayout menuItemsLayout = new DiningDividerLinearLayout(mContext);
+		menuItemsLayout.setOrientation(LinearLayout.VERTICAL);
+		menuItemsLayout.setDividerColor(mDarkColor);
+		for (MenuItem menuItem : meal.getMenuItems()) {
+			menuItemsLayout.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		}	
+		return menuItemsLayout;
+	}
+	
+	private View getEmptyMenuView() {
+		TextView emptyMessage = new TextView(mContext);
+		emptyMessage.setGravity(Gravity.CENTER_HORIZONTAL);
+		emptyMessage.setTextAppearance(mContext, R.style.ListItemSecondary);
+		emptyMessage.setText("This hall is closed");
+		int topPadding = mContext.getResources().getDimensionPixelSize(R.dimen.standardPadding);
+		emptyMessage.setPadding(0, topPadding, 0, 0);
+		return emptyMessage;
+	}
+
 	
 	private View getMenuItemView(MenuItem menuItem) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
