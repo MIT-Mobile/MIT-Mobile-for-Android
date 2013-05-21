@@ -7,9 +7,13 @@
   >
   
   <TextView
+      android:id="@+id/diningComparisonDate"
       android:layout_width="match_parent"
-      android:layout_height="20dip"
-      android:text="DATE HERE" 
+      android:layout_height="30dip"
+      android:background="#993333"
+      android:textSize="17sp"
+      android:textColor="#fff"
+      android:gravity="center"
       />
   
   <edu.mit.mitmobile2.dining.DiningSliderView
