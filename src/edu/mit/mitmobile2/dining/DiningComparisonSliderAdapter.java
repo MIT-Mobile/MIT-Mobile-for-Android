@@ -1,11 +1,7 @@
 package edu.mit.mitmobile2.dining;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -14,77 +10,36 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TableRow;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SliderView;
-import edu.mit.mitmobile2.SliderView.ScreenPosition;
 import edu.mit.mitmobile2.dining.DiningMealIterator.MealOrEmptyDay;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.Meal;
 import edu.mit.mitmobile2.dining.DiningModel.MenuItem;
 
-class DiningComparisionSliderAdapter implements SliderView.Adapter {
+class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 
+	private Context mContext;
+	private int mDarkColor;
+	private int mLightColor;
 	
-	private DiningMealIterator mMealIterator;
-	private String mCurrentDateString;
 	List<HouseDiningHall> mHalls;
 	
-	public DiningComparisionSliderAdapter(Context context, List<HouseDiningHall> halls, long currentTime) {		
+	public DiningComparisionSliderAdapter(Context context, List<HouseDiningHall> halls, long currentTime) {	
+		super(context, currentTime);
 		mContext = context;
 		mHalls = halls;
 		
 		GregorianCalendar day = new GregorianCalendar();
 		day.setTimeInMillis(currentTime);
-		mMealIterator = new DiningMealIterator(day, mHalls);
+		DiningMealIterator mealIterator = new DiningMealIterator(day, mHalls);
+		setMealIterator(mealIterator);
 		
-		Date mCurrentDate = new Date(currentTime);
-		SimpleDateFormat mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-		mFormat.setCalendar(new GregorianCalendar());
-		mCurrentDateString = mFormat.format(mCurrentDate);
 		
-	}
-	
-	private Context mContext;
-	private int mDarkColor;
-	private int mLightColor;
-	public DiningComparisionSliderAdapter(Context context) {
-		mContext = context;
-	}
-	
-	@Override
-	public boolean hasScreen(ScreenPosition screenPosition) {
-		switch (screenPosition) {
-			case Previous:
-				return mMealIterator.hasPrevious();
-			case Next:
-				return mMealIterator.hasNext();
-			case Current:
-				return true;
-		}
-		return true;
 	}	
 
 	@Override
-	public View getScreen(ScreenPosition screenPosition) {
-		MealOrEmptyDay mealOrEmptyDay = null;
-		switch (screenPosition) {
-			case Previous:
-				mealOrEmptyDay = mMealIterator.getPrevious();
-				break;
-			
-			case Next:
-				mealOrEmptyDay = mMealIterator.getNext();
-				break;
-				
-			case Current:
-				mealOrEmptyDay = mMealIterator.getCurrent();
-				break;
-	
-		}
-		
+	protected View viewForMealOrDay(MealOrEmptyDay mealOrEmptyDay) {
 		if (!mealOrEmptyDay.isEmpty()) {
 			return mealComparisonScreen(mealOrEmptyDay);
 		} else {
@@ -99,7 +54,6 @@ class DiningComparisionSliderAdapter implements SliderView.Adapter {
 		DiningDividerLinearLayout hallSubtitles = (DiningDividerLinearLayout) view.findViewById(R.id.diningComparisonMealHallSubtitles);
 		DiningDividerLinearLayout menus = (DiningDividerLinearLayout) view.findViewById(R.id.diningComparisonMealMenus);
 		
-		// TODO get the colors from resources
 		mDarkColor = mContext.getResources().getColor(R.color.diningGray);
 		mLightColor = Color.WHITE;
 		hallTitles.setDividerColor(mDarkColor);
@@ -182,11 +136,6 @@ class DiningComparisionSliderAdapter implements SliderView.Adapter {
 		return view;
 	}
 	
-	private int getDietaryFlagResId(String flag) {
-		String safeID = "dining_" + flag.replace(" ", "_");
-		return mContext.getResources().getIdentifier(safeID, "drawable", "edu.mit.mitmobile2");
-	}
-	
 	private View noMealsTodayScreen(String message) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dining_meal_message, null);
@@ -194,26 +143,4 @@ class DiningComparisionSliderAdapter implements SliderView.Adapter {
 		messageView.setText(message);
 		return view;
 	}
-	
-	@Override
-	public void destroyScreen(ScreenPosition screenPosition) { }
-
-	@Override
-	public void seek(ScreenPosition screenPosition) {
-		switch (screenPosition) {
-			case Previous:
-				mMealIterator.moveToPrevious();
-				break;
-				
-			case Next:
-				mMealIterator.moveToNext();
-				break;
-			default:		
-		}
-	}
-
-	@Override
-	public void destroy() { }
-	
-	
 }
