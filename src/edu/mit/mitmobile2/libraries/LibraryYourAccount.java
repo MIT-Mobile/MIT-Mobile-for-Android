@@ -27,12 +27,15 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsListener;
 import edu.mit.mitmobile2.objs.FineListItem;
 import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
@@ -315,16 +318,23 @@ public class LibraryYourAccount extends NewModuleActivity {
 	
 	// TAB LOADING METHODS
 	public void loadLoans() {
-			//if (!loggedIn) {
-			//	Log.d(TAG,"before log in");
-			//	LibraryModel.getUserIdentity(mActivity, loginUiHandler);
-			//	Log.d(TAG,"after log in");
-			//}
 	        mLoanResults.setVisibility(View.GONE);
 	        loanLoadingView.setVisibility(View.VISIBLE);
 	        loanLoadingView.showLoading();
+			VerifyUserCredentials.VerifyUserHasFormAccess(this, new VerifyUserCredentialsListener() {
+				@Override
+				public void onUserLoggedIn(UserIdentity user) {
+					showForm();
+				}
+	        });
 	        LibraryModel.fetchLoanDetail(this, loansUiHandler);
 	}
+	
+    private void showForm() {
+    	mFineResults.setVisibility(View.VISIBLE);
+        fineLoadingView.setVisibility(View.GONE);
+        fineLoadingView.stopLoading();
+    }
 	
 	public void loadFines() {
     	mFineResults.setVisibility(View.GONE);

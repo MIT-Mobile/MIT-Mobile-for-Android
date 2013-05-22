@@ -351,12 +351,10 @@ public class LibraryModel {
     
 	public static void fetchHoldDetail(final Context context, final Handler uiHandler) {
 		Log.d(TAG,"getHoldData()");
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "libraries");
-		params.put("command", "holds");
+		String url = BASE_PATH + HOLDS_PATH;
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-    	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+    	webApi.requestJSONObject(url, null, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override
@@ -374,12 +372,10 @@ public class LibraryModel {
 
 	public static void fetchFineDetail(final Context context, final Handler uiHandler) {
 		Log.d(TAG,"getFineData()");
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "libraries");
-		params.put("command", "fines");
-
+		String url = BASE_PATH + FINES_PATH;
+		
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
-    	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+    	webApi.requestJSONObject(url, null, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override

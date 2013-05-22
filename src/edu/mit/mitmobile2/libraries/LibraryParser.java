@@ -48,13 +48,13 @@ public class LibraryParser {
         container.tel = object.getString("tel");
         container.location = object.getString("location");
         JSONObject temp = object.getJSONObject("schedule");
-        if(temp.has("current_term")) {
+        if(temp.has("current_term") && !temp.isNull("current_term")) {
             container.currentTerm = getSchedule(temp.getJSONObject("current_term"), true);
         }
-        if(temp.has("previous_terms")) {
+        if(temp.has("previous_terms") && !temp.isNull("previous_terms")) {
             container.previousTerms = getTerms(temp.getJSONArray("previous_terms"));
         }
-        if(temp.has("next_terms")) {
+        if(temp.has("next_terms") && !temp.isNull("next_terms")) {
             container.nextTerms = getTerms(temp.getJSONArray("next_terms"));
         }
         
