@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,11 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.mitmobile2.MobileWebApi;
-
 import android.content.Context;
 import android.os.Handler;
 import android.text.Html;
+import edu.mit.mitmobile2.MobileWebApi;
 
 public class DiningModel {
 
@@ -160,11 +161,14 @@ public class DiningModel {
 		private String mName;
 		private String mShortName;
 		private String mUrl;
+		private String mIconUrl;
+
 		private DiningHallLocation mLocation;
 		
 		public DiningHall(JSONObject object) throws JSONException {
 			mId = object.getString("id");
 			mUrl = object.getString("url");
+			mIconUrl = object.getString("icon_url");
 			mName = object.getString("name");
 			mShortName = object.getString("short_name");
 			mLocation = new DiningHallLocation(object.getJSONObject("location"));
@@ -185,6 +189,14 @@ public class DiningModel {
 		
 		public String getShortName() {
 			return mShortName;
+		}
+		
+		public String getUrl() {
+			return mUrl;
+		}
+		
+		public String getIconUrl() {
+			return mIconUrl;
 		}
 		
 		public abstract String getTodaysHoursSummary(long currentTime);

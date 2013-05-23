@@ -19,6 +19,7 @@ import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.TwoLineActionRow;
@@ -93,10 +94,12 @@ public class DiningHomeActivity extends NewModuleActivity {
 			
 			// add dining row
 			View row = inflater.inflate(R.layout.dining_hall_row, null);
+			RemoteImageView iconView = (RemoteImageView) row.findViewById(R.id.diningHallRowImage);
 			TextView titleView = (TextView) row.findViewById(R.id.diningHallRowTitle);
 			TextView subtitleView = (TextView) row.findViewById(R.id.diningHallRowSubtitle);
 			TextView statusView = (TextView) row.findViewById(R.id.diningHallRowStatus);
 			
+//			iconView.setURL(diningHall.getIconUrl());  // uncomment this when images are in a better size for display. Causes out of memory issue currently.
 			titleView.setText(diningHall.getName());
 			subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
 			switch (diningHall.getCurrentStatus(currentTime)) {

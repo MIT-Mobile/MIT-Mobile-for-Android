@@ -1,12 +1,13 @@
 package edu.mit.mitmobile2.dining;
 
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.RemoteImageView;
+import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 
 public class DiningHallHeaderView extends LinearLayout {
 
@@ -20,10 +21,12 @@ public class DiningHallHeaderView extends LinearLayout {
 		
 		TextView titleView = (TextView) findViewById(R.id.diningHallHeaderTitle);
 		TextView subtitleView = (TextView) findViewById(R.id.diningHallHeaderSubtitle);
+		RemoteImageView iconView = (RemoteImageView) findViewById(R.id.diningHallHeaderImage);
 		mActionImage = (ImageView) findViewById(R.id.diningHallActionImage);	
 		
 		titleView.setText(hall.getName());
 		subtitleView.setText(hall.getCurrentStatusSummary(currentTime));
+		iconView.setURL(hall.getIconUrl());
 		
 		int colorResID = 0;
 		switch (hall.getCurrentStatus(currentTime)) {

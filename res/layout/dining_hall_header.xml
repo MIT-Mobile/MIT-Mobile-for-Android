@@ -6,7 +6,7 @@
   android:layout_height="wrap_content"
   android:background="@color/rowBackground">
   
-  <ImageView
+  <edu.mit.mitmobile2.RemoteImageView
       android:id="@+id/diningHallHeaderImage"
       android:layout_width="46dip"
       android:layout_height="46dip"
