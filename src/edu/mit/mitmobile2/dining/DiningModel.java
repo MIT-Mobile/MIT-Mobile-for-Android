@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -160,6 +161,7 @@ public class DiningModel {
 		private String mShortName;
 		private String mUrl;
 		private String mIconUrl;
+		private List<String> mPaymentOptions = null;
 
 		private DiningHallLocation mLocation;
 		
@@ -170,6 +172,16 @@ public class DiningModel {
 			mName = object.getString("name");
 			mShortName = object.getString("short_name");
 			mLocation = new DiningHallLocation(object.getJSONObject("location"));
+			
+			if (object.has("payment")) {
+				JSONArray jPayArray = object.getJSONArray("payment");
+				ArrayList<String> tempList = new ArrayList<String>();
+				for (int i = 0; i < jPayArray.length(); i++) {
+					tempList.add(jPayArray.getString(i));
+				}
+				mPaymentOptions = tempList;
+			}
+			
 		}
 		
 		public enum Status {
@@ -195,6 +207,23 @@ public class DiningModel {
 		
 		public String getIconUrl() {
 			return mIconUrl;
+		}
+		
+		public List<String> getPaymentOptions() {
+			return mPaymentOptions;
+		}
+		
+		public String getPaymentOptionString() {
+			String options ="";
+			for (String s : mPaymentOptions) {
+				options+= s + ", ";
+			}
+
+			return options.substring(0, options.length() - 2);
+		}
+		
+		public DiningHallLocation getLocation() {
+			return mLocation;
 		}
 		
 		public abstract String getTodaysHoursSummary(long currentTime);
@@ -279,7 +308,6 @@ public class DiningModel {
 		String mMenuUrl;
 		String mHomepageUrl;
 		ArrayList<String> mCuisine = new ArrayList<String>();
-		ArrayList<String> mPayment = new ArrayList<String>();
 		
 		public RetailDiningHall(JSONObject object) throws JSONException {
 			super(object);
@@ -301,13 +329,7 @@ public class DiningModel {
 					mCuisine.add(jsonCuisine.getString(i));
 				}
 			}
-			
-			if (object.has("payment")) {
-				JSONArray jsonPayment = object.getJSONArray("payment");
-				for (int i = 0; i < jsonPayment.length(); i++) {
-					mPayment.add(jsonPayment.getString(i));
-				}
-			}
+		
 		}
 
 		@Override

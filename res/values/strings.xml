@@ -29,6 +29,9 @@
 	
 	<string name="search_invoke"></string>
 	
+	<string name="dining_location_info_label">location</string>
+	<string name="dining_payment_info_label">payment</string>
+	
 	<string name="library_search_hint">Search MIT\'s WorldCat</string>
     <string name="library_search_label">Library Search</string>
     

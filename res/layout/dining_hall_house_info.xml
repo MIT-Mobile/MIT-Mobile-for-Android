@@ -16,6 +16,7 @@
         android:id="@+id/diningHallHouseInfoTopLV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"
         android:layout_marginLeft="10sp"
