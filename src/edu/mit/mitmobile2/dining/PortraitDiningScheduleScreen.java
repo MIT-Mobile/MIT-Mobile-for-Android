@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,8 +58,9 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 		headerView.setActionClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				Intent i = new Intent(mContext, DiningHouseInfoActivity.class);
+				i.putExtra("hall_id", mSelectedHouse.getID());
+				mContext.startActivity(i);
 			}			
 		});
 		mMainLayout.addView(headerView, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
