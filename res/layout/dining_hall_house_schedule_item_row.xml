@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:padding="@dimen/standardPadding"
+  android:background="@color/rowBackground" >
+  
+  
+  <TextView
+      android:id="@+id/diningMealItemInfoLabel"
+      android:layout_width="90dip"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      style="@style/ListItemPrimary"
+      />
+      
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="horizontal"
+      >
+  
+	  <TextView
+	      android:id="@+id/diningScheduleMealName"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:gravity="left"
+	      android:singleLine="false"
+	      style="@style/ListItemPrimary"
+	      />
+	  
+	  <TextView
+	      android:id="@+id/diningScheduleMealTimes"
+	      android:layout_width="wrap_content"
+	      android:layout_height="wrap_content"
+	      android:singleLine="false"
+	      android:gravity="right"
+	      style="@style/ListItemPrimary"
+	      />
+  </LinearLayout>
+  
+ </LinearLayout>

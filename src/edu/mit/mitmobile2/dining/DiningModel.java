@@ -8,11 +8,11 @@ import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -368,10 +368,31 @@ public class DiningModel {
 			return null;
 		}
 		
+		public List<DailyMeals> getDailyMealsForCurrentWeek(Calendar day) {
+			int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 1;  //subtract 1 so Sunday is 0
+			long millisInDay = 60 * 60 * 24 * 1000;
+			long millisFromStartOfWeek = dayOfWeek * millisInDay; //number of millis in day times day of week
+			long millisToEndOfWeek = (7 - dayOfWeek) * millisInDay;
+			GregorianCalendar startOfWeek = new GregorianCalendar();
+			GregorianCalendar endOfWeek = new GregorianCalendar();
+			startOfWeek.setTimeInMillis(day.getTimeInMillis() - millisFromStartOfWeek);
+			endOfWeek.setTimeInMillis(day.getTimeInMillis() - millisToEndOfWeek);
+			
+			ArrayList<DailyMeals> mealsInWeek = new ArrayList<DailyMeals>();
+			for (DailyMeals mealDay : mDailyMealsList) {
+				if (	compareDates(mealDay.getDay(), startOfWeek) >= 0 &&		// compare startOfWeek
+						compareDates(endOfWeek, mealDay.getDay()) <= 0 ) {		// compare endOfWeek
+					// if within this week add to weekly list
+					mealsInWeek.add(mealDay);
+				}
+			}
+			return mealsInWeek;
+		}
+		
 		/*
 		 * Compare only the date (ignore hours/minutes/seconds etc...)
 		 */
-		private static long compareDates(Calendar a, Calendar b) {
+		public static long compareDates(Calendar a, Calendar b) {
 			String aString = sFormat.format(a.getTime());
 			String bString = sFormat.format(b.getTime());
 			if (aString.equals(bString)) {
@@ -437,6 +458,23 @@ public class DiningModel {
 		
 		public Meal getMeal(String name) {
 			return mMeals.get(name);
+		}
+		
+		public HashMap<String, String> getMealTimes() {
+			// return HashMap of format <Meal Name, Times Summary> both of type String.
+			HashMap<String, String> schedule = new HashMap<String, String>();
+			Set<String> mealKeys = mMeals.keySet();
+			
+			for (String key : mealKeys) {
+				Meal meal = mMeals.get(key);
+				if (meal.getMessage() != null && !meal.getMessage().isEmpty()) {
+					schedule.put(meal.getCapitalizedName(), meal.getMessage());			// use message if we have it
+				} else {
+					schedule.put(meal.getCapitalizedName(), meal.getScheduleSummary());
+				}
+			}
+			
+			return schedule;
 		}
 		
 		private static int getMealIndex(String name) {
@@ -534,6 +572,29 @@ public class DiningModel {
 				return null;
 			}
 		}
+		
+		public String getScheduleSummary() {
+			if (mStart != null && mEnd != null) {
+				return formatTimeForScheduleSpan(mStart) + " - " + formatTimeForScheduleSpan(mEnd);
+			} else {
+				return null;
+			}
+		}
+		
+		private String formatTimeForScheduleSpan(Calendar cal) {
+			SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h", Locale.US);
+			
+			SimpleDateFormat df = null;
+			if (cal.get(Calendar.MINUTE) == 0) {
+				df = shortTimeFormat;
+			} else {
+				df = sHourMinuteFormat;
+			}
+			
+			String timeString = df.format(cal.getTime()) + sAmPmFormat.format(cal.getTime()).toLowerCase();
+			return timeString;
+		}
+		
 		
 		public List<MenuItem> getMenuItems() {
 			return mMenuItems;
