@@ -15,14 +15,13 @@ import edu.mit.mitmobile2.MobileWebApi;
 public class LinksModel {
 
 	private final static String LINKS_PREFS_NAME = "linksPreferences";
+	private static final String LINKS_PATH = "/links";
 	
 	public static void fetchLinks(final Context context, final Handler uiHandler) {
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("module", "links");
 		
 		MobileWebApi webApi = new MobileWebApi(false, false, "Links", context, uiHandler);
 		webApi.setIsSearchQuery(false);
-		webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
+		webApi.requestJSONArray(LINKS_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 				new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
 			
 			@Override

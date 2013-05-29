@@ -66,6 +66,8 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 	private final static String ACTION_URL_KEY="action_url";
 	private final static String HEIGHT_KEY="height_url";
 	private final static String WIDTH_KEY="width_url";
+	
+	private static final String BANNERS_PATH = "/apps/banners";
 
 	
 	/****************************************************/
@@ -202,12 +204,8 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 	
 	private void getBannerData() {
 		MobileWebApi webApi = new MobileWebApi(false, false, "Banner", this, uiHandler);
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "features");
-		params.put("command", "banner");
 		
-		webApi.requestJSONObject(params, 
-			new JSONObjectResponseListener(new DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONObject(BANNERS_PATH, null, new JSONObjectResponseListener(new DefaultErrorListener(uiHandler), null) {
 			
 				@Override
 				public void onResponse(JSONObject object) throws ServerResponseException, JSONException {

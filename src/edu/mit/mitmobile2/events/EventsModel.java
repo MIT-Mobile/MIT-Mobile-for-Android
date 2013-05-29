@@ -29,6 +29,8 @@ public class EventsModel {
 	private static final String CATEGORIES_PATH = "/events_calendar/categories";
 	private static final String EVENTS_PATH = "/events_calendar/events";
 	private static final String EXHIBITS_PATH = "/events_calendar/exhibits";
+	private static final String HOLIDAYS_PATH = "/academic_holidays/events";
+	private static final String ACADEMIC_PATH = "/academic_calendar/events";
 	
 	
 	private static int TIME_ZONE_OFFSET = 5;
@@ -537,13 +539,11 @@ public class EventsModel {
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("module", "calendar");
-		eventParameters.put("command", "academic");
 		eventParameters.put("year", Integer.toString(year));
 		eventParameters.put("month", Integer.toString(month));
 		
 		
-		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
+		webApi.requestJSONArray(BASE_PATH + ACADEMIC_PATH, eventParameters, new MobileWebApi.JSONArrayResponseListener(
 			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
 			@Override
@@ -598,12 +598,7 @@ public class EventsModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
-		
-		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("module", "calendar");
-		eventParameters.put("command", "holidays");		
-		
-		webApi.requestJSONArray(eventParameters, new MobileWebApi.JSONArrayResponseListener(
+		webApi.requestJSONArray(BASE_PATH + HOLIDAYS_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
 			@Override
@@ -625,11 +620,6 @@ public class EventsModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
-		
-//		HashMap<String, String> eventParameters = new HashMap<String, String>();
-//		eventParameters.put("module", "calendar");
-//		eventParameters.put("command", "detail");
-//		eventParameters.put("id", eventId);
 		
 		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH + "/" + eventId, null, 
 				new MobileWebApi.JSONObjectResponseListener(

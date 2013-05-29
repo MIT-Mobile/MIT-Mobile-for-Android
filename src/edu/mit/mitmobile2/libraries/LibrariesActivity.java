@@ -71,6 +71,8 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
 	private static final int MENU_INFO = 0;
 	private static final int MENU_PREFS = 1;
 	
+	public static String BASE_PATH = "libraries/";
+	public static String LOANS_PATH = "account/loans";
 	/**
 	 * @throws IOException 
 	 * @throws ClientProtocolException **************************************************/
@@ -100,20 +102,10 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
     		mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
         }
         else {   
-	        //responseString = mitClient.getResponse(targetUrl);
-
-//        	MITClient client = null;
-//        	HttpGet get = new HttpGet("https://mobile-dev.mit.edu/secure/api/index.php?module=libraries&command=loans");
-//        	HttpResponse resp = client.getResponse(get);
-//        	Log.d(TAG,responseContentToString(resp));
         	
         	//DEBUG
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "libraries");
-			params.put("command", "loans");
-
         	MobileWebApi api = new MobileWebApi(false, true, "Libraries", mContext, uiHandler,HttpClientType.MIT);
-        	api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+        	api.requestJSONObject(BASE_PATH + LOANS_PATH, null, new MobileWebApi.JSONObjectResponseListener(
 	                new MobileWebApi.DefaultErrorListener(uiHandler),
 	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 				@Override

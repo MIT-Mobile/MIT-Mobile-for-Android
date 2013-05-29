@@ -52,6 +52,9 @@ public class Global extends Application {
 	// Facilities 
 	private static String problemType;
 	
+	private static final String VERSION_PATH = "/timestamps";
+	private static final String BASE_PATH = "/apps";
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -131,13 +134,11 @@ public class Global extends Application {
 
     	MobileWebApi api = new MobileWebApi(false, true, "Version", mContext, uiHandler);
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "version");
-		params.put("command", "list");
 		Date date = new Date();
 		params.put("key", date.getTime() + "");
 		Log.d(TAG,"before request json");
 		
-		api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+		api.requestJSONObject(BASE_PATH + VERSION_PATH, params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			@Override

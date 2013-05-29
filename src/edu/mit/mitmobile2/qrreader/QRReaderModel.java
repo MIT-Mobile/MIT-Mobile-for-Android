@@ -14,15 +14,11 @@ import edu.mit.mitmobile2.MobileWebApi.JSONObjectResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 
 public class QRReaderModel {
-	private static final String MODULE_NAME = "qr";
+	private static final String MODULE_PATH = "/scanner/mappings/";
 	
 	public void fetchSuggestedUrl(Context context, String originString, final Handler uiHandler) {
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("module", MODULE_NAME);
-		parameters.put("q", originString);
-		
 		final MobileWebApi api = new MobileWebApi(false, true, "QR Code", context, uiHandler);
-		api.requestJSONObject(parameters, new JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), 
+		api.requestJSONObject(MODULE_PATH + originString, null, new JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), 
 				new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 			
 			@Override
@@ -76,7 +72,9 @@ public class QRReaderModel {
 		public ArrayList<QRAction> actions;
 		public QRAction	shareAction;
 		
-		
+		public SuggestedUrl() {
+			actions = new ArrayList<QRAction>();
+		}		
 	}
 	
 	public static class QRAction {

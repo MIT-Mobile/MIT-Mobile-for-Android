@@ -33,6 +33,9 @@ public class LibraryModel {
 	private static final String LOANS_PATH = "/account/loans";
 	private static final String HOLDS_PATH = "/account/holds";
 	private static final String FINES_PATH = "/account/fines";
+	private static final String SECURE_PATH = "/secure";
+	
+	private static UserIdentity identity = null;
 
     // private static HashMap<String, SearchResults<BookItem>> searchCache = new
     // FixedCache<SearchResults<BookItem>>(10);
@@ -71,12 +74,13 @@ public class LibraryModel {
             final Context context, final Handler uiHandler) {
 
         HashMap<String, String> parameters = null;
+        parameters = new HashMap<String, String>();
+        parameters.put("q", searchTerm);
         if (previousResults != null) {
-        	parameters = new HashMap<String, String>();
             parameters.put("startIndex", String.valueOf(previousResults.getNextIndex()));
         }
         
-        String requestUrl = BASE_PATH + WORLDCAT_PATH + "/q=" + searchTerm;
+        String requestUrl = BASE_PATH + WORLDCAT_PATH;
         
         MobileWebApi webApi = new MobileWebApi(false, showErrors, "Library", context, uiHandler);
         webApi.setIsSearchQuery(true);
@@ -310,19 +314,19 @@ public class LibraryModel {
 
             @Override
             public void onResponse(JSONObject object) throws JSONException {
-            	UserIdentity identity = new UserIdentity(
+            	identity = new UserIdentity(
             		object.optString("shib_identity"),
             		object.optString("username"),
             		object.optBoolean("is_mit_identity")
             	);
             	MobileWebApi.sendSuccessMessage(uiHandler, identity);
             }
-            
+
          });
     }
     
 	public static void fetchLoanDetail(final Context context, final Handler uiHandler) {
-		String requestUrl = BASE_PATH + LOANS_PATH;
+		String requestUrl = SECURE_PATH + BASE_PATH + LOANS_PATH;
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
     	webApi.requestJSONObject(requestUrl, null, new MobileWebApi.JSONObjectResponseListener(
@@ -351,7 +355,7 @@ public class LibraryModel {
     
 	public static void fetchHoldDetail(final Context context, final Handler uiHandler) {
 		Log.d(TAG,"getHoldData()");
-		String url = BASE_PATH + HOLDS_PATH;
+		String url = SECURE_PATH + BASE_PATH + HOLDS_PATH;
 
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
     	webApi.requestJSONObject(url, null, new MobileWebApi.JSONObjectResponseListener(
@@ -372,7 +376,7 @@ public class LibraryModel {
 
 	public static void fetchFineDetail(final Context context, final Handler uiHandler) {
 		Log.d(TAG,"getFineData()");
-		String url = BASE_PATH + FINES_PATH;
+		String url = SECURE_PATH + BASE_PATH + FINES_PATH;
 		
     	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
     	webApi.requestJSONObject(url, null, new MobileWebApi.JSONObjectResponseListener(

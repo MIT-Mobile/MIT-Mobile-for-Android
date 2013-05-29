@@ -79,7 +79,6 @@ public class QRReaderDetailActivity extends NewModuleActivity {
 					
 					if (mQRItem.isSuccess) {
 						layoutDetailView();
-						
 					}
 					
 				} else {
