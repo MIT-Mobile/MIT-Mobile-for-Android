@@ -46,7 +46,7 @@ public class DiningModule extends NewModule {
 
 	@Override
 	public int getHomeIconResourceId() {
-		return R.drawable.home_events;
+		return R.drawable.home_dining;
 	}
 
 }
