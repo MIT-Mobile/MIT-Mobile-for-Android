@@ -248,7 +248,14 @@ public class DiningModel {
 
 		@Override
 		public String getTodaysHoursSummary(long currentTime) {
-			return "8am-10:59am, 11am-3pm";
+			Calendar currentDay = new GregorianCalendar();
+			currentDay.setTimeInMillis(currentTime);
+			for (DailyMeals dailyMeals : mSchedule.mDailyMealsList) {
+				if (DailyMealsSchedule.compareDates(currentDay, dailyMeals.getDay()) == 0) {
+					return dailyMeals.getScheduleSummary();
+				}
+			}
+			return "";
 		}
 
 		@Override
@@ -475,6 +482,25 @@ public class DiningModel {
 			}
 			
 			return schedule;
+		}
+
+		public String getScheduleSummary() {
+			String summaryString = "";
+			boolean first = true;
+			for (String key : sMealNames) {
+				if (mMeals.containsKey(key)) {
+					Meal meal = mMeals.get(key);
+					if (meal.getScheduleSummary() != null) {
+						if (!first) {
+							summaryString += ", ";
+						}
+						first = false;
+						summaryString += meal.getScheduleSummary();
+					}
+				}
+			}
+			
+			return summaryString;
 		}
 		
 		private static int getMealIndex(String name) {
