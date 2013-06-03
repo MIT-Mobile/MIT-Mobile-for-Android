@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.dining;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
@@ -85,7 +86,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 		LayoutInflater inflater = getLayoutInflater();
 		for (final DiningHall diningHall : list) {
 
-			// add seperator
+			// add separator
 			if (!first) {
 				layout.addView(new DividerView(this, null));
 			} else {
@@ -151,7 +152,14 @@ public class DiningHomeActivity extends NewModuleActivity {
 	protected boolean isScrollable() {
 		return false;
 	}
-
+	
+	@Override
+	protected List<String> getMenuItemBlackList() {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(DiningModule.FILTER_ITEM_ID);
+		return list;
+	}
+	
 	@Override
 	protected void onOptionSelected(String optionId) { }
 

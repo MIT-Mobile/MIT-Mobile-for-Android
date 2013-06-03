@@ -140,9 +140,4 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 	
 	@Override
 	public void destroy() { }
-	
-	protected int getDietaryFlagResId(String flag) {
-		String safeID = "dining_" + flag.replace(" ", "_");
-		return mContext.getResources().getIdentifier(safeID, "drawable", "edu.mit.mitmobile2");
-	}
 }

@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.dining;
 
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.DiningMealIterator.MealOrEmptyDay;
+import edu.mit.mitmobile2.dining.DiningModel.DiningDietaryFlag;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.Meal;
 import edu.mit.mitmobile2.dining.DiningModel.MenuItem;
@@ -127,9 +129,9 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 		
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-		for (String flag : menuItem.getDietaryFlags()) {
+		for (DiningDietaryFlag flag : menuItem.getDietaryFlags()) {
 			ImageView flagImageView = new ImageView(mContext);
-			flagImageView.setImageResource(getDietaryFlagResId(flag));
+			flagImageView.setImageResource(flag.getIconId());
 			dietaryFlags.addView(flagImageView, layoutParams);
 		}
 		

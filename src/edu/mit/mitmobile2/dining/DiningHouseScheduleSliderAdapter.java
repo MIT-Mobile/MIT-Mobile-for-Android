@@ -19,6 +19,7 @@ import android.widget.TextView;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.DiningMealIterator.MealOrEmptyDay;
+import edu.mit.mitmobile2.dining.DiningModel.DiningDietaryFlag;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.Meal;
 import edu.mit.mitmobile2.dining.DiningModel.MenuItem;
@@ -106,7 +107,7 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 					descriptionView.setVisibility(View.GONE);
 				}
 				
-				List<String> flags = menuItem.getDietaryFlags();
+				List<DiningDietaryFlag> flags = menuItem.getDietaryFlags();
 				TableRow tableRow = null;
 				int columns = 2; 
 				for (int i = 0; i < flags.size(); i++) {
@@ -117,7 +118,8 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 						dietaryFlags.addView(tableRow);
 					}
 					ImageView flagImageView = new ImageView(mContext);
-					flagImageView.setImageResource(getDietaryFlagResId(flags.get(i)));
+					DiningDietaryFlag flag = flags.get(i);
+					flagImageView.setImageResource(flag.getIconId());
 					tableRow.addView(flagImageView);
 				}
 				

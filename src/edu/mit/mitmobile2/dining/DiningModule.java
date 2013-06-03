@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.dining;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -8,10 +9,14 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
 
 public class DiningModule extends NewModule {
+	
+	public final static String FILTER_ITEM_ID = "dining.filter"; 
 
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
-		return null;
+		ArrayList<MITMenuItem> list = new ArrayList<MITMenuItem>();
+		list.add(new MITMenuItem(FILTER_ITEM_ID, "Filter", R.drawable.action_history));
+		return list;
 	}
 
 	@Override

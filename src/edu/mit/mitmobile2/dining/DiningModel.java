@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +21,11 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Html;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.R;
 
 public class DiningModel {
 
@@ -694,7 +698,7 @@ public class DiningModel {
 		String mName;
 		String mDescription;
 		String mStation;
-		ArrayList<String> mDietaryFlags = new ArrayList<String>();
+		ArrayList<DiningDietaryFlag> mDietaryFlags = new ArrayList<DiningDietaryFlag>();
 		
 		public MenuItem(JSONObject object) throws JSONException {
 			mName = object.getString("name");
@@ -703,7 +707,7 @@ public class DiningModel {
 			if (object.has("dietary_flags")) {
 				JSONArray flags = object.getJSONArray("dietary_flags");
 				for (int i = 0; i < flags.length(); i++) {
-					mDietaryFlags.add(flags.getString(i));
+					mDietaryFlags.add(DiningDietaryFlag.flagsByName().get(flags.getString(i)));
 				}
 			}
 		}		
@@ -720,7 +724,7 @@ public class DiningModel {
 			return mDescription;
 		}
 		
-		public List<String> getDietaryFlags() {
+		public List<DiningDietaryFlag> getDietaryFlags() {
 			return mDietaryFlags;
 		}
 	}
@@ -758,6 +762,79 @@ public class DiningModel {
 				mLongitude = (float) object.getDouble("longitude");
 			}
 		}
+	}
+	
+	public static class DiningDietaryFlag implements Parcelable {
+		private static HashMap<String, DiningDietaryFlag> sFlagsMap;
+		
+		private String mName;
+		private String mDisplayName;
+		private int mIconId;
+		
+		public static Collection<DiningDietaryFlag> allFlags() {
+			return flagsByName().values();
+		}
+		
+		public static HashMap<String, DiningDietaryFlag> flagsByName() {
+			if (sFlagsMap == null) {
+				HashMap<String, DiningDietaryFlag> map = new HashMap<String, DiningDietaryFlag>();
+				map.put("farm to fork", new DiningDietaryFlag("farm to fork", "Farm to Fork", R.drawable.dining_farm_to_fork));
+				map.put("organic", new DiningDietaryFlag("organic", "Organic", R.drawable.dining_organic));
+				map.put("seafood watch", new DiningDietaryFlag("seafood watch", "Seafood Watch", R.drawable.dining_seafood_watch));
+				map.put("vegan", new DiningDietaryFlag("vegan", "Vegan", R.drawable.dining_vegan));
+				map.put("vegetarian", new DiningDietaryFlag("vegetarian", "Vegetarian", R.drawable.dining_vegetarian));
+				map.put("for your well-being", new DiningDietaryFlag("for your well-being", "For Your Well-Being", R.drawable.dining_well_being));
+				map.put("made without gluten", new DiningDietaryFlag("made without gluten", "Made Without Gluten", R.drawable.dining_made_without_gluten));
+				map.put("halal", new DiningDietaryFlag("halal", "Halal", R.drawable.dining_halal));
+				map.put("kosher", new DiningDietaryFlag("kosher", "Kosher", R.drawable.dining_kosher));
+				map.put("humane", new DiningDietaryFlag("humane", "Humane", R.drawable.dining_humane));
+				map.put("in balance", new DiningDietaryFlag("in balance", "In Balance", R.drawable.dining_in_balance));
+				sFlagsMap = map;
+			}
+			return sFlagsMap;
+		}
+		
+		private DiningDietaryFlag(String name, String display, int resource) {
+			mName = name;
+			mDisplayName= display;
+			mIconId = resource;
+		}
+
+		public String getName() {
+			return mName;
+		}
+
+		public String getDisplayName() {
+			return mDisplayName;
+		}
+
+		public int getIconId() {
+			return mIconId;
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(mName);
+			dest.writeString(mDisplayName);
+			dest.writeInt(mIconId);
+		}
+		
+		public static final Parcelable.Creator<DiningDietaryFlag> CREATOR = new Parcelable.Creator<DiningDietaryFlag>() {
+					@Override
+					public DiningDietaryFlag createFromParcel(Parcel in) {
+						return new DiningDietaryFlag(in.readString(), in.readString(), in.readInt());
+					}
+
+					@Override
+					public DiningDietaryFlag[] newArray(int size) {
+						return new DiningDietaryFlag[size];
+					}
+		};
 	}
 	
 	public static class DiningLink {
