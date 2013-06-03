@@ -246,26 +246,66 @@ public class DiningModel {
 			mSchedule = new DailyMealsSchedule(dailyMealsList);
 		}
 
-		@Override
-		public String getTodaysHoursSummary(long currentTime) {
+		private DailyMeals getCurrentDailyMeals(long currentTime) {
 			Calendar currentDay = new GregorianCalendar();
 			currentDay.setTimeInMillis(currentTime);
 			for (DailyMeals dailyMeals : mSchedule.mDailyMealsList) {
 				if (DailyMealsSchedule.compareDates(currentDay, dailyMeals.getDay()) == 0) {
-					return dailyMeals.getScheduleSummary();
+					return dailyMeals;
 				}
+			}
+			return null;
+		}
+		
+		@Override
+		public String getTodaysHoursSummary(long currentTime) {
+			DailyMeals dailyMeals = getCurrentDailyMeals(currentTime);
+			if (dailyMeals != null) {
+				return dailyMeals.getScheduleSummary();
 			}
 			return "";
 		}
 
 		@Override
 		public Status getCurrentStatus(long currentTime) {
+			DailyMeals dailyMeals = getCurrentDailyMeals(currentTime);
+			if (dailyMeals != null) {
+				for (Meal meal : dailyMeals.mMeals.values()) {
+					Calendar currentDay = new GregorianCalendar();
+					currentDay.setTimeInMillis(currentTime);
+					if (meal.isInProgress(currentDay)) {
+						return Status.OPEN;
+					}
+				}
+			}			
 			return Status.CLOSED;
 		}
 		
 		@Override
-		public String getCurrentStatusSummary(long currentTime) {
-			return "Opens at 5:30pm";
+		public String getCurrentStatusSummary(long currentTime) {			
+			Calendar currentDay = new GregorianCalendar();
+			currentDay.setTimeInMillis(currentTime);
+			
+			DailyMeals dailyMeals = getCurrentDailyMeals(currentTime);
+			if (dailyMeals != null) {
+				String mealKey = DailyMeals.getFirstMealName();
+				while (mealKey != null) {
+					Meal meal = dailyMeals.getMeal(mealKey);
+					if (meal != null) {
+						if (meal.isInProgress(currentDay)) {
+							return "Open until " + Meal.sHourMinuteFormat.format(meal.mEnd.getTime()) + 
+								Meal.sAmPmFormat.format(meal.mEnd.getTime()).toLowerCase(Locale.US);
+						}
+						
+						if (meal.isUpcoming(currentDay)) {
+							return "Opens at " + Meal.sHourMinuteFormat.format(meal.mStart.getTime()) + 
+								Meal.sAmPmFormat.format(meal.mStart.getTime()).toLowerCase(Locale.US);
+						}
+					}
+					mealKey = DailyMeals.getNextMealName(mealKey);
+				}
+			}
+			return "Closed for the day";
 		}
 		
 		public DailyMealsSchedule getSchedule() {
@@ -477,7 +517,7 @@ public class DiningModel {
 				if (meal.getMessage() != null && !meal.getMessage().isEmpty()) {
 					schedule.put(meal.getCapitalizedName(), meal.getMessage());			// use message if we have it
 				} else {
-					schedule.put(meal.getCapitalizedName(), meal.getScheduleSummary());
+					schedule.put(meal.getCapitalizedName(), meal.getScheduleSummary(false));
 				}
 			}
 			
@@ -490,12 +530,12 @@ public class DiningModel {
 			for (String key : sMealNames) {
 				if (mMeals.containsKey(key)) {
 					Meal meal = mMeals.get(key);
-					if (meal.getScheduleSummary() != null) {
+					if (meal.getScheduleSummary(true) != null) {
 						if (!first) {
 							summaryString += ", ";
 						}
 						first = false;
-						summaryString += meal.getScheduleSummary();
+						summaryString += meal.getScheduleSummary(true);
 					}
 				}
 			}
@@ -589,7 +629,7 @@ public class DiningModel {
 			return mEnd;
 		}
 		
-		public String getTimesSummary() {
+		public String getScheduleSummaryForColumns() {
 			if (mStart != null && mEnd != null) {
 				return sHourMinuteFormat.format(mStart.getTime()) + " - " +
 						sHourMinuteFormat.format(mEnd.getTime()) + " " +
@@ -599,19 +639,20 @@ public class DiningModel {
 			}
 		}
 		
-		public String getScheduleSummary() {
+		public String getScheduleSummary(boolean compact) {
 			if (mStart != null && mEnd != null) {
-				return formatTimeForScheduleSpan(mStart) + " - " + formatTimeForScheduleSpan(mEnd);
+				String delimiter = "-"; 
+				return formatTimeForScheduleSpan(mStart, compact) + delimiter + formatTimeForScheduleSpan(mEnd, compact);
 			} else {
 				return null;
 			}
 		}
 		
-		private String formatTimeForScheduleSpan(Calendar cal) {
+		private String formatTimeForScheduleSpan(Calendar cal, boolean compact) {
 			SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h", Locale.US);
 			
 			SimpleDateFormat df = null;
-			if (cal.get(Calendar.MINUTE) == 0) {
+			if (compact && cal.get(Calendar.MINUTE) == 0) {
 				df = shortTimeFormat;
 			} else {
 				df = sHourMinuteFormat;

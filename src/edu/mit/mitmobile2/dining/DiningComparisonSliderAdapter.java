@@ -79,7 +79,7 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 			
 			View menuView;
 			if (meal != null) {
-				subtitleView.setText(meal.getTimesSummary());
+				subtitleView.setText(meal.getScheduleSummaryForColumns());
 				menuView = getMenuView(meal);
 			} else {
 				menuView = getEmptyMenuView();
