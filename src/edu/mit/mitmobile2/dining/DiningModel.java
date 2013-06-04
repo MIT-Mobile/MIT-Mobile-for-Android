@@ -9,9 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -891,6 +891,15 @@ public class DiningModel {
 		public int compareTo(DiningDietaryFlag another) {
 			return this.getName().compareTo(another.getName());
 		}
+		
+		public static Comparator<DiningDietaryFlag> NameDescendingComparator = new Comparator<DiningDietaryFlag>() {
+			@Override
+			public int compare(DiningDietaryFlag flag1, DiningDietaryFlag flag2) {
+				String name1 = flag1.getName().toUpperCase();
+				String name2 = flag2.getName().toUpperCase();
+				return name2.compareTo(name1);
+			}
+		};
 	}
 	
 	public static class DiningLink {

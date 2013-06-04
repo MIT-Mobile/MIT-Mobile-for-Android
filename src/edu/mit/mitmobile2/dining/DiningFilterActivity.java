@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Intent;
@@ -37,6 +38,7 @@ public class DiningFilterActivity extends NewModuleActivity {
 		findViewById(R.id.boringListLoader).setVisibility(View.GONE);
 		
 		mAllFlags = new ArrayList<DiningDietaryFlag>(DiningDietaryFlag.allFlags());
+		Collections.sort(mAllFlags, DiningDietaryFlag.NameDescendingComparator);	// sorted name descending
 		
 		mFilterAdapter = new SimpleArrayAdapter<DiningDietaryFlag>(this, mAllFlags, R.layout.dining_filter_row) {
 			@Override
