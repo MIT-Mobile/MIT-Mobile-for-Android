@@ -28,10 +28,12 @@ import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningLink;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
+import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
 
 public class DiningHomeActivity extends NewModuleActivity {
 
 	FullScreenLoader mLoader;
+	DiningVenues mVenues;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {
@@ -47,8 +49,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 				if (msg.arg1 == MobileWebApi.SUCCESS) {
 					mLoader.setVisibility(View.GONE);
 
-					DiningVenues venues = DiningModel.getDiningVenues(); 
-					displayDiningHalls(venues);
+					mVenues = DiningModel.getDiningVenues(); 
+					displayDiningHalls(mVenues);
 					
 					List<DiningLink> links = DiningModel.getDiningLinks();
 					displayDiningLinks(links);
@@ -60,6 +62,15 @@ public class DiningHomeActivity extends NewModuleActivity {
 		
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (mVenues != null) {
+			LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeRetailContent);
+			layout.removeAllViews();
+			populateDiningHallRows(R.id.diningHomeRetailContent, mVenues.getRetail(), "Retail");
+		}
+	}
 	
 	private void displayDiningHalls(DiningVenues venues) {
 		TabHost tabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
@@ -79,12 +90,14 @@ public class DiningHomeActivity extends NewModuleActivity {
 	
 	private void populateDiningHallRows(int layoutID, List<? extends DiningHall> list, String title) {
 		LinearLayout layout = (LinearLayout) findViewById(layoutID);
+		long currentTime = System.currentTimeMillis();
+		if (layoutID == R.id.diningHomeRetailContent) {
+			// add bookmarked venues to top of list
+			addBookmarkedRetailVenuesToLayout(layout, currentTime);
+		}
+		
 		SectionHeader header = new SectionHeader(this, title);
 		layout.addView(header, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		
-
-		
-		long currentTime = System.currentTimeMillis();
 		
 		boolean first = true;
 		LayoutInflater inflater = getLayoutInflater();
@@ -97,42 +110,66 @@ public class DiningHomeActivity extends NewModuleActivity {
 				first = false;
 			}
 			
-			// add dining row
-			View row = inflater.inflate(R.layout.dining_hall_row, null);
-			RemoteImageView iconView = (RemoteImageView) row.findViewById(R.id.diningHallRowImage);
-			TextView titleView = (TextView) row.findViewById(R.id.diningHallRowTitle);
-			TextView subtitleView = (TextView) row.findViewById(R.id.diningHallRowSubtitle);
-			TextView statusView = (TextView) row.findViewById(R.id.diningHallRowStatus);
-			
-//			iconView.setURL(diningHall.getIconUrl());  // uncomment this when images are in a better size for display. Causes out of memory issue currently.
-			titleView.setText(diningHall.getName());
-			subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
-			switch (diningHall.getCurrentStatus(currentTime)) {
-				case OPEN:
-					statusView.setText("Open");
-					statusView.setTextColor(getResources().getColor(R.color.dining_open));
-					break;
-				case CLOSED:
-					statusView.setText("Closed");
-					statusView.setTextColor(getResources().getColor(R.color.dining_closed));
-					break;
-			}
-			
-			row.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (diningHall instanceof HouseDiningHall) {
-						DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
-					} else {
-						// TODO: start retail activity
-						DiningRetailInfoActivity.launch(DiningHomeActivity.this, diningHall);
-					}
-				}				
-			});
-			
+			View row = viewForDiningHall(inflater, diningHall, currentTime);
 			layout.addView(row, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
 		}		
+	}
+	
+	private View viewForDiningHall(LayoutInflater inflater, final DiningHall diningHall, long currentTime) {
+		// add dining row
+		View row = inflater.inflate(R.layout.dining_hall_row, null);
+		RemoteImageView iconView = (RemoteImageView) row.findViewById(R.id.diningHallRowImage);
+		TextView titleView = (TextView) row.findViewById(R.id.diningHallRowTitle);
+		TextView subtitleView = (TextView) row.findViewById(R.id.diningHallRowSubtitle);
+		TextView statusView = (TextView) row.findViewById(R.id.diningHallRowStatus);
+		
+//		iconView.setURL(diningHall.getIconUrl());  // uncomment this when images are in a better size for display. Causes out of memory issue currently.
+		titleView.setText(diningHall.getName());
+		subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
+		switch (diningHall.getCurrentStatus(currentTime)) {
+			case OPEN:
+				statusView.setText("Open");
+				statusView.setTextColor(getResources().getColor(R.color.dining_open));
+				break;
+			case CLOSED:
+				statusView.setText("Closed");
+				statusView.setTextColor(getResources().getColor(R.color.dining_closed));
+				break;
+		}
+		
+		row.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (diningHall instanceof HouseDiningHall) {
+					DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
+				} else {
+					DiningRetailInfoActivity.launch(DiningHomeActivity.this, diningHall);
+				}
+			}				
+		});
+		return row;
+	}
+	
+	private void addBookmarkedRetailVenuesToLayout(LinearLayout layout, long currentTime) {
+		List<RetailDiningHall> halls = RetailDiningHall.getBookmarks(this);
+		if (!halls.isEmpty()) {
+			SectionHeader header = new SectionHeader(this, "Favorites");
+			layout.addView(header, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		}
+
+		LayoutInflater inflater = getLayoutInflater();
+		boolean first = true;
+		for (RetailDiningHall hall : halls) {
+			// add separator
+			if (!first) {
+				layout.addView(new DividerView(this, null));
+			} else {
+				first = false;
+			}
+			View row = viewForDiningHall(inflater, hall, currentTime);
+			layout.addView(row, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		}
 	}
 	
 	private void displayDiningLinks(List<DiningLink> links) {
