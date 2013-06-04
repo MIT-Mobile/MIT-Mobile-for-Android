@@ -14,4 +14,6 @@ public abstract class DiningScheduleScreen {
 	public boolean titleBarHidden() {
 		return false;
 	}
+	
+	public void refreshScreen() { } // default implementation is empty
 }

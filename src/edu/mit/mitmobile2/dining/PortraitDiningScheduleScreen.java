@@ -28,6 +28,7 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 	LinearLayout mMainLayout;
 	private Context mContext;
 	private DiningHouseScheduleSliderAdapter mDiningAdapter;
+	private SliderView mSliderView;
 
 	public PortraitDiningScheduleScreen(DiningVenues venues, HouseDiningHall selectedHouse, GregorianCalendar initialDate) {
 		mVenues = venues;
@@ -75,11 +76,11 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 		
 		mMainLayout.addView(diningSliderBar);
 		
-		final SliderView sliderView = new SliderView(mContext);
-		mMainLayout.addView(sliderView);
+		mSliderView = new SliderView(mContext);
+		mMainLayout.addView(mSliderView);
 		
 		mDiningAdapter = new DiningHouseScheduleSliderAdapter(mContext, mSelectedHouse, mInitialDate.getTimeInMillis());
-		sliderView.setAdapter(mDiningAdapter);
+		mSliderView.setAdapter(mDiningAdapter);
 		leftArrow.setEnabled(mDiningAdapter.hasScreen(ScreenPosition.Previous));
 		rightArrow.setEnabled(mDiningAdapter.hasScreen(ScreenPosition.Next));
 		sliderTitle.setText(mDiningAdapter.getCurrentTitle());
@@ -87,17 +88,17 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 		leftArrow.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sliderView.slideLeft();
+				mSliderView.slideLeft();
 			}			
 		});
 		rightArrow.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sliderView.slideRight();
+				mSliderView.slideRight();
 			}			
 		});
 		
-		sliderView.setOnSeekListener(new OnSeekListener() {
+		mSliderView.setOnSeekListener(new OnSeekListener() {
 
 			@Override
 			public void onSeek(SliderView view, Adapter adapter) {
@@ -111,6 +112,11 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 	@Override
 	public Calendar getSelectedDate() {
 		return mDiningAdapter.getSelectedDate();
+	}
+	
+	@Override
+	public void refreshScreen() {
+		mSliderView.refreshScreens();
 	}
 }
 

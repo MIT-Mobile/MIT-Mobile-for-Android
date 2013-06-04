@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -20,9 +21,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
@@ -763,7 +766,8 @@ public class DiningModel {
 		}
 	}
 	
-	public static class DiningDietaryFlag implements Parcelable {
+	public static class DiningDietaryFlag implements Parcelable, Comparable<DiningDietaryFlag> {
+		private static String FILTER_PREFERENCE_KEY = "filter.preference";
 		private static HashMap<String, DiningDietaryFlag> sFlagsMap;
 		
 		private String mName;
@@ -791,6 +795,38 @@ public class DiningModel {
 				sFlagsMap = map;
 			}
 			return sFlagsMap;
+		}
+		
+		public static void saveFilters(Context context, List<DiningDietaryFlag> list) {
+			// serialize flag names into comma separated string, save string
+			String nameString = "";
+			for (DiningDietaryFlag flag : list) {
+				if (list.indexOf(flag) == list.size() - 1) {
+					nameString+= flag.getName();
+				} else {
+					nameString+= flag.getName() + ",";
+				}
+			}
+			if (!nameString.isEmpty()) {
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putString(FILTER_PREFERENCE_KEY, nameString);
+				editor.apply();
+			}
+		}
+		
+		public static List<DiningDietaryFlag> loadFilters(Context context) {
+			// load string from preferences, unserialize string into flag names, lookup flags from static map
+			// returns list of flags
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			String nameString = prefs.getString(FILTER_PREFERENCE_KEY, "");
+			String [] nameSet = nameString.split(",");
+			ArrayList<DiningDietaryFlag> flagList = new ArrayList<DiningDietaryFlag>();
+			for (String name : nameSet) {
+				DiningDietaryFlag flag = DiningDietaryFlag.flagsByName().get(name);
+				if (flag != null) flagList.add(flag);
+			}
+			return flagList;
 		}
 		
 		private DiningDietaryFlag(String name, String display, int resource) {
@@ -850,6 +886,11 @@ public class DiningModel {
 						return new DiningDietaryFlag[size];
 					}
 		};
+
+		@Override
+		public int compareTo(DiningDietaryFlag another) {
+			return this.getName().compareTo(another.getName());
+		}
 	}
 	
 	public static class DiningLink {

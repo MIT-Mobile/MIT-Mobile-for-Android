@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -69,8 +71,29 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 		layout.setOrientation(LinearLayout.VERTICAL);
 		scrollWrapper.addView(layout);
 		
-		// Meal header
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		List <DiningDietaryFlag> appliedFilters = DiningDietaryFlag.loadFilters(mContext);
+		// filter header
+		float density = mContext.getResources().getDisplayMetrics().density;
+		int iconSquare = (int)Math.ceil(18 * density);
+		int iconMargin = (int)Math.ceil(7 * density);
+		Log.d("MARGIN", iconMargin + "");
+		if (!appliedFilters.isEmpty()) {
+			View filterHeader = inflater.inflate(R.layout.dining_filter_header, null);
+			LinearLayout iconContainer = (LinearLayout)filterHeader.findViewById(R.id.filterIdContainer);
+			LayoutParams params = new LayoutParams(iconSquare, iconSquare);
+			params.setMargins(iconMargin, 0, 0, 0);
+			for (DiningDietaryFlag flag : appliedFilters) {
+				ImageView iconView = new ImageView(mContext);
+				iconView.setLayoutParams(params);
+				iconView.setBackgroundResource(flag.getIconId());
+				iconContainer.addView(iconView);
+			}
+			layout.addView(filterHeader);
+		}
+		
+		// Meal header
+		
 		View mealHeader = inflater.inflate(R.layout.dining_meal_header, null);	
 		TextView mealTitleView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTitle);
 		TextView mealTimeView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTime);
@@ -88,42 +111,63 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 			TextView messageView = (TextView) view.findViewById(R.id.diningMealMessageText);
 			messageView.setText(meal.getMessage());			
 		} else {
+			
+			if (appliedFilters.isEmpty()) {
+				// no filters applied means all filters are applied
+				appliedFilters = new ArrayList<DiningDietaryFlag>(DiningDietaryFlag.allFlags());
+			}
+			
 			for (MenuItem menuItem : meal.getMenuItems()) {
-				View view = inflater.inflate(R.layout.dining_meal_item_row, null);
-				TextView stationView = (TextView) view.findViewById(R.id.diningMealItemRowStation);
-				TextView nameView = (TextView) view.findViewById(R.id.diningMealItemRowName);
-				TextView descriptionView = (TextView) view.findViewById(R.id.diningMealItemRowDescription);
-				TableLayout dietaryFlags = (TableLayout) view.findViewById(R.id.diningMealItemRowDietaryFlagsTable);
 				
-				stationView.setText(menuItem.getStation());
-				nameView.setText(menuItem.getName());
-				if (menuItem.getDescription() != null) {
-					descriptionView.setText(menuItem.getDescription());
-				} else {
-					descriptionView.setVisibility(View.GONE);
-				}
-				
-				List<DiningDietaryFlag> flags = menuItem.getDietaryFlags();
-				TableRow tableRow = null;
-				int columns = 2; 
-				for (int i = 0; i < flags.size(); i++) {
-					if (i % columns == 0) {
-						// lets make new row
-						tableRow = new TableRow(mContext);
-						tableRow.setGravity(Gravity.RIGHT);
-						dietaryFlags.addView(tableRow);
+				boolean showItem = false;
+				for (DiningDietaryFlag menuFlag : menuItem.getDietaryFlags()) {
+					if (appliedFilters.contains(menuFlag)) {
+						showItem = true;
+						break;
 					}
-					ImageView flagImageView = new ImageView(mContext);
-					DiningDietaryFlag flag = flags.get(i);
-					flagImageView.setImageResource(flag.getIconId());
-					tableRow.addView(flagImageView);
 				}
 				
-				layout.addView(view);
-				layout.addView(new DividerView(mContext, null));
+				if (showItem) {
+					View view = inflater.inflate(R.layout.dining_meal_item_row, null);
+					TextView stationView = (TextView) view.findViewById(R.id.diningMealItemRowStation);
+					TextView nameView = (TextView) view.findViewById(R.id.diningMealItemRowName);
+					TextView descriptionView = (TextView) view.findViewById(R.id.diningMealItemRowDescription);
+					TableLayout dietaryFlags = (TableLayout) view.findViewById(R.id.diningMealItemRowDietaryFlagsTable);
+					
+					stationView.setText(menuItem.getStation());
+					nameView.setText(menuItem.getName());
+					if (menuItem.getDescription() != null) {
+						descriptionView.setText(menuItem.getDescription());
+					} else {
+						descriptionView.setVisibility(View.GONE);
+					}
+					
+					List<DiningDietaryFlag> flags = menuItem.getDietaryFlags();
+					TableRow tableRow = null;
+					int columns = 2; 
+					for (int i = 0; i < flags.size(); i++) {
+						if (i % columns == 0) {
+							// lets make new row
+							tableRow = new TableRow(mContext);
+							tableRow.setGravity(Gravity.RIGHT);
+							dietaryFlags.addView(tableRow);
+						}
+						ImageView flagImageView = new ImageView(mContext);
+						DiningDietaryFlag flag = flags.get(i);
+						flagImageView.setImageResource(flag.getIconId());
+						tableRow.addView(flagImageView);
+					}
+					
+					layout.addView(view);
+					layout.addView(new DividerView(mContext, null));
+				}
 			}
 		}
 		
 		return scrollWrapper;
 	}
+	
+	
+	
+	
 }

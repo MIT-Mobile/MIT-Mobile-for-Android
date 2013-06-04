@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.dining;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -96,8 +97,17 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 		DiningDividerLinearLayout menuItemsLayout = new DiningDividerLinearLayout(mContext);
 		menuItemsLayout.setOrientation(LinearLayout.VERTICAL);
 		menuItemsLayout.setDividerColor(mDarkColor);
+		List<DiningDietaryFlag> appliedFlags = DiningDietaryFlag.loadFilters(mContext);
+		if (appliedFlags.isEmpty()) {
+			appliedFlags = new ArrayList<DiningDietaryFlag>(DiningDietaryFlag.allFlags());
+		}
 		for (MenuItem menuItem : meal.getMenuItems()) {
-			menuItemsLayout.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			for (DiningDietaryFlag flag : menuItem.getDietaryFlags()) {
+				if (appliedFlags.contains(flag)) {
+					menuItemsLayout.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+					break;
+				}
+			}
 		}	
 		return menuItemsLayout;
 	}

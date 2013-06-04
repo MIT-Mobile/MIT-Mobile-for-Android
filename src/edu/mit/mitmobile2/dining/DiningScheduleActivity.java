@@ -3,16 +3,12 @@ package edu.mit.mitmobile2.dining;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import edu.mit.mitmobile2.NewModule;
@@ -24,7 +20,6 @@ import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 
 public class DiningScheduleActivity extends NewModuleActivity {
 
-	private static String FILTER_PREFERENCE_KEY = "filter.preference";
 	private static int FILTER_ACTIVITY_REQUEST_CODE = 1;
 	
 	private static String SELECTED_DATE_KEY = "selected_date";
@@ -53,7 +48,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 			finish();
 			return;
 		}
-		mFiltersApplied = loadFilters();
+		mFiltersApplied = DiningDietaryFlag.loadFilters(this);
 		String houseID = getIntent().getStringExtra(HOUSE_DINING_HALL_ID_KEY);
 		HouseDiningHall selectedHouse = venues.getHouseDiningHall(houseID);
 		
@@ -95,30 +90,10 @@ public class DiningScheduleActivity extends NewModuleActivity {
 			if (resultCode == RESULT_OK) {
 				List<DiningDietaryFlag> list = data.getParcelableArrayListExtra(DiningFilterActivity.SELECTED_FILTERS);
 				mFiltersApplied = list;
-				saveFilters();
+				DiningDietaryFlag.saveFilters(this, mFiltersApplied);
+				mDiningScheduleScreen.refreshScreen();
 			}
 		}
-	}
-	
-	private void saveFilters() {
-		Set<String> filterNames = new HashSet<String>();
-		for (DiningDietaryFlag flag : mFiltersApplied) {
-			filterNames.add(flag.getName());
-		}
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putStringSet(FILTER_PREFERENCE_KEY, filterNames);
-		editor.apply();
-	}
-	
-	private List<DiningDietaryFlag> loadFilters() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		Set<String> nameSet = prefs.getStringSet(FILTER_PREFERENCE_KEY, new HashSet<String>());
-		ArrayList<DiningDietaryFlag> flagList = new ArrayList<DiningDietaryFlag>();
-		for (String name : nameSet) {
-			flagList.add(DiningDietaryFlag.flagsByName().get(name));
-		}
-		return flagList;
 	}
 	
 	@Override
