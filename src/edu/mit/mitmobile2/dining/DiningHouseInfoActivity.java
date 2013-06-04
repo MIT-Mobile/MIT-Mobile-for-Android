@@ -196,6 +196,13 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 	}
 
 	@Override
+	protected List<String> getMenuItemBlackList() {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(DiningModule.FILTER_ITEM_ID);
+		return list;
+	}
+	
+	@Override
 	protected void onOptionSelected(String optionId) { }
 
 	@Override
