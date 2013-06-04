@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    
+    <edu.mit.mitmobile2.dining.DiningHallHeaderView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/diningHallHouseInfoHeader"
+        />
+    
+<!--     <ListView 
+        android:id="@+id/diningHallHouseInfoTopLV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#D2D2D2"
+        android:dividerHeight="10.0sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_marginBottom="10sp"
+        android:listSelector="@drawable/highlight_background"
+        />
+    
+    <ListView
+        android:id="@+id/diningHallHouseInfoScheduleLV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+    /> -->
+    
+</LinearLayout>

@@ -188,7 +188,6 @@ public class DiningModel {
 				}
 				mPaymentOptions = tempList;
 			}
-			
 		}
 		
 		public enum Status {
@@ -362,6 +361,41 @@ public class DiningModel {
 		String mMenuUrl;
 		String mHomepageUrl;
 		ArrayList<String> mCuisine = new ArrayList<String>();
+		
+		private static String RETAIL_BOOKMARK_KEY = "retail.bookmarks";
+		
+		public static void saveBookmarks(Context context, List<RetailDiningHall> list) {
+			// serialize hall Ids into comma separated string, save string
+			String nameString = "";
+			for (RetailDiningHall hall : list) {
+				if (list.indexOf(hall) == list.size() - 1) {
+					nameString+= hall.getID();
+				} else {
+					nameString+= hall.getID() + ",";
+				}
+			}
+
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString(RETAIL_BOOKMARK_KEY, nameString);
+			editor.apply();
+		}
+		
+		public static List<RetailDiningHall> getBookmarks(Context context) {
+			// load string from preferences, unserialize string into flag names, lookup flags from static map
+			// returns list of flags
+			ArrayList<RetailDiningHall> bookmarkedHalls = new ArrayList<RetailDiningHall>();
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			String nameString = prefs.getString(RETAIL_BOOKMARK_KEY, "");
+			if (nameString.isEmpty()) return bookmarkedHalls;	// return empty list if no preference saved
+			String [] idSet = nameString.split(",");
+			DiningVenues venues = DiningModel.getDiningVenues();
+			for (String id : idSet) {
+				RetailDiningHall hall = venues.getRetailDiningHall(id);
+				if (hall != null) bookmarkedHalls.add(hall);
+			}
+			return bookmarkedHalls;
+		}
 		
 		public RetailDiningHall(JSONObject object) throws JSONException {
 			super(object);

@@ -125,7 +125,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 						DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
 					} else {
 						// TODO: start retail activity
-						
+						DiningRetailInfoActivity.launch(DiningHomeActivity.this, diningHall);
 					}
 				}				
 			});
