@@ -807,12 +807,11 @@ public class DiningModel {
 					nameString+= flag.getName() + ",";
 				}
 			}
-			if (!nameString.isEmpty()) {
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putString(FILTER_PREFERENCE_KEY, nameString);
-				editor.apply();
-			}
+
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString(FILTER_PREFERENCE_KEY, nameString);
+			editor.apply();
 		}
 		
 		public static List<DiningDietaryFlag> loadFilters(Context context) {
