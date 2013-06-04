@@ -27,6 +27,7 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningLink;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
+import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 
 public class DiningHomeActivity extends NewModuleActivity {
 
@@ -71,7 +72,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 		populateDiningHallRows(R.id.diningHomeHouseContent, venues.getHouses(), "Dining Houses");
 		populateDiningHallRows(R.id.diningHomeRetailContent, venues.getRetail(), "Retail");
 		
-		TextView messageView = (TextView) findViewById(R.id.diningHomeMessage);
+		View view = findViewById(R.id.diningHomeHouseTab);
+		TextView messageView = (TextView) view.findViewById(R.id.diningHomeMessage);
 		messageView.setText(venues.getAnnouncementsPlainText());
 	}
 	
@@ -79,6 +81,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 		LinearLayout layout = (LinearLayout) findViewById(layoutID);
 		SectionHeader header = new SectionHeader(this, title);
 		layout.addView(header, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		
+
 		
 		long currentTime = System.currentTimeMillis();
 		
@@ -117,7 +121,12 @@ public class DiningHomeActivity extends NewModuleActivity {
 			row.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
+					if (diningHall instanceof HouseDiningHall) {
+						DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
+					} else {
+						// TODO: start retail activity
+						
+					}
 				}				
 			});
 			
