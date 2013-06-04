@@ -85,7 +85,7 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 				subtitleView.setText(meal.getScheduleSummaryForColumns());
 				menuView = getMenuView(meal);
 			} else {
-				menuView = getEmptyMenuView();
+				menuView = getEmptyMenuView("This hall is closed");
 			}
 			menus.addView(menuView, columnLayoutParams);
 		}
@@ -98,25 +98,40 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 		menuItemsLayout.setOrientation(LinearLayout.VERTICAL);
 		menuItemsLayout.setDividerColor(mDarkColor);
 		List<DiningDietaryFlag> appliedFlags = DiningDietaryFlag.loadFilters(mContext);
-		if (appliedFlags.isEmpty()) {
+		boolean noSelectedFlags = appliedFlags.isEmpty();
+		if (noSelectedFlags) {
 			appliedFlags = new ArrayList<DiningDietaryFlag>(DiningDietaryFlag.allFlags());
 		}
+		boolean showingMenuItems = false;
 		for (MenuItem menuItem : meal.getMenuItems()) {
+			boolean showItem = false;
+			if (noSelectedFlags) {
+				showItem = true;
+			}
 			for (DiningDietaryFlag flag : menuItem.getDietaryFlags()) {
 				if (appliedFlags.contains(flag)) {
-					menuItemsLayout.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+					showItem = true;
 					break;
 				}
 			}
+			if (showItem) {
+				showingMenuItems = true;
+				menuItemsLayout.addView(getMenuItemView(menuItem), new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			}
 		}	
+		
+		if (!showingMenuItems) {
+			menuItemsLayout.setDrawHorizontalDivider(false);
+			menuItemsLayout.addView(getEmptyMenuView("no matching items"));
+		}
 		return menuItemsLayout;
 	}
 	
-	private View getEmptyMenuView() {
+	private View getEmptyMenuView(String message) {
 		TextView emptyMessage = new TextView(mContext);
 		emptyMessage.setGravity(Gravity.CENTER_HORIZONTAL);
 		emptyMessage.setTextAppearance(mContext, R.style.ListItemSecondary);
-		emptyMessage.setText("This hall is closed");
+		emptyMessage.setText(message);
 		int topPadding = mContext.getResources().getDimensionPixelSize(R.dimen.standardPadding);
 		emptyMessage.setPadding(0, topPadding, 0, 0);
 		return emptyMessage;

@@ -73,6 +73,7 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 		
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		List <DiningDietaryFlag> appliedFilters = DiningDietaryFlag.loadFilters(mContext);
+		boolean noSelectedFilters = appliedFilters.isEmpty();
 		// filter header
 		float density = mContext.getResources().getDisplayMetrics().density;
 		int iconSquare = (int)Math.ceil(18 * density);
@@ -117,9 +118,14 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 				appliedFilters = new ArrayList<DiningDietaryFlag>(DiningDietaryFlag.allFlags());
 			}
 			
+			boolean showingItems = false;
 			for (MenuItem menuItem : meal.getMenuItems()) {
 				
 				boolean showItem = false;
+				if (menuItem.getDietaryFlags().isEmpty() && noSelectedFilters) {
+					// if menuItem does not have any flags and no filters have been selected (before we take all filters)
+					showItem = true;
+				}
 				for (DiningDietaryFlag menuFlag : menuItem.getDietaryFlags()) {
 					if (appliedFilters.contains(menuFlag)) {
 						showItem = true;
@@ -128,6 +134,7 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 				}
 				
 				if (showItem) {
+					showingItems = true;
 					View view = inflater.inflate(R.layout.dining_meal_item_row, null);
 					TextView stationView = (TextView) view.findViewById(R.id.diningMealItemRowStation);
 					TextView nameView = (TextView) view.findViewById(R.id.diningMealItemRowName);
@@ -162,12 +169,24 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 					layout.addView(new DividerView(mContext, null));
 				}
 			}
+			
+			if (!showingItems) {
+				layout.addView(getEmptyMenuView("No matching items"));
+			}
 		}
 		
 		return scrollWrapper;
 	}
 	
-	
+	private View getEmptyMenuView(String message) {
+		TextView emptyMessage = new TextView(mContext);
+		emptyMessage.setGravity(Gravity.CENTER_HORIZONTAL);
+		emptyMessage.setTextAppearance(mContext, R.style.ListItemPrimary);
+		emptyMessage.setText(message);
+		int topPadding = mContext.getResources().getDimensionPixelSize(R.dimen.standardPadding);
+		emptyMessage.setPadding(0, topPadding, 0, 0);
+		return emptyMessage;
+	}
 	
 	
 }

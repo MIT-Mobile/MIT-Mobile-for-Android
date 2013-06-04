@@ -12,6 +12,7 @@ import edu.mit.mitmobile2.AttributesParser;
 public class DiningDividerLinearLayout extends LinearLayout {
 	
 	private Integer mDividerColor;
+	private boolean mDrawDivider = true;
 	
 	private int mStrokeWidth;
 
@@ -24,9 +25,17 @@ public class DiningDividerLinearLayout extends LinearLayout {
 		super(context, attrs);
 		init(context);
 	}
+	
+	public boolean getDrawHorizontalDivider() {
+		return mDrawDivider;
+	}
+
+	public void setDrawHorizontalDivider(boolean mDrawDivider) {
+		this.mDrawDivider = mDrawDivider;
+	}
 
 	private void init(Context context) {
-		mStrokeWidth = AttributesParser.parseDimension("2dip", context);
+		mStrokeWidth = AttributesParser.parseDimension("1dip", context);
 	}
 	
 	public void setDividerColor(int dividerColor){
@@ -37,7 +46,7 @@ public class DiningDividerLinearLayout extends LinearLayout {
 	@Override
 	public void dispatchDraw(Canvas canvas) {
 		super.dispatchDraw(canvas);
-		
+
 		if (mDividerColor == null) {
 			return;
 		}
@@ -64,7 +73,7 @@ public class DiningDividerLinearLayout extends LinearLayout {
 
 				View child = getChildAt(i);
 				y += child.getHeight();
-				if (child.getVisibility() == View.VISIBLE && y < getHeight()) {
+				if (child.getVisibility() == View.VISIBLE && y < getHeight() && mDrawDivider) {
 					canvas.drawLine(0, y, width, y, dividerPaint);
 				}
 			}			
