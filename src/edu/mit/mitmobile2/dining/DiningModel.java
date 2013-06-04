@@ -799,6 +799,22 @@ public class DiningModel {
 			mDisplayName= display;
 			mIconId = resource;
 		}
+		
+		@Override
+		public String toString() {
+			return "DiningDietaryFlag:" + this.hashCode() + " name: " + mName;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof DiningDietaryFlag) {
+				DiningDietaryFlag o = (DiningDietaryFlag)obj;
+				if (this.getName().equals(o.getName())) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 		public String getName() {
 			return mName;
