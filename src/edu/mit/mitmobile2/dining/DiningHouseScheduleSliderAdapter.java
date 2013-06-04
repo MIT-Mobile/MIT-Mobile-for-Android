@@ -76,12 +76,8 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 		TextView mealTimeView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTime);
 		mealTitleView.setText(meal.getCapitalizedName());
 		
-		if ((meal.getStart() != null) && (meal.getEnd() != null)) {
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("h:mma", Locale.US);
-			String time = dateFormatter.format(meal.getStart().getTime()) + " - " +
-					dateFormatter.format(meal.getEnd().getTime());
-			time = time.toLowerCase(Locale.US);
-			mealTimeView.setText(time);
+		if (meal.getScheduleSummary() != null) {
+			mealTimeView.setText(meal.getScheduleSummary());
 		}
 		layout.addView(mealHeader);
 		

@@ -521,7 +521,7 @@ public class DiningModel {
 				if (meal.getMessage() != null && !meal.getMessage().isEmpty()) {
 					schedule.put(meal.getCapitalizedName(), meal.getMessage());			// use message if we have it
 				} else {
-					schedule.put(meal.getCapitalizedName(), meal.getScheduleSummary(false));
+					schedule.put(meal.getCapitalizedName(), meal.getScheduleSummary());
 				}
 			}
 			
@@ -534,12 +534,12 @@ public class DiningModel {
 			for (String key : sMealNames) {
 				if (mMeals.containsKey(key)) {
 					Meal meal = mMeals.get(key);
-					if (meal.getScheduleSummary(true) != null) {
+					if (meal.getScheduleSummary() != null) {
 						if (!first) {
 							summaryString += ", ";
 						}
 						first = false;
-						summaryString += meal.getScheduleSummary(true);
+						summaryString += meal.getScheduleSummary();
 					}
 				}
 			}
@@ -643,20 +643,19 @@ public class DiningModel {
 			}
 		}
 		
-		public String getScheduleSummary(boolean compact) {
+		public String getScheduleSummary() {
 			if (mStart != null && mEnd != null) {
-				String delimiter = "-"; 
-				return formatTimeForScheduleSpan(mStart, compact) + delimiter + formatTimeForScheduleSpan(mEnd, compact);
+				return formatTimeForScheduleSpan(mStart) + " - " + formatTimeForScheduleSpan(mEnd);
 			} else {
 				return null;
 			}
 		}
 		
-		private String formatTimeForScheduleSpan(Calendar cal, boolean compact) {
+		private String formatTimeForScheduleSpan(Calendar cal) {
 			SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h", Locale.US);
 			
 			SimpleDateFormat df = null;
-			if (compact && cal.get(Calendar.MINUTE) == 0) {
+			if (cal.get(Calendar.MINUTE) == 0) {
 				df = shortTimeFormat;
 			} else {
 				df = sHourMinuteFormat;
