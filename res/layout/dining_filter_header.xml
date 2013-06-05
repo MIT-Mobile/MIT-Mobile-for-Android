@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
     	android:textSize="12sp"
-    	android:fontFamily="Helvetica"
     	android:paddingLeft="@dimen/standardPadding"
     	android:text="@string/dining_filters"
     	android:layout_gravity = "center_vertical"
