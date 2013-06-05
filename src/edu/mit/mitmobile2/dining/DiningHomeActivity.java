@@ -3,9 +3,12 @@ package edu.mit.mitmobile2.dining;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +69,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 	protected void onResume() {
 		super.onResume();
 		if (mVenues != null) {
+			// need to refresh retail dining because bookmarks may have changed
+			// TODO:: could use SharedPreferenceChangedListener to only update when bookmark has changed
 			LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeRetailContent);
 			layout.removeAllViews();
 			populateDiningHallRows(R.id.diningHomeRetailContent, mVenues.getRetail(), "Retail");
@@ -154,7 +159,13 @@ public class DiningHomeActivity extends NewModuleActivity {
 	private void addBookmarkedRetailVenuesToLayout(LinearLayout layout, long currentTime) {
 		List<RetailDiningHall> halls = RetailDiningHall.getBookmarks(this);
 		if (!halls.isEmpty()) {
-			SectionHeader header = new SectionHeader(this, "Favorites");
+			// add favorites sectionheader
+			SectionHeader header = new SectionHeader(this, "");
+			ImageSpan favIcon = new ImageSpan(this, R.drawable.dining_bookmark_section_header, ImageSpan.ALIGN_BASELINE);
+			SpannableString text = new SpannableString("  Favorites");
+			text.setSpan(favIcon, 0, 1, SpannableString.SPAN_INCLUSIVE_INCLUSIVE);
+			header.getTextView().setText(text);
+			
 			layout.addView(header, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		}
 
