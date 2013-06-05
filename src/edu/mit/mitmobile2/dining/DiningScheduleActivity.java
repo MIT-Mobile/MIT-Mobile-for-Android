@@ -30,6 +30,8 @@ public class DiningScheduleActivity extends NewModuleActivity {
 	LinearLayout mMainLayout;
 	private DiningScheduleScreen mDiningScheduleScreen;
 
+	private HouseDiningHall mSelectedHouse;
+
 	public static void launch(Context context, DiningHall diningHall) {
 		if (diningHall instanceof HouseDiningHall) {
 			Intent intent = new Intent(context, DiningScheduleActivity.class);
@@ -50,7 +52,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		}
 		mFiltersApplied = DiningDietaryFlag.loadFilters(this);
 		String houseID = getIntent().getStringExtra(HOUSE_DINING_HALL_ID_KEY);
-		HouseDiningHall selectedHouse = venues.getHouseDiningHall(houseID);
+		mSelectedHouse = venues.getHouseDiningHall(houseID);
 		
 		long selectedTime;
 		if (savedInstanceState != null) {
@@ -71,7 +73,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 				
 			case Configuration.ORIENTATION_PORTRAIT:
 			default:
-				mDiningScheduleScreen = new PortraitDiningScheduleScreen(venues, selectedHouse, selectedDate);
+				mDiningScheduleScreen = new PortraitDiningScheduleScreen(venues, mSelectedHouse, selectedDate);
 				break;
 		}
 		
@@ -98,7 +100,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putLong(SELECTED_DATE_KEY, mDiningScheduleScreen.getSelectedDate().getTimeInMillis());
+		outState.putLong(SELECTED_DATE_KEY, mDiningScheduleScreen.getSelectedDate(mSelectedHouse).getTimeInMillis());
 	}
 	
 	@Override

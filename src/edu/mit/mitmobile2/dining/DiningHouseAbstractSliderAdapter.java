@@ -13,6 +13,7 @@ import android.view.View;
 import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.SliderView.ScreenPosition;
 import edu.mit.mitmobile2.dining.DiningMealIterator.MealOrEmptyDay;
+import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 
 public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Adapter {
 
@@ -29,8 +30,10 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 	private Date mCurrentDate;
 
 	
-	public DiningHouseAbstractSliderAdapter(Context context, long currentTime) {
+	public DiningHouseAbstractSliderAdapter(Context context) {
 		mContext = context;
+		long currentTime = 1367351565000L;
+		//long currentTime = System.currentTimeMillis();		
 		mCurrentDate = new Date(currentTime);
 		mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 		mFormat.setCalendar(new GregorianCalendar());
@@ -51,14 +54,15 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 		mMealIterator = mealIterator;
 	}
 	
-	public Calendar getSelectedDate() {
+	public Calendar getSelectedDate(HouseDiningHall house) {
 		MealOrEmptyDay mealOrEmptyDay = mMealIterator.getCurrent();
-		return mealOrEmptyDay.getDay();
+		return mealOrEmptyDay.getDay(house);
 	}
 	
 	public CharSequence getCurrentTitle() {
 		MealOrEmptyDay mealOrEmptyDay = mMealIterator.getCurrent();
 		
+		SimpleDateFormat dayNameFormat = new SimpleDateFormat("EEEE", Locale.US);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("LLLL d", Locale.US);
 		Calendar day = mealOrEmptyDay.getDay();
 		String dateString = mFormat.format(day.getTime());
@@ -68,16 +72,19 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 			String mealName = mealOrEmptyDay.getCapitalizedMealName();
 			title = mealName + ", " + title;
 			
+			String dayName = dayNameFormat.format(day.getTime());
+			
 			// check if the meal is today/tomorrow/yesterday
 			if (mCurrentDateString.equals(dateString)) {
-				title = "Today's " + title;
+				dayName = "Today";
 			} else if (mTommorowDateString.equals(dateString)) {
-				title = "Tomorow's " + title;
+				dayName = "Tomorow";
 			} else if (mYesterdayDateString.equals(dateString)) {
-				title = "Yesterday's " + title;
+				dayName = "Yesterday";
 			}
 			
-			return title;
+			return dayName + "'s " + title;
+			
 		} else {
 			return dateFormat.format(day.getTime());
 		}

@@ -28,13 +28,13 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 	
 	List<HouseDiningHall> mHalls;
 	
-	public DiningComparisionSliderAdapter(Context context, List<HouseDiningHall> halls, long currentTime) {	
-		super(context, currentTime);
+	public DiningComparisionSliderAdapter(Context context, List<HouseDiningHall> halls, long selectedTime) {	
+		super(context);
 		mContext = context;
 		mHalls = halls;
 		
 		GregorianCalendar day = new GregorianCalendar();
-		day.setTimeInMillis(currentTime);
+		day.setTimeInMillis(selectedTime);
 		DiningMealIterator mealIterator = new DiningMealIterator(day, mHalls);
 		setMealIterator(mealIterator);
 		

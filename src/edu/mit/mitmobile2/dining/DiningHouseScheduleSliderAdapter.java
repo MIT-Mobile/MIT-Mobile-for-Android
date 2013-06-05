@@ -32,14 +32,14 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 	
 	private String mHallID;
 	
-	public DiningHouseScheduleSliderAdapter(Context context, HouseDiningHall hall, long currentTime) {
-		super(context, currentTime);
+	public DiningHouseScheduleSliderAdapter(Context context, HouseDiningHall hall, long selectedTime) {
+		super(context);
 		
 		mContext = context;
 		mHallID = hall.getID();
 		
 		GregorianCalendar day = new GregorianCalendar();
-		day.setTimeInMillis(currentTime);
+		day.setTimeInMillis(selectedTime);
 		ArrayList<HouseDiningHall> halls = new ArrayList<HouseDiningHall>();
 		halls.add(hall);
 		DiningMealIterator mealIterator = new DiningMealIterator(day, halls);

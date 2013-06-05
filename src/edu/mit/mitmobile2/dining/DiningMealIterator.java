@@ -28,9 +28,17 @@ public class DiningMealIterator {
 		public List<HouseDiningHall> getHalls() {
 			return mHalls;
 		}
-			
+
 		public Calendar getDay() {
 			return mDay;
+		}
+		
+		public Calendar getDay(HouseDiningHall house) {
+			if (mMeals.containsKey(house.getID())) {
+				return mMeals.get(house.getID()).mStart;
+			} else {
+				return mDay;
+			}
 		}
 		
 		public Meal getMeal(String hallID) {

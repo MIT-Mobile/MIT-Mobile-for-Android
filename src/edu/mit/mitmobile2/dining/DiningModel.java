@@ -751,8 +751,8 @@ public class DiningModel {
 
 		public boolean isInProgress(Calendar day) {
 			if (mStart != null && mEnd != null) {
-				return (day.getTimeInMillis() > mStart.getTimeInMillis()) &&
-						(day.getTimeInMillis() < mEnd.getTimeInMillis());
+				return (day.getTimeInMillis() >= mStart.getTimeInMillis()) &&
+						(day.getTimeInMillis() <= mEnd.getTimeInMillis());
 			}
 			return false;
 		}

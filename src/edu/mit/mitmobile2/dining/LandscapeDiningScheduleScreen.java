@@ -21,6 +21,7 @@ public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 
 	DiningVenues mVenues;
 	protected GregorianCalendar mInitialDate;
+	private DiningComparisionSliderAdapter mDiningAdapter;
 	
 	public LandscapeDiningScheduleScreen(DiningVenues venues, GregorianCalendar initialDate) {
 		mVenues = venues;
@@ -38,10 +39,10 @@ public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 		@SuppressWarnings("unchecked")
 		List<HouseDiningHall> halls =  (List<HouseDiningHall>) mVenues.getHouses();
 		
-		DiningComparisionSliderAdapter diningAdapter = new DiningComparisionSliderAdapter(context, halls, mInitialDate.getTimeInMillis());
-		dateView.setText(diningAdapter.getCurrentTitle());	
+		mDiningAdapter = new DiningComparisionSliderAdapter(context, halls, mInitialDate.getTimeInMillis());
+		dateView.setText(mDiningAdapter.getCurrentTitle());	
 		
-		sliderView.setAdapter(diningAdapter);		
+		sliderView.setAdapter(mDiningAdapter);		
 		sliderView.setOnSeekListener(new OnSeekListener() {
 
 			@Override
@@ -55,8 +56,8 @@ public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 	}
 
 	@Override
-	public Calendar getSelectedDate() {
-		return mInitialDate;
+	public Calendar getSelectedDate(HouseDiningHall house) {
+		return mDiningAdapter.getSelectedDate(house);
 	}
 	
 	public boolean titleBarHidden() {

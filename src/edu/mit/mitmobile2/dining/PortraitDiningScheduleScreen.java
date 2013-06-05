@@ -110,8 +110,8 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 	}
 
 	@Override
-	public Calendar getSelectedDate() {
-		return mDiningAdapter.getSelectedDate();
+	public Calendar getSelectedDate(HouseDiningHall house) {
+		return mDiningAdapter.getSelectedDate(house);
 	}
 	
 	@Override
