@@ -9,12 +9,13 @@
   
   
   <TextView
-      android:id="@+id/diningMealItemInfoLabel"
+      android:id="@+id/diningHallInfoLabel"
       android:layout_alignParentLeft="true"
       android:paddingRight="@dimen/standardPadding"
       android:layout_width="90dip"
       android:layout_height="wrap_content"
       style="@style/ListItemPrimary"
+      android:gravity="right"
       />
   
   <ImageView
@@ -22,13 +23,13 @@
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       android:paddingLeft="@dimen/standardPadding"
-      android:layout_width="62dip"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       />
   
   <TextView
-      android:id="@+id/diningMealItemInfoValue"
-      android:layout_toRightOf="@id/diningMealItemInfoLabel"
+      android:id="@+id/diningHallInfoValue"
+      android:layout_toRightOf="@id/diningHallInfoLabel"
       android:layout_toLeftOf="@id/diningInfoItemRowActionIcon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

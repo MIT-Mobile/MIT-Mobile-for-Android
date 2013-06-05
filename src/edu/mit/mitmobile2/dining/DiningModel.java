@@ -406,6 +406,9 @@ public class DiningModel {
 			}
 			if (!object.isNull("menu_url")) {
 				mMenuUrl = object.getString("menu_url");
+				if (!mMenuUrl.startsWith("http://") && !mMenuUrl.startsWith("https://")) {
+					mMenuUrl = "http://"+mMenuUrl;	//prepend scheme when necessary
+				}
 			}
 			if (!object.isNull("homepage_url")) {
 				mHomepageUrl = object.getString("homepage_url");
@@ -418,6 +421,31 @@ public class DiningModel {
 				}
 			}
 		
+		}
+		
+		public String getDescriptionHtml() {
+			return mDescriptionHtml;
+		}
+		
+		public String getMenuHtml() {
+			return mMenuHtml;
+		}
+		
+		public String getMenuUrl() {
+			return mMenuUrl;
+		}
+		
+		public String getHomePageUrl() {
+			return mHomepageUrl;
+		}
+		
+		public String getCuisineString() {
+			String options ="";
+			for (String s : mCuisine) {
+				options+= s + ", ";
+			}
+
+			return options.substring(0, options.length() - 2);
 		}
 
 		@Override

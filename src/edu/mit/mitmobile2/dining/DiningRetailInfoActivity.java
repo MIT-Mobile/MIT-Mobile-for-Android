@@ -7,11 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
@@ -67,7 +77,131 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 				}
 			}
 		});
+		
+		layoutDescription();
+		layoutMenu();
+		
+		layoutInfoList();
+		
 	}
+	
+	private void layoutDescription() {
+		TextView descriptionTV = (TextView)findViewById(R.id.retailDescriptionTV);
+		if (mHall.getDescriptionHtml() != null && !mHall.getDescriptionHtml().isEmpty()) {
+			descriptionTV.setText(Html.fromHtml(mHall.getDescriptionHtml()));
+		} else {
+			descriptionTV.setVisibility(View.GONE);
+		}
+	}
+	
+	private void layoutMenu() {
+		View row = findViewById(R.id.menuItemRow);
+		row.setBackgroundColor(Color.WHITE);
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) row.getLayoutParams();
+		int margin = getResources().getDimensionPixelSize(R.dimen.standardPadding);
+		params.setMargins(margin, 0, margin, margin);
+		TextView rowLabel = (TextView) row.findViewById(R.id.diningHallInfoLabel);
+		TextView rowValue = (TextView) row.findViewById(R.id.diningHallInfoValue);
+		ImageView rowAction = (ImageView) row.findViewById(R.id.diningInfoItemRowActionIcon);
+		rowLabel.setText(getString(R.string.dining_menu_info_label));
+		boolean tempHasMenu = false;
+		if (mHall.getMenuUrl() != null && !mHall.getMenuUrl().isEmpty()) {
+			tempHasMenu = true;
+			rowValue.setText(mHall.getMenuUrl());
+			rowValue.setEllipsize(TruncateAt.END);
+			rowValue.setSingleLine(true);
+			rowAction.setBackgroundResource(R.drawable.action_external);
+		} else if (mHall.getMenuHtml() != null && !mHall.getMenuHtml().isEmpty()) {
+			tempHasMenu = false;
+			rowAction.setBackgroundResource(R.drawable.tour_notsure_arrow);
+		} else {
+			row.setVisibility(View.GONE);
+		}
+		
+		final boolean isExternalMenu = tempHasMenu;
+		row.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (isExternalMenu) {
+					CommonActions.viewURL(DiningRetailInfoActivity.this, mHall.getMenuUrl());
+				} else {
+					// go to description page
+					
+				}
+			}
+		});
+	}
+	
+	private void layoutScheduleList() {
+		
+	}
+	
+	private void layoutInfoList() {
+		ListView infoLV = (ListView)findViewById(R.id.diningHallInfoLV);
+		infoLV.setAdapter(new SimpleArrayAdapter<InfoItem>(this, getHallInfo(), R.layout.dining_hall_info_item_row) {
+			@Override
+			public void updateView(InfoItem item, View view) {
+				TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
+				TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
+				ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
+				
+				label.setText(item.getInfoLabel());
+				value.setText(item.getInfoValue());
+				
+				if (item.getInfoActionId() > 0) {
+					img.setVisibility(View.VISIBLE);
+					img.setImageResource(item.getInfoActionId());
+				} else {
+					img.setVisibility(View.GONE);
+				}
+			}
+			
+			@Override
+			public boolean isEnabled(int position) {
+				InfoItem item = this.getItem(position);
+				return (item.getInfoActionId() > 0);
+			}
+			
+			@Override
+			public boolean areAllItemsEnabled() {
+				return true;	// need to be true so dividers show up
+			}
+		});
+		
+		infoLV.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				InfoItem item = (InfoItem)parent.getAdapter().getItem(position);
+				if (item.getInfoActionId() == R.drawable.action_map) {
+					String locationName = mHall.getLocation().mDescription;
+					String url = "mitmobile://map/search?" + locationName;
+					CommonActions.doAction(DiningRetailInfoActivity.this, url);
+				} else if (item.getInfoActionId() == R.drawable.action_external) {
+					CommonActions.viewURL(DiningRetailInfoActivity.this, mHall.getHomePageUrl());
+				}
+			}
+		});
+		
+	}
+	
+	private List<InfoItem> getHallInfo() {
+		ArrayList<InfoItem> items = new ArrayList<InfoItem>();
+		if (mHall.getCuisineString() != null && !mHall.getCuisineString().isEmpty()) {
+			items.add(new InfoItem(getString(R.string.dining_cuisine_info_label), mHall.getCuisineString(), 0));
+		}
+		if (!mHall.getPaymentOptions().isEmpty()) {
+			items.add(new InfoItem(getString(R.string.dining_payment_info_label), mHall.getPaymentOptionString(), 0));
+		}
+		if (mHall.getLocation() != null) {
+			items.add(new InfoItem(getString(R.string.dining_location_info_label), mHall.getLocation().mDescription, R.drawable.action_map));
+		}
+		if (mHall.getHomePageUrl() != null && !mHall.getHomePageUrl().isEmpty()) {
+			items.add(new InfoItem(getString(R.string.dining_home_page_info_label), mHall.getHomePageUrl(), R.drawable.action_external));
+		}
+		return items;
+	}
+	
+	
 	
 	@Override
 	public void onResume() {
@@ -86,7 +220,7 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 
 	@Override
 	protected boolean isScrollable() {
-		return false;
+		return true;
 	}
 	
 	@Override

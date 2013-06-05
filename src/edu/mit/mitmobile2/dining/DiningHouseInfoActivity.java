@@ -33,8 +33,6 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 	
 	private static String HOUSE_DINING_HALL_ID_KEY = "hall_id";
 	
-	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,11 +56,11 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 		
 		
 		ListView infoLV = (ListView) findViewById(R.id.diningHallHouseInfoTopLV);
-		infoLV.setAdapter(new SimpleArrayAdapter<InfoItem>(this, getHouseInfo(house), R.layout.dining_hall_house_info_item_row) {
+		infoLV.setAdapter(new SimpleArrayAdapter<InfoItem>(this, getHouseInfo(house), R.layout.dining_hall_info_item_row) {
 			@Override
 			public void updateView(InfoItem item, View view) {
-				TextView label = (TextView) view.findViewById(R.id.diningMealItemInfoLabel);
-				TextView value = (TextView) view.findViewById(R.id.diningMealItemInfoValue);
+				TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
+				TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
 				ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
 				
 				label.setText(item.getInfoLabel());
@@ -107,7 +105,7 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 		scheduleLV.setAdapter(new SimpleArrayAdapter<ScheduleItem>(this, schedules, R.layout.dining_hall_house_schedule_item_row) {
 			@Override
 			public void updateView(ScheduleItem item, View view) {
-				TextView label = (TextView) view.findViewById(R.id.diningMealItemInfoLabel);
+				TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
 				TextView mealTV = (TextView) view.findViewById(R.id.diningScheduleMealName);
 				TextView timeTV = (TextView) view.findViewById(R.id.diningScheduleMealTimes);
 				
@@ -116,9 +114,6 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 				timeTV.setText(item.getMealTimeString());
 			}
 		});
-		
-		
-		
 	}
 	
 	private List<InfoItem> getHouseInfo(HouseDiningHall hall) {
@@ -284,49 +279,6 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 				i++;
 			}
 			return timeString;
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	private static class InfoItem {
-		private String mInfoLabel;
-		private String mInfoValue;
-		private int mInfoActionId;
-		
-		public InfoItem(String label, String value, int actionId) {
-			mInfoLabel = label;
-			mInfoValue = value;
-			mInfoActionId = actionId;
-			
-		}
-		
-		public String getInfoLabel() {
-			return mInfoLabel;
-		}
-
-		public void setInfoLabel(String mInfoLabel) {
-			this.mInfoLabel = mInfoLabel;
-		}
-
-		public String getInfoValue() {
-			return mInfoValue;
-		}
-
-		public void setInfoValue(String mInfoValue) {
-			this.mInfoValue = mInfoValue;
-		}
-
-		public int getInfoActionId() {
-			return mInfoActionId;
-		}
-
-		public void setmInfoActionId(int mInfoActionId) {
-			this.mInfoActionId = mInfoActionId;
 		}
 	}
 	
