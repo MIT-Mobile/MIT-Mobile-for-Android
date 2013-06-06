@@ -149,7 +149,7 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 				scheduleLists.add(item);
 			} else {
 				long oneDayInMillis = 60 * 60 * 24 * 1000;
-				if (DailyMealsSchedule.compareDates(previousDay.getDay(), mealDay.getDay()) <= oneDayInMillis) {
+				if (DiningModel.compareDates(previousDay.getDay(), mealDay.getDay()) <= oneDayInMillis) {
 					// day is adjacent, need to compare schedules
 					ScheduleItem lastSchedule = scheduleLists.get(scheduleLists.size() - 1);
 					if (lastSchedule.getMealSummary().equals(mealDay.getMealTimes())) {
@@ -242,7 +242,7 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 		}
 		
 		public String getSpanString() {
-			if (DailyMealsSchedule.compareDates(mStartDay, mEndDay) == 0) {
+			if (DiningModel.compareDates(mStartDay, mEndDay) == 0) {
 				String daySpan = sFormat.format(mStartDay.getTime());
 				return daySpan.toLowerCase();
 			}

@@ -256,7 +256,7 @@ public class DiningModel {
 			Calendar currentDay = new GregorianCalendar();
 			currentDay.setTimeInMillis(currentTime);
 			for (DailyMeals dailyMeals : mSchedule.mDailyMealsList) {
-				if (DailyMealsSchedule.compareDates(currentDay, dailyMeals.getDay()) == 0) {
+				if (compareDates(currentDay, dailyMeals.getDay()) == 0) {
 					return dailyMeals;
 				}
 			}
@@ -299,13 +299,13 @@ public class DiningModel {
 					Meal meal = dailyMeals.getMeal(mealKey);
 					if (meal != null) {
 						if (meal.isInProgress(currentDay)) {
-							return "Open until " + Meal.sHourMinuteFormat.format(meal.mEnd.getTime()) + 
-								Meal.sAmPmFormat.format(meal.mEnd.getTime()).toLowerCase(Locale.US);
+							return "Open until " + sHourMinuteFormat.format(meal.mEnd.getTime()) + 
+								sAmPmFormat.format(meal.mEnd.getTime()).toLowerCase(Locale.US);
 						}
 						
 						if (meal.isUpcoming(currentDay)) {
-							return "Opens at " + Meal.sHourMinuteFormat.format(meal.mStart.getTime()) + 
-								Meal.sAmPmFormat.format(meal.mStart.getTime()).toLowerCase(Locale.US);
+							return "Opens at " + sHourMinuteFormat.format(meal.mStart.getTime()) + 
+								sAmPmFormat.format(meal.mStart.getTime()).toLowerCase(Locale.US);
 						}
 					}
 					mealKey = DailyMeals.getNextMealName(mealKey);
@@ -322,10 +322,10 @@ public class DiningModel {
 	public static class RetailDiningHall extends DiningHall {
 		
 		static class DailyHours {
-			int mDayOfWeek;
 			String mMessage;
-			String mStartTime;
-			String mEndTime;
+			Calendar mDay;
+			Calendar mStartTime;
+			Calendar mEndTime;
 			
 			static String[] days = new String[] {
 				"sunday",
@@ -338,25 +338,19 @@ public class DiningModel {
 			};
 			
 			DailyHours(JSONObject object) throws JSONException {
-				String dayOfWeek = object.getString("day");
-				for (int i = 0; i < days.length; i++) {
-					if (dayOfWeek.equalsIgnoreCase(days[i])) {
-						mDayOfWeek = i + 1;
-						break;
-					}
-				}
-				
+				mDay = getCalendarDate(object.getString("date"), null);			
 				if (!object.isNull("message")) {
 					mMessage = object.getString("message");
 				}
 				if (!object.isNull("start_time") && !object.isNull("end_time")) {
-					mStartTime = object.getString("start_time");
-					mEndTime = object.getString("end_time");
+					mStartTime = getCalendarDate(object.getString("date"), object.getString("start_time")); 
+					mEndTime = getCalendarDate(object.getString("date"), object.getString("end_time")); 
 				}
 			}
 		}
 		
 		String mDescriptionHtml;
+		ArrayList<DailyHours> mHours = new ArrayList<DailyHours>();
 		String mMenuHtml;
 		String mMenuUrl;
 		String mHomepageUrl;
@@ -404,6 +398,10 @@ public class DiningModel {
 			if (!object.isNull("menu_html")) {
 				mMenuHtml = object.getString("menu_html");
 			}
+			JSONArray jsonHours = object.getJSONArray("hours");
+			for (int i = 0; i < jsonHours.length(); i++) {
+				mHours.add(new DailyHours(jsonHours.getJSONObject(i)));
+			}
 			if (!object.isNull("menu_url")) {
 				mMenuUrl = object.getString("menu_url");
 				if (!mMenuUrl.startsWith("http://") && !mMenuUrl.startsWith("https://")) {
@@ -450,7 +448,18 @@ public class DiningModel {
 
 		@Override
 		public String getTodaysHoursSummary(long currentTime) {
-			return "8am-8pm";
+			Calendar currentDate = new GregorianCalendar();
+			currentDate.setTimeInMillis(currentTime);
+			for (DailyHours hours: mHours) {
+				if (compareDates(hours.mDay, currentDate) == 0) {
+					if (hours.mMessage != null) {
+						return hours.mMessage;
+					} else {
+						return scheduleSummary(hours.mStartTime, hours.mEndTime);
+					}
+				}
+			}
+			return null;
 		}
 
 		@Override
@@ -466,7 +475,6 @@ public class DiningModel {
 	
 	public static class DailyMealsSchedule {
 		
-		static SimpleDateFormat sFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 		private List<DailyMeals> mDailyMealsList;
 		
 		public DailyMealsSchedule(List<DailyMeals> dailyMealsList) {
@@ -503,18 +511,6 @@ public class DiningModel {
 				}
 			}
 			return mealsInWeek;
-		}
-		
-		/*
-		 * Compare only the date (ignore hours/minutes/seconds etc...)
-		 */
-		public static long compareDates(Calendar a, Calendar b) {
-			String aString = sFormat.format(a.getTime());
-			String bString = sFormat.format(b.getTime());
-			if (aString.equals(bString)) {
-				return 0;
-			}
-			return a.getTimeInMillis() - b.getTimeInMillis();
 		}
 
 		public boolean isBeforeAllDays(Calendar day) {
@@ -650,10 +646,7 @@ public class DiningModel {
 		}
 	}
 	
-	public static class Meal {
-		static SimpleDateFormat sHourMinuteFormat = new SimpleDateFormat("h:mm", Locale.US);
-		static SimpleDateFormat sAmPmFormat = new SimpleDateFormat("a", Locale.US);
-		
+	public static class Meal {		
 		String mName;
 		String mMessage;
 		Calendar mStart;
@@ -709,27 +702,8 @@ public class DiningModel {
 		}
 		
 		public String getScheduleSummary() {
-			if (mStart != null && mEnd != null) {
-				return formatTimeForScheduleSpan(mStart) + " - " + formatTimeForScheduleSpan(mEnd);
-			} else {
-				return null;
-			}
-		}
-		
-		private String formatTimeForScheduleSpan(Calendar cal) {
-			SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h", Locale.US);
-			
-			SimpleDateFormat df = null;
-			if (cal.get(Calendar.MINUTE) == 0) {
-				df = shortTimeFormat;
-			} else {
-				df = sHourMinuteFormat;
-			}
-			
-			String timeString = df.format(cal.getTime()) + sAmPmFormat.format(cal.getTime()).toLowerCase();
-			return timeString;
-		}
-		
+			return scheduleSummary(mStart, mEnd);
+		}		
 		
 		public List<MenuItem> getMenuItems() {
 			return mMenuItems;
@@ -980,5 +954,54 @@ public class DiningModel {
 		public String getUrl() {
 			return mUrl;
 		}
+	}
+	
+	
+	
+	/*
+	 * Some convenience methods for handling dates
+	 */
+	static SimpleDateFormat sFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+	static SimpleDateFormat sHourMinuteFormat = new SimpleDateFormat("h:mm", Locale.US);
+	static SimpleDateFormat sAmPmFormat = new SimpleDateFormat("a", Locale.US);
+	
+	/*
+	 * Compare only the date (ignore hours/minutes/seconds etc...)
+	 */
+	static long compareDates(Calendar a, Calendar b) {
+		String aString = sFormat.format(a.getTime());
+		String bString = sFormat.format(b.getTime());
+		if (aString.equals(bString)) {
+			return 0;
+		}
+		return a.getTimeInMillis() - b.getTimeInMillis();
+	}
+	
+	static String formatTimeForScheduleSpan(Calendar cal) {
+		SimpleDateFormat shortTimeFormat = new SimpleDateFormat("h", Locale.US);
+		
+		SimpleDateFormat df = null;
+		if (cal.get(Calendar.MINUTE) == 0) {
+			df = shortTimeFormat;
+		} else {
+			df = sHourMinuteFormat;
+		}
+		
+		String timeString = df.format(cal.getTime()) + sAmPmFormat.format(cal.getTime()).toLowerCase();
+		return timeString;
+	}
+	
+	static String scheduleSummary(Calendar start, Calendar end) {
+		if (start != null && end != null) {
+			return formatTimeForScheduleSpan(start) + " - " + formatTimeForScheduleSpan(end);
+		} else {
+			return null;
+		}
+	}
+	
+	static long currentTimeMillis() {
+		long currentTime = 1367351565000L;
+		//long currentTime = System.currentTimeMillis();
+		return currentTime;
 	}
 }
