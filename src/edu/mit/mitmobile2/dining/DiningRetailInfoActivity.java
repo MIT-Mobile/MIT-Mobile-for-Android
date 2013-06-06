@@ -10,19 +10,18 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
+import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
@@ -134,70 +133,84 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 	}
 	
 	private void layoutScheduleList() {
-		ListView scheduleLV = (ListView)findViewById(R.id.diningHallInfoScheduleLV);
-		scheduleLV.setAdapter(new SimpleArrayAdapter<ScheduleItem>(this, getScheduleInfo(), R.layout.dining_hall_info_item_row) {
-			@Override
-			public void updateView(ScheduleItem item, View view) {
-				TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
-				TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
-				ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
-				img.setVisibility(View.GONE);
-				
-				if (item.dayStart.getDayAbbreviation().equals(item.dayEnd.getDayAbbreviation())) {
-					label.setText(item.dayStart.getDayAbbreviation());
-				} else {
-					label.setText(item.dayStart.getDayAbbreviation() + " - " + item.dayEnd.getDayAbbreviation());
-				}
-				value.setText(item.dayStart.getScheduleSpan());
+		LinearLayout scheduleContainer = (LinearLayout)findViewById(R.id.diningHallInfoScheduleContainer);
+		
+		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+		boolean first = true;
+		for (ScheduleItem item : getScheduleInfo()) {
+			
+			// add separator
+			if (!first) {
+				scheduleContainer.addView(new DividerView(this, null));
+			} else {
+				first = false;
 			}
-		});
+			
+			View view = inflater.inflate(R.layout.dining_hall_info_item_row, null);
+			view.setBackgroundColor(Color.WHITE);
+			TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
+			TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
+			ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
+			img.setVisibility(View.GONE);
+			
+			if (item.dayStart.getDayAbbreviation().equals(item.dayEnd.getDayAbbreviation())) {
+				label.setText(item.dayStart.getDayAbbreviation());
+			} else {
+				label.setText(item.dayStart.getDayAbbreviation() + " - " + item.dayEnd.getDayAbbreviation());
+			}
+			value.setText(item.dayStart.getScheduleSpan());
+			scheduleContainer.addView(view);
+		}
 	}
 	
 	private void layoutInfoList() {
-		ListView infoLV = (ListView)findViewById(R.id.diningHallInfoLV);
-		infoLV.setAdapter(new SimpleArrayAdapter<InfoItem>(this, getHallInfo(), R.layout.dining_hall_info_item_row) {
-			@Override
-			public void updateView(InfoItem item, View view) {
-				TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
-				TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
-				ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
-				
-				label.setText(item.getInfoLabel());
-				value.setText(item.getInfoValue());
-				
-				if (item.getInfoActionId() > 0) {
-					img.setVisibility(View.VISIBLE);
-					img.setImageResource(item.getInfoActionId());
-				} else {
-					img.setVisibility(View.GONE);
-				}
+		LinearLayout infoContainer = (LinearLayout)findViewById(R.id.diningHallInfoContainer);
+		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+		int standardPadding = getResources().getDimensionPixelOffset(R.dimen.standardPadding);
+		for (InfoItem item : getHallInfo()) {
+			
+			LinearLayout itemLayout = new LinearLayout(this);
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			itemLayout.setBackgroundColor(Color.WHITE);
+			params.bottomMargin = standardPadding;
+			itemLayout.setLayoutParams(params);
+			
+			View view = inflater.inflate(R.layout.dining_hall_info_item_row, null);
+			
+			TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
+			TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
+			ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
+			
+			label.setText(item.getInfoLabel());
+			value.setText(item.getInfoValue());
+			
+			if (item.getInfoActionId() > 0) {
+				img.setVisibility(View.VISIBLE);
+				img.setImageResource(item.getInfoActionId());
+			} else {
+				img.setVisibility(View.GONE);
 			}
 			
-			@Override
-			public boolean isEnabled(int position) {
-				InfoItem item = this.getItem(position);
-				return (item.getInfoActionId() > 0);
+			if (item.getInfoActionId() == R.drawable.action_map || item.getInfoActionId() == R.drawable.action_external) {
+				final InfoItem clickItem = item;
+				view.setBackgroundResource(R.drawable.highlight_background);
+				view.setPadding(standardPadding, standardPadding, standardPadding, standardPadding);
+				view.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (clickItem.getInfoActionId() == R.drawable.action_map) {
+							String locationName = mHall.getLocation().mDescription;
+							String url = "mitmobile://map/search?" + locationName;
+							CommonActions.doAction(DiningRetailInfoActivity.this, url);
+						} else if (clickItem.getInfoActionId() == R.drawable.action_external) {
+							CommonActions.viewURL(DiningRetailInfoActivity.this, mHall.getHomePageUrl());
+						}
+					}
+				});
 			}
-			
-			@Override
-			public boolean areAllItemsEnabled() {
-				return true;	// need to be true so dividers show up
-			}
-		});
-		
-		infoLV.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				InfoItem item = (InfoItem)parent.getAdapter().getItem(position);
-				if (item.getInfoActionId() == R.drawable.action_map) {
-					String locationName = mHall.getLocation().mDescription;
-					String url = "mitmobile://map/search?" + locationName;
-					CommonActions.doAction(DiningRetailInfoActivity.this, url);
-				} else if (item.getInfoActionId() == R.drawable.action_external) {
-					CommonActions.viewURL(DiningRetailInfoActivity.this, mHall.getHomePageUrl());
-				}
-			}
-		});
+			itemLayout.addView(view);
+			infoContainer.addView(itemLayout);
+		}
 	}
 	
 	private List<ScheduleItem> getScheduleInfo() {
