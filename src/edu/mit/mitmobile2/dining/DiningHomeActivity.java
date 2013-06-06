@@ -95,7 +95,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 	
 	private void populateDiningHallRows(int layoutID, List<? extends DiningHall> list, String title) {
 		LinearLayout layout = (LinearLayout) findViewById(layoutID);
-		long currentTime = System.currentTimeMillis();
+		long currentTime = DiningModel.currentTimeMillis();
 		if (layoutID == R.id.diningHomeRetailContent) {
 			// add bookmarked venues to top of list
 			addBookmarkedRetailVenuesToLayout(layout, currentTime);

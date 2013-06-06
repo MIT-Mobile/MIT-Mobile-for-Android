@@ -32,8 +32,7 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 	
 	public DiningHouseAbstractSliderAdapter(Context context) {
 		mContext = context;
-		long currentTime = 1367351565000L;
-		//long currentTime = System.currentTimeMillis();		
+		long currentTime = DiningModel.currentTimeMillis();		
 		mCurrentDate = new Date(currentTime);
 		mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 		mFormat.setCalendar(new GregorianCalendar());

@@ -48,8 +48,7 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 		String houseID = getIntent().getStringExtra(HOUSE_DINING_HALL_ID_KEY);
 		final HouseDiningHall house = venues.getHouseDiningHall(houseID);
 		
-		long selectedTime = 1367351565000L;
-		//selectedTime = System.currentTimeMillis();
+		long selectedTime = DiningModel.currentTimeMillis();
 		DiningHallHeaderView headerView = (DiningHallHeaderView) findViewById(R.id.diningHallHouseInfoHeader);
 		headerView.setHall(house, selectedTime);
 		headerView.setBackgroundColor(Color.TRANSPARENT);

@@ -58,9 +58,7 @@ public class DiningScheduleActivity extends NewModuleActivity {
 		if (savedInstanceState != null) {
 			selectedTime = savedInstanceState.getLong(SELECTED_DATE_KEY);
 		} else {
-			// test time
-			selectedTime = 1367351565000L;
-			//selectedTime = System.currentTimeMillis();
+			selectedTime = DiningModel.currentTimeMillis();
 		}
 		GregorianCalendar selectedDate = new GregorianCalendar();
 		selectedDate.setTimeInMillis(selectedTime);
