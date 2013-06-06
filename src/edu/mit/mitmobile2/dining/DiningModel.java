@@ -299,13 +299,11 @@ public class DiningModel {
 					Meal meal = dailyMeals.getMeal(mealKey);
 					if (meal != null) {
 						if (meal.isInProgress(currentDay)) {
-							return "Open until " + sHourMinuteFormat.format(meal.mEnd.getTime()) + 
-								sAmPmFormat.format(meal.mEnd.getTime()).toLowerCase(Locale.US);
+							return openUntil(meal.mEnd);
 						}
 						
 						if (meal.isUpcoming(currentDay)) {
-							return "Opens at " + sHourMinuteFormat.format(meal.mStart.getTime()) + 
-								sAmPmFormat.format(meal.mStart.getTime()).toLowerCase(Locale.US);
+							return opensAt(meal.mStart);
 						}
 					}
 					mealKey = DailyMeals.getNextMealName(mealKey);
@@ -464,12 +462,40 @@ public class DiningModel {
 
 		@Override
 		public Status getCurrentStatus(long currentTime) {
-			return Status.OPEN;
+			Calendar currentDate = new GregorianCalendar();
+			currentDate.setTimeInMillis(currentTime);
+			for (DailyHours hours: mHours) {
+				if (compareDates(hours.mDay, currentDate) == 0) {
+					if (hours.mStartTime != null && hours.mEndTime != null) {
+						if (currentTime >= hours.mStartTime.getTimeInMillis()) {
+							if (currentTime <= hours.mEndTime.getTimeInMillis()) {
+								return Status.OPEN;
+							}
+						}
+					} 
+				}
+			}
+			return Status.CLOSED;
 		}	
 		
 		@Override
 		public String getCurrentStatusSummary(long currentTime) {
-			return "Open till 8pm";
+			Calendar currentDate = new GregorianCalendar();
+			currentDate.setTimeInMillis(currentTime);
+			for (DailyHours hours: mHours) {
+				if (compareDates(hours.mDay, currentDate) == 0) {
+					if (hours.mStartTime != null && hours.mEndTime != null) {
+						if (currentTime >= hours.mStartTime.getTimeInMillis()) {
+							if (currentTime <= hours.mEndTime.getTimeInMillis()) {
+								return openUntil(hours.mEndTime);
+							}
+						} else {
+							return opensAt(hours.mStartTime);
+						}
+					} 
+				}
+			}
+			return "Closed for the day";
 		}	
 	}
 	
@@ -999,6 +1025,15 @@ public class DiningModel {
 		}
 	}
 	
+	static String openUntil(Calendar end) {
+		return "Open until " + sHourMinuteFormat.format(end.getTime()) + 
+				sAmPmFormat.format(end.getTime()).toLowerCase(Locale.US);
+	}
+	
+	static String opensAt(Calendar start) {
+		return "Opens at " + sHourMinuteFormat.format(start.getTime()) + 
+				sAmPmFormat.format(start.getTime()).toLowerCase(Locale.US);
+	}
 	static long currentTimeMillis() {
 		long currentTime = 1367351565000L;
 		//long currentTime = System.currentTimeMillis();
