@@ -54,7 +54,7 @@ public class PortraitDiningScheduleScreen extends DiningScheduleScreen {
 	}
 	
 	protected void addHeader() {
-		DiningHallHeaderView headerView = new DiningHallHeaderView(mContext, mSelectedHouse, System.currentTimeMillis());
+		DiningHallHeaderView headerView = new DiningHallHeaderView(mContext, mSelectedHouse, DiningModel.currentTimeMillis());
 		headerView.setActionImageResourceId(R.drawable.menu_info);
 		headerView.setActionClickListener(new OnClickListener() {
 			@Override

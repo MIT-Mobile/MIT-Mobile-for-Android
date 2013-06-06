@@ -128,8 +128,7 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 	
 	private List<ScheduleItem> getHouseSchedule(HouseDiningHall hall) {
 		
-		long selectedTime = 1367351565000L;
-		//selectedTime = System.currentTimeMillis();
+		long selectedTime = DiningModel.currentTimeMillis();
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(selectedTime);
 		
