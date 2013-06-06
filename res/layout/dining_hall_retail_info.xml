@@ -30,11 +30,12 @@
         android:layout_marginRight="@dimen/standardPadding" />
     
     <ListView
-        android:id="@+id/diningHallHouseInfoScheduleLV"
+        android:id="@+id/diningHallInfoScheduleLV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10sp"
         android:layout_marginRight="10sp"
+        android:layout_marginBottom="10sp"
     />
     
      <ListView 

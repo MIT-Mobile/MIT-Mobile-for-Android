@@ -335,6 +335,11 @@ public class DiningModel {
 				"saturday",				
 			};
 			
+			@Override
+			public String toString() {
+				return getDayAbbreviation() + "  " + getScheduleSpan();
+			}
+			
 			DailyHours(JSONObject object) throws JSONException {
 				mDay = getCalendarDate(object.getString("date"), null);			
 				if (!object.isNull("message")) {
@@ -344,6 +349,30 @@ public class DiningModel {
 					mStartTime = getCalendarDate(object.getString("date"), object.getString("start_time")); 
 					mEndTime = getCalendarDate(object.getString("date"), object.getString("end_time")); 
 				}
+			}
+			
+			private static SimpleDateFormat sHourFormat = new SimpleDateFormat("h", Locale.US);
+			
+			public Calendar getDay() {
+				return mDay;
+			}
+			
+			public String getDayAbbreviation() {
+				SimpleDateFormat df = new SimpleDateFormat("EEE", Locale.US);
+				return df.format(mDay.getTime()).toLowerCase();
+			}
+			
+			public String getScheduleSpan() { 
+				if (mStartTime == null && mMessage != null) {
+					return mMessage;
+				}
+				SimpleDateFormat startFormat = (mStartTime.get(Calendar.MINUTE) > 0) ? sHourMinuteFormat : sHourFormat;
+				SimpleDateFormat endFormat = (mEndTime.get(Calendar.MINUTE) > 0) ? sHourMinuteFormat : sHourFormat;
+				String start =  startFormat.format(mStartTime.getTime()) +
+								sAmPmFormat.format(mStartTime.getTime()).toLowerCase(Locale.US);
+				String end =  endFormat.format(mEndTime.getTime()) +
+						sAmPmFormat.format(mEndTime.getTime()).toLowerCase(Locale.US);
+				return start + " - " + end;
 			}
 		}
 		
@@ -442,6 +471,10 @@ public class DiningModel {
 			}
 
 			return options.substring(0, options.length() - 2);
+		}
+		
+		public List<DailyHours> getDailyHours() {
+			return mHours;
 		}
 
 		@Override

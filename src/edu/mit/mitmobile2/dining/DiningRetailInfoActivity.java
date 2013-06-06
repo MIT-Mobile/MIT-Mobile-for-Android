@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
@@ -12,11 +13,11 @@ import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -25,6 +26,7 @@ import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
+import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall.DailyHours;
 
 public class DiningRetailInfoActivity extends NewModuleActivity {
 	
@@ -79,7 +81,7 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 		
 		layoutDescription();
 		layoutMenu();
-		
+		layoutScheduleList();
 		layoutInfoList();
 		
 	}
@@ -132,7 +134,23 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 	}
 	
 	private void layoutScheduleList() {
-		
+		ListView scheduleLV = (ListView)findViewById(R.id.diningHallInfoScheduleLV);
+		scheduleLV.setAdapter(new SimpleArrayAdapter<ScheduleItem>(this, getScheduleInfo(), R.layout.dining_hall_info_item_row) {
+			@Override
+			public void updateView(ScheduleItem item, View view) {
+				TextView label = (TextView) view.findViewById(R.id.diningHallInfoLabel);
+				TextView value = (TextView) view.findViewById(R.id.diningHallInfoValue);
+				ImageView img = (ImageView) view.findViewById(R.id.diningInfoItemRowActionIcon);
+				img.setVisibility(View.GONE);
+				
+				if (item.dayStart.getDayAbbreviation().equals(item.dayEnd.getDayAbbreviation())) {
+					label.setText(item.dayStart.getDayAbbreviation());
+				} else {
+					label.setText(item.dayStart.getDayAbbreviation() + " - " + item.dayEnd.getDayAbbreviation());
+				}
+				value.setText(item.dayStart.getScheduleSpan());
+			}
+		});
 	}
 	
 	private void layoutInfoList() {
@@ -180,7 +198,38 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 				}
 			}
 		});
+	}
+	
+	private List<ScheduleItem> getScheduleInfo() {
 		
+		List<DailyHours> schedule = mHall.getDailyHours();
+		ArrayList<ScheduleItem> items = new ArrayList<ScheduleItem>();
+		ScheduleItem previousItem = null;
+		for (DailyHours hours : schedule) {
+			if (previousItem == null) {
+				// first time through, add schedule item
+				ScheduleItem item = new ScheduleItem();
+				item.dayStart = hours;
+				item.dayEnd = hours;
+				items.add(item);
+				previousItem = item;
+			} else {
+				if (previousItem.dayEnd.getScheduleSpan().equals(hours.getScheduleSpan()) &&
+						hours.getDay().get(Calendar.DAY_OF_WEEK) - previousItem.dayEnd.getDay().get(Calendar.DAY_OF_WEEK) == 1) {
+					// schedule span is equal update previous item daySpan and days are adjacent
+					items.get(items.size() - 1).dayEnd = hours;
+					previousItem = items.get(items.size() - 1);
+				} else {
+					// schedule item is not equal, or not adjacent, add new item to list and update previous item
+					ScheduleItem item = new ScheduleItem();
+					item.dayStart = hours;
+					item.dayEnd = hours;
+					items.add(item);
+					previousItem = item;
+				}
+			}
+		}
+		return items;
 	}
 	
 	private List<InfoItem> getHallInfo() {
@@ -199,8 +248,6 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 		}
 		return items;
 	}
-	
-	
 	
 	@Override
 	public void onResume() {
@@ -235,6 +282,11 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 	@Override
 	protected boolean isModuleHomeActivity() {
 		return false;
+	}
+	
+	private static class ScheduleItem {
+		public DailyHours dayStart;
+		public DailyHours dayEnd;
 	}
 
 }

@@ -11,6 +11,10 @@ public class InfoItem {
 		mInfoActionId = actionId;
 	}
 	
+	public InfoItem(String label, String value) {
+		this(label, value, 0);
+	}
+	
 	public String getInfoLabel() {
 		return mInfoLabel;
 	}
