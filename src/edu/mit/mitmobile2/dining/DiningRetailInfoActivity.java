@@ -107,7 +107,7 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 		boolean tempHasMenu = false;
 		if (mHall.getMenuUrl() != null && !mHall.getMenuUrl().isEmpty()) {
 			tempHasMenu = true;
-			rowValue.setText(mHall.getMenuUrl());
+			rowValue.setText(stripUrlScheme(mHall.getMenuUrl()));
 			rowValue.setEllipsize(TruncateAt.END);
 			rowValue.setSingleLine(true);
 			rowAction.setBackgroundResource(R.drawable.action_external);
@@ -258,9 +258,18 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 			items.add(new InfoItem(getString(R.string.dining_location_info_label), mHall.getLocation().mDescription, R.drawable.action_map));
 		}
 		if (mHall.getHomePageUrl() != null && !mHall.getHomePageUrl().isEmpty()) {
-			items.add(new InfoItem(getString(R.string.dining_home_page_info_label), mHall.getHomePageUrl(), R.drawable.action_external));
+			items.add(new InfoItem(getString(R.string.dining_home_page_info_label), stripUrlScheme(mHall.getHomePageUrl()), R.drawable.action_external));
 		}
 		return items;
+	}
+	
+	private String stripUrlScheme(String url) {
+		if (url.startsWith("http://")) {
+			url = url.substring(7);
+		} else if (url.startsWith("https://")) {
+			url = url.substring(8);
+		}
+		return url;
 	}
 	
 	@Override

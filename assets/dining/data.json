@@ -3223,7 +3223,7 @@
           "state": "MA",
           "zipcode": "02139"
         },
-        "menu_url": "annastaqueria.com/menu.htm",
+        "menu_url": "http://annastaqueria.com/menu.html",
         "hours": [
           {
             "date": "2013-04-29",

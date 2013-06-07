@@ -229,12 +229,7 @@
 		<activity android:name=".dining.DiningHouseInfoActivity" />	
 		<activity android:name=".dining.DiningRetailInfoActivity" />	
 		<activity android:name=".dining.DiningFilterActivity" />	
-		<activity android:name=".dining.SimpleSingleWebTextActivity" >
-			<intent-filter>
-    			<category android:name="android.intent.category.DEFAULT" />
-    			<action android:name="android.intent.action.VIEW" /> 
-			</intent-filter>    
-		</activity>
+		<activity android:name=".dining.SimpleSingleWebViewActivity" />
 		
 		
 		<activity android:name=".about.AboutActivity" />
