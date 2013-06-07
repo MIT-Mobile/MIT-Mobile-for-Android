@@ -20,7 +20,9 @@ public class SliderView extends HorizontalScrollView {
 	// going horizontally
 	private static int VERTICAL_FAVOR_FACTOR = 2;
 	
-	protected int mWidth, mHeight;
+	protected int mLeftXforMiddle;
+	protected int mRightXforMiddle;
+	protected int mHeight;
 	
 	protected Context mContext;
 	
@@ -34,7 +36,7 @@ public class SliderView extends HorizontalScrollView {
 	protected View.OnTouchListener mTouchListener = null;
 	protected OnSeekListener mOnSeekListener = null;
 	
-	private LinearLayout mLinearLayout;
+	private SliderViewLayout mSliderViewLayout;
 	private boolean mHasPreviousScreen;
 	private boolean mHasNextScreen;
 	private boolean mScrollNeedsResetting;
@@ -61,40 +63,34 @@ public class SliderView extends HorizontalScrollView {
 	private void initSliderView(Context context) {
 		mContext = context;
 		
-		mLinearLayout = new LinearLayout(context);
-		mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-		addView(mLinearLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+		mSliderViewLayout = new SliderViewLayout(context);
+		addView(mSliderViewLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		
 		setHorizontalScrollBarEnabled(false);
-		mWidth = 0;
+		
+		mLeftXforMiddle = mSliderViewLayout.getLeftXforMiddle();
 		
         setHorizontalFadingEdgeEnabled(false);
         
-        mStaticFrictionThreshold = AttributesParser.parseDimension("4dip", mContext);		
+        mStaticFrictionThreshold = AttributesParser.parseDimension("4dip", mContext);	
+        
+        setFillViewport(true);
 	}
 	
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		int newWidth = right - left;
-		if (newWidth != mWidth) {
-			mWidth = newWidth;
-			for(int i = 0; i < mLinearLayout.getChildCount(); i++) {
-				FrameLayout frame = (FrameLayout) mLinearLayout.getChildAt(i);
-				frame.setLayoutParams(new LinearLayout.LayoutParams(mWidth, LayoutParams.MATCH_PARENT));
-			}
-			new Handler().post(new Runnable() {
-				@Override
-				public void run() {
-					mScrollNeedsResetting = true;
-					mLinearLayout.requestLayout();
-				}
-			});
-		}
 		super.onLayout(changed, left, top, right, bottom);
 		if (mScrollNeedsResetting) {
-			scrollTo(mWidth, 0);
+			scrollTo(mLeftXforMiddle, 0);
 			mScrollNeedsResetting = false;
 		}
+	}
+	
+	@Override
+	protected void onSizeChanged (int w, int h, int oldw, int oldh) {
+		mLeftXforMiddle = mSliderViewLayout.getLeftXforMiddle();
+		mRightXforMiddle = mSliderViewLayout.getRightXforMiddle();
+		scrollTo(mLeftXforMiddle, 0);
 	}
 
 	public void setAdapter(Adapter sliderAdapter) {
@@ -218,13 +214,13 @@ public class SliderView extends HorizontalScrollView {
             final int deltaX = (int) (mLastMotionX - event.getX());
             mLastMotionX = event.getX();
             if (deltaX < 0) {
-            	int availableToScroll = mHasPreviousScreen ? -getScrollX() : -getScrollX() + mWidth;
+            	int availableToScroll = mHasPreviousScreen ? -getScrollX() : -getScrollX() + mLeftXforMiddle;
             	if (availableToScroll < 0) {                       	   
             		scrollBy(Math.max(availableToScroll, deltaX), 0);
             	} 
             } else if (deltaX > 0) {
-            	int right = mHasNextScreen ? 3 * mWidth : 2 * mWidth;
-            	final int availableToScroll = right - getScrollX() - getWidth();
+            	int right = mHasNextScreen ? mSliderViewLayout.getWidth() : mRightXforMiddle;
+            	final int availableToScroll = right - getScrollX() - mLeftXforMiddle;
 
             	if (availableToScroll > 0) {
             		scrollBy(Math.min(availableToScroll, deltaX), 0);
@@ -269,7 +265,7 @@ public class SliderView extends HorizontalScrollView {
 	}
 
 	private ScreenPosition nearestPosition() {
-		float screenFraction = (float)(getScrollX() - mWidth) / (float)(mWidth);
+		float screenFraction = (float)(getScrollX() - mLeftXforMiddle) / (float)(mSliderViewLayout.getChildWidth());
 		if (screenFraction < -0.50) {
 			return ScreenPosition.Previous;
 		}
@@ -284,9 +280,9 @@ public class SliderView extends HorizontalScrollView {
 			case Previous:
 				return 0;
 			case Current:
-				return mWidth;
+				return mLeftXforMiddle;
 			case Next:
-				return 2 * mWidth;
+				return mSliderViewLayout.getWidth() - mSliderViewLayout.getChildWidth();
 		}
 		throw new RuntimeException("scroll position not found, must have received null for screen position");
 	}
@@ -356,49 +352,20 @@ public class SliderView extends HorizontalScrollView {
 		    newScreen = mSliderAdapter.getScreen(position);
 		}
 		
-		FrameLayout previousWrapper = (FrameLayout) mLinearLayout.getChildAt(0);
-		FrameLayout currentWrapper = (FrameLayout) mLinearLayout.getChildAt(1);
-		FrameLayout nextWrapper = (FrameLayout) mLinearLayout.getChildAt(2);
-		
 		if (position == ScreenPosition.Next) {
-			if (previousWrapper.getChildCount() > 0) {
-				previousWrapper.removeViewAt(0);
+			mHasPreviousScreen = true;
+			mHasNextScreen = (newScreen != null);
+			
+			if (mSliderViewLayout.addViewToRight(newScreen) != null) {
 				mSliderAdapter.destroyScreen(ScreenPosition.Previous);
 			}
 			
-			mHasPreviousScreen = true;
-			View current = currentWrapper.getChildAt(0);
-			currentWrapper.removeView(current);
-			previousWrapper.addView(current);
-			
-			View next = nextWrapper.getChildAt(0);
-			nextWrapper.removeView(next);
-			currentWrapper.addView(next);
-			
-			mHasNextScreen = (newScreen != null);
-			if (mHasNextScreen) {
-				nextWrapper.addView(newScreen);
-			}
-			
 		} else if (position == ScreenPosition.Previous) {
-			
-			if (nextWrapper.getChildCount() > 0) {
-				nextWrapper.removeViewAt(0);
-				mSliderAdapter.destroyScreen(ScreenPosition.Next);
-			}
-			
 			mHasNextScreen = true;
-			View current = currentWrapper.getChildAt(0);
-			currentWrapper.removeView(current);
-			nextWrapper.addView(current);
-			
-			View previous = previousWrapper.getChildAt(0);
-			previousWrapper.removeView(previous);
-			currentWrapper.addView(previous);
-			
 			mHasPreviousScreen = (newScreen != null);
-			if (mHasPreviousScreen) {
-				previousWrapper.addView(newScreen);
+
+			if (mSliderViewLayout.addViewToLeft(newScreen) != null) {
+				mSliderAdapter.destroyScreen(ScreenPosition.Next);
 			}
 			
 		} else {
@@ -407,7 +374,7 @@ public class SliderView extends HorizontalScrollView {
 		}
 		
 		mScrollNeedsResetting = true;
-		scrollTo(mWidth, 0);
+		scrollTo(mLeftXforMiddle, 0);
 		
 		if (mOnSeekListener != null) {
 		    mOnSeekListener.onSeek(this, mSliderAdapter);
@@ -415,58 +382,41 @@ public class SliderView extends HorizontalScrollView {
 	}
 	
 	public void destroy() {
-		clear();
+		mSliderViewLayout.clear();
 		mSliderAdapter.destroy();
 		mSliderAdapter = null;
 	}
 	
-	private void addScreen(ScreenPosition screenPosition) {
-		FrameLayout wrapperView = new FrameLayout(mContext);
-		mLinearLayout.addView(wrapperView, new LayoutParams(mWidth, mHeight));
-		if (screenPosition == null) {
-			Log.d("ZZZ","screenposition is null");
-		}
-		if (mSliderAdapter == null) {
-			Log.d("ZZZ","mSliderAdapter is null");			
-		}
-		if (mSliderAdapter.hasScreen(screenPosition)) {
-			wrapperView.addView(mSliderAdapter.getScreen(screenPosition));
-		}		
-	}
-	
 	
 	public void refreshScreens() {
-		clear();
-		addScreen(ScreenPosition.Previous);
-		mHasPreviousScreen = mSliderAdapter.hasScreen(ScreenPosition.Previous);
+		/*
+		 * really should change how SliderAdapter is notified about views being removed.
+		 */
+		mSliderViewLayout.clear();
+		View currentView = mSliderAdapter.getScreen(ScreenPosition.Current);
+		mSliderViewLayout.addViewToRight(currentView);
 		
-		addScreen(ScreenPosition.Current);
+		mHasNextScreen = false;
+		if (mSliderAdapter.hasScreen(ScreenPosition.Next)) {
+			mHasNextScreen = true;
+			View nextView = mSliderAdapter.getScreen(ScreenPosition.Next);
+			mSliderViewLayout.addViewToRight(nextView);
+		} 
 		
-		addScreen(ScreenPosition.Next);
-		mHasNextScreen = mSliderAdapter.hasScreen(ScreenPosition.Next);
+		mHasPreviousScreen = false;
+		if (mSliderAdapter.hasScreen(ScreenPosition.Previous)) {
+			mHasPreviousScreen = true;
+			View previousView = mSliderAdapter.getScreen(ScreenPosition.Previous);
+			mSliderViewLayout.addViewToLeft(previousView);
+		}
 		
 		mScrollNeedsResetting = true;
-		scrollTo(mWidth, 0);
+
+		scrollTo(mLeftXforMiddle, 0);
 		
 		mSliderAdapter.seek(ScreenPosition.Current);
 		if (mOnSeekListener != null) {
 		    mOnSeekListener.onSeek(this, mSliderAdapter);
-		}
-	}
-	
-	private void clearScreen(int childIndex, ScreenPosition screenPosition) {
-		FrameLayout view = (FrameLayout) mLinearLayout.getChildAt(childIndex);
-		if (view.getChildCount() > 0) {
-		    	view.removeViewAt(0);
-			mSliderAdapter.destroyScreen(screenPosition);
-		}
-	}
-	private void clear() {
-		if (mLinearLayout.getChildCount() > 0) {
-			clearScreen(0, ScreenPosition.Previous);
-			clearScreen(1, ScreenPosition.Current);
-			clearScreen(2, ScreenPosition.Next);
-			mLinearLayout.removeAllViews();
 		}
 	}
 	

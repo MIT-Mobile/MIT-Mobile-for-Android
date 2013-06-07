@@ -40,15 +40,15 @@ public class DiningSliderView extends SliderView {
 		int action = event.getAction();
 	    if (action == MotionEvent.ACTION_UP) {
 	    	int scrollX = getScrollX();
-			if (mWidth <= scrollX && scrollX <= 2 * mWidth) {
+			if (mLeftXforMiddle <= scrollX && scrollX <= mRightXforMiddle) {
 				// override the default snap to position behavior
-				if (scrollX >= (2 * mWidth - mContainerWidth)) {
+				if (scrollX >= (mRightXforMiddle - mContainerWidth)) {
 					// user has scrolled beyond the screen, either let the user
 					// go to the next screen or scroll to be right justified
-					if (scrollX > 2 * mWidth - mContainerWidth / 2) {
+					if (scrollX > mRightXforMiddle - mContainerWidth / 2) {
 						snapToPosition(ScreenPosition.Next);
 					} else {
-						smoothScrollTo(2 * mWidth - mContainerWidth, 0);
+						smoothScrollTo(mRightXforMiddle - mContainerWidth, 0);
 					}
 				}
 				mTouchState = TOUCH_STATE_REST;
