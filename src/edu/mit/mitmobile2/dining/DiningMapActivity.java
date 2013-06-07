@@ -5,16 +5,57 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TabHost;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.maps.MITMapView;
 
-public class DiningMapActivity extends NewModuleActivity {
+public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTabChangeListener{
+	
+	public static final String sHouseTab = "HOUSE DINING";
+	public static final String sRetailTab = "RETAIL";
+	
+	private MITMapView mMapView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dining_map);
+		
+		TabHost tabHost = (TabHost) findViewById(R.id.diningMapTabHost);
+		tabHost.setup();
+		TabConfigurator tabConfigurator = new TabConfigurator(this, tabHost);
+		tabConfigurator.addTab(sHouseTab, android.R.id.tabcontent);
+		tabConfigurator.addTab(sRetailTab, android.R.id.tabcontent);
+		tabConfigurator.configureTabs();
+		tabHost.setOnTabChangedListener(this);
+		
+		mMapView = (MITMapView) findViewById(R.id.diningMapView);
+		
+	}
+	
+	// onTabChangedListener
+	@Override
+	public void onTabChanged(String tabId) {
+		Log.d("TAB", "Tab changed to id : " + tabId);
+		mMapView.clearMapItems();
+		if (tabId.equals(sHouseTab)) {
+			annotateHouseVenues();
+		} else if (tabId.equals(sRetailTab)) {
+			annotateRetailVenues();
+		}
+	}
+	
+	private void annotateHouseVenues() {
+		
+		
+	}
+	
+	private void annotateRetailVenues() {
+		
 		
 	}
 	
