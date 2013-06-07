@@ -91,6 +91,8 @@ public class SliderView extends HorizontalScrollView {
 		mLeftXforMiddle = mSliderViewLayout.getLeftXforMiddle();
 		mRightXforMiddle = mSliderViewLayout.getRightXforMiddle();
 		scrollTo(mLeftXforMiddle, 0);
+		mScrollNeedsResetting = true;
+		requestLayout();
 	}
 
 	public void setAdapter(Adapter sliderAdapter) {
