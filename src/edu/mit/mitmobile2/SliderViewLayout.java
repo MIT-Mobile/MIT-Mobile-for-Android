@@ -1,6 +1,10 @@
 package edu.mit.mitmobile2;
 
+import android.R.color;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,11 +14,18 @@ public class SliderViewLayout extends ViewGroup {
 	View mRight;
 	
 	private int mChildWidth;
-	private int mDividerWidth;
+	
+	private int mSpacerWidth;
+	private int mDividerWidth;	
+	private Paint mDividerPaint;
 	
 	public SliderViewLayout(Context context) {
 		super(context);
-		mDividerWidth = AttributesParser.parseDimension("8dip", context);
+		mSpacerWidth = AttributesParser.parseDimension("8dip", context);
+		mDividerWidth = AttributesParser.parseDimension("1dip", context);
+		mDividerPaint = new Paint();
+		mDividerPaint.setColor(Color.BLACK);
+		mDividerPaint.setStrokeWidth(mDividerWidth);
 	}
 
 	public int getChildWidth() {
@@ -22,11 +33,11 @@ public class SliderViewLayout extends ViewGroup {
 	}
 	
 	public int getLeftXforMiddle() {
-		return mChildWidth + mDividerWidth;
+		return mChildWidth + mSpacerWidth;
 	}
 	
 	public int getRightXforMiddle() {
-		return 2 * mChildWidth + mDividerWidth;
+		return 2 * mChildWidth + mSpacerWidth;
 	}
 	
 	@Override
@@ -34,7 +45,7 @@ public class SliderViewLayout extends ViewGroup {
 		int width = 0;
 		int childWidthSpec = 0;
 		mChildWidth = MeasureSpec.getSize(widthMeasureSpec);
-		width = 3 * MeasureSpec.getSize(widthMeasureSpec) + 2 * mDividerWidth;			
+		width = 3 * MeasureSpec.getSize(widthMeasureSpec) + 2 * mSpacerWidth;			
 		childWidthSpec = MeasureSpec.makeMeasureSpec(mChildWidth, MeasureSpec.EXACTLY);
 		
 		if (mLeft != null) {
@@ -57,13 +68,32 @@ public class SliderViewLayout extends ViewGroup {
 			mLeft.layout(0, 0, mChildWidth, height);
 		}
 		if (mMiddle != null) {
-			mMiddle.layout(mChildWidth+mDividerWidth, 0, 2*mChildWidth+mDividerWidth, height);
+			mMiddle.layout(mChildWidth+mSpacerWidth, 0, 2*mChildWidth+mSpacerWidth, height);
 		}
 		if (mRight != null) {
-			mRight.layout(2*mChildWidth+2*mDividerWidth, 0, 3*mChildWidth+2*mDividerWidth, height);
+			mRight.layout(2*mChildWidth+2*mSpacerWidth, 0, 3*mChildWidth+2*mSpacerWidth, height);
 		}
 	}
 	
+	@Override
+	protected void dispatchDraw(Canvas canvas) {
+		super.dispatchDraw(canvas);
+	
+		int x = mChildWidth+(mDividerWidth+1)/2;
+		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
+		
+		// Note: dividerWidth+1 is to force it to round up.
+		x = mChildWidth + mSpacerWidth - mDividerWidth/2;
+		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
+		
+		
+		// Note: dividerWidth+1 is to force it to round up.
+		x = 2*mChildWidth + mSpacerWidth + (mDividerWidth+1)/2;
+		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
+		
+		x = 2*mChildWidth+2*mSpacerWidth - mDividerWidth/2;
+		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
+	}
 	
 	/*
 	 *  these methods add views to the left or right and push off
