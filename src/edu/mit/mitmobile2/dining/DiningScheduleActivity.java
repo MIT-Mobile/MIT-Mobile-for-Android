@@ -113,16 +113,17 @@ public class DiningScheduleActivity extends NewModuleActivity {
 	
 	@Override
 	protected List<String> getMenuItemBlackList() {
+		ArrayList<String> list = new ArrayList<String>();
 		int orientation = getResources().getConfiguration().orientation;
 		switch (orientation) {
 			case Configuration.ORIENTATION_LANDSCAPE:
-				ArrayList<String> list = new ArrayList<String>();
 				list.add(DiningModule.FILTER_ITEM_ID);
-				return list;
-		case Configuration.ORIENTATION_PORTRAIT:
+			case Configuration.ORIENTATION_PORTRAIT:
 			default:
-				return Collections.emptyList();
 		}
+		list.add(DiningModule.LISTVIEW_ITEM_ID);
+		list.add(DiningModule.MAPVIEW_ITEM_ID);
+		return list;
 	}
 
 	@Override

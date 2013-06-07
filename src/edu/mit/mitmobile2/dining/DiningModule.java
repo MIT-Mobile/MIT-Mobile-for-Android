@@ -10,12 +10,16 @@ import edu.mit.mitmobile2.R;
 
 public class DiningModule extends NewModule {
 	
-	public final static String FILTER_ITEM_ID = "dining.filter"; 
+	public final static String FILTER_ITEM_ID = "dining.filter";
+	public final static String MAPVIEW_ITEM_ID = "dining.mapview"; 
+	public final static String LISTVIEW_ITEM_ID = "dining.listview"; 
 
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
 		ArrayList<MITMenuItem> list = new ArrayList<MITMenuItem>();
 		list.add(new MITMenuItem(FILTER_ITEM_ID, "Filter", R.drawable.action_history));
+		list.add(new MITMenuItem(MAPVIEW_ITEM_ID, "Show Map", R.drawable.action_map));
+		list.add(new MITMenuItem(LISTVIEW_ITEM_ID, "Show List", R.drawable.action_pdf));
 		return list;
 	}
 

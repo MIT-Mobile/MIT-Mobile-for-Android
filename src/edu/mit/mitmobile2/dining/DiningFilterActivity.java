@@ -99,6 +99,8 @@ public class DiningFilterActivity extends NewModuleActivity {
 	protected List<String> getMenuItemBlackList() {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(DiningModule.FILTER_ITEM_ID);
+		list.add(DiningModule.LISTVIEW_ITEM_ID);
+		list.add(DiningModule.MAPVIEW_ITEM_ID);
 		return list;
 	}
 

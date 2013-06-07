@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:background="@color/rowBackground">
+  
+	<edu.mit.mitmobile2.FullScreenLoader
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:id="@+id/diningHomeLoader"
+		android:visibility=gone />
+	
+	<TabHost 
+		    android:id="@+id/diningMapTabHost"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"> 
+		    
+	    <LinearLayout
+		        android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"> 
+				
+	        <TabWidget
+		            android:id="@android:id/tabs"
+		            android:layout_width="fill_parent"
+		            android:layout_height="@dimen/tabHeight"/>
+	        
+	        
+	     </LinearLayout>
+	</TabHost>
+	
+	
+</LinearLayout>

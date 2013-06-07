@@ -3,7 +3,7 @@ package edu.mit.mitmobile2.dining;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -220,11 +220,18 @@ public class DiningHomeActivity extends NewModuleActivity {
 	protected List<String> getMenuItemBlackList() {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(DiningModule.FILTER_ITEM_ID);
+		list.add(DiningModule.LISTVIEW_ITEM_ID);
 		return list;
 	}
 	
 	@Override
-	protected void onOptionSelected(String optionId) { }
+	protected void onOptionSelected(String optionId) {
+		if (optionId.equals(DiningModule.MAPVIEW_ITEM_ID)) {
+			Intent i = new Intent(this, DiningMapActivity.class);
+			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+		}
+	}
 
 	@Override
 	protected boolean isModuleHomeActivity() {
