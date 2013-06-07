@@ -123,10 +123,11 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 			@Override
 			public void onClick(View v) {
 				if (isExternalMenu) {
+					// view web page
 					CommonActions.viewURL(DiningRetailInfoActivity.this, mHall.getMenuUrl());
 				} else {
 					// go to description page
-					
+					SimpleSingleWebViewActivity.launch(DiningRetailInfoActivity.this, mHall.getMenuHtml());
 				}
 			}
 		});
@@ -250,10 +251,10 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 		if (mHall.getCuisineString() != null && !mHall.getCuisineString().isEmpty()) {
 			items.add(new InfoItem(getString(R.string.dining_cuisine_info_label), mHall.getCuisineString(), 0));
 		}
-		if (!mHall.getPaymentOptions().isEmpty()) {
+		if (mHall.getPaymentOptions() != null && !mHall.getPaymentOptions().isEmpty()) {
 			items.add(new InfoItem(getString(R.string.dining_payment_info_label), mHall.getPaymentOptionString(), 0));
 		}
-		if (mHall.getLocation() != null) {
+		if (mHall.getLocation().mDescription != null && !mHall.getLocation().mDescription.isEmpty()) {
 			items.add(new InfoItem(getString(R.string.dining_location_info_label), mHall.getLocation().mDescription, R.drawable.action_map));
 		}
 		if (mHall.getHomePageUrl() != null && !mHall.getHomePageUrl().isEmpty()) {

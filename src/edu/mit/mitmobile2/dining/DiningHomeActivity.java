@@ -53,7 +53,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 					mLoader.setVisibility(View.GONE);
 
 					mVenues = DiningModel.getDiningVenues(); 
-					displayDiningHalls(mVenues);
+					displayDiningHalls();
 					
 					List<DiningLink> links = DiningModel.getDiningLinks();
 					displayDiningLinks(links);
@@ -77,7 +77,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 		}
 	}
 	
-	private void displayDiningHalls(DiningVenues venues) {
+	private void displayDiningHalls() {
 		TabHost tabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
 		tabHost.setup();
 		TabConfigurator tabConfigurator = new TabConfigurator(this, tabHost);
@@ -85,12 +85,18 @@ public class DiningHomeActivity extends NewModuleActivity {
 		tabConfigurator.addTab("RETAIL", R.id.diningHomeRetailContent);
 		tabConfigurator.configureTabs();
 		
-		populateDiningHallRows(R.id.diningHomeHouseContent, venues.getHouses(), "Dining Houses");
-		populateDiningHallRows(R.id.diningHomeRetailContent, venues.getRetail(), "Retail");
+		populateDiningHallRows(R.id.diningHomeHouseContent, mVenues.getHouses(), "Dining Houses");
+		populateDiningHallRows(R.id.diningHomeRetailContent, mVenues.getRetail(), "Retail");
 		
 		View view = findViewById(R.id.diningHomeHouseTab);
 		TextView messageView = (TextView) view.findViewById(R.id.diningHomeMessage);
-		messageView.setText(venues.getAnnouncementsPlainText());
+		messageView.setText(mVenues.getAnnouncementsPlainText());
+		messageView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SimpleSingleWebViewActivity.launch(DiningHomeActivity.this, mVenues.getAnnouncementsHtml());
+			}
+		});
 	}
 	
 	private void populateDiningHallRows(int layoutID, List<? extends DiningHall> list, String title) {

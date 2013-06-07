@@ -47,17 +47,23 @@
 			                    android:layout_width="fill_parent" 
 								android:layout_height="wrap_content">
 								
-			                   	<TextView 
-			            			android:id="@+id/diningHomeMessage"
-			            			android:textColor="#000"
-			            			android:background="#FAF796"
-									android:paddingLeft="@dimen/standardPadding"
-									android:paddingRight="@dimen/standardPadding"
-									android:paddingTop="20dip"
-									android:paddingBottom="20dip"		
-									android:singleLine="true"
-									android:layout_width="fill_parent" 
-									android:layout_height="wrap_content"/>
+			                   <LinearLayout
+			                    	android:orientation="vertical"
+			                    	android:layout_width="fill_parent" 
+									android:layout_height="wrap_content"
+									android:background="#FAF796">
+			                   		<TextView 
+			            				android:id="@+id/diningHomeMessage"
+				            			android:textColor="#000"
+				            			android:background="@drawable/highlight_background"
+										android:paddingLeft="@dimen/standardPadding"
+										android:paddingRight="@dimen/standardPadding"
+										android:paddingTop="20dip"
+										android:paddingBottom="20dip"		
+										android:singleLine="true"
+										android:layout_width="fill_parent" 
+										android:layout_height="wrap_content"/>
+			               		</LinearLayout>
 										                   
 			               		<LinearLayout 
 			               		    android:id="@+id/diningHomeHouseContent"  

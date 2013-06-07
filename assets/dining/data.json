@@ -3337,6 +3337,7 @@
       {
         "name": "Bosworth's Café",
         "short_name": "Bosworth's Café",
+        "menu_html" : "Here is a menu that is html. <a href=\"http://m.mit.edu/home\">Check if the link works!</a>",
         "description_html": "Designed for MIT by MIT, this café features fresh-brewed Peet’s Coffees, hot and iced specialty drinks and gourmet teas, plus fabulous pastries and desserts by renowned Boston bakeries. Bosworth’s is a coffee drinker’s favorite and is not to be missed!Menu options:</strong>Assorted Peet's Coffee BeveragesHot Coffee, Iced Beverages, LattesAssorted Bottled JuiceOdwalla/ Tropicana / Bottled WaterAssorted Pastries, Muffins, and BagelsAssorted Cakes, Bundt Cakes, Biscotti and CookiesWhole FruitBiscotti</p>",
         "id": "bosworths",
         "url": "http://mobile-dev.mit.edu/apis/dining/venues/retail/bosworths",
