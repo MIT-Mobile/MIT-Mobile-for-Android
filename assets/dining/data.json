@@ -3221,6 +3221,8 @@
           "street": "84 Massachusetts Avenue",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354748",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://annastaqueria.com/menu.html",
@@ -3295,6 +3297,8 @@
           "street": "500 Main Street",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354752",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://web.mit.edu/kochcafe/menu.html",
@@ -3360,6 +3364,8 @@
           "mit_room_number": "Lobby 7",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.10181",
           "zipcode": "02139"
         },
         "hours": [
@@ -3433,6 +3439,8 @@
           "mit_room_number": "Kendall Square",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354749",
+          "longitude": "-71.101805",
           "zipcode": "02139"
         },
         "menu_url": "http://web.mit.edu/100main/menu.html",
@@ -3498,6 +3506,8 @@
           "street": "Carleton Street",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "www.cloverfastfood.com",
@@ -3561,6 +3571,8 @@
           "mit_room_number": "Nesr Main Street",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -3619,6 +3631,8 @@
           "street": "Carleton Street",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -3679,6 +3693,8 @@
           "street": "Carleton Street",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -3734,6 +3750,8 @@
           "street": "32 Vassar St.",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -3784,6 +3802,8 @@
           "street": "142 Memorial Drive",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://web.mit.edu/muddy/food.html",
@@ -3852,6 +3872,8 @@
           "mit_room_number": "W20-101",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -3916,6 +3938,8 @@
           "street": "84 Massachusetts Ave",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -3997,6 +4021,8 @@
           "street": "84 Massachusetts Ave",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -4062,6 +4088,8 @@
           "mit_room_number": "Cambridge",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -4122,6 +4150,8 @@
           "street": "84 Massachusetts Ave",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -4179,6 +4209,8 @@
           "street": "84 Massachusetts Ave",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -4245,6 +4277,8 @@
           "street": "84 Massachusetts Avenue",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.subway.com/menu/default.aspx",
@@ -4305,6 +4339,8 @@
           "street": "32 Vassar St.",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "hours": [
@@ -4366,6 +4402,8 @@
           "street": "235 Albany St",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://thirsty-ear.mit.edu/wp-content/uploads/2011/08/Fall-2011-Thirsty-menu.pdf",
@@ -4439,6 +4477,8 @@
           "mit_room_number": "4th Floor",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.sodexodiningmit.com/dining/faculty.html",
@@ -4502,6 +4542,8 @@
           "mit_room_number": "Lobdell Food Court in the Stratton Student Center (W20)",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.cafespice.com/food-service.htm",
@@ -4564,6 +4606,8 @@
           "street": "77 Massachusetts Ave.",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.sodexodiningmit.com/dining/index.html",
@@ -4626,6 +4670,8 @@
           "street": "77 Massachusetts Ave.",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.sodexodiningmit.com/dining/",
@@ -4689,6 +4735,8 @@
           "street": "32 Vassar St.",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.sodexodiningmit.com/index.html",
@@ -4752,6 +4800,8 @@
           "street": "70 Pacific St",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "02139"
         },
         "menu_url": "http://www.pacificstreetcafe.com/",
@@ -4815,6 +4865,8 @@
           "street": "600 Memorial Drive",
           "city": "Cambridge",
           "state": "MA",
+          "latitude": "42.354746",
+          "longitude": "-71.101800",
           "zipcode": "021425"
         },
         "menu_url": "http://www.zigo.biz/pdfs/zigo_catering_menu.pdf",
