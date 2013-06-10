@@ -22,7 +22,7 @@ public class SliderViewLayout extends ViewGroup {
 	public SliderViewLayout(Context context) {
 		super(context);
 		mSpacerWidth = AttributesParser.parseDimension("8dip", context);
-		mDividerWidth = AttributesParser.parseDimension("1dip", context);
+		mDividerWidth = 1;
 		mDividerPaint = new Paint();
 		mDividerPaint.setColor(Color.BLACK);
 		mDividerPaint.setStrokeWidth(mDividerWidth);
@@ -79,19 +79,18 @@ public class SliderViewLayout extends ViewGroup {
 	protected void dispatchDraw(Canvas canvas) {
 		super.dispatchDraw(canvas);
 	
-		int x = mChildWidth+(mDividerWidth+1)/2;
+		float dividerWidth = mDividerWidth;
+		float x = mChildWidth + dividerWidth/2;
 		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
 		
-		// Note: dividerWidth+1 is to force it to round up.
-		x = mChildWidth + mSpacerWidth - mDividerWidth/2;
+		x = mChildWidth + mSpacerWidth - dividerWidth/2;
 		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
 		
 		
-		// Note: dividerWidth+1 is to force it to round up.
-		x = 2*mChildWidth + mSpacerWidth + (mDividerWidth+1)/2;
+		x = 2*mChildWidth + mSpacerWidth + dividerWidth/2;
 		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
 		
-		x = 2*mChildWidth+2*mSpacerWidth - mDividerWidth/2;
+		x = 2*mChildWidth+2*mSpacerWidth - dividerWidth/2;
 		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
 	}
 	
