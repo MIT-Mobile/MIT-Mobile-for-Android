@@ -9,9 +9,10 @@ import android.util.Log;
 import android.widget.TabHost;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.maps.MITMapView;
+import edu.mit.mitmobile2.R;
+
 
 public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTabChangeListener{
 	
@@ -19,21 +20,25 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 	public static final String sRetailTab = "RETAIL";
 	
 	private MITMapView mMapView;
+	TabHost mTabHost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dining_map);
 		
-		TabHost tabHost = (TabHost) findViewById(R.id.diningMapTabHost);
-		tabHost.setup();
-		TabConfigurator tabConfigurator = new TabConfigurator(this, tabHost);
+		mTabHost = (TabHost) findViewById(R.id.diningMapTabHost);
+		mTabHost.setup();
+		TabConfigurator tabConfigurator = new TabConfigurator(this, mTabHost);
 		tabConfigurator.addTab(sHouseTab, android.R.id.tabcontent);
 		tabConfigurator.addTab(sRetailTab, android.R.id.tabcontent);
 		tabConfigurator.configureTabs();
-		tabHost.setOnTabChangedListener(this);
+		mTabHost.setOnTabChangedListener(this);
 		
 		mMapView = (MITMapView) findViewById(R.id.diningMapView);
+		
+		String tabIndex = getIntent().getStringExtra(DiningHomeActivity.SELECTED_TAB);
+		mTabHost.setCurrentTabByTag(tabIndex);
 		
 	}
 	
@@ -60,6 +65,14 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 	}
 	
 	@Override
+	public void onBackPressed() {
+		Intent returnIntent = new Intent();
+		returnIntent.putExtra(DiningHomeActivity.SELECTED_TAB, mTabHost.getCurrentTabTag());
+		setResult(RESULT_OK, returnIntent);        
+		finish();
+	}
+	
+	@Override
 	protected NewModule getNewModule() {
 		return new DiningModule();
 	}
@@ -80,9 +93,7 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 	@Override
 	protected void onOptionSelected(String optionId) {
 		if (optionId.equals(DiningModule.LISTVIEW_ITEM_ID)) {
-			Intent i = new Intent(this, DiningHomeActivity.class);
-			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(i);
+			onBackPressed();
 		}
 	}
 

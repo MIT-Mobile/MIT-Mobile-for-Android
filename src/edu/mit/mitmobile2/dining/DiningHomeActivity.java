@@ -16,13 +16,13 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TabConfigurator;
@@ -34,9 +34,13 @@ import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
 
 public class DiningHomeActivity extends NewModuleActivity {
-
+	public static final String SELECTED_TAB = "dining.selected_tab";
+	private static int MAP_ACTIVITY_REQUEST_CODE = 1;
+	
 	FullScreenLoader mLoader;
 	DiningVenues mVenues;
+	
+	TabHost mTabHost;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {
@@ -77,10 +81,20 @@ public class DiningHomeActivity extends NewModuleActivity {
 		}
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == MAP_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				String tabIndex = data.getStringExtra(SELECTED_TAB);
+				mTabHost.setCurrentTabByTag(tabIndex);
+			}
+		}
+	}
+	
 	private void displayDiningHalls() {
-		TabHost tabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
-		tabHost.setup();
-		TabConfigurator tabConfigurator = new TabConfigurator(this, tabHost);
+		mTabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
+		mTabHost.setup();
+		TabConfigurator tabConfigurator = new TabConfigurator(this, mTabHost);
 		tabConfigurator.addTab("HOUSE DINING", R.id.diningHomeHouseTab);
 		tabConfigurator.addTab("RETAIL", R.id.diningHomeRetailContent);
 		tabConfigurator.configureTabs();
@@ -228,8 +242,9 @@ public class DiningHomeActivity extends NewModuleActivity {
 	protected void onOptionSelected(String optionId) {
 		if (optionId.equals(DiningModule.MAPVIEW_ITEM_ID)) {
 			Intent i = new Intent(this, DiningMapActivity.class);
+			i.putExtra(SELECTED_TAB, mTabHost.getCurrentTabTag()); 
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(i);
+			startActivityForResult(i, MAP_ACTIVITY_REQUEST_CODE);
 		}
 	}
 
