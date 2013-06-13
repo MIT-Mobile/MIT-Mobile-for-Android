@@ -53,9 +53,6 @@ public class SliderViewLayout extends ViewGroup {
 		
 		if (mLeft != null) {
 			mLeft.measure(childWidthSpec, heightMeasureSpec);
-			if (mLeft.getMeasuredWidth() > mChildWidth) {
-				mChildWidth = mLeft.getMeasuredWidth();
-			}
 		}
 		if (mMiddle != null) {
 			mMiddle.measure(childWidthSpec, heightMeasureSpec);
