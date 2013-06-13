@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -175,7 +176,7 @@ public class DiningModel {
 		private String mShortName;
 		private String mUrl;
 		private String mIconUrl;
-		private List<String> mPaymentOptions = null;
+		private List<String> mPaymentOptions = Collections.emptyList();
 
 		private DiningHallLocation mLocation;
 		
@@ -717,7 +718,7 @@ public class DiningModel {
 		String mMessage;
 		Calendar mStart;
 		Calendar mEnd;
-		ArrayList<MenuItem> mMenuItems;
+		ArrayList<MenuItem> mMenuItems = new ArrayList<MenuItem>();
 		
 		public Meal(JSONObject object, String date) throws JSONException {
 			mName = object.getString("name");
