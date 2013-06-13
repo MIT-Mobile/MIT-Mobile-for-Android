@@ -10,6 +10,7 @@ import android.widget.TabHost;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.R;
 
@@ -39,7 +40,6 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		
 		String tabIndex = getIntent().getStringExtra(DiningHomeActivity.SELECTED_TAB);
 		mTabHost.setCurrentTabByTag(tabIndex);
-		
 	}
 	
 	// onTabChangedListener
@@ -52,16 +52,19 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		} else if (tabId.equals(sRetailTab)) {
 			annotateRetailVenues();
 		}
+//		mMapView.fitMapItems();
 	}
 	
 	private void annotateHouseVenues() {
-		
-		
+		for (DiningHall hall : DiningModel.getDiningVenues().getHouses()) {
+			mMapView.addMapItem(hall.getLocation());
+		}
 	}
 	
 	private void annotateRetailVenues() {
-		
-		
+		for (DiningHall hall : DiningModel.getDiningVenues().getRetail()) {
+			mMapView.addMapItem(hall.getLocation());
+		}
 	}
 	
 	@Override

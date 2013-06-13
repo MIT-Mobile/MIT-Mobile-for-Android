@@ -27,8 +27,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.RemoteImageView;
+import edu.mit.mitmobile2.objs.MapItem;
+import edu.mit.mitmobile2.objs.MapPoint;
 
 public class DiningModel {
 
@@ -178,7 +185,7 @@ public class DiningModel {
 			mIconUrl = object.getString("icon_url");
 			mName = object.getString("name");
 			mShortName = object.getString("short_name");
-			mLocation = new DiningHallLocation(object.getJSONObject("location"));
+			mLocation = new DiningHallLocation(this, object.getJSONObject("location"));
 			
 			if (object.has("payment")) {
 				JSONArray jPayArray = object.getJSONArray("payment");
@@ -826,8 +833,9 @@ public class DiningModel {
 		}
 	}
 	
-	public static class DiningHallLocation {
+	public static class DiningHallLocation extends MapItem {
 		
+		DiningHall mDiningHall;
 		// required
 		String mStreet;
 		String mCity;
@@ -840,7 +848,9 @@ public class DiningModel {
 		float mLatitude;
 		float mLongitude;
 		
-		public DiningHallLocation(JSONObject object) throws JSONException {
+		public DiningHallLocation(DiningHall hall, JSONObject object) throws JSONException {
+			mDiningHall = hall;
+			
 			mStreet = object.getString("street");
 			mCity = object.getString("city");
 			mState = object.getString("state");
@@ -857,7 +867,59 @@ public class DiningModel {
 			if (object.has("latitude") && object.has("longitude")) {
 				mLatitude = (float) object.getDouble("latitude");
 				mLongitude = (float) object.getDouble("longitude");
+				getMapPoints().add(new MapPoint(mLatitude, mLongitude));
 			}
+			
+			
+		}
+
+		@Override
+		public View getCallout(Context context) {
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View row = inflater.inflate(R.layout.dining_hall_row, null);
+			RemoteImageView iconView = (RemoteImageView) row.findViewById(R.id.diningHallRowImage);
+			iconView.setVisibility(View.GONE);
+			TextView titleView = (TextView) row.findViewById(R.id.diningHallRowTitle);
+			TextView subtitleView = (TextView) row.findViewById(R.id.diningHallRowSubtitle);
+			TextView statusView = (TextView) row.findViewById(R.id.diningHallRowStatus);
+			
+			long currentTime = DiningModel.currentTimeMillis();
+			titleView.setText(mDiningHall.getName());
+			subtitleView.setText(mDiningHall.getTodaysHoursSummary(currentTime));
+			switch (mDiningHall.getCurrentStatus(currentTime)) {
+				case OPEN:
+					statusView.setText("Open");
+					statusView.setTextColor(context.getResources().getColor(R.color.dining_open));
+					break;
+				case CLOSED:
+					statusView.setText("Closed");
+					statusView.setTextColor(context.getResources().getColor(R.color.dining_closed));
+					break;
+			}
+			
+			final Context rowContext = context;
+			row.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (mDiningHall instanceof HouseDiningHall) {
+						DiningScheduleActivity.launch(rowContext, mDiningHall);
+					} else {
+						DiningRetailInfoActivity.launch(rowContext, mDiningHall);
+					}
+				}				
+			});
+			return row;
+		}
+
+		@Override
+		public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
+			return null;
+		}
+
+		@Override
+		public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position) {
+			DiningHallLocation item = (DiningHallLocation) mapItems.get(position);
+			return item.getCallout(mContext);
 		}
 	}
 	
