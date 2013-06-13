@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2;
 
-import android.R.color;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -40,16 +39,23 @@ public class SliderViewLayout extends ViewGroup {
 		return 2 * mChildWidth + mSpacerWidth;
 	}
 	
+	public int getLeftXforRight() {
+		return 2 * mChildWidth + 2 * mSpacerWidth;
+	}
+	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		int width = 0;
 		int childWidthSpec = 0;
-		mChildWidth = MeasureSpec.getSize(widthMeasureSpec);
-		width = 3 * MeasureSpec.getSize(widthMeasureSpec) + 2 * mSpacerWidth;			
+		mChildWidth = getMeasureChildWidth(widthMeasureSpec);
+		width = 3 * mChildWidth + 2 * mSpacerWidth;			
 		childWidthSpec = MeasureSpec.makeMeasureSpec(mChildWidth, MeasureSpec.EXACTLY);
 		
 		if (mLeft != null) {
 			mLeft.measure(childWidthSpec, heightMeasureSpec);
+			if (mLeft.getMeasuredWidth() > mChildWidth) {
+				mChildWidth = mLeft.getMeasuredWidth();
+			}
 		}
 		if (mMiddle != null) {
 			mMiddle.measure(childWidthSpec, heightMeasureSpec);
@@ -59,6 +65,10 @@ public class SliderViewLayout extends ViewGroup {
 		}		
 		
 		setMeasuredDimension(width, MeasureSpec.getSize(heightMeasureSpec));
+	}
+	
+	protected int getMeasureChildWidth(int widthMeasureSpec) {
+		return MeasureSpec.getSize(widthMeasureSpec);
 	}
 	
 	@Override

@@ -2,9 +2,9 @@ package edu.mit.mitmobile2.dining;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.SliderView;
+import edu.mit.mitmobile2.SliderViewLayout;
 
 public class DiningSliderView extends SliderView {
 
@@ -20,43 +20,25 @@ public class DiningSliderView extends SliderView {
 		mMinimumWidth = AttributesParser.parseDimension(mMinimumDimen, context);
 	}
 
-	private int mContainerWidth;
-	
 	@Override
-	public void onMeasure(int widthSpec, int heightSpec) {
-		int width = MeasureSpec.getSize(widthSpec);
-		mContainerWidth = width;
-		if (width >= mMinimumWidth) {
-			super.onMeasure(widthSpec, heightSpec);
-		} else {
-			widthSpec = MeasureSpec.makeMeasureSpec(mMinimumWidth, MeasureSpec.EXACTLY);
-			super.onMeasure(widthSpec, heightSpec);
-		}
-		
+	protected SliderViewLayout createSliderViewLayout(Context context) {
+		return new DiningSliderViewLayout(context);
 	}
+	
+	private class DiningSliderViewLayout extends SliderViewLayout {
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		int action = event.getAction();
-	    if (action == MotionEvent.ACTION_UP) {
-	    	int scrollX = getScrollX();
-			if (mLeftXforMiddle <= scrollX && scrollX <= mRightXforMiddle) {
-				// override the default snap to position behavior
-				if (scrollX >= (mRightXforMiddle - mContainerWidth)) {
-					// user has scrolled beyond the screen, either let the user
-					// go to the next screen or scroll to be right justified
-					if (scrollX > mRightXforMiddle - mContainerWidth / 2) {
-						snapToPosition(ScreenPosition.Next);
-					} else {
-						smoothScrollTo(mRightXforMiddle - mContainerWidth, 0);
-					}
-				}
-				mTouchState = TOUCH_STATE_REST;
-				return true;
+		public DiningSliderViewLayout(Context context) {
+			super(context);
+		}
+	
+		@Override
+		protected int getMeasureChildWidth(int widthMeasureSpec) {
+			int width = MeasureSpec.getSize(widthMeasureSpec);
+			if (width > mMinimumWidth) {
+				return width;
+			} else {
+				return mMinimumWidth;
 			}
 		}
-		
-		return super.onTouchEvent(event);
-	}
-	
+	}	
 }

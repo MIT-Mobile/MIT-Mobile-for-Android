@@ -60,10 +60,14 @@ public class SliderView extends HorizontalScrollView {
 		mHeight = AttributesParser.parseDimension(layout_height, mContext);
 	}
 
+	protected SliderViewLayout createSliderViewLayout(Context context) {
+		return new SliderViewLayout(context);
+	}
+	
 	private void initSliderView(Context context) {
 		mContext = context;
 		
-		mSliderViewLayout = new SliderViewLayout(context);
+		mSliderViewLayout = createSliderViewLayout(context);
 		addView(mSliderViewLayout, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 		
 		setHorizontalScrollBarEnabled(false);
@@ -222,7 +226,7 @@ public class SliderView extends HorizontalScrollView {
             	} 
             } else if (deltaX > 0) {
             	int right = mHasNextScreen ? mSliderViewLayout.getWidth() : mRightXforMiddle;
-            	final int availableToScroll = right - getScrollX() - mLeftXforMiddle;
+            	final int availableToScroll = (right - mLeftXforMiddle) - (getScrollX() - mLeftXforMiddle) - getWidth();
 
             	if (availableToScroll > 0) {
             		scrollBy(Math.min(availableToScroll, deltaX), 0);
@@ -234,7 +238,26 @@ public class SliderView extends HorizontalScrollView {
 		if (action == MotionEvent.ACTION_UP) {
 			// calculate the closest position
 			mTouchState = TOUCH_STATE_REST;
-			snapToPosition(nearestPosition());
+			
+			if (shouldAlwaysSnapToPosition()) {
+				snapToPosition(nearestPosition());
+			} else {
+				int scrollX = getScrollX();
+				if (mLeftXforMiddle <= scrollX && scrollX <= mRightXforMiddle) {
+					int childWidth = mSliderViewLayout.getChildWidth();
+					if (scrollX >= (mRightXforMiddle - getWidth())) {
+						// user has scrolled beyond the screen, either let the user
+						// go to the next screen or scroll to be right justified
+						if (scrollX > mRightXforMiddle - childWidth/2) {
+							snapToPosition(ScreenPosition.Next);
+						} else {
+							smoothScrollTo(mRightXforMiddle - getWidth(), 0);
+						}
+					}
+				} else {
+					snapToPosition(nearestPosition());
+				}
+			}
 			
 			if(mClickListener != null) {
 				if(mFingerIsStill) {
@@ -255,6 +278,9 @@ public class SliderView extends HorizontalScrollView {
 		return true;
 	}
 
+	protected boolean shouldAlwaysSnapToPosition() {
+		return (getWidth() >= mSliderViewLayout.getChildWidth());
+	}
 	
 	@Override
 	public void setOnClickListener(View.OnClickListener clickListener) {
@@ -284,7 +310,7 @@ public class SliderView extends HorizontalScrollView {
 			case Current:
 				return mLeftXforMiddle;
 			case Next:
-				return mSliderViewLayout.getWidth() - mSliderViewLayout.getChildWidth();
+				return mSliderViewLayout.getLeftXforRight();
 		}
 		throw new RuntimeException("scroll position not found, must have received null for screen position");
 	}
