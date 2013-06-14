@@ -8,7 +8,7 @@
         "url": "http://m.mit.edu/apis/dining/venues/house/next",
         "name": "Next",
         "short_name": "Next",
-        "icon_url": "http://dining.mit.edu/sites/default/files/next.png",
+        "icon_url": "http://dining.mit.edu/sites/default/files/next-new-bw.png",
         "location": {
           "mit_room_number": "W71-129F",
           "description": "W71 - Next House",
@@ -30,8 +30,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -41,8 +41,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -106,8 +106,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -117,8 +117,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -191,8 +191,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -202,8 +202,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "bits and bytes",
@@ -286,8 +286,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -300,8 +300,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -371,8 +371,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -385,8 +385,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -425,8 +425,8 @@
             "meals": [
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -436,8 +436,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -484,8 +484,8 @@
             "meals": [
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -495,8 +495,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -543,7 +543,7 @@
         "url": "http://m.mit.edu/apis/dining/venues/house/maseeh",
         "name": "The Howard Dining Hall at Maseeh",
         "short_name": "Maseeh",
-        "icon_url": "http://dining.mit.edu/sites/default/files/maseeh.png",
+        "icon_url": "http://dining.mit.edu/sites/default/files/maseeh-new.png",
         "location": {
           "mit_room_number": "W1-1041",
           "description": "W1 - Fariborz Maseeh Hall",
@@ -565,8 +565,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "11:00",
+                "start_time": "08:00:00",
+                "end_time": "11:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -576,8 +576,8 @@
               },
               {
                 "name": "lunch",
-                "start_time": "11:00",
-                "end_time": "15:00",
+                "start_time": "11:00:00",
+                "end_time": "15:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -624,8 +624,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -689,8 +689,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "11:00",
+                "start_time": "08:00:00",
+                "end_time": "11:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -701,8 +701,8 @@
               },
               {
                 "name": "lunch",
-                "start_time": "11:00",
-                "end_time": "15:00",
+                "start_time": "11:00:00",
+                "end_time": "15:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -755,8 +755,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -818,8 +818,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "11:00",
+                "start_time": "08:00:00",
+                "end_time": "11:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -832,8 +832,8 @@
               },
               {
                 "name": "lunch",
-                "start_time": "11:00",
-                "end_time": "15:00",
+                "start_time": "11:00:00",
+                "end_time": "15:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -883,8 +883,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -937,8 +937,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "11:00",
+                "start_time": "08:00:00",
+                "end_time": "11:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -948,8 +948,8 @@
               },
               {
                 "name": "lunch",
-                "start_time": "11:00",
-                "end_time": "15:00",
+                "start_time": "11:00:00",
+                "end_time": "15:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1002,8 +1002,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1058,8 +1058,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "11:00",
+                "start_time": "08:00:00",
+                "end_time": "11:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -1072,8 +1072,8 @@
               },
               {
                 "name": "lunch",
-                "start_time": "11:00",
-                "end_time": "15:00",
+                "start_time": "11:00:00",
+                "end_time": "15:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1129,8 +1129,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1188,8 +1188,8 @@
             "meals": [
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1234,8 +1234,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1292,8 +1292,8 @@
             "meals": [
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1343,8 +1343,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "21:00",
+                "start_time": "17:00:00",
+                "end_time": "21:00:00",
                 "items": [
                   {
                     "station": "stockpot",
@@ -1408,7 +1408,7 @@
         "url": "http://m.mit.edu/apis/dining/venues/house/baker",
         "name": "Baker",
         "short_name": "Baker",
-        "icon_url": "http://dining.mit.edu/sites/default/files/baker.png",
+        "icon_url": "http://dining.mit.edu/sites/default/files/baker-new.png",
         "location": {
           "mit_room_number": "W7-026",
           "description": "W7 - Baker House",
@@ -1430,8 +1430,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "bowls",
@@ -1503,8 +1503,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -1522,8 +1522,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "pi",
@@ -1593,8 +1593,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -1612,8 +1612,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "pi",
@@ -1690,8 +1690,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -1706,8 +1706,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "pi",
@@ -1787,8 +1787,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -1803,8 +1803,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "pi",
@@ -1843,8 +1843,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -1859,8 +1859,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "pi",
@@ -1886,8 +1886,8 @@
               },
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -1963,8 +1963,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:30",
-                "end_time": "20:30",
+                "start_time": "17:30:00",
+                "end_time": "20:30:00",
                 "items": [
                   {
                     "station": "pi",
@@ -1975,8 +1975,8 @@
               },
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "market grill",
@@ -2036,7 +2036,7 @@
         "url": "http://m.mit.edu/apis/dining/venues/house/simmons",
         "name": "Simmons",
         "short_name": "Simmons",
-        "icon_url": "http://dining.mit.edu/sites/default/files/simmons.png",
+        "icon_url": "http://dining.mit.edu/sites/default/files/simmons-new.png",
         "location": {
           "mit_room_number": "W79-145",
           "description": "W79 - Simmons Hall",
@@ -2058,8 +2058,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -2076,8 +2076,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2137,8 +2137,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -2158,8 +2158,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2245,8 +2245,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -2266,8 +2266,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2356,8 +2356,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -2378,8 +2378,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2473,8 +2473,8 @@
             "meals": [
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "breakfast",
@@ -2494,8 +2494,8 @@
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2575,13 +2575,13 @@
               },
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00"
+                "start_time": "10:00:00",
+                "end_time": "13:00:00"
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2646,13 +2646,13 @@
               },
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00"
+                "start_time": "10:00:00",
+                "end_time": "13:00:00"
               },
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "comforts",
@@ -2711,8 +2711,8 @@
         "id": "mccormick",
         "url": "http://m.mit.edu/apis/dining/venues/house/mccormick",
         "name": "McCormick",
-        "short_name": "mccormick",
-        "icon_url": "http://dining.mit.edu/sites/default/files/mccormick.png",
+        "short_name": "McCormick",
+        "icon_url": "http://dining.mit.edu/sites/default/files/mccormick-new.png",
         "location": {
           "mit_room_number": "W4-122",
           "description": "W4 - McCormick Hall",
@@ -2734,8 +2734,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -2773,8 +2773,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -2798,8 +2798,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -2840,8 +2840,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -2865,8 +2865,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -2908,8 +2908,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -2933,8 +2933,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -2969,8 +2969,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -2994,8 +2994,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -3033,8 +3033,8 @@
               },
               {
                 "name": "breakfast",
-                "start_time": "08:00",
-                "end_time": "10:00",
+                "start_time": "08:00:00",
+                "end_time": "10:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -3058,8 +3058,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -3100,8 +3100,8 @@
               },
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -3129,8 +3129,8 @@
             "meals": [
               {
                 "name": "dinner",
-                "start_time": "17:00",
-                "end_time": "20:00",
+                "start_time": "17:00:00",
+                "end_time": "20:00:00",
                 "items": [
                   {
                     "station": "Stock Pot",
@@ -3168,8 +3168,8 @@
               },
               {
                 "name": "brunch",
-                "start_time": "10:00",
-                "end_time": "13:00",
+                "start_time": "10:00:00",
+                "end_time": "13:00:00",
                 "items": [
                   {
                     "station": "Breakfast",
@@ -3219,13 +3219,14 @@
         ],
         "location": {
           "street": "84 Massachusetts Avenue",
+          "mit_room_number": "W20-100",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354748",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.358897",
+          "longitude": "-71.094638"
         },
-        "menu_url": "http://annastaqueria.com/menu.html",
+        "menu_url": "annastaqueria.com/menu.htm",
         "hours": [
           {
             "date": "2013-04-29",
@@ -3295,11 +3296,12 @@
         "location": {
           "description": "Building 76",
           "street": "500 Main Street",
+          "mit_room_number": "76-150",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354752",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.362270",
+          "longitude": "-71.089236"
         },
         "menu_url": "http://web.mit.edu/kochcafe/menu.html",
         "hours": [
@@ -3341,7 +3343,6 @@
       {
         "name": "Bosworth's Café",
         "short_name": "Bosworth's Café",
-        "menu_html" : "Here is a menu that is html. <a href=\"http://m.mit.edu/home\">Check if the link works!</a>",
         "description_html": "Designed for MIT by MIT, this café features fresh-brewed Peet’s Coffees, hot and iced specialty drinks and gourmet teas, plus fabulous pastries and desserts by renowned Boston bakeries. Bosworth’s is a coffee drinker’s favorite and is not to be missed!Menu options:</strong>Assorted Peet's Coffee BeveragesHot Coffee, Iced Beverages, LattesAssorted Bottled JuiceOdwalla/ Tropicana / Bottled WaterAssorted Pastries, Muffins, and BagelsAssorted Cakes, Bundt Cakes, Biscotti and CookiesWhole FruitBiscotti</p>",
         "id": "bosworths",
         "url": "http://mobile-dev.mit.edu/apis/dining/venues/retail/bosworths",
@@ -3360,13 +3361,14 @@
           "TechCASH"
         ],
         "location": {
+          "description": "Lobby 7",
           "street": "77 Massachusetts Avenue",
-          "mit_room_number": "Lobby 7",
+          "mit_room_number": "7-111",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.10181",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359117",
+          "longitude": "-71.093101"
         },
         "hours": [
           {
@@ -3435,13 +3437,14 @@
           "TechCASH"
         ],
         "location": {
+          "description": "Kendall Square",
           "street": "100 Main Street",
-          "mit_room_number": "Kendall Square",
+          "mit_room_number": "E62",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354749",
-          "longitude": "-71.101805",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361382",
+          "longitude": "-71.082501"
         },
         "menu_url": "http://web.mit.edu/100main/menu.html",
         "hours": [
@@ -3506,9 +3509,9 @@
           "street": "Carleton Street",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361120",
+          "longitude": "-71.086253"
         },
         "menu_url": "www.cloverfastfood.com",
         "hours": [
@@ -3571,9 +3574,9 @@
           "mit_room_number": "Nesr Main Street",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361751",
+          "longitude": "-71.086172"
         },
         "hours": [
           {
@@ -3631,9 +3634,9 @@
           "street": "Carleton Street",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361412",
+          "longitude": "-71.086229"
         },
         "hours": [
           {
@@ -3693,9 +3696,9 @@
           "street": "Carleton Street",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361303",
+          "longitude": "-71.086245"
         },
         "hours": [
           {
@@ -3748,11 +3751,12 @@
         "location": {
           "description": "Gates Lobby",
           "street": "32 Vassar St.",
+          "mit_room_number": "32-100LB",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361937",
+          "longitude": "-71.090303"
         },
         "hours": [
           {
@@ -3799,12 +3803,14 @@
           "Other"
         ],
         "location": {
+          "description": "Walker Memorial",
           "street": "142 Memorial Drive",
+          "mit_room_number": "50-100LB",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359598",
+          "longitude": "-71.088297"
         },
         "menu_url": "http://web.mit.edu/muddy/food.html",
         "hours": [
@@ -3872,9 +3878,9 @@
           "mit_room_number": "W20-101",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.358885",
+          "longitude": "-71.095045"
         },
         "hours": [
           {
@@ -3936,11 +3942,12 @@
         ],
         "location": {
           "street": "84 Massachusetts Ave",
+          "mit_room_number": "W20-101",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.358911",
+          "longitude": "-71.094981"
         },
         "hours": [
           {
@@ -4019,40 +4026,55 @@
         "location": {
           "description": "Stratton Student Center",
           "street": "84 Massachusetts Ave",
+          "mit_room_number": "W20-105",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359177",
+          "longitude": "-71.094455"
         },
         "hours": [
           {
             "date": "2013-04-29",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           },
           {
             "date": "2013-04-30",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           },
           {
             "date": "2013-05-01",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           },
           {
             "date": "2013-05-02",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           },
           {
             "date": "2013-05-03",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           },
           {
             "date": "2013-05-04",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           },
           {
             "date": "2013-05-05",
-            "message": "Open 24 Hours"
+            "message": "Open 24 Hours",
+            "start_time": "00:00:00",
+            "end_time": "23:59:59"
           }
         ]
       },
@@ -4085,12 +4107,12 @@
         ],
         "location": {
           "street": "450 Memorial Drive",
-          "mit_room_number": "Cambridge",
+          "mit_room_number": "W61-027",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.355446",
+          "longitude": "-71.099761"
         },
         "hours": [
           {
@@ -4148,11 +4170,12 @@
         "location": {
           "description": "Stratton Student Center",
           "street": "84 Massachusetts Ave",
+          "mit_room_number": "W20-206",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359199",
+          "longitude": "-71.094705"
         },
         "hours": [
           {
@@ -4207,11 +4230,12 @@
         "location": {
           "description": "Stratton Student Center",
           "street": "84 Massachusetts Ave",
+          "mit_room_number": "W20-206",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359250",
+          "longitude": "-71.094756"
         },
         "hours": [
           {
@@ -4275,11 +4299,12 @@
         "location": {
           "description": "Second Floor",
           "street": "84 Massachusetts Avenue",
+          "mit_room_number": "W20-203",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359111",
+          "longitude": "-71.094973"
         },
         "menu_url": "http://www.subway.com/menu/default.aspx",
         "hours": [
@@ -4337,11 +4362,12 @@
         "location": {
           "description": "Stata Center's 4th Floor",
           "street": "32 Vassar St.",
+          "mit_room_number": "32-G410",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361991",
+          "longitude": "-71.090673"
         },
         "hours": [
           {
@@ -4400,11 +4426,12 @@
         ],
         "location": {
           "street": "235 Albany St",
+          "mit_room_number": "NW35",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.358687",
+          "longitude": "-71.101284"
         },
         "menu_url": "http://thirsty-ear.mit.edu/wp-content/uploads/2011/08/Fall-2011-Thirsty-menu.pdf",
         "hours": [
@@ -4472,14 +4499,14 @@
           "TechCASH"
         ],
         "location": {
-          "description": "Building 32",
+          "description": "Building 32 4th Floor",
           "street": "32 Vassar St.",
-          "mit_room_number": "4th Floor",
+          "mit_room_number": "32-G401",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361729",
+          "longitude": "-71.090544"
         },
         "menu_url": "http://www.sodexodiningmit.com/dining/faculty.html",
         "hours": [
@@ -4525,7 +4552,7 @@
         "id": "cafespice",
         "url": "http://mobile-dev.mit.edu/apis/dining/venues/retail/cafespice",
         "icon_url": "http://dining.mit.edu/sites/default/files/cafespice.jpg",
-        "homepage_url": "http://www.cafespice.com/index.htm",
+        "homepage_url": "http://www.cafespice.com/",
         "cuisine": [
           "Indian Food",
           "Vegetarian",
@@ -4538,13 +4565,14 @@
           "TechCASH"
         ],
         "location": {
+          "description": "Lobdell Food Court in the Stratton Student Center (W20)",
           "street": "84 Massachusetts Avenue",
-          "mit_room_number": "Lobdell Food Court in the Stratton Student Center (W20)",
+          "mit_room_number": "W20-206",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359208",
+          "longitude": "-71.094904"
         },
         "menu_url": "http://www.cafespice.com/food-service.htm",
         "hours": [
@@ -4604,11 +4632,12 @@
         "location": {
           "description": "Building 4",
           "street": "77 Massachusetts Ave.",
+          "mit_room_number": "4-115",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359814",
+          "longitude": "-71.091317"
         },
         "menu_url": "http://www.sodexodiningmit.com/dining/index.html",
         "hours": [
@@ -4668,11 +4697,12 @@
         "location": {
           "description": "Building 7",
           "street": "77 Massachusetts Ave.",
+          "mit_room_number": "7-407",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359189",
+          "longitude": "-71.092930"
         },
         "menu_url": "http://www.sodexodiningmit.com/dining/",
         "hours": [
@@ -4733,11 +4763,12 @@
         ],
         "location": {
           "street": "32 Vassar St.",
+          "mit_room_number": "32-164",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.361669",
+          "longitude": "-71.090035"
         },
         "menu_url": "http://www.sodexodiningmit.com/index.html",
         "hours": [
@@ -4780,8 +4811,8 @@
         "name": "Pacific Street Café",
         "short_name": "Pacific Street Café",
         "description_html": " </p>Pacific Street Cafe requires the highest standards of food handling from its employees and vendors. The management strives to assure quality food and on time delivery. In addition we offer assistance to our clients to have a worry-free event by planning each step with them. Our mission is \"great food at competitive price\".</p> </p>",
-        "id": "pacific-st-cafe",
-        "url": "http://mobile-dev.mit.edu/apis/dining/venues/retail/pacific-st-cafe",
+        "id": "pacific-street-cafe",
+        "url": "http://mobile-dev.mit.edu/apis/dining/venues/retail/pacific-street-cafe",
         "icon_url": "http://dining.mit.edu/sites/default/files/pacificstcafe.jpg",
         "homepage_url": "http://www.pacificstreetcafe.com/",
         "cuisine": [
@@ -4800,9 +4831,9 @@
           "street": "70 Pacific St",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354746",
-          "longitude": "-71.101800",
-          "zipcode": "02139"
+          "zipcode": "02139",
+          "latitude": "42.359989",
+          "longitude": "-71.102054"
         },
         "menu_url": "http://www.pacificstreetcafe.com/",
         "hours": [
@@ -4844,7 +4875,7 @@
       {
         "name": "Zigo Café",
         "short_name": "Zigo Café",
-        "description_html": " </div> Zigo started with love of people, of fun, and especially good food. Like most of us who work long hours, our lives were full but our refrigerators were not. We filled our evening hunger with pizza, cereal, frozen dinners, and many restaurants. “Where was the love in this?” our taste buds, waistlines, and wallets cried? </div>  </div> With zigo we put delicious, healthful meals back into the hands of busy people. With one stop on your way home, you have a meal that is simple to prepare and yummy to eat. </div>  </div> With the ever-changing zigo menu, we bring the most delectable foods from around the world to your table. Each of our recipes has been taste-tested again and again. Our meals use only the finest and freshest ingredients. That means crispy not mushy, seasoned not salted, flaky not chewy. </div>",
+        "description_html": " </div> Zigo started with love of people, of fun, and especially good food. Like most of us who work long hours, our lives were full but our refrigerators were not. We filled our evening hunger with pizza, cereal, frozen dinners, and many restaurants. “Where was the love in this?” our taste buds, waistlines, and wallets cried? </div>  </div> With zigo we put delicious, healthful meals back into the hands of busy people. With one stop on your way home, you have a meal that is simple to prepare and yummy to eat. </div>  </div> With the ever-changing zigo menu, we bring the most delectable foods from around the world to your table. Each of our recipes has been taste-tested again and again. Our meals use only the finest and freshest ingredients. That means crispy not mushy, seasoned not salted, flaky not chewy.</div>",
         "id": "zigo-cafe",
         "url": "http://mobile-dev.mit.edu/apis/dining/venues/retail/zigo-cafe",
         "icon_url": "http://dining.mit.edu/sites/default/files/zigocafe.jpg",
@@ -4863,11 +4894,12 @@
         ],
         "location": {
           "street": "600 Memorial Drive",
+          "mit_room_number": "W98-124",
           "city": "Cambridge",
           "state": "MA",
-          "latitude": "42.354346",
-          "longitude": "-71.101500",
-          "zipcode": "021425"
+          "zipcode": "021425",
+          "latitude": "42.354017",
+          "longitude": "-71.106576"
         },
         "menu_url": "http://www.zigo.biz/pdfs/zigo_catering_menu.pdf",
         "hours": [
@@ -4907,5 +4939,19 @@
         ]
       }
     ]
-  }
+  },
+  "links": [
+    {
+      "name": "Comments for MIT Dining",
+      "url": "http://dining.mit.edu/feedback/form"
+    },
+    {
+      "name": "Food to Go",
+      "url": "http://www.cafebonappetit.com/menu/your-cafe/mit/food-to-go/"
+    },
+    {
+      "name": "Full MIT Dining Website",
+      "url": "http://dining.mit.edu"
+    }
+  ]
 }
