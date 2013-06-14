@@ -915,7 +915,7 @@ public class MITMapView extends MapView  {
 		        if (mapGraphicsLayer.getMapItems() != null) {
 		        	for (int m = 0; m < mapGraphicsLayer.getMapItems().size(); m++) {
     	    			MapItem mapItem = mapGraphicsLayer.getMapItems().get(m);
-    	    			if (mapItem.getCallout(this.getContext(),null,0) != null) {
+    	    			if (mapItem.getCallout(this.getContext()) != null) {
     	    				calloutItems.add(mapItem);
     	    			}
  		        	}
