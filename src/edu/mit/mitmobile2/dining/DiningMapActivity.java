@@ -40,6 +40,8 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		
 		String tabIndex = getIntent().getStringExtra(DiningHomeActivity.SELECTED_TAB);
 		mTabHost.setCurrentTabByTag(tabIndex);
+		
+		onTabChanged(mTabHost.getCurrentTabTag());
 	}
 	
 	// onTabChangedListener
@@ -52,7 +54,10 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		} else if (tabId.equals(sRetailTab)) {
 			annotateRetailVenues();
 		}
-//		mMapView.fitMapItems();
+		mMapView.fitMapItems();
+		if (mMapView.isLoaded()) {
+			mMapView.syncGraphicsLayers();
+		}
 	}
 	
 	private void annotateHouseVenues() {
