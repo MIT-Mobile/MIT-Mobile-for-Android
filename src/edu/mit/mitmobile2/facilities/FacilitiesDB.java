@@ -136,6 +136,32 @@ public class FacilitiesDB {
 		mDBHelper = new FacilitiesDBOpenHelper(context);
 	}
 	
+	public void updateDatabase(final Context context, Handler uiHandler) {
+        final String categoryVersion = FacilitiesDB.updateCategories(context, uiHandler);
+        uiHandler.post(new Runnable() {
+             @Override
+			public void run() {
+            	 Global.setVersion("local", "map", "category_list", categoryVersion, context);
+             }
+        });
+
+        final String locationVersion = FacilitiesDB.updateLocations(context, uiHandler);
+        uiHandler.post(new Runnable() {
+             @Override
+			public void run() {
+            	 Global.setVersion("local", "map", "location", locationVersion, context);
+             }
+        });
+
+        final String problemTypeVersion = FacilitiesDB.updateProblemTypes(context, uiHandler);
+        uiHandler.post(new Runnable() {
+             @Override
+			public void run() {
+            	 Global.setVersion("local", "facilities", "problem_type", problemTypeVersion, context);
+             }
+        });
+        MobileWebApi.sendSuccessMessage(uiHandler);
+	}
 	// BEGIN INSERT/UPDATE/DELETE METHODS
 
 	// ADDCATEGORY

@@ -32,6 +32,7 @@ import edu.mit.mitmobile2.dining.DiningModel.DiningLink;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
+import edu.mit.mitmobile2.facilities.FacilitiesDB;
 
 public class DiningHomeActivity extends NewModuleActivity {
 	public static final String SELECTED_TAB = "dining.selected_tab";
@@ -41,32 +42,45 @@ public class DiningHomeActivity extends NewModuleActivity {
 	DiningVenues mVenues;
 	
 	TabHost mTabHost;
+	private DiningHomeActivity mContext;
+	private FacilitiesDB mFacilitiesDB;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		setContentView(R.layout.dining_home);
 		
+		mContext = this;
+		
 		mLoader = (FullScreenLoader) findViewById(R.id.diningHomeLoader);
 		mLoader.showLoading();
 		
-		DiningModel.fetchDiningData(this, new Handler() {
+		mFacilitiesDB = FacilitiesDB.getInstance(this);
+		mFacilitiesDB.updateDatabase(this, new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.arg1 == MobileWebApi.SUCCESS) {
-					mLoader.setVisibility(View.GONE);
+					DiningModel.fetchDiningData(mContext, new Handler() {
+						@Override
+						public void handleMessage(Message msg) {
+							if (msg.arg1 == MobileWebApi.SUCCESS) {
+								mLoader.setVisibility(View.GONE);
 
-					mVenues = DiningModel.getDiningVenues(); 
-					displayDiningHalls();
-					
-					List<DiningLink> links = DiningModel.getDiningLinks();
-					displayDiningLinks(links);
+								mVenues = DiningModel.getDiningVenues(); 
+								displayDiningHalls();
+								
+								List<DiningLink> links = DiningModel.getDiningLinks();
+								displayDiningLinks(links);
+							} else {
+								mLoader.showError();
+							}
+						}						
+					});
 				} else {
 					mLoader.showError();
 				}
-			}
-		});
-		
+			}			
+		});		
 	}
 	
 	@Override
