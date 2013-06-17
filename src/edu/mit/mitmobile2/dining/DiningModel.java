@@ -156,6 +156,16 @@ public class DiningModel {
 				ArrayList<RetailDiningHall> retailVenues = (ArrayList<RetailDiningHall>) mRetailVenues.get(buildingNumber);
 				retailVenues.add(new RetailDiningHall(jsonRetail.getJSONObject(i)));
 			}
+			
+			// alphabetize the retail halls within buildings.
+			for (List<? extends DiningHall> halls: mRetailVenues.values()) {
+				Collections.sort(halls, new Comparator<DiningHall>() {
+					@Override
+					public int compare(DiningHall lhs, DiningHall rhs) {
+						return lhs.getName().compareTo(rhs.getName());
+					}
+				});
+			}
 		}
 
 
@@ -918,11 +928,12 @@ public class DiningModel {
 		
 		public String getBuildingNumber() {
 			if (mRoomNumber != null) {
-				String[] parts = mRoomNumber.split("\\-");
-				return parts[0];
-			} else {
-				return null;
-			}
+				if (mRoomNumber.matches("^(N|NW|NE|W|WW|E)?(\\d+).*")) {
+					String[] parts = mRoomNumber.split("\\-");
+					return parts[0];
+				}
+			} 
+			return null;
 		}
 
 		@Override

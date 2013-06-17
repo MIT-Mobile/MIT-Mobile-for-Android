@@ -104,13 +104,6 @@ public class DiningHomeActivity extends NewModuleActivity {
 				}				
 			}
 			cursor.close();
-			
-			// if building not found use empty string as name
-			// this is just to prevent looking up the building more
-			// than once in the database.
-			if (!mBuildingName.containsKey(buildingNumber)) {
-				mBuildingName.put(buildingNumber, "");
-			}
 		}
 		
 		return mBuildingName.get(buildingNumber);
@@ -167,17 +160,14 @@ public class DiningHomeActivity extends NewModuleActivity {
 		for (String buildingNumber: DiningModel.getDiningVenues().getRetailBuildingNumbers()) {
 			List<? extends DiningHall> halls = retailHallsBySection.get(buildingNumber);
 			
-			String buildingName = "";
-			if (buildingNumber != "other") {
-				buildingName = getBuildingName(buildingNumber);
+			String title;
+			if (buildingNumber == "other") {
+				title = "Other";
+			} else {
+				String buildingName = getBuildingName(buildingNumber);
+				title = buildingNumber + " - " + buildingName;
 			}
 			
-			String title;
-			if (buildingName.length() > 0) {
-				title = buildingNumber + " - " + buildingName;
-			} else {
-				title = "Other";
-			}
 			populateDiningHallRows(R.id.diningHomeRetailContent, halls, title);
 		}		
 	}

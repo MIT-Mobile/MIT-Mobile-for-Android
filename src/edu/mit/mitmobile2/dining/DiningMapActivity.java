@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
+import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.R;
 
@@ -22,11 +24,19 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 	
 	private MITMapView mMapView;
 	TabHost mTabHost;
+	private DiningVenues mDiningVenues;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dining_map);
+		
+		mDiningVenues = DiningModel.getDiningVenues();
+		if (mDiningVenues == null) {
+			// fail gracefully
+			finish();
+			return;
+		}
 		
 		mTabHost = (TabHost) findViewById(R.id.diningMapTabHost);
 		mTabHost.setup();
@@ -61,14 +71,17 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 	}
 	
 	private void annotateHouseVenues() {
-		for (DiningHall hall : DiningModel.getDiningVenues().getHouses()) {
+		for (DiningHall hall : mDiningVenues.getHouses()) {
 			mMapView.addMapItem(hall.getLocation());
 		}
 	}
 	
 	private void annotateRetailVenues() {
-		for (DiningHall hall : DiningModel.getDiningVenues().getRetail()) {
-			mMapView.addMapItem(hall.getLocation());
+		Map<String, List<? extends DiningHall>> retailVenues = mDiningVenues.getRetail();
+		for (String buildingID : mDiningVenues.getRetailBuildingNumbers()) {
+			for (DiningHall hall : retailVenues.get(buildingID)) {
+				mMapView.addMapItem(hall.getLocation());
+			}
 		}
 	}
 	
