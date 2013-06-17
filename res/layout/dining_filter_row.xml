@@ -21,6 +21,15 @@
         android:layout_toRightOf="@id/flagIconIV"
         android:paddingLeft="@dimen/standardPadding"
         />
+  
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/flagUnselectedIV"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/dining_filter_checkbox_unchecked"
+        />
     
     <ImageView 
         android:layout_width="wrap_content"
@@ -28,7 +37,7 @@
         android:id="@+id/flagSelectedIV"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/icon"
+        android:background="@drawable/dining_filter_checkbox"
         />
  	
     

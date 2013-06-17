@@ -17,9 +17,9 @@ public class DiningModule extends NewModule {
 	@Override
 	public List<MITMenuItem> getPrimaryOptions() {
 		ArrayList<MITMenuItem> list = new ArrayList<MITMenuItem>();
-		list.add(new MITMenuItem(FILTER_ITEM_ID, "Filter", R.drawable.action_history));
-		list.add(new MITMenuItem(MAPVIEW_ITEM_ID, "Show Map", R.drawable.action_map));
-		list.add(new MITMenuItem(LISTVIEW_ITEM_ID, "Show List", R.drawable.action_pdf));
+		list.add(new MITMenuItem(FILTER_ITEM_ID, "Filter", R.drawable.menu_dining_filter));
+		list.add(new MITMenuItem(MAPVIEW_ITEM_ID, "Show Map", R.drawable.menu_view_on_map));
+		list.add(new MITMenuItem(LISTVIEW_ITEM_ID, "Show List", R.drawable.menu_view_as_list));
 		return list;
 	}
 

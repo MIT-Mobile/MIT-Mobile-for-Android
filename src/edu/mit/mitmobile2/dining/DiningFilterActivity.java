@@ -46,6 +46,7 @@ public class DiningFilterActivity extends NewModuleActivity {
 				ImageView iconView = (ImageView) view.findViewById(R.id.flagIconIV);
 				TextView textView = (TextView) view.findViewById(R.id.flagDisplayNameTV);
 				ImageView selectedView = (ImageView) view.findViewById(R.id.flagSelectedIV);
+				ImageView unSelectedView = (ImageView) view.findViewById(R.id.flagUnselectedIV);
 				
 				iconView.setBackgroundResource(item.getIconId());
 				textView.setText(item.getDisplayName());
