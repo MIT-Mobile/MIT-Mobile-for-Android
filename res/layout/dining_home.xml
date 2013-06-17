@@ -75,12 +75,13 @@
 												android:layout_height="wrap_content"	
 												android:text="Resources" />
 						           		
-						           		<edu.mit.mitmobile2.TwoLineActionRow
+						           		<!-- <edu.mit.mitmobile2.TwoLineActionRow
 						           		    	android:layout_width="fill_parent" 
 												android:layout_height="wrap_content"	
+												android:id="@+id/diningMealBalanceRow"
 												android:text="Meal Plan Balance"
 												android:src="@drawable/action_secure"
-												/>
+												/> -->
 						        </LinearLayout>	                   
 			                   
 			               </LinearLayout>
