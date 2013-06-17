@@ -15,6 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.NaturalSort;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.objs.MapItem;
@@ -118,7 +120,7 @@ public class DiningModel {
 		private String mAnnouncementsHtml;
 		
 		private ArrayList<HouseDiningHall> mHouseVenues = new ArrayList<HouseDiningHall>();
-		private ArrayList<RetailDiningHall> mRetailVenues = new ArrayList<RetailDiningHall>();
+		private HashMap<String, List<? extends DiningHall>> mRetailVenues = new HashMap<String, List<? extends DiningHall>>();
 		
 		
 		public DiningVenues(JSONObject object) throws JSONException {
@@ -131,7 +133,17 @@ public class DiningModel {
 			
 			JSONArray jsonRetail = object.getJSONObject("venues").getJSONArray("retail");
 			for (int i = 0; i < jsonRetail.length(); i++) {
-				mRetailVenues.add(new RetailDiningHall(jsonRetail.getJSONObject(i)));
+				RetailDiningHall retailDiningHall = new RetailDiningHall(jsonRetail.getJSONObject(i));
+				String buildingNumber = retailDiningHall.getLocation().getBuildingNumber();
+				if (buildingNumber == null) {
+					buildingNumber = "other";
+				}
+				if (!mRetailVenues.containsKey(buildingNumber)) {
+					mRetailVenues.put(buildingNumber, new ArrayList<RetailDiningHall>());
+				}
+				@SuppressWarnings("unchecked")
+				ArrayList<RetailDiningHall> retailVenues = (ArrayList<RetailDiningHall>) mRetailVenues.get(buildingNumber);
+				retailVenues.add(new RetailDiningHall(jsonRetail.getJSONObject(i)));
 			}
 		}
 
@@ -140,8 +152,22 @@ public class DiningModel {
 			return mHouseVenues;
 		}
 
-		public List<? extends DiningHall> getRetail() {
+		public Map<String, List<? extends DiningHall>> getRetail() {
 			return mRetailVenues;
+		}
+		
+		public List<String> getRetailBuildingNumbers() {
+			ArrayList<String> buildingNumbers = new ArrayList<String>();
+			for (String key : mRetailVenues.keySet()) {
+				buildingNumbers.add(key);
+			}
+			Collections.sort(buildingNumbers, new Comparator<String>() {
+				@Override
+				public int compare(String lhs, String rhs) {
+					return NaturalSort.compare(lhs, rhs);
+				}
+			});
+			return buildingNumbers;
 		}
 		
 		public HouseDiningHall getHouseDiningHall(String id) {
@@ -149,7 +175,14 @@ public class DiningModel {
 		}
 		
 		public RetailDiningHall getRetailDiningHall(String id) {
-			return (RetailDiningHall) findDiningHall(mRetailVenues, id);
+			for (List<? extends DiningHall> buildingDiningHalls : mRetailVenues.values()) {
+				for (DiningHall hall : buildingDiningHalls) {
+					if (hall.getID().equals(id)) {
+						return (RetailDiningHall) hall;
+					}
+				}
+			}
+			throw new RuntimeException("Dining hall with id=" + id + " not found");
 		}
 		
 		private DiningHall findDiningHall(List<? extends DiningHall> halls, String id) {
@@ -869,9 +902,16 @@ public class DiningModel {
 				mLatitude = (float) object.getDouble("latitude");
 				mLongitude = (float) object.getDouble("longitude");
 				getMapPoints().add(new MapPoint(mLatitude, mLongitude));
+			}	
+		}
+		
+		public String getBuildingNumber() {
+			if (mRoomNumber != null) {
+				String[] parts = mRoomNumber.split("\\-");
+				return parts[0];
+			} else {
+				return null;
 			}
-			
-			
 		}
 
 		@Override

@@ -1,9 +1,12 @@
 package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,6 +36,7 @@ import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
 import edu.mit.mitmobile2.facilities.FacilitiesDB;
+import edu.mit.mitmobile2.facilities.FacilitiesDB.LocationTable;
 
 public class DiningHomeActivity extends NewModuleActivity {
 	public static final String SELECTED_TAB = "dining.selected_tab";
@@ -71,6 +75,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 								
 								List<DiningLink> links = DiningModel.getDiningLinks();
 								displayDiningLinks(links);
+								
 							} else {
 								mLoader.showError();
 							}
@@ -83,6 +88,34 @@ public class DiningHomeActivity extends NewModuleActivity {
 		});		
 	}
 	
+	private HashMap<String, String> mBuildingName = new HashMap<String, String>();
+	
+	private String getBuildingName(String buildingNumber) {
+		if (!mBuildingName.containsKey(buildingNumber)) {
+			
+			Cursor cursor = mFacilitiesDB.getLocationByBuildingNumber(buildingNumber);
+			while (cursor.moveToNext()) {
+				int columnIndex = cursor.getColumnIndexOrThrow(LocationTable.NAME);
+				String name = cursor.getString(columnIndex);
+				if (name != null && name.length() > 0) {
+					cursor.close();
+					mBuildingName.put(buildingNumber, name);
+					break;
+				}				
+			}
+			cursor.close();
+			
+			// if building not found use empty string as name
+			// this is just to prevent looking up the building more
+			// than once in the database.
+			if (!mBuildingName.containsKey(buildingNumber)) {
+				mBuildingName.put(buildingNumber, "");
+			}
+		}
+		
+		return mBuildingName.get(buildingNumber);
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -91,7 +124,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 			// TODO:: could use SharedPreferenceChangedListener to only update when bookmark has changed
 			LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeRetailContent);
 			layout.removeAllViews();
-			populateDiningHallRows(R.id.diningHomeRetailContent, mVenues.getRetail(), "Retail");
+			displayRetailDiningHalls();
 		}
 	}
 	
@@ -114,7 +147,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 		tabConfigurator.configureTabs();
 		
 		populateDiningHallRows(R.id.diningHomeHouseContent, mVenues.getHouses(), "Dining Houses");
-		populateDiningHallRows(R.id.diningHomeRetailContent, mVenues.getRetail(), "Retail");
+		
+		displayRetailDiningHalls();		
 		
 		View view = findViewById(R.id.diningHomeHouseTab);
 		TextView messageView = (TextView) view.findViewById(R.id.diningHomeMessage);
@@ -127,13 +161,30 @@ public class DiningHomeActivity extends NewModuleActivity {
 		});
 	}
 	
+	private void displayRetailDiningHalls() {
+		addBookmarkedRetailVenuesToLayout(R.id.diningHomeRetailContent, DiningModel.currentTimeMillis());
+		Map<String, List<? extends DiningHall>> retailHallsBySection = mVenues.getRetail();
+		for (String buildingNumber: DiningModel.getDiningVenues().getRetailBuildingNumbers()) {
+			List<? extends DiningHall> halls = retailHallsBySection.get(buildingNumber);
+			
+			String buildingName = "";
+			if (buildingNumber != "other") {
+				buildingName = getBuildingName(buildingNumber);
+			}
+			
+			String title;
+			if (buildingName.length() > 0) {
+				title = buildingNumber + " - " + buildingName;
+			} else {
+				title = "Other";
+			}
+			populateDiningHallRows(R.id.diningHomeRetailContent, halls, title);
+		}		
+	}
+	
 	private void populateDiningHallRows(int layoutID, List<? extends DiningHall> list, String title) {
 		LinearLayout layout = (LinearLayout) findViewById(layoutID);
 		long currentTime = DiningModel.currentTimeMillis();
-		if (layoutID == R.id.diningHomeRetailContent) {
-			// add bookmarked venues to top of list
-			addBookmarkedRetailVenuesToLayout(layout, currentTime);
-		}
 		
 		SectionHeader header = new SectionHeader(this, title);
 		layout.addView(header, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -190,7 +241,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 		return row;
 	}
 	
-	private void addBookmarkedRetailVenuesToLayout(LinearLayout layout, long currentTime) {
+	private void addBookmarkedRetailVenuesToLayout(int layoutID, long currentTime) {
+		LinearLayout layout = (LinearLayout) findViewById(layoutID);
 		List<RetailDiningHall> halls = RetailDiningHall.getBookmarks(this);
 		if (!halls.isEmpty()) {
 			// add favorites sectionheader

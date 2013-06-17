@@ -65,12 +65,12 @@ public class FacilitiesDB {
 
 	// LOCATIONS
 	public static final class LocationTable implements BaseColumns {
-		static final String ID = "id";
-		static final String NAME = "name";
-		static final String LAT = "lat_wgs84";
-		static final String LONG = "long_wgs84";
-		static final String BLDGNUM = "bldgnum";
-		static final String LAST_UPDATED = "last_updated";
+		public static final String ID = "id";
+		public static final String NAME = "name";
+		public static final String LAT = "lat_wgs84";
+		public static final String LONG = "long_wgs84";
+		public static final String BLDGNUM = "bldgnum";
+		public static final String LAST_UPDATED = "last_updated";
 		
 		// bldg_services fields;
 		static final String HIDDEN_BLDG_SERVICES = "hidden_bldg_services";
@@ -433,6 +433,14 @@ public class FacilitiesDB {
 	}
 	
 
+	public Cursor getLocationByBuildingNumber(String buildingNumber) {
+		String sql = getLocationSearchQuery("", LOCATION_TABLE + "." + LocationTable.BLDGNUM + "=\"" + buildingNumber + "\"");
+		Log.d(TAG,"location search sql = " + sql);
+		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery(sql, new String[] {buildingNumber});
+		Log.d(TAG,"num results = " + cursor.getCount());
+		return cursor;		
+	}
 	public Cursor getLocationSearchCursor(CharSequence searchTerm) {
 		String sql = getLocationSearchQuery(searchTerm, null);
 		Log.d(TAG,"location search sql = " + sql);
