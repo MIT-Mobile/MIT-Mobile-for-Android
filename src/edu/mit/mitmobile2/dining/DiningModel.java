@@ -28,6 +28,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +42,7 @@ import edu.mit.mitmobile2.objs.MapPoint;
 public class DiningModel {
 
 	protected static DiningVenues sVenues;
+	protected static ArrayList<DiningLink> sLinks;
 
 	public static void fetchDiningData(final Context context, final Handler uiHandler) {
 		uiHandler.postDelayed(new Runnable() {
@@ -52,8 +54,8 @@ public class DiningModel {
 					String jsonString = convertStreamToString(istream);
 					JSONObject jsonObject = new JSONObject(jsonString);
 					sVenues = new DiningVenues(jsonObject);
+					sLinks = parseDiningLinks(jsonObject.getJSONArray("links"));
 					MobileWebApi.sendSuccessMessage(uiHandler);					
-					
 				} catch (IOException e) {
 					e.printStackTrace();
 					MobileWebApi.sendErrorMessage(uiHandler);
@@ -67,16 +69,25 @@ public class DiningModel {
 		}, 500);
 	}
 	
+	private static ArrayList<DiningLink> parseDiningLinks(JSONArray linkArray) {
+		ArrayList<DiningLink> links = new ArrayList<DiningLink>();
+		for (int i = 0; i < linkArray.length(); i++) {
+			try {
+				JSONObject link = linkArray.getJSONObject(i);
+				links.add(new DiningLink(link.getString("name"), link.getString("url")));
+			} catch (JSONException e) {
+				Log.e("Dining JSON", "Error parsing link at index ["+ i +"] in json : " + linkArray.toString());
+			}
+		}
+		return links;
+	}
+	
 	public static DiningVenues getDiningVenues() {
 		return sVenues;
 	}
 	
 	public static List<DiningLink> getDiningLinks() {
-		ArrayList<DiningLink> links = new ArrayList<DiningLink>();
-		links.add(new DiningLink("Comments for MIT Dining", "http://web.mit.edu/dining/comments"));
-		links.add(new DiningLink("Food to Go", "http://web.mit.edu/dining/food-to-go"));
-		links.add(new DiningLink("Full MIT Dining website", "http://web.mit.edu/dining"));
-		return links;
+		return sLinks;
 	}
 	
 	private static String convertStreamToString(InputStream is) throws IOException {
