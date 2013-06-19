@@ -1,5 +1,8 @@
 package edu.mit.mitmobile2.tour;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -129,6 +133,15 @@ public class MainTourActivity extends NewModuleActivity {
 	  }
 	*/
 
+	private static String MENU_TOUR_MAP = "tour_map";
+	
+	@Override
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+		return Arrays.asList(
+			new MITMenuItem(MENU_TOUR_MAP, "Tour Map")
+		);
+	}
+	
 	@Override
 	protected boolean isScrollable() {
 		// TODO Auto-generated method stub
@@ -137,7 +150,8 @@ public class MainTourActivity extends NewModuleActivity {
 
 	@Override
 	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
-		
+		Tour tour = TourModel.getTour();
+		TourMapActivity.launch(this, tour.getDefaultTourMapItems(),
+		tour.getPathGeoPoints(), false);
 	}
 }

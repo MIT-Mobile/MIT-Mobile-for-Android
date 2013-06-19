@@ -74,6 +74,7 @@ public class NewsModel {
 	private Context mContext;
 	private SharedPreferences mSharedPreferences;
 	static String NEWS_PATH = "/" + Config.NEWS_OFFICE_PATH;
+	public static final String BASE_PATH = "/apis";
 	
 	private static HashMap<String, SearchResults<NewsItem>> searchCache = new FixedCache<SearchResults<NewsItem>>(10);
 	
@@ -96,13 +97,11 @@ public class NewsModel {
 	public boolean fetchCategory(final int category, final Integer story_id, final boolean silent, final Handler uiHandler) {				
 		
 		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("channel", Integer.toString(category));		
-		if(story_id != null) {
-			parameters.put("story_id", story_id.toString());
-		}
+		if (category != 0)
+			parameters.put("channel", Integer.toString(category));
 		
 		MobileWebApi webApi = new MobileWebApi(false, !silent, "News", mContext, uiHandler);
-		boolean isStarted = webApi.requestRaw(NEWS_PATH, parameters, new MobileWebApi.RawResponseListener(null, null) {			
+		boolean isStarted = webApi.requestRaw(story_id != null ? NEWS_PATH + "/" + story_id.toString() : NEWS_PATH, parameters, new MobileWebApi.RawResponseListener(null, null) {			
 			@Override
 			public void onError() {
 				Message message = Message.obtain();
@@ -476,7 +475,6 @@ public class NewsModel {
 		}
 		
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("command", "search");
 		params.put("q", searchTerm);
 		params.put("start", String.valueOf(start));
 		params.put("limit", "50");
@@ -484,7 +482,7 @@ public class NewsModel {
 		String query = MobileWebApi.query(params);
 		
 		ConnectionWrapper connection = new ConnectionWrapper(mContext);
-		String searchURL = "http://" + Global.getMobileWebDomain() + "/api/" + Config.NEWS_OFFICE_PATH + "/";
+		String searchURL = "http://" + Global.getMobileWebDomain() + BASE_PATH + NEWS_PATH;
 		connection.openURL(searchURL + "?" + query, 
 			new ConnectionInterface() {
 				@Override
