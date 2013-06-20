@@ -20,23 +20,28 @@ import android.widget.ListView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
+import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.MapCatItem;
 
-public class MITMapBrowseCatsActivity extends ModuleActivity {
+public class MITMapBrowseCatsActivity extends NewModuleActivity {
 
 	public static final String TAG = "MITMapBrowseCatsActivity";
+	private static String MENU_BOOKMARKS = "bookmarks";
 
 	//public static final String KEY_TITLE = "title";
 
-	static final int MENU_BOOKMARKS  = MENU_SEARCH + 1;
+	//static final int MENU_BOOKMARKS  = MENU_SEARCH + 1;
 
 	protected FullScreenLoader mLoader;
+	Context mContext;
 	
 	/*
 	String[] categories = {
@@ -57,13 +62,16 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
 	
 	ArrayList<MapCatItem> cats;
 	String[] categories;
-	
+	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
 	
 	/****************************************************/
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"onCreate()");
 	    super.onCreate(savedInstanceState);
+
+	    mContext = this;
+
 	    
     	Bundle extras = getIntent().getExtras();
         if (extras!=null){  
@@ -72,24 +80,23 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
     		
         }
 
-        setContentView(R.layout.boring_list_layout);
-        TitleBar titleBar = (TitleBar) findViewById(R.id.boringListTitleBar);
-        titleBar.setTitle("Browse Map");
-	    
+		setContentView(R.layout.map_browse_cats);
+        addSecondaryTitle("Browse Map");        
         mLoader = (FullScreenLoader) findViewById(R.id.boringListLoader);
         mLoader.showLoading();
-		
-		
+        
         fetchCats();
-		
+
 	}
 	/****************************************************/
 	void createView() {
 		
+
 		findViewById(R.id.boringListLoader).setVisibility(View.GONE);
 		
 		ListView listView = (ListView) findViewById(R.id.boringListLV);
-		
+
+
 		ArrayAdapter<String> categoriesAdapter = new CategoriesAdapter(this, Arrays.asList(categories));
 		
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -116,20 +123,7 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
 		
 	}
 	
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		case MENU_BOOKMARKS: 
-			Intent i = new Intent(this,MITMapBrowseResultsActivity.class);  
-			startActivity(i);
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-
+	
 	/****************************************************/
 	void fetchCats() {
 			
@@ -184,18 +178,38 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
 		}
 	}
 
-	@Override
-	protected Module getModule() {
-		return new MapsModule();
-	}
+//	@Override
+//	protected Module getModule() {
+//		return new MapsModule();
+//	}
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
+//	@Override
+//	protected void prepareActivityOptionsMenu(Menu menu) {
+//		menu.add(0, MENU_BOOKMARKS, Menu.NONE, "Bookmarks")
+//		  .setIcon(R.drawable.menu_bookmarks);
+//	}
 	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_BOOKMARKS, Menu.NONE, "Bookmarks")
-		  .setIcon(R.drawable.menu_bookmarks);
+	protected NewModule getNewModule() {
+		return new MapBrowseCatsModule();
 	}
+	
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String id) {
+	    if (id.equals(MENU_BOOKMARKS)) {
+			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			mContext.startActivity(i);
+	    }
+	}
+
 }
 
