@@ -3,11 +3,13 @@ package edu.mit.mitmobile2.maps;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +26,7 @@ import com.esri.core.geometry.Polygon;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.HomeScreenActivity;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
+import edu.mit.mitmobile2.MITSearchRecentSuggestions;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -294,6 +297,8 @@ public class MITMapActivity extends NewModuleActivity {
             	
             	try {
             		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
+            		MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(mContext, MapsSearchSuggestionsProvider.AUTHORITY,  MapsSearchSuggestionsProvider.MODE);
+            		suggestions.saveRecentQuery(query.toLowerCase(Locale.US), null);
             		map.clearMapItems();
             		ArrayList mapItems = (ArrayList)msg.obj;
          			mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + "  results");
