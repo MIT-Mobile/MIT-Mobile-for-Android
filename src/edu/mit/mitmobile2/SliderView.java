@@ -41,6 +41,10 @@ public class SliderView extends HorizontalScrollView {
 	private boolean mHasNextScreen;
 	private boolean mScrollNeedsResetting;
 	
+	// keep track of which edge screen want to align
+	// true for left edge, false for right edge
+	private boolean mAlignLeftEdge = true;
+	
 	// prevent accidentally starting a horizontal
 	// scroll when tapping on bottoms
 	private int mStaticFrictionThreshold;
@@ -85,7 +89,7 @@ public class SliderView extends HorizontalScrollView {
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
 		if (mScrollNeedsResetting) {
-			scrollTo(mLeftXforMiddle, 0);
+			resetScroll();
 			mScrollNeedsResetting = false;
 		}
 	}
@@ -94,7 +98,7 @@ public class SliderView extends HorizontalScrollView {
 	protected void onSizeChanged (int w, int h, int oldw, int oldh) {
 		mLeftXforMiddle = mSliderViewLayout.getLeftXforMiddle();
 		mRightXforMiddle = mSliderViewLayout.getRightXforMiddle();
-		scrollTo(mLeftXforMiddle, 0);
+		resetScroll();
 		mScrollNeedsResetting = true;
 		requestLayout();
 	}
@@ -306,7 +310,7 @@ public class SliderView extends HorizontalScrollView {
 	private int scrollX(ScreenPosition screenPosition) {
 		switch (screenPosition) {
 			case Previous:
-				return 0;
+				return mSliderViewLayout.getChildWidth() - getWidth();
 			case Current:
 				return mLeftXforMiddle;
 			case Next:
@@ -402,10 +406,19 @@ public class SliderView extends HorizontalScrollView {
 		}
 		
 		mScrollNeedsResetting = true;
-		scrollTo(mLeftXforMiddle, 0);
+		mAlignLeftEdge = (position != ScreenPosition.Previous);
+		resetScroll();
 		
 		if (mOnSeekListener != null) {
 		    mOnSeekListener.onSeek(this, mSliderAdapter);
+		}
+	}
+	
+	private void resetScroll() {
+		if (mAlignLeftEdge) {
+			scrollTo(mLeftXforMiddle, 0);
+		} else {
+			scrollTo(mRightXforMiddle - getWidth(), 0);
 		}
 	}
 	
@@ -440,7 +453,7 @@ public class SliderView extends HorizontalScrollView {
 		
 		mScrollNeedsResetting = true;
 
-		scrollTo(mLeftXforMiddle, 0);
+		resetScroll();
 		
 		mSliderAdapter.seek(ScreenPosition.Current);
 		if (mOnSeekListener != null) {
