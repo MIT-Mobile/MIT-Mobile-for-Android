@@ -167,7 +167,7 @@ public class MITMapBrowseCatsActivity extends ModuleActivity {
 		};
 
 		
-		mp.getJSONThread("?command=categorytitles", myHandler);
+		mp.getJSONThread("place_categories", myHandler);
 		
 	}
 	

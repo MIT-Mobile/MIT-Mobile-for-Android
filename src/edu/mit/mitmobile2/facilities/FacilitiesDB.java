@@ -53,6 +53,13 @@ public class FacilitiesDB {
 	private static final String ROOMS_TABLE = "rooms";
 	private static final String PROBLEM_TYPE_TABLE = "problem_types";
 	
+	public static final String BASE_PATH = "/building_services";
+	public static final String CATEGORIES_PATH = "/location_categories";
+	public static final String LOCATION_PATH = "/map/places";
+	public static final String ROOMS_PATH = "/map/rooms/";
+	public static final String PROBLEM_TYPE_PATH = "/problem_types";
+	
+	
 	
 	// BEGIN TABLE DEFINITIONS
 
@@ -928,10 +935,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"updating category list");
 			db.clearCategories();
 			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "facilities");
-			params.put("command", "categorylist");
-			api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+			api.requestJSONObject(BASE_PATH + CATEGORIES_PATH, null, new MobileWebApi.JSONObjectResponseListener(
 		                new MobileWebApi.DefaultErrorListener(uiHandler),
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
@@ -987,10 +991,7 @@ public class FacilitiesDB {
 				Log.d(TAG,"updating location list");
 				db.clearLocations();
 				MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
-				HashMap<String, String> params = new HashMap<String, String>();
-				params.put("module", "facilities");
-				params.put("command", "location");
-				api.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+				api.requestJSONArray(LOCATION_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 			                new MobileWebApi.DefaultErrorListener(uiHandler),
 			                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 						@Override
@@ -1096,10 +1097,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"updating problem type list");
 			db.clearProblemTypes();
 			MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "facilities");
-			params.put("command", "problemtype");
-			api.requestJSONArray(params, new MobileWebApi.JSONArrayResponseListener(
+			api.requestJSONArray(BASE_PATH + PROBLEM_TYPE_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 		                new MobileWebApi.DefaultErrorListener(uiHandler),
 		                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 					@Override
@@ -1131,11 +1129,7 @@ public class FacilitiesDB {
 		final FacilitiesDB db = FacilitiesDB.getInstance(mContext);
 	
 		MobileWebApi api = new MobileWebApi(false, true, "Facilities", mContext, uiHandler);
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("module", "facilities");
-		params.put("command", "room");
-		params.put("building", buildingNumber);
-		api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+		api.requestJSONObject(ROOMS_PATH + buildingNumber, null, new MobileWebApi.JSONObjectResponseListener(
 	                new MobileWebApi.DefaultErrorListener(uiHandler),
 	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
 				@Override

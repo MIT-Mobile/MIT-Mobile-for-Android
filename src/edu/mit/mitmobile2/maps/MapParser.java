@@ -147,8 +147,8 @@ public class MapParser {
 	        	}
 	        }
 
-	        mi.getItemData().put("displayName",jItem.optString("name",""));
-	        Log.d(TAG,"name = " + jItem.optString("name",""));
+	        mi.getItemData().put("displayName",jItem.optString("displayName",""));
+	        Log.d(TAG,"name = " + jItem.optString("displayName",""));
 	        mi.getItemData().put("name", jItem.getString("name"));
 	        mi.getItemData().put("id",jItem.getString("id"));
 	        mi.getItemData().put("street",jItem.optString("street",""));

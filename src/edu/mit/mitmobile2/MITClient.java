@@ -111,9 +111,9 @@ public class MITClient extends DefaultHttpClient {
 		this.mContext = context;
 		
 		//Log.d(TAG,"MITClient.cookieStore = " + MITClient.cookieStore);
-		if (MITClient.cookieStore == null) {
+//		if (MITClient.cookieStore == null) {
 			MITClient.cookieStore = this.getCookieStore();
-		}
+//		}
 
 		this.setCookieStore(this.cookieStore);
 		

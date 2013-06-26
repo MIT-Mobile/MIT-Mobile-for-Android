@@ -29,6 +29,7 @@ public class EventsModel {
 	private static final String CATEGORIES_PATH = "/events_calendar/categories";
 	private static final String EVENTS_PATH = "/events_calendar/events";
 	private static final String EXHIBITS_PATH = "/events_calendar/exhibits";
+	private static final String NON_EXHIBITS_PATH = "/events_calendar/non_exhibits";
 	private static final String HOLIDAYS_PATH = "/academic_holidays/events";
 	private static final String ACADEMIC_PATH = "/academic_calendar/events";
 	
@@ -135,18 +136,16 @@ public class EventsModel {
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("q", "2");
-		eventParameters.put("start_date", Long.toString(unixtime));
-		eventParameters.put("end_date", Long.toString(unixtime + 86400));
+		eventParameters.put("time", Long.toString(unixtime));
 		
-		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH, eventParameters, 
-				new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONArray(BASE_PATH + NON_EXHIBITS_PATH, eventParameters, 
+				new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 					
 					@Override
-					public void onResponse(JSONObject object) throws ServerResponseException,
+					public void onResponse(JSONArray object) throws ServerResponseException,
 							JSONException {
 						
-						List<EventDetailsItem> events = parseDetailArray(object.getJSONArray("events"));
+						List<EventDetailsItem> events = parseDetailArray(object);
 						putInDayEventsCache(unixtime, eventType, events);
 						MobileWebApi.sendSuccessMessage(uiHandler);
 					}
@@ -163,9 +162,7 @@ public class EventsModel {
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
 		
 		HashMap<String, String> eventParameters = new HashMap<String, String>();
-		eventParameters.put("q", "2");
-		eventParameters.put("start_date", Long.toString(unixtime));
-		eventParameters.put("end_date", Long.toString(unixtime + 86400));
+		eventParameters.put("time", Long.toString(unixtime));
 		
 		webApi.requestJSONArray(BASE_PATH + EXHIBITS_PATH, eventParameters, 
 				new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
@@ -598,6 +595,8 @@ public class EventsModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
+
+		
 		webApi.requestJSONArray(BASE_PATH + HOLIDAYS_PATH, null, new MobileWebApi.JSONArrayResponseListener(
 			new MobileWebApi.DefaultErrorListener(uiHandler), null)  {
 			
@@ -620,6 +619,11 @@ public class EventsModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Calendar", context, uiHandler);
+		
+//		HashMap<String, String> eventParameters = new HashMap<String, String>();
+//		eventParameters.put("module", "calendar");
+//		eventParameters.put("command", "detail");
+//		eventParameters.put("id", eventId);
 		
 		webApi.requestJSONObject(BASE_PATH + EVENTS_PATH + "/" + eventId, null, 
 				new MobileWebApi.JSONObjectResponseListener(

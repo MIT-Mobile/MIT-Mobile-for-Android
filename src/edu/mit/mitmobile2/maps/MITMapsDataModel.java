@@ -28,13 +28,8 @@ public class MITMapsDataModel {
 			
 		}
 		
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-
-		params.put("q", searchTerm);
-		params.put("command", "search");
 		MobileWebApi webApi = new MobileWebApi(false, true, "Campus map", context, uiHandler);
-		webApi.requestJSONArray("/map", params, new JSONArrayResponseListener(new DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONArray("/map/places/q=" + searchTerm, null, new JSONArrayResponseListener(new DefaultErrorListener(uiHandler), null) {
 
 			@Override
 			public void onResponse(JSONArray array) throws JSONException {
@@ -60,18 +55,13 @@ public class MITMapsDataModel {
 	
 	public static void fetchCategory(final String categoryId, final Handler uiHandler, Context context) {
 		
-		HashMap<String, String> params = new HashMap<String, String>();
-
-		params.put("id", categoryId);
-		params.put("command", "category");
 		MobileWebApi webApi = new MobileWebApi(false, true, "Campus map", context, uiHandler);
 		
-		webApi.requestJSONArray("/map", params, new JSONArrayResponseListener(new DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONArray("/map/places/" + categoryId, null, new JSONArrayResponseListener(new DefaultErrorListener(uiHandler), null) {
 
 			@Override
 			public void onResponse(JSONArray array) throws JSONException {
 				List<MapItem> mapItems = MapParser.parseMapItems(array);
-				
 				sCategoryCache.put(categoryId, mapItems); 
 				
 				MobileWebApi.sendSuccessMessage(uiHandler);

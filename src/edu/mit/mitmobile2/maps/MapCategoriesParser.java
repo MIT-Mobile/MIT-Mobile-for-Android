@@ -20,7 +20,7 @@ public class MapCategoriesParser extends JSONParser {
 	}
 	
 	public String getBaseUrl() {
-		return "http://" + Global.getMobileWebDomain() + "/api/map/";
+		return "http://" + Global.getMobileWebDomain() + "/apis/map/";
 	}
 	
 	/////////////////////////////////////////

@@ -17,7 +17,7 @@ public class MapAgeParser extends JSONParser {
 
 	@Override
 	public String getBaseUrl() {
-		return "http://" + Global.getMobileWebDomain() + "/api/map/";
+		return "http://" + Global.getMobileWebDomain() + "/apis/map/";
 	}
 	
 	@Override

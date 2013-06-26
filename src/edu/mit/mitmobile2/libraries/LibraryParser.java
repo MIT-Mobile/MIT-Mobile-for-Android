@@ -63,13 +63,9 @@ public class LibraryParser {
     
     private static Schedule getSchedule(JSONObject object, boolean isCurrentTerm) throws JSONException {
         Schedule schedule = new Schedule();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
-        try {
-			schedule.range_start = dateFormatter.parse(object.getJSONObject("range").getString("start"));
-			schedule.range_end = dateFormatter.parse(object.getJSONObject("range").getString("end"));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+		schedule.range_start = new Date((long)object.getJSONObject("range").getLong("start")*1000);//dateFormatter.parse(time.toString());
+		schedule.range_end = new Date((long)object.getJSONObject("range").getLong("end")*1000);//dateFormatter.parse(end);
         schedule.name = object.getString("name");
         if(!isCurrentTerm) {
         	schedule.termday = new Date(object.getLong("termday"));
@@ -237,7 +233,7 @@ public class LibraryParser {
         	else {
 		        loanData.setNumLoan(object.getInt("total"));
 		        loanData.setNumOverdue(object.getInt("overdue"));
-	        	JSONArray items = object.getJSONArray("items");
+		        JSONArray items = object.getJSONArray("items");
 				for (int l = 0; l < items.length(); l++) {
 					LoanListItem item = new LoanListItem();
 					JSONObject tmpItem = items.getJSONObject(l);
