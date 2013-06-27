@@ -204,7 +204,11 @@ public class DiningHomeActivity extends NewModuleActivity {
 		TextView subtitleView = (TextView) row.findViewById(R.id.diningHallRowSubtitle);
 		TextView statusView = (TextView) row.findViewById(R.id.diningHallRowStatus);
 		
-//		iconView.setURL(diningHall.getIconUrl());  // uncomment this when images are in a better size for display. Causes out of memory issue currently.
+		if (diningHall.getIconUrl() != null) {
+			iconView.setURL(diningHall.getIconUrl());
+		} else {
+			iconView.setVisibility(View.GONE);
+		}
 		titleView.setText(diningHall.getName());
 		subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
 		switch (diningHall.getCurrentStatus(currentTime)) {

@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.dining;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,7 +55,12 @@ public class DiningHallHeaderView extends LinearLayout {
 	public void setHall(DiningHall hall, long currentTime) {
 		mTitleView.setText(hall.getName());
 		mSubtitleView.setText(hall.getCurrentStatusSummary(currentTime));
-		mIconView.setURL(hall.getIconUrl());
+		if (hall.getIconUrl() != null) {
+			mIconView.setURL(hall.getIconUrl());
+		} else {
+			mIconView.setVisibility(View.GONE);
+			mTitleView.setPadding(0, mTitleView.getPaddingTop(), mTitleView.getPaddingRight(), mTitleView.getPaddingBottom());
+		}
 		
 		int colorResID = 0;
 		switch (hall.getCurrentStatus(currentTime)) {

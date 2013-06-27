@@ -40,35 +40,58 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
+import edu.mit.mitmobile2.objs.PersonItem;
+import edu.mit.mitmobile2.objs.SearchResults;
+import edu.mit.mitmobile2.people.PeopleParser;
 
 public class DiningModel {
 
 	protected static DiningVenues sVenues;
 	protected static ArrayList<DiningLink> sLinks;
+	protected static final boolean sUseTestData = false;
 
 	public static void fetchDiningData(final Context context, final Handler uiHandler) {
-		uiHandler.postDelayed(new Runnable() {
+		if (!sUseTestData) {
+			HashMap<String, String> parameters = new HashMap<String, String>();
+			parameters.put("module", "dining");
 
-			@Override
-			public void run() {
-				try {
-					InputStream istream = context.getResources().getAssets().open("dining/data.json");
-					String jsonString = convertStreamToString(istream);
-					JSONObject jsonObject = new JSONObject(jsonString);
-					sVenues = new DiningVenues(jsonObject);
-					sLinks = parseDiningLinks(jsonObject.getJSONArray("links"));
+			MobileWebApi webApi = new MobileWebApi(false, true, "Dining", context, uiHandler);
+			webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
+				new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
+				
+				@Override
+				public void onResponse(JSONObject object) throws JSONException {
+					sVenues = new DiningVenues(object);
+					sLinks = parseDiningLinks(object.getJSONArray("links"));
 					MobileWebApi.sendSuccessMessage(uiHandler);					
-				} catch (IOException e) {
-					e.printStackTrace();
-					MobileWebApi.sendErrorMessage(uiHandler);
-				} catch (JSONException e) {
-					e.printStackTrace();
-					MobileWebApi.sendErrorMessage(uiHandler);
+				}
+			});
+			
+		} else {
+
+			uiHandler.postDelayed(new Runnable() {
+	
+				@Override
+				public void run() {
+					try {
+						InputStream istream = context.getResources().getAssets().open("dining/data.json");
+						String jsonString = convertStreamToString(istream);
+						JSONObject jsonObject = new JSONObject(jsonString);
+						sVenues = new DiningVenues(jsonObject);
+						sLinks = parseDiningLinks(jsonObject.getJSONArray("links"));
+						MobileWebApi.sendSuccessMessage(uiHandler);					
+					} catch (IOException e) {
+						e.printStackTrace();
+						MobileWebApi.sendErrorMessage(uiHandler);
+					} catch (JSONException e) {
+						e.printStackTrace();
+						MobileWebApi.sendErrorMessage(uiHandler);
+					}
+					
 				}
 				
-			}
-			
-		}, 500);
+			}, 500);
+		}
 	}
 	
 	private static ArrayList<DiningLink> parseDiningLinks(JSONArray linkArray) {
@@ -237,7 +260,9 @@ public class DiningModel {
 		public DiningHall(JSONObject object) throws JSONException {
 			mId = object.getString("id");
 			mUrl = object.getString("url");
-			mIconUrl = object.getString("icon_url");
+			if (object.has("icon_url")) {
+				mIconUrl = object.getString("icon_url");
+			}
 			mName = object.getString("name");
 			mShortName = object.getString("short_name");
 			mLocation = new DiningHallLocation(this, object.getJSONObject("location"));
@@ -775,7 +800,7 @@ public class DiningModel {
 		ArrayList<MenuItem> mMenuItems = new ArrayList<MenuItem>();
 		
 		public Meal(JSONObject object, String date) throws JSONException {
-			mName = object.getString("name");
+			mName = object.getString("name").toLowerCase(Locale.US);
 			if (!object.isNull("message")) {
 				mMessage = object.getString("message");
 			}
@@ -907,9 +932,15 @@ public class DiningModel {
 			mDiningHall = hall;
 			
 			mStreet = object.getString("street");
-			mCity = object.getString("city");
-			mState = object.getString("state");
-			mZipcode = object.getString("zipcode");
+			if (object.has("city")) {
+				mCity = object.getString("city");
+			}
+			if (object.has("state")) {
+				mState = object.getString("state");
+			}
+			if (object.has("zipcode")) {
+				mZipcode = object.getString("zipcode");
+			}
 			
 			if (object.has("description")) {
 				mDescription = object.getString("description");
@@ -940,8 +971,8 @@ public class DiningModel {
 		public View getCallout(Context context) {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(R.layout.dining_hall_row, null);
-			RemoteImageView iconView = (RemoteImageView) row.findViewById(R.id.diningHallRowImage);
-			iconView.setVisibility(View.GONE);
+			View iconWrapper = row.findViewById(R.id.diningHallRowImageWrapper);
+			iconWrapper.setVisibility(View.GONE);
 			TextView titleView = (TextView) row.findViewById(R.id.diningHallRowTitle);
 			TextView subtitleView = (TextView) row.findViewById(R.id.diningHallRowSubtitle);
 			TextView statusView = (TextView) row.findViewById(R.id.diningHallRowStatus);
@@ -1193,8 +1224,11 @@ public class DiningModel {
 				sAmPmFormat.format(start.getTime()).toLowerCase(Locale.US);
 	}
 	static long currentTimeMillis() {
-		long currentTime = 1367351565000L;
-		//long currentTime = System.currentTimeMillis();
-		return currentTime;
+		if (!sUseTestData) {
+			return System.currentTimeMillis();
+		} else {
+			long currentTime = 1367351565000L;
+			return currentTime;	
+		}
 	}
 }

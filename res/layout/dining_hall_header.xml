@@ -6,14 +6,22 @@
   android:layout_height="wrap_content"
   android:background="@android:color/transparent">
   
-  <edu.mit.mitmobile2.RemoteImageView
-      android:id="@+id/diningHallHeaderImage"
-      android:layout_width="46dip"
-      android:layout_height="46dip"
+  <FrameLayout 
+      android:id="@+id/diningHallHeaderImageWrapper"
+      android:layout_width="wrap_content"
+      android:layout_height="46dip"     
       android:layout_marginLeft="@dimen/standardPadding"
       android:layout_marginTop="16dip"
-      android:background="#aaa" 
-      />
+      >
+
+      <edu.mit.mitmobile2.RemoteImageView
+       		android:id="@+id/diningHallHeaderImage"
+      		android:layout_width="46dip"
+      		android:layout_height="match_parent"
+      		android:background="#aaa" 
+      		/>
+        
+  </FrameLayout>
   
   <ImageView
       android:id="@+id/diningHallActionImage"
@@ -27,10 +35,10 @@
   
   <TextView 
       android:id="@+id/diningHallHeaderTitle"
-      android:layout_toRightOf="@id/diningHallHeaderImage"
+      android:layout_toRightOf="@id/diningHallHeaderImageWrapper"
       android:layout_toLeftOf="@id/diningHallActionImage"
-      android:layout_alignTop="@id/diningHallHeaderImage"
-      android:layout_alignBottom="@id/diningHallHeaderImage"
+      android:layout_alignTop="@id/diningHallHeaderImageWrapper"
+      android:layout_alignBottom="@id/diningHallHeaderImageWrapper"
       android:layout_width="wrap_content"
   	  android:layout_height="wrap_content"
   	  android:gravity="center_vertical"
@@ -43,8 +51,8 @@
       android:id="@+id/diningHallHeaderSubtitle"  
       android:layout_width="wrap_content"
   	  android:layout_height="wrap_content"
-  	  android:layout_alignLeft="@id/diningHallHeaderImage"
-  	  android:layout_below="@id/diningHallHeaderImage"
+  	  android:layout_alignLeft="@id/diningHallHeaderImageWrapper"
+  	  android:layout_below="@id/diningHallHeaderImageWrapper"
   	  android:paddingTop="@dimen/standardPadding"
   	  android:paddingBottom="@dimen/standardPadding"
       style="@style/ListItemSecondary"
