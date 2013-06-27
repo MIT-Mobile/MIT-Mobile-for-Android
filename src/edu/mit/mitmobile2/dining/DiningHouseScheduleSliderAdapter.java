@@ -173,6 +173,13 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 			if (!showingItems) {
 				layout.addView(getEmptyMenuView("No matching items"));
 			}
+			
+			View rotateLegend = inflater.inflate(R.layout.dining_rotate_legend, null);
+			layout.addView(rotateLegend);
+			
+			if (showingItems) {
+				rotateLegend.setBackgroundColor(mContext.getResources().getColor(R.color.rowBackground));
+			}
 		}
 		
 		return scrollWrapper;
