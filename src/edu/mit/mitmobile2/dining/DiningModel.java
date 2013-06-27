@@ -219,6 +219,14 @@ public class DiningModel {
 		}
 		
 		public RetailDiningHall getRetailDiningHall(String id) {
+			RetailDiningHall hall = findRetailDiningHall(id);
+			if (hall != null) {
+				return hall;
+			}
+			throw new RuntimeException("Dining hall with id=" + id + " not found");
+		}
+		
+		public RetailDiningHall findRetailDiningHall(String id) {
 			for (List<? extends DiningHall> buildingDiningHalls : mRetailVenues.values()) {
 				for (DiningHall hall : buildingDiningHalls) {
 					if (hall.getID().equals(id)) {
@@ -226,7 +234,8 @@ public class DiningModel {
 					}
 				}
 			}
-			throw new RuntimeException("Dining hall with id=" + id + " not found");
+			
+			return null;
 		}
 		
 		private DiningHall findDiningHall(List<? extends DiningHall> halls, String id) {
@@ -499,7 +508,7 @@ public class DiningModel {
 			String [] idSet = nameString.split(",");
 			DiningVenues venues = DiningModel.getDiningVenues();
 			for (String id : idSet) {
-				RetailDiningHall hall = venues.getRetailDiningHall(id);
+				RetailDiningHall hall = venues.findRetailDiningHall(id);
 				if (hall != null) bookmarkedHalls.add(hall);
 			}
 			return bookmarkedHalls;
