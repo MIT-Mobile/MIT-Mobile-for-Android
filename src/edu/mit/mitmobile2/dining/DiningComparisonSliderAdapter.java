@@ -40,17 +40,9 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 		
 		
 	}	
-
+	
 	@Override
 	protected View viewForMealOrDay(MealOrEmptyDay mealOrEmptyDay) {
-		if (!mealOrEmptyDay.isEmpty()) {
-			return mealComparisonScreen(mealOrEmptyDay);
-		} else {
-			return noMealsTodayScreen(mealOrEmptyDay.getDayMessage());
-		}
-	}
-
-	private View mealComparisonScreen(MealOrEmptyDay mealOrEmptyDay) {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dining_comparison_meal, null);
 		DiningDividerLinearLayout hallTitles = (DiningDividerLinearLayout) view.findViewById(R.id.diningComparisonMealHallTitles);
@@ -85,7 +77,7 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 				subtitleView.setText(meal.getScheduleSummaryForColumns());
 				menuView = getMenuView(meal);
 			} else {
-				menuView = getEmptyMenuView("This hall is closed");
+				menuView = getEmptyMenuView("No meals");
 			}
 			menus.addView(menuView, columnLayoutParams);
 		}
