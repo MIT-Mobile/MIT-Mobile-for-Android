@@ -64,7 +64,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.arg1 == MobileWebApi.SUCCESS) {
-					DiningModel.fetchDiningData(mContext, new Handler() {
+					DiningModel.fetchDiningData(mContext, false, new Handler() {
 						@Override
 						public void handleMessage(Message msg) {
 							if (msg.arg1 == MobileWebApi.SUCCESS) {

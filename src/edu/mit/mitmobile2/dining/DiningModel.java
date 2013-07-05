@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,21 +38,60 @@ import android.widget.TextView;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NaturalSort;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
-import edu.mit.mitmobile2.objs.PersonItem;
-import edu.mit.mitmobile2.objs.SearchResults;
-import edu.mit.mitmobile2.people.PeopleParser;
+
 
 public class DiningModel {
 
+	protected static final String PREFS_NAME = "dining_data";
+	protected static final String JSON = "json";
+	protected static final String JSON_SAVED_TIME_KEY = "last_saved";
+	
+	protected static long sCacheLifetime = 10 * 60 * 1000; 
+	protected static long sLastRefreshTime;
 	protected static DiningVenues sVenues;
 	protected static ArrayList<DiningLink> sLinks;
 	protected static final boolean sUseTestData = false;
 
-	public static void fetchDiningData(final Context context, final Handler uiHandler) {
+	public static void fetchDiningData(final Context context, boolean forceRefresh, final Handler uiHandler) {
 		if (!sUseTestData) {
+			
+			// check memory cache
+			if (!forceRefresh && sLastRefreshTime > (System.currentTimeMillis() - sCacheLifetime)) {
+				// nothing to do
+				uiHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						MobileWebApi.sendSuccessMessage(uiHandler);	
+					}
+				});
+				return;
+			}
+					
+			// check persistent cache
+			final SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+			long lastSaved = sharedPreferences.getLong(JSON_SAVED_TIME_KEY, 0);
+			if (!forceRefresh && lastSaved > (System.currentTimeMillis() - sCacheLifetime)) {
+				String jsonData = sharedPreferences.getString(JSON, null);
+				try {
+					JSONObject object = new JSONObject(jsonData);
+					sVenues = new DiningVenues(object);
+					sLinks = parseDiningLinks(object.getJSONArray("links"));
+					uiHandler.post(new Runnable() {
+						@Override
+						public void run() {
+							MobileWebApi.sendSuccessMessage(uiHandler);	
+						}
+					});
+					return;					
+				} catch (JSONException e) {
+					Log.d("dining", "Cached dining json in invalid");
+					e.printStackTrace();					
+					// cached data is invalid, lets just go ahead and download the new data
+				}
+			}
+			
 			HashMap<String, String> parameters = new HashMap<String, String>();
 			parameters.put("module", "dining");
 
@@ -63,6 +103,11 @@ public class DiningModel {
 				public void onResponse(JSONObject object) throws JSONException {
 					sVenues = new DiningVenues(object);
 					sLinks = parseDiningLinks(object.getJSONArray("links"));
+					sLastRefreshTime = System.currentTimeMillis();
+					Editor editor = sharedPreferences.edit();
+					editor.putString(JSON, object.toString());
+					editor.putLong(JSON_SAVED_TIME_KEY, sLastRefreshTime);
+					editor.commit();
 					MobileWebApi.sendSuccessMessage(uiHandler);					
 				}
 			});
