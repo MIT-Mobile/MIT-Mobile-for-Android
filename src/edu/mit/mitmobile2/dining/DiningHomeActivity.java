@@ -159,6 +159,9 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 	}
 	
 	private void displayDiningHalls() {
+		LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeHouseContent);
+		layout.removeAllViews();
+		
 		populateDiningHallRows(R.id.diningHomeHouseContent, mVenues.getHouses(), "Dining Houses");
 		
 		displayRetailDiningHalls();		
@@ -197,7 +200,6 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 	
 	private void populateDiningHallRows(int layoutID, List<? extends DiningHall> list, String title) {
 		LinearLayout layout = (LinearLayout) findViewById(layoutID);
-		layout.removeAllViews();
 		
 		long currentTime = DiningModel.currentTimeMillis();
 		
