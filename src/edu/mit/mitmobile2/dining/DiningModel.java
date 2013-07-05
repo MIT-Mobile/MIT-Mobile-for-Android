@@ -73,22 +73,8 @@ public class DiningModel {
 			final SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 			long lastSaved = sharedPreferences.getLong(JSON_SAVED_TIME_KEY, 0);
 			if (!forceRefresh && lastSaved > (System.currentTimeMillis() - sCacheLifetime)) {
-				String jsonData = sharedPreferences.getString(JSON, null);
-				try {
-					JSONObject object = new JSONObject(jsonData);
-					sVenues = new DiningVenues(object);
-					sLinks = parseDiningLinks(object.getJSONArray("links"));
-					uiHandler.post(new Runnable() {
-						@Override
-						public void run() {
-							MobileWebApi.sendSuccessMessage(uiHandler);	
-						}
-					});
-					return;					
-				} catch (JSONException e) {
-					Log.d("dining", "Cached dining json in invalid");
-					e.printStackTrace();					
-					// cached data is invalid, lets just go ahead and download the new data
+				if (fetchPersistantCache(sharedPreferences, uiHandler)) {
+					return;
 				}
 			}
 			
@@ -97,19 +83,28 @@ public class DiningModel {
 
 			MobileWebApi webApi = new MobileWebApi(false, true, "Dining", context, uiHandler);
 			webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
-				new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {
+				new MobileWebApi.ErrorResponseListener() {
+					@Override
+					public void onError() {
+						boolean success = fetchPersistantCache(sharedPreferences, uiHandler);
+						if (!success) {
+							MobileWebApi.sendErrorMessage(uiHandler);
+						}
+					}
+				}, 
 				
-				@Override
-				public void onResponse(JSONObject object) throws JSONException {
-					sVenues = new DiningVenues(object);
-					sLinks = parseDiningLinks(object.getJSONArray("links"));
-					sLastRefreshTime = System.currentTimeMillis();
-					Editor editor = sharedPreferences.edit();
-					editor.putString(JSON, object.toString());
-					editor.putLong(JSON_SAVED_TIME_KEY, sLastRefreshTime);
-					editor.commit();
-					MobileWebApi.sendSuccessMessage(uiHandler);					
-				}
+				new MobileWebApi.DefaultCancelRequestListener(uiHandler) ) {					
+					@Override
+					public void onResponse(JSONObject object) throws JSONException {
+						sVenues = new DiningVenues(object);
+						sLinks = parseDiningLinks(object.getJSONArray("links"));
+						sLastRefreshTime = System.currentTimeMillis();
+						Editor editor = sharedPreferences.edit();
+						editor.putString(JSON, object.toString());
+						editor.putLong(JSON_SAVED_TIME_KEY, sLastRefreshTime);
+						editor.commit();
+						MobileWebApi.sendSuccessMessage(uiHandler);					
+					}
 			});
 			
 		} else {
@@ -137,6 +132,26 @@ public class DiningModel {
 				
 			}, 500);
 		}
+	}
+	
+	private static boolean fetchPersistantCache(SharedPreferences sharedPreferences, final Handler uiHandler) {
+		String jsonData = sharedPreferences.getString(JSON, null);
+		try {
+			JSONObject object = new JSONObject(jsonData);
+			sVenues = new DiningVenues(object);
+			sLinks = parseDiningLinks(object.getJSONArray("links"));
+			uiHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					MobileWebApi.sendSuccessMessage(uiHandler);	
+				}
+			});
+			return true;					
+		} catch (JSONException e) {
+			Log.d("dining", "Cached dining json in invalid");
+			e.printStackTrace();					
+			return false;
+		}		
 	}
 	
 	private static ArrayList<DiningLink> parseDiningLinks(JSONArray linkArray) {
