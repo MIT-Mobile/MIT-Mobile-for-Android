@@ -213,7 +213,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 		
 		String subtitle = diningHall.getTodaysHoursSummary(currentTime);
 		if (subtitle != null && subtitle.length() > 0) {
-			subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
+			subtitleView.setText(subtitle);
 		} else {
 			subtitleView.setVisibility(View.GONE);
 		}
