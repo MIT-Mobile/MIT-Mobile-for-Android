@@ -29,7 +29,8 @@ public class SimpleSingleWebViewActivity extends NewModuleActivity {
 		String text = getIntent().getStringExtra(WEB_TEXT_HTML_KEY);
 		
 		WebView webView = (WebView) findViewById(R.id.diningWebText);
-		webView.loadData(text, "text/html", "utf8");
+		webView.loadDataWithBaseURL(null, text, "text/html", "utf-8", null);
+
 	}
 	
 	@Override
