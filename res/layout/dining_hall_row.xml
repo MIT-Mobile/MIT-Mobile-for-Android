@@ -4,6 +4,7 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:minHeight="78dip"
   android:background="@drawable/highlight_background">
   
   <FrameLayout

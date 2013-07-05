@@ -237,7 +237,14 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 			iconView.setVisibility(View.GONE);
 		}
 		titleView.setText(diningHall.getName());
-		subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
+		
+		String subtitle = diningHall.getTodaysHoursSummary(currentTime);
+		if (subtitle != null && subtitle.length() > 0) {
+			subtitleView.setText(diningHall.getTodaysHoursSummary(currentTime));
+		} else {
+			subtitleView.setVisibility(View.GONE);
+		}
+		
 		switch (diningHall.getCurrentStatus(currentTime)) {
 			case OPEN:
 				statusView.setText("Open");
