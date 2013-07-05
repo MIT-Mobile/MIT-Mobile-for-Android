@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.DefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
@@ -38,7 +43,7 @@ import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
 import edu.mit.mitmobile2.facilities.FacilitiesDB;
 import edu.mit.mitmobile2.facilities.FacilitiesDB.LocationTable;
 
-public class DiningHomeActivity extends NewModuleActivity {
+public class DiningHomeActivity extends NewModuleActivity implements OnRefreshListener {
 	public static final String SELECTED_TAB = "dining.selected_tab";
 	private static int MAP_ACTIVITY_REQUEST_CODE = 1;
 	
@@ -48,6 +53,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 	TabHost mTabHost;
 	private DiningHomeActivity mContext;
 	private FacilitiesDB mFacilitiesDB;
+	private PullToRefreshAttacher mPullToRefreshAttacher;
 	
 	@Override
 	protected void onCreate(Bundle savedInstance) {
@@ -59,6 +65,14 @@ public class DiningHomeActivity extends NewModuleActivity {
 		mLoader = (FullScreenLoader) findViewById(R.id.diningHomeLoader);
 		mLoader.showLoading();
 		
+		// prepare tabs
+		mTabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
+		mTabHost.setup();
+		TabConfigurator tabConfigurator = new TabConfigurator(this, mTabHost);
+		tabConfigurator.addTab("HOUSE DINING", R.id.diningHomeHouseTab);
+		tabConfigurator.addTab("RETAIL", R.id.diningHomeRetailContent);
+		tabConfigurator.configureTabs();
+		
 		mFacilitiesDB = FacilitiesDB.getInstance(this);
 		mFacilitiesDB.updateDatabase(this, new Handler() {
 			@Override
@@ -69,13 +83,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 						public void handleMessage(Message msg) {
 							if (msg.arg1 == MobileWebApi.SUCCESS) {
 								mLoader.setVisibility(View.GONE);
-
-								mVenues = DiningModel.getDiningVenues(); 
-								displayDiningHalls();
-								
-								List<DiningLink> links = DiningModel.getDiningLinks();
-								displayDiningLinks(links);
-								
+								updateDiningData();
 							} else {
 								mLoader.showError();
 							}
@@ -85,10 +93,30 @@ public class DiningHomeActivity extends NewModuleActivity {
 					mLoader.showError();
 				}
 			}			
-		});		
+		});	
+		
+	    ScrollView scrollView = (ScrollView) findViewById(R.id.diningHomeMainScrollView);
+
+        // Create new PullToRefreshAttacher
+        mPullToRefreshAttacher = new PullToRefreshAttacher(this);
+        mPullToRefreshAttacher.setRefreshableView(scrollView, this);
+        DefaultHeaderTransformer ht = (DefaultHeaderTransformer) mPullToRefreshAttacher
+                .getHeaderTransformer();
+        ht.setPullText("Swipe to refresh");
+        ht.setRefreshingText("Refreshing...");
+        
+	}
+	
+	private void updateDiningData() {
+		mVenues = DiningModel.getDiningVenues(); 
+		displayDiningHalls();
+		
+		List<DiningLink> links = DiningModel.getDiningLinks();
+		displayDiningLinks(links);		
 	}
 	
 	private HashMap<String, String> mBuildingName = new HashMap<String, String>();
+	private boolean mRefreshInProgress;
 	
 	private String getBuildingName(String buildingNumber) {
 		if (!mBuildingName.containsKey(buildingNumber)) {
@@ -115,8 +143,7 @@ public class DiningHomeActivity extends NewModuleActivity {
 		if (mVenues != null) {
 			// need to refresh retail dining because bookmarks may have changed
 			// TODO:: could use SharedPreferenceChangedListener to only update when bookmark has changed
-			LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeRetailContent);
-			layout.removeAllViews();
+			
 			displayRetailDiningHalls();
 		}
 	}
@@ -132,13 +159,6 @@ public class DiningHomeActivity extends NewModuleActivity {
 	}
 	
 	private void displayDiningHalls() {
-		mTabHost = (TabHost) findViewById(R.id.diningHomeTabHost);
-		mTabHost.setup();
-		TabConfigurator tabConfigurator = new TabConfigurator(this, mTabHost);
-		tabConfigurator.addTab("HOUSE DINING", R.id.diningHomeHouseTab);
-		tabConfigurator.addTab("RETAIL", R.id.diningHomeRetailContent);
-		tabConfigurator.configureTabs();
-		
 		populateDiningHallRows(R.id.diningHomeHouseContent, mVenues.getHouses(), "Dining Houses");
 		
 		displayRetailDiningHalls();		
@@ -155,6 +175,9 @@ public class DiningHomeActivity extends NewModuleActivity {
 	}
 	
 	private void displayRetailDiningHalls() {
+		LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeRetailContent);
+		layout.removeAllViews();
+		
 		addBookmarkedRetailVenuesToLayout(R.id.diningHomeRetailContent, DiningModel.currentTimeMillis());
 		Map<String, List<? extends DiningHall>> retailHallsBySection = mVenues.getRetail();
 		for (String buildingNumber: DiningModel.getDiningVenues().getRetailBuildingNumbers()) {
@@ -174,6 +197,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 	
 	private void populateDiningHallRows(int layoutID, List<? extends DiningHall> list, String title) {
 		LinearLayout layout = (LinearLayout) findViewById(layoutID);
+		layout.removeAllViews();
+		
 		long currentTime = DiningModel.currentTimeMillis();
 		
 		SectionHeader header = new SectionHeader(this, title);
@@ -225,10 +250,12 @@ public class DiningHomeActivity extends NewModuleActivity {
 		row.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (diningHall instanceof HouseDiningHall) {
-					DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
-				} else {
-					DiningRetailInfoActivity.launch(DiningHomeActivity.this, diningHall);
+				if (!mRefreshInProgress) {
+					if (diningHall instanceof HouseDiningHall) {
+						DiningScheduleActivity.launch(DiningHomeActivity.this, diningHall);
+					} else {
+						DiningRetailInfoActivity.launch(DiningHomeActivity.this, diningHall);
+					}
 				}
 			}				
 		});
@@ -265,6 +292,8 @@ public class DiningHomeActivity extends NewModuleActivity {
 	
 	private void displayDiningLinks(List<DiningLink> links) {
 		LinearLayout resourcesLayout = (LinearLayout) findViewById(R.id.diningHomeResources);
+		resourcesLayout.removeAllViews();
+		
 		for (final DiningLink link : links) {
 			resourcesLayout.addView(new DividerView(this, null));
 			TwoLineActionRow row = new TwoLineActionRow(this);
@@ -313,4 +342,19 @@ public class DiningHomeActivity extends NewModuleActivity {
 		return true;
 	}
 
+	@Override
+	public void onRefreshStarted(View view) {
+		mRefreshInProgress = true;
+		
+		DiningModel.fetchDiningData(this, true, new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.arg1 == MobileWebApi.SUCCESS) {
+					updateDiningData();
+				}
+				mPullToRefreshAttacher.setRefreshComplete();
+				mRefreshInProgress = false;
+			}
+		});	
+	}
 }

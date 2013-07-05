@@ -27,6 +27,7 @@
 		            android:layout_height="@dimen/tabHeight"/>
 		
 	        <ScrollView
+	            	android:id="@+id/diningHomeMainScrollView"
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content" >
 			        <FrameLayout
@@ -65,7 +66,7 @@
 		
 						   		</LinearLayout> 		
 						   		
-						       	<LinearLayout android:id="@+id/diningHomeResources"  
+						       	<LinearLayout
 										android:orientation="vertical"
 										android:layout_width="fill_parent" 
 										android:layout_height="wrap_content">
@@ -74,6 +75,11 @@
 												android:layout_width="fill_parent" 
 												android:layout_height="wrap_content"	
 												android:text="Resources" />
+						           		
+						           		<LinearLayout android:id="@+id/diningHomeResources"  
+											android:orientation="vertical"
+											android:layout_width="fill_parent" 
+											android:layout_height="wrap_content" />
 						           		
 						           		<!-- <edu.mit.mitmobile2.TwoLineActionRow
 						           		    	android:layout_width="fill_parent" 
