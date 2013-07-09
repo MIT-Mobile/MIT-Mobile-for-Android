@@ -121,9 +121,9 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 				new EmergencyModule(),
 				new LibrariesModule(),
 				new FacilitiesModule(),
+				new DiningModule(),
 				new QRReaderModule(),
 				new LinksModule(),
-				new DiningModule(),
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);
