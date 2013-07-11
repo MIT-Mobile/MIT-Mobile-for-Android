@@ -407,7 +407,6 @@ public class SliderView extends HorizontalScrollView {
 		
 		mScrollNeedsResetting = true;
 		mAlignLeftEdge = (position != ScreenPosition.Previous);
-		resetScroll();
 		
 		if (mOnSeekListener != null) {
 		    mOnSeekListener.onSeek(this, mSliderAdapter);
