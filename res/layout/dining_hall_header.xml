@@ -18,7 +18,6 @@
        		android:id="@+id/diningHallHeaderImage"
       		android:layout_width="46dip"
       		android:layout_height="match_parent"
-      		android:background="#aaa" 
       		/>
         
   </FrameLayout>
