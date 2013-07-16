@@ -11,6 +11,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefres
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -71,6 +72,8 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 		TabConfigurator tabConfigurator = new TabConfigurator(this, mTabHost);
 		tabConfigurator.addTab("HOUSE DINING", R.id.diningHomeHouseTab);
 		tabConfigurator.addTab("RETAIL", R.id.diningHomeRetailContent);
+		tabConfigurator.setUnderlineColor(getResources().getColor(R.color.diningTabUnderline));
+		tabConfigurator.setTextStyleResID(R.style.DiningTabTitle);
 		tabConfigurator.configureTabs();
 		
 		mFacilitiesDB = FacilitiesDB.getInstance(this);
