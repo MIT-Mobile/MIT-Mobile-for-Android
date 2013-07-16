@@ -227,8 +227,8 @@
 		<activity android:name=".dining.DiningHomeActivity" />
 		<activity android:name=".dining.DiningMapActivity" />
 		<activity android:name=".dining.DiningScheduleActivity" />	
-		<activity android:name=".dining.DiningHouseInfoActivity" />	
-		<activity android:name=".dining.DiningRetailInfoActivity" />	
+		<activity android:name=".dining.DiningHouseInfoActivity" android:screenOrientation="portrait" />	
+		<activity android:name=".dining.DiningRetailInfoActivity" android:screenOrientation="portrait" />	
 		<activity android:name=".dining.DiningFilterActivity" />	
 		<activity android:name=".dining.SimpleSingleWebViewActivity" />
 		
