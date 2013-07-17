@@ -365,7 +365,7 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 		protected Boolean doInBackground(Void... unusedArgs) {
 			try {
 				HttpClient httpClient = new DefaultHttpClient();
-				HttpPost httpPost = new HttpPost("http://" + Global.getMobileWebDomain() + "/api/?module=facilities&command=upload");
+				HttpPost httpPost = new HttpPost("http://" + Global.getMobileWebDomain() + "/apis/building_services/problems");
 				mMaxBytes = 500;
 				if(mSelectedImageUri != null) {
 					InputStream imageStream = getContentResolver().openInputStream(mSelectedImageUri);

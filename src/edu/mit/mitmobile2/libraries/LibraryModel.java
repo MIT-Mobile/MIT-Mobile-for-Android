@@ -209,7 +209,7 @@ public class LibraryModel {
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
 //        webApi.requestJSONObject(searchParameters,
-        webApi.requestJSONObject(BASE_PATH + "/forms/askUs", searchParameters, 
+        webApi.requestJSONObject(SECURE_PATH + BASE_PATH + "/forms/sendAskUsForm", searchParameters, 
         		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -227,16 +227,13 @@ public class LibraryModel {
     public static void sendTellUsInfo(final Context context, final Handler uiHandler, String status, String feedback) {
 
         HashMap<String, String> searchParameters = new HashMap<String, String>();
-//        searchParameters.put("command", "sendTellUsEmail");
         if (status != null && !"".equals(status)) {
             searchParameters.put("status", status);
         }
         searchParameters.put("feedback", feedback);
-//        searchParameters.put("module", MODULE_LIBRARY);
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.requestJSONObject(BASE_PATH + "/forms/tellUs", searchParameters,
-//        webApi.requestJSONObject(searchParameters, 
+        webApi.requestJSONObject(SECURE_PATH + BASE_PATH + "/forms/sendTellForm", searchParameters,
         		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
