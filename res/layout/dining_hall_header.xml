@@ -30,6 +30,7 @@
 	  android:layout_centerVertical="true"
 	  android:layout_alignParentRight="true"
 	  android:background="@drawable/highlight_background"
+	  android:scaleType="center"
       />
   
   <TextView 
