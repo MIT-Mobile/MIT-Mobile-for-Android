@@ -109,7 +109,12 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 				TextView timeTV = (TextView) view.findViewById(R.id.diningScheduleMealTimes);
 				
 				label.setText(item.getSpanString());
-				mealTV.setText(item.getMealNameString());
+				String mealName = item.getMealNameString();
+				if (!mealName.isEmpty()) {
+					mealTV.setText(item.getMealNameString());
+				} else {
+					mealTV.setText("Closed");
+				}
 				timeTV.setText(item.getMealTimeString());
 			}
 		});
