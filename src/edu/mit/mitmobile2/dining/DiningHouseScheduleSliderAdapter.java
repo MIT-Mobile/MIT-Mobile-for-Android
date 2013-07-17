@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -166,20 +167,31 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 					}
 					
 					layout.addView(view);
-					layout.addView(new DividerView(mContext, null));
+					
+					View dividerView = new View(mContext);
+					dividerView.setLayoutParams(
+							new LayoutParams(
+									LayoutParams.MATCH_PARENT, 
+									mContext.getResources().getDimensionPixelSize(R.dimen.dividerHeight)));
+					dividerView.setBackgroundColor(Color.parseColor("#a8a8a8"));
+					layout.addView(dividerView);
 				}
 			}
 			
 			if (!showingItems) {
-				layout.addView(getEmptyMenuView("No matching items"));
+				String message;
+				if (meal.getMenuItems().size() == 0) {
+					message = "No items";
+				} else {
+					message = "No matching items";
+				}
+				layout.addView(getEmptyMenuView(message));
 			}
 			
 			View rotateLegend = inflater.inflate(R.layout.dining_rotate_legend, null);
 			layout.addView(rotateLegend);
 			
-			if (showingItems) {
-				rotateLegend.setBackgroundColor(mContext.getResources().getColor(R.color.rowBackground));
-			}
+			rotateLegend.setBackgroundColor(mContext.getResources().getColor(R.color.rowBackground));
 		}
 		
 		return scrollWrapper;
@@ -192,6 +204,7 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 		emptyMessage.setText(message);
 		int topPadding = mContext.getResources().getDimensionPixelSize(R.dimen.standardPadding);
 		emptyMessage.setPadding(0, topPadding, 0, 0);
+		emptyMessage.setBackgroundColor(Color.WHITE);
 		return emptyMessage;
 	}
 	

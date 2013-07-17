@@ -113,8 +113,14 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 		}	
 		
 		if (!showingMenuItems) {
+			String message;
+			if (meal.getMenuItems().size() == 0) {
+				message = "No items";
+			} else {
+				message = "No matching items";
+			}
 			menuItemsLayout.setDrawHorizontalDivider(false);
-			menuItemsLayout.addView(getEmptyMenuView("no matching items"));
+			menuItemsLayout.addView(getEmptyMenuView(message));
 		}
 		return menuItemsLayout;
 	}
@@ -152,14 +158,6 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 			dietaryFlags.addView(flagImageView, layoutParams);
 		}
 		
-		return view;
-	}
-	
-	private View noMealsTodayScreen(String message) {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.dining_meal_message, null);
-		TextView messageView = (TextView) view.findViewById(R.id.diningMealMessageText);
-		messageView.setText(message);
 		return view;
 	}
 }
