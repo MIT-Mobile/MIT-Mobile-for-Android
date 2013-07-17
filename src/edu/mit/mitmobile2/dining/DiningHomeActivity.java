@@ -165,7 +165,7 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 		LinearLayout layout = (LinearLayout) findViewById(R.id.diningHomeHouseContent);
 		layout.removeAllViews();
 		
-		populateDiningHallRows(R.id.diningHomeHouseContent, mVenues.getHouses(), "Dining Houses");
+		populateDiningHallRows(R.id.diningHomeHouseContent, mVenues.getHouses(), "Venues");
 		
 		displayRetailDiningHalls();		
 		
