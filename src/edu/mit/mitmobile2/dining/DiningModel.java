@@ -225,6 +225,16 @@ public class DiningModel {
 				mHouseVenues.add(new HouseDiningHall(jsonHouse.getJSONObject(i)));
 			}
 			
+			// sort by short name
+			Collections.sort(mHouseVenues, new Comparator<HouseDiningHall>() {
+				@Override
+				public int compare(HouseDiningHall hall1, HouseDiningHall hall2) {
+					String shortName1 = hall1.getShortName();
+					String shortName2 = hall2.getShortName();
+					return shortName1.compareTo(shortName2);
+				}				
+			});
+			
 			JSONArray jsonRetail = object.getJSONObject("venues").getJSONArray("retail");
 			for (int i = 0; i < jsonRetail.length(); i++) {
 				RetailDiningHall retailDiningHall = new RetailDiningHall(jsonRetail.getJSONObject(i));
