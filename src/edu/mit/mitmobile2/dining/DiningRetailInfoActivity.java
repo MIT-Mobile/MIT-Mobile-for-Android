@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -105,10 +106,11 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 	
 	private void layoutMenu() {
 		View row = findViewById(R.id.menuItemRow);
-		row.setBackgroundColor(Color.WHITE);
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) row.getLayoutParams();
-		int margin = getResources().getDimensionPixelSize(R.dimen.standardPadding);
-		params.setMargins(margin, 0, margin, margin);
+		row.setBackgroundResource(R.drawable.highlight_background);
+		
+		int padding = getResources().getDimensionPixelSize(R.dimen.standardPadding);
+		row.setPadding(padding, padding, padding, padding);
+
 		TextView rowLabel = (TextView) row.findViewById(R.id.diningHallInfoLabel);
 		TextView rowValue = (TextView) row.findViewById(R.id.diningHallInfoValue);
 		ImageView rowAction = (ImageView) row.findViewById(R.id.diningInfoItemRowActionIcon);
@@ -119,12 +121,13 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 			rowValue.setText(stripUrlScheme(mHall.getMenuUrl()));
 			rowValue.setEllipsize(TruncateAt.END);
 			rowValue.setSingleLine(true);
-			rowAction.setBackgroundResource(R.drawable.action_external);
+			rowAction.setImageResource(R.drawable.action_external);
 		} else if (mHall.getMenuHtml() != null && !mHall.getMenuHtml().isEmpty()) {
 			tempHasMenu = false;
-			rowAction.setBackgroundResource(R.drawable.tour_notsure_arrow);
+			rowAction.setImageResource(R.drawable.action_external);
 		} else {
-			row.setVisibility(View.GONE);
+			View rowWrapper = findViewById(R.id.menuItemRowWrapper);
+			rowWrapper.setVisibility(View.GONE);
 		}
 		
 		final boolean isExternalMenu = tempHasMenu;
@@ -218,6 +221,11 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 					}
 				});
 			}
+			
+			if (item.isSingleLine()) {
+				value.setEllipsize(TruncateAt.END);
+				value.setSingleLine(true);
+			}
 			itemLayout.addView(view);
 			infoContainer.addView(itemLayout);
 		}
@@ -267,7 +275,7 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 			items.add(new InfoItem(getString(R.string.dining_location_info_label), mHall.getLocation().mDescription, R.drawable.action_map));
 		}
 		if (mHall.getHomePageUrl() != null && !mHall.getHomePageUrl().isEmpty()) {
-			items.add(new InfoItem(getString(R.string.dining_home_page_info_label), stripUrlScheme(mHall.getHomePageUrl()), R.drawable.action_external));
+			items.add(new InfoItem(getString(R.string.dining_home_page_info_label), stripUrlScheme(mHall.getHomePageUrl()), R.drawable.action_external, true));
 		}
 		return items;
 	}
