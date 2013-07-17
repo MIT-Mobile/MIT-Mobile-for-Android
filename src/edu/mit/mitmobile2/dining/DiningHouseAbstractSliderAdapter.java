@@ -65,27 +65,25 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 		SimpleDateFormat dateFormat = new SimpleDateFormat("LLLL d", Locale.US);
 		Calendar day = mealOrEmptyDay.getDay();
 		String dateString = mFormat.format(day.getTime());
+
+		String dayName = dayNameFormat.format(day.getTime());		
+		// check for today/tomorrow/yesterday
+		if (mCurrentDateString.equals(dateString)) {
+			dayName = "Today";
+		} else if (mTommorowDateString.equals(dateString)) {
+			dayName = "Tomorow";
+		} else if (mYesterdayDateString.equals(dateString)) {
+			dayName = "Yesterday";
+		}
 		
 		if (!mealOrEmptyDay.isEmpty()) {
 			String title = dateFormat.format(day.getTime());
 			String mealName = mealOrEmptyDay.getCapitalizedMealName();
 			title = mealName + ", " + title;
 			
-			String dayName = dayNameFormat.format(day.getTime());
-			
-			// check if the meal is today/tomorrow/yesterday
-			if (mCurrentDateString.equals(dateString)) {
-				dayName = "Today";
-			} else if (mTommorowDateString.equals(dateString)) {
-				dayName = "Tomorow";
-			} else if (mYesterdayDateString.equals(dateString)) {
-				dayName = "Yesterday";
-			}
-			
-			return dayName + "'s " + title;
-			
+			return dayName + "'s " + title;			
 		} else {
-			return dateFormat.format(day.getTime());
+			return dayName + ", " + dateFormat.format(day.getTime());
 		}
 	}
 	
