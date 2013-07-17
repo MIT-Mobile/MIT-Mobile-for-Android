@@ -1,8 +1,10 @@
 package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.webkit.WebView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.StyledContentHTML;
 
 public class SimpleSingleWebViewActivity extends NewModuleActivity {
 	
@@ -21,6 +24,7 @@ public class SimpleSingleWebViewActivity extends NewModuleActivity {
 		context.startActivity(intent);
 	}
 	
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,7 +33,13 @@ public class SimpleSingleWebViewActivity extends NewModuleActivity {
 		String text = getIntent().getStringExtra(WEB_TEXT_HTML_KEY);
 		
 		WebView webView = (WebView) findViewById(R.id.diningWebText);
-		webView.loadDataWithBaseURL(null, text, "text/html", "utf-8", null);
+		
+		HashMap<String, String> content = new HashMap<String, String>();
+		content.put("BODY", text);
+		String html = StyledContentHTML.populateTemplate(this, "dining/announcement.html", content);
+		
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
 
 	}
 	

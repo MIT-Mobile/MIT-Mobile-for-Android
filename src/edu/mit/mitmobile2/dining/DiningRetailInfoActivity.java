@@ -2,8 +2,10 @@ package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.StyledContentHTML;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.RetailDiningHall;
@@ -85,12 +89,17 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 		
 	}
 	
+	@SuppressLint("SetJavaScriptEnabled")
 	private void layoutDescription() {
-		TextView descriptionTV = (TextView)findViewById(R.id.retailDescriptionTV);
+		WebView descriptionWV = (WebView)findViewById(R.id.retailDescriptionTV);
 		if (mHall.getDescriptionHtml() != null && !mHall.getDescriptionHtml().isEmpty()) {
-			descriptionTV.setText(Html.fromHtml(mHall.getDescriptionHtml()));
+			HashMap<String, String> content = new HashMap<String, String>();
+			content.put("BODY", mHall.getDescriptionHtml());
+			String html = StyledContentHTML.populateTemplate(this, "dining/announcement.html", content);
+			descriptionWV.getSettings().setJavaScriptEnabled(true);
+			descriptionWV.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
 		} else {
-			descriptionTV.setVisibility(View.GONE);
+			descriptionWV.setVisibility(View.GONE);
 		}
 	}
 	
