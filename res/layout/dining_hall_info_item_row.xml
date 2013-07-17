@@ -14,6 +14,7 @@
       android:paddingRight="@dimen/standardPadding"
       android:layout_width="90dip"
       android:layout_height="wrap_content"
+      android:textSize="15sp"
       style="@style/ListItemPrimary"
       android:gravity="right"
       />
@@ -33,6 +34,7 @@
       android:layout_toLeftOf="@id/diningInfoItemRowActionIcon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:textSize="15sp"
       style="@style/ListItemPrimary"
       />
   
