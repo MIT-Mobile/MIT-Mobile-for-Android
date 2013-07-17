@@ -42,7 +42,4 @@
   <color name="viewfinder_mask">#60000000</color>
   <color name="overdue_text">#ff990000</color>
   <color name="libraries_gray">#404649</color>
-  
-  <color name="dining_closed">#ff990000</color>
-  <color name="dining_open">#007f00</color>
 </resources>

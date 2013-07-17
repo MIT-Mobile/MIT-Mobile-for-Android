@@ -17,4 +17,8 @@
 	</style>	
 	
 	<color name="diningTabUnderline">#d20000</color>
+	
+	<color name="dining_closed">#ffd20000</color>
+	<color name="dining_open">#ff009900</color>
+      
 </resources>
