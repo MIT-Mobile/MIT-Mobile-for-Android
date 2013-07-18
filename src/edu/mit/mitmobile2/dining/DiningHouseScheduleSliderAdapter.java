@@ -72,30 +72,8 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 		layout.setOrientation(LinearLayout.VERTICAL);
 		scrollWrapper.addView(layout);
 		
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		List <DiningDietaryFlag> appliedFilters = DiningDietaryFlag.loadFilters(mContext);
-		boolean noSelectedFilters = appliedFilters.isEmpty();
-		// filter header
-		float density = mContext.getResources().getDisplayMetrics().density;
-		int iconSquare = (int)Math.ceil(18 * density);
-		int iconMargin = (int)Math.ceil(7 * density);
-		Log.d("MARGIN", iconMargin + "");
-		if (!appliedFilters.isEmpty()) {
-			View filterHeader = inflater.inflate(R.layout.dining_filter_header, null);
-			LinearLayout iconContainer = (LinearLayout)filterHeader.findViewById(R.id.filterIdContainer);
-			LayoutParams params = new LayoutParams(iconSquare, iconSquare);
-			params.setMargins(iconMargin, 0, 0, 0);
-			for (DiningDietaryFlag flag : appliedFilters) {
-				ImageView iconView = new ImageView(mContext);
-				iconView.setLayoutParams(params);
-				iconView.setBackgroundResource(flag.getIconId());
-				iconContainer.addView(iconView);
-			}
-			layout.addView(filterHeader);
-		}
-		
 		// Meal header
-		
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View mealHeader = inflater.inflate(R.layout.dining_meal_header, null);	
 		TextView mealTitleView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTitle);
 		TextView mealTimeView = (TextView) mealHeader.findViewById(R.id.diningMealHeaderTime);
@@ -114,7 +92,9 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 			messageView.setText(meal.getMessage());			
 		} else {
 			
-			if (appliedFilters.isEmpty()) {
+			List <DiningDietaryFlag> appliedFilters = DiningDietaryFlag.loadFilters(mContext);
+			boolean noSelectedFilters = appliedFilters.isEmpty();
+			if (noSelectedFilters) {
 				// no filters applied means all filters are applied
 				appliedFilters = new ArrayList<DiningDietaryFlag>(DiningDietaryFlag.allFlags());
 			}
@@ -168,12 +148,7 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 					
 					layout.addView(view);
 					
-					View dividerView = new View(mContext);
-					dividerView.setLayoutParams(
-							new LayoutParams(
-									LayoutParams.MATCH_PARENT, 
-									mContext.getResources().getDimensionPixelSize(R.dimen.dividerHeight)));
-					dividerView.setBackgroundColor(Color.parseColor("#a8a8a8"));
+					View dividerView = new DividerView(mContext, null);
 					layout.addView(dividerView);
 				}
 			}
@@ -186,6 +161,8 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 					message = "No matching items";
 				}
 				layout.addView(getEmptyMenuView(message));
+				
+				layout.addView(new DividerView(mContext, null));
 			}
 			
 			View rotateLegend = inflater.inflate(R.layout.dining_rotate_legend, null);
@@ -203,10 +180,9 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 		emptyMessage.setTextAppearance(mContext, R.style.ListItemPrimary);
 		emptyMessage.setText(message);
 		int topPadding = mContext.getResources().getDimensionPixelSize(R.dimen.standardPadding);
-		emptyMessage.setPadding(0, topPadding, 0, 0);
+		emptyMessage.setPadding(topPadding, topPadding, topPadding, topPadding);
 		emptyMessage.setBackgroundColor(Color.WHITE);
 		return emptyMessage;
 	}
-	
 	
 }
