@@ -514,6 +514,11 @@ public class DiningModel {
 				if (!object.isNull("start_time") && !object.isNull("end_time")) {
 					mStartTime = getCalendarDate(object.getString("date"), object.getString("start_time")); 
 					mEndTime = getCalendarDate(object.getString("date"), object.getString("end_time")); 
+					
+					// make sure event ends after it starts
+					if (mEndTime.getTimeInMillis() < mStartTime.getTimeInMillis()) {
+						mEndTime.add(Calendar.DATE, 1);
+					}
 				}
 			}
 			
