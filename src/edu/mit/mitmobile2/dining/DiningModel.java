@@ -669,12 +669,25 @@ public class DiningModel {
 			return null;
 		}
 
+		private static boolean isToday(Calendar currentDate, Calendar predicateDate) {
+			return (compareDates(currentDate, predicateDate) == 0);
+		}
+		
+		private static boolean isYesterday(Calendar currentDate, Calendar predicateDate) {
+			GregorianCalendar previousDate = new GregorianCalendar();
+			previousDate.setTime(currentDate.getTime());
+			previousDate.add(Calendar.DATE, -1);
+			String previousDay = sFormat.format(previousDate.getTime());
+			String predicateDay = sFormat.format(predicateDate.getTime());
+			return previousDay.equals(predicateDay);
+		}
+		
 		@Override
 		public Status getCurrentStatus(long currentTime) {
 			Calendar currentDate = new GregorianCalendar();
 			currentDate.setTimeInMillis(currentTime);
 			for (DailyHours hours: mHours) {
-				if (compareDates(hours.mDay, currentDate) == 0) {
+				if (isToday(currentDate, hours.mDay) || isYesterday(currentDate, hours.mDay)) {
 					if (hours.mStartTime != null && hours.mEndTime != null) {
 						if (currentTime >= hours.mStartTime.getTimeInMillis()) {
 							if (currentTime <= hours.mEndTime.getTimeInMillis()) {
@@ -692,7 +705,17 @@ public class DiningModel {
 			Calendar currentDate = new GregorianCalendar();
 			currentDate.setTimeInMillis(currentTime);
 			for (DailyHours hours: mHours) {
-				if (compareDates(hours.mDay, currentDate) == 0) {
+				if (isYesterday(currentDate, hours.mDay)) {
+					if (hours.mStartTime != null && hours.mEndTime != null) {
+						if (currentTime >= hours.mStartTime.getTimeInMillis()) {
+							if (currentTime <= hours.mEndTime.getTimeInMillis()) {
+								return openUntil(hours.mEndTime);
+							}
+						} 
+					} 
+				}
+				
+				if (isToday(currentDate, hours.mDay)) {
 					if (hours.mStartTime != null && hours.mEndTime != null) {
 						if (currentTime >= hours.mStartTime.getTimeInMillis()) {
 							if (currentTime <= hours.mEndTime.getTimeInMillis()) {
