@@ -43,6 +43,8 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		TabConfigurator tabConfigurator = new TabConfigurator(this, mTabHost);
 		tabConfigurator.addTab(sHouseTab, android.R.id.tabcontent);
 		tabConfigurator.addTab(sRetailTab, android.R.id.tabcontent);
+		tabConfigurator.setUnderlineColor(getResources().getColor(R.color.diningTabUnderline));
+		tabConfigurator.setTextStyleResID(R.style.DiningTabTitle);
 		tabConfigurator.configureTabs();
 		mTabHost.setOnTabChangedListener(this);
 		

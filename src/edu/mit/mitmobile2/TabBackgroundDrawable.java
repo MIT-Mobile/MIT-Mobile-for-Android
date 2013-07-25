@@ -22,12 +22,12 @@ public class TabBackgroundDrawable extends StateListDrawable {
 
 	public TabBackgroundDrawable(Context context, int underlineColor) {
 		TabSelectedBackground selected = new TabSelectedBackground();
-		TabUnselectedBackground unselectedPressed = new TabUnselectedBackground();
+//		TabUnselectedBackground unselectedPressed = new TabUnselectedBackground();
 		TabUnselectedBackground unselected = new TabUnselectedBackground();
 		
 
 		addState(new int[] {attr.state_selected}, selected);
-		addState(new int[] {attr.state_pressed}, new LayerDrawable(new Drawable[] {getHighlightDrawable(context), unselectedPressed}));
+		addState(new int[] {attr.state_pressed}, new LayerDrawable(new Drawable[] {getHighlightDrawable(context)/*, unselectedPressed*/}));
 		addState(new int[] {}, unselected);		
 		
 		
@@ -86,6 +86,11 @@ public class TabBackgroundDrawable extends StateListDrawable {
 
 		@Override
 		public void setColorFilter(ColorFilter cf) {}
+		
+		@Override
+		public boolean isStateful() {
+			return false;
+		}
 		
 	}	
 
