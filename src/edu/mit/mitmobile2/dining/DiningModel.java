@@ -636,12 +636,17 @@ public class DiningModel {
 		}
 		
 		public String getCuisineString() {
-			String options ="";
-			for (String s : mCuisine) {
-				options+= s + ", ";
+			String cuisineString = "";
+			boolean first = true;
+			for (String cuisine : mCuisine) {
+				if (!first) {
+					cuisineString += ", ";
+				} else {
+					first = false;
+				}
+				cuisineString += cuisine;
 			}
-
-			return options.substring(0, options.length() - 2);
+			return cuisineString;
 		}
 		
 		public List<DailyHours> getDailyHours() {
@@ -1015,7 +1020,9 @@ public class DiningModel {
 		public DiningHallLocation(DiningHall hall, JSONObject object) throws JSONException {
 			mDiningHall = hall;
 			
-			mStreet = object.getString("street");
+			if (object.has("string")) {
+				mStreet = object.getString("street");
+			} 
 			if (object.has("city")) {
 				mCity = object.getString("city");
 			}
