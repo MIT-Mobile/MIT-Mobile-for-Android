@@ -54,15 +54,15 @@ public class MITMapView extends MapView  {
 	public static String DEFAULT_GRAPHICS_LAYER = "LAYER_GRAPHICS";
 	public static int DEFAULT_PIN = R.drawable.map_red_pin;
 	private Polygon selectedExtent; // selected extent for use with fitMapItems
+	private boolean showCallout = true;
 	PictureMarkerSymbol pms;
 	private static int MAP_PADDING = 100;
-	private static Double WGS84_PADDING = 0.0005; // use to padd wgs84 map points before they are projects to webmercator
+	private static Double WGS84_PADDING = 0.0005; // use to padd wgs84 map points before they are projected to webmercator
 	private GraphicsLayer gl;
 	private Context mContext;
 	protected LocationService ls;
 	protected boolean baseLayersLoaded = false;
-	protected static final String MAP_ITEMS_KEY = "map_items";
-	public static final String MAP_DATA_KEY = "map_data";	
+	public static final String MAP_ITEMS_KEY = "map_items";
 	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
 
 	public MITMapView(Context context) {
@@ -141,20 +141,18 @@ public class MITMapView extends MapView  {
 			for (int i = 0; i < mapItems.size(); i++) {
 				MapItem mapItem = mapItems.get(i);
 				mapItem.setGraphicsLayer(layerName);
-				//addMapItem(mapItems.get(i),layerName);
 				if (!mao.getGraphicsLayers().containsKey(layerName)) {
 					addMAOGraphicsLayer(layerName);
 				}
 				
 				mapItem.setIndex(mao.getGraphicsLayers().get(layerName).getMapItems().size());
-				mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);				
+				mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);
 			}
 			
-			// add the graphic for the map item if the base layers are loaded
-			//if (baseLayersLoaded()) {
-		    //	syncGraphicsLayers();
-		    //}
-
+		}
+		
+		if (baseLayersLoaded) {
+			syncGraphicsLayers();
 		}
 	}
 
@@ -198,7 +196,6 @@ public class MITMapView extends MapView  {
 	}
 	
 	protected int dislayMapItem(MapItem mapItem) {
-		Log.d(TAG,"displaying map item on layer " + mapItem.getGraphicsLayer());
 		int gId = 0;
 		
 		switch (mapItem.getGeometryType()) {
@@ -301,7 +298,6 @@ public class MITMapView extends MapView  {
 			Graphic g = new Graphic(point, pms,attributes, null);
 
 			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
-
 			int Uid = gl.addGraphic(g);	
 	        return Uid;				
 		}
@@ -451,10 +447,10 @@ public class MITMapView extends MapView  {
 			
 			// create Polygon from 4 points
 			// start of the south west point
-			Log.d(TAG,"fitMapItems minLat = " + minLat);
-			Log.d(TAG,"fitMapItems maxLat = " + maxLat);
-			Log.d(TAG,"fitMapItems minLong = " + minLong);
-			Log.d(TAG,"fitMapItems maxLong = " + maxLong);
+//			Log.d(TAG,"fitMapItems minLat = " + minLat);
+//			Log.d(TAG,"fitMapItems maxLat = " + maxLat);
+//			Log.d(TAG,"fitMapItems minLong = " + minLong);
+//			Log.d(TAG,"fitMapItems maxLong = " + maxLong);
 
 			Point SW = new Point(minLong,minLat);
 			Point NW = new Point(minLong,maxLat);
@@ -492,7 +488,7 @@ public class MITMapView extends MapView  {
 
 	public void init(final Context mContext) {
 		
-	    Log.d(TAG,"mapInit");
+	    //Log.d(TAG,"mapInit");
 	    
 	    mao = new MapAbstractionObject();
 		final MITMapView mapView = this;
@@ -501,7 +497,7 @@ public class MITMapView extends MapView  {
         this.setOnStatusChangedListener(new OnStatusChangedListener() {
             @Override
 			public void onStatusChanged(Object source, STATUS status) {
-            	Log.d(TAG,"map status changed: " + source.getClass().getSimpleName() + " status = " + status.getValue());
+            	//Log.d(TAG,"map status changed: " + source.getClass().getSimpleName() + " status = " + status.getValue());
             	updateBaseLayersStatus();
             }
         });
@@ -513,13 +509,12 @@ public class MITMapView extends MapView  {
     		
     		@Override
     		public void onSingleTap(float x, float y) {
-    			Log.d(TAG,"x: " + x + " y:" + y);
+    			//Log.d(TAG,"x: " + x + " y:" + y);
     			Callout callout = mapView.getCallout(); 
 
     			if (!mapView.isLoaded()) {
     				return;
     			}
-    			Log.d(TAG,"spatial reference = " + mapView.getSpatialReference().getID());
     			
     			if (mao.getGraphicsLayers() != null) {
     		    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
@@ -541,7 +536,6 @@ public class MITMapView extends MapView  {
 	    	    	    			
 	    	    	    			// get the mapItem
 	    	    	    			MapItem mapItem = mapView.getMao().getGraphicsLayers().get(layerName).getMapItems().get(mapItemIndex);
-	    	    	    			Log.d(TAG,"tapped graphic: map item class = " + mapItem.getMapItemClass());
 									
 	    	    	    			// Display the Callout if it is defined
 	    	    	    			if (mapItem.getCallout(mapView.getContext(),mapGraphicsLayer.getMapItems(),mapItemIndex.intValue()) != null) {
@@ -576,7 +570,7 @@ public class MITMapView extends MapView  {
             //mLoadingView.setVisibility(View.GONE);
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
-            	Log.d(TAG,"MobileWebApi success");
+            	//Log.d(TAG,"MobileWebApi success");
                 @SuppressWarnings("unchecked")
                 MapServerData mapServerData = (MapServerData)msg.obj;
                 // get the layers for the default group
@@ -712,7 +706,12 @@ public class MITMapView extends MapView  {
 	        	}
 	        }
 		}
-		
+
+		// Display the callout if there is only one map item with a defined callout, and showCallout is true
+		ArrayList<MapItem> calloutItems = getCalloutItems();
+		if (calloutItems.size() == 1 && showCallout) {
+			displayCallout(mContext, calloutItems.get(0));
+		}
     }
 
     final class MyOnStatusChangedListener implements OnStatusChangedListener {
@@ -740,6 +739,7 @@ public class MITMapView extends MapView  {
             		if (selectedExtent != null) {
             			setExtent(projectMapPolygon(selectedExtent),MAP_PADDING);		
             		}
+
             	}
             	catch (Exception e) {
             	}
@@ -768,6 +768,27 @@ public class MITMapView extends MapView  {
 		}
 	}
 
+	private MapItem getFirstMapItem() {
+		MapItem firstItem = null;
+		//loops through layers in MAO and returns the first map item found
+		Iterator it = mao.getBaseLayers().entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry glpairs = (Map.Entry)it.next();
+	        String layerName = (String)glpairs.getKey();
+	        MapGraphicsLayer mgl = mao.getGraphicsLayers().get(layerName);
+	        if (mgl != null) {
+	        	if (mgl.getMapItems() != null) {
+	        		if (mgl.getMapItems().size() > 0) {
+	        			firstItem = mgl.getMapItems().get(0);
+	        			return firstItem;
+	        		}
+	        	}
+	        }
+		}
+
+		return firstItem;
+	}
+	
     private void processMapItems(final String layerName) {
     	this.getCallout().hide();
     	this.pause();
@@ -777,7 +798,7 @@ public class MITMapView extends MapView  {
 		// clear the graphics layer
 		gl = (GraphicsLayer)getMapLayer(layerName);
 		gl.removeAll();
-		
+		Log.d(TAG,"clearing graphics on layer " + layerName);
 		// get MapGraphicsLayer
 		MapGraphicsLayer mapGraphicsLayer = mao.getGraphicsLayers().get(layerName);
 		ArrayList<MapItem> mapItems = mapGraphicsLayer.getMapItems();
@@ -790,8 +811,6 @@ public class MITMapView extends MapView  {
     		try {
 	    		MapItem mapItem = mapItems.get(i);
 	    		mapItem.setIndex(i);
-	    		Log.d(TAG,"sorted weight = " + mapItem.getSortWeight());
-
 	    		// get the ID of the graphic once it has been added to the graphics layer
 	    		gId = dislayMapItem(mapItem);
 
@@ -849,6 +868,62 @@ public class MITMapView extends MapView  {
 		Log.d(TAG,"unpause map");
 	}
 	
+	private ArrayList<Graphic> getCalloutGraphics() {
+		ArrayList<Graphic> calloutGraphics = new ArrayList<Graphic>();
+		if (mao.getGraphicsLayers() != null) {
+	    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry glpairs = (Map.Entry)it.next();
+		        String layerName = (String)glpairs.getKey();
+		        MapGraphicsLayer mapGraphicsLayer = this.getMao().getGraphicsLayers().get(layerName);
+    			GraphicsLayer gl = (GraphicsLayer)this.getMapLayer(layerName);
+    			
+    			if (gl != null) {
+	    			int[] graphicId = gl.getGraphicIDs();
+	    			
+	    			if (graphicId.length > 0) {
+	    				for (int i = 0; i < graphicId.length; i++) {
+	    	    			Graphic g = gl.getGraphic(graphicId[i]);
+	    	    			
+	    	    			// get the index of the mapItem from the GraphicIdMap
+	    	    			Integer mapItemIndex = this.getMao().getGraphicsLayers().get(layerName).getGraphicIdMap().get(Integer.toString(g.getUid()));
+	    	    			
+	    	    			// get the mapItem
+	    	    			MapItem mapItem = this.getMao().getGraphicsLayers().get(layerName).getMapItems().get(mapItemIndex);
+							
+	    	    			// If a callout is defined for the mapItem, add its graphic to the graphics array
+	    	    			if (mapItem.getCallout(this.getContext(),mapGraphicsLayer.getMapItems(),mapItemIndex.intValue()) != null) {
+	    	    				calloutGraphics.add(g);
+	    	    			}
+	    				}
+	    			}
+    			}
+			}
+		}
+		return calloutGraphics;
+	}
 	
+	private ArrayList<MapItem> getCalloutItems() {
+		ArrayList<MapItem> calloutItems = new ArrayList<MapItem>();
+		if (mao.getGraphicsLayers() != null) {
+	    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry glpairs = (Map.Entry)it.next();
+		        String layerName = (String)glpairs.getKey();
+		        MapGraphicsLayer mapGraphicsLayer = this.getMao().getGraphicsLayers().get(layerName);
+    			 
+		        if (mapGraphicsLayer.getMapItems() != null) {
+		        	for (int m = 0; m < mapGraphicsLayer.getMapItems().size(); m++) {
+    	    			MapItem mapItem = mapGraphicsLayer.getMapItems().get(m);
+    	    			if (mapItem.getCallout(this.getContext()) != null) {
+    	    				calloutItems.add(mapItem);
+    	    			}
+ 		        	}
+		        }
+			}
+		}
+		return calloutItems;
+	}
+
 }
 

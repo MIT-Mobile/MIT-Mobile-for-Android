@@ -77,7 +77,7 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	            public void onClick(View v) {
 	            	Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
 	            	//i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);
-	            	i.putParcelableArrayListExtra(MITMapView.MAP_DATA_KEY, (ArrayList<? extends Parcelable>) mapItems);
+	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
 	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
 	            	mContext.startActivity(i);
 	            }

@@ -28,4 +28,8 @@
   <item type="id" name="return_scan_result"/>
   <item type="id" name="search_book_contents_failed"/>
   <item type="id" name="search_book_contents_succeeded"/>
+  <item type="id" name="ptr_content" />
+  <item type="id" name="ptr_text_opaque_bg" />
+  <item type="id" name="ptr_text" />
+  <item type="id" name="ptr_progress" />
 </resources>

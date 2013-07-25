@@ -222,7 +222,17 @@
 
 		<!-- LIBRARIES -->
 		<activity android:name=".libraries.LibrariesActivity" />
-
+		
+		<!-- DINING -->
+		<activity android:name=".dining.DiningHomeActivity" android:screenOrientation="portrait" />
+		<activity android:name=".dining.DiningMapActivity" />
+		<activity android:name=".dining.DiningScheduleActivity" />	
+		<activity android:name=".dining.DiningHouseInfoActivity" android:screenOrientation="portrait" />	
+		<activity android:name=".dining.DiningRetailInfoActivity" android:screenOrientation="portrait" />	
+		<activity android:name=".dining.DiningFilterActivity" />	
+		<activity android:name=".dining.SimpleSingleWebViewActivity" />
+		
+		
 		<activity android:name=".about.AboutActivity" />
 		<activity android:name=".about.AboutMITActivity" />
 		<activity android:name=".about.AboutCreditsActivity" />

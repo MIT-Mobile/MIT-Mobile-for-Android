@@ -19,14 +19,26 @@ public class TabConfigurator {
 	Activity mActivity;
 	ArrayList<String> mTabNames;
 	ArrayList<Integer> mTabContentResourceIds;
+	private int mUnderlineColor;
+	private int mTextStyleResourceID;
 	
 	public TabConfigurator(Activity activity, TabHost tabHost) {
 		mTabHost = tabHost;
 		mActivity = activity;
 		mTabNames = new ArrayList<String>();
 		mTabContentResourceIds = new ArrayList<Integer>();
+		mUnderlineColor = activity.getResources().getColor(R.color.tabUnderlineColor);
+		mTextStyleResourceID = R.style.TabTitle;
 	}
 	
+	public void setUnderlineColor(int underlineColor) {
+		mUnderlineColor = underlineColor;
+	}
+	
+	public void setTextStyleResID(int resID) {
+		mTextStyleResourceID = resID;
+	}
+ 	
 	
 	public void addTab(String tabName, int contentId) {
 		mTabNames.add(tabName.toUpperCase(Locale.US));
@@ -58,12 +70,12 @@ public class TabConfigurator {
 			// could not get the builtin tab dividers to display
 			LinearLayout indicatorView = new LinearLayout(mActivity);
 			indicatorView.setLayoutParams(new LayoutParams(tabWidth, height));
-			indicatorView.setBackgroundResource(R.drawable.tab2_background);
+			indicatorView.setBackgroundDrawable(new TabBackgroundDrawable(mActivity, mUnderlineColor));
 			indicatorView.setGravity(Gravity.CENTER);
 			
 			Spannable tabNameSpan = spanFactory.newSpannable(tabName);
 			tabNameSpan.setSpan(
-				new TextAppearanceSpan(mActivity, R.style.TabTitle), 
+				new TextAppearanceSpan(mActivity, mTextStyleResourceID), 
 				0, tabName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			
 			TextView textView = new TextView(mActivity);

@@ -47,16 +47,10 @@ public class MITMapsDataModel {
 			}
 			
 		});
-		
-		
-		
-		
 	}
 	
 	public static void fetchCategory(final String categoryId, final Handler uiHandler, Context context) {
-		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Campus map", context, uiHandler);
-		
 		webApi.requestJSONArray("/map/places/" + categoryId, null, new JSONArrayResponseListener(new DefaultErrorListener(uiHandler), null) {
 
 			@Override

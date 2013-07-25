@@ -89,14 +89,14 @@ public class SettingsActivity extends Activity {
 				
 				type = NotificationsAlarmReceiver.ACTION_ALARM_CLASS;
 				
-				switch (choice) {
-				case R.id.settingsClassesRB00:
-					period = -1; index = 0; break;
-				case R.id.settingsClassesRB01:
-					period = 15*60*1000; index = 1; break;
-				case R.id.settingsClassesRB02:
-					period = 30*60*1000; index = 2; break;
-				}
+//				switch (choice) {
+//				case R.id.settingsClassesRB00:
+//					period = -1; index = 0; break;
+//				case R.id.settingsClassesRB01:
+//					period = 15*60*1000; index = 1; break;
+//				case R.id.settingsClassesRB02:
+//					period = 30*60*1000; index = 2; break;
+//				}
 				
 				// note: do NOT set alarm - that is done per Class elsewhere
 
@@ -113,17 +113,17 @@ public class SettingsActivity extends Activity {
 
 				type = NotificationsAlarmReceiver.ACTION_ALARM_EMERGENCY;
 				
-				switch (choice) {
-				case R.id.settingsEmergencyRB00:
-					period = -1; index = 0;          // disabled
-					break;
-				case R.id.settingsEmergencyRB01:
-					period = 30*60*1000; index = 1;  // 30 mins
-					break;
-				case R.id.settingsEmergencyRB02:
-					period = 60*60*1000; index = 2;  // 1 hr
-					break;
-				}
+//				switch (choice) {
+//				case R.id.settingsEmergencyRB00:
+//					period = -1; index = 0;          // disabled
+//					break;
+//				case R.id.settingsEmergencyRB01:
+//					period = 30*60*1000; index = 1;  // 30 mins
+//					break;
+//				case R.id.settingsEmergencyRB02:
+//					period = 60*60*1000; index = 2;  // 1 hr
+//					break;
+//				}
 				
 				setAlarm(period,type,null);
 

@@ -7,40 +7,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import edu.mit.mitmobile2.Global;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.MapCatItem;
 
-public class MITMapBrowseSubCatsActivity extends ModuleActivity {
+public class MITMapBrowseSubCatsActivity extends NewModuleActivity {
 
-	static final String TAG = "MITMapBrowseSubCatsActivity";
-	static final int MENU_BOOKMARKS  = MENU_SEARCH + 1;
-	
+	static final String TAG = "MITMapBrowseSubCatsActivity";	
+	private static String MENU_BOOKMARKS = "bookmarks";
 	static final String CATEGORY_NAME_KEY = "category_name";
 	private String mCategoryName;
-
+	Context mContext;
+	
 	ArrayList<MapCatItem> mSubCats;
 	List<String> subcategory_names;
 	
 	
 	/****************************************************/
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"onCreate()");
 	
 	    super.onCreate(savedInstanceState);
+	    
+	    mContext = this;
 	    
     	Bundle extras = getIntent().getExtras();
         if (extras!=null){  
@@ -54,17 +53,17 @@ public class MITMapBrowseSubCatsActivity extends ModuleActivity {
         	finish();
         	return;
         }
-	    
+	            
         createView();
 		
 	}
 		
 
 	void createView() {
+
+		setContentView(R.layout.map_browse_cats);
+        addSecondaryTitle("Browse by " + mCategoryName);        
 		
-		setContentView(R.layout.boring_list_layout);
-		TitleBar titleBar = (TitleBar) findViewById(R.id.boringListTitleBar);
-		titleBar.setTitle("Browse by " + mCategoryName);
 		
 		// hide loader
 		findViewById(R.id.boringListLoader).setVisibility(View.GONE);
@@ -99,60 +98,40 @@ public class MITMapBrowseSubCatsActivity extends ModuleActivity {
 		}
 	}
 	
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		case MENU_BOOKMARKS: 
-			Intent i = new Intent(this,MITMapBrowseResultsActivity.class);  
-			startActivity(i);
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
 
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_BOOKMARKS, Menu.NONE, "Bookmarks")
-		  .setIcon(R.drawable.menu_bookmarks);
-	}
+
 	
 	@Override
-	protected Module getModule() {
-		return new MapsModule();
+	protected NewModule getNewModule() {
+		return new MapBrowseCatsModule();
 	}
 
+
 	@Override
-	public boolean isModuleHomeActivity() {
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
 		return false;
 	}
-}
 
 
-/*
-[{"id":"object-33",
-	"name":"Guggenheim Laboratory",
-	"lat_wgs84":42.36017974,"long_wgs84":-71.09374216,
-	"altname":["Aeronautics & Astronautics Library"],
-	"bldgnum":"33",
-	"category":["building"],
-	"street":"125 Massachusetts Avenu",
-	"mailing":"77 Massachusetts Avenue",
-	"viewangle":"west side",
-	"bldgimg":"http:\/\/web.mit.edu\/campus-map\/objimgs\/object-33.jpg",
-	"architect":"Coolidge & Carlson",
-	"floorplans":{"floor":["0","1","2","3","4","5"]},
-	"contents":[{"name":"Aeronautics & Astronautics Library","url":"http:\/\/libraries.mit.edu\/aero\/index.html","category":["library"]},
-		{"name":"Communications and Networking Research Group","url":"http:\/\/web.mit.edu\/aeroastro\/labs\/cnrg\/"},
-			{"name":"Aeronautics and Astronautics, Dept. of","url":"http:\/\/web.mit.edu\/aeroastro\/"},
-			{"name":"Global Airline Industry Program","url":"http:\/\/web.mit.edu\/airlines\/"},
-			{"name":"International Center for Air Transportation (ICAT)","url":"http:\/\/web.mit.edu\/aeroastro\/www\/labs\/ICAT\/"},
-			{"name":"Technology Laboratory for Advanced Materials and Structures (TELAMS)","url":"http:\/\/web.mit.edu\/telams\/"}],"city":"Cambridge, MA","displayName":"Aeronautics & Astronautics Library"},
+	@Override
+	protected void onOptionSelected(String id) {
+	    if (id.equals(MENU_BOOKMARKS)) {
+			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			mContext.startActivity(i);
+	    }
+	}
+
+
+	@Override
+	protected boolean isModuleHomeActivity() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
-	{"id":"object-10","name":"Maclaurin Buildings (10)",
-*/
+
+}
 
 
 

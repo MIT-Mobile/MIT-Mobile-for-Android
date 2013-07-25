@@ -24,18 +24,18 @@ import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.Module;
 import edu.mit.mitmobile2.ModuleActivity;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.objs.MapItem;
 
 
-public class MITMapBrowseResultsActivity extends ModuleActivity  {
+public class MITMapBrowseResultsActivity extends NewModuleActivity  {
 
 	static final String TAG = "MITMapBrowseResultsActivity";
-	static final int MENU_BROWSE_OR_BKS = MENU_SEARCH + 1;
-	static final int MENU_CLEAR_BKS = MENU_SEARCH + 2;
-	static final int MENU_VIEW_MAP = MENU_SEARCH + 3;
-	
+	private static String MENU_BOOKMARKS = "bookmarks";
+
 	// TODO may drop if we don't keep accelerator
 	static final String BK_ADD = "Add Bookmark";
 	static final String BK_RM = "Remove Bookmark";
@@ -89,16 +89,13 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
         }
 	    
 
-        setContentView(R.layout.boring_list_layout);
-        
-        TitleBar titleBar = (TitleBar) findViewById(R.id.boringListTitleBar);
+        setContentView(R.layout.map_browse_cats);
         
         if(mCategoryName != null) {
-        	titleBar.setTitle(mCategoryName);
+            addSecondaryTitle(mCategoryName);        
         	bookmarks_mode = false;
         } else {
-        	titleBar.setTitle("Bookmarks");
-        	//titleBar.setTitle("Map Results");
+        	addSecondaryTitle("Bookmarks");
         	bookmarks_mode = true;
         }
 	    
@@ -107,10 +104,7 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		mEmptyMessageTV = (TextView) findViewById(R.id.boringListEmptyTV);
 		mEmptyMessageTV.setText(getResources().getString(R.string.map_no_bookmarks));
 		mLoaderView = (FullScreenLoader) findViewById(R.id.boringListLoader);
-		
-		//lv.setLongClickable(true);
-		//lv.setOnLongClickListener(this);  // FIXME only regular or long click possible, not both
-		
+				
         if (cat==null) showBookmarks();
         else {
         	mLoaderView.showLoading();
@@ -177,8 +171,10 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 	
 	/****************************************************/
 	void createView() {
-		
-		adapter = new MapItemsAdapter(this, results);
+    	Log.d(TAG,"cat = " + cat);
+    	Log.d(TAG,"mCategoryName = " + mCategoryName);
+
+		adapter = new MapItemsAdapter(this, results,mCategoryName);
 		
 		mLoaderView.setVisibility(View.GONE);
 		
@@ -195,152 +191,31 @@ public class MITMapBrowseResultsActivity extends ModuleActivity  {
 		}
 	}
 	
-	/****************************************************/
-	@Override
-	protected Dialog onCreateDialog(int id) {
-
-		String[] options = {"View",bookmark_action,"Google Maps"};
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Action");
-		builder.setItems(options, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				Log.d(TAG,"item = " + item);
-				Intent i;
-				switch (item) {
-				case 0:
-					// View
-					// we would have to launch the MapDetailsActivity here
-					break;
-				case 1:
-					// Bookmark
-					if (bookmark_action.equals(BK_ADD)) {
-						mDB.saveMapItem(curMapItem);
-					} else {
-						mDB.delete(curMapItem);
-					}
-					break;
-				case 2:
-					// Google
-					String uri = "geo:0,0?q="+(String)curMapItem.getItemData().get("name")+"+near+"+ (String)curMapItem.getItemData().get("street")+",Cambridge,MA";
-					i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-					startActivity(i);
-					break;
-				}
-			}
-		});
-
-		AlertDialog alert = builder.create();
-
-		return alert;
-		
-	}
-	/****************************************************/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		
-		case MENU_MODULE_HOME: 
-			Log.d(TAG,"menu_module_home");
-			if (results==null) return false;
-			Intent i = new Intent(this, MITMapActivity.class);
-			i.putExtra(MITMapActivity.MAP_ITEMS_KEY, new ArrayList<MapItem>(results));
-			
-			startActivity(i);
-			return true;
-			
-		case MENU_BROWSE_OR_BKS:
-			Log.d(TAG,"MENU_BROWSE_OR_BKS");
-
-			//Cursor c  = (Cursor) mListView.getSelectedItem();
-			int selected = mListView.getSelectedItemPosition();
-			if (selected<0) return false;
-			
-			if (bookmark_action.equals(BK_ADD)) {
-				curMapItem = results.get(selected);
-				mDB.saveMapItem(curMapItem);
-			} else {
-				Cursor c = (Cursor) mListView.getItemAtPosition(selected);
-				curMapItem = MapsDB.retrieveMapItem(c);
-				mDB.delete(curMapItem);
-				c.close();
-				showBookmarks();
-			}
-		
-			return true;
-			
-		case MENU_CLEAR_BKS: 
-			mDB.clearAll();
-			showBookmarks();
-			return true;
-			
-		case MENU_VIEW_MAP: 
-			Log.d(TAG,"menu_view_map");
-			//MITMapActivity.launchNewMapItems(this, results);
-			MITMapActivity.launchNewMapItems(this, results);
-			break;
-		
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		
-		super.onPrepareOptionsMenu(menu);
-	
-		//menu.add(0, MENU_BROWSE_OR_BKS, Menu.NONE, bookmark_action)
-		//  .setIcon(R.drawable.menu_bookmarks);
-		
-		if (bookmarks_mode) {
-			Cursor bookmarkCursor = mDB.getMapsCursor();	
-			if (bookmarkCursor.getCount()>0) {
-				menu.add(0, MENU_CLEAR_BKS, Menu.NONE, "Clear Bookmarks")
-				  .setIcon(R.drawable.menu_bookmarks);
-			}
-			bookmarkCursor.close();
-		}
-		
-		return true;
-	}
-
-	@Override
-	protected Module getModule() {
-		return new MapsModule();
-	}
 
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;
 	}
 
-	
-	@Override
-	protected void prepareActivityOptionsMenu(Menu menu) {
-		menu.add(0, MENU_VIEW_MAP, Menu.NONE, "View on Map")
-		  .setIcon(R.drawable.menu_view_on_map);		
-	}
-	 
-	/*
-	@Override
-	public boolean onLongClick(View v) {
-		
-		longClickPos = mListView.getPositionForView(v);
-		
-		if (longClickPos<0) return false;
 
-		if (bookmark_action.equals(BK_ADD)) 
-			curMapItem = results.get(longClickPos);
-		else {
-			Cursor c = (Cursor) mListView.getItemAtPosition(longClickPos);
-			curMapItem = mDB.retrieveMapItem(c);
-		}
-		
-		showDialog(0);
-		
-		return true;
+	@Override
+	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
+		return new MapBrowseCatsModule();
 	}
-	*/
+
+	@Override
+	protected boolean isScrollable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void onOptionSelected(String id) {
+	    if (id.equals(MENU_BOOKMARKS)) {
+			Intent i = new Intent(ctx, MapBookmarksActivity.class); 
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			ctx.startActivity(i);
+	    }
+	}	 
 }

@@ -19,11 +19,19 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 	static final String TAG = "MapItemsAdapter"; 
 	List<MapItem> mMapItems;
 	Context mContext;
+	String mCategory = "";
 	
 	public MapItemsAdapter(Context context, List<MapItem> items) {
 		super(context, items, R.layout.boring_action_row);
 		mMapItems = items;
 		mContext = context;
+	}
+
+	public MapItemsAdapter(Context context, List<MapItem> items, String category) {
+		super(context, items, R.layout.boring_action_row);
+		mMapItems = items;
+		mContext = context;
+		mCategory = category;
 	}
 
 	@Override
@@ -32,8 +40,12 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		
 		String displayName = (String)mapItem.getItemData().get("displayName");
 		String name = (String)mapItem.getItemData().get("name");
-		
-		if(displayName != null && !displayName.equals("")) {
+		String bldgnum = (String)mapItem.getItemData().get("bldgnum");
+		// Building Number searches have categories with parenthesis
+		if (mCategory.contains("(")) {
+			row.setTitle(bldgnum);			
+		}
+		else if(displayName != null && !displayName.equals("")) {
 			row.setTitle(displayName);
 		} else {
 			row.setTitle(name);
@@ -51,7 +63,7 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 				
 				Intent i = new Intent(mContext, MITMapActivity.class); 
 				i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);
+				i.putExtra(MITMapView.MAP_ITEMS_KEY, mapItems);
 				mContext.startActivity(i);
 			}
 		};

@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -69,5 +70,5 @@ public class MapAbstractionObject {
 	public static void setDEFAULT_WKID(int dEFAULT_WKID) {
 		DEFAULT_WKID = dEFAULT_WKID;
 	}
-			
+		
 }

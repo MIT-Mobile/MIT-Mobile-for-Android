@@ -20,5 +20,7 @@ public class Config
 	public final static String release_project_name = "edu.mit.mitmobile2";
     public final static String source_project_name = "edu.mit.mitmobile2";
     public final static String C2DM_SENDER = "";
-    public final static String NEWS_OFFICE_PATH = "/newsoffice";
+    public final static String NEWS_OFFICE_PATH = "news/stories";
+    
+    public static final String google_maps_api_key = "0VATbcwfBkEaelRtPK6PY6vqOb6W8Xfbo-VeeQA";
 }

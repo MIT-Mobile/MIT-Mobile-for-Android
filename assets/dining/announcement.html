@@ -1,0 +1,24 @@
+<html>
+ 	<head>
+ 		<style>			
+ 			a {
+ 				color: #990000;
+			}		
+			
+			.emptyParagraph { display: none; }	
+		</style>
+	</head>
+	<body>
+		_BODY_
+	</body>
+	
+    <script type="text/javascript" charset="utf-8">
+        /* hide all of the empty paragraph tags, because info and announcements tend to have a lot of unnecessary whitespace*/
+        var allParagraphs = document.getElementsByTagName("p");
+        for (var i = allParagraphs.length - 1; i >= 0; i--){
+            if (/\S+/.test(allParagraphs[i].innerText) == false) {
+                allParagraphs[i].className = "emptyParagraph";
+            }
+        }
+    </script>        
+</html>
