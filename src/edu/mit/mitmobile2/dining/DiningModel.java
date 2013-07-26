@@ -344,7 +344,14 @@ public class DiningModel {
 			}
 			mName = object.getString("name");
 			mShortName = object.getString("short_name");
-			mLocation = new DiningHallLocation(this, object.getJSONObject("location"));
+			
+			JSONObject locationJSON;
+			if (object.has("location")) {
+				locationJSON = object.getJSONObject("location");
+			} else {
+				locationJSON = new JSONObject();
+			}
+			mLocation = new DiningHallLocation(this, locationJSON);
 			
 			if (object.has("payment")) {
 				JSONArray jPayArray = object.getJSONArray("payment");
