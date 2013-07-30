@@ -376,6 +376,8 @@ public class MITMapView extends MapView  {
 		callout.setContent(calloutView);
     	callout.setCoordinates(calloutPoint);
     	callout.setStyle(R.xml.callout);
+    	callout.setMaxWidth(800);
+    	callout.setMaxHeight(300);
 		callout.refresh();
 		callout.show();		
 	}
