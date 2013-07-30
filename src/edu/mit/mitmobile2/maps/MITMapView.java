@@ -292,11 +292,10 @@ public class MITMapView extends MapView  {
 
 			pms.setOffsetY(mapItem.offsetY);
 			pms.setOffsetX(mapItem.offsetX);
-
+			
 			Map attributes = new HashMap();
 		
 			Graphic g = new Graphic(point, pms,attributes, null);
-
 			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
 			int Uid = gl.addGraphic(g);	
 	        return Uid;				
@@ -366,7 +365,13 @@ public class MITMapView extends MapView  {
 	public void displayCallout(Context context, MapItem mapItem) {
 		View calloutView = mapItem.getCallout(mContext,mao.getGraphicsLayers().get(mapItem.getGraphicsLayer()).getMapItems(),mapItem.getIndex());
 		Callout callout = getCallout();
-		callout.setOffset(0, mapItem.offsetY * 2);
+		int dpi = getResources().getDisplayMetrics().densityDpi;
+		if (dpi == 480) {
+			callout.setOffset(0, mapItem.offsetY * 6);
+		}
+		else {
+			callout.setOffset(0, mapItem.offsetY * 2);			
+		}
 		Point calloutPoint = getCalloutPoint(mapItem);
 		callout.setContent(calloutView);
     	callout.setCoordinates(calloutPoint);
