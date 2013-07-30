@@ -12,6 +12,7 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
 import edu.mit.mitmobile2.dining.DiningModel.DiningHall;
+import edu.mit.mitmobile2.dining.DiningModel.DiningHallLocation;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.R;
@@ -66,24 +67,39 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		} else if (tabId.equals(sRetailTab)) {
 			annotateRetailVenues();
 		}
-		mMapView.fitMapItems();
 		if (mMapView.isLoaded()) {
 			mMapView.syncGraphicsLayers();
 		}
 	}
 	
 	private void annotateHouseVenues() {
+		boolean needsRecenter = false;
 		for (DiningHall hall : mDiningVenues.getHouses()) {
-			mMapView.addMapItem(hall.getLocation());
+			DiningHallLocation location = hall.getLocation();
+			if (location.getMapPoints().size() > 0) {
+				mMapView.addMapItem(location);
+				needsRecenter = true;
+			}
+		}
+		if (needsRecenter) {
+			mMapView.fitMapItems();
 		}
 	}
 	
 	private void annotateRetailVenues() {
+		boolean needsRecenter = false;
 		Map<String, List<? extends DiningHall>> retailVenues = mDiningVenues.getRetail();
 		for (String buildingID : mDiningVenues.getRetailBuildingNumbers()) {
 			for (DiningHall hall : retailVenues.get(buildingID)) {
-				mMapView.addMapItem(hall.getLocation());
+				DiningHallLocation location = hall.getLocation();
+				if (location.getMapPoints().size() > 0) {
+					mMapView.addMapItem(location);
+					needsRecenter = true;
+				}
 			}
+		}
+		if (needsRecenter) {
+			mMapView.fitMapItems();
 		}
 	}
 	
