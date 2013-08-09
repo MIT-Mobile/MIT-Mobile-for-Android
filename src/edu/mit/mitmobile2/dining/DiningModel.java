@@ -34,7 +34,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NaturalSort;
 import edu.mit.mitmobile2.R;
@@ -1123,7 +1126,10 @@ public class DiningModel {
 					}
 				}				
 			});
-			return row;
+			FrameLayout rowWrapper = new FrameLayout(context);
+			int bubbleFixedWidth = AttributesParser.parseDimension("250dip", context);
+			rowWrapper.addView(row, new FrameLayout.LayoutParams(bubbleFixedWidth, LayoutParams.WRAP_CONTENT));
+			return rowWrapper;
 		}
 
 		@Override
