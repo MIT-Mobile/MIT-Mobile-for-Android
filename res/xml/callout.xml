@@ -3,8 +3,8 @@
 <calloutViewStyle
     textColor="#000000"
 	backgroundColor="#ffffff"
-	backgroundAlpha="255"
-	frameColor="#000000"	
-	cornerCurve="10"  
+	backgroundAlpha="0"
+	frameColor="#00000000"	
+	cornerCurve="0" 
 	anchor="5" />
 </resources>
