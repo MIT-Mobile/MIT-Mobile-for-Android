@@ -20,6 +20,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.esri.android.map.Callout;
 import com.esri.android.map.GraphicsLayer;
@@ -40,6 +41,7 @@ import com.esri.core.portal.BaseMap;
 import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
 
+import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
@@ -364,6 +366,9 @@ public class MITMapView extends MapView  {
 	
 	public void displayCallout(Context context, MapItem mapItem) {
 		View calloutView = mapItem.getCallout(mContext,mao.getGraphicsLayers().get(mapItem.getGraphicsLayer()).getMapItems(),mapItem.getIndex());
+		FrameLayout frame = new FrameLayout(context);
+		frame.setBackgroundResource(R.drawable.map_detail_bubble);
+		frame.addView(calloutView, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		Callout callout = getCallout();
 		int dpi = getResources().getDisplayMetrics().densityDpi;
 		if (dpi == 480) {
@@ -373,11 +378,11 @@ public class MITMapView extends MapView  {
 			callout.setOffset(0, mapItem.offsetY * 2);			
 		}
 		Point calloutPoint = getCalloutPoint(mapItem);
-		callout.setContent(calloutView);
+		callout.setContent(frame);
     	callout.setCoordinates(calloutPoint);
     	callout.setStyle(R.xml.callout);
-    	callout.setMaxWidth(800);
-    	callout.setMaxHeight(300);
+    	callout.setMaxWidth(getWidth());
+    	callout.setMaxHeight(400);
 		callout.refresh();
 		callout.show();		
 	}
@@ -922,7 +927,7 @@ public class MITMapView extends MapView  {
 		        if (mapGraphicsLayer.getMapItems() != null) {
 		        	for (int m = 0; m < mapGraphicsLayer.getMapItems().size(); m++) {
     	    			MapItem mapItem = mapGraphicsLayer.getMapItems().get(m);
-    	    			if (mapItem.getCallout(this.getContext(),null,0) != null) {
+    	    			if (mapItem.getCallout(this.getContext()) != null) {
     	    				calloutItems.add(mapItem);
     	    			}
  		        	}
