@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -187,32 +188,29 @@ public class LibraryModel {
 
     public static void sendAskUsInfo(final Context context, final Handler uiHandler, String topic, String status,
             String department, String subject, String question, String phone, String usingVPN, String onCampus, String askType) {
-
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
-        searchParameters.put("command", "sendAskUsEmail");
-        searchParameters.put("topic", topic);
-        searchParameters.put("status", status);
-        searchParameters.put("department", department);
-        searchParameters.put("subject", subject);
-        searchParameters.put("question", question);
-        searchParameters.put("ask_type", askType);
-//        searchParameters.put("module", MODULE_LIBRARY);
-        if (phone != null) {
-        	searchParameters.put("phone", phone);
+    	
+    	List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(7);
+    	nameValuePairs.add(new BasicNameValuePair("topic", topic));
+    	nameValuePairs.add(new BasicNameValuePair("status", status));
+    	nameValuePairs.add(new BasicNameValuePair("department", department));
+    	nameValuePairs.add(new BasicNameValuePair("subject", subject));
+    	nameValuePairs.add(new BasicNameValuePair("question", question));
+    	nameValuePairs.add(new BasicNameValuePair("ask_type", askType));
+    	if (phone != null) {
+    		nameValuePairs.add(new BasicNameValuePair("phone", phone));
         }
         if (usingVPN != null) {
-        	searchParameters.put("vpn", usingVPN);
+        	nameValuePairs.add(new BasicNameValuePair("vpn", usingVPN));
         }
         if (onCampus != null) {
-        	searchParameters.put("on_campus", onCampus);
+        	nameValuePairs.add(new BasicNameValuePair("on_campus", onCampus));
         }
-
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-//        webApi.requestJSONObject(searchParameters,
-        webApi.requestJSONObject(SECURE_PATH + BASE_PATH + "/forms/sendAskUsForm", searchParameters, 
-        		new MobileWebApi.JSONObjectResponseListener(
-                new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
-                        uiHandler)) {
+	    
+	    
+        MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler, HttpClientType.MIT); 
+        webApi.requestJSONObject(nameValuePairs, "POST", SECURE_PATH + BASE_PATH + "/forms/askUs", null, new MobileWebApi.JSONObjectResponseListener(
+        		new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
+        	                        uiHandler)) {
 
             @Override
             public void onResponse(JSONObject object) throws JSONException {
@@ -225,15 +223,15 @@ public class LibraryModel {
     }
     
     public static void sendTellUsInfo(final Context context, final Handler uiHandler, String status, String feedback) {
-
-        HashMap<String, String> searchParameters = new HashMap<String, String>();
+      
+    	List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(7);
         if (status != null && !"".equals(status)) {
-            searchParameters.put("status", status);
+        	nameValuePairs.add(new BasicNameValuePair("status", status));
         }
-        searchParameters.put("feedback", feedback);
+    	nameValuePairs.add(new BasicNameValuePair("feedback", feedback));
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.requestJSONObject(SECURE_PATH + BASE_PATH + "/forms/sendTellForm", searchParameters,
+        webApi.requestJSONObject(nameValuePairs, "POST", SECURE_PATH + BASE_PATH + "/forms/tellUs", null,
         		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -251,21 +249,20 @@ public class LibraryModel {
             String timeframe, String information, String purpose, String course, String researchTopic, String status,
             String department, String phonenumber) {
 
-        HashMap<String, String> parameters = new HashMap<String, String>();
-        parameters.put("command", "sendAskUsEmail");
-        parameters.put("subject", topic);
-        parameters.put("timeframe", timeframe);
-        parameters.put("description", information);
-        parameters.put("why", purpose);
-        parameters.put("topic", researchTopic);
-        parameters.put("status", status);
-        parameters.put("department", department);
-        parameters.put("course", course);
-        parameters.put("ask_type", "consultation");
-        parameters.put("module", MODULE_LIBRARY);
+    	List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(7);
+    	nameValuePairs.add(new BasicNameValuePair("subject", topic));
+    	nameValuePairs.add(new BasicNameValuePair("timeframe", timeframe));
+    	nameValuePairs.add(new BasicNameValuePair("description", information));
+    	nameValuePairs.add(new BasicNameValuePair("why", purpose));
+    	nameValuePairs.add(new BasicNameValuePair("topic", researchTopic));
+    	nameValuePairs.add(new BasicNameValuePair("status", status));
+    	nameValuePairs.add(new BasicNameValuePair("department", department));
+    	nameValuePairs.add(new BasicNameValuePair("course", course));
+    	nameValuePairs.add(new BasicNameValuePair("ask_type", "consultation"));
 
         MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
-        webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
+        webApi.requestJSONObject(nameValuePairs, "POST", SECURE_PATH + BASE_PATH + "/forms/askUs", null,
+        		new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
 

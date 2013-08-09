@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -299,7 +301,7 @@ public class MobileWebApi {
 		return loadingDialog;
 	}
 	
-	private boolean requestResponse(String path, Map<String, String> parameters, final ResponseType expectedType, final ResponseListener responseListener) {
+	private boolean requestResponse(String method, String path, Map<String, String> parameters, final ResponseType expectedType, final ResponseListener responseListener, final List<BasicNameValuePair> nameValuePairs) {
 		
 		Log.d(TAG,"path = " + path);
 		Log.d(TAG,"requestResponse");
@@ -393,12 +395,12 @@ public class MobileWebApi {
 						
 					case Raw:
 						RawResponseListener rawResponseListener = (RawResponseListener) responseListener;
-						rawResponseListener.onResponse(stream);	
+						rawResponseListener.onResponse(stream);
 						break;
 					}	
 				} catch (JSONException e) {
 					e.printStackTrace();
-					onError(ErrorType.Server);										
+					onError(ErrorType.Server);
 				} catch (ServerResponseException e) {
 					e.printStackTrace();
 					onError(ErrorType.Server);										
@@ -423,25 +425,30 @@ public class MobileWebApi {
 		}
 		
 		String parametersStr = parameters != null ? "?" + query(parameters) : "";
-		String urlString = "http://" + Global.getMobileWebDomain() + BASE_PATH + path + parametersStr;
+		String urlString = "https://" + Global.getMobileWebDomain() + BASE_PATH + path + parametersStr;
 		Log.d(TAG, "requesting " + urlString);
-		boolean isStarted = connection.openURL(urlString, callback);
+		boolean isStarted = connection.openURL(urlString, callback, method, nameValuePairs);
 		
 		return isStarted;
 	}
 	
 	public boolean requestJSONObject(String path, Map<String, String> parameters, JSONObjectResponseListener responseListener) {
 		Log.d(TAG,"json 1 - path = " + path);
-		return requestResponse(path, parameters, ResponseType.JSONObject, responseListener);
+		return requestResponse("GET", path, parameters, ResponseType.JSONObject, responseListener, null);
+	}
+	
+	public boolean requestJSONObject(List<BasicNameValuePair> nameValuePairs, String method, String path, Map<String, String> parameters, JSONObjectResponseListener responseListener) {
+		Log.d(TAG,"json 1 - path = " + path + " method = " + method);
+		return requestResponse(method, path, parameters, ResponseType.JSONObject, responseListener, nameValuePairs);
 	}
 	
 	public boolean requestJSONObject(Map<String, String> parameters, JSONObjectResponseListener responseListener) {
 		Log.d(TAG,"json 2 module = " + parameters.get("module"));
-		return requestJSONObject("", parameters, responseListener);
+		return requestJSONObject(null, "GET", "", parameters, responseListener);
 	}
 	
 	public boolean requestJSONArray(String path, Map<String, String> parameters, JSONArrayResponseListener responseListener) {
-		return requestResponse(path, parameters, ResponseType.JSONArray, responseListener);
+		return requestResponse("GET", path, parameters, ResponseType.JSONArray, responseListener, null);
 	}
 	
 	public boolean requestJSONArray(Map<String, String> parameters, JSONArrayResponseListener responseListener) {
@@ -449,7 +456,7 @@ public class MobileWebApi {
 	}	
 	
 	public boolean requestRaw(String path, Map<String, String> parameters, RawResponseListener responseListener) {
-		return requestResponse(path, parameters, ResponseType.Raw, responseListener);
+		return requestResponse("GET", path, parameters, ResponseType.Raw, responseListener, null);
 	}
 	
 	public static String query(Map<String, String> parameters) {

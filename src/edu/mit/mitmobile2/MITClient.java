@@ -67,6 +67,7 @@ public class MITClient extends DefaultHttpClient {
 	final SharedPreferences.Editor prefsEditor;
 
 	HttpGet mHttpGet;
+	HttpPost mHttpPost;
 	String requestKey;
 	URI targetUri;
 	
@@ -210,7 +211,77 @@ public class MITClient extends DefaultHttpClient {
 				Log.d(TAG,"auth state");
 				authState();
 			}
+			
+			if (state == AUTH_ERROR_STATE) {
+				Log.d(TAG,"auth error state");
+				authError();
+			}
+
+			if (state == CANCELLED_STATE) {
+				Log.d(TAG,"status in cancelled state = " + response.getStatusLine().getStatusCode());
+				MITHttpEntity entity = new MITHttpEntity();
+				entity.setContent(MITHttpEntity.JSON_CANCEL);
+				response.setStatusCode(200);
+				response.setEntity(entity);
+				return response;
+			}
+
+			if (state == OK_STATE) {
+				saveLogin();
+				return response;
+			}
+
+			return null;
+		}
+		catch (IOException e) {
+			Log.d(TAG,"get response exception = " + e.getMessage());
+			return null;
+		}
 		
+	}
+	
+	public HttpResponse getResponseFromPost(HttpPost httpPost) {
+		try {
+			return this.execute(httpPost);
+		}
+		catch (IOException e) {
+			Log.d(TAG,"get response exception = " + e.getMessage());
+			return null;
+		}
+	}
+	
+	public HttpResponse getResponse(HttpPost httpPost) {
+		try {
+			this.mHttpPost = httpPost;
+			this.targetUri = httpPost.getURI();
+			MITClientData clientData = new MITClientData();
+			clientData.setTargetUri(this.targetUri);
+			requestKey = System.currentTimeMillis()/1000 + "";
+			Log.d(TAG,"requestKey " + requestKey + " created");
+			requestMap.put(requestKey, clientData);
+			response = this.execute(httpPost);
+			responseEntity = response.getEntity();
+			
+			if (state == OK_STATE) {
+				saveLogin();
+				return response;
+			}
+			
+			if (state == WAYF_STATE ) {
+				Log.d(TAG,"wayf state");
+				wayf();
+			}
+				
+			if (state == IDP_STATE) {
+				Log.d(TAG,"idp state");
+				idp();
+			}			
+	
+			if (state == AUTH_STATE) {
+				Log.d(TAG,"auth state");
+				authState();
+			}
+			
 			if (state == AUTH_ERROR_STATE) {
 				Log.d(TAG,"auth error state");
 				authError();

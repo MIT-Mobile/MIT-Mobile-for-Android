@@ -2,12 +2,15 @@ package edu.mit.mitmobile2;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -60,7 +63,7 @@ public class ConnectionWrapper {
 	/*
 	 * @return if attempted to begin network connection
 	 */
-	public boolean openURL(final String url, final ConnectionInterface callback) {
+	public boolean openURL(final String url, final ConnectionInterface callback, final String method, final List<BasicNameValuePair> nameValuePairs) {
 		Log.d(TAG, "starting request: " + url);
 		
 		if(mConnectivityManager != null) {
@@ -79,7 +82,7 @@ public class ConnectionWrapper {
 		// also, probably no need to do asynchronous connection 
 		// (since the thread probably does not block anything else)
 		if(Looper.myLooper() != null) {
-			asynchronous(url, new Handler() {
+			asynchronous(url, method, nameValuePairs, new Handler() {
 				@Override
 				public void handleMessage(Message msg) {
 					Log.d(TAG,"openURL - asynchronous");
@@ -120,18 +123,44 @@ public class ConnectionWrapper {
 		}
 	}
 	
-	private void asynchronous(final String url, final Handler threadHandler) {
+	public HttpResponse httpClientResponse(HttpPost httpPost, List<BasicNameValuePair> nameValuePairs) throws ClientProtocolException, IOException {
+		Log.d(TAG,"httpClientResponse from ConnectionWrapper");
+		HttpClient httpClient = new DefaultHttpClient();
+		Log.d(TAG,"1");
+		try {
+			HttpResponse response = httpClient.execute(httpPost);
+			return response;
+		}
+		catch (IOException e) {
+			Log.d(TAG,"IOException = " + e.getMessage());
+			return null;
+		}
+	}
+	
+	private void asynchronous(final String url, final String method, final List<BasicNameValuePair> nameValuePairs, final Handler threadHandler) {
 		new Thread() {
 			@Override
 			public void run() {
 				Log.d(TAG,"asynchronous url = " + url);
 				Message message = Message.obtain();
+				HttpResponse response = null;
 				
-				HttpGet httpGet = new HttpGet(url);
-				httpGet.setHeader("User-Agent", HTTP_USER_AGENT);
 				try {
 					//HttpResponse response = httpClient.execute(httpGet);
-					HttpResponse response = httpClientResponse(httpGet);
+					int method_id = method.equals("POST") ? 2 : 1;
+					switch(method_id) {
+						case 1:
+							HttpGet httpGet = new HttpGet(url);
+							httpGet.setHeader("User-Agent", HTTP_USER_AGENT);
+							response = httpClientResponse(httpGet);
+							break;
+						case 2:
+							HttpPost httpPost = new HttpPost(url);
+							httpPost.setHeader("User-Agent", HTTP_USER_AGENT);
+							response = httpClientResponse(httpPost, nameValuePairs);
+							break;
+					}
+					
 					//Log.d(TAG,"response = " + response);
 					//Log.d(TAG,"status code = " + response.getStatusLine().getStatusCode());
 					//Log.d(TAG,"url = " + httpGet.getURI().toURL().toString());

@@ -510,7 +510,7 @@ public class NewsModel {
 						}
 					}.start();
 				}
-			}
+			}, "GET", null
 		);
 	}
 	
