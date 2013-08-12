@@ -414,9 +414,11 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	@Override
 	protected NewModule getNewModule() {
 		// TODO Auto-generated method stub
-		return new MapsModule();
+		return new MapDetailsModule();
 	}
 
+	
+	
 	@Override
 	protected void onOptionSelected(String optionId) {
 		Log.d(TAG,"optionId = " + optionId);
