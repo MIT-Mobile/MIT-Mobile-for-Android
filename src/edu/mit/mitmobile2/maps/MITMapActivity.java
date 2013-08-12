@@ -128,7 +128,7 @@ public class MITMapActivity extends NewModuleActivity {
 	@Override
 	protected boolean isModuleHomeActivity() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 	/*
