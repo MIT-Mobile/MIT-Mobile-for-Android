@@ -322,13 +322,11 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			MapItem dbItem = db.retrieveMapItem((String)mMapItem.getItemData().get("id"));
 			if (dbItem == null) {
 				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is not bookmarked");
-				//mapBookmarkBtn.setBackgroundResource(R.drawable.button_bookmark_off);
 				mapBookmarkBtn.setText(R.string.map_bookmark_off);
 				mapBookmarkBtn.setTag("off");
 			}
 			else {
 				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is bookmarked");
-				//mapBookmarkBtn.setBackgroundResource(R.drawable.button_bookmark_on);
 				mapBookmarkBtn.setText(R.string.map_bookmark_on);
 				mapBookmarkBtn.setTag("on");
 			}
@@ -340,14 +338,12 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 					if (v.getTag() == "off") {	
 						MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
 						((Button)v).setText(R.string.map_bookmark_on);
-						//v.setBackgroundResource(R.drawable.button_bookmark_on);
 						v.setTag("on");
 						Toast.makeText(mContext, "map item saved", 1).show();
 					}
 					else {
 						MapsDB.getInstance(mContext).delete(mMapItem);
 						((Button)v).setText(R.string.map_bookmark_off);
-						//v.setBackgroundResource(R.drawable.button_bookmark_off);
 						v.setTag("off");
 						Toast.makeText(mContext, "map item removed", 1).show();						
 					}
