@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -252,8 +253,10 @@ public class MITMapView extends MapView  {
 			
 			Bitmap libImage = BitmapFactory.decodeResource(getResources(), mapItem.symbol);
 			BitmapDrawable libDrawable = new BitmapDrawable(libImage);
+			
 			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
-
+			
+			Log.d(TAG,"intrinsic height = " + libDrawable.getIntrinsicHeight());
 			switch (mapItem.verticalAlign) {
 				case MapItem.VALIGN_TOP:
 					mapItem.offsetY = -(libDrawable.getIntrinsicHeight() / 2);
@@ -370,13 +373,13 @@ public class MITMapView extends MapView  {
 		frame.setBackgroundResource(R.drawable.map_detail_bubble);
 		frame.addView(calloutView, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		Callout callout = getCallout();
-		int dpi = getResources().getDisplayMetrics().densityDpi;
-		if (dpi == 480) {
-			callout.setOffset(0, mapItem.offsetY * 6);
-		}
-		else {
-			callout.setOffset(0, mapItem.offsetY * 2);			
-		}
+		int displayDensity = getResources().getDisplayMetrics().densityDpi;
+		int calloutOffset = (mapItem.offsetY * 2 + 6) * displayDensity / DisplayMetrics.DENSITY_HIGH;
+		Log.d(TAG,"displayDentity = " + displayDensity);
+		Log.d(TAG,"density medium = " + DisplayMetrics.DENSITY_MEDIUM);
+		Log.d(TAG,"density high = " + DisplayMetrics.DENSITY_HIGH);
+		callout.setOffset(0, calloutOffset);
+		
 		Point calloutPoint = getCalloutPoint(mapItem);
 		callout.setContent(frame);
     	callout.setCoordinates(calloutPoint);
