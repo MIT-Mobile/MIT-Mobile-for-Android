@@ -374,7 +374,7 @@ public class MITMapView extends MapView  {
 		frame.addView(calloutView, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		Callout callout = getCallout();
 		int displayDensity = getResources().getDisplayMetrics().densityDpi;
-		int calloutOffset = (mapItem.offsetY * 2 + 6) * displayDensity / DisplayMetrics.DENSITY_HIGH;
+		int calloutOffset = (mapItem.offsetY * 2) * displayDensity / DisplayMetrics.DENSITY_HIGH + 9;
 		Log.d(TAG,"displayDentity = " + displayDensity);
 		Log.d(TAG,"density medium = " + DisplayMetrics.DENSITY_MEDIUM);
 		Log.d(TAG,"density high = " + DisplayMetrics.DENSITY_HIGH);
