@@ -1133,14 +1133,20 @@ public class DiningModel {
 		}
 
 		@Override
-		public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
+		public View getCallout(Context context, ArrayList<? extends MapItem> mapItems) {
 			return null;
 		}
 
 		@Override
-		public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position) {
+		public View getCallout(Context context, ArrayList<? extends MapItem> mapItems, int position) {
 			DiningHallLocation item = (DiningHallLocation) mapItems.get(position);
-			return item.getCallout(mContext);
+			return item.getCallout(context);
+		}
+
+		@Override
+		public View getCallout(Context context, MapItem mapItem) {
+			DiningHallLocation item = (DiningHallLocation) mapItem;
+			return item.getCallout(context);
 		}
 	}
 	
