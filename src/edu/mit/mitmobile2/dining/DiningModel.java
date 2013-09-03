@@ -139,6 +139,10 @@ public class DiningModel {
 	
 	private static boolean fetchPersistantCache(SharedPreferences sharedPreferences, final Handler uiHandler) {
 		String jsonData = sharedPreferences.getString(JSON, null);
+		if (jsonData == null) {
+			return false;
+		}
+		
 		try {
 			JSONObject object = new JSONObject(jsonData);
 			sVenues = new DiningVenues(object);
