@@ -24,6 +24,12 @@ public class RouteMapItem extends MapItem {
 	}
 
 	@Override
+	public View getCallout(Context mContext, MapItem mapItem) {
+		return null;
+	}
+
+
+	@Override
 	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position) {
 		// TODO Auto-generated method stub
 		return null;

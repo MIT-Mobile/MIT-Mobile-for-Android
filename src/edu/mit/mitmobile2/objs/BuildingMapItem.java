@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -14,15 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
-import edu.mit.mitmobile2.maps.MITMapBrowseResultsActivity;
 import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
 import edu.mit.mitmobile2.maps.MITMapView;
-import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MapData;
 
 public class BuildingMapItem extends MapItem implements Parcelable {
 	
@@ -44,10 +36,19 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	}
 	
 	@Override
-	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
-		return null;
+	public View getCallout(Context mContext, MapItem mapItem) {
+		final ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
+		mapItems.add(mapItem);
+		return this.getCallout(mContext, mapItems, 0);		
 	}
 
+	
+	@Override
+	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
+		return this.getCallout(mContext, mapItems, 0);
+	}
+
+	
 	@Override
 	public View getCallout(final Context mContext, final ArrayList<? extends MapItem> mapItems, final int position) {
 
@@ -73,7 +74,8 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 
 		calloutLayout.setOnClickListener(new View.OnClickListener() {
 		
-	            @Override
+	            @SuppressWarnings("unchecked")
+				@Override
 	            public void onClick(View v) {
 	            	Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
 	            	//i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);

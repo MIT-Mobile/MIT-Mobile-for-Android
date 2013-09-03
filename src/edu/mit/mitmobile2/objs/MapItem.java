@@ -45,6 +45,7 @@ public abstract class MapItem {
 	public long sql_id = -1;  // not to confuse with "id"
 	
 	public abstract View getCallout(Context mContext);
+	public abstract View getCallout(Context mContext, MapItem mapItem);
 	public abstract View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems);
 	public abstract View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position);
 

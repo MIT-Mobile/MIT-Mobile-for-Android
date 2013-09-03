@@ -256,7 +256,6 @@ public class MITMapView extends MapView  {
 			
 			PictureMarkerSymbol pms = new PictureMarkerSymbol(libDrawable);       
 			
-			Log.d(TAG,"intrinsic height = " + libDrawable.getIntrinsicHeight());
 			switch (mapItem.verticalAlign) {
 				case MapItem.VALIGN_TOP:
 					mapItem.offsetY = -(libDrawable.getIntrinsicHeight() / 2);
@@ -375,9 +374,6 @@ public class MITMapView extends MapView  {
 		Callout callout = getCallout();
 		int displayDensity = getResources().getDisplayMetrics().densityDpi;
 		int calloutOffset = (mapItem.offsetY * 2) * displayDensity / DisplayMetrics.DENSITY_HIGH + 9;
-		Log.d(TAG,"displayDentity = " + displayDensity);
-		Log.d(TAG,"density medium = " + DisplayMetrics.DENSITY_MEDIUM);
-		Log.d(TAG,"density high = " + DisplayMetrics.DENSITY_HIGH);
 		callout.setOffset(0, calloutOffset);
 		
 		Point calloutPoint = getCalloutPoint(mapItem);
@@ -724,7 +720,9 @@ public class MITMapView extends MapView  {
 
 		// Display the callout if there is only one map item with a defined callout, and showCallout is true
 		ArrayList<MapItem> calloutItems = getCalloutItems();
-		if (calloutItems.size() == 1 && showCallout) {
+		Log.d(TAG,"num calloutItems = " + calloutItems.size());
+		Log.d(TAG,"showCallout = " + this.showCallout);
+		if (calloutItems.size() == 1 && this.showCallout) {
 			displayCallout(mContext, calloutItems.get(0));
 		}
     }
@@ -930,7 +928,7 @@ public class MITMapView extends MapView  {
 		        if (mapGraphicsLayer.getMapItems() != null) {
 		        	for (int m = 0; m < mapGraphicsLayer.getMapItems().size(); m++) {
     	    			MapItem mapItem = mapGraphicsLayer.getMapItems().get(m);
-    	    			if (mapItem.getCallout(this.getContext()) != null) {
+    	    			if (mapItem.getCallout(this.getContext(),mapItem) != null) {
     	    				calloutItems.add(mapItem);
     	    			}
  		        	}

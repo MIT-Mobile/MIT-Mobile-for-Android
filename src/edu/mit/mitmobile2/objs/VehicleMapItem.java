@@ -33,6 +33,11 @@ public class VehicleMapItem extends MapItem {
 	}
 	
 	@Override
+	public View getCallout(Context mContext, MapItem mapItem) {
+		return null;
+	}
+	
+	@Override
 	public View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems) {
 		return null;
 	}

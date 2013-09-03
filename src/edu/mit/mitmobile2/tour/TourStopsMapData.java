@@ -118,5 +118,11 @@ public class TourStopsMapData extends MapData {
 			TourStopMapItem tourStopMapItem = (TourStopMapItem) mapItems.get(position);
 			return tourStopMapItem.getCallout(mContext);
 		}
+
+		@Override
+		public View getCallout(Context mContext, MapItem mapItem) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 }
