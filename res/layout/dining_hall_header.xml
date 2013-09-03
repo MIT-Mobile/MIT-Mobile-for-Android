@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="@android:color/transparent">
+  
+  <FrameLayout 
+      android:id="@+id/diningHallHeaderImageWrapper"
+      android:layout_width="wrap_content"
+      android:layout_height="46dip"     
+      android:layout_marginLeft="@dimen/standardPadding"
+      android:layout_marginTop="16dip"
+      >
+
+      <edu.mit.mitmobile2.RemoteImageView
+       		android:id="@+id/diningHallHeaderImage"
+      		android:layout_width="46dip"
+      		android:layout_height="match_parent"
+      		/>
+        
+  </FrameLayout>
+  
+  <ImageView
+      android:id="@+id/diningHallActionImage"
+      android:layout_width="46dip"
+      android:layout_height="46dip"
+      android:layout_marginRight="@dimen/standardPadding"
+	  android:layout_centerVertical="true"
+	  android:layout_alignParentRight="true"
+	  android:background="@drawable/highlight_background"
+	  android:scaleType="center"
+      />
+  
+  <TextView 
+      android:id="@+id/diningHallHeaderTitle"
+      android:layout_toRightOf="@id/diningHallHeaderImageWrapper"
+      android:layout_toLeftOf="@id/diningHallActionImage"
+      android:layout_alignTop="@id/diningHallHeaderImageWrapper"
+      android:layout_alignBottom="@id/diningHallHeaderImageWrapper"
+      android:layout_width="wrap_content"
+  	  android:layout_height="wrap_content"
+  	  android:gravity="center_vertical"
+  	  android:paddingLeft="@dimen/standardPadding"
+  	  android:paddingRight="@dimen/standardPadding"
+  	  android:textSize="19sp"
+      style="@style/ListItemPrimary"
+      />
+
+   <TextView
+      android:id="@+id/diningHallHeaderSubtitle"  
+      android:layout_width="wrap_content"
+  	  android:layout_height="wrap_content"
+  	  android:layout_alignLeft="@id/diningHallHeaderImageWrapper"
+  	  android:layout_below="@id/diningHallHeaderImageWrapper"
+  	  android:paddingTop="@dimen/standardPadding"
+  	  android:paddingBottom="@dimen/standardPadding"
+      style="@style/ListItemSecondary"
+       />
+</RelativeLayout>
+  

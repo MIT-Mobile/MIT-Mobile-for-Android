@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<style name="PopupWindowAnimation" parent="@android:style/Animation.Dialog" mce_bogus="1">
-		<item name="android:windowEnterAnimation">@anim/fade_in</item>
-		<item name="android:windowExitAnimation">@anim/fade_out</item>
+		<item name="android:windowEnterAnimation">@anim/mit_fade_in</item>
+		<item name="android:windowExitAnimation">@anim/mit_fade_out</item>
 	</style>
 </resources>

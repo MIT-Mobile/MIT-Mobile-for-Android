@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="diningGray">#222222</color>
+   
+    <style name="DiningComparisonHallTitle">
+		<item name="android:textColor">#000</item>
+		<item name="android:textSize">17sp</item>
+	</style>	
+	
+     <style name="DiningComparisonHallSubtitle">
+		<item name="android:textColor">#fff</item>
+		<item name="android:textSize">15sp</item>
+	</style>
+	
+	<style name="DiningTabTitle" parent="@style/TabTitle">
+		<item name="android:textColor">@color/dining_tab_text_color</item>
+	</style>	
+	
+	<color name="diningTabUnderline">#d20000</color>
+	
+	<color name="dining_closed">#ffd20000</color>
+	<color name="dining_open">#ff009900</color>
+      
+</resources>

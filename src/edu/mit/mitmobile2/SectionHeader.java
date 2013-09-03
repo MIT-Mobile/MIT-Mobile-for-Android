@@ -56,5 +56,8 @@ public class SectionHeader extends FrameLayout {
 		mTextView.setText(text);
 	}
 	
+	public TextView getTextView() {
+		return mTextView;
+	}
 }
 

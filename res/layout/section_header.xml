@@ -11,6 +11,8 @@
   			android:paddingLeft="@dimen/standardPadding"
   			android:background="@android:color/transparent"
   			android:id="@+id/sectionHeaderTV" 
+  			android:singleLine="true"
+  			android:ellipsize="end"
   			style="@style/SubHead" />
   
 </FrameLayout>

@@ -25,12 +25,15 @@ public class TabActivityConfigurator {
 	//ArrayList<Integer> mTabContentResourceIds;
 	ArrayList<Class> mTabActivities;
 	Intent mIntent;
+	private int mUnderlineColor;
+	
 	@SuppressWarnings("rawtypes")
 	public TabActivityConfigurator(Activity activity, TabHost tabHost) {
 		mTabHost = tabHost;
 		mActivity = activity;
 		mTabNames = new ArrayList<String>();
 		mTabActivities = new ArrayList<Class>();
+		mUnderlineColor = activity.getResources().getColor(R.color.tabUnderlineColor);
 	}
 	
 	public void addTab(String tabName, @SuppressWarnings("rawtypes") Class className) {
@@ -64,7 +67,7 @@ public class TabActivityConfigurator {
 			LinearLayout indicatorView = new LinearLayout(mActivity);
 			Log.d(TAG,"tabWidth = " + tabWidth + " height = " + height);
 			indicatorView.setLayoutParams(new LayoutParams(tabWidth, height));
-			indicatorView.setBackgroundResource(R.drawable.tab2_background);
+			indicatorView.setBackgroundDrawable(new TabBackgroundDrawable(mActivity, mUnderlineColor));
 			indicatorView.setGravity(Gravity.CENTER);
 			Spannable tabNameSpan = spanFactory.newSpannable(tabName);
 			tabNameSpan.setSpan(
