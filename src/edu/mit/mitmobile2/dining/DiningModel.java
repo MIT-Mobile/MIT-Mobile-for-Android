@@ -610,9 +610,11 @@ public class DiningModel {
 			if (!object.isNull("menu_html")) {
 				mMenuHtml = object.getString("menu_html");
 			}
-			JSONArray jsonHours = object.getJSONArray("hours");
-			for (int i = 0; i < jsonHours.length(); i++) {
-				mHours.add(new DailyHours(jsonHours.getJSONObject(i)));
+			if (!object.isNull("hours")) {
+				JSONArray jsonHours = object.getJSONArray("hours");
+				for (int i = 0; i < jsonHours.length(); i++) {
+					mHours.add(new DailyHours(jsonHours.getJSONObject(i)));
+				}
 			}
 			if (!object.isNull("menu_url")) {
 				mMenuUrl = object.getString("menu_url");
