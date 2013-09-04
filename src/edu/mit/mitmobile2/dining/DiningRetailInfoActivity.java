@@ -146,11 +146,17 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 	}
 	
 	private void layoutScheduleList() {
-		LinearLayout scheduleContainer = (LinearLayout)findViewById(R.id.diningHallInfoScheduleContainer);
+		LinearLayout scheduleContainer = (LinearLayout)findViewById(R.id.diningHallInfoScheduleContainer);		
 		
-		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+		List<ScheduleItem> items = getScheduleInfo();
+		if (items.size() == 0) {
+			scheduleContainer.setVisibility(View.GONE);
+			return;
+		}
+		
+		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);		
 		boolean first = true;
-		for (ScheduleItem item : getScheduleInfo()) {
+		for (ScheduleItem item : items) {
 			
 			// add separator
 			if (!first) {
