@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -78,8 +79,20 @@ public class DiningFilterActivity extends NewModuleActivity {
 		});
 	}
 	
+
+	@Override
+	protected List<MITMenuItem> getSecondaryMenuItems() {
+		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("done", "Done"));
+		return items;
+	}
+	
 	@Override
 	public void onBackPressed() {
+		finishWithFiltersResult();
+	}
+	
+	private void finishWithFiltersResult() {
 		Intent returnIntent = new Intent();
 		returnIntent.putParcelableArrayListExtra(SELECTED_FILTERS, mSelectedFlags);
 		setResult(RESULT_OK, returnIntent);        
@@ -106,7 +119,11 @@ public class DiningFilterActivity extends NewModuleActivity {
 	}
 
 	@Override
-	protected void onOptionSelected(String optionId) { }
+	protected void onOptionSelected(String optionId) { 
+		if(optionId.equals("done")) {
+			finishWithFiltersResult();
+		}
+	}
 
 	@Override
 	protected boolean isModuleHomeActivity() {
