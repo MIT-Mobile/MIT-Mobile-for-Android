@@ -171,8 +171,6 @@ public class MITMapBrowseResultsActivity extends NewModuleActivity  {
 	
 	/****************************************************/
 	void createView() {
-    	Log.d(TAG,"cat = " + cat);
-    	Log.d(TAG,"mCategoryName = " + mCategoryName);
 
 		adapter = new MapItemsAdapter(this, results,mCategoryName);
 		

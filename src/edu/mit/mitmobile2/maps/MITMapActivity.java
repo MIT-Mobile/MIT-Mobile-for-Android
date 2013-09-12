@@ -292,11 +292,10 @@ public class MITMapActivity extends NewModuleActivity {
         @SuppressWarnings("unchecked")
 		@Override
         public void handleMessage(Message msg) {
-        	Log.d(TAG,"mapSearchUiHandler success");
+        	//Log.d(TAG,"mapSearchUiHandler success");
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	
             	try {
-            		Log.d(TAG,"search results class = " + msg.obj.getClass().toString());
             		MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(mContext, MapsSearchSuggestionsProvider.AUTHORITY,  MapsSearchSuggestionsProvider.MODE);
             		suggestions.saveRecentQuery(query.toLowerCase(Locale.US), null);
             		map.clearMapItems();

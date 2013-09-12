@@ -75,7 +75,6 @@ public class MapsDB {
 	
 	private String[] whereArgs(MapItem MapItem) {
 		String id = (String)MapItem.getItemData().get("id");
-		Log.d(TAG,"delete id = " + id);
 		String[] args = new String[1];
 		args[0] = id;
 		return args;
@@ -90,7 +89,6 @@ public class MapsDB {
 	synchronized void delete(MapItem mi) {
 		SQLiteDatabase db = mMapsDBHelper.getWritableDatabase();
 		int result = db.delete(MAPS_TABLE, MAP_ID_WHERE, whereArgs(mi));
-		Log.d(TAG,"delete result = " + result);
 
 		db.close();
 		mMapsDBHelper.close();
@@ -125,15 +123,14 @@ public class MapsDB {
 		long row_id;
 		int rows;
 		String id = (String)mi.getItemData().get("id");
-		Log.d(TAG,"checking map id " + id);
 		if(miExists(id)) {
 			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			Log.d(TAG,"MapDB: updating "+rows);
+			//Log.d(TAG,"MapDB: updating "+rows);
 		} else {
 			row_id = db.insert(MAPS_TABLE, SNIPPETS, mapValues);
 			mi.sql_id = row_id;
 			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			Log.d(TAG,"MapDB: adding "+row_id);
+			//Log.d(TAG,"MapDB: adding "+row_id);
 		}
 		db.close();
 		mMapsDBHelper.close();
@@ -170,7 +167,6 @@ public class MapsDB {
 									    };
 		
 		Cursor cursor = db.query(MAPS_TABLE, fields, null, null, null, null, NAME + " DESC", null);
-		Log.d(TAG,"num map items in cursor = " + cursor.getCount());
 		return cursor;
 	}
 	
@@ -241,7 +237,7 @@ public class MapsDB {
 		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			Log.d(TAG,"creating maps table");
+			//Log.d(TAG,"creating maps table");
 			db.execSQL("CREATE TABLE " + MAPS_TABLE + " ("
 					+ ID + " INTEGER PRIMARY KEY,"
 					+ MAP_ID + " TEXT,"

@@ -230,7 +230,6 @@ public class MapData {
 					Class cls = Class.forName(jMapItem.getString("mapItemClass"));
 					try {
 						MapItem mapItem = (MapItem) cls.newInstance();
-						//Log.d("ZZZ","mapItem class = " + mapItem.getClass().getName());
 						mapItem.setGeometryType(jMapItem.getInt("geometryType"));
 						JSONObject jItemData = jMapItem.getJSONObject("itemData");
 	
@@ -296,81 +295,5 @@ public class MapData {
 	public void setSpatialReference(SpatialReference spatialReference) {
 		this.spatialReference = spatialReference;
 	}
-
-	//	public static MapData fromJSON(String mapDataJSON) {
-//		MapData m = new MapData();
-//		try {
-//			JSONObject jMapData = new JSONObject(mapDataJSON);
-//			//m.setLayerName(jMapData.getString("layerName"));
-//			m.setMode(jMapData.getInt("mode"));
-//			
-//			// get mapGraphicLayers
-//			JSONObject jMapGraphicLayers = jMapData.getJSONObject("mapGraphicLayers");
-//			// BEGIN LAYER LOOP
-//			Iterator glkeys = jMapGraphicLayers.keys();
-//			while (glkeys.hasNext()) {
-//
-//				// get mapItems
-//				JSONArray jMapItems = jMapData.getJSONArray("mapItems");
-//	            for (int i = 0; i < jMapItems.length(); i++) {
-//	            	JSONObject jMapItem = jMapItems.getJSONObject(i);
-//	
-//					try {
-//						Class cls = Class.forName(jMapItem.getString("mapItemClass"));
-//						try {
-//							MapItem mapItem = (MapItem) cls.newInstance();
-//							//Log.d("ZZZ","mapItem class = " + mapItem.getClass().getName());
-//							mapItem.setGeometryType(jMapItem.getInt("geometryType"));
-//							JSONObject jItemData = jMapItem.getJSONObject("itemData");
-//	
-//							// POPULATE itemDATA
-//							Iterator keys = jItemData.keys();
-//							while (keys.hasNext()) {
-//								String key = (String)keys.next();
-//								Object value = jItemData.get(key);
-//								mapItem.getItemData().put(key, value);
-//							}
-//													
-//							mapItem.setLineColor(jMapItem.getInt("lineColor"));
-//							mapItem.setLineWidth(jMapItem.getInt("lineWidth"));
-//							mapItem.setMapItemClass(jMapItem.getString("mapItemClass"));
-//							mapItem.setSymbol(jMapItem.getInt("symbol"));
-//							
-//							// get map points
-//							JSONArray jMapPoints = jMapItem.getJSONArray("mapPoints");
-//				            for (int j = 0; j < jMapPoints.length(); j++) {
-//				            	JSONObject jMapPoint = jMapPoints.getJSONObject(j);
-//				            	MapPoint mapPoint = new MapPoint();
-//				            	mapPoint.lat_wgs84 = jMapPoint.getDouble("lat_wgs84");
-//				            	mapPoint.long_wgs84 = jMapPoint.getDouble("long_wgs84");
-//				            	mapItem.getMapPoints().add(mapPoint);
-//				            }
-//					
-//				            m.getMapItems().add(mapItem);
-//						} catch (InstantiationException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						} catch (IllegalAccessException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//	
-//					} catch (ClassNotFoundException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//	            }
-//			}	
-//			// END LAYER LOOP
-//			
-//		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		//jMapData.
-//
-//		return m;
-//	}
-
 
 }

@@ -54,7 +54,7 @@ public class MapModel {
 
             @Override
             public void onResponse(JSONObject jobject) throws JSONException {
-            	Log.d(TAG,jobject.toString());
+            	//Log.d(TAG,jobject.toString());
             	MapServerData mapServerData = MapParser.parseMapServerData(jobject);
             	MobileWebApi.sendSuccessMessage(uiHandler, mapServerData);
             }

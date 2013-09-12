@@ -129,7 +129,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			List<MapItem> mapItems = null;
 			if(extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
 				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
-				Log.d(TAG,"number of map items = " + mapItems.size());
+				//Log.d(TAG,"number of map items = " + mapItems.size());
 			} 	
 
 			if(extras.containsKey(MITMapView.MAP_ITEM_INDEX_KEY)) {
@@ -147,44 +147,14 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		for(int index = 0; index < totalMapItems; ++index) {
 			MapItem mapItem = mMapItems.get(index);
 			if (mapItem.getMapPoints() != null) {
-				Log.d(TAG,"first map point = " + mapItem.getMapPoints().get(0).lat_wgs84 + ":" + mapItem.getMapPoints().get(0).long_wgs84);
 			}
 			String headerTitle = Integer.toString(index+1) + " of " + Integer.toString(totalMapItems);
 			addScreen(new MapSliderInterface(mapItem), (String)mapItem.getItemData().get("name"), headerTitle);
 		}
 		
-		//int position = PeopleModel.getPosition(mPeople, uid);
 		setPosition(position);
 	}
 	
-//	private void populateAddContactIntent(Intent intent, PersonItem person, boolean editOrInsert) {
-//		// the data that the add contact screen accepts does not quite match
-//		// the structure of our data, so we do a reasonably good fit between the two
-//		
-//		// puts the full name in the firstname field (this is a limitation of android see link below)
-//		// http://groups.google.com/group/android-developers/browse_thread/thread/39615ba0bbcfc62b
-//		if(!editOrInsert) {
-//			intent.putExtra(Insert.NAME, person.getName());
-//		}
-//		
-//		addFields(intent, person.phone, 
-//			new String[] {Insert.PHONE, Insert.SECONDARY_PHONE, Insert.TERTIARY_PHONE}, 
-//			new String[] {Insert.PHONE_TYPE, Insert.SECONDARY_PHONE_TYPE, Insert.TERTIARY_PHONE_TYPE},	
-//			CommonDataKinds.Phone.TYPE_WORK);
-//
-//		addFields(intent, person.email,
-//			new String[] {Insert.EMAIL, Insert.SECONDARY_EMAIL, Insert.TERTIARY_EMAIL},
-//			new String[] {Insert.EMAIL_TYPE, Insert.SECONDARY_EMAIL_TYPE, Insert.TERTIARY_EMAIL_TYPE},
-//			CommonDataKinds.Email.TYPE_WORK);
-//		
-//		addField(intent, Insert.COMPANY, person.dept);
-//		addField(intent, Insert.JOB_TITLE, person.title);
-//		
-//		addField(intent, Insert.POSTAL, person.office);
-//		if(!person.office.isEmpty()) {
-//			intent.putExtra(Insert.POSTAL_TYPE, ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK);
-//		}
-//	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -321,12 +291,10 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			mapBookmarkBtn = (Button) mMainLayout.findViewById(R.id.mapBookmarkBtn);
 			MapItem dbItem = db.retrieveMapItem((String)mMapItem.getItemData().get("id"));
 			if (dbItem == null) {
-				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is not bookmarked");
 				mapBookmarkBtn.setText(R.string.map_bookmark_off);
 				mapBookmarkBtn.setTag("off");
 			}
 			else {
-				Log.d(TAG,"map item " + mMapItem.getItemData().get("id") + " is bookmarked");
 				mapBookmarkBtn.setText(R.string.map_bookmark_on);
 				mapBookmarkBtn.setTag("on");
 			}
@@ -373,7 +341,6 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 				mapDetailsPhotoView.setVisibility(View.GONE);
 			}
 			else {
-				Log.d(TAG,"image url = " + imgUrl);
 				mapDetailsPhotoView.setURL(imgUrl);				
 				mapDetailsPhotosTV.setText("view from " + (String)mMapItem.getItemData().get("viewangle"));
 			}
@@ -417,7 +384,6 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	
 	@Override
 	protected void onOptionSelected(String optionId) {
-		Log.d(TAG,"optionId = " + optionId);
 	    if (optionId.equals(MENU_BOOKMARKS)) {
 			Intent i = new Intent(mContext, MapBookmarksActivity.class); 
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -432,13 +398,6 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	}
 	
 	private void performAction(MapItem item) {
-//	    if(item.getType().equals("email")) {
-//		CommonActions.composeEmail(mContext, item.getValue());
-//	    } else if(item.getType().equals("phone")) {
-//		CommonActions.callPhone(mContext, item.getValue());
-//	    } else if(item.getType().equals("office")) {
-//		CommonActions.searchMap(mContext, item.getValue());
-//	    }
 	}
 	
 	private int getActionIconResourceId(String type) {
@@ -452,60 +411,6 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	    return -1;
 	}
 	
-//    private Handler mapBitmapUiHandler = new Handler() {
-//        @SuppressWarnings("unchecked")
-//		@Override
-//        public void handleMessage(Message msg) {
-//
-//            if (msg.arg1 == MobileWebApi.SUCCESS) {
-//            	try {
-//            		// set bitmap
-//            		mThumbnailView.setImageBitmap((Bitmap)msg.obj);
-//            		//map.getMapData().getMapItems().get(0).setThumbnail((Bitmap)msg.obj);
-//            	}
-//            	catch (Exception e) {
-//            		Log.d(TAG,"mapBitmapUiHander exception");
-//            		Log.d(TAG,e.getMessage());
-//            	}
-//            }
-//            else if (msg.arg1 == MobileWebApi.ERROR) {
-//
-//            } 
-//            else if (msg.arg1 == MobileWebApi.CANCELLED) {
-//
-//            }
-//        }
-//    };
-//
-//	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-//
-//	    public DownloadImageTask(ImageView bmImage) {
-//	    	mThumbnailView = bmImage;
-//	    }
-//
-//	    protected Bitmap doInBackground(String... urls) {
-//	    	Log.d(TAG,urls[0]);
-//	        String urldisplay = urls[0];
-//	        Bitmap mIcon11 = null;
-//	        try {
-//	            InputStream in = new java.net.URL(urldisplay).openStream();
-//	            mIcon11 = BitmapFactory.decodeStream(in);
-//	        } catch (Exception e) {
-//	            Log.e("Error", e.getMessage());
-//	            e.printStackTrace();
-//	        }
-//	        return mIcon11;
-//	    }
-//
-//	    protected void onPostExecute(Bitmap result) {
-//	        if (result == null) {
-//	        	Log.d(TAG,"result is null");
-//	        }
-//	        else {
-//	        	Log.d(TAG,"result height is " + result.getHeight());	        	
-//	        	mThumbnailView.setImageBitmap(result);
-//	        }
-//	    }
-//	}
+
 
 }

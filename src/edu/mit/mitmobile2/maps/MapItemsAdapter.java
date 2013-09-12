@@ -37,10 +37,12 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 	@Override
 	public void updateView(MapItem mapItem, View view) {
 		TwoLineActionRow row = (TwoLineActionRow) view;
-		
 		String displayName = (String)mapItem.getItemData().get("displayName");
 		String name = (String)mapItem.getItemData().get("name");
 		String bldgnum = (String)mapItem.getItemData().get("bldgnum");
+		//Log.d(TAG,"displayName = " + displayName);
+		String room = (String)mapItem.getItemData().get("room");		
+
 		// Building Number searches have categories with parenthesis
 		if (mCategory.contains("(")) {
 			row.setTitle(bldgnum);			
@@ -56,7 +58,6 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		return new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
-				Log.d(TAG,"adapter view click position = " + position + " id = " + id);
 				ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 				MapItem mapItem = getItem(position);
 				mapItems.add(mapItem);

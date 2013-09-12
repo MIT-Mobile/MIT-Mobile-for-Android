@@ -23,7 +23,6 @@ public class MapCursorAdapter extends CursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		final MapItem mi = MapsDB.retrieveMapItem(cursor);
-		Log.d(TAG, "map Item = " + mi.getItemData().get("displayName"));
 		mMapAdapterHelper.populateView(view, mi, true);
 	}
 	

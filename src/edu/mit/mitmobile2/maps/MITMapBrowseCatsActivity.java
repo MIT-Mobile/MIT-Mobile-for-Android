@@ -102,7 +102,6 @@ public class MITMapBrowseCatsActivity extends NewModuleActivity {
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View row, int position, long id) {
-				Log.d(TAG,"click position = " + position + " id = " + id);
 				Intent i;
 				Global.curSubCats = cats.get(position).subcategories;
 				if (Global.curSubCats.size()<1) {

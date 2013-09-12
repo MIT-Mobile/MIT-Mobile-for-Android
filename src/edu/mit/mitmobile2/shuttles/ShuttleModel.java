@@ -389,7 +389,7 @@ public class ShuttleModel {
 					stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete;
 				}
 			} else {
-				stopItem.symbol = R.drawable.shuttle_off;
+				stopItem.symbol = R.drawable.map_pin_shuttle_stop_complete;
 			}
 
 			stopItem.getItemData().put("displayName", stop.title);

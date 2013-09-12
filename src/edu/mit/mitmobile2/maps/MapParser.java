@@ -51,7 +51,6 @@ public class MapParser {
 			}
 			
 			JSONArray array = jobject.getJSONArray("features");
-			Log.d("MITMapActivity","num features = " + array.length());
 			for (int i = 0; i < array.length(); i++) {
 				JSONObject map = array.getJSONObject(i);
 				MapFeatureLayer layer = new MapFeatureLayer();
@@ -67,13 +66,11 @@ public class MapParser {
 		catch (JSONException e) {
 			Log.d(TAG,"JSON exception " + e.getMessage());				
 		}
-		Log.d(TAG,"class = " + mapServerData.getClass());
 		return mapServerData;
 	}
 	
 	public static List<MapItem> parseMapItems(JSONArray jArray) throws JSONException {
-	
-		Log.d(TAG,jArray.length() + " map items in JSONArray");
+		
 		ArrayList<MapItem> mapItems = new ArrayList<MapItem>();
 		try {
 			for(int i = 0; i < jArray.length(); i++) {
@@ -86,8 +83,11 @@ public class MapParser {
 		}
 		
 		return mapItems;
+		
 	}
+
 	
+
 	public static MapItem parseMapItem(JSONObject jItem) throws JSONException {
 		
 		
@@ -129,8 +129,7 @@ public class MapParser {
 	        	}
 	        }
 
-	        mi.getItemData().put("displayName",jItem.optString("name",""));
-	        Log.d(TAG,"name = " + jItem.optString("name",""));
+	        mi.getItemData().put("displayName",jItem.optString("displayName",""));
 	        mi.getItemData().put("name", jItem.getString("name"));
 	        mi.getItemData().put("id",jItem.getString("id"));
 	        mi.getItemData().put("street",jItem.optString("street",""));
@@ -150,42 +149,10 @@ public class MapParser {
 
 	        MapPoint mapPoint = new MapPoint(jItem.getDouble("lat_wgs84"),jItem.getDouble("long_wgs84"));
 
-	        Log.d(TAG,"mappoint lat = " + mapPoint.lat_wgs84 + " long = " + mapPoint.long_wgs84);
 	        mi.getMapPoints().add(mapPoint);
-	        	        
-	        Log.d("ZZZ","parseMapItem: mapItem has " + mi.getMapPoints().size() + " points");
-	        //DEBUG itemData
-	        Iterator it = mi.getItemData().entrySet().iterator();
-	        while (it.hasNext()) {
-	            Map.Entry pairs = (Map.Entry)it.next();
-	            Log.d("ZZZ",pairs.getKey() + " = " + pairs.getValue());
-	        }
-	        //DEBUG itemData
-	        
+	        	        	        
 	        return mi;	        
 	}
 
 	
 }
-/*
-[
-{"category":["building"],
-"long_wgs84":-71.083463199999997,
-"name":"Badger Building",
-"lat_wgs84":42.362749229999999,
-"id":"object-E70",
-"bldgimg":"http://web.mit.edu/campus-map/objimgs/object-E70.jpg",
-"snippets":["Laboratory for Financial Engineering"],
-"street":"1 Broadway, (8th FL)",
-"bldgnum":"E70",
-"floorplans":["8"],
-"mailing":"77 Massachusetts Avenue",
-"viewangle":"west side",
-"contents":[
-{"url":"http://lfe.mit.edu/","name":"Laboratory for Financial Engineering"},
-{"url":"http://web.mit.edu/workplacecenter/","name":"Workplace Center, MIT","altname":["MIT Workplace Center"]},
-{"url":"http://ocw.mit.edu/","name":"OpenCourseWare (OCW)"}]},
-
-
-{"category":
-*/

@@ -456,13 +456,6 @@ public class MITMapView extends MapView  {
 
 			}
 			
-			// create Polygon from 4 points
-			// start of the south west point
-//			Log.d(TAG,"fitMapItems minLat = " + minLat);
-//			Log.d(TAG,"fitMapItems maxLat = " + maxLat);
-//			Log.d(TAG,"fitMapItems minLong = " + minLong);
-//			Log.d(TAG,"fitMapItems maxLong = " + maxLong);
-
 			Point SW = new Point(minLong,minLat);
 			Point NW = new Point(minLong,maxLat);
 			Point NE = new Point(maxLong,maxLat);
@@ -665,7 +658,6 @@ public class MITMapView extends MapView  {
 	        	// create and add the layer
             	ArcGISTiledMapServiceLayer serviceLayer = new ArcGISTiledMapServiceLayer(layer.getUrl());
             	serviceLayer.setName(layer.getLayerIdentifier());
-            	Log.d(TAG,"adding service layer " + serviceLayer.getName());
                 addMapLayer(serviceLayer, serviceLayer.getName());
       	
 	        }
@@ -688,17 +680,16 @@ public class MITMapView extends MapView  {
 	        	// create and add the layer
             	GraphicsLayer graphicsLayer = new GraphicsLayer();
             	graphicsLayer.setName(layerName);
-            	Log.d(TAG,"adding graphics layer " + layerName);
                 graphicsLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
                     public void onStatusChanged(Object source, STATUS status) {
                         if (OnStatusChangedListener.STATUS.INITIALIZED == status){
                         	Log.d(TAG,source.getClass().getName() + " " +  ((GraphicsLayer)source).getName() + " is initialized");
                         	if (baseLayersLoaded) {
-                        		Log.d(TAG,"all base layers loaded, ready to add graphics");
+                        		//Log.d(TAG,"all base layers loaded, ready to add graphics");
                         		processMapItems(layerName);
                         	}
                         	else {
-                        		Log.d(TAG,"still waiting for base layers to load");
+                        		//Log.d(TAG,"still waiting for base layers to load");
                         	}
                         }
                     }
@@ -805,13 +796,13 @@ public class MITMapView extends MapView  {
     private void processMapItems(final String layerName) {
     	this.getCallout().hide();
     	this.pause();
-    	Log.d(TAG,"processing map Items for " + layerName);
+    	//Log.d(TAG,"processing map Items for " + layerName);
 		int gId = 0; // ID of graphic object created by displayMapItem
     	
 		// clear the graphics layer
 		gl = (GraphicsLayer)getMapLayer(layerName);
 		gl.removeAll();
-		Log.d(TAG,"clearing graphics on layer " + layerName);
+		//Log.d(TAG,"clearing graphics on layer " + layerName);
 		// get MapGraphicsLayer
 		MapGraphicsLayer mapGraphicsLayer = mao.getGraphicsLayers().get(layerName);
 		ArrayList<MapItem> mapItems = mapGraphicsLayer.getMapItems();
@@ -819,7 +810,6 @@ public class MITMapView extends MapView  {
 		// sort map items by weight of  x and y coords
 		Collections.sort(mapItems, new CustomComparator());
 		
-		Log.d(TAG,"num map items = " + mapItems.size());
     	for (int i = 0; i < mapItems.size(); i++) {
     		try {
 	    		MapItem mapItem = mapItems.get(i);

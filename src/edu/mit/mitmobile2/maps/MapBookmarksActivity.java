@@ -85,7 +85,6 @@ public class MapBookmarksActivity extends NewModuleActivity {
 	@Override
 	protected List<MITMenuItem> getSecondaryMenuItems() {
 		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		Log.d(TAG,"mapItems size = " + mapItems.size());
 		if (mapItems.size() > 0) {
 			items.add(new MITMenuItem(MENU_CLEAR_BOOKMARKS, "Clear Bookmarks"));
 		}
@@ -202,9 +201,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
             			map.addMapItems(mapItems);
             			map.fitMapItems();
             		}
-            		Log.d(TAG,mapItems.size() + " mapItems before updateUI");
             		updateUI();
-            		Log.d(TAG,mapItems.size() + " mapItems after updateUI");
             	}
             	catch (Exception e) {
             		Log.d(TAG,"getBookmarksHandler exception");
