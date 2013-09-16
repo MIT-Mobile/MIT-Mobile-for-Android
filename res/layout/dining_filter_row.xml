@@ -20,6 +20,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/flagIconIV"
         android:paddingLeft="@dimen/standardPadding"
+        android:textColor="#ff222222"
         />
   
     <ImageView 
