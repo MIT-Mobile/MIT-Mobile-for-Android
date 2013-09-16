@@ -767,19 +767,20 @@ public class DiningModel {
 		}
 		
 		public List<DailyMeals> getDailyMealsForCurrentWeek(Calendar day) {
-			int dayOfWeek = day.get(Calendar.DAY_OF_WEEK) - 1;  //subtract 1 so Sunday is 0
+			int dayOfWeek = (day.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7;  //monday should be zero
 			long millisInDay = 60 * 60 * 24 * 1000;
 			long millisFromStartOfWeek = dayOfWeek * millisInDay; //number of millis in day times day of week
 			long millisToEndOfWeek = (7 - dayOfWeek) * millisInDay;
-			GregorianCalendar startOfWeek = new GregorianCalendar();
+			
+			GregorianCalendar startOfWeek = new GregorianCalendar();			
 			GregorianCalendar endOfWeek = new GregorianCalendar();
 			startOfWeek.setTimeInMillis(day.getTimeInMillis() - millisFromStartOfWeek);
-			endOfWeek.setTimeInMillis(day.getTimeInMillis() - millisToEndOfWeek);
+			endOfWeek.setTimeInMillis(day.getTimeInMillis() + millisToEndOfWeek);
 			
 			ArrayList<DailyMeals> mealsInWeek = new ArrayList<DailyMeals>();
 			for (DailyMeals mealDay : mDailyMealsList) {
 				if (	compareDates(mealDay.getDay(), startOfWeek) >= 0 &&		// compare startOfWeek
-						compareDates(endOfWeek, mealDay.getDay()) <= 0 ) {		// compare endOfWeek
+						compareDates(mealDay.getDay(), endOfWeek) <= 0 ) {		// compare endOfWeek
 					// if within this week add to weekly list
 					mealsInWeek.add(mealDay);
 				}
