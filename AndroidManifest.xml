@@ -6,11 +6,36 @@
       android:versionName="2.3.3"
       >
 
+    <!-- targetSdkVersion must remain < 11 in order for the menu to work correctly on 4.0+ devices -->
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="10"></uses-sdk>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+
+    <!-- Only this application can receive the messages and registration result -->
+    <permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" />
+
+    <!-- This app has permission to register and receive message -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+
     <application android:label="@string/app_name"
                  android:name=".Global"
                  android:icon="@drawable/mit_mobile_icon"
                  android:theme="@style/Main"
-                 android:hardwareAccelerated="true">
+                 android:hardwareAccelerated="true"
+                 android:allowBackup="true">
 
         <activity android:name=".HomeScreenActivity"
                   android:screenOrientation="portrait"
@@ -297,30 +322,5 @@
         <activity android:name=".links.LinksActivity"></activity>
 
     </application>
-
-
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"></uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
-
-    <!-- targetSdkVersion must remain < 11 in order for the menu to work correctly on 4.0+ devices -->
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="10"></uses-sdk>
-
-    <!-- Only this application can receive the messages and registration result -->
-    <permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="edu.mit.mitmobile2.permission.C2D_MESSAGE" />
-
-    <!-- This app has permission to register and receive message -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
-    <uses-feature android:name="android.hardware.telephony" android:required="false"/>
 
 </manifest>
