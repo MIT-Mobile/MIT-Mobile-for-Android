@@ -194,7 +194,11 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 				title = "Other";
 			} else {
 				String buildingName = getBuildingName(buildingNumber);
-				title = buildingNumber + " - " + buildingName;
+				if (buildingName != null) {
+					title = buildingNumber + " - " + buildingName;
+				} else {
+					title = buildingNumber;
+				}
 			}
 			
 			populateDiningHallRows(R.id.diningHomeRetailContent, halls, title);
