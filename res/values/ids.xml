@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
   <!-- Messages IDs -->
   <item type="id" name="auto_focus"/>
   <item type="id" name="decode"/>

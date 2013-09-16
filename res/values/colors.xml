@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
   <color name="hold_ready_text">#007f00</color>
   <color name="contents_text">#ff000000</color>
   <color name="encode_view">#ffffffff</color>

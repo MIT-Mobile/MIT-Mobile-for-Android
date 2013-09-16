@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 	<string name="libraryTopicsTitle">Select a topic area</string>
     <string-array name="libraryTopics">
         <item>General</item>
