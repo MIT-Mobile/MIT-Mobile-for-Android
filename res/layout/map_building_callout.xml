@@ -8,4 +8,6 @@
             android:textSize="16sp"
             android:paddingLeft="@dimen/horizontalPadding"
             android:paddingRight="@dimen/horizontalPadding"
+            android:paddingTop="@dimen/verticalPadding"
+            android:paddingBottom="@dimen/verticalPadding"            
                />
