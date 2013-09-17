@@ -136,7 +136,9 @@ public class MapParser {
 	        mi.getItemData().put("viewangle",jItem.optString("viewangle",""));
 	        mi.getItemData().put("bldgimg",jItem.optString("bldgimg",""));
 	        mi.getItemData().put("bldgnum",jItem.optString("bldgnum",""));
-
+Log.d(TAG,"displayName = " + mi.getItemData().get("displayName"));
+Log.d(TAG,"name = " + mi.getItemData().get("name"));
+Log.d(TAG,"bldgnum = " + mi.getItemData().get("bldgnum"));
 	        
 	        temp = jItem.optJSONArray("snippets");
 	        if (temp!=null) {

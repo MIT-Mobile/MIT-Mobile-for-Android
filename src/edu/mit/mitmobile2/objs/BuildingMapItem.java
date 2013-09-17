@@ -5,10 +5,13 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,33 +55,26 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	@Override
 	public View getCallout(final Context mContext, final ArrayList<? extends MapItem> mapItems, final int position) {
 
-		Log.d(TAG,"position = " + position);
-		Log.d(TAG,"BuildingMapItem getCallout");
-		Log.d(TAG,"map item index = " + position);
-		Log.d(TAG,"displayName = " + this.getItemData().get("displayName"));
-		String buildingName = (String)this.getItemData().get("displayName");
-		String buildingNumber = (String)this.getItemData().get("bldgnum");
-
    		LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_building_callout, null);
+		LinearLayout calloutLayout = (LinearLayout) inflater.inflate(R.layout.map_item_callout, null);
+		TextView calloutView = (TextView) inflater.inflate(R.layout.map_building_callout, null);
+		calloutView.setText(this.getMapItemName());
+		calloutLayout.addView(calloutView);		
+		calloutLayout.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 		
-		TextView calloutBuildingNumber = (TextView)calloutLayout.findViewById(R.id.callout_building_number);
-		calloutBuildingNumber.setText(buildingNumber);
-
-		TextView calloutBuildingName = (TextView)calloutLayout.findViewById(R.id.callout_building_name);
-		calloutBuildingName.setText(buildingName);
-		
-		if (buildingNumber.equalsIgnoreCase(buildingName)) {
-			calloutBuildingName.setVisibility(View.GONE);
-		}
-
 		calloutLayout.setOnClickListener(new View.OnClickListener() {
 		
-	            @SuppressWarnings("unchecked")
+			@SuppressWarnings("unchecked")
 				@Override
 	            public void onClick(View v) {
 	            	Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
-	            	//i.putExtra(MITMapActivity.MAP_DATA_KEY, mapItems);
 	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
 	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
 	            	mContext.startActivity(i);
@@ -86,6 +82,29 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	        });
 		
 		return calloutLayout;
+	}
+
+	@Override
+	public String getMapItemName() {
+		String displayName = (String)this.getItemData().get("displayName");
+		String name = (String)this.getItemData().get("name");
+		String bldgnum = (String)this.getItemData().get("bldgnum");
+		String calloutText = "";
+		// Building # but no name
+		if (name.equals("Building " + bldgnum)) {
+			calloutText = name;			
+		}
+
+		// separate building number and name
+		else if ( (bldgnum.length() > 0) && (!name.equals("Building " + bldgnum))) {
+			calloutText = "Building " + bldgnum + " (" + name + ")";
+		}
+        
+		// name but no building number
+		else {
+			calloutText = displayName;			
+		}
+		return calloutText;
 	}
 
 	@Override

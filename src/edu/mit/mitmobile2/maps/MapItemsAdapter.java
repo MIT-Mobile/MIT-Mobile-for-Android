@@ -25,6 +25,7 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 		super(context, items, R.layout.boring_action_row);
 		mMapItems = items;
 		mContext = context;
+		mCategory = "";
 	}
 
 	public MapItemsAdapter(Context context, List<MapItem> items, String category) {
@@ -37,20 +38,24 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 	@Override
 	public void updateView(MapItem mapItem, View view) {
 		TwoLineActionRow row = (TwoLineActionRow) view;
-		String displayName = (String)mapItem.getItemData().get("displayName");
-		String name = (String)mapItem.getItemData().get("name");
-		String bldgnum = (String)mapItem.getItemData().get("bldgnum");
-		//Log.d(TAG,"displayName = " + displayName);
-		String room = (String)mapItem.getItemData().get("room");		
-
-		// Building Number searches have categories with parenthesis
-		if (mCategory.contains("(")) {
-			row.setTitle(bldgnum);			
+		if (mCategory.equals("")) {
+			row.setTitle(mapItem.getMapItemName());
 		}
-		else if(displayName != null && !displayName.equals("")) {
-			row.setTitle(displayName);
-		} else {
-			row.setTitle(name);
+		else {
+			String displayName = (String)mapItem.getItemData().get("displayName");
+			String name = (String)mapItem.getItemData().get("name");
+			String bldgnum = (String)mapItem.getItemData().get("bldgnum");
+			String room = (String)mapItem.getItemData().get("room");		
+	
+			// Building Number searches have categories with parenthesis
+			if (mCategory.contains("(")) {
+				row.setTitle(bldgnum);			
+			}
+			else if(displayName != null && !displayName.equals("")) {
+				row.setTitle(displayName);
+			} else {
+				row.setTitle(name);
+			}
 		}
 	}
 	

@@ -48,7 +48,11 @@ public abstract class MapItem {
 	public abstract View getCallout(Context mContext, MapItem mapItem);
 	public abstract View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems);
 	public abstract View getCallout(Context mContext, ArrayList<? extends MapItem> mapItems, int position);
-
+	
+	public String getMapItemName() {
+		return "";
+	}
+	
 	//public abstract void initTimer(Context mContext);
 	
 	protected String mapItemClass; // this is a hack to recreate MapItem objects that are extended from the abstract class

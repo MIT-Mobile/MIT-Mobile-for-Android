@@ -24,6 +24,7 @@ public class MapItemArrayAdapter extends SimpleArrayAdapter<MapItem> {
 		
 		// for subcategories we want the root category
 		// to be call "All categoryName"
-		actionRow.setTitle((String)item.getItemData().get("displayName"));
+		//actionRow.setTitle((String)item.getItemData().get("displayName"));
+		actionRow.setTitle((String)item.getMapItemName());		
 	}	
 }
