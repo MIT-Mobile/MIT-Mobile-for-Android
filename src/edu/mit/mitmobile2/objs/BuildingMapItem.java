@@ -102,7 +102,12 @@ public class BuildingMapItem extends MapItem implements Parcelable {
         
 		// name but no building number
 		else {
-			calloutText = displayName;			
+			if (displayName != null && !displayName.equals("")) {
+				calloutText = displayName;			
+			}
+			else {
+				calloutText = name;
+			}
 		}
 		return calloutText;
 	}
