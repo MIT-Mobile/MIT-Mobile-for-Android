@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -251,8 +252,9 @@ public class DiningRetailInfoActivity extends NewModuleActivity {
 				items.add(item);
 				previousItem = item;
 			} else {
+				int dayDiff = (7 + hours.getDay().get(Calendar.DAY_OF_WEEK) - previousItem.dayEnd.getDay().get(Calendar.DAY_OF_WEEK)) % 7;
 				if (previousItem.dayEnd.getScheduleSpan().equals(hours.getScheduleSpan()) &&
-						hours.getDay().get(Calendar.DAY_OF_WEEK) - previousItem.dayEnd.getDay().get(Calendar.DAY_OF_WEEK) == 1) {
+						dayDiff == 1) {
 					// schedule span is equal update previous item daySpan and days are adjacent
 					items.get(items.size() - 1).dayEnd = hours;
 					previousItem = items.get(items.size() - 1);

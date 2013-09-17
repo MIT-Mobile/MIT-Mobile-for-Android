@@ -26,6 +26,7 @@
 	  	android:text="Rotate device to compare venues"
 	  	android:padding="@dimen/standardPadding"
 	  	android:gravity="center_vertical"
+	  	android:textColor="#CC222222"
 	  	style="@style/ListItemSecondary"
 	  	/>
 	  	

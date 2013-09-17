@@ -23,7 +23,7 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 	private DiningMealIterator mMealIterator;
 	
 	private String mCurrentDateString;
-	private String mTommorowDateString;
+	private String mTomorrowDateString;
 	private String mYesterdayDateString;
 	
 	private DateFormat mFormat;
@@ -38,10 +38,10 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 		mFormat.setCalendar(new GregorianCalendar());
 		mCurrentDateString = mFormat.format(mCurrentDate);
 		
-		Calendar tomorow = new GregorianCalendar();
-		tomorow.setTime(mCurrentDate);
-		tomorow.add(Calendar.DATE, 1);
-		mTommorowDateString =  mFormat.format(tomorow.getTime());
+		Calendar tomorrow = new GregorianCalendar();
+		tomorrow.setTime(mCurrentDate);
+		tomorrow.add(Calendar.DATE, 1);
+		mTomorrowDateString =  mFormat.format(tomorrow.getTime());
 		
 		Calendar yesterday = new GregorianCalendar();
 		yesterday.setTime(mCurrentDate);
@@ -70,8 +70,8 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 		// check for today/tomorrow/yesterday
 		if (mCurrentDateString.equals(dateString)) {
 			dayName = "Today";
-		} else if (mTommorowDateString.equals(dateString)) {
-			dayName = "Tomorow";
+		} else if (mTomorrowDateString.equals(dateString)) {
+			dayName = "Tomorrow";
 		} else if (mYesterdayDateString.equals(dateString)) {
 			dayName = "Yesterday";
 		}
