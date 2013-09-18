@@ -2,8 +2,12 @@ package edu.mit.mitmobile2.news;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +23,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -34,12 +41,18 @@ import android.widget.Toast;
 import edu.mit.mitmobile2.ConnectionWrapper;
 import edu.mit.mitmobile2.ConnectionWrapper.ConnectionInterface;
 import edu.mit.mitmobile2.ConnectionWrapper.ErrorType;
+import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.FixedCache;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.about.Config;
+import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.objs.NewsItem.Image;
+import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.SearchResults;
+import edu.mit.mitmobile2.objs.EventDetailsItem.Coord;
+import edu.mit.mitmobile2.shuttles.RoutesParser;
 
 public class NewsModel {
 	// categorys
@@ -92,79 +105,6 @@ public class NewsModel {
 		}
 		
 		return null;
-	}
-	
-	public boolean fetchCategory(final int category, final Integer story_id, final boolean silent, final Handler uiHandler) {				
-		
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		if (category != 0)
-			parameters.put("channel", Integer.toString(category));
-		
-		MobileWebApi webApi = new MobileWebApi(false, !silent, "News", mContext, uiHandler);
-		boolean isStarted = webApi.requestRaw(story_id != null ? NEWS_PATH + "/" + story_id.toString() : NEWS_PATH, parameters, new MobileWebApi.RawResponseListener(null, null) {			
-			@Override
-			public void onError() {
-				Message message = Message.obtain();
-				message.arg1 = FETCH_FAILED;
-				uiHandler.sendMessage(message);
-			}
-			
-			@Override
-			public void onResponse(final InputStream stream) {
-				
-				// parsing takes long enough that we want to do it 
-				// on a separate thread
-				new Thread() {
-					
-					@Override
-					public void run() {
-					
-						synchronized(mNewsDB) {
-							List<NewsItem> newsItems = parseNewsItems(stream);
-				
-							if(newsItems == null) {
-								onError();
-								return;
-							}
-							
-							// use a transaction to group all the db operations
-							// insures consistency (and actually seems to give a huge performance boast)
-							mNewsDB.startTransaction();
-							
-							if(story_id == null && !newsItems.isEmpty()) {
-								// new stories will replace old stories
-								if(category == NewsModel.TOP_NEWS) {
-									clearAllStories();								
-								} else {
-									clearCategory(category);
-								}
-							}
-				
-							for(NewsItem item : newsItems) {
-								// this is a little tricky (for most cases we only want
-								// to use the category_id that was used in the web request
-								// however in the case of the initial query of top news
-								// we also want to respect/use the category Id supplied by the server
-								// this is just so we can have a preview for all categories even before
-								// there first official load of that category
-								if( !(category == TOP_NEWS && story_id == null) ) {
-									item.categories.clear();
-								} 
-								item.categories.add(category);
-								mNewsDB.saveNewsItem(item, true);
-							}
-							mNewsDB.endTransaction();
-							markCategoryAsFresh(category);
-							
-						}
-				
-						uiHandler.sendMessage(messageFetchSuccess());
-					}
-				}.start();
-			}
-		});	
-		
-		return isStarted;
 	}
 	
 	public void setStoryBookmarkStatus(final NewsItem newsItem, final boolean bookmarkStatus) {
@@ -373,7 +313,7 @@ public class NewsModel {
 							}
 						}
 						
-						if(newsItem.thumbURL == null) {
+						if(newsItem.thumbURL == null || newsItem.thumbURL.equals("")) {
 								// no image to download, hence nothing to do
 								return;
 						}
@@ -464,56 +404,6 @@ public class NewsModel {
 		return message;
 	}
 	
-	public void executeSearch(final String searchTerm, final Handler uiHandler, int start) {
-		// check cache
-		if(searchCache.get(searchTerm) != null) {
-			SearchResults<NewsItem> searchResults = searchCache.get(searchTerm);
-			if (searchResults.getResultsList().size() > start) {
-				MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
-				return;
-			}
-		}
-		
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("q", searchTerm);
-		params.put("start", String.valueOf(start));
-		params.put("limit", "50");
-		
-		String query = MobileWebApi.query(params);
-		
-		ConnectionWrapper connection = new ConnectionWrapper(mContext);
-		String searchURL = "http://" + Global.getMobileWebDomain() + BASE_PATH + NEWS_PATH;
-		connection.openURL(searchURL + "?" + query, 
-			new ConnectionInterface() {
-				@Override
-				public void onError(ErrorType error) {
-					MobileWebApi.sendErrorMessage(uiHandler);					
-				}
-
-				@Override
-				public void onResponse(final InputStream stream) {
-					new Thread() {
-						@Override
-						public void run() {
-							SearchResults<NewsItem> results = parseNewsSearchResults(stream, searchTerm);
-							if (results != null) {
-								SearchResults<NewsItem> lastResults = searchCache.get(searchTerm);
-								if (null != lastResults) {
-									lastResults.addMoreResults(results.getResultsList());
-									results = lastResults;
-								}
-								searchCache.put(searchTerm, results);
-								MobileWebApi.sendSuccessMessage(uiHandler, results);
-							} else {
-								MobileWebApi.sendErrorMessage(uiHandler);
-							}
-						}
-					}.start();
-				}
-			}, "GET", null
-		);
-	}
-	
 	public List<NewsItem> executeLocalSearch(String searchTerm) {
 		return searchCache.get(searchTerm).getResultsList();
 	}
@@ -531,32 +421,223 @@ public class NewsModel {
 		}
 	}
 	
-	private List<NewsItem> parseNewsItems(InputStream stream) {
-		try {
-			
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser parser = factory.newSAXParser();
-			NewsHandler handler = new NewsHandler();
-			parser.parse(stream, handler);
-			return handler.getNewsItems();
-			
-		} catch (Exception e) {
-			//throw new RuntimeException(e);
-			Log.d("NewsParser", "RuntimeException");
-			e.printStackTrace();
-		} 
+	
+	//////////////new////////////////////////
+	
+	public boolean fetchCategory(final int category, final Integer story_id, final boolean silent, final Handler uiHandler) {
 		
-		return null;
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("category", Integer.toString(category));
+		
+		
+		MobileWebApi webApi = new MobileWebApi(false, !silent, "News", mContext, uiHandler);
+		boolean isStarted = webApi.requestJSONArray(story_id != null ? NEWS_PATH + "/" + story_id.toString() : NEWS_PATH, parameters, 
+				new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+					
+			@Override
+			public void onResponse(final JSONArray array) throws ServerResponseException, JSONException {
+				new Thread() {
+						
+					@Override
+					public void run() {
+						
+						synchronized(mNewsDB) {
+							List<NewsItem> newsItems = parseDetailArray(array);
+							
+							mNewsDB.startTransaction();
+							
+							if(story_id == null && !newsItems.isEmpty()) {
+								if(category == NewsModel.TOP_NEWS) {
+									clearAllStories();								
+								} else {
+									clearCategory(category);
+								}
+							}
+	
+							for(NewsItem item : newsItems) {
+								if( !(category == TOP_NEWS && story_id == null) ) {
+									item.categories.clear();
+								} 
+								item.categories.add(category);
+								mNewsDB.saveNewsItem(item, true);
+							}
+							mNewsDB.endTransaction();
+							markCategoryAsFresh(category);
+	
+						}
+					
+						uiHandler.sendMessage(messageFetchSuccess());
+					}
+				}.start();
+			}
+		});	
+		
+		return isStarted;
+	}
+
+	private static List<NewsItem> parseDetailArray(JSONArray jArray) {
+		ArrayList<NewsItem> events = new ArrayList<NewsItem>();
+		for(int i = 0; i < jArray.length(); i++) {
+			try {
+				JSONObject jItem = (JSONObject) jArray.get(i);
+				events.add(parseDetailItem(jItem));
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Failed to parsed EventItem");
+			}					
+		}	
+		return events;		
 	}
 	
-	private SearchResults<NewsItem> parseNewsSearchResults(InputStream stream, String searchTerm) {
+	private static NewsItem parseDetailItem(JSONObject jItem) {
+		NewsItem item = new NewsItem();
+        
+        try {
+        	item.story_id = jItem.getInt("id");
+        	item.link = jItem.getString("source_url");
+        	item.title = jItem.getString("title");
+        	item.author = jItem.getString("author");
+        	item.description = jItem.getString("dek");
+        	
+        	if (jItem.has("categories")) {
+	        	JSONArray categories_array = jItem.getJSONArray("categories");
+	        	HashSet<Integer> categories = new HashSet<Integer>();
+	        	
+	        	for(int j=0;j<categories_array.length();j++)
+	        		categories.add(Integer.parseInt(categories_array.getString(j)));
+	        	
+	        	item.categories = categories;
+        	}
+        	
+        	item.featured = jItem.getBoolean("featured");
+        	item.body = jItem.getString("body");
+        	
+        	Image img = new Image();
+        	JSONObject otherImg;
+        	Image imgother;
+        	
+        	if (jItem.has("images")) {
+        		
+        		Object images = jItem.get("images");
+
+	        	JSONArray imagesJsonArray = (JSONArray)images;
+	        	JSONObject image = imagesJsonArray.getJSONObject(0);
+        	
+
+	        	ArrayList<Image> otherImgList = new ArrayList<Image>(imagesJsonArray.length()-1);
+	        		
+	        	if (imagesJsonArray.length() > 1) {
+			    	for (int s = 1; s < imagesJsonArray.length(); s++) {
+			    		otherImg = imagesJsonArray.getJSONObject(s);
+			    		imgother = new Image();
+			    		if (otherImg.has("caption"))
+			    			imgother.imageCaption = otherImg.getString("caption");
+			       		if (otherImg.has("credits"))
+			       			imgother.imageCredits = otherImg.getString("credits");    			
+			       			
+			       		JSONObject representations = otherImg.getJSONObject("representations");
+			       		
+			       		if (representations.has("full")) {
+			       			JSONObject full = representations.getJSONObject("full");
+			       			imgother.fullURL = full.getString("url");
+			       		}
+			       		otherImgList.add(imgother);
+			    	}
+			    	item.otherImgs = otherImgList;
+	        	}
+	        	        	
+				if (image.has("caption"))
+	    			img.imageCaption = image.getString("caption");
+	    		if (image.has("credits"))
+	    			img.imageCredits = image.getString("credits");    			
+	    			
+	    		JSONObject representations = image.getJSONObject("representations");
+	    		if (representations.has("thumb")) {
+	    			JSONObject thumb = representations.getJSONObject("thumb");
+	    			item.thumbURL = thumb.getString("url");
+	    		}
+	
+	    		if (representations.has("small")) {
+	    			JSONObject small = representations.getJSONObject("small");
+	    			img.smallURL = small.getString("url");
+	    		}
+	    		if (representations.has("full")) {
+	    			JSONObject full = representations.getJSONObject("full");
+	    			img.fullURL = full.getString("url");
+	    		}
+	        	
+	    		item.img = img;
+        	}
+        	
+        	try {
+				item.postDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(jItem.getString("published_at"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	        
+    	} catch (JSONException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to parsed EventItem");
+		}
+    	
+        return item;
+	}
+	
+	public void executeSearch(final String searchTerm, final Handler uiHandler, int start) {
+		// check cache
+		if(searchCache.get(searchTerm) != null) {
+			SearchResults<NewsItem> searchResults = searchCache.get(searchTerm);
+			if (searchResults.getResultsList().size() > start) {
+				MobileWebApi.sendSuccessMessage(uiHandler, searchResults);
+				return;
+			}
+		}
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("q", searchTerm);
+		params.put("offset", String.valueOf(start));
+		params.put("limit", "50");
+		
+		
+		MobileWebApi webApi = new MobileWebApi(false, false, "News", mContext, uiHandler);
+		webApi.requestJSONObject(NEWS_PATH, params, 
+				new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+					
+			@Override
+			public void onResponse(final JSONObject object) throws ServerResponseException, JSONException {	
+					new Thread() {
+						@Override
+						public void run() {
+							SearchResults<NewsItem> results = parseNewsSearchResults(object, searchTerm);
+							if (results != null) {
+								SearchResults<NewsItem> lastResults = searchCache.get(searchTerm);
+								if (null != lastResults) {
+									lastResults.addMoreResults(results.getResultsList());
+									results = lastResults;
+								}
+								searchCache.put(searchTerm, results);
+								MobileWebApi.sendSuccessMessage(uiHandler, results);
+							} else {
+								MobileWebApi.sendErrorMessage(uiHandler);
+							}
+						}
+					}.start();
+			}
+		});
+	}
+	
+	private SearchResults<NewsItem> parseNewsSearchResults(JSONObject object, String searchTerm) {
 		try {
-			
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser parser = factory.newSAXParser();
 			NewsHandler handler = new NewsHandler();
-			parser.parse(stream, handler);
+			List<NewsItem> news = parseDetailArray(object.optJSONArray("items"));
+			handler.setNewsItems(news);
+			handler.settotalResults(object.getInt("totalResult"));
 			SearchResults<NewsItem> results = new SearchResults<NewsItem>(searchTerm, handler.getNewsItems());
+			
+			int a = handler.getNewsItems().size();
 			if(handler.getNewsItems().size() != handler.totalResults()) {
 				results.markAsPartialWithTotalCount(handler.totalResults());
 			}

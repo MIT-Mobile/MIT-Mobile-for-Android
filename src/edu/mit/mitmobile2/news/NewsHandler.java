@@ -53,8 +53,16 @@ public class NewsHandler extends DefaultHandler{
 	        return this.NewsItems;
 	    }
 	    
+	    public List<NewsItem> setNewsItems(List<NewsItem> news){
+	    	return this.NewsItems = news;
+	    }
+	    
 	    public int totalResults() {
 	    	return mTotalResults;
+	    }
+	    
+	    public void settotalResults(int total) {
+	    	mTotalResults = total;
 	    }
 	    
 	    @Override
