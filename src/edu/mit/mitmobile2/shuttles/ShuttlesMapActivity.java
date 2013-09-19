@@ -16,9 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ListView;
-
-import com.esri.android.map.GraphicsLayer;
-
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -26,18 +23,10 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
-import edu.mit.mitmobile2.maps.MapGraphicsLayer;
 import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.MapUpdater;
 import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.objs.RouteItem.Loc;
-import edu.mit.mitmobile2.objs.RouteItem.Stops;
-import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
-import edu.mit.mitmobile2.objs.RouteMapItem;
 import edu.mit.mitmobile2.objs.ShuttleMapUpdater;
-import edu.mit.mitmobile2.objs.StopMapItem;
-import edu.mit.mitmobile2.objs.VehicleMapItem;
 
 public class ShuttlesMapActivity extends NewModuleActivity {
 
@@ -142,7 +131,6 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		super.onResume();
 		Log.d(TAG, "onResume");
 		map.unpause();
-
 	}
 
 	public MapUpdater getMapUpdater() {
@@ -158,6 +146,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		// TODO Auto-generated method stub
 		super.onPause();
 		this.getMapUpdater().stop();
+		map.pause();
 		Log.d(TAG, "onPause()");
 	}
 
@@ -183,6 +172,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	}
 
 	private void displayRoute(String routeId) {
+		Log.d(TAG,"displayRoute");
 		routeItem = new RouteItem();
 		routeItem.route_id = routeId;
 		ShuttleModel.fetchRouteDetails(mContext, routeItem, routeUiHandler);
@@ -216,7 +206,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 					RouteItem updatedRouteItem = ShuttleModel
 							.getUpdatedRoute(routeItem);
 					addShuttleItems(updatedRouteItem);
-					map.syncGraphicsLayers();
+					//map.syncGraphicsLayers();
 					map.fitMapItems();
 				} catch (Exception e) {
 					Log.d(TAG, "mapSearchUiHander exception");
@@ -270,7 +260,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 					map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
 					map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
 					map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);		
-					map.syncGraphicsLayers();
+					//map.syncGraphicsLayers();
 				} catch (Exception e) {
 					Log.d(TAG, "mapSearchUiHander exception");
 					Log.d(TAG, e.getStackTrace().toString());

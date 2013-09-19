@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,7 @@ import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 public class RoutesAsyncListView  extends LinearLayout implements SliderInterface, OnItemClickListener   {
 
+	private static String TAG = "RoutesAsyncListView";
 	Activity mActivity;
 	
 	private List<Stops> mStops;
@@ -60,7 +63,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 	}
 	/****************************************************/
 	void terminate() {
-		cancelUpdateThread = true;		
+		cancelUpdateThread = true;	
 	}
 	
 	/****************************************************/
@@ -107,6 +110,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 				 int refresh_wait = 1000*20;  // refresh every 20 seconds
 		    	 while(!cancelUpdateThread) {
 		    		 // Update routes...
+		    		 Log.d("RoutesAsyncListView","fetchRouteDetails from RoutesAsyncListView");
 		    		 ShuttleModel.fetchRouteDetails(mActivity, ri, routeUpdateHandler);
 		    		 try {
 		    			 Thread.sleep(refresh_wait);

@@ -189,6 +189,7 @@ public class MITMapActivity extends NewModuleActivity {
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
+		map.pause();
 		super.onPause();
 		//Log.d(TAG,"onPause()");
 	}

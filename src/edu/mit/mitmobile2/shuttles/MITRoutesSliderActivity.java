@@ -32,7 +32,8 @@ import edu.mit.mitmobile2.objs.ShuttleMapUpdater;
 import edu.mit.mitmobile2.objs.VehicleMapItem;
 
 public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
-	private RoutesAsyncListView curView;
+	private static final String TAG = "MITRoutesSliderActivity";
+	private static RoutesAsyncListView curView;
 	
 	private int position;
 
@@ -44,7 +45,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	/****************************************************/
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+    	Log.d(TAG,"onCreate()");
     	super.onCreate(savedInstanceState);
         
     	setTitle("MIT Routes");
@@ -58,33 +59,28 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     		position = bundle.getInt(KEY_POSITION, 0);
     	}
     	
-
-//    	getSecondaryMenuItems().add(new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map));
-/*
-    	addMenuItem(new MITMenuItem("LIST_MAP", "", R.drawable.menu_view_as_list));
-    	getSecondaryMenuItems().setOnMITMenuItemListener(new OnMITMenuItemListener() {
-			@Override
-			public void onOptionItemSelected(String optionId) {
-				// TODO Auto-generated method stub
-				if (optionId.equals("LIST_MAP")) {
-					RoutesAsyncListView view = (RoutesAsyncListView) getCurrentCategory();
-					launchShuttleRouteMap(MITRoutesSliderActivity.this, view.ri, view.getStops(), -1);
-				} 
-			}
-		});
-  */  	
     	createViews();
 	}
     /****************************************************/
 	@Override
 	protected void onPause() {
-		if (curView!=null) curView.terminate();
+		for (int x=0; x < ShuttleModel.getSortedRoutes().size(); x++) {
+		    curView = (RoutesAsyncListView) getScreen(x);
+			if (curView!=null) curView.terminate();
+    	}
+		
+		//if (curView!=null) curView.terminate();
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop() {
-		if (curView!=null) curView.terminate();
+		for (int x=0; x < ShuttleModel.getSortedRoutes().size(); x++) {
+		    curView = (RoutesAsyncListView) getScreen(x);
+			if (curView!=null) curView.terminate();
+    	}
+
+		//if (curView!=null) curView.terminate();
 		super.onStop();
 	}
 
@@ -94,6 +90,8 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 		if (curView!=null) curView.onSelected();
 	}
 	
+	
+
 	/****************************************************/
     void createViews() {
 
@@ -115,7 +113,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	@Override
 	public void onPositionChanged(int newPosition, int oldPosition) {
 	    super.onPositionChanged(newPosition, oldPosition);	
-	    
+	    Log.d("ZZZ","onPositionChanged");
 	    if(curView != null) {
 		curView.terminate();
 	    }
@@ -143,6 +141,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	protected void onOptionSelected(String optionId) {
 		// TODO Auto-generated method stub
 		if (optionId.equals("viewmap")) {
+			Log.d(TAG,"viewmap");
 			String routeId = ShuttleModel.getSortedRoutes().get(position).route_id;
 			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), ShuttleModel.getRoute(routeId).stops, getPosition());
 		}

@@ -189,7 +189,6 @@ public class ShuttleModel {
 		routeInfoParameters.put("command", "routeInfo");
 		routeInfoParameters.put("full", "true");
 		routeInfoParameters.put("id", routeItem.route_id);
-		Log.d("ZZZ","route id = " + routeItem.route_id);
 		
 		MobileWebApi webApi = new MobileWebApi(!silent, !silent, "Shuttle Route", context, uiHandler);
 		webApi.requestJSONObject(BASE_PATH, routeInfoParameters, 

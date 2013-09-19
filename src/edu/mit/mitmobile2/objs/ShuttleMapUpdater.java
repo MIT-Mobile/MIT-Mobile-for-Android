@@ -5,33 +5,12 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.esri.android.map.GraphicsLayer;
-import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
-
-import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapView;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MapBaseLayer;
-import edu.mit.mitmobile2.maps.MapData;
-import edu.mit.mitmobile2.maps.MapLayer;
-import edu.mit.mitmobile2.maps.MapServerData;
-import edu.mit.mitmobile2.objs.RouteItem.Loc;
-import edu.mit.mitmobile2.objs.RouteItem.Stops;
-import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
-import edu.mit.mitmobile2.shuttles.MITRoutesSliderActivity;
-import edu.mit.mitmobile2.shuttles.ShuttleModel;
-
 import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
+import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
 public class ShuttleMapUpdater extends MapUpdater {
 
@@ -44,6 +23,7 @@ public class ShuttleMapUpdater extends MapUpdater {
 		Log.d(TAG,"updateMap()");
 		routeItem = new RouteItem();
 		routeItem.route_id = (String)params.get("route_id"); // debug
+		Log.d(TAG,"fetchRouteDetails from ShuttleMapUpdater");
 		ShuttleModel.fetchRouteDetails(mContext, routeItem, uiHandler);
 	}
 

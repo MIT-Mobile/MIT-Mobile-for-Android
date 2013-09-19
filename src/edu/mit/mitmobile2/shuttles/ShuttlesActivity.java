@@ -12,6 +12,7 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.Spannable.Factory;
 import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -36,6 +37,7 @@ import edu.mit.mitmobile2.shuttles.ShuttleRouteArrayAdapter.SectionListItemView;
 
 public class ShuttlesActivity extends NewModuleActivity {
 	
+	private static final String TAG = "ShuttlesActivity";
 	Context ctx;
 	
 	ListView routeListView;
@@ -52,7 +54,7 @@ public class ShuttlesActivity extends NewModuleActivity {
 	/****************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-	
+		Log.d(TAG,"onCreate()");
 		super.onCreate(savedInstanceState);
 		
 		ctx = this;

@@ -73,7 +73,6 @@
                    
         <activity android:name=".maps.MITMapActivity" 
                   android:launchMode="singleTop" 
-                  android:process="map.test"  
                   android:exported="false"
                   android:screenOrientation="portrait" >          
             	  <intent-filter>
@@ -137,8 +136,8 @@
         		android:screenOrientation="portrait"
         		android:label="Shuttles"
         		android:taskAffinity="edu.mit.mitmobile2.shuttles"/>
-        <activity android:name=".shuttles.MITStopsSliderActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".shuttles.MITRoutesSliderActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".shuttles.MITStopsSliderActivity" android:launchMode="singleTop" android:screenOrientation="portrait"/>
+        <activity android:name=".shuttles.MITRoutesSliderActivity" android:launchMode="singleTop" android:screenOrientation="portrait"/>
 		
         <activity android:name=".shuttles.ShuttlesMapActivity" android:launchMode="singleTop" android:configChanges="orientation"/>
         

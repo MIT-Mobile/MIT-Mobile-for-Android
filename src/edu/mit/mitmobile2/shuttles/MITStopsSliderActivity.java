@@ -30,7 +30,7 @@ public class MITStopsSliderActivity extends SliderListNewModuleActivity implemen
 	static public ArrayList<String> stop_ids = new ArrayList<String>(); 
 
 	private int last_pos;
-	private StopsAsyncView curView;
+	private static StopsAsyncView curView;
 
 	protected String routeId,stopId;
 	

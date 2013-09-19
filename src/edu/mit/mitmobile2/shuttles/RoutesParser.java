@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Loc;
@@ -15,6 +17,7 @@ import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
 
 public class RoutesParser {
 
+	final static String TAG = "RoutesParser";
 	public RouteItem ri;
 	
 	public String ROUTES_BASE_URL = "http://" + Global.getMobileWebDomain() + "/api/shuttles/";
@@ -26,6 +29,7 @@ public class RoutesParser {
 	
 	static List<RouteItem> routesParser(JSONArray jsonArray) throws JSONException
 	{
+		Log.d(TAG,"routesParser()");
 		ArrayList<RouteItem> items = new ArrayList<RouteItem>();
 		for(int index=0; index < jsonArray.length(); index++) {
 			JSONObject jsonObject;
@@ -41,7 +45,7 @@ public class RoutesParser {
 	}
 
 	static RouteItem parseJSONRouteObject(JSONObject jItem) throws JSONException{
-		
+		Log.d(TAG,"parseJSONRouteObject()");
             RouteItem routeItem = new RouteItem();
             routeItem.route_id = jItem.getString("route_id");
             routeItem.title    = jItem.getString("title");
@@ -75,6 +79,7 @@ public class RoutesParser {
 	}
 	
 	static List<Stops> parseJSONStopsArray(JSONObject jsonObject) throws JSONException {		
+		Log.d(TAG,"parseJSONStopsArray()");
 		
 			ArrayList<Stops> stops = new ArrayList<Stops>();
 			JSONArray jStops = jsonObject.getJSONArray("stops");
