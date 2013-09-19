@@ -65,9 +65,11 @@ public class MITMapView extends MapView  {
 	private Context mContext;
 	protected LocationService ls;
 	protected boolean baseLayersLoaded = false;
+	public boolean autoPause = true; // pause and unpause the map for each processMapItems call, set to false to manually pause/unpause map, useful when drawing multiple  layeres
 	public static final String MAP_ITEMS_KEY = "map_items";
 	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
 
+	
 	public MITMapView(Context context) {
 		super(context);
 		mContext = context;
@@ -80,6 +82,7 @@ public class MITMapView extends MapView  {
 		init(context);
 	}
 
+	
 	public void addMAOBaseLayer(MapBaseLayer mapBaseLayer) {
 		mao.getBaseLayers().put(mapBaseLayer.getLayerIdentifier(), mapBaseLayer);
 	}
@@ -716,6 +719,7 @@ public class MITMapView extends MapView  {
 		if (calloutItems.size() == 1 && this.showCallout) {
 			displayCallout(mContext, calloutItems.get(0));
 		}
+		this.unpause();
     }
 
     final class MyOnStatusChangedListener implements OnStatusChangedListener {
@@ -795,7 +799,9 @@ public class MITMapView extends MapView  {
 	
     private void processMapItems(final String layerName) {
     	this.getCallout().hide();
-    	this.pause();
+    	if (this.autoPause) {
+    		this.pause();
+    	}
     	//Log.d(TAG,"processing map Items for " + layerName);
 		int gId = 0; // ID of graphic object created by displayMapItem
     	
@@ -827,7 +833,9 @@ public class MITMapView extends MapView  {
     		}
     		
     	}
-    	this.unpause();    	
+    	if (this.autoPause) {
+    		this.unpause();    	
+    	}
     }
 
 	public MapAbstractionObject getMao() {

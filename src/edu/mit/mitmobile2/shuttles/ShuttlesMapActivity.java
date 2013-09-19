@@ -120,6 +120,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 			Log.d(TAG, "query = " + query);
 		} else if (extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
 			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
+			map.autoPause = false;
 			map.addMapItems(mapItems);
 		}
 

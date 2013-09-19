@@ -16,7 +16,11 @@ public class ShuttleMapUpdater extends MapUpdater {
 
 	Timer timer; 
 	RouteItem routeItem;
+	private static int STATUS_RUNNING = 0;
+	private static int STATUS_COMPLETED = 1;
+	private int status = ShuttleMapUpdater.STATUS_COMPLETED; 
 	private static final String TAG = "ShuttleMapUpdater";
+	private static int updateInterval = 20000; // time between update calls
 	
 	@Override
 	public void updateMap(Context mContext) {
@@ -35,14 +39,20 @@ public class ShuttleMapUpdater extends MapUpdater {
 		this.context = mContext;
 		MyTimerTask myTask = new MyTimerTask();
 		timer = new Timer();
-		timer.schedule(myTask, 1, 10000);        		
+		timer.schedule(myTask, 1, updateInterval);        		
 	}
 
 	class MyTimerTask extends TimerTask {
 		 public void run() {
-			 // ERROR
-			 Log.d(TAG,"MyTimerTask: run");
-			 updateMap(context);
+			 if (status != STATUS_RUNNING) {
+				 status = ShuttleMapUpdater.STATUS_RUNNING;
+				 Log.d(TAG,"status = " + status);
+				 Log.d(TAG,"MyTimerTask: run");
+				 updateMap(context);
+			 }
+			 else {
+				 Log.d(TAG,"waiting for update to complete");
+			 }
 		 }
 	}
 	
@@ -72,6 +82,7 @@ public class ShuttleMapUpdater extends MapUpdater {
             	
             	// send the mapMessage to the mapUpdateUiHandler
         		handler.sendMessage(mapMessage);
+        		status = ShuttleMapUpdater.STATUS_COMPLETED;
             } 
             else if (msg.arg1 == MobileWebApi.ERROR) {	
             } 
