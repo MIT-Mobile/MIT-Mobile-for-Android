@@ -135,11 +135,13 @@ public class MITMapView extends MapView  {
 	}
 	
 	public void addMapItems(ArrayList<? extends MapItem> mapItems, String layerName, int mode) {
+		Log.d("PAUSE","add map items for layer " + layerName);
 		if (mapItems != null) {
 			if (!mao.getGraphicsLayers().containsKey(layerName)) {
 				addMAOGraphicsLayer(layerName);
 			}
 			
+			mao.getGraphicsLayers().get(layerName).synched = false; // display layer not synched with abstract layer as soon as we add a map item
 			if (mao.getGraphicsLayers().get(layerName).getMapItems() != null && mode == MapGraphicsLayer.MODE_OVERWRITE) {
 				mao.getGraphicsLayers().get(layerName).getMapItems().clear();
 			}
@@ -158,7 +160,7 @@ public class MITMapView extends MapView  {
 		}
 		
 		if (baseLayersLoaded) {
-			syncGraphicsLayers();
+			syncGraphicsLayers(layerName);
 		}
 	}
 
@@ -174,6 +176,7 @@ public class MITMapView extends MapView  {
 		}
 		
 		mapItem.setIndex(mao.getGraphicsLayers().get(layerName).getMapItems().size());
+		mao.getGraphicsLayers().get(layerName).synched = false; // display layer not synched with abstract layer as soon as we add a map item
 		mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);
 
 		// add the graphic for the map item if the base layers are loaded
@@ -669,7 +672,15 @@ public class MITMapView extends MapView  {
     }
     
     public void syncGraphicsLayers() {
+        syncGraphicsLayers(null);
+    }
+    
+    public void syncGraphicsLayers(String selectedLayerName) {
     	Log.d(TAG,"syncGraphicsLayers()");
+    	Log.d("PAUSE","syncing graphics for selected layer " + selectedLayerName);
+    	if (this.autoPause) {
+    		this.pause();
+    	}
     	// loops through all graphics layers defined in mao, adding them if they dont exist
     	// adds mapitem from each graphics layer in mao, overwriting mapitems
 
@@ -677,39 +688,43 @@ public class MITMapView extends MapView  {
 		while (it.hasNext()) {
 	        Map.Entry glpairs = (Map.Entry)it.next();
 	        final String layerName = (String)glpairs.getKey();
-	        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
-	        Long layerId = mao.getLayerIdMap().get(layerName);
-	        if (layerId == null) {
-	        	// create and add the layer
-            	GraphicsLayer graphicsLayer = new GraphicsLayer();
-            	graphicsLayer.setName(layerName);
-                graphicsLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
-                    public void onStatusChanged(Object source, STATUS status) {
-                        if (OnStatusChangedListener.STATUS.INITIALIZED == status){
-                        	Log.d(TAG,source.getClass().getName() + " " +  ((GraphicsLayer)source).getName() + " is initialized");
-                        	if (baseLayersLoaded) {
-                        		//Log.d(TAG,"all base layers loaded, ready to add graphics");
-                        		processMapItems(layerName);
-                        	}
-                        	else {
-                        		//Log.d(TAG,"still waiting for base layers to load");
-                        	}
-                        }
-                    }
-                });
-
-                addMapLayer(graphicsLayer, layerName);
-      	
-	        }
-	        else {
-	        	if (baseLayersLoaded) {
-	        		Log.d(TAG,"all base layers loaded, ready to add graphics");
-	        		processMapItems(layerName);
-	        	}
-	        	else {
-	        		Log.d(TAG,"still waiting for base layers to load");
-	        	}
-	        }
+	        if (selectedLayerName == null || selectedLayerName.endsWith(layerName)) {
+		        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
+		        if (!layer.synched) {
+			        Long layerId = mao.getLayerIdMap().get(layerName);
+			        if (layerId == null) {
+			        	// create and add the layer
+		            	GraphicsLayer graphicsLayer = new GraphicsLayer();
+		            	graphicsLayer.setName(layerName);
+		                graphicsLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
+		                    public void onStatusChanged(Object source, STATUS status) {
+		                        if (OnStatusChangedListener.STATUS.INITIALIZED == status){
+		                        	Log.d(TAG,source.getClass().getName() + " " +  ((GraphicsLayer)source).getName() + " is initialized");
+		                        	if (baseLayersLoaded) {
+		                        		//Log.d(TAG,"all base layers loaded, ready to add graphics");
+		                        		processMapItems(layerName);
+		                        	}
+		                        	else {
+		                        		//Log.d(TAG,"still waiting for base layers to load");
+		                        	}
+		                        }
+		                    }
+		                });
+		
+		                addMapLayer(graphicsLayer, layerName);
+		      	
+			        }
+			        else {
+			        	if (baseLayersLoaded) {
+			        		Log.d(TAG,"all base layers loaded, ready to add graphics");
+			        		processMapItems(layerName);
+			        	}
+			        	else {
+			        		Log.d(TAG,"still waiting for base layers to load");
+			        	}
+			        }
+		        } // end if layer not synched
+	        } // end if (selectedLayerName == null || selectedLayerName.endsWith(layerName))
 		}
 
 		// Display the callout if there is only one map item with a defined callout, and showCallout is true
@@ -719,7 +734,9 @@ public class MITMapView extends MapView  {
 		if (calloutItems.size() == 1 && this.showCallout) {
 			displayCallout(mContext, calloutItems.get(0));
 		}
-		this.unpause();
+    	if (this.autoPause) {
+    		this.unpause();
+    	}
     }
 
     final class MyOnStatusChangedListener implements OnStatusChangedListener {
@@ -799,9 +816,6 @@ public class MITMapView extends MapView  {
 	
     private void processMapItems(final String layerName) {
     	this.getCallout().hide();
-    	if (this.autoPause) {
-    		this.pause();
-    	}
     	//Log.d(TAG,"processing map Items for " + layerName);
 		int gId = 0; // ID of graphic object created by displayMapItem
     	
@@ -833,9 +847,7 @@ public class MITMapView extends MapView  {
     		}
     		
     	}
-    	if (this.autoPause) {
-    		this.unpause();    	
-    	}
+    	mapGraphicsLayer.synched = true;
     }
 
 	public MapAbstractionObject getMao() {
@@ -868,7 +880,7 @@ public class MITMapView extends MapView  {
 	public void pause() {
 		// TODO Auto-generated method stub
 		super.pause();
-		Log.d(TAG,"pause map");
+		Log.d("PAUSE","pause map");
 		
 	}
 
@@ -876,7 +888,7 @@ public class MITMapView extends MapView  {
 	public void unpause() {
 		// TODO Auto-generated method stub
 		super.unpause();
-		Log.d(TAG,"unpause map");
+		Log.d("PAUSE","unpause map");
 	}
 	
 	private ArrayList<Graphic> getCalloutGraphics() {

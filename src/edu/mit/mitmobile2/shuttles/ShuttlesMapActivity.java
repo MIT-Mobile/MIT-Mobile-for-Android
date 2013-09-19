@@ -57,7 +57,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		//mLoadingView = (FullScreenLoader) findViewById(getMapLoadingViewID());
 		this.extras = this.getIntent().getExtras();
 		map = (MITMapView) findViewById(getMapViewID());
-		//map.init(mContext);
+		map.autoPause = false;
 		
 		if (extras.containsKey(ShuttlesMapActivity.ROUTE_ID_KEY)) {
 			routeId = extras.getString(ShuttlesMapActivity.ROUTE_ID_KEY);
@@ -120,8 +120,9 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 			Log.d(TAG, "query = " + query);
 		} else if (extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
 			mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
-			map.autoPause = false;
+			map.pause();
 			map.addMapItems(mapItems);
+			map.unpause();			
 		}
 
 	} // End of onN
@@ -190,10 +191,11 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	        ArrayList<MapItem> m = (ArrayList<MapItem>) layers.get(key);
 	        Log.d(TAG,"DEBUG: layer " + key + " has " + m.size() + " map items");
 		}
-		
+		map.pause();
 		map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
 		map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
-		map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);		
+		map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);
+		map.unpause();
 	}
 	
 	public Handler routeUiHandler = new Handler() {
@@ -258,9 +260,11 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 				try {
 					HashMap<String,ArrayList<? extends MapItem>> layers = (HashMap<String,ArrayList<? extends MapItem>>)msg.obj;
 					Log.d(TAG,"adding vehicle locations from updater");
+					map.pause();
 					map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
 					map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
-					map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);		
+					map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);	
+					map.unpause();
 					//map.syncGraphicsLayers();
 				} catch (Exception e) {
 					Log.d(TAG, "mapSearchUiHander exception");

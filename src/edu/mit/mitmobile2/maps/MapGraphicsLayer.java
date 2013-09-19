@@ -19,7 +19,7 @@ public class MapGraphicsLayer implements Parcelable {
 	protected String layerName;
 	protected Map<String,Integer> graphicIdMap; // map of graphic Id to the index of it's corresponding MapItem in the mapItems array
 	protected ArrayList<MapItem> mapItems;
-	
+	protected boolean synched = true;
 	public static int MODE_OVERWRITE = 1; // will clear the graphics layer before adding new graphics
 	public static int MODE_APPEND = 2; // appends graphics to the graphics layer
 		
