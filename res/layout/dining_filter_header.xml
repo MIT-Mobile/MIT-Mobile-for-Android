@@ -15,6 +15,7 @@
     	android:textSize="12sp"
     	android:paddingLeft="@dimen/standardPadding"
     	android:text="@string/dining_filters"
+    	android:textColor="#ff222222"
     	android:layout_gravity = "center_vertical"
     	/>
     
