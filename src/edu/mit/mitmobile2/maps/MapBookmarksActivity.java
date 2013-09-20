@@ -198,8 +198,10 @@ public class MapBookmarksActivity extends NewModuleActivity {
             		mapItems = (ArrayList<MapItem>)msg.obj;
             		Toast.makeText(context, mapItems.size() + " bookmarks", Toast.LENGTH_LONG).show();
             		if (mapItems != null && mapItems.size() > 0) {
+            			map.pause();
             			map.addMapItems(mapItems);
             			map.fitMapItems();
+            			map.unpause();
             		}
             		updateUI();
             	}

@@ -87,6 +87,7 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 	}
 	
 	private void annotateRetailVenues() {
+		mMapView.pause();
 		boolean needsRecenter = false;
 		Map<String, List<? extends DiningHall>> retailVenues = mDiningVenues.getRetail();
 		for (String buildingID : mDiningVenues.getRetailBuildingNumbers()) {
@@ -101,6 +102,7 @@ public class DiningMapActivity extends NewModuleActivity implements TabHost.OnTa
 		if (needsRecenter) {
 			mMapView.fitMapItems();
 		}
+		mMapView.unpause();
 	}
 	
 	@Override

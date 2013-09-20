@@ -124,11 +124,12 @@ public class TourMapActivity extends NewModuleActivity implements OnTourSiteSele
 		float routeWidth = getResources().getDimension(R.dimen.tourPathWidth) / density;
 		
 		TourRouteMapData routeData = new TourRouteMapData(mGeoPoints, routeWidth);
+		mMapView.pause();
 		mMapView.addMapItems(routeData.getMapItems(), "route");
 		mStopsData = new TourStopsMapData(mSiteTourMapItems, this);
 		mMapView.addMapItems(mStopsData.getMapItems(), "stops");
 		mMapView.fitMapItems();
-
+		mMapView.unpause();
 		
 		mSecondaryTitleBar = new MITPlainSecondaryTitleBar(this);
 		mMapListSwitch = new TitleBarSwitch(this);

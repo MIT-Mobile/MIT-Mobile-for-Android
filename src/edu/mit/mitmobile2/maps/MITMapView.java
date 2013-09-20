@@ -65,7 +65,6 @@ public class MITMapView extends MapView  {
 	private Context mContext;
 	protected LocationService ls;
 	protected boolean baseLayersLoaded = false;
-	public boolean autoPause = true; // pause and unpause the map for each processMapItems call, set to false to manually pause/unpause map, useful when drawing multiple  layeres
 	public static final String MAP_ITEMS_KEY = "map_items";
 	public static final String MAP_ITEM_INDEX_KEY = "map_item_index";	
 
@@ -678,9 +677,6 @@ public class MITMapView extends MapView  {
     public void syncGraphicsLayers(String selectedLayerName) {
     	Log.d(TAG,"syncGraphicsLayers()");
     	Log.d("PAUSE","syncing graphics for selected layer " + selectedLayerName);
-    	if (this.autoPause) {
-    		this.pause();
-    	}
     	// loops through all graphics layers defined in mao, adding them if they dont exist
     	// adds mapitem from each graphics layer in mao, overwriting mapitems
 
@@ -734,9 +730,6 @@ public class MITMapView extends MapView  {
 		if (calloutItems.size() == 1 && this.showCallout) {
 			displayCallout(mContext, calloutItems.get(0));
 		}
-    	if (this.autoPause) {
-    		this.unpause();
-    	}
     }
 
     final class MyOnStatusChangedListener implements OnStatusChangedListener {

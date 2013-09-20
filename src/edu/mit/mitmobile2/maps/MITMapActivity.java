@@ -321,9 +321,12 @@ public class MITMapActivity extends NewModuleActivity {
          			});
 
          			mLoadingView.setVisibility(View.GONE);
+        			map.pause();
          			map.addMapItems(mapItems);
-            		map.syncGraphicsLayers();
+            		//map.syncGraphicsLayers();
                 	map.fitMapItems();
+        			map.unpause();
+
             	}
             	catch (Exception e) {
             		Log.d(TAG,"mapSearchUiHander exception");
@@ -386,11 +389,13 @@ public class MITMapActivity extends NewModuleActivity {
  			});
 
  			mLoadingView.setVisibility(View.GONE);
+			map.pause();
 			map.addMapItems(mapItems);
 	    	if (mapItems.size() == 1) {
 	    		map.displayCallout(mContext, mapItems.get(0));
 	    	}
 	    	map.fitMapItems();
+	    	map.unpause();
 	    }    	
     }
 }
