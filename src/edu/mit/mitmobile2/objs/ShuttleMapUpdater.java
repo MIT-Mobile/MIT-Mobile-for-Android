@@ -39,7 +39,7 @@ public class ShuttleMapUpdater extends MapUpdater {
 		this.context = mContext;
 		MyTimerTask myTask = new MyTimerTask();
 		timer = new Timer();
-		timer.schedule(myTask, 1, updateInterval);        		
+		timer.schedule(myTask, updateInterval, updateInterval);        		
 	}
 
 	class MyTimerTask extends TimerTask {
