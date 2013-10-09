@@ -28,6 +28,7 @@ import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
+import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapItemContent;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
@@ -98,6 +99,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		if(extras != null) {
 			List<MapItem> mapItems = null;
 			if(extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
+				BuildingMapItem b;
+				
 				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
 				//Log.d(TAG,"number of map items = " + mapItems.size());
 			} 	
@@ -232,13 +235,13 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 						MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
 						((Button)v).setText(R.string.map_bookmark_on);
 						v.setTag("on");
-						Toast.makeText(mContext, "map item saved", 1).show();
+						Toast.makeText(mContext, "map item saved", Toast.LENGTH_LONG).show();
 					}
 					else {
 						MapsDB.getInstance(mContext).delete(mMapItem);
 						((Button)v).setText(R.string.map_bookmark_off);
 						v.setTag("off");
-						Toast.makeText(mContext, "map item removed", 1).show();						
+						Toast.makeText(mContext, "map item removed", Toast.LENGTH_LONG).show();						
 					}
 				}
 			});

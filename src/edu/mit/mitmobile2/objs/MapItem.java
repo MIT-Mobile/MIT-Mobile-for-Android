@@ -230,25 +230,7 @@ public abstract class MapItem {
 		return bbox;
 
 	}
-	
-//	public static void getMapItemImage(Context mContext, Handler uiHandler,MapItem mapItem, final SpatialReference targetSpatialReference) {
-//		MapItem.getMapItemImage(mContext,uiHandler,mapItem,SpatialReference.create(mapItem.wikid), targetSpatialReference);
-//	}
-//
-//	public static void getMapItemImage(Context mContext, Handler uiHandler,MapItem mapItem,final SpatialReference sourceSpatialReference, final SpatialReference targetSpatialReference) {
-//		String boundingBox; // comma separate string of doubles in form of minX,minY,maxX,maxY
-//		if (mapItem.geometryType == MapItem.TYPE_POINT) {
-//			Point thumbnailPoint = (Point)GeometryEngine.project(new Point(mapItem.getMapPoints().get(0).long_wgs84,mapItem.getMapPoints().get(0).lat_wgs84), SpatialReference.create(mapItem.getWikid()),targetSpatialReference);
-//			double minX = thumbnailPoint.getX() - 100;
-//			double minY = thumbnailPoint.getY() - 100;
-//			double maxX = thumbnailPoint.getX() + 100;
-//			double maxY = thumbnailPoint.getY() + 100;
-//			Log.d(TAG,"bbox = " + minX + "," + minY + "," + maxX + "," + maxY);
-//			boundingBox = minX + "," + minY + "," + maxX + "," + maxY; 
-//			MapModel.exportMapBitmap(mContext,boundingBox, true, uiHandler);
-//		}
-//	}
-	
+		
 	public int getWkid() {
 		return wkid;
 	}

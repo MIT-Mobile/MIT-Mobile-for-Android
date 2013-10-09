@@ -249,11 +249,11 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 		public String getSpanString() {
 			if (DiningModel.compareDates(mStartDay, mEndDay) == 0) {
 				String daySpan = sFormat.format(mStartDay.getTime());
-				return daySpan.toLowerCase();
+				return daySpan.toLowerCase(Locale.ENGLISH);
 			}
 			String startStr = sFormat.format(mStartDay.getTime());
 			String endStr = sFormat.format(mEndDay.getTime());			
-			return startStr.toLowerCase() + " - " + endStr.toLowerCase();
+			return startStr.toLowerCase(Locale.ENGLISH) + " - " + endStr.toLowerCase();
 		}
 		
 		public String getMealNameString() {

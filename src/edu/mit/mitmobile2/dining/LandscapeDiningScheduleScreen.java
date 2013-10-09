@@ -58,6 +58,7 @@ public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 		return mDiningAdapter.getSelectedDate(house);
 	}
 	
+	@Override
 	public boolean titleBarHidden() {
 		return true;
 	}
