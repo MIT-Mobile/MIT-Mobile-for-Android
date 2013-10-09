@@ -1,29 +1,18 @@
 package edu.mit.mitmobile2.maps;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Toast;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.news.NewsDB;
-import edu.mit.mitmobile2.news.NewsModel;
 import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.objs.PersonItem;
-import edu.mit.mitmobile2.people.PeopleDB;
 
 public class MapModel {
     public static String MODULE_MAP = "map";
@@ -69,7 +58,7 @@ public class MapModel {
 		new Thread() {
 			@Override
 			public void run() {
-				ArrayList mapItems = mMapsDB.getMapItems();
+				ArrayList<MapItem> mapItems = mMapsDB.getMapItems();
 				Message msg = new Message();
 				msg.obj = mapItems;
 				uiHandler.sendMessage(msg);

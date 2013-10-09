@@ -1,10 +1,8 @@
 package edu.mit.mitmobile2.shuttles;
 
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.List;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,12 +14,11 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
@@ -32,7 +29,7 @@ import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
 public class RoutesAsyncListView  extends LinearLayout implements SliderInterface, OnItemClickListener   {
 
-	private static String TAG = "RoutesAsyncListView";
+	//private static String TAG = "RoutesAsyncListView";
 	Activity mActivity;
 	
 	private List<Stops> mStops;

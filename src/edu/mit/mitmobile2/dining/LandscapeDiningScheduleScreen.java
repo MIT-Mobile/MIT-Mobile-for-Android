@@ -4,18 +4,16 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import edu.mit.mitmobile2.NewModuleActivity;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderView;
 import edu.mit.mitmobile2.SliderView.Adapter;
 import edu.mit.mitmobile2.SliderView.OnSeekListener;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
-
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 public class LandscapeDiningScheduleScreen extends DiningScheduleScreen {
 

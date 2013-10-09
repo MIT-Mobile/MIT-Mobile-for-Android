@@ -10,24 +10,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.JSONParser;
-import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
-import edu.mit.mitmobile2.Module;
-import edu.mit.mitmobile2.ModuleActivity;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.MapCatItem;
 
@@ -62,7 +55,7 @@ public class MITMapBrowseCatsActivity extends NewModuleActivity {
 	
 	ArrayList<MapCatItem> cats;
 	String[] categories;
-	private MITPlainSecondaryTitleBar mSecondaryTitleBar;
+	//private MITPlainSecondaryTitleBar mSecondaryTitleBar;
 	
 	/****************************************************/
 	@Override

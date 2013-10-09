@@ -6,20 +6,14 @@ import java.util.Map;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.esri.core.geometry.SpatialReference;
-
-import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.MapItemContent;
-import edu.mit.mitmobile2.objs.MapPoint;
 
 public class MapGraphicsLayer implements Parcelable {
 	
 	protected String layerName;
 	protected Map<String,Integer> graphicIdMap; // map of graphic Id to the index of it's corresponding MapItem in the mapItems array
 	protected ArrayList<MapItem> mapItems;
-	protected boolean synched = true;
+	protected boolean synched = false;
 	public static int MODE_OVERWRITE = 1; // will clear the graphics layer before adding new graphics
 	public static int MODE_APPEND = 2; // appends graphics to the graphics layer
 		

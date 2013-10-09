@@ -2,27 +2,20 @@ package edu.mit.mitmobile2.objs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
 
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.SpatialReference;
-import com.esri.core.geometry.Unit;
-import com.esri.core.geometry.Unit.UnitType;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MapData;
-import edu.mit.mitmobile2.maps.MapModel;
 
 public abstract class MapItem {
 	
@@ -168,7 +161,6 @@ public abstract class MapItem {
 		double maxLat;
 		
 		MapPoint mapPoint;
-		Point point;
 		
 		if (mapPoints.size() > 0) {
 			

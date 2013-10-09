@@ -222,13 +222,13 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 		private HashMap<String, String> mMealSummary;
 		static SimpleDateFormat sFormat = new SimpleDateFormat("EEE", Locale.US);
 		
-		public Calendar getStartDay() {
-			return mStartDay;
-		}
-		
-		public Calendar getEndDay() {
-			return mEndDay;
-		}
+//		public Calendar getStartDay() {
+//			return mStartDay;
+//		}
+//		
+//		public Calendar getEndDay() {
+//			return mEndDay;
+//		}
 		
 		public HashMap<String, String> getMealSummary() {
 			return mMealSummary;

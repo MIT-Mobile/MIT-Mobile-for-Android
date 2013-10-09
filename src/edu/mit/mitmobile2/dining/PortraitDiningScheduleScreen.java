@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.dining;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;

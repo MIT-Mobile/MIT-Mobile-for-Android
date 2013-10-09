@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.tour;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -14,8 +13,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-
-
 import edu.mit.mitmobile2.AudioPlayer;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;

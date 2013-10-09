@@ -2,8 +2,6 @@ package edu.mit.mitmobile2.objs;
 
 import java.util.HashMap;
 
-import edu.mit.mitmobile2.maps.MapData;
-
 import android.content.Context;
 import android.os.Handler;
 

@@ -1,35 +1,18 @@
 package edu.mit.mitmobile2.shuttles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import edu.mit.mitmobile2.CategoryNewModuleActivity;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
-import edu.mit.mitmobile2.maps.MapData;
-import edu.mit.mitmobile2.objs.RouteMapItem;
-import edu.mit.mitmobile2.objs.StopMapItem;
-import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.objs.RouteItem.Loc;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
-import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
-import edu.mit.mitmobile2.objs.ShuttleMapUpdater;
-import edu.mit.mitmobile2.objs.VehicleMapItem;
 
 public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	private static final String TAG = "MITRoutesSliderActivity";

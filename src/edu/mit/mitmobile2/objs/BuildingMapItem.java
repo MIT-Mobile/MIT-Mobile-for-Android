@@ -5,11 +5,8 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -154,7 +151,8 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 	}
 	
     public static final Parcelable.Creator<BuildingMapItem> CREATOR = new Parcelable.Creator<BuildingMapItem>() {
-        public BuildingMapItem createFromParcel(Parcel in) {
+        @Override
+		public BuildingMapItem createFromParcel(Parcel in) {
             return new BuildingMapItem(in);
         }
 

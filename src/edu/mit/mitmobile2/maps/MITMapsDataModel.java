@@ -8,17 +8,14 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.os.Handler;
-import android.util.Log;
-
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
+import edu.mit.mitmobile2.MobileWebApi.JSONArrayResponseListener;
 import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.SearchResults;
 
 public class MITMapsDataModel {
 
-	private static final String TAG = "MITMapsDataModel";
+	//private static final String TAG = "MITMapsDataModel";
 	private static HashMap<String, List<MapItem>> sSearchCache = new HashMap<String, List<MapItem>>();
 	
 	private static HashMap<String, List<MapItem>> sCategoryCache = new HashMap<String, List<MapItem>>();
