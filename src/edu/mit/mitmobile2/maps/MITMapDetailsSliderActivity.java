@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -334,6 +335,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			// Photo
 			imgUrl = (String)mMapItem.getItemData().get("bldgimg") + "";
 			mapDetailsPhotoView = (RemoteImageView) tabHost.findViewById(R.id.mapDetailsPhotoView);
+			mapDetailsPhotoView.setScreenDensity(DisplayMetrics.DENSITY_MEDIUM);
 			mapDetailsPhotosTV = (TextView) tabHost.findViewById(R.id.mapDetailsPhotosTV);
 			
 			if (imgUrl == null || imgUrl.trim().length() == 0) {

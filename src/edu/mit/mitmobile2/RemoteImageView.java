@@ -27,6 +27,8 @@ public class RemoteImageView extends FrameLayout {
 	
 	private BitmapFactory.Options mBitmapDecodeOptions;
 	
+	private Integer mScreenDensity;
+	
 	public RemoteImageView(Context context, AttributeSet attrs) {
 		
 		super(context, attrs);
@@ -79,6 +81,10 @@ public class RemoteImageView extends FrameLayout {
 		setURLs(urls, false);
 	}
 	
+	public void setScreenDensity(Integer density) {
+		mScreenDensity = density;
+	}
+
 	private static boolean compareURLs(List<String> urls1, List<String> urls2) {
 		if (urls1 == null || urls2 == null) {
 			// only way to be equal is both objects are null
@@ -165,6 +171,9 @@ public class RemoteImageView extends FrameLayout {
 					}
 				}
 				
+				if (image != null && mScreenDensity != null) {
+					image.setDensity(mScreenDensity);
+				}
 
 				synchronized (RemoteImageView.this) {
 					if(compareURLs(mUrls, urls)) {  // check to make sure URL has not changed						
