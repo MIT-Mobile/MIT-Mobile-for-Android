@@ -25,10 +25,9 @@ public class RoutesParser {
 	}
 	
 	
-	static List<RouteItem> routesParser(JSONObject jsonArray) throws JSONException {
+	static List<RouteItem> routesParser(JSONArray jRoutes) throws JSONException {
 		ArrayList<RouteItem> items = new ArrayList<RouteItem>();
 		
-		JSONArray jRoutes = jsonArray.getJSONArray("routes");
 		for(int index=0; index < jRoutes.length(); index++) {
 			JSONObject jsonObject;
 			try {

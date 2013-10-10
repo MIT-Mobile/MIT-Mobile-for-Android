@@ -153,12 +153,12 @@ public class ShuttleModel {
 		}
 		
 		MobileWebApi webApi = new MobileWebApi(false, true, "Shuttle Routes", context, uiHandler);
-		webApi.requestJSONObject(BASE_PATH, null,
-			new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONArray(BASE_PATH, null,
+			new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 				@Override
-				public void onResponse(JSONObject object) throws JSONException {
+				public void onResponse(JSONArray array) throws JSONException {
 					routes = new ArrayList<RouteItem>();
-					routes.addAll(RoutesParser.routesParser(object));
+					routes.addAll(RoutesParser.routesParser(array));
 					lastRouteFetchTime = System.currentTimeMillis();
 					MobileWebApi.sendSuccessMessage(uiHandler);
 				}
@@ -182,15 +182,15 @@ public class ShuttleModel {
 		*/
 		
 		MobileWebApi webApi = new MobileWebApi(!silent, !silent, "Shuttle Route", context, uiHandler);
-		webApi.requestJSONArray(BASE_PATH + "/" + routeItem.id, null, 
-				new MobileWebApi.JSONArrayResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
+		webApi.requestJSONObject(BASE_PATH + "/" + routeItem.id, null, 
+				new MobileWebApi.JSONObjectResponseListener(new MobileWebApi.DefaultErrorListener(uiHandler), null) {
 					
 					@Override
-					public void onResponse(JSONArray array) throws ServerResponseException,
+					public void onResponse(JSONObject object) throws ServerResponseException,
 							JSONException {
 						
 						try {
-							RouteItem route = RoutesParser.parseJSONRouteObject(array.getJSONObject(0)); 
+							RouteItem route = RoutesParser.parseJSONRouteObject(object); 
 							updateRouteItem(route);
 							MobileWebApi.sendSuccessMessage(uiHandler, route);
 						} catch (JSONException e) {
