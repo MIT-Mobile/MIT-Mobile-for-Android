@@ -1,40 +1,22 @@
 package edu.mit.mitmobile2.shuttles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import edu.mit.mitmobile2.CategoryNewModuleActivity;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
-import edu.mit.mitmobile2.maps.MapData;
-import edu.mit.mitmobile2.objs.RouteMapItem;
-import edu.mit.mitmobile2.objs.StopMapItem;
-import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.MapPoint;
 import edu.mit.mitmobile2.objs.RouteItem;
-import edu.mit.mitmobile2.objs.RouteItem.Loc;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
-import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
-import edu.mit.mitmobile2.objs.ShuttleMapUpdater;
-import edu.mit.mitmobile2.objs.VehicleMapItem;
 
 public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
-	private RoutesAsyncListView curView;
 	
-	private int position;
+	private int selectedPos;
+	private int startPos;
 
 	static final String KEY_POSITION = "key_position";
 	static final String NOT_RUNNING = "Bus not running. Following schedule.";
@@ -55,9 +37,9 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     	}
     	Bundle bundle = getIntent().getExtras();
     	if (null != bundle) {
-    		position = bundle.getInt(KEY_POSITION, 0);
+    		startPos = bundle.getInt(KEY_POSITION, 0);
+    		selectedPos = startPos;
     	}
-    	
 
 //    	getSecondaryMenuItems().add(new MITMenuItem("viewmap", "View on Map", R.drawable.menu_view_on_map));
 /*
@@ -75,23 +57,23 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
   */  	
     	createViews();
 	}
+    
     /****************************************************/
 	@Override
 	protected void onPause() {
-		if (curView!=null) curView.terminate();
+		RoutesAsyncListView oldView = (RoutesAsyncListView) getScreen(selectedPos);
+    	oldView.terminate();
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop() {
-		if (curView!=null) curView.terminate();
 		super.onStop();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (curView!=null) curView.onSelected();
 	}
 	
 	/****************************************************/
@@ -103,23 +85,28 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 
     		RouteItem r = ShuttleModel.getSortedRoutes().get(x);
     		
-    		String routeId = r.title;
+    		String routeId = r.id;
     		
     		cv = new RoutesAsyncListView(this, routeId, r);
 
     		addScreen(cv, r.title, r.title);
     	}
-    	setPosition(position);
+    	setPosition(startPos);
     }
     
 	@Override
 	public void onPositionChanged(int newPosition, int oldPosition) {
 	    super.onPositionChanged(newPosition, oldPosition);	
 	    
-	    if(curView != null) {
-		curView.terminate();
+	    if (oldPosition == -1)
+	    	return;
+	    
+	    if (oldPosition >= 0) {
+	    	RoutesAsyncListView oldView = (RoutesAsyncListView) getScreen(oldPosition);
+	    	oldView.terminate();
 	    }
-	    curView = (RoutesAsyncListView) getScreen(newPosition);
+	    
+	    selectedPos = newPosition;
 	}
 
 	@Override
@@ -135,15 +122,13 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	}
 	@Override
 	protected NewModule getNewModule() {
-		// TODO Auto-generated method stub
 		return new ShuttlesModule();
 	}
 
 	@Override
 	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
 		if (optionId.equals("viewmap")) {
-			String routeId = ShuttleModel.getSortedRoutes().get(position).id;
+			String routeId = ShuttleModel.getSortedRoutes().get(selectedPos).id;
 			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), ShuttleModel.getRoute(routeId).stops, getPosition());
 		}
 	}
