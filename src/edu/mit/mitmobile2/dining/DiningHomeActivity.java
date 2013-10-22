@@ -99,13 +99,9 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 	    ScrollView scrollView = (ScrollView) findViewById(R.id.diningHomeMainScrollView);
 
         // Create new PullToRefreshAttacher
-        mPullToRefreshAttacher = new PullToRefreshAttacher(this);
-        mPullToRefreshAttacher.setRefreshableView(scrollView, this);
-        DefaultHeaderTransformer ht = (DefaultHeaderTransformer) mPullToRefreshAttacher
-                .getHeaderTransformer();
-        ht.setPullText("Swipe to refresh");
-        ht.setRefreshingText("Refreshing...");
-        
+	    mPullToRefreshAttacher = createPullToRefreshAttacher();
+	    mPullToRefreshAttacher.setRefreshableView(scrollView, this);
+
 	}
 	
 	private void updateDiningData() {

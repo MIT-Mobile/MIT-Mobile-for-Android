@@ -3,6 +3,9 @@ package edu.mit.mitmobile2;
 import java.util.Collections;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.DefaultHeaderTransformer;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -224,5 +227,14 @@ public abstract class NewModuleActivity extends Activity {
 		FrameLayout fullScreenFrameLayout = (FrameLayout) findViewById(R.id.newModuleMainFullScreenFrameLayout);
 		fullScreenFrameLayout.removeAllViews();
 		fullScreenFrameLayout.setVisibility(View.GONE);
+	}
+	
+	public PullToRefreshAttacher createPullToRefreshAttacher() {
+	    PullToRefreshAttacher pullToRefreshAttacher = new PullToRefreshAttacher(this);
+	    DefaultHeaderTransformer ht = (DefaultHeaderTransformer) pullToRefreshAttacher
+                .getHeaderTransformer();
+	    ht.setPullText("Swipe to refresh");
+	    ht.setRefreshingText("Refreshing...");
+	    return pullToRefreshAttacher;
 	}
 }
