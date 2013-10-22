@@ -198,7 +198,6 @@ public class ShuttlesActivity extends NewModuleActivity implements OnRefreshList
 		routeListView.setOnItemClickListener(listener);
 		
 		mPullToRefreshAttacher.setEnabled(true);
-		mPullToRefreshAttacher.setRefreshComplete();
 
 	}
 	/****************************************************/
@@ -214,6 +213,9 @@ public class ShuttlesActivity extends NewModuleActivity implements OnRefreshList
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
+				
+				mPullToRefreshAttacher.setRefreshComplete();
+				
 				if(msg.arg1 == MobileWebApi.SUCCESS) {
 					updateView();
 				} else {
