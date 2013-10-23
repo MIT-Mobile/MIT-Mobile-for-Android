@@ -383,23 +383,27 @@ public class ShuttleModel {
 		ArrayList<VehicleMapItem> vehicleItems = new ArrayList<VehicleMapItem>();
 		ArrayList<StopMapItem> stopItems = new ArrayList<StopMapItem>();
 
-		RouteMapItem route = new RouteMapItem();
 		// create a polygon for route
 		// create shuttle pin + callout for each stop
 		// create shuttle location pin for each vehicle location
 
-		route.setGeometryType(MapItem.TYPE_POLYGON);
-		
 		for (int p = 0; p < updatedRouteItem.path.segments.size(); p++) {
-			Loc loc = (Loc) updatedRouteItem.path.segments.get(p);
-			
-			// get a map point for the stop
-			MapPoint pathPoint = new MapPoint();
-			pathPoint.lat_wgs84 = Double.valueOf(loc.lat);
-			pathPoint.long_wgs84 = Double.valueOf(loc.lon);
-
-			// add the map point to the route polygon
-			route.getMapPoints().add(pathPoint);
+			RouteMapItem route = new RouteMapItem();
+			route.setGeometryType(MapItem.TYPE_POLYLINE);
+			routeItems = new ArrayList<RouteMapItem>();
+			for (int i = 0; i < updatedRouteItem.path.segments.get(p).size(); i++) {
+				Loc loc = (Loc) updatedRouteItem.path.segments.get(p).get(i);
+				
+				// get a map point for the stop
+				MapPoint pathPoint = new MapPoint();
+				pathPoint.lat_wgs84 = Double.valueOf(loc.lat);
+				pathPoint.long_wgs84 = Double.valueOf(loc.lon);
+	
+				// add the map point to the route polygon
+				route.getMapPoints().add(pathPoint);
+			}
+			routeItems.add(route);
+			layers.put(ShuttlesMapActivity.SHUTTLE_ROUTE_LAYER+p, routeItems);
 		}
 
 		// loop through all the stops
@@ -461,8 +465,6 @@ public class ShuttleModel {
 		}
 
 		// add route
-		routeItems.add(route);
-		layers.put(ShuttlesMapActivity.SHUTTLE_ROUTE_LAYER, routeItems);
 		
 		// add stops
 		layers.put(ShuttlesMapActivity.SHUTTLE_STOPS_LAYER, stopItems);

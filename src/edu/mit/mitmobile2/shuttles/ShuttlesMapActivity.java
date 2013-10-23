@@ -198,11 +198,8 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	        String key = (String)pairs.getKey();
 	        ArrayList<MapItem> m = (ArrayList<MapItem>) layers.get(key);
 	        Log.d(TAG,"DEBUG: layer " + key + " has " + m.size() + " map items");
-		}
-		
-		map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
-		map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
-		map.addMapItems(layers.get(MITMapView.DEFAULT_GRAPHICS_LAYER),MITMapView.DEFAULT_GRAPHICS_LAYER);		
+	        map.addMapItems(layers.get(key),key);
+		}		
 	}
 	
 	public Handler routeUiHandler = new Handler() {

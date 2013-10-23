@@ -433,7 +433,7 @@ public class RouteItem implements Parcelable {
 	
 	public static class Path implements Parcelable {
 		
-		public ArrayList<Loc> segments;
+		public ArrayList<ArrayList<Loc>> segments;
 		
 		public float minLat;
 		public float minLon;
@@ -442,7 +442,7 @@ public class RouteItem implements Parcelable {
 		
 		
 		public Path () {
-			segments = new ArrayList<Loc>();
+			segments = new ArrayList<ArrayList<Loc>>();
 		}
 		
 		public Path(Parcel in) {

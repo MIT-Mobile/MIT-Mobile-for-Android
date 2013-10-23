@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.util.Log;
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.objs.RouteItem;
+import edu.mit.mitmobile2.objs.RouteItem.Loc;
 import edu.mit.mitmobile2.objs.RouteItem.Prediction;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 import edu.mit.mitmobile2.objs.RouteItem.Vehicle;
@@ -98,14 +99,17 @@ public class RoutesParser {
 		
 		RouteItem.Path path = new RouteItem.Path();
 		if (segments != null) {
-			for (int index = 0; index < segments.length(); index++) {
-				JSONArray segment = segments.getJSONArray(index);
-				
-				RouteItem.Loc location = new RouteItem.Loc();
-				location.lat = (float) segment.getDouble(1);
-				location.lon = (float) segment.getDouble(0);
-				
-				path.segments.add(location);
+			for (int i = 0; i < segments.length(); i++) {
+				ArrayList<RouteItem.Loc> paths = new ArrayList<RouteItem.Loc>();
+				JSONArray segmentarray = segments.getJSONArray(i);
+				for (int j = 0; j < segmentarray.length(); j++) {
+					JSONArray segment = segmentarray.getJSONArray(j);
+					RouteItem.Loc location = new RouteItem.Loc();
+					location.lat = (float) segment.getDouble(1);
+					location.lon = (float) segment.getDouble(0);
+					paths.add(location);
+				}
+				path.segments.add(paths);
 			}
 		}
 		
