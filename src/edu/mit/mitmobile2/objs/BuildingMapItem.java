@@ -133,6 +133,7 @@ public class BuildingMapItem extends MapItem implements Parcelable {
 		dest.writeList(contents);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void readFromParcel(Parcel source) {
 		geometryType = source.readInt();
 		horizontalAlign = source.readInt();
@@ -156,6 +157,7 @@ public class BuildingMapItem extends MapItem implements Parcelable {
             return new BuildingMapItem(in);
         }
 
+        @Override
         public BuildingMapItem[] newArray(int size) {
 
             return new BuildingMapItem[size];

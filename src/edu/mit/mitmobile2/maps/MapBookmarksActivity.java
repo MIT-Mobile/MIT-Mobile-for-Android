@@ -129,6 +129,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
 
 		mListView.setOnItemClickListener(
 				new AdapterView.OnItemClickListener() {
+					@SuppressWarnings({ "unchecked" })
 					@Override
 					public void onItemClick(AdapterView<?> listView, View view, int position, long id) {					
 					

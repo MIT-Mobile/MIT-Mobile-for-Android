@@ -46,6 +46,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	public static final String SHUTTLE_ROUTE_LAYER = "shuttle_route_layer";
 	public static final String SHUTTLE_STOPS_LAYER = "shuttle_stops_layer";
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "oncreate()");
 		super.onCreate(savedInstanceState);
@@ -105,6 +106,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		super.onDestroy();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes"})
 	@Override
 	protected void onNewIntent(Intent intent) {
 		Log.d(TAG, "onNewIntent");

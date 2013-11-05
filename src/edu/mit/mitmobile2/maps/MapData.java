@@ -230,6 +230,7 @@ public class MapData {
 						JSONObject jItemData = jMapItem.getJSONObject("itemData");
 	
 						// POPULATE itemDATA
+						@SuppressWarnings("unchecked")
 						Iterator<String> keys = jItemData.keys();
 						while (keys.hasNext()) {
 							String key = (String)keys.next();

@@ -25,7 +25,8 @@ public class MIT150RemoteView extends RemoteImageView {
 		
 	}
 	/****************************************************************************/ 	
-	public void inflateLayout(Context context) {
+	@Override
+	public void inflateImageLayout(Context context) {
 		LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflator.inflate(R.layout.mit150_remote_imageview, this); 
 	} 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.MapCatItem;
 
+@SuppressLint("HandlerLeak")
 public class MITMapBrowseCatsActivity extends NewModuleActivity {
 
 	public static final String TAG = "MITMapBrowseCatsActivity";
@@ -140,6 +142,7 @@ public class MITMapBrowseCatsActivity extends NewModuleActivity {
 		};
 		
 		final JSONParser mp = new MapCategoriesParser() {
+			@SuppressWarnings({ "unchecked" })
 			@Override
 			public void saveData() {
 				if (items.size()>0) {

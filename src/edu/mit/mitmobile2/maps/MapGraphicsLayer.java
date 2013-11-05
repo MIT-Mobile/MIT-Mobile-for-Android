@@ -77,17 +77,21 @@ public class MapGraphicsLayer implements Parcelable {
 		dest.writeList(mapItems);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void readFromParcel(Parcel source) {
 		layerName = source.readString();
-		graphicIdMap = source.readHashMap(HashMap.class.getClassLoader());
-		mapItems = source.readArrayList(MapItem.class.getClassLoader());
+		this.graphicIdMap = source.readHashMap(HashMap.class.getClassLoader());
+		this.mapItems = source.readArrayList(MapItem.class.getClassLoader());
 	}
 	
     public static final Parcelable.Creator<MapGraphicsLayer> CREATOR = new Parcelable.Creator<MapGraphicsLayer>() {
-        public MapGraphicsLayer createFromParcel(Parcel in) {
+        
+    	@Override
+    	public MapGraphicsLayer createFromParcel(Parcel in) {
             return new MapGraphicsLayer(in);
         }
 
+    	@Override
         public MapGraphicsLayer[] newArray(int size) {
 
             return new MapGraphicsLayer[size];

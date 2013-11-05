@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,7 @@ import edu.mit.mitmobile2.dining.DiningModel.DailyMealsSchedule;
 import edu.mit.mitmobile2.dining.DiningModel.DiningVenues;
 import edu.mit.mitmobile2.dining.DiningModel.HouseDiningHall;
 
+@SuppressLint("DefaultLocale")
 public class DiningHouseInfoActivity extends NewModuleActivity {
 	
 	private static String HOUSE_DINING_HALL_ID_KEY = "hall_id";
@@ -246,6 +248,7 @@ public class DiningHouseInfoActivity extends NewModuleActivity {
 			 mMealSummary = map;
 		}
 		
+		@SuppressLint("DefaultLocale")
 		public String getSpanString() {
 			if (DiningModel.compareDates(mStartDay, mEndDay) == 0) {
 				String daySpan = sFormat.format(mStartDay.getTime());

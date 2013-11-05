@@ -33,7 +33,7 @@ public class RemoteImageView extends FrameLayout {
 		
 		super(context, attrs);
 		
-		inflateLayout(context);
+		inflateImageLayout(context);
 		
 		int scaleTypeInt= attrs.getAttributeIntValue("http://schemas.android.com/apk/res/android", "scaleType", -1);		
 		
@@ -48,7 +48,7 @@ public class RemoteImageView extends FrameLayout {
 		mDiskCache = new ImageDiskCache(context);
 	}
 
-	void inflateLayout(Context context) {
+	public void inflateImageLayout(Context context) {
 		LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflator.inflate(R.layout.remote_imageview, this);
 	}

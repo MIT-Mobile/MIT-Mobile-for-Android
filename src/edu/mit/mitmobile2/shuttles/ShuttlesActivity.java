@@ -3,9 +3,7 @@ package edu.mit.mitmobile2.shuttles;
 import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;

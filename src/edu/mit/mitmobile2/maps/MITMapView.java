@@ -577,7 +577,6 @@ public class MITMapView extends MapView  {
                 String defaultBasemap = mapServerData.getDefaultBasemap();
                 
                 // add the base layers to the map
-                @SuppressWarnings("unchecked")
 				ArrayList<MapBaseLayer> baseMaps = mapServerData.getBaseLayerGroup().get(defaultBasemap);
                 if (baseMaps != null) {
 	                for (int i = 0; i < baseMaps.size(); i++) {
@@ -645,7 +644,7 @@ public class MITMapView extends MapView  {
     public void syncBaseLayers() {
     	// loops through all base layers defined in the map abstraction object, mao, and adds them to the mapView if they don't already exists
 
-    	Iterator<?> it = mao.getBaseLayers().entrySet().iterator();
+    	Iterator<Map.Entry<String,MapBaseLayer>> it = mao.getBaseLayers().entrySet().iterator();
 		while (it.hasNext()) {
 	        Map.Entry<String,MapBaseLayer> glpairs = (Map.Entry<String,MapBaseLayer>)it.next();
 	        String layerName = (String)glpairs.getKey();
@@ -734,6 +733,7 @@ public class MITMapView extends MapView  {
 
     	private static final long serialVersionUID = 1L;
 
+    	@Override
         public void onStatusChanged(Object source, STATUS status) {
             //conditional checks if mapView's status has changed to initialized 
              if (OnStatusChangedListener.STATUS.INITIALIZED == status && source == this) { 

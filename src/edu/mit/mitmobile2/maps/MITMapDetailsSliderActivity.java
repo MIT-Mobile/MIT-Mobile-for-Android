@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
-import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapItemContent;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
@@ -88,7 +86,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		return super.getPosition();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,11 +97,10 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras != null) {
-			List<MapItem> mapItems = null;
+			ArrayList<MapItem> mapItems = null;
 			if(extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
-				BuildingMapItem b;
-				
 				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
+				
 				//Log.d(TAG,"number of map items = " + mapItems.size());
 			} 	
 
@@ -115,6 +112,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		} 
 	}
 	
+
+
 	private void setMapItems(List<MapItem> mapItems, int position) {
 		mMapItems = mapItems;
 		int totalMapItems = mMapItems.size();

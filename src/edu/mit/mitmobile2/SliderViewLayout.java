@@ -100,7 +100,7 @@ public class SliderViewLayout extends ViewGroup {
 		x = 2*mChildWidth+2*mSpacerWidth - dividerWidth/2;
 		canvas.drawLine(x, 0, x, getHeight(), mDividerPaint);
 	}
-	
+
 	/*
 	 *  these methods add views to the left or right and push off
 	 *  a view which no longer fits and returns it.

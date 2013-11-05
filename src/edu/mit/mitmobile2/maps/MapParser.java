@@ -28,6 +28,7 @@ public class MapParser {
 			JSONObject layerGroups = jobject.getJSONObject("basemaps");
 			
 			// loop through the layer groups
+			@SuppressWarnings("unchecked")
 			Iterator<String> g = layerGroups.keys();
 			while (g.hasNext()) {
 				String group = (String)g.next(); // name of the layer group, i.e. "default"
