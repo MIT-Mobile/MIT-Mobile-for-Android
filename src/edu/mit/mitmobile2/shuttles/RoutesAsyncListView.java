@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,21 +16,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
-import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class RoutesAsyncListView extends LinearLayout implements SliderInterface, OnItemClickListener, OnRefreshListener   {
+public class RoutesAsyncListView extends LinearLayout implements SliderInterface, OnItemClickListener   {
 
-	//private static String TAG = "RoutesAsyncListView";
+	private static String TAG = "RoutesAsyncListView";
 	Activity mActivity;
 	
 	private List<Stops> mStops;
@@ -47,11 +46,12 @@ public class RoutesAsyncListView extends LinearLayout implements SliderInterface
 	
 	RouteItem ri;
 	
-	ListView lv;
+//	ListView lv;
+	PullToRefreshListView lv;
 
 	private Thread mUpdateThread;
 
-	private PullToRefreshAttacher mRefreshAttacher;
+	//private PullToRefreshAttacher mRefreshAttacher;
 
 	
 	/****************************************************/
@@ -97,39 +97,14 @@ public class RoutesAsyncListView extends LinearLayout implements SliderInterface
 			lv.setAdapter(ra);
 		}
 		
-		final Handler routeUpdateHandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				
-				lb.setLastLoaded(new Date());
-				lb.endLoading();
-				mRefreshAttacher.setEnabled(true);
-				mRefreshAttacher.setRefreshComplete();
-				
-				if(msg.arg1 == MobileWebApi.SUCCESS) {
-			    	 ri = ShuttleModel.getUpdatedRoute(ri);
-			    		mStops = ri.stops;
-			    		ra.clear();
-				    	for (Stops s : mStops) {
-				    		 ra.add(s);
-				    	}
-
-			    	 ra.notifyDataSetChanged();
-				} else if (msg.arg1 == MobileWebApi.ERROR) {
-					Toast.makeText(mActivity, MobileWebApi.NETWORK_ERROR, Toast.LENGTH_LONG).show();
-	    			lb.errorLoading();
-				}
-			}
-		};
 		
 		mUpdateThread = new Thread() {
 			@Override
 			public void run() {
-				 int refresh_wait = 1000*20;  // refresh every 20 seconds
-		    	 while(!cancelUpdateThread) {
+				int refresh_wait = 1000*20;  // refresh every 20 seconds
+				while(!cancelUpdateThread) {
 		    		 // Update routes...
-		    		 Log.d("RoutesAsyncListView","fetchRouteDetails from RoutesAsyncListView");
+		    		 Log.d(TAG,"fetchRouteDetails from RoutesAsyncListView");
 		    		 ShuttleModel.fetchRouteDetails(mActivity, ri, routeUpdateHandler);
 		    		 try {
 		    			 Thread.sleep(refresh_wait);
@@ -155,8 +130,27 @@ public class RoutesAsyncListView extends LinearLayout implements SliderInterface
 		
 		setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 		
-		lv = (ListView) topView.findViewById(R.id.routesLV);
+//		lv = (ListView) topView.findViewById(R.id.routesLV);
+		lv = (PullToRefreshListView) topView.findViewById(R.id.routesLV);
 		lv.setOnItemClickListener(this);
+
+		// Set a listener to be invoked when the list should be refreshed.
+		lv.setOnRefreshListener(new OnRefreshListener() {
+		    @Override
+			public void onRefresh() {
+		    	Log.d(TAG,"refresh");
+		    	ShuttleModel.fetchRouteDetails(mActivity, ri, routeUpdateHandler);
+		    	// Do work to refresh the list here.
+		        //new GetDataTask().execute();
+		    	lv.onRefreshComplete();
+		    }
+
+//			public void onRefreshStarted(View arg0) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+		});
+	
 		
 		TextView tv;
 		
@@ -197,9 +191,9 @@ public class RoutesAsyncListView extends LinearLayout implements SliderInterface
 		
 		addView(topView);
 		
-		mRefreshAttacher = ((NewModuleActivity) mActivity).createPullToRefreshAttacher();
-		mRefreshAttacher.setRefreshableView(lv, this);
-		mRefreshAttacher.setEnabled(false);
+		//mRefreshAttacher = ((NewModuleActivity) mActivity).createPullToRefreshAttacher();
+		//mRefreshAttacher.setRefreshableView(lv, this);
+		//mRefreshAttacher.setEnabled(false);
 		
 	}
 	 
@@ -251,8 +245,38 @@ public class RoutesAsyncListView extends LinearLayout implements SliderInterface
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public void onRefreshStarted(View view) {
-		refresh();		
-	}
+	//@Override
+	//public void onRefreshStarted(View view) {
+	//	refresh();		
+	//}
+	
+	
+	final Handler routeUpdateHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			Log.d(TAG,"received message " + msg.obj.toString());
+			super.handleMessage(msg);
+			
+			lb.setLastLoaded(new Date());
+			lb.endLoading();
+			//mRefreshAttacher.setEnabled(true);
+			//mRefreshAttacher.setRefreshComplete();
+			
+			if(msg.arg1 == MobileWebApi.SUCCESS) {
+		    	 ri = ShuttleModel.getUpdatedRoute(ri);
+		    		mStops = ri.stops;
+		    		ra.clear();
+			    	for (Stops s : mStops) {
+			    		 ra.add(s);
+			    	}
+
+		    	 ra.notifyDataSetChanged();
+			} else if (msg.arg1 == MobileWebApi.ERROR) {
+				Toast.makeText(mActivity, MobileWebApi.NETWORK_ERROR, Toast.LENGTH_LONG).show();
+    			lb.errorLoading();
+			}
+		}
+	};
+
+	
 }
