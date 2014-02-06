@@ -1,7 +1,3 @@
 [submodule "ActionBar-PullToRefresh"]
 	path = ActionBar-PullToRefresh
 	url = git@github.com:MIT-Mobile/ActionBar-PullToRefresh.git
-
-[submodule "android-pulltorefresh"]
-	path = android-pulltorefresh
-	url = git@github.com:MIT-Mobile/android-pulltorefresh.git
