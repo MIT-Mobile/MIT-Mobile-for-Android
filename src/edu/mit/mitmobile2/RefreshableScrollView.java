@@ -28,7 +28,7 @@ public class RefreshableScrollView extends ScrollView {
 	}
 	
 	private void initView(Context context) {
-		mMinimumPullPixels = context.getResources().getDisplayMetrics().density;
+		mMinimumPullPixels = MINIMUM_PULL_DISTANCE * context.getResources().getDisplayMetrics().density;
 	}
 	
     @Override
