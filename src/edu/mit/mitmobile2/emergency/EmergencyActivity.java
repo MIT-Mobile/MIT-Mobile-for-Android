@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.Global;
@@ -34,7 +38,7 @@ import edu.mit.mitmobile2.objs.EmergencyItem;
 import edu.mit.mitmobile2.objs.EmergencyItem.Contact;
 
 
-public class EmergencyActivity extends NewModuleActivity {
+public class EmergencyActivity extends NewModuleActivity implements OnRefreshListener {
 
 	private ListView mListView;
 
@@ -42,10 +46,14 @@ public class EmergencyActivity extends NewModuleActivity {
 	private WebView mEmergencyMsgTV = null;
 	private ImageView mEmergencyMsgLoader;
 	private ImageView mEmergencyListLoader;
+	private ScrollView mEmergencyScrollView;
 	
 	TextView emergencyContactsTV;
 
 	SharedPreferences pref;
+
+	private PullToRefreshAttacher mPullToRefreshAttacher;
+
 	
 	static EmergencyItem emergencyItem;
 	
@@ -61,8 +69,13 @@ public class EmergencyActivity extends NewModuleActivity {
 		
 		mEmergencyMsgLoader = (ImageView) findViewById(R.id.emergencyMsgLoader);
 		mEmergencyListLoader = (ImageView) findViewById(R.id.emergencyListLoader);
+		mEmergencyScrollView = (ScrollView) findViewById(R.id.emergencyMainScrollView);
 		
 		pref = this.getSharedPreferences(Global.PREFS,MODE_PRIVATE);  // FIXME
+		
+		mPullToRefreshAttacher = createPullToRefreshAttacher();
+	    mPullToRefreshAttacher.setRefreshableView(mEmergencyScrollView, this);
+	    
 		getData();
 		
 	}
@@ -95,9 +108,7 @@ public class EmergencyActivity extends NewModuleActivity {
 			Date postDate = new Date(emergencyItem.unixtime * 1000);
 			SimpleDateFormat format = new SimpleDateFormat("EEE d, MMM yyyy");
 			String dateStr = format.format(postDate);
-			html = String.format(noticeTemplate,
-				emergencyItem.text,
-				dateStr);
+			html = String.format(noticeTemplate, emergencyItem.text, dateStr);
 		} else {
 			html = emergencyItem.text;
 		}
@@ -185,6 +196,7 @@ public class EmergencyActivity extends NewModuleActivity {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				updateEmergencyText();
+				mPullToRefreshAttacher.setRefreshComplete();
 			}
 		};
 
@@ -194,9 +206,7 @@ public class EmergencyActivity extends NewModuleActivity {
 	// default implementation for primary, and secondary menu items.
 	@Override
 	protected List<MITMenuItem> getPrimaryMenuItems() {
-		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
-		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));
-		return menuItems;
+		return null;
 	}
 	
 	@Override
@@ -217,10 +227,10 @@ public class EmergencyActivity extends NewModuleActivity {
 	}
 
 	@Override
-	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
-		if (optionId.equals("refresh")) {
-			refresh();
-		}
+	protected void onOptionSelected(String optionId) { }
+
+	@Override
+	public void onRefreshStarted(View view) {
+		refresh();		
 	}
 }
