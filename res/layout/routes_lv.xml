@@ -23,17 +23,10 @@
         android:paddingBottom="@dimen/standardPadding"
         style="@style/SmallPrint" />
 		
-<!--  
-    	<ListView android:id="@+id/routesLV"
+	<ListView android:id="@+id/routesLV"
 		android:layout_width="fill_parent" 
 		android:layout_height="0dip" 
 		android:layout_weight="1"
 	 	style="@style/Lists" />
--->
-	<com.markupartist.android.widget.PullToRefreshListView
-	    android:id="@+id/routesLV"
-  		android:layout_height="fill_parent"
-    	android:layout_width="fill_parent"
-    	/>
-		
+
 </LinearLayout>
