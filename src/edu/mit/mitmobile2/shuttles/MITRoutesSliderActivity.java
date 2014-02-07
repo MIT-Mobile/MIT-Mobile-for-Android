@@ -33,10 +33,10 @@ import edu.mit.mitmobile2.objs.VehicleMapItem;
 
 public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	private static final String TAG = "MITRoutesSliderActivity";
-
-	private int selectedPos;
-	private int startPos;
+	private static RoutesAsyncListView curView;
 	
+	private int position;
+
 	static final String KEY_POSITION = "key_position";
 	static final String NOT_RUNNING = "Bus not running. Following schedule.";
 	static final String GPS_ONLINE = "Real time bus tracking online.";
@@ -56,8 +56,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     	}
     	Bundle bundle = getIntent().getExtras();
     	if (null != bundle) {
-    		startPos = bundle.getInt(KEY_POSITION, 0);
-    		selectedPos = startPos;
+    		position = bundle.getInt(KEY_POSITION, 0);
     	}
     	
     	createViews();
@@ -65,22 +64,30 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     /****************************************************/
 	@Override
 	protected void onPause() {
-		RoutesAsyncListView oldView = (RoutesAsyncListView) getScreen(selectedPos);
-		oldView.terminate();
+		for (int x=0; x < ShuttleModel.getSortedRoutes().size(); x++) {
+		    curView = (RoutesAsyncListView) getScreen(x);
+			if (curView!=null) curView.terminate();
+    	}
+		
+		//if (curView!=null) curView.terminate();
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop() {
-		//there is no need to terminate RoutesAsyncListView as onPause takes care of this
+		for (int x=0; x < ShuttleModel.getSortedRoutes().size(); x++) {
+		    curView = (RoutesAsyncListView) getScreen(x);
+			if (curView!=null) curView.terminate();
+    	}
+
+		//if (curView!=null) curView.terminate();
 		super.onStop();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		RoutesAsyncListView oldView = (RoutesAsyncListView) getScreen(startPos);
-		if(oldView!=null) oldView.onSelected();
+		if (curView!=null) curView.onSelected();
 	}
 	
 	
@@ -94,27 +101,23 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 
     		RouteItem r = ShuttleModel.getSortedRoutes().get(x);
     		
-    		String routeId = r.route_id; //r.title;
+    		String routeId = r.title;
     		
     		cv = new RoutesAsyncListView(this, routeId, r);
 
     		addScreen(cv, r.title, r.title);
     	}
-    	setPosition(startPos);
+    	setPosition(position);
     }
     
 	@Override
 	public void onPositionChanged(int newPosition, int oldPosition) {
 	    super.onPositionChanged(newPosition, oldPosition);	
 	    Log.d("ZZZ","onPositionChanged");
-	    if (oldPosition == -1)
-	    	return;
-	    
-	    if (oldPosition >= 0) {
-	    	RoutesAsyncListView oldView = (RoutesAsyncListView) getScreen(oldPosition);
-	    	oldView.terminate();
+	    if(curView != null) {
+		curView.terminate();
 	    }
-	    selectedPos = newPosition;
+	    curView = (RoutesAsyncListView) getScreen(newPosition);
 	}
 
 	@Override
@@ -130,14 +133,16 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
 	}
 	@Override
 	protected NewModule getNewModule() {
+		// TODO Auto-generated method stub
 		return new ShuttlesModule();
 	}
 
 	@Override
 	protected void onOptionSelected(String optionId) {
+		// TODO Auto-generated method stub
 		if (optionId.equals("viewmap")) {
 			Log.d(TAG,"viewmap");
-			String routeId = ShuttleModel.getSortedRoutes().get(selectedPos).route_id;
+			String routeId = ShuttleModel.getSortedRoutes().get(position).route_id;
 			MITRoutesSliderActivity.launchShuttleRouteMap(this, ShuttleModel.getRoute(routeId), ShuttleModel.getRoute(routeId).stops, getPosition());
 		}
 	}
