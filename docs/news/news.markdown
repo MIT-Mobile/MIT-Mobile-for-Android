@@ -114,7 +114,7 @@ Only the [Top List](#toplist) and [Category List](#categorylist) screens cache s
 
 The two API resources to be cached are the category list call ([http://m.mit.edu/apis/news/categories](http://m.mit.edu/apis/news/categories)) and the list of stories in those categories (e.g. [http://m.mit.edu/apis/news/stories?category=mit_news](http://m.mit.edu/apis/news/stories?category=mit_news)).
 
-Both of those include cache-control headers which should be relied upon to decide how long to cache that data. Top List and Category List should check, when they become visible, if their relevant cached data is stale and refresh it as needed.
+Both of those include cache-control headers which should be relied upon to decide how long to cache that data. Top List and Category List should check, when they become visible, if their relevant cached data is stale and refresh it as needed. Stale data should only be replaced if the app is able to get new data from the API. The app should never get in a state where the user sees no categories because their data got stale or the APIs are down.
 
 Story images should be loaded lazily.
 
