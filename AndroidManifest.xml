@@ -249,8 +249,8 @@
         <activity android:name=".settings.MITSettingsActivity" />
 
         <!-- TOUCHSTONE -->
-        <activity android:name=".touchstone.TouchstoneActivity" />
-        <activity android:name=".touchstone.TouchstonePrefsActivity"></activity>
+        <activity android:name=".touchstone.TouchstoneActivity" android:launchMode="singleTop" />
+        <activity android:name=".touchstone.TouchstonePrefsActivity" android:launchMode="singleTop"></activity>
 
         <!-- LIBRARIES -->
         <activity android:name=".libraries.LibrariesActivity" />
