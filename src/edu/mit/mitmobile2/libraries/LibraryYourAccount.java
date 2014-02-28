@@ -144,7 +144,8 @@ public class LibraryYourAccount extends NewModuleActivity {
 		
 		setUpViews();
 		setUpButtons();
-		LibraryModel.getUserIdentity(mActivity, loginUiHandler);
+		setUpTabs();
+		//LibraryModel.getUserIdentity(mActivity, loginUiHandler);
     }
 
 	// SET UP VIEWS

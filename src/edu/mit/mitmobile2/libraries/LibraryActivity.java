@@ -3,10 +3,12 @@ package edu.mit.mitmobile2.libraries;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
 public class LibraryActivity extends NewModuleActivity {
 
@@ -30,11 +33,13 @@ public class LibraryActivity extends NewModuleActivity {
 
     private FullScreenLoader mLoadingView;
     private LinearLayout mLinearLayout;
+    private Activity mActivity;
+    private static String TAG = "LibraryActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mActivity = this;
         createViews();
 
         doSearch();
@@ -54,7 +59,7 @@ public class LibraryActivity extends NewModuleActivity {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LibraryActivity.this, LibraryYourAccount.class));
+        		LibraryModel.getUserIdentity(mActivity, yourAccountHandler);
             }
         });
         locationRow.setOnClickListener(new OnClickListener() {
@@ -75,7 +80,7 @@ public class LibraryActivity extends NewModuleActivity {
 
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LibraryActivity.this, TellUsActivity.class));
+        		LibraryModel.getUserIdentity(mActivity, tellUsHandler);
             }
         });
 
@@ -142,7 +147,40 @@ public class LibraryActivity extends NewModuleActivity {
         }
     };
 
+    private Handler yourAccountHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        	
+        	Log.d(TAG,"touchstone messsage = " + msg.arg1);
+        	if (msg.arg1 == MobileWebApi.SUCCESS) {
+        		UserIdentity userIdentity = (UserIdentity)msg.obj;
+        		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
+        		Log.d(TAG,"username = " + userIdentity.getUsername());
+        		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
+        		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
+        			  startActivity(new Intent(LibraryActivity.this, LibraryYourAccount.class));
+        		}
+        	}
+        }
+    };
 
+    private Handler tellUsHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        	
+        	Log.d(TAG,"touchstone messsage = " + msg.arg1);
+        	if (msg.arg1 == MobileWebApi.SUCCESS) {
+        		UserIdentity userIdentity = (UserIdentity)msg.obj;
+        		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
+        		Log.d(TAG,"username = " + userIdentity.getUsername());
+        		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
+        		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
+        		    startActivity(new Intent(LibraryActivity.this, TellUsActivity.class));
+        		}
+        	}
+        }
+    };
+    
     static class LinkItem {
         public String title;
         public String url;
