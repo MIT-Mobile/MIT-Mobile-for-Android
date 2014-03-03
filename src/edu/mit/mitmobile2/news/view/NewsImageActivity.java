@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.news.view;
 
-import java.util.List;
 
 import edu.mit.mitmobile2.ActivityPassingCache;
 import edu.mit.mitmobile2.LoadingUIHelper;
@@ -12,7 +11,7 @@ import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.StyledContentHTML;
 import edu.mit.mitmobile2.news.NewsModule;
 import edu.mit.mitmobile2.news.beans.NewsStory;
-import edu.mit.mitmobile2.objs.NewsItem;
+//import edu.mit.mitmobile2.objs.NewsItem;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,23 +45,23 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 		
 		super.onCreate(savedInstanceState);
 		
-		long newsItemCacheId = getIntent().getLongExtra(NEWS_ITEM_ID_KEY, -1);
+		/*long newsItemCacheId = getIntent().getLongExtra(NEWS_ITEM_ID_KEY, -1);
 		NewsStory newsItem = sNewsItemCache.get(newsItemCacheId);
-		/*List<Image> allImages = newsItem.getAllImages();
+		List<Image> allImages = newsItem.getAllImages();
 		for(int i=0; i < allImages.size(); i++) {
 			NewsStory.Image image = allImages.get(i);
 			addScreen(new NewsImageSliderInterface(image), image.imageCaption, "" + (i+1) + " of " + allImages.size());
 		}*/
 		setPosition(getPositionValue());
 	}
-	
+	/*
 	private class NewsImageSliderInterface implements SliderInterface {
 		NewsItem.Image mImage;
 		NewsImageView mView;
-		/*
-		NewsImageSliderInterface(NewsItem.Image image) {
-			mImage = image;
-		}*/
+		
+		//NewsImageSliderInterface(NewsItem.Image image) {
+		//	mImage = image;
+		//}
 		
 		@Override
 		public View getView() {
@@ -129,7 +128,7 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 			}
 		}
 	}
-
+	*/
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;

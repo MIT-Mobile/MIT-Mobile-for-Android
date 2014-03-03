@@ -23,14 +23,13 @@ public class NewsSliderCursorAdapter extends NewsCategoryLoader implements NewsS
     
     
     
-    NewsSliderCursorAdapter(Context context, String category_id, StorySliderListener storyListener, boolean hasDynamicLoading) {
+    NewsSliderCursorAdapter(Context context, String criteria,String type,int start, int limit, StorySliderListener storyListener, boolean hasDynamicLoading) {
 		super(context);
     	mContext = context;
 		this.position = 0;
-		this.category = category_id;
 		mStoryListener = storyListener;
 		mHasDynamicLoading = hasDynamicLoading;
-		loadCategory();
+		loadStories(criteria,type,start,limit);
     }
 
     @Override

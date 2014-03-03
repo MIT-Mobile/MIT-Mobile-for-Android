@@ -24,7 +24,8 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Load
 	public static final String STORY_ID_KEY = "story_id";
 	public static final String CATEGORY_ID_KEY = "category_id";
 	public static final String SEARCH_TERM_KEY = "search_term";
-	public static final String BOOKMARKS_KEY = "bookmarks";
+	public static final String SEARCH_LIMIT = "search_limit";
+	//public static final String BOOKMARKS_KEY = "bookmarks";
 	
 	private static final String MENU_BOOKMARKED = "menu_bookmark";
 	private static final String MENU_SHARE = "menu_share";
@@ -185,24 +186,20 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Load
 			story_id = extras.getString(STORY_ID_KEY);
 		}
 		if(extras.containsKey(CATEGORY_ID_KEY)) {
-		    mSliderAdapter = new NewsSliderCursorAdapter(this, extras.getString(CATEGORY_ID_KEY), this, false);
-		    ((NewsSliderCursorAdapter) mSliderAdapter).setStartStory(story_id);
-			((NewsSliderCursorAdapter) mSliderAdapter).setLoadingScreenListener(this);
-			
-		}/* else if(extras.containsKey(SEARCH_TERM_KEY)) {
-		    
-			mSearchTerm = extras.getString(SEARCH_TERM_KEY);
-			List<NewsItem> newsItems = mNewsModel.executeLocalSearch(mSearchTerm);
-			mSliderAdapter = new NewsSliderListAdapter(this, newsItems, this);
-			
-		} else if(extras.containsKey(BOOKMARKS_KEY)) {
+		    mSliderAdapter = new NewsSliderCursorAdapter(this, extras.getString(CATEGORY_ID_KEY),"category",0,20, this, false);
+		} else if(extras.containsKey(SEARCH_TERM_KEY)) {
+			int search_limit = 20;
+			if(extras.containsKey(SEARCH_LIMIT)){
+				search_limit = extras.getInt(SEARCH_LIMIT);
+			}
+			mSliderAdapter = new NewsSliderCursorAdapter(this, extras.getString(SEARCH_TERM_KEY),"search",0,search_limit, this, false);
+		}/* else if(extras.containsKey(BOOKMARKS_KEY)) {
 			mBookmarks  = true;
 			Cursor newsCursor = mNewsModel.getBookmarksCursor();
 			mSliderAdapter = new NewsSliderCursorAdapter(this, newsCursor, this, false);
-		}
- 
-		mSliderAdapter.seekToNewsItem(mStartPosition);
-		*/
+		}*/
+		((NewsSliderCursorAdapter) mSliderAdapter).setStartStory(story_id);
+		((NewsSliderCursorAdapter) mSliderAdapter).setLoadingScreenListener(this);
 		return mSliderAdapter;
 	}
 

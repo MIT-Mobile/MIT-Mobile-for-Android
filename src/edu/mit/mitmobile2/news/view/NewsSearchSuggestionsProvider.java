@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.news;
+package edu.mit.mitmobile2.news.view;
 
 import edu.mit.mitmobile2.MITSearchRecentsProvider;
 import edu.mit.mitmobile2.about.Config;

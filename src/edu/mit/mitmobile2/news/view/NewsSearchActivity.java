@@ -17,7 +17,6 @@ import edu.mit.mitmobile2.news.view.NewsArrayAdapter;
 import edu.mit.mitmobile2.news.NewsModule;
 //import edu.mit.mitmobile2.news.NewsModel;
 //import edu.mit.mitmobile2.news.NewsModule;
-import edu.mit.mitmobile2.news.NewsSearchSuggestionsProvider;
 import edu.mit.mitmobile2.news.beans.NewsStory;
 //import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.SearchResults;
@@ -48,7 +47,6 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 	protected void initiateSearch(String searchTerm, final Handler uiHandler) {
 		mSearchTerm = searchTerm;
 		NewsDownloader.DownloadStoriesTask dst = nd.new DownloadStoriesTask(new StoriesProgressListener(){
-			//ArrayList<NewsStory> allStories = new ArrayList<NewsStory>();
 			SearchResults<NewsStory> results;
 			@Override
 			public void onProgressUpdate(ArrayList<NewsStory>... list) {
@@ -87,10 +85,15 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 
 	@Override
 	protected void onItemSelected(SearchResults<NewsStory> results, NewsStory item) {
-		Intent intent = new Intent(NewsSearchActivity.this, NewsDetailsActivity.class);
+		/*Intent intent = new Intent(NewsSearchActivity.this, NewsDetailsActivity.class);
 		intent.putExtra(NewsDetailsActivity.KEY_POSITION, results.getItemPosition(item));
 		intent.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, results.getSearchTerm());
-		startActivity(intent);
+		startActivity(intent);*/
+		Intent i  = new Intent(this, NewsDetailsActivity.class);
+		i.putExtra(NewsDetailsActivity.STORY_ID_KEY, item.getId());
+		i.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, mSearchTerm);
+		i.putExtra(NewsDetailsActivity.SEARCH_LIMIT, results.totalResultsCount());
+		startActivity(i);
 		
 	}
 
@@ -130,9 +133,7 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 				MobileWebApi.sendSuccessMessage(uiHandler, results);
 			}
 			
-		}, "search",previousResults.getResultsList().size(),20);
+		}, "search",previousResults.totalResultsCount(),20);
 		dst.execute(new String[]{mSearchTerm});
-		//mNewsModel.executeSearch(mSearchTerm, uiHandler, previousResults.getResultsList().size());
-		
 	}
 }

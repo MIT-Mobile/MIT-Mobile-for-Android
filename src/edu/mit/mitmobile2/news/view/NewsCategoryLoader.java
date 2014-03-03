@@ -16,7 +16,8 @@ public abstract class NewsCategoryLoader {
 	boolean isLoading = false;
 	int position;
     String start_story_id;
-    String category;
+    //String criteria;
+    //String type;
 	
     //abstract void categoryLoaded();
     
@@ -33,8 +34,8 @@ public abstract class NewsCategoryLoader {
 		return this.mLoadingScreenListener;
 	}*/
 	
-	public void loadCategory(){
-    	String[] cats = new String[]{this.category};
+	public void loadStories(String criteria, String type, int start, int limit){
+    	String[] cats = new String[]{criteria};
 		
     	final NewsCategoryLoader ncl = this;
 		
@@ -67,7 +68,7 @@ public abstract class NewsCategoryLoader {
 					mLoadingScreenListener.onStoriesLoaded();
 			}
 			
-		}, "category");
+		}, type, start, limit);
 		dst.execute(cats);
     }
 	
