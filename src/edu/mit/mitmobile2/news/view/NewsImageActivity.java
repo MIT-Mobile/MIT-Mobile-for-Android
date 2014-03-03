@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.news;
+package edu.mit.mitmobile2.news.view;
 
 import java.util.List;
 
@@ -10,8 +10,9 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.StyledContentHTML;
+import edu.mit.mitmobile2.news.NewsModule;
+import edu.mit.mitmobile2.news.beans.NewsStory;
 import edu.mit.mitmobile2.objs.NewsItem;
-import edu.mit.mitmobile2.objs.NewsItem.Image;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,11 +29,11 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 
 	static final String NEWS_ITEM_ID_KEY = "news_item_cache_id";
 	
-	private static ActivityPassingCache<NewsItem> sNewsItemCache = new ActivityPassingCache<NewsItem>();
+	private static ActivityPassingCache<NewsStory> sNewsItemCache = new ActivityPassingCache<NewsStory>();
 	
 	public static final String TAG = "NewsImageActivity";
 	
-	public static void launchActivity(Context context, NewsItem newsItem) {
+	public static void launchActivity(Context context, NewsStory newsItem) {
 		Intent i = new Intent(context, NewsImageActivity.class); 
 		long id = sNewsItemCache.put(newsItem);
 		i.putExtra(NEWS_ITEM_ID_KEY, id);
@@ -46,22 +47,22 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 		super.onCreate(savedInstanceState);
 		
 		long newsItemCacheId = getIntent().getLongExtra(NEWS_ITEM_ID_KEY, -1);
-		NewsItem newsItem = sNewsItemCache.get(newsItemCacheId);
-		List<Image> allImages = newsItem.getAllImages();
+		NewsStory newsItem = sNewsItemCache.get(newsItemCacheId);
+		/*List<Image> allImages = newsItem.getAllImages();
 		for(int i=0; i < allImages.size(); i++) {
-			NewsItem.Image image = allImages.get(i);
+			NewsStory.Image image = allImages.get(i);
 			addScreen(new NewsImageSliderInterface(image), image.imageCaption, "" + (i+1) + " of " + allImages.size());
-		}
+		}*/
 		setPosition(getPositionValue());
 	}
 	
 	private class NewsImageSliderInterface implements SliderInterface {
 		NewsItem.Image mImage;
 		NewsImageView mView;
-		
+		/*
 		NewsImageSliderInterface(NewsItem.Image image) {
 			mImage = image;
-		}
+		}*/
 		
 		@Override
 		public View getView() {

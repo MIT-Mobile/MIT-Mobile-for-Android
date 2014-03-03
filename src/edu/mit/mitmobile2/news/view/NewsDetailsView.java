@@ -1,9 +1,11 @@
-package edu.mit.mitmobile2.news;
+package edu.mit.mitmobile2.news.view;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -12,11 +14,11 @@ import android.os.Handler;
 
 import android.webkit.WebChromeClient;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.webkit.JsResult;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -30,22 +32,26 @@ import edu.mit.mitmobile2.NewModuleActivity.OnPausedListener;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderActivity;
-import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.news.beans.NewsStory;
 
 public class NewsDetailsView extends WebView {
 	private Handler mHandler = new Handler();
 
 
 	NewModuleActivity mModuleActivity;
-	NewsItem mNewsItem;
+	NewsStory mNewsItem;
 	static final String TAG = "NewsDetailsView";
 	
-    static final SimpleDateFormat sDateFormat = new SimpleDateFormat("EEE d, MMM yyyy");
-    
+    static final SimpleDateFormat sDateFormat = new SimpleDateFormat("EEE d, MMM yyyy",Locale.US);
+    static final SimpleDateFormat fromDate = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZZZZZ", Locale.US);
     SliderActivity mSliderActivity;
 	
 	/****************************************************/
-	public NewsDetailsView(Context context, NewsItem newsItem) {
+    
+    public NewsDetailsView(Context context){
+    	this(context,new NewsStory());
+    }
+	public NewsDetailsView(Context context, NewsStory newsItem) {
 		super(context);
 		mModuleActivity = (NewModuleActivity) context;
 		mNewsItem = newsItem;
@@ -54,44 +60,64 @@ public class NewsDetailsView extends WebView {
 	}
 	
 
+	@SuppressLint("SetJavaScriptEnabled")
 	private void populateView() {
 		// standard view
 			
-		NewsModel newsModel = new NewsModel(mModuleActivity);
-		newsModel.populateImages(mNewsItem);
+		//NewsModel newsModel = new NewsModel(mModuleActivity);
+		//newsModel.populateImages(mNewsItem);
 		
 		// Web template
 		setFocusable(false);
 		String templateHtml = readTextFromResource(R.raw.news_detail);
 		
 		// Set Title
-		templateHtml = templateHtml.replace("__TITLE__", mNewsItem.title);
-		
+		if(mNewsItem.getTitle()!=null)
+			templateHtml = templateHtml.replace("__TITLE__", mNewsItem.getTitle());
+		else
+			templateHtml = templateHtml.replace("__TITLE__", "");
 		// Set Author
-		templateHtml = templateHtml.replace("__AUTHOR__", mNewsItem.author);
-		
+		if(mNewsItem.getAuthor()!=null)
+			templateHtml = templateHtml.replace("__AUTHOR__", mNewsItem.getAuthor());
+		else
+			templateHtml = templateHtml.replace("__AUTHOR__", "");
 		// Set Date
-		templateHtml = templateHtml.replace("__DATE__", sDateFormat.format(mNewsItem.postDate));
-					
+		if(mNewsItem.getPublishedAt()!=null){
+			try {
+				templateHtml = templateHtml.replace("__DATE__", sDateFormat.format(fromDate.parse(mNewsItem.getPublishedAt())));
+			} catch (ParseException e) {
+				Log.d("NEWS",e.getLocalizedMessage());
+				templateHtml = templateHtml.replace("__DATE__","");
+			}
+		}else{
+			templateHtml = templateHtml.replace("__DATE__","");
+		}
 		// Set Description
-		templateHtml = templateHtml.replace("__DEK__", mNewsItem.description);
-		
+		if(mNewsItem.getDek()!=null)
+			templateHtml = templateHtml.replace("__DEK__", mNewsItem.getDek());
+		else
+			templateHtml = templateHtml.replace("__AUTHOR__", "");
 		// Set Image Count
 		int galleryCount = 0;
 		
-		if(mNewsItem.img != null) {
-			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", mNewsItem.img.smallURL);				
-			galleryCount = mNewsItem.getAllImages().size();
+		if(mNewsItem.getCoverImage() != null) {
+			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", mNewsItem.getCoverImage().getRepresentations().get(0).getUrl());
+			if(mNewsItem.getGalleryImages()!=null)
+				galleryCount = mNewsItem.getGalleryImages().size();
+			else
+				galleryCount = 0;
 		}
 		templateHtml = templateHtml.replace("__GALLERY_COUNT__", galleryCount + "");								
 		
 		// Set Body
-		templateHtml = templateHtml.replace("__BODY__", mNewsItem.body);
-		
-		String bookmarkClass = newsModel.isBookmarked(mNewsItem) ? "on" : "off";
+		if(mNewsItem.getBodyHtml()!=null)
+			templateHtml = templateHtml.replace("__BODY__", mNewsItem.getBodyHtml());
+		else
+			templateHtml = templateHtml.replace("__BODY__", "");
+		String bookmarkClass = "off"; //newsModel.isBookmarked(mNewsItem) ? "on" : "off";
 		templateHtml = templateHtml.replace("__BOOKMARK__", bookmarkClass);
 
-		Log.d(TAG,"html = " + templateHtml);
+		//Log.d(TAG,"html = " + templateHtml);
 		
 		getSettings().setJavaScriptEnabled(true);
 		getSettings().setSupportZoom(false);
@@ -122,6 +148,7 @@ public class NewsDetailsView extends WebView {
 	    return stream.toString();
 	}
 	
+	/*
 	@SuppressWarnings("unused")
 	private static class PictureFailedToLoadHandler extends WebViewClient {
 		@Override
@@ -129,7 +156,7 @@ public class NewsDetailsView extends WebView {
 			view.setVisibility(View.GONE);
 		}
 	}
-
+*/
 
     /**
      * Provides a hook for calling "alert" from javascript. Useful for
@@ -237,17 +264,17 @@ public class NewsDetailsView extends WebView {
          * loadUrl on the UI thread.
          */
         public void clickBookmarkButton(String status) {
-        	NewsModel newsModel = new NewsModel(mModuleActivity);
+        	/*NewsModel newsModel = new NewsModel(mModuleActivity);
         	boolean bookmarkStatus = status.equals("on");
-        	newsModel.setStoryBookmarkStatus(mNewsItem, bookmarkStatus);
+        	newsModel.setStoryBookmarkStatus(mNewsItem, bookmarkStatus);*/
         }
  
         public void clickShareButton() {
             mHandler.post(new Runnable() {
                 @Override
 				public void run() {
-        			String url  = "http://" + Global.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(mNewsItem.story_id);
-        			CommonActions.shareCustomContent(mModuleActivity, mNewsItem.title, mNewsItem.description, url);
+        			String url  = "http://" + Global.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(Integer.parseInt(mNewsItem.getId()));
+        			CommonActions.shareCustomContent(mModuleActivity, mNewsItem.getTitle(), mNewsItem.getDek(), url);
                 }
             });
         }
@@ -257,7 +284,7 @@ public class NewsDetailsView extends WebView {
             mHandler.post(new Runnable() {
                 @Override
 				public void run() {
-					NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
+					//NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
 
                 }
             });

@@ -6,7 +6,7 @@
   android:layout_height="fill_parent">
   
 		
-	<ListView android:id="@+id/newsCategoryLV"
+	<ListView android:id="@+id/newsTopStoriesLV"
 		android:layout_width="fill_parent" 
 		android:layout_height="0dip" 
 		android:layout_weight="1"

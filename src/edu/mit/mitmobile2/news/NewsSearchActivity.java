@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.widget.ArrayAdapter;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.SearchActivity;
+import edu.mit.mitmobile2.news.view.NewsDetailsActivity;
 import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.SearchResults;
 

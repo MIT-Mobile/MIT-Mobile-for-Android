@@ -17,7 +17,9 @@ public abstract class SliderNewModuleActivity extends NewModuleActivity {
 	
 	abstract protected SliderView.Adapter getSliderAdapter();
 	
-	protected abstract String getCurrentHeaderTitle();
+	protected String getCurrentHeaderTitle(){
+		return "";
+	}
 	
 	protected void onSliderSeek() {
 	    // default implementation does nothing

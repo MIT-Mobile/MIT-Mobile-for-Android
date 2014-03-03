@@ -1,59 +1,56 @@
-package edu.mit.mitmobile2.news;
-
-import java.util.List;
+package edu.mit.mitmobile2.news.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.IdEncoder;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
-import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderNewModuleActivity;
 import edu.mit.mitmobile2.SliderView;
-import edu.mit.mitmobile2.news.NewsSliderCursorAdapter.OnLoadingScreenListener;
-import edu.mit.mitmobile2.objs.NewsItem;
+import edu.mit.mitmobile2.news.NewsModule;
+import edu.mit.mitmobile2.news.beans.NewsStory;
+import edu.mit.mitmobile2.news.net.NewsDownloader;
 
-public class NewsDetailsActivity extends SliderNewModuleActivity implements StorySliderListener, OnLoadingScreenListener {
+public class NewsDetailsActivity extends SliderNewModuleActivity implements LoadingScreenListener, StorySliderListener {
 	
 	static final String TAG = "NewsDetailsActivity";
 	
+	public static final String STORY_ID_KEY = "story_id";
 	public static final String CATEGORY_ID_KEY = "category_id";
-	static final String SEARCH_TERM_KEY = "search_term";
-	static final String BOOKMARKS_KEY = "bookmarks";
+	public static final String SEARCH_TERM_KEY = "search_term";
+	public static final String BOOKMARKS_KEY = "bookmarks";
 	
 	private static final String MENU_BOOKMARKED = "menu_bookmark";
 	private static final String MENU_SHARE = "menu_share";
 	
 	boolean mBookmarks = false;
-	int mCategoryId = -1;
+	String mCategoryId = "";
 	String mSearchTerm = null;
 	MITPlainSecondaryTitleBar mSecondaryTitleBar;
 	
 	Context ctx;
-	private int mStartPosition;
 	private int mLastSavedPosition;
 	public static String KEY_POSITION = "position";
 	
-	NewsModel mNewsModel;
+	static private NewsSliderAdapter mSliderAdapter;
+	
+	//NewsModel mNewsModel;
 	
 	private MITMenuItem mBookmarkMenuItem;
-	
+	NewsDownloader np;
 	/****************************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
-
-		if (mSliderAdapter.getStoriesCount() == 0) {
-			// gracefull exit
+		np = NewsDownloader.getInstance(this);
+		
+		if (!mSliderAdapter.isLoading()  && mSliderAdapter.getStoriesCount() == 0) {
 			finish();
 			return;
 		}
@@ -79,8 +76,8 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 		super.onNewIntent(intent);
 		
 		Bundle extras = getIntent().getExtras();
-		if (extras != null){
-		    	mSliderAdapter.seekToNewsItem(extras.getInt(KEY_POSITION));
+		if (extras != null && extras.getString(STORY_ID_KEY)!=null){
+		    	mSliderAdapter.seekToNewsItem(extras.getString(STORY_ID_KEY));
 		    	refreshScreens();
 		}
 		
@@ -100,22 +97,22 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 			@Override
 			public void onOptionItemSelected(String optionId) {
 				// TODO Auto-generated method stub
-				NewsItem newsItem = mSliderAdapter.getCurrentNewsItem();
+				NewsStory newsItem = mSliderAdapter.getCurrentNewsItem();
 				if(optionId.equals(MENU_BOOKMARKED)) {			
 					// toggle bookmark status
-					updateBookmarkMenuItem();
-					mNewsModel.setStoryBookmarkStatus(newsItem, !mNewsModel.isBookmarked(newsItem));
+					//updateBookmarkMenuItem();
 					
 				} else if(optionId == MENU_SHARE) {
 					@SuppressWarnings("static-access")
-					String url  = "http://" + app.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(newsItem.story_id);
-					CommonActions.shareCustomContent(NewsDetailsActivity.this, newsItem.title, newsItem.description, url);
+					String url  = "http://" + app.getMobileWebDomain() + "/n/" + IdEncoder.shortenId(Integer.valueOf(newsItem.getId()));
+					CommonActions.shareCustomContent(NewsDetailsActivity.this, newsItem.getTitle(), newsItem.getDekText(), url);
 				}
 			}
 		});
 		getTitleBar().addSecondaryBar(mSecondaryTitleBar);
 	}
 	
+	/*
 	private void updateBookmarkMenuItem() {
 		if (mBookmarkMenuItem.getIconResId() == R.drawable.menu_remove_bookmark) {
 			mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
@@ -124,12 +121,13 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 		}
 		mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
 	}
-
+	*/
+	
 	private String newsCategoryTitle() {
-		if(mCategoryId >= 0) {
-			NewsModel newsModel = new NewsModel(this);
-			return newsModel.getCategoryTitle(mCategoryId);
-		} else if (mSearchTerm != null) {
+		NewsStory newsItem = mSliderAdapter.getCurrentNewsItem();
+		if(newsItem.getCategory()!=null && newsItem.getCategory().getName()!=null){
+			return newsItem.getCategory().getName();
+		}else if (mSearchTerm != null) {
 			return "Search Results";
 		} else if (mBookmarks) {
 			return "Bookmarks";
@@ -172,96 +170,55 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Stor
 		// TODO Auto-generated method stub
 		
 	}
-
-	static private NewsSliderAdapter mSliderAdapter;
-	
-	interface NewsSliderAdapter extends SliderView.Adapter {
-	    public void seekToNewsItem(int position);
-	
-	    public NewsItem getCurrentNewsItem();
-	    
-	    public int getStoriesCount();
-	}
-	
-	static interface StoryListener {
-
-	}
 	
 	@Override
 	protected SliderView.Adapter getSliderAdapter() {
-		mStartPosition = getPositionValue();
+		//mStartPosition = getPositionValue();
 
 		//initSecondaryTitleBar();
 		
-		mNewsModel = new NewsModel(this);
+
 		
 		Bundle extras = getIntent().getExtras();
+		String story_id = null;
+		if(extras.containsKey(STORY_ID_KEY)){
+			story_id = extras.getString(STORY_ID_KEY);
+		}
 		if(extras.containsKey(CATEGORY_ID_KEY)) {
-		    
-			mCategoryId = extras.getInt(CATEGORY_ID_KEY);
-			Cursor newsCursor = mNewsModel.getNewsCursor(mCategoryId);
-			mSliderAdapter = new NewsSliderCursorAdapter(this, newsCursor, this, true);
-			((NewsSliderCursorAdapter) mSliderAdapter).setOnLoadingScreenListener(this);
+		    mSliderAdapter = new NewsSliderCursorAdapter(this, extras.getString(CATEGORY_ID_KEY), this, false);
+		    ((NewsSliderCursorAdapter) mSliderAdapter).setStartStory(story_id);
+			((NewsSliderCursorAdapter) mSliderAdapter).setLoadingScreenListener(this);
 			
-		} else if(extras.containsKey(SEARCH_TERM_KEY)) {
+		}/* else if(extras.containsKey(SEARCH_TERM_KEY)) {
 		    
 			mSearchTerm = extras.getString(SEARCH_TERM_KEY);
 			List<NewsItem> newsItems = mNewsModel.executeLocalSearch(mSearchTerm);
 			mSliderAdapter = new NewsSliderListAdapter(this, newsItems, this);
 			
 		} else if(extras.containsKey(BOOKMARKS_KEY)) {
-			mBookmarks = true;
+			mBookmarks  = true;
 			Cursor newsCursor = mNewsModel.getBookmarksCursor();
 			mSliderAdapter = new NewsSliderCursorAdapter(this, newsCursor, this, false);
 		}
  
 		mSliderAdapter.seekToNewsItem(mStartPosition);
-		
+		*/
 		return mSliderAdapter;
 	}
 
-	@Override
-	protected String getCurrentHeaderTitle() {
-	    return "";
-	}
-
-	boolean mIsLoadingMoreStories = false;
+	//boolean mIsLoadingMoreStories = false;
 	
 	@Override
-	public void onLoadingScreenSelected(final NewsSliderCursorAdapter adapter, final Cursor cursor) {
-	    if (!mIsLoadingMoreStories) {
-		mIsLoadingMoreStories = true;
-		int lastStoryID = adapter.getLastStoryItem().story_id;
-		final int currentSize = cursor.getCount();
-		
-		mNewsModel.fetchCategory(mCategoryId, lastStoryID, false, new Handler() {
-		    
-		    @Override
-		    public void handleMessage(Message msg) {
-			mIsLoadingMoreStories = false;
-			if (msg.arg1 == MobileWebApi.SUCCESS) {
-			    cursor.requery();
-			    cursor.moveToPosition(currentSize);
-			    adapter.stopLoading();
-			    refreshScreens();
-			} else {
-			    adapter.showError();
-			}
-		    }
-		});
-	    }	    
+	public void onStoriesLoaded() {
+		((NewsSliderCursorAdapter)mSliderAdapter).stopLoading();
+		refreshScreens();
 	}
 
 	@Override
-	public void onStorySelected(NewsItem newsItem) {
-	    
-	    	/*
-		if (mNewsModel.isBookmarked(newsItem)) {
-			mBookmarkMenuItem.setIconResId(R.drawable.menu_remove_bookmark);
-		} else {
-			mBookmarkMenuItem.setIconResId(R.drawable.menu_add_bookmark);
-		}
-		mSecondaryTitleBar.updateMenuItem(mBookmarkMenuItem);
-		*/
+	public void onStorySelected(NewsStory newsItem) {
+		// TODO Auto-generated method stub
+		
 	}
+
+
 }

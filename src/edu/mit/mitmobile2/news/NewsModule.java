@@ -9,6 +9,7 @@ import android.content.Intent;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.view.NewsTopListActivity;
 
 public class NewsModule extends NewModule {
 
@@ -24,7 +25,7 @@ public class NewsModule extends NewModule {
 	
 	@Override
 	public Class<? extends Activity> getModuleHomeActivity() {
-		return NewsListActivity.class;
+		return NewsTopListActivity.class;
 	}
 
 	@Override

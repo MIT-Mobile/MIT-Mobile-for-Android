@@ -190,8 +190,10 @@
         <activity android:name=".people.PeopleDetailActivity" android:configChanges="orientation">
             <meta-data android:name="android.app.default_searchable" android:value=".people.PeopleSearchActivity" />
         </activity>
-
-        <activity android:name=".news.NewsListActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+		<activity android:name="edu.mit.mitmobile2.news.view.NewsTopListActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+            <meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
+        </activity>
+        <activity android:name=".news.view.NewsCategoryListActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
             <meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
         </activity>
         <activity android:name=".news.NewsSearchActivity"
@@ -207,10 +209,10 @@
         <activity android:name=".news.NewsBookmarksActivity" android:theme="@style/PlainBackground">
             <meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
         </activity>
-        <activity android:name=".news.NewsDetailsActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
+        <activity android:name=".news.view.NewsDetailsActivity" android:theme="@style/PlainBackground" android:configChanges="orientation">
             <meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
         </activity>
-        <activity android:name=".news.NewsImageActivity" android:theme="@style/PlainBackground">
+        <activity android:name="edu.mit.mitmobile2.news.view.NewsImageActivity" android:theme="@style/PlainBackground">
             <meta-data android:name="android.app.default_searchable" android:value=".news.NewsSearchActivity" />
         </activity>
 
