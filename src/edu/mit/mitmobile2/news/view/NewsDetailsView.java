@@ -16,6 +16,7 @@ import android.webkit.WebChromeClient;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -45,7 +46,7 @@ public class NewsDetailsView extends WebView {
     static final SimpleDateFormat sDateFormat = new SimpleDateFormat("EEE d, MMM yyyy",Locale.US);
     static final SimpleDateFormat fromDate = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZZZZZ", Locale.US);
     SliderActivity mSliderActivity;
-	
+    int size_width;
 	/****************************************************/
     
     public NewsDetailsView(Context context){
@@ -55,7 +56,9 @@ public class NewsDetailsView extends WebView {
 		super(context);
 		mModuleActivity = (NewModuleActivity) context;
 		mNewsItem = newsItem;
-		
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		size_width = (int)( metrics.widthPixels/metrics.density);
+		Log.d("NEWS", "Width is: "+size_width + " density: "+metrics.density);
 		populateView();
 	}
 	
@@ -96,17 +99,19 @@ public class NewsDetailsView extends WebView {
 		if(mNewsItem.getDek()!=null)
 			templateHtml = templateHtml.replace("__DEK__", mNewsItem.getDek());
 		else
-			templateHtml = templateHtml.replace("__AUTHOR__", "");
-		// Set Image Count
-		int galleryCount = 0;
+			templateHtml = templateHtml.replace("__DEK__", "");
+		
 		
 		if(mNewsItem.getCoverImage() != null) {
-			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", mNewsItem.getCoverImage().getRepresentations().get(0).getUrl());
-			if(mNewsItem.getGalleryImages()!=null)
-				galleryCount = mNewsItem.getGalleryImages().size();
-			else
-				galleryCount = 0;
+			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", 
+					mNewsItem.getCoverImage().getRepresentationBestFitByWidth(size_width).getUrl());
+		}else{
+			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", "");
 		}
+		// Set Image Count
+		int galleryCount = 0;
+		if(mNewsItem.getGalleryImages()!=null)
+				galleryCount = mNewsItem.getGalleryImages().size();
 		templateHtml = templateHtml.replace("__GALLERY_COUNT__", galleryCount + "");								
 		
 		// Set Body
@@ -284,7 +289,7 @@ public class NewsDetailsView extends WebView {
             mHandler.post(new Runnable() {
                 @Override
 				public void run() {
-					//NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
+					NewsImageActivity.launchActivity(mModuleActivity, mNewsItem);
 
                 }
             });

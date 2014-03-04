@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.news.view;
 
 
+import java.util.ArrayList;
+
 import edu.mit.mitmobile2.ActivityPassingCache;
 import edu.mit.mitmobile2.LoadingUIHelper;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -10,6 +12,7 @@ import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.StyledContentHTML;
 import edu.mit.mitmobile2.news.NewsModule;
+import edu.mit.mitmobile2.news.beans.NewsImage;
 import edu.mit.mitmobile2.news.beans.NewsStory;
 //import edu.mit.mitmobile2.objs.NewsItem;
 
@@ -18,6 +21,7 @@ import android.content.Intent;
 import android.graphics.Picture;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
@@ -31,6 +35,7 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 	private static ActivityPassingCache<NewsStory> sNewsItemCache = new ActivityPassingCache<NewsStory>();
 	
 	public static final String TAG = "NewsImageActivity";
+	private int size_width;
 	
 	public static void launchActivity(Context context, NewsStory newsItem) {
 		Intent i = new Intent(context, NewsImageActivity.class); 
@@ -44,24 +49,27 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		size_width = (int)( metrics.widthPixels/metrics.density);
 		
-		/*long newsItemCacheId = getIntent().getLongExtra(NEWS_ITEM_ID_KEY, -1);
+		long newsItemCacheId = getIntent().getLongExtra(NEWS_ITEM_ID_KEY, -1);
 		NewsStory newsItem = sNewsItemCache.get(newsItemCacheId);
-		List<Image> allImages = newsItem.getAllImages();
+		
+		ArrayList<NewsImage> allImages = newsItem.getGalleryImages();
 		for(int i=0; i < allImages.size(); i++) {
-			NewsStory.Image image = allImages.get(i);
-			addScreen(new NewsImageSliderInterface(image), image.imageCaption, "" + (i+1) + " of " + allImages.size());
-		}*/
+			NewsImage image = allImages.get(i);
+			addScreen(new NewsImageSliderInterface(image), image.getDescription(), "" + (i+1) + " of " + allImages.size());
+		}
 		setPosition(getPositionValue());
 	}
-	/*
+	
 	private class NewsImageSliderInterface implements SliderInterface {
-		NewsItem.Image mImage;
+		NewsImage mImage;
 		NewsImageView mView;
 		
-		//NewsImageSliderInterface(NewsItem.Image image) {
-		//	mImage = image;
-		//}
+		NewsImageSliderInterface(NewsImage image) {
+			mImage = image;
+		}
 		
 		@Override
 		public View getView() {
@@ -97,13 +105,15 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 			inflator.inflate(R.layout.news_image, this);
 		}
 		
-		public void populateView(NewsItem.Image image) {
+		public void populateView(NewsImage image) {
 			final ImageView loadingView = (ImageView) findViewById(R.id.newsImageLoadingView);
 			LoadingUIHelper.startLoadingImage(new Handler(), loadingView);
 			
 			WebView imageWV = (WebView) findViewById(R.id.newsLargeImageWV);
 			imageWV.getSettings().setBuiltInZoomControls(false);
-			imageWV.loadDataWithBaseURL(null, StyledContentHTML.imageHtml(NewsImageActivity.this, image.fullURL), "text/html", "utf-8", null);
+			imageWV.loadDataWithBaseURL(null, 
+					StyledContentHTML.imageHtml(NewsImageActivity.this, image.getRepresentationBestFitByWidth(size_width).getUrl()),
+					"text/html", "utf-8", null);
 			
 			// turn off loading view after picture completes loading
 			imageWV.setPictureListener(new WebView.PictureListener() {
@@ -116,19 +126,21 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 			
 			
 			TextView captionView = (TextView) findViewById(R.id.newsImageCaption);
-			captionView.setText(image.imageCaption);
-			if(image.imageCaption.equals("")) {
+			if(image.getDescription()!=null)
+				captionView.setText(image.getDescription());
+			else
 				captionView.setVisibility(GONE);
-			}
 			
 			TextView creditView = (TextView) findViewById(R.id.newsImageCredit);
-			creditView.setText(image.imageCredits);
-			if(image.imageCredits.equals("")) {
+			if(image.getCredits()!=null)
+				creditView.setText(image.getCredits());
+			else
 				creditView.setVisibility(GONE);
-			}
 		}
 	}
-	*/
+	
+	
+	
 	@Override
 	public boolean isModuleHomeActivity() {
 		return false;

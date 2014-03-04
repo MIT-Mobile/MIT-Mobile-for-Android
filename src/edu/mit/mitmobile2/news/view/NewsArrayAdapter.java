@@ -6,7 +6,6 @@ import com.squareup.picasso.Picasso;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.beans.NewsImage;
-import edu.mit.mitmobile2.news.beans.NewsImageRepresentation;
 import edu.mit.mitmobile2.news.beans.NewsStory;
 import edu.mit.mitmobile2.news.net.NewsDownloader;
 
@@ -71,21 +70,9 @@ public class NewsArrayAdapter extends ArrayAdapter<NewsStory>{
 				deckTtView.requestLayout();
 				NewsImage ni = story.getCoverImage();
 				if(ni!=null && !ni.getRepresentations().isEmpty()){
-					int min_index = 0;
-					double min_size = 10000;
-					double tmp_size = 0;
-					int i = 0;
-					for(NewsImageRepresentation ir : ni.getRepresentations()){
-						tmp_size = Math.sqrt(ir.getHeight()^2 + ir.getWidth()^2); 
-						if(tmp_size < min_size){
-							min_size = tmp_size;
-							min_index = i; 
-						}
-						i++;
-					}
 					//NewsDownloader.DownloadImageTask dit = np.new DownloadImageTask();
 					ImageView imageView = (ImageView) view.findViewById(R.id.newsRowIV);
-					Picasso.with(getContext()).load(ni.getRepresentations().get(min_index).getUrl()).into(imageView);
+					Picasso.with(getContext()).load(ni.getSmallestRepresentationsByDiagonal().getUrl()).into(imageView);
 					//p.setDebugging(true);
 					//p.load(ni.getRepresentations().get(min_index).getUrl()).into(imageView);
 					//dit.setViewer(imageView);
