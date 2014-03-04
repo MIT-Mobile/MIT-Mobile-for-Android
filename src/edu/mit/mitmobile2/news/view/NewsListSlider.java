@@ -25,7 +25,7 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		this.context = ctx;
 		this.mLoadingScreenListener = this;
 		newsAdapter = new NewsArrayAdapter(ctx,0);
-		loadStories(category_id,"categories",0,20);
+		loadStories(category_id,"category",0,20);
 	}
 	@Override
 	public void updateView() {

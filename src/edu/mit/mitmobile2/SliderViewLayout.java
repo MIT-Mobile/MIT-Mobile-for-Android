@@ -142,6 +142,9 @@ public class SliderViewLayout extends ViewGroup {
 			mRight = view;
 		}
 		if (view != null) {
+			if(view.getParent()!=null){
+				((ViewGroup)view.getParent()).removeView(view);
+			}
 			addView(view);
 		}
 		return removedView;

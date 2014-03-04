@@ -50,7 +50,6 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Load
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		np = NewsDownloader.getInstance(this);
-		
 		if (!mSliderAdapter.isLoading()  && mSliderAdapter.getStoriesCount() == 0) {
 			finish();
 			return;
