@@ -205,7 +205,7 @@
             </intent-filter>
             <meta-data android:name="android.app.searchable" android:resource="@xml/news_searchable" />
         </activity>
-        <provider android:name=".news.NewsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.news.SuggestionsProvider" />
+        <provider android:name="edu.mit.mitmobile2.news.view.NewsSearchSuggestionsProvider" android:authorities="edu.mit.mitmobile2.news.SuggestionsProvider" />
         <activity android:name=".news.NewsBookmarksActivity" android:theme="@style/PlainBackground">
             <meta-data android:name="android.app.default_searchable" android:value=".news.view.NewsSearchActivity" />
         </activity>
