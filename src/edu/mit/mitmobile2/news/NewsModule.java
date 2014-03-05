@@ -46,9 +46,10 @@ public class NewsModule extends NewModule {
 
 	@Override
 	public List<MITMenuItem> getSecondaryOptions() {
-		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		/*ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
 		items.add(new MITMenuItem("bookmarks", "Bookmarks"));
-		return items;
+		return items;*/
+		return null;
 	}
 
 	@Override
