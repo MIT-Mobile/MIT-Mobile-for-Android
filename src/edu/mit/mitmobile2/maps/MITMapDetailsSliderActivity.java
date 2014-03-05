@@ -123,7 +123,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			if (mapItem.getMapPoints() != null) {
 			}
 			String headerTitle = Integer.toString(index+1) + " of " + Integer.toString(totalMapItems);
-			addScreen(new MapSliderInterface(mapItem), (String)mapItem.getItemData().get("name"), headerTitle);
+			addScreen(new MapSliderInterface(mapItem), headerTitle);
 		}
 		
 		setPosition(position);

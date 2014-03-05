@@ -155,11 +155,11 @@ public class TourStopSliderActivity extends SliderListNewModuleActivity {
 		for(TourItem tourItem : mTourItems) {
 			boolean isSite = (tourItem.getClass() == Site.class);
 			TourStopSliderInterface sliderInterface = new TourStopSliderInterface(this, mTour, tourItem, ap, progbar, isSite);
-			addScreen(sliderInterface, null, tourItem.getLabel());
+			addScreen(sliderInterface, tourItem.getLabel());
 			mTourStopSliderInterfaces.add(sliderInterface);
 		}
 		//Log.v("tour_debug", "tour_debug: getPositionValue="+String.valueOf(getPositionValue()));
-		addScreen(new TourThankYouSliderInterface(this, mTour.getFooter()), null, "Thank You");
+		addScreen(new TourThankYouSliderInterface(this, mTour.getFooter()), "Thank You");
 		setPosition(getPositionValue());
 		progbar.setProgress(getPositionValue()/2);
 	}

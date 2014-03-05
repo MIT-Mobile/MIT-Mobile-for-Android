@@ -294,23 +294,42 @@ public class SliderView extends HorizontalScrollView {
 
 	private ScreenPosition nearestPosition() {
 		float screenFraction = (float)(getScrollX() - mLeftXforMiddle) / (float)(mSliderViewLayout.getChildWidth());
-		if (screenFraction < -0.50) {
-			return ScreenPosition.Previous;
+		if(mSliderViewLayout.getChildCount()>2){
+			if (screenFraction < -0.50) {
+				return ScreenPosition.Previous;
+			}
+			if (screenFraction > 0.50) {
+				return ScreenPosition.Next;
+			}
+			return ScreenPosition.Current;
+		}else{
+			if (screenFraction <= 0.50) {
+				return ScreenPosition.Previous;
+			}else{
+				return ScreenPosition.Next;
+			}
 		}
-		if (screenFraction > 0.50) {
-			return ScreenPosition.Next;
-		}
-		return ScreenPosition.Current;
 	}
 	
 	private int scrollX(ScreenPosition screenPosition) {
-		switch (screenPosition) {
-			case Previous:
-				return mSliderViewLayout.getChildWidth() - getWidth();
-			case Current:
-				return mLeftXforMiddle;
-			case Next:
-				return mSliderViewLayout.getLeftXforRight();
+		if(mSliderViewLayout.getChildCount()>2){
+			switch (screenPosition) {
+				case Previous:
+					return mSliderViewLayout.getChildWidth() - getWidth();
+				case Current:
+					return mLeftXforMiddle;
+				case Next:
+					return mSliderViewLayout.getLeftXforRight();
+			}
+		}else if(mSliderViewLayout.getChildCount()==2){
+			switch (screenPosition) {
+				case Previous:
+					return mLeftXforMiddle;
+				case Next:
+					return mSliderViewLayout.getLeftXforRight();
+				case Current:
+					throw new RuntimeException("bad scroll position");
+			}
 		}
 		throw new RuntimeException("scroll position not found, must have received null for screen position");
 	}
@@ -430,7 +449,8 @@ public class SliderView extends HorizontalScrollView {
 		 */
 		mSliderViewLayout.clear();
 		View currentView = mSliderAdapter.getScreen(ScreenPosition.Current);
-		mSliderViewLayout.addViewToRight(currentView);
+		if(currentView!=null)
+			mSliderViewLayout.addViewToRight(currentView);
 		
 		mHasNextScreen = false;
 		if (mSliderAdapter.hasScreen(ScreenPosition.Next)) {

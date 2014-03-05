@@ -56,7 +56,7 @@ public class BookDetailActivity extends SliderListNewModuleActivity {
     private void setBooks(List<BookItem> books) {
         mBooks = books;
         for(BookItem book : mBooks) {
-            addScreen(new BookDetailView(BookDetailActivity.this, book), book.id, "Book Detail");
+            addScreen(new BookDetailView(BookDetailActivity.this, book), "Book Detail");
         }
         
         setPosition(getPositionValue());

@@ -68,7 +68,7 @@ public class LibrariesHoldingsSliderActivity extends SliderListNewModuleActivity
 		
 		for (String library : listOfLibraries) {
 			Availabilitys availabilitys = listOfHoldings.get(library);
-			addScreen(new MITLibraryBookHoldingsSliderInterface(availabilitys.getBooks()), null, library);
+			addScreen(new MITLibraryBookHoldingsSliderInterface(availabilitys.getBooks()), library);
 		}
 		setPosition(getPositionValue());
 		

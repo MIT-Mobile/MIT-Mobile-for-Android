@@ -36,7 +36,7 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Load
 	MITPlainSecondaryTitleBar mSecondaryTitleBar;
 	
 	Context ctx;
-	private int mLastSavedPosition;
+	//private int mLastSavedPosition;
 	public static String KEY_POSITION = "position";
 	
 	static private NewsSliderAdapter mSliderAdapter;
@@ -53,20 +53,6 @@ public class NewsDetailsActivity extends SliderNewModuleActivity implements Load
 		if (!mSliderAdapter.isLoading()  && mSliderAdapter.getStoriesCount() == 0) {
 			finish();
 			return;
-		}
-	}
-
-	protected int getPositionValue() {
-		if(mLastSavedPosition > 0) {
-			return mLastSavedPosition;
-		}
-		
-		Bundle extras = getIntent().getExtras();
-		
-		if (extras != null){
-			return extras.getInt(KEY_POSITION);
-		} else {
-			return 0;
 		}
 	}
 	

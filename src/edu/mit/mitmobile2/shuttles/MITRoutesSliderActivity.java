@@ -81,7 +81,7 @@ public class MITRoutesSliderActivity extends SliderListNewModuleActivity {
     		
     		cv = new RoutesAsyncListView(this, routeId, r);
 
-    		addScreen(cv, r.title, r.title);
+    		addScreen(cv, r.title);
     	}
     	setPosition(startPos);
     }

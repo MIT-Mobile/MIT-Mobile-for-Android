@@ -58,7 +58,7 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 		ArrayList<NewsImage> allImages = newsItem.getGalleryImages();
 		for(int i=0; i < allImages.size(); i++) {
 			NewsImage image = allImages.get(i);
-			addScreen(new NewsImageSliderInterface(image), image.getDescription(), "" + (i+1) + " of " + allImages.size());
+			addScreen(new NewsImageSliderInterface(image), "" + (i+1) + " of " + allImages.size());
 		}
 		setPosition(getPositionValue());
 	}
@@ -69,11 +69,11 @@ public class NewsImageActivity extends SliderListNewModuleActivity {
 		
 		NewsImageSliderInterface(NewsImage image) {
 			mImage = image;
+			mView = new NewsImageView(NewsImageActivity.this);
 		}
 		
 		@Override
-		public View getView() {
-			mView = new NewsImageView(NewsImageActivity.this);
+		public View getView() {	
 			return mView;
 		}
 
