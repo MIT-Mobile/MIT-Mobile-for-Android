@@ -2,6 +2,9 @@ package edu.mit.mitmobile2.news.view;
 
 import java.util.ArrayList;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,13 +22,15 @@ import edu.mit.mitmobile2.news.net.CategoryProgressListener;
 import edu.mit.mitmobile2.news.net.NewsDownloader;
 import edu.mit.mitmobile2.news.net.StoriesProgressListener;
 
-public class NewsTopListActivity  extends NewModuleActivity {
+public class NewsTopListActivity  extends NewModuleActivity implements OnRefreshListener{
 
 	NewsDownloader np;
 	NewsArrayAdapter newsAdapter;
 	ListView list;
 	boolean loadCategories = true;
 	private final int TOP_NR = 5;
+	private PullToRefreshAttacher mRefreshAttacher;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,6 +47,11 @@ public class NewsTopListActivity  extends NewModuleActivity {
 		newsAdapter = new NewsArrayAdapter(this,0);
 		list.setAdapter(newsAdapter);
 		final Context c = this;
+		
+		mRefreshAttacher = createPullToRefreshAttacher();
+		mRefreshAttacher.setRefreshableView(list, this);
+		mRefreshAttacher.setEnabled(true);
+		
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
@@ -60,6 +70,9 @@ public class NewsTopListActivity  extends NewModuleActivity {
 				}
 			}
 		);
+		loadData(false);
+	}
+	private void loadData(final boolean refreshData){
 		NewsDownloader.DownloadCategoriesTask dct = np.new DownloadCategoriesTask(new CategoryProgressListener(){
 
 			@Override
@@ -97,21 +110,24 @@ public class NewsTopListActivity  extends NewModuleActivity {
 
 						@Override
 						public void onPostExecute(Long nr) {
+							newsAdapter.clear();
 							for(int i=0;(i < allStories.size()); i++){
 								newsAdapter.add(allStories.get(i));
 							}
+							mRefreshAttacher.setRefreshComplete();
 						}
 						
 					}, "category");
+					dst.setRefresh(refreshData);
 					dst.execute(cats);
 				}
 				
 			}
 			
 		});
+		dct.setRefresh(refreshData);
 		dct.execute();
 	}
-	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -135,6 +151,10 @@ public class NewsTopListActivity  extends NewModuleActivity {
 	protected boolean isModuleHomeActivity() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	@Override
+	public void onRefreshStarted(View view) {
+		loadData(true);
 	}	
 
 

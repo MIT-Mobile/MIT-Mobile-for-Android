@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.news.view;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -12,19 +14,25 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.news.beans.NewsStory;
 
-public class NewsListSlider extends NewsCategoryLoader implements SliderInterface, LoadingScreenListener{
+public class NewsListSlider extends NewsCategoryLoader implements SliderInterface, LoadingScreenListener, OnRefreshListener{
 
 	private View mView;
 	private ListView mNewsListView;
 	private LoaderBar mLoaderBar;
 	private Context context;
-	NewsArrayAdapter newsAdapter;
-	
+	private NewsArrayAdapter newsAdapter;
+	private PullToRefreshAttacher mRefreshAttacher;
+	private String category_id;
 	public NewsListSlider(Context ctx, String category_id){
 		super(ctx);
 		this.context = ctx;
 		this.mLoadingScreenListener = this;
 		newsAdapter = new NewsArrayAdapter(ctx,0);
+		
+		mRefreshAttacher = ((NewsCategoryListActivity)ctx).createPullToRefreshAttacher();
+		mRefreshAttacher.setEnabled(false);
+		this.refreshData = false;
+		this.category_id = category_id;
 		loadStories(category_id,"category",0,20);
 	}
 	@Override
@@ -65,6 +73,10 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		mLoaderBar.setFailedMessage("Error loading news headlines.");
 		mLoaderBar.enableAnimation();
 		
+		
+		mRefreshAttacher.setRefreshableView(mNewsListView, this);
+		mRefreshAttacher.setEnabled(true);
+		
 		return mView;
 	}
 
@@ -86,9 +98,15 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 	}
 	@Override
 	public void onStoriesLoaded() {
+		newsAdapter.clear();
 		for(int i=0;(i < list.size()); i++){
 			newsAdapter.add(list.get(i));
 		}
-		
+		mRefreshAttacher.setRefreshComplete();
+	}
+	@Override
+	public void onRefreshStarted(View view) {
+		this.refreshData = true;
+		loadStories(this.category_id,"category",0,20);
 	}
 }

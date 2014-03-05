@@ -146,10 +146,14 @@ public class NewsDownloader {
 		}
 		return in; 
 	}
-	private String downloadText(String URL) {
-		String str = getCachedResponse(URL);
-		if(str!=null){
-			return str;
+	private String downloadText(String URL, boolean refresh) {
+		String str = null;
+		
+		if(!refresh){
+			str = getCachedResponse(URL);
+			if(str!=null){
+				return str;
+			}
 		}
 		InputStream in = null;
 		try {
@@ -251,16 +255,21 @@ public class NewsDownloader {
 	}*/
 	
 	public class DownloadTextTask extends AsyncTask<String, String, Long> {
-		TextProgressListener jpl;
+		private TextProgressListener jpl;
+		private boolean refresh;
 		public void setListener(TextProgressListener jpl){
 			this.jpl = jpl;
+			refresh = false;
+		}
+		public void setRefresh(boolean b){
+			this.refresh = b;
 		}
 		@Override
 		protected Long doInBackground(String... urls) {
 			
 			long textCount = 0;
 			for(int i=0;i<urls.length;i++){
-				String textDownloaded = downloadText(urls[i]);
+				String textDownloaded = downloadText(urls[i], refresh);
 				if(textDownloaded!=null){
 					textCount++;
 					publishProgress(textDownloaded);
@@ -279,14 +288,21 @@ public class NewsDownloader {
 	}
 	
 	public class DownloadCategoriesTask extends AsyncTask<Void, Void, ArrayList<NewsCategory>> {
-		CategoryProgressListener cpl;
+		private CategoryProgressListener cpl;
+		private boolean refresh;
+		
 		public DownloadCategoriesTask(CategoryProgressListener c){
 			this.cpl = c;
+			this.refresh = false;
+		}
+		
+		public void setRefresh(boolean b){
+			this.refresh = b;
 		}
 		@Override
 		protected ArrayList<NewsCategory> doInBackground(Void...v) {
 			Log.d("NEWS", "URL: "+NewsDownloader.NEWS_PATH+"/categories/");
-			String ret = downloadText(NEWS_PATH+"/categories/");
+			String ret = downloadText(NEWS_PATH+"/categories/",refresh);
 			CategoryParser cp = new CategoryParser();
 			ArrayList<NewsCategory> nc = cp.parseArrayFromString(ret);
 			return nc;
@@ -298,9 +314,15 @@ public class NewsDownloader {
 		}
 	}
 	public class DownloadStoryTask extends AsyncTask<String, NewsStory, Long> {
-		StoryProgressListener spl;
+		private StoryProgressListener spl;
+		private boolean refresh;
 		public DownloadStoryTask(StoryProgressListener c){
 			this.spl = c;
+			this.refresh = false;
+		}
+		
+		public void setRefresh(boolean b){
+			this.refresh = b;
 		}
 		@Override
 		protected Long doInBackground(String... ids) {
@@ -309,7 +331,7 @@ public class NewsDownloader {
 			for(int i=0;i<ids.length;i++){
 				String url = NewsDownloader.NEWS_PATH+"/stories/"+ids[i];
 				Log.d("NEWS", "URL: "+url);
-				String ret = downloadText(url);
+				String ret = downloadText(url,refresh);
 				NewsStory st = sp.parseObjectFromString(ret);
 				publishProgress(st);
 			}
@@ -333,9 +355,10 @@ public class NewsDownloader {
 		 * "search" we are passing search query
 		 * "urls" we are passing full urls (default)
 		 */
-		String type = "urls";
-		int offset; // default 0
-		int limit; // default 20
+		private String type = "urls";
+		private int offset; // default 0
+		private int limit; // default 20
+		private boolean refresh;
 		
 		public DownloadStoriesTask(StoriesProgressListener spl){
 			this(spl,"urls",0,20);
@@ -350,6 +373,11 @@ public class NewsDownloader {
 			this.type = type;
 			this.offset = offset;
 			this.limit = limit;
+			this.refresh = false;
+		}
+		
+		public void setRefresh(boolean b){
+			this.refresh = b;
 		}
 		@SuppressWarnings("unchecked")
 		@Override
@@ -368,7 +396,7 @@ public class NewsDownloader {
 			for(int i=0;i<urls.length;i++){
 				ArrayList<NewsStory> al = new ArrayList<NewsStory>();
 				Log.d("NEWS", "URL: "+pre_url + urls[i]);
-				String textDownloaded = downloadText(pre_url + urls[i]);
+				String textDownloaded = downloadText(pre_url + urls[i], refresh);
 				if(textDownloaded!=null){
 					if(this.type.equals("ids")){
 						NewsStory s = sp.parseObjectFromString(textDownloaded);

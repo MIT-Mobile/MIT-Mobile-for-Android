@@ -16,6 +16,7 @@ public abstract class NewsCategoryLoader {
 	boolean isLoading = false;
 	int position;
     String start_story_id;
+    boolean refreshData;
     //String criteria;
     //String type;
 	
@@ -24,6 +25,7 @@ public abstract class NewsCategoryLoader {
 	public NewsCategoryLoader(Context c){
 		nd = NewsDownloader.getInstance(c);
 		list = new ArrayList<NewsStory>();
+		this.refreshData = false;
 	}
 	
 	/*public void setScreenListener(LoadingScreenListener l){
@@ -44,6 +46,7 @@ public abstract class NewsCategoryLoader {
 			//ArrayList<NewsStory> allStories = new ArrayList<NewsStory>();
 			{
 				ncl.isLoading = true;
+				ncl.list.clear();
 			}
 			@Override
 			public void onProgressUpdate(ArrayList<NewsStory>... list) {
@@ -69,6 +72,7 @@ public abstract class NewsCategoryLoader {
 			}
 			
 		}, type, start, limit);
+		dst.setRefresh(refreshData);
 		dst.execute(cats);
     }
 	
