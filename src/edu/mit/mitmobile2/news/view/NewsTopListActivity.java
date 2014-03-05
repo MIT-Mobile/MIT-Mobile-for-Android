@@ -55,9 +55,12 @@ public class NewsTopListActivity  extends NewModuleActivity implements OnRefresh
 		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
+					
 					NewsStory newsCursor = (NewsStory) listView.getItemAtPosition(position);
 					Intent i = null;
-					if(newsCursor.getId().equals("more")){
+					if(newsCursor.getId().equals("header")){
+						return;
+					}else if(newsCursor.getId().equals("more")){
 						i = new Intent(c, NewsCategoryListActivity.class);
 					}else{
 						i = new Intent(c, NewsDetailsActivity.class);
@@ -92,6 +95,14 @@ public class NewsTopListActivity  extends NewModuleActivity implements OnRefresh
 						public void onProgressUpdate(ArrayList<NewsStory>... list) {
 							for(ArrayList<NewsStory> st:list){
 								if(st!=null && st.size()>0){
+									NewsStory nHeader = new NewsStory();
+									nHeader.setId("header");
+									if(st.get(0).getCategory()!=null){
+										nHeader.setCategory(st.get(0).getCategory());
+										nHeader.setDek(st.get(0).getCategory().getName());
+									}
+									allStories.add(nHeader);
+									
 									for(int i=0;(i < st.size() && i<TOP_NR); i++){
 										allStories.add(st.get(i));
 									}

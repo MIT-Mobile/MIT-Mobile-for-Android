@@ -39,7 +39,17 @@ public class NewsArrayAdapter extends ArrayAdapter<NewsStory>{
 			if(story!=null){
 				TruncatingTextView ttView = null;
 				TruncatingTextView deckTtView = null;
-				if(story.getId()!=null && story.getId().equals("more")){
+				if(story.getId()!=null && story.getId().equals("header")){
+					//if(view==null){
+						view = LayoutInflater.from(getContext()).inflate(R.layout.news_row_header, null);
+					
+					//}
+					TextView ttv = (TextView) view.findViewById(R.id.newsRowMoreTV);
+					ttv.setText(story.getDekText());
+					ttv.requestLayout();
+					return view;
+						
+				}else if(story.getId()!=null && story.getId().equals("more")){
 					//if(view==null){
 						view = LayoutInflater.from(getContext()).inflate(R.layout.news_row_more, null);
 					
