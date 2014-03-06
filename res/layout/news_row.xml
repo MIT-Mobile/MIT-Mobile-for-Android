@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="horizontal"
   android:layout_width="wrap_content"
-  android:layout_height="103dip">
+  android:layout_height="wrap_content">
   
   <ImageView
       android:id="@+id/newsRowIV"
@@ -16,12 +16,13 @@
 			
   <LinearLayout
 		android:orientation="vertical"
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
+		android:layout_weight="1"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
 		android:paddingRight="@dimen/standardPadding"
 		android:paddingLeft="@dimen/standardPadding" >
 		
-		<edu.mit.mitmobile2.TruncatingTextView
+		<TextView
 		    android:id="@+id/newsRowTV"
 		    style="@style/ListItemPrimary"
 		    android:layout_width="fill_parent"
@@ -29,11 +30,11 @@
 		    android:paddingTop="@dimen/standardPadding"
 		    android:textStyle="bold" />
 			
-		<edu.mit.mitmobile2.TruncatingTextView
+		<TextView
 		    android:id="@+id/newsRowDeckTV"
 		    style="@style/ListItemSecondary"
 		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
+		    android:layout_height="wrap_content"
 		    android:paddingBottom="@dimen/standardPadding"
 		    android:textColor="@android:color/black"
 		    android:textSize="15sp" />

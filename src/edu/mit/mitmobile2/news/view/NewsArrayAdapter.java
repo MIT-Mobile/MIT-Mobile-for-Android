@@ -37,8 +37,8 @@ public class NewsArrayAdapter extends ArrayAdapter<NewsStory>{
 		if(this.getCount()>0){
 			NewsStory story = (NewsStory) getItem(position);
 			if(story!=null){
-				TruncatingTextView ttView = null;
-				TruncatingTextView deckTtView = null;
+				TextView ttView = null;
+				TextView deckTtView = null;
 				if(story.getId()!=null && story.getId().equals("header")){
 					//if(view==null){
 						view = LayoutInflater.from(getContext()).inflate(R.layout.news_row_header, null);
@@ -63,16 +63,16 @@ public class NewsArrayAdapter extends ArrayAdapter<NewsStory>{
 					//if(view==null){
 						view = LayoutInflater.from(getContext()).inflate(R.layout.news_row_in_media, null);
 					//}
-					deckTtView = (TruncatingTextView) view.findViewById(R.id.newsRowDeckInMediaTV);
+					deckTtView = (TextView) view.findViewById(R.id.newsRowDeckInMediaTV);
 				}else{
 					//if(view==null){
 						view = LayoutInflater.from(getContext()).inflate(R.layout.news_row, null);
 					//}
 					
-					ttView = (TruncatingTextView) view.findViewById(R.id.newsRowTV);
+					ttView = (TextView) view.findViewById(R.id.newsRowTV);
 					ttView.setText(story.getTitleText());
 					ttView.requestLayout();
-					deckTtView = (TruncatingTextView) view.findViewById(R.id.newsRowDeckTV);
+					deckTtView = (TextView) view.findViewById(R.id.newsRowDeckTV);
 				}
 				view.setTag(Integer.valueOf(story.getId()));
 				

@@ -5,12 +5,15 @@
     android:minHeight="113dip"
     android:orientation="vertical" >
 
-    <edu.mit.mitmobile2.TruncatingTextView
+    <TextView
         android:id="@+id/newsRowDeckInMediaTV"
         style="@style/ListItemSecondary"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
-        android:layout_weight="1" />
+        android:gravity="top"
+        android:layout_weight="1"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"/>
 
     <ImageView
         android:id="@+id/newsRowIV"

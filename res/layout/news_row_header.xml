@@ -10,7 +10,10 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:background="@color/news_header_item"
+		    android:paddingBottom="@dimen/standardPadding"
+		    android:paddingLeft="10dp"
 		    android:paddingTop="@dimen/standardPadding"
+		    android:textStyle="bold"
 		    android:textColor="@android:color/white" />
 
 </LinearLayout>
