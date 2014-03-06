@@ -38,6 +38,7 @@ public class LibraryActivity extends NewModuleActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    	Log.d(TAG,"onCreate()");
         super.onCreate(savedInstanceState);
         mActivity = this;
         createViews();
@@ -59,7 +60,8 @@ public class LibraryActivity extends NewModuleActivity {
 
             @Override
             public void onClick(View v) {
-        		LibraryModel.getUserIdentity(mActivity, yourAccountHandler);
+        		
+            	LibraryModel.getUserIdentity(mActivity,  getTouchStoneHandler(mActivity, "edu.mit.mitmobile2.libraries.LibraryYourAccount"));
             }
         });
         locationRow.setOnClickListener(new OnClickListener() {
@@ -80,7 +82,8 @@ public class LibraryActivity extends NewModuleActivity {
 
             @Override
             public void onClick(View v) {
-        		LibraryModel.getUserIdentity(mActivity, tellUsHandler);
+        		
+        		LibraryModel.getUserIdentity(mActivity,  getTouchStoneHandler(mActivity, "edu.mit.mitmobile2.libraries.TellUsActivity"));
             }
         });
 
@@ -147,39 +150,7 @@ public class LibraryActivity extends NewModuleActivity {
         }
     };
 
-    private Handler yourAccountHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-        	
-        	Log.d(TAG,"touchstone messsage = " + msg.arg1);
-        	if (msg.arg1 == MobileWebApi.SUCCESS) {
-        		UserIdentity userIdentity = (UserIdentity)msg.obj;
-        		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
-        		Log.d(TAG,"username = " + userIdentity.getUsername());
-        		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
-        		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
-        			  startActivity(new Intent(LibraryActivity.this, LibraryYourAccount.class));
-        		}
-        	}
-        }
-    };
-
-    private Handler tellUsHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-        	
-        	Log.d(TAG,"touchstone messsage = " + msg.arg1);
-        	if (msg.arg1 == MobileWebApi.SUCCESS) {
-        		UserIdentity userIdentity = (UserIdentity)msg.obj;
-        		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
-        		Log.d(TAG,"username = " + userIdentity.getUsername());
-        		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
-        		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
-        		    startActivity(new Intent(LibraryActivity.this, TellUsActivity.class));
-        		}
-        	}
-        }
-    };
+    
     
     static class LinkItem {
         public String title;
@@ -201,5 +172,32 @@ public class LibraryActivity extends NewModuleActivity {
 	
     @Override
     protected void onOptionSelected(String optionId) { }
-
+    
+    protected Handler createTouchStoneHandler(final String target) {
+    	  
+    	Handler TouchStoneHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {         	
+            	Log.d(TAG,"touchstone messsage = " + msg.arg1);
+            	if (msg.arg1 == MobileWebApi.SUCCESS) {
+            		UserIdentity userIdentity = (UserIdentity)msg.obj;
+            		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
+            		Log.d(TAG,"username = " + userIdentity.getUsername());
+            		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
+            		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
+            			//startActivity(new Intent(AskUsTopActivity.this, AppointmentActivity.class));       			
+            			try {
+	        				  Class<?> c = Class.forName(target);
+	        				  Intent i = new Intent(mActivity, c);
+	        				  startActivity(i);
+	        				  Log.d(TAG,"start intent = " + i.toString());
+	        			  } catch (Throwable e) {
+	        		            System.err.println(e);
+	        		      }
+            		}
+            	}
+            }
+        };
+        return TouchStoneHandler;
+    }
 }
