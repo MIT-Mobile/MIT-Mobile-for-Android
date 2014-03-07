@@ -1,10 +1,7 @@
 package edu.mit.mitmobile2.libraries;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Spannable;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
@@ -12,12 +9,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView.BufferType;
 import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
-import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+//import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
+//import edu.mit.mitmobile2.MobileWebApi;
 
 public class AskUsTopActivity extends NewModuleActivity {
 
@@ -92,69 +89,5 @@ public class AskUsTopActivity extends NewModuleActivity {
 
 	@Override
 	protected void onOptionSelected(String optionId) { }
-   
-    //---------------
-    protected Handler createTouchStoneHandler(final String target) {
-  
-    	Handler TouchStoneHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {     	
-            	Log.d(TAG,"touchstone messsage = " + msg.arg1);
-            	if (msg.arg1 == MobileWebApi.SUCCESS) {
-            		UserIdentity userIdentity = (UserIdentity)msg.obj;
-            		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
-            		Log.d(TAG,"username = " + userIdentity.getUsername());
-            		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
-            		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
-            			//startActivity(new Intent(AskUsTopActivity.this, AppointmentActivity.class));           			
-            			try {
-	        				  Class<?> c = Class.forName(target);
-	        				  Intent i = new Intent(mActivity, c);
-	        				  startActivity(i);
-	        				  Log.d(TAG,"start intent = " + i.toString());
-	        			  } catch (Throwable e) {
-	        		            System.err.println(e);
-	        		      }
-            		}
-            	}
-            }
-        };
-        return TouchStoneHandler;
-    }
-    
-/*
-  	private Handler AskUsHandler = new Handler() {
-          @Override
-          public void handleMessage(Message msg) {
-          	
-          	Log.d(TAG,"touchstone messsage = " + msg.arg1);
-          	if (msg.arg1 == MobileWebApi.SUCCESS) {
-          		UserIdentity userIdentity = (UserIdentity)msg.obj;
-          		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
-          		Log.d(TAG,"username = " + userIdentity.getUsername());
-          		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
-          		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
-          			  startActivity(new Intent(AskUsTopActivity.this, AskUsActivity.class));      			  
-          		}
-          	}
-          }
-      };
-      
-      private Handler AppointmentHandler = new Handler() {
-          @Override
-          public void handleMessage(Message msg) {
-          	
-          	Log.d(TAG,"touchstone messsage = " + msg.arg1);
-          	if (msg.arg1 == MobileWebApi.SUCCESS) {
-          		UserIdentity userIdentity = (UserIdentity)msg.obj;
-          		Log.d(TAG,"shbidentity = " + userIdentity.getShibIdentity());
-          		Log.d(TAG,"username = " + userIdentity.getUsername());
-          		Log.d(TAG,"mit identity = " + userIdentity.isMITIdentity() + "");
-          		if (userIdentity.getShibIdentity() != null && userIdentity.getShibIdentity().length() > 1) {
-          			  startActivity(new Intent(AskUsTopActivity.this, AppointmentActivity.class));
-          		}
-          	}
-          }
-      };
-*/
+	
 }
