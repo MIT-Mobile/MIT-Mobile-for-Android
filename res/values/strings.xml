@@ -104,4 +104,6 @@ MIT\&apos;s commitment to innovation has led to a host of scientific breakthroug
     <string name="pref_touchstone_username_summary">User name for touchstone account</string>
     <string name="pref_touchstone_username_title">User Name</string>
 	<string name="imageContent">Image for the news</string>
+	<string name="ok">OK</string>
+	<string name="cancel">Cancel</string>
 </resources>

@@ -10,18 +10,24 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 //import android.graphics.Bitmap;
 //import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 //import android.support.v4.util.LruCache;
 import android.util.Log;
+import edu.mit.mitmobile2.R;
 //import android.widget.ImageView;
 import edu.mit.mitmobile2.news.beans.NewsCategory;
 import edu.mit.mitmobile2.news.beans.NewsStory;
+import edu.mit.mitmobile2.news.view.NewsTopListActivity;
 
 
 //import android.support.v4.util.LruCache;
@@ -434,6 +440,28 @@ public class NewsDownloader {
 		return null;
 	}
 	*/
+	public void showOpenInBrowserDialog(final Context c, final String url){
+		AlertDialog.Builder builder = new AlertDialog.Builder(c);
+		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				Intent br = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				c.startActivity(br);
+			}
+		});
+		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
+
+			@Override
+			public void onClick(DialogInterface dialog,int which) {
+				//do nothing :-)
+			}
+			
+		});
+		builder.setTitle("Open in default browser?");
+		builder.setMessage(url);
+		builder.show();
+	}
+	
 	
 	public void setCategory(String key, String value){
 		this.categories.put(key, value);

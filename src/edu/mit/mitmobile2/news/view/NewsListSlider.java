@@ -47,23 +47,25 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		mView = inflater.inflate(R.layout.news, null);
 		
 		mNewsListView = (ListView) mView.findViewById(R.id.newsCategoryLV);
-		
+		final Context c = this.context;
 		mNewsListView.setOnItemClickListener(
 			new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
 					NewsStory newsCursor = (NewsStory) listView.getItemAtPosition(position);
-					Intent i = null;
-					if(newsCursor.getId().equals("more")){
-						//i = new Intent(c, NewsCategoryListActivity.class);
+					
+					if(newsCursor.getCategory()!=null && newsCursor.getCategory().getId().equals("in_the_media")){
+						nd.showOpenInBrowserDialog(c,newsCursor.getSourceUrl());
+						return;
 					}else{
-						i = new Intent(context, NewsDetailsActivity.class);
+						Intent i = new Intent(context, NewsDetailsActivity.class);
 						i.putExtra(NewsDetailsActivity.STORY_ID_KEY, newsCursor.getId());
+					
+						if(newsCursor.getCategory()!=null){
+							i.putExtra(NewsDetailsActivity.CATEGORY_ID_KEY, newsCursor.getCategory().getId());
+						}
+						context.startActivity(i);
 					}
-					if(newsCursor.getCategory()!=null){
-						i.putExtra(NewsDetailsActivity.CATEGORY_ID_KEY, newsCursor.getCategory().getId());
-					}
-					context.startActivity(i);
 				}
 			}
 		);
