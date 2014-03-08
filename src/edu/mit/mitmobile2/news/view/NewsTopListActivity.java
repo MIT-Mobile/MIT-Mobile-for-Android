@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -66,25 +63,6 @@ public class NewsTopListActivity  extends NewModuleActivity implements OnRefresh
 					}else if(newsCursor.getId().equals("more")){
 						i = new Intent(c, NewsCategoryListActivity.class);
 					}else if(newsCursor.getCategory()!=null && newsCursor.getCategory().getId().equals("in_the_media")){
-						/*AlertDialog.Builder builder = new AlertDialog.Builder(NewsTopListActivity.this);
-						builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								Intent br = new Intent(Intent.ACTION_VIEW, Uri.parse(newsCursor.getSourceUrl()));
-								startActivity(br);
-							}
-						});
-						builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
-
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								//do nothing :-)
-							}
-							
-						});
-						builder.setTitle("Open in default browser?");
-						builder.setMessage(newsCursor.getSourceUrl());
-						builder.show();*/
 						np.showOpenInBrowserDialog(NewsTopListActivity.this,newsCursor.getSourceUrl());
 						return;
 					}else{

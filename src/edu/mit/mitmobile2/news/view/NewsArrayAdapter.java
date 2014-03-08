@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import edu.mit.mitmobile2.TruncatingTextView;
 
 public class NewsArrayAdapter extends ArrayAdapter<NewsStory>{
 

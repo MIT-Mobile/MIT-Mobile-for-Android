@@ -11,8 +11,7 @@
       android:layout_height="80dp"
       android:layout_gravity="center"
       android:contentDescription="@string/imageContent"
-      android:paddingLeft="10dp"
-      android:src="@drawable/news_placeholder" />
+      android:paddingLeft="10dp" />
 			
   <LinearLayout
 		android:orientation="vertical"

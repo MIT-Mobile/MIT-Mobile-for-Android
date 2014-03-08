@@ -27,7 +27,6 @@ import edu.mit.mitmobile2.R;
 //import android.widget.ImageView;
 import edu.mit.mitmobile2.news.beans.NewsCategory;
 import edu.mit.mitmobile2.news.beans.NewsStory;
-import edu.mit.mitmobile2.news.view.NewsTopListActivity;
 
 
 //import android.support.v4.util.LruCache;
