@@ -47,13 +47,14 @@ public class NewsModule extends NewModule {
 	@Override
 	public List<MITMenuItem> getSecondaryOptions() {
 		/*ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		items.add(new MITMenuItem("bookmarks", "Bookmarks"));
+		items.add(new MITMenuItem("share", "Share"));
 		return items;*/
 		return null;
 	}
 
 	@Override
 	public boolean onItemSelected(Activity activity, String id) {
+		//activity.onOptionsItemSelected("");
 		if(id.equals("bookmarks")) {
 			/*Intent intent = new Intent(activity, NewsBookmarksActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
