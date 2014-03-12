@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -23,6 +24,7 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 	private NewsArrayAdapter newsAdapter;
 	private PullToRefreshAttacher mRefreshAttacher;
 	private String category_id;
+	private  LayoutInflater inflater;
 	public NewsListSlider(Context ctx, String category_id){
 		super(ctx);
 		this.context = ctx;
@@ -33,6 +35,14 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		mRefreshAttacher.setEnabled(false);
 		this.refreshData = false;
 		this.category_id = category_id;
+		
+		inflater = LayoutInflater.from(context);
+		mView = inflater.inflate(R.layout.news, null);
+		
+		mLoaderBar = (LoaderBar) mView.findViewById(R.id.newsLoaderBar);
+		mLoaderBar.setFailedMessage("Error loading news headlines.");
+		mNewsListView = (ListView) mView.findViewById(R.id.newsCategoryLV);
+		
 		loadStories(category_id,"category",0,20);
 	}
 	@Override
@@ -43,10 +53,8 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 
 	@Override
 	public View getView() {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		mView = inflater.inflate(R.layout.news, null);
+
 		
-		mNewsListView = (ListView) mView.findViewById(R.id.newsCategoryLV);
 		final Context c = this.context;
 		mNewsListView.setOnItemClickListener(
 			new AdapterView.OnItemClickListener() {
@@ -71,8 +79,7 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		);
 		mNewsListView.setAdapter(newsAdapter);
 		
-		mLoaderBar = (LoaderBar) mView.findViewById(R.id.newsLoaderBar);
-		mLoaderBar.setFailedMessage("Error loading news headlines.");
+		
 		mLoaderBar.enableAnimation();
 		
 		
@@ -104,6 +111,10 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		for(int i=0;(i < list.size()); i++){
 			newsAdapter.add(list.get(i));
 		}
+		//mLoaderBar.endLoading();
+		//mLoaderBar.getParent().removeView(mLoaderBar);
+		//mView.removeView(mLoaderBar);
+		((LinearLayout)mLoaderBar.getParent()).removeView(mLoaderBar);
 		mRefreshAttacher.setRefreshComplete();
 	}
 	@Override

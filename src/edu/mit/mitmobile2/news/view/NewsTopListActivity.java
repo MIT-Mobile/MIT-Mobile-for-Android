@@ -28,7 +28,7 @@ public class NewsTopListActivity  extends NewModuleActivity implements OnRefresh
 	NewsArrayAdapter newsAdapter;
 	ListView list;
 	boolean loadCategories = true;
-	private final int TOP_NR = 5;
+	private final int TOP_NR = 3;
 	private PullToRefreshAttacher mRefreshAttacher;
 	
 	@Override
