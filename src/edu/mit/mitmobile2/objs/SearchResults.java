@@ -22,6 +22,10 @@ public class SearchResults<ResultItem> {
 		mIsPartialResult = false;
 	}
 	
+	public Integer getCount(){
+		return mResultsList.size();
+	}
+	
 	public void markAsPartialWithUnknownTotal() {
 		mTotalResultsCount = null;
 		mIsPartialResult = true;
@@ -35,7 +39,10 @@ public class SearchResults<ResultItem> {
 	public List<ResultItem> getResultsList() {
 		return mResultsList;
 	}
-
+	
+	public void removeItem(int index){
+		mResultsList.remove(index);
+	}
 	public String getSearchTerm() {
 		return mSearchTerm;
 	}

@@ -26,6 +26,7 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 	//protected NewsModel mNewsModel;
 	private String mSearchTerm;
 	private NewsDownloader nd;
+	private Handler uiHandler;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		nd = NewsDownloader.getInstance(this);
@@ -45,6 +46,7 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 
 	@Override
 	protected void initiateSearch(String searchTerm, final Handler uiHandler) {
+		this.uiHandler = uiHandler;
 		mSearchTerm = searchTerm;
 		NewsDownloader.DownloadStoriesTask dst = nd.new DownloadStoriesTask(new StoriesProgressListener(){
 			SearchResults<NewsStory> results;
@@ -62,6 +64,12 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 			}
 			@Override
 			public void onPostExecute(Long nr) {
+				ArrayList<NewsStory> loadMore = new ArrayList<NewsStory>();
+				NewsStory nMore = new NewsStory();
+				nMore.setId("more");
+				nMore.setDek("Load more stories");
+				loadMore.add(nMore);
+				results.addMoreResults(loadMore);
 				MobileWebApi.sendSuccessMessage(uiHandler, results);
 			}
 		}, "search");
@@ -89,12 +97,16 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 		intent.putExtra(NewsDetailsActivity.KEY_POSITION, results.getItemPosition(item));
 		intent.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, results.getSearchTerm());
 		startActivity(intent);*/
-		Intent i  = new Intent(this, NewsDetailsActivity.class);
-		i.putExtra(NewsDetailsActivity.STORY_ID_KEY, item.getId());
-		i.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, mSearchTerm);
-		i.putExtra(NewsDetailsActivity.SEARCH_LIMIT, results.totalResultsCount());
-		startActivity(i);
-		
+		if(item.getId().equals("more")){
+			results.removeItem(results.getCount()-1);
+			continueSearch(results, uiHandler);
+		}else{
+			Intent i  = new Intent(this, NewsDetailsActivity.class);
+			i.putExtra(NewsDetailsActivity.STORY_ID_KEY, item.getId());
+			i.putExtra(NewsDetailsActivity.SEARCH_TERM_KEY, mSearchTerm);
+			i.putExtra(NewsDetailsActivity.SEARCH_LIMIT, results.totalResultsCount());
+			startActivity(i);
+		}
 	}
 
 	@Override
@@ -113,27 +125,29 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 	}
 
 	@Override
-	protected void continueSearch(SearchResults<NewsStory> previousResults, final Handler uiHandler) {
+	protected void continueSearch(final SearchResults<NewsStory> previousResults, final Handler uiHandler) {
 		NewsDownloader.DownloadStoriesTask dst = nd.new DownloadStoriesTask(new StoriesProgressListener(){
-			SearchResults<NewsStory> results;
 			@Override
 			public void onProgressUpdate(ArrayList<NewsStory>... list) {
 				for(ArrayList<NewsStory> st:list){
 					if(st==null || st.size()<1)
 						continue;
-					if(results==null)
-						results = new SearchResults<NewsStory>(mSearchTerm,st);
-					else
-						results.addMoreResults(st);
+					previousResults.addMoreResults(st);
 				}
 				
 			}
 			@Override
 			public void onPostExecute(Long nr) {
-				MobileWebApi.sendSuccessMessage(uiHandler, results);
+				ArrayList<NewsStory> loadMore = new ArrayList<NewsStory>();
+				NewsStory nMore = new NewsStory();
+				nMore.setId("more");
+				nMore.setDek("Load more stories");
+				loadMore.add(nMore);
+				previousResults.addMoreResults(loadMore);
+				MobileWebApi.sendSuccessMessage(uiHandler, previousResults);
 			}
 			
-		}, "search",previousResults.totalResultsCount(),20);
+		}, "search",previousResults.getCount(),20);
 		dst.execute(new String[]{mSearchTerm});
 	}
 }

@@ -17,6 +17,15 @@ public abstract class NewsCategoryLoader {
 	int position;
     String start_story_id;
     boolean refreshData;
+    boolean loadMore = false;
+    
+    public void setLoadMore(boolean b){
+    	this.loadMore = b;
+    }
+    
+    public boolean isLoadMore(){
+    	return this.loadMore;
+    }
     //String criteria;
     //String type;
 	
@@ -36,6 +45,10 @@ public abstract class NewsCategoryLoader {
 		return this.mLoadingScreenListener;
 	}*/
 	
+	/*public void removeItem(Integer i){
+		this.list.remove(i);
+	}*/
+	
 	public void loadStories(String criteria, String type, int start, int limit){
     	String[] cats = new String[]{criteria};
 		
@@ -43,10 +56,14 @@ public abstract class NewsCategoryLoader {
 		
 		NewsDownloader.DownloadStoriesTask dst = nd.new DownloadStoriesTask(new StoriesProgressListener(){
 			
-			//ArrayList<NewsStory> allStories = new ArrayList<NewsStory>();
+			
 			{
+				if(!ncl.loadMore){
+					ncl.list.clear();
+					ncl.setLoadMore(false);
+				}
 				ncl.isLoading = true;
-				ncl.list.clear();
+				
 			}
 			@Override
 			public void onProgressUpdate(ArrayList<NewsStory>... list) {

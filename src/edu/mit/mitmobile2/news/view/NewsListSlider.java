@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -61,8 +60,12 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 				@Override
 				public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
 					NewsStory newsCursor = (NewsStory) listView.getItemAtPosition(position);
-					
-					if(newsCursor.getCategory()!=null && newsCursor.getCategory().getId().equals("in_the_media")){
+					if(newsCursor.getId().equals("more")){
+						//removeItem(position);
+						setLoadMore(true);
+						mLoaderBar.setVisibility(View.VISIBLE);
+						loadStories(category_id,"category",position,20);
+					}else if(newsCursor.getCategory()!=null && newsCursor.getCategory().getId().equals("in_the_media")){
 						nd.showOpenInBrowserDialog(c,newsCursor.getSourceUrl());
 						return;
 					}else{
@@ -111,10 +114,17 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		for(int i=0;(i < list.size()); i++){
 			newsAdapter.add(list.get(i));
 		}
+		
+		NewsStory nMore = new NewsStory();
+		nMore.setId("more");
+		nMore.setDek("Load more stories");
+		newsAdapter.add(nMore);
+		
 		//mLoaderBar.endLoading();
 		//mLoaderBar.getParent().removeView(mLoaderBar);
 		//mView.removeView(mLoaderBar);
-		((LinearLayout)mLoaderBar.getParent()).removeView(mLoaderBar);
+		mLoaderBar.setVisibility(View.INVISIBLE);
+		//((LinearLayout)mLoaderBar.getParent()).removeView(mLoaderBar);
 		mRefreshAttacher.setRefreshComplete();
 	}
 	@Override
