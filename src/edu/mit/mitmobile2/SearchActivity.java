@@ -228,15 +228,16 @@ public abstract class SearchActivity<ResultItem> extends NewModuleActivity {
 		if(resultsCount == 0) {
 			summaryText = "No matches for \"" + mSearchTerm + "\"";
 		} else if(resultsCount == 1) {
-			summaryText = "1 result";
+			summaryText = "Results for "+ mSearchTerm;
 		} else if(!mSearchResults.isPartialResult() || supportsMoreResult()) {
-			String totalCount;
+			/*String totalCount;
 			if (mSearchResults.totalResultsCount() != null) {
 				totalCount = "" + mSearchResults.totalResultsCount();
 			} else {
 				totalCount = "" + mSearchResults.getResultsList().size();
 			}
-			summaryText = totalCount + " results";
+			summaryText = totalCount + " results";*/
+			summaryText = "Results for "+ mSearchTerm;
 		} else {
 			if(mSearchResults.totalResultsCount() != null) {
 				// total known

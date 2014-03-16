@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 //import android.support.v4.util.LruCache;
 import android.util.Log;
+import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.R;
 //import android.widget.ImageView;
 import edu.mit.mitmobile2.news.beans.NewsCategory;
@@ -41,8 +42,13 @@ public class NewsDownloader {
 	private NewsDbHelper dbHelper;
 	private SQLiteDatabase database;
 	
-	public static final String NEWS_PATH = "http://mobile-dev.mit.edu/latestStable/apis/news";
-	
+	//"http://mobile-dev.mit.edu/latestStable/apis/news";
+	/*
+	 * http://m.mit.edu/apis/news/stories/, 
+	 * http://mobile-stage.mit.edu/apis/news/stories/, 
+	 * http://mobile-dev.mit.edu/latestStable/apis/news/stories/
+	 */
+	public static String NEWS_PATH;
 	private LinkedHashMap<String, String> categories = new LinkedHashMap<String, String>();
 	//private LruCache<String, Bitmap> mMemoryCache;
 	
@@ -51,6 +57,11 @@ public class NewsDownloader {
 	public static NewsDownloader getInstance(Context context){
 		if(instance==null){
 			instance = new NewsDownloader(context);
+			if(Global.getMobileWebDomain().equals("mobile-dev.edu")){
+				NEWS_PATH = "http://"+Global.getMobileWebDomain()+"/latestStable/apis/news";
+			}else{
+				NEWS_PATH = "http://"+Global.getMobileWebDomain()+"/apis/news";
+			}
 		}
 		return instance;
 	}
