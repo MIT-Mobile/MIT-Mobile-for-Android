@@ -22,7 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:contentDescription="@string/imageContent"
-        android:maxHeight="128dip"
+        android:maxHeight="34dip"
+        android:maxWidth="175dip"
+        android:scaleType="fitEnd"
+        android:adjustViewBounds="true"
         android:src="@drawable/news_placeholder" />
 
 </LinearLayout>
