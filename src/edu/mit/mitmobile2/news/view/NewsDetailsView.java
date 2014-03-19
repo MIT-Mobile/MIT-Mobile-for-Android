@@ -58,7 +58,7 @@ public class NewsDetailsView extends WebView {
 		mNewsItem = newsItem;
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		size_width = (int)( metrics.widthPixels/metrics.density);
-		Log.d("NEWS", "Width is: "+size_width + " density: "+metrics.density);
+		//Log.d("NEWS", "Width is: "+size_width + " density: "+metrics.density);
 		populateView();
 	}
 	

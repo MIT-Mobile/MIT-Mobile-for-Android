@@ -43,6 +43,23 @@ public class NewsImage{
 		}
 		return representations.get(this.min_index);
 	}
+	public NewsImageRepresentation getRepresentationBestFitByWidthOrHeight(int width, int height) {
+		int mIndex = -1;
+		double max_size = 0;
+		int i = 0;
+		for(NewsImageRepresentation ir : representations){
+			if(ir.getWidth() > max_size && ((ir.getWidth() < width) && (ir.getHeight() < height))){
+				max_size = ir.getWidth();
+				mIndex = i; 
+			}
+			i++;
+		}
+		if(mIndex == -1){
+			return getSmallestRepresentationsByDiagonal();
+		}else{
+			return representations.get(mIndex);
+		}
+	}
 	public NewsImageRepresentation getRepresentationBestFitByWidth(int width) {
 		int mIndex = 0;
 		double max_size = 0;
