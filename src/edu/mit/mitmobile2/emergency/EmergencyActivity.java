@@ -147,8 +147,7 @@ public class EmergencyActivity extends NewModuleActivity implements OnRefreshLis
 					return;
 				}
 				
-				// not sure why position isn't the same row in this activity vs. emergencycontactsactivity
-				Contact c = db.getContact(position - 1);
+				Contact c = db.getContact(position);
 				String numericPhone = PhoneNumberUtils.convertKeypadLettersToDigits(c.phone);
 				Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + numericPhone));
 				startActivity(intent);

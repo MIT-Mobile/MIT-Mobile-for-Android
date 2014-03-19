@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="edu.mit.mitmobile2"
-      android:versionCode="14"
+      android:versionCode="15"
       android:installLocation="auto"
-      android:versionName="2.4.1"
+      android:versionName="2.5"
       >
 
     <!-- targetSdkVersion must remain < 11 in order for the menu to work correctly on 4.0+ devices -->
@@ -248,8 +248,8 @@
         <activity android:name=".settings.MITSettingsActivity" />
 
         <!-- TOUCHSTONE -->
-        <activity android:name=".touchstone.TouchstoneActivity" />
-        <activity android:name=".touchstone.TouchstonePrefsActivity"></activity>
+        <activity android:name=".touchstone.TouchstoneActivity" android:launchMode="singleTop" />
+        <activity android:name=".touchstone.TouchstonePrefsActivity" android:launchMode="singleTop"></activity>
 
         <!-- LIBRARIES -->
         <activity android:name=".libraries.LibrariesActivity" />

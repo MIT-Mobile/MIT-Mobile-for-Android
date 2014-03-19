@@ -11,6 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +22,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import edu.mit.mitmobile2.MITTitleBar.OnMITTitleBarListener;
+import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
 public abstract class NewModuleActivity extends Activity {
-
+	private static String TAG = "NewModuleActivity";
 	private MITTitleBar mTitleBar;
 	private LinearLayout mMainLayout;
 	private View mContentView;
@@ -236,5 +240,36 @@ public abstract class NewModuleActivity extends Activity {
 	    ht.setPullText("Swipe to refresh");
 	    ht.setRefreshingText("Refreshing...");
 	    return pullToRefreshAttacher;
+	}
+	
+	protected Handler getTouchStoneHandler(final Context context,
+			final String target) {
+
+		Handler TouchStoneHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.arg1 == MobileWebApi.SUCCESS) {
+					UserIdentity userIdentity = (UserIdentity) msg.obj;
+					Log.d(TAG,
+							"shbidentity = " + userIdentity.getShibIdentity());
+					Log.d(TAG, "username = " + userIdentity.getUsername());
+					Log.d(TAG, "mit identity = " + userIdentity.isMITIdentity()
+							+ "");
+					if (userIdentity.getShibIdentity() != null
+							&& userIdentity.getShibIdentity().length() > 1) {
+						
+						try {
+							Class<?> c = Class.forName(target);
+							Intent i = new Intent(context, c);
+							startActivity(i);
+						} catch (ClassNotFoundException e) {
+							Log.d(TAG, e.toString() + " occurs in context = "
+									+ context.toString());
+						}
+					}
+				}
+			}
+		};
+		return TouchStoneHandler;
 	}
 }

@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -116,7 +117,8 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 				finish();
 			}
 		});
-						
+		
+	    	    
 		// Dialog for invalid username or password
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Please enter a valid username and password.")
@@ -224,6 +226,8 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 		String requestKey = extras.getString("requestKey");
 		Log.d(TAG,"cancelling request " + requestKey);
 		((MITClientData)MITClient.requestMap.get(requestKey)).setTouchstoneState(MITClient.TOUCHSTONE_CANCEL);
+		Log.d(TAG,"touchstone state = " + ((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState());
+
 		finish();
 	}
 
@@ -235,4 +239,14 @@ public class TouchstoneActivity extends NewModuleActivity implements OnSharedPre
 	@Override
 	protected void onOptionSelected(String optionId) { }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+//        	
+//            //do your stuff
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+	
 }

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ import edu.mit.mitmobile2.libraries.VerifyUserCredentials.VerifyUserCredentialsL
 
 public class AppointmentActivity extends NewModuleActivity {
     
+	public static final String TAG = "AppointmentActivity";
     private Spinner mPurposeSpinner;
     private Spinner mTopicSpinner;
     private Spinner mStatusSpinner;
@@ -57,6 +59,7 @@ public class AppointmentActivity extends NewModuleActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    	Log.d(TAG,"onCreate()");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_appointment);
