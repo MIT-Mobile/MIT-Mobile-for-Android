@@ -123,7 +123,7 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		//mLoaderBar.endLoading();
 		//mLoaderBar.getParent().removeView(mLoaderBar);
 		//mView.removeView(mLoaderBar);
-		mLoaderBar.setVisibility(View.INVISIBLE);
+		mLoaderBar.setVisibility(View.GONE);
 		//((LinearLayout)mLoaderBar.getParent()).removeView(mLoaderBar);
 		mRefreshAttacher.setRefreshComplete();
 	}
