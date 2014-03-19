@@ -117,7 +117,7 @@ public class NewsListSlider extends NewsCategoryLoader implements SliderInterfac
 		
 		NewsStory nMore = new NewsStory();
 		nMore.setId("more");
-		nMore.setDek("Load more stories");
+		nMore.setDek("Load More...");
 		newsAdapter.add(nMore);
 		
 		//mLoaderBar.endLoading();

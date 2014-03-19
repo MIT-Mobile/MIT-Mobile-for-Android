@@ -141,7 +141,7 @@ public class NewsSearchActivity extends SearchActivity<NewsStory> {
 				ArrayList<NewsStory> loadMore = new ArrayList<NewsStory>();
 				NewsStory nMore = new NewsStory();
 				nMore.setId("more");
-				nMore.setDek("Load more stories");
+				nMore.setDek("Load More...");
 				loadMore.add(nMore);
 				previousResults.addMoreResults(loadMore);
 				MobileWebApi.sendSuccessMessage(uiHandler, previousResults);

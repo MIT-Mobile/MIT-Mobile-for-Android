@@ -113,7 +113,7 @@ public class NewsTopListActivity  extends NewModuleActivity implements OnRefresh
 									nMore.setId("more");
 									if(st.get(0).getCategory()!=null){
 										nMore.setCategory(st.get(0).getCategory());
-										nMore.setDek("More "+st.get(0).getCategory().getName()+" ...");
+										nMore.setDek("More "+st.get(0).getCategory().getName()+"...");
 									}
 									allStories.add(nMore);
 	
