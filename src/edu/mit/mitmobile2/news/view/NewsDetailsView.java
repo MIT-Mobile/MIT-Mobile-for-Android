@@ -57,7 +57,7 @@ public class NewsDetailsView extends WebView {
 		mModuleActivity = (NewModuleActivity) context;
 		mNewsItem = newsItem;
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		size_width = (int)( metrics.widthPixels/metrics.density);
+		size_width = (int)metrics.widthPixels;
 		//Log.d("NEWS", "Width is: "+size_width + " density: "+metrics.density);
 		populateView();
 	}
@@ -104,9 +104,7 @@ public class NewsDetailsView extends WebView {
 		
 		if(mNewsItem.getCoverImage() != null) {
 			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", 
-					mNewsItem.getCoverImage().getRepresentationBestFitByWidth(size_width).getUrl());
-		}else{
-			templateHtml = templateHtml.replace("__THUMBNAIL_URL__", "");
+					mNewsItem.getCoverImage().getSmallestRepresentationWithMinimumWidth(size_width).getUrl());
 		}
 		// Set Image Count
 		int galleryCount = 0;
