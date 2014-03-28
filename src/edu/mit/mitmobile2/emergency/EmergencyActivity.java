@@ -221,7 +221,7 @@ public class EmergencyActivity extends NewModuleActivity implements OnRefreshLis
 	@Override
 	protected boolean isScrollable() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
