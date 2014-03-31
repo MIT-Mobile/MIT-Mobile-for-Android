@@ -14,8 +14,8 @@ public class Config
 	
 	// static configurations PLEASE EDIT THESE VALUES TO SET UP YOUR APP
 	public final static boolean VERBOSE_LOGGING = true;
-	public final static String VERSION_NAME = "2.5";
-    public final static String VERSION_NUMBER = "15";
+	public final static String VERSION_NAME = "2.5.1";
+    public final static String VERSION_NUMBER = "16";
 	public final static String MOBILE_WEB_DOMAIN = "mobile-dev.mit.edu";
 	public final static String release_project_name = "edu.mit.mitmobile2";
     public final static String source_project_name = "edu.mit.mitmobile2";
