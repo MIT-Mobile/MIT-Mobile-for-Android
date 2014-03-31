@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class NewsDbHelper extends SQLiteOpenHelper{
 		
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "news.db";
 	public static final String TABLE_NAME = "news_cache";
 	public static final String KEY = "url";
