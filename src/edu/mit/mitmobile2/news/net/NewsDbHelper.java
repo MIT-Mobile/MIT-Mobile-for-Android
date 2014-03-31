@@ -38,7 +38,9 @@ public class NewsDbHelper extends SQLiteOpenHelper{
 		Log.w(NewsDbHelper.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 	    		+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+		try{
+			db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+		}catch(Exception e){}
 		onCreate(db);
 	}
 }
