@@ -227,7 +227,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	   				}
 	   				ArrayList<Predicted> predictions = sections.get(s.route_id);
 	    			 
-		    		Log.d("StopsAsyncView", s.toString());
+		    		Log.d("StopsAsyncView",""+ s.toString());
 
     				
 	    			// first stop...

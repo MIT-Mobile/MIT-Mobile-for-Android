@@ -219,7 +219,7 @@ public class LibraryParser {
     	Log.d(TAG,"parseLoans");
         LoanData loanData = new LoanData();
         try {
-			Log.d(TAG,object.toString(1));
+			Log.d(TAG,""+object.toString(1));
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -315,7 +315,7 @@ public class LibraryParser {
         	}
         }
 		catch (JSONException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error parsing libraries");			
 		}
@@ -481,7 +481,7 @@ public class LibraryParser {
         }
 		catch (JSONException e) {
             e.printStackTrace();
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG,""+e.getMessage());
             throw new RuntimeException("Error parsing libraries");			
 		}
 		return fineData;
@@ -574,7 +574,7 @@ public class LibraryParser {
         }
 		catch (JSONException e) {
             e.printStackTrace();
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG,""+e.getMessage());
             throw new RuntimeException("Error parsing libraries");			
 		}
 		return response;

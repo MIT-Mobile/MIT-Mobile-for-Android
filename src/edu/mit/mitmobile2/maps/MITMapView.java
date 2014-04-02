@@ -812,7 +812,7 @@ public class MITMapView extends MapView  {
     		}
     		catch (Exception e) {
     			Log.d(TAG, "error processing map items");
-    			Log.d(TAG, e.getStackTrace().toString());
+    			Log.d(TAG, ""+e.getStackTrace().toString());
     		}
     		
     	}

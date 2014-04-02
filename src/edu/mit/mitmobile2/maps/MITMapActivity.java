@@ -327,7 +327,7 @@ public class MITMapActivity extends NewModuleActivity {
             	}
             	catch (Exception e) {
             		Log.d(TAG,"mapSearchUiHander exception");
-            		Log.d(TAG,e.getStackTrace().toString());
+            		Log.d(TAG,""+e.getStackTrace().toString());
             	}
             }
             else if (msg.arg1 == MobileWebApi.ERROR) {

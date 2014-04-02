@@ -37,7 +37,7 @@ public class MITConnectionWrapper extends ConnectionWrapper {
 			//Log.d(TAG,"response = " + response);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getStackTrace().toString());
+			Log.d(TAG,""+e.getStackTrace().toString());
 			//Log.d(TAG,e.getMessage());
 		}
 		return response;

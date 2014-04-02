@@ -482,7 +482,7 @@ public class MITClient extends DefaultHttpClient {
 				}
 			}
 			catch (IOException e) {
-				Log.d(TAG,e.getMessage());
+				Log.d(TAG,""+e.getMessage());
 			}
 		}
 		

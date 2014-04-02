@@ -205,7 +205,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
             	}
             	catch (Exception e) {
             		Log.d(TAG,"getBookmarksHandler exception");
-            		Log.d(TAG,e.getStackTrace().toString());
+            		Log.d(TAG,""+e.getStackTrace().toString());
             	}
         }
     };
