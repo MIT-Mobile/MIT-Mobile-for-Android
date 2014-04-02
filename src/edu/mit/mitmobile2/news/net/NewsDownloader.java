@@ -157,7 +157,7 @@ public class NewsDownloader {
 				throw new IOException("Bad request: "+response);
 			}
 		}catch (Exception ex) {
-			Log.d("Networking", ex.getLocalizedMessage());
+			Log.d("Networking", ""+ex.getLocalizedMessage());
 			throw new IOException("Error connecting"); 
 		}
 		return in; 
@@ -184,7 +184,7 @@ public class NewsDownloader {
 		                stringBuilder.append(line + "\n");
 		            }
 		        } catch (IOException e) {
-		            Log.d("Networking",e.getLocalizedMessage());
+		            Log.d("Networking",""+e.getLocalizedMessage());
 		            return null;
 		        } finally {
 		            try {
@@ -198,7 +198,7 @@ public class NewsDownloader {
 				throw new IOException("No InputStream");
 			}
 		} catch (IOException e) {
-			Log.d("Networking", e.getLocalizedMessage());
+			Log.d("Networking", ""+e.getLocalizedMessage());
 			return null; 
 		}
 		

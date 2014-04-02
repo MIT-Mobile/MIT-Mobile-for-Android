@@ -19,7 +19,7 @@ public abstract class NewsParser<T> {
 			JSONArray array = new JSONArray(t);
 			return parseObjectArray(array);
 		}catch(Exception e){
-			Log.d("NEWS_PARSER",e.getLocalizedMessage());
+			Log.d("NEWS_PARSER",""+e.getLocalizedMessage());
 			return null;
 		}
 	}
@@ -28,7 +28,7 @@ public abstract class NewsParser<T> {
 			JSONObject obj = new JSONObject(t);
 			return parseObject(obj);
 		}catch(Exception e){
-			Log.d("NEWS_PARSER",e.getLocalizedMessage());
+			Log.d("NEWS_PARSER",""+e.getLocalizedMessage());
 			return null;
 		}
 	}
