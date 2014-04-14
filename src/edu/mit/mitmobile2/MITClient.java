@@ -87,8 +87,8 @@ public class MITClient extends DefaultHttpClient {
 	private static final String PAOS_HEADER = "PAOS";
 	private static final String PAOS_HEADER_VALUE = "ver=\"urn:liberty:paos:2003-08\";\"urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp\"";
 	private static final String PAOS_CONTENT_TYPE = "application/vnd.paos+xml";
-	public static final String MITIDP = "https://idp.mit.edu/idp/profile/SAML2/SOAP/ECP";
-	public static final String CAMSIDP = "https://idp.touchstonenetwork.net/idp/profile/SAML2/SOAP/ECP";
+	private static final String MITIDP = "https://idp.mit.edu/idp/profile/SAML2/SOAP/ECP";
+	private static final String CAMSIDP = "https://idp.touchstonenetwork.net/idp/profile/SAML2/SOAP/ECP";
 	final SharedPreferences.Editor prefsEditor;
 
 	HttpGet mHttpGet;
@@ -163,13 +163,17 @@ public class MITClient extends DefaultHttpClient {
 					Header location = locations[0];
 					String uriString = location.getValue();
 					//Log.d(TAG,"uriString from redirect = " + uriString);
-					if (state == null && (uriString.contains("https") && uriString.contains("mobile") 
-							&& uriString.contains("secure/api"))) {
-						setEcpTarget(uriString);
-					}
+
+                    if (state == null && state != OK_STATE) {
+                        if (getEcpTarget() == null || !getEcpTarget().equalsIgnoreCase(uriString)) {
+                            setEcpTarget(uriString);
+                        }
+                    }
+
 					try {
 						uri = new URI(uriString);
 						host = uri.getHost();
+                        /*
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
 							state = ECP_STATE;
 							Log.d(TAG,"state = " + state);
@@ -177,10 +181,12 @@ public class MITClient extends DefaultHttpClient {
 						else {
 							state = OK_STATE;
 						}
+						*/
+
 					} catch (URISyntaxException use) {
 						Log.e(TAG, "Invalid Location URI: "+uriString);
 					}
-					
+
 				}
 				return uri;
 			}
@@ -218,45 +224,53 @@ public class MITClient extends DefaultHttpClient {
 			requestKey = System.currentTimeMillis()/1000 + "";
 			Log.d(TAG,"requestKey " + requestKey + " created");
 			requestMap.put(requestKey, clientData);
+
+            httpGet.addHeader("accept", PAOS_MIME_TYPE);
+            httpGet.addHeader(PAOS_HEADER, PAOS_HEADER_VALUE);
+            //httpGet.addHeader("Content-Type", PAOS_CONTENT_TYPE);
+
 			response = this.execute(httpGet);
 			responseEntity = response.getEntity();
-			
-			if (state == OK_STATE) {
-				saveLogin();
-				return response;
-			}
-			
-			if (state == ECP_STATE ) {
-				Log.d(TAG,"ecp state");
-				ecp();				
-			}
-						
-			if (state == AUTH_ERROR_STATE) {
-				Log.d(TAG,"auth error state");
-				authError();
-			}
 
-			if (state == CANCELLED_STATE) {
-				Log.d(TAG,"status in cancelled state = " + response.getStatusLine().getStatusCode());
-				MITHttpEntity entity = new MITHttpEntity();
-				entity.setContent(MITHttpEntity.JSON_CANCEL);
-				response.setStatusCode(200);
-				response.setEntity(entity);
-				return response;
-			}
+            Header contentType = response.getFirstHeader("Content-Type");
+            String mimeType = contentType.getValue();
+            if (response.getStatusLine().getStatusCode() == 200 && mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
+            	state = ECP_STATE;
+            } else if (response.getStatusLine().getStatusCode() == 200 && !mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
+                state = OK_STATE;
+            } else {
+                	Log.d(TAG, "sp response statu = " + response.getStatusLine().getStatusCode());
+            }
 
-			if (state == OK_STATE) {
-				saveLogin();
-				return response;
-			}
-
+                if (state == OK_STATE) {
+                    saveLogin();
+                    return response;
+                }
+                if (state == ECP_STATE) {
+                    Log.d(TAG, "ecp state");
+                    ecp();
+                }
+                if (state == AUTH_ERROR_STATE) {
+                    Log.d(TAG, "auth error state");
+                    authError();
+                }
+                if (state == CANCELLED_STATE) {
+                    Log.d(TAG, "status in cancelled state = " + response.getStatusLine().getStatusCode());
+                    MITHttpEntity entity = new MITHttpEntity();
+                    entity.setContent(MITHttpEntity.JSON_CANCEL);
+                    response.setStatusCode(200);
+                    response.setEntity(entity);
+                    return response;
+                }
+                if (state == OK_STATE) {
+                    saveLogin();
+                    return response;
+                }
 			return null;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			Log.d(TAG,"get response exception = " + e.getMessage());
 			return null;
 		}
-		
 	}
 
 	private void ecp() {
@@ -271,17 +285,15 @@ public class MITClient extends DefaultHttpClient {
 			((Activity) mContext).startActivity(touchstoneIntent);
 		
 			Log.d(TAG,"requestKey " + requestKey + " value = " + MITClient.requestMap.get(requestKey));
-			while( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST) ) {
-				// do stuff
-			    // don't burn the CPU
-			    try {
-			    	Log.d(TAG,"requestMap " + requestKey + " = " + requestMap.get(requestKey));
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+            // do stuff,  don't burn the CPU
+            while( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST) )
+                try {
+                    Log.d(TAG, "requestMap " + requestKey + " = " + requestMap.get(requestKey));
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 					
 		}
 		Log.d(TAG,"request key in ecp = " + requestKey);
@@ -292,6 +304,7 @@ public class MITClient extends DefaultHttpClient {
 			HttpGet paosGet = new HttpGet();
 			try {
 				uri = new URI(getEcpTarget());
+                
 			} catch (URISyntaxException e) {
 				Log.d(TAG, " paos sp httpget uri exception = " + e.getMessage());
 			}
@@ -303,12 +316,12 @@ public class MITClient extends DefaultHttpClient {
 			try {
 				response = this.execute(paosGet); 
 			} catch (IOException ioe) {
-				Log.d(TAG, getEcpTarget() + "paos sp httpget response exception = "
-						+ ioe.getMessage());
+				Log.d(TAG, getEcpTarget() + "paos sp httpget IO exception = "+ ioe.getMessage());
 			}
-			
+
 			if (response.getStatusLine().getStatusCode() != 200) { 
-				Log.d(TAG, "ECP PAOS reponse connection error! response status = " + response.getStatusLine().getStatusCode());
+				Log.d(TAG, "ECP PAOS reponse from sp, request failed! status = " + response.getStatusLine().getStatusCode());
+                //state = ERROR_STATE;
 			}
 
 			HttpEntity paosEntity = response.getEntity();
@@ -317,25 +330,25 @@ public class MITClient extends DefaultHttpClient {
 				xmlString = EntityUtils.toString(paosEntity);
 			} catch (IOException ioe) {
 				Log.d(TAG,
-						"paos sp httpget response, converting to string, exception =" + ioe);
+						"paos sp httpget response, converting to string failed, IO exception =" + ioe.getMessage());
 			}
 			//Log.d(TAG, "paos sp httpget response  =" + xmlString);
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = null;
 			try {
 				builder = factory.newDocumentBuilder();
-			} catch (ParserConfigurationException e) {
+			} catch (ParserConfigurationException pce) {
 				Log.d(TAG,
-						" paos sp httpget response, creating dom parser,  exception = " + e);
+                        " paos sp httpget response, creating dom parser,  exception = " + pce.getMessage());
 			}
 			Document doc = null;
 			try {
 				doc = builder.parse(new InputSource(new ByteArrayInputStream(
 						xmlString.getBytes("utf-8"))));
 			} catch (SAXException se) {
-				Log.d(TAG, "paos sp httpget response, create DOM document, SAXException = " + se);
+				Log.d(TAG, "paos sp httpget response, create DOM document, SAXException = " + se.getMessage());
 			} catch (IOException ioe) {
-				Log.d(TAG, "paos sp httpget response, create DOM document, IOException = " + ioe);
+				Log.d(TAG, "paos sp httpget response, create DOM document, IOException = " + ioe.getMessage());
 			}
 			Element spRespnseRoot = doc.getDocumentElement();
 			String spSoapPrefix = spRespnseRoot.getNodeName();
@@ -347,7 +360,8 @@ public class MITClient extends DefaultHttpClient {
 			NodeList faultList = null;
 			faultList = doc.getElementsByTagName(spSoapFault);
 			if (faultList != null && faultList.getLength() > 0) {
-				Log.d(TAG, " sp paos response error, S:Fault");
+				Log.d(TAG, " sp paos response error, SOAP FAULT in soap message");
+                //state = ERROR_STATE;
 			}
 			// relayState
 			NodeList rnds = doc.getElementsByTagName("ecp:RelayState");
@@ -356,7 +370,7 @@ public class MITClient extends DefaultHttpClient {
 			//Node newRelayStateNode = doc.importNode(relayStateNode, true);
 			//use doc.adoptNode, both cloneNode() and importNode() don't work for android 2.3.4
 			Node newRelayStateNode = doc.adoptNode(relayStateNode);		
-			Log.d(TAG, " getting - relay_state " + relayStateNode.getTextContent());
+			Log.d(TAG, "relay_state = " + relayStateNode.getTextContent());
 
 			// responseConsumerURL
 			NodeList cnds = doc.getElementsByTagName("paos:Request");
@@ -400,34 +414,33 @@ public class MITClient extends DefaultHttpClient {
 			try {
 				response = this.execute(paosPost); // post to idp			
 			} catch (ClientProtocolException cpe) {
-				Log.d(TAG, " paos idp post client protocol exception = " + cpe.toString());
+				Log.d(TAG, " paos idp post client protocol exception = " + cpe.getMessage());
 			} catch (IOException ioe) {
-				Log.d(TAG, " paos idp post io exception = " + ioe);
+				Log.d(TAG, " paos idp post io exception = " + ioe.getMessage());
 			}
 			
 			paosEntity = response.getEntity();
 			try {
 				xmlString = EntityUtils.toString(paosEntity);
 			} catch (IOException ioe) {
-				Log.d(TAG, "paos response from idp, ioexception = " + ioe);
+				Log.d(TAG, "paos response from idp, ioexception = " + ioe.getMessage());
 			}
 			//Log.d(TAG, "paos httpost response from idp =" + xmlString);
 			if (response.getStatusLine().getStatusCode() != 200) {		
 			    Log.d(TAG, "paos httpost response from idp status code  =" + response.getStatusLine().getStatusCode());
-			    //state = AUTH_ERROR_STATE;
-			    //return;
+			    state = AUTH_ERROR_STATE;
+			    return;
 			} else {
 				try {
 					doc = builder.parse(new InputSource(new ByteArrayInputStream(
 						xmlString.getBytes("utf-8"))));
 				} catch (SAXException se) {
-					Log.d(TAG, " idp paos post response, create DOM document, SAXException =  + se");
+					Log.d(TAG, " idp paos post response, create DOM document, SAXException =  "+se.getMessage());
 				} catch (IOException ioe) {
-					Log.d(TAG, " idp paos post response, create DOM document, IOException" + ioe);
+					Log.d(TAG, " idp paos post response, create DOM document, IOException" + ioe.getMessage());
 				}
 				//get prefix and do error checking paos soap from idp
 				Element idpRespnseRoot = doc.getDocumentElement();
-				
 				String idpSoapPrefix = idpRespnseRoot.getNodeName();
 				if (idpSoapPrefix != null && idpSoapPrefix.contains(":")) {
 					idpSoapPrefix = idpSoapPrefix.substring(0, idpSoapPrefix.indexOf(":"));
@@ -436,7 +449,7 @@ public class MITClient extends DefaultHttpClient {
 				String idpSoapFault = idpSoapPrefix + ":Fault";
 				faultList = doc.getElementsByTagName(idpSoapFault);
 				if (faultList.getLength() != 0) {
-					Log.d(TAG, " idp paos response error in soap message, S:Fault");
+					Log.d(TAG, " idp paos response error, SOAP FAULT  in soap message");
 				}
 				NodeList ands = doc.getElementsByTagName("ecp:Response");
 				//Node assertionConsumerServiceURLNode = ands.item(0);
@@ -447,8 +460,7 @@ public class MITClient extends DefaultHttpClient {
 					Log.d(TAG,
 						"Error!  responseConsumerURL from sp != assertionConsumerServiceURL from idp");
 					//state = AUTH_ERROR_STATE;
-					//state = CANCELLED_STATE;
-					//return;
+					return;
 				}
 				// remove all child nodes from headerNode.
 				Node headerNode = doc.getElementsByTagName(idpSoapPrefix + ":Header").item(0);
@@ -499,9 +511,9 @@ public class MITClient extends DefaultHttpClient {
 				try {
 					response = this.execute(paosPost); // assertionComsumerURL, post to sp
 				} catch (ClientProtocolException cpe) {
-					Log.d(TAG, " paos sp post client protocol exception = " + cpe.toString());
+					Log.d(TAG, " paos sp post client protocol exception = " + cpe.getMessage());
 				} catch (IOException ioe) {
-					Log.d(TAG, " paos sp post io exception = " + ioe);
+					Log.d(TAG, " paos sp post io exception = " + ioe.getMessage());
 				}
 				if (response.getStatusLine().getStatusCode() == 200) {
 					//clearing pref
@@ -512,10 +524,9 @@ public class MITClient extends DefaultHttpClient {
 						prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
 					}										
 				} else {
-					//state = AUTH_ERROR_STATE;
-					Log.d(TAG, "paos httpost response from sp status code  =" + response.getStatusLine().getStatusCode());
+					Log.d(TAG, "paos httpost response error from sp status code  =" + response.getStatusLine().getStatusCode());
+                    //state = ERROR_STATE;
 				}
-				
 			}
 		} else {
 			state = CANCELLED_STATE;
@@ -656,7 +667,7 @@ public class MITClient extends DefaultHttpClient {
 			Transformer transformer = transFactory.newTransformer();
 			transformer.transform(source, result);
 		} catch (Exception ex) {
-			Log.d(TAG, "XML element to stream error");
+			Log.d(TAG, "XML element to stream error = " + ex.getMessage());
 		}
 	}
 }
