@@ -163,13 +163,13 @@ public class MITClient extends DefaultHttpClient {
 					Header location = locations[0];
 					String uriString = location.getValue();
 					//Log.d(TAG,"uriString from redirect = " + uriString);
-
+                    /*
                     if (state == null && state != OK_STATE) {
                         if (getEcpTarget() == null || !getEcpTarget().equalsIgnoreCase(uriString)) {
                             setEcpTarget(uriString);
                         }
                     }
-
+                    */
 					try {
 						uri = new URI(uriString);
 						host = uri.getHost();
@@ -235,7 +235,8 @@ public class MITClient extends DefaultHttpClient {
             Header contentType = response.getFirstHeader("Content-Type");
             String mimeType = contentType.getValue();
             if (response.getStatusLine().getStatusCode() == 200 && mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
-            	state = ECP_STATE;
+            	setEcpTarget(uri.toString());
+                state = ECP_STATE;
             } else if (response.getStatusLine().getStatusCode() == 200 && !mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
                 state = OK_STATE;
             } else {
@@ -426,10 +427,14 @@ public class MITClient extends DefaultHttpClient {
 				Log.d(TAG, "paos response from idp, ioexception = " + ioe.getMessage());
 			}
 			//Log.d(TAG, "paos httpost response from idp =" + xmlString);
-			if (response.getStatusLine().getStatusCode() != 200) {		
-			    Log.d(TAG, "paos httpost response from idp status code  =" + response.getStatusLine().getStatusCode());
-			    state = AUTH_ERROR_STATE;
-			    return;
+			if (response.getStatusLine().getStatusCode() != 200) {
+                if (response.getStatusLine().getStatusCode() == 401) {
+                    Log.d(TAG, "paos httpost response from idp status code  =" + response.getStatusLine().getStatusCode());
+                    state = AUTH_ERROR_STATE;
+                    return;
+                } else {
+                    Log.d(TAG, "paos httpost response from idp != 200, status code  =" + response.getStatusLine().getStatusCode());
+                }
 			} else {
 				try {
 					doc = builder.parse(new InputSource(new ByteArrayInputStream(
@@ -515,17 +520,22 @@ public class MITClient extends DefaultHttpClient {
 				} catch (IOException ioe) {
 					Log.d(TAG, " paos sp post io exception = " + ioe.getMessage());
 				}
-				if (response.getStatusLine().getStatusCode() == 200) {
+                if (response.getStatusLine().getStatusCode() != 200 ) {
+                    Log.d(TAG, "paos httpost response error from sp, status code  = " + response.getStatusLine().getStatusCode());
+                    //state = ERROR_STATE;
+                } else {
+                    Header contentType = response.getFirstHeader("Content-Type");
+                    String mimeType = contentType.getValue();
+                    if (mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
+                        Log.d(TAG, "paos httpost response error from sp, MIME type = " + mimeType);
+                    }
 					//clearing pref
 					state = OK_STATE;
 					if (!rememberLogin) {
 						prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", null);
 						prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", null);
 						prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
-					}										
-				} else {
-					Log.d(TAG, "paos httpost response error from sp status code  =" + response.getStatusLine().getStatusCode());
-                    //state = ERROR_STATE;
+					}
 				}
 			}
 		} else {
