@@ -130,6 +130,7 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				edit.putString("oidc_username", "");
 				edit.putString("oidc_email", "");
 				edit.commit();
+				updateDisplay();
 			}
 		});
 		
