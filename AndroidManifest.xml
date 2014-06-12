@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="edu.mit.mitmobile2"
-      android:versionCode="16"
+      android:versionCode="17"
       android:installLocation="auto"
-      android:versionName="2.5.1"
+      android:versionName="2.5.2"
       >
 
     <!-- targetSdkVersion must remain < 11 in order for the menu to work correctly on 4.0+ devices -->
