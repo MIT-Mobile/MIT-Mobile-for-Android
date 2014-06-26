@@ -114,7 +114,7 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				url = url + "?client_id=" + clientId;
 				url = url + "&response_type=code";
 				url = url + "&state=" + state;
-				url = url + "&scope=openid+email+profile+address+phone+offline_access";
+				url = url + "&scope=openid+email+profile+address+phone+offline_access+techcash+libraries";
 				
 				Log.d(TAG, "Loading authorization URL: " + url);
 				
@@ -417,6 +417,7 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
 			
 			String accessToken = getAccesstoken(prefs);
+			accessToken = checkExpiredToken(accessToken);
 			
 			if (accessToken == null || accessToken.isEmpty()) {
 				// if we don't have an access token, try to refresh it
@@ -426,6 +427,8 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				if (accessToken == null || accessToken.isEmpty()) {
 					// if we still don't have one, bail
 					Log.d(TAG, "Couldn't load profile: no access token");
+					updateDisplay();
+					return;
 				}
 			}
 
