@@ -18,6 +18,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -38,6 +39,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
@@ -53,14 +55,10 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 	private String authorizationEndpoint = issuer + "authorize";
 	private String tokenEndpoint = issuer + "token";
 	private String userInfoEndpoint = issuer + "userinfo";
+	private String revocationEndpoint = issuer + "revoke";
 	
 	
 	private String clientId = "05a3f7f5-c6db-4b1b-aca6-cc2f3c163b78";
-	private String clientSecret = "APyV0tFxyDrvsdr7M0ZPaVdnLQ_tTicMdtkw7OvkePXOhv_MD1IOCSBjx1voJ7wWicGJl5LQj7I6SnCgni1wRGk";
-	
-	// TODO: figure out how to save/check this?
-	private String state;
-	
 	
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -98,8 +96,14 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 			
 			@Override
 			public void onClick(View v) {
-				
-				state = UUID.randomUUID().toString();
+
+				// create a randomized State string and save it
+				String state = UUID.randomUUID().toString();
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
+				Editor edit = prefs.edit();
+				edit.putString("oidc_state", state);
+				edit.commit();
+
 				
 				// TODO: use a real URL builder
 				String url = authorizationEndpoint;
@@ -107,7 +111,7 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				url = url + "?client_id=" + clientId;
 				url = url + "&response_type=code";
 				url = url + "&state=" + state;
-				url = url + "&scope=openid+email+profile+address+phone";
+				url = url + "&scope=openid+email+profile+address+phone+offline_access";
 				
 				Log.d(TAG, "Loading authorization URL: " + url);
 				
@@ -122,9 +126,13 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 			
 			@Override
 			public void onClick(View v) {
+				
+				revokeTokens();
+				
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
 				Editor edit = prefs.edit();
 				edit.putString("oidc_accesstoken", "");
+				edit.putString("oidc_refreshtoken", "");
 				edit.putString("oidc_idtoken", "");
 				edit.putString("oidc_subject", "");
 				edit.putString("oidc_username", "");
@@ -134,12 +142,82 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 			}
 		});
 		
+		Button profileButton = (Button)findViewById(R.id.openid_profile);
+		
+		profileButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				loadProfile();
+				updateDisplay();				
+			}
+		});
+		
 	}
 	
+	private void revokeTokens() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
+		String idToken = getIdToken(prefs);
+		String accessToken = getAccesstoken(prefs);
+		String refreshToken = getRefreshToken(prefs);
+
+		revokeSingleToken(idToken);
+		revokeSingleToken(accessToken);
+		revokeSingleToken(refreshToken);
+		
+	}
+	
+	private void revokeSingleToken(String tokenValue) {
+		
+		try {
+		
+			HttpClient client = new DefaultHttpClient();
+			String url = revocationEndpoint;
+			
+			HttpPost post = new HttpPost(url);
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("client_id", clientId));
+			params.add(new BasicNameValuePair("token", tokenValue));
+			post.setEntity(new UrlEncodedFormEntity(params));
+			
+			HttpResponse response = client.execute(post);
+			
+			StatusLine result = response.getStatusLine();
+			
+			Log.d(TAG, "Revoked token, result was: " + result.getStatusCode());
+
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private String getRefreshToken(SharedPreferences prefs) {
+		return prefs.getString("oidc_refreshtoken", "");
+	}
+
+	private String getAccesstoken(SharedPreferences prefs) {
+		return prefs.getString("oidc_accesstoken", "");
+	}
+
+	private String getIdToken(SharedPreferences prefs) {
+		return prefs.getString("oidc_idtoken", "");
+	}
+
 	private void updateDisplay() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
-		String idToken = prefs.getString("oidc_idtoken", "");
+		String idToken = getIdToken(prefs);
+		String accessToken = getAccesstoken(prefs);
+		String refreshToken = getRefreshToken(prefs);
+		
 		String subjectVal = prefs.getString("oidc_subject", "");
 		String usernameVal = prefs.getString("oidc_username", "");
 		String emailVal = prefs.getString("oidc_email", "");
@@ -152,6 +230,27 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 		usernameView.setText(usernameVal);
 		emailView.setText(emailVal);
 		
+		ToggleButton idToggle = (ToggleButton)findViewById(R.id.openid_idtoken);
+		ToggleButton accessToggle = (ToggleButton)findViewById(R.id.openid_access);
+		ToggleButton refreshToggle = (ToggleButton)findViewById(R.id.openid_refresh);
+		
+		if (idToken != null && !idToken.isEmpty()) {
+			idToggle.setChecked(true);
+		} else {
+			idToggle.setChecked(false);
+		}
+		
+		if (accessToken != null && !accessToken.isEmpty()) {
+			accessToggle.setChecked(true);
+		} else {
+			accessToggle.setChecked(false);
+		}
+		
+		if (refreshToken != null && !refreshToken.isEmpty()) {
+			refreshToggle.setChecked(true);
+		} else {
+			refreshToggle.setChecked(false);
+		}
 		
 	}
 
@@ -176,8 +275,11 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 			Log.d(TAG, "Code: " + code);
 			Log.d(TAG, "State: " + state);
 			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
+			String savedState = prefs.getString("oidc_state", "");
+			
 			// TODO: check "state" for consistency
-			if (state.equals(this.state)) {
+			if (state.equals(savedState)) {
 				Log.d(TAG, "States match!");
 			} else {
 				Log.d(TAG, "States don't match :(");
@@ -194,7 +296,7 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				params.add(new BasicNameValuePair("client_id", clientId));
-				params.add(new BasicNameValuePair("client_secret", clientSecret));
+				//params.add(new BasicNameValuePair("client_secret", clientSecret));
 				params.add(new BasicNameValuePair("grant_type", "authorization_code"));
 				params.add(new BasicNameValuePair("code", code));
 				post.setEntity(new UrlEncodedFormEntity(params));
@@ -212,24 +314,25 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 
 					String idTokenTxt = JSONObjectUtils.getString(obj, "id_token");
 					String accessToken = JSONObjectUtils.getString(obj, "access_token");
+					String refreshToken = JSONObjectUtils.getString(obj, "refresh_token");
 
+					Log.d(TAG, "Got ID Token: " + idTokenTxt);
+					Log.d(TAG, "Got Access Token: " + accessToken);
+					Log.d(TAG, "Got Refresh Token: " + refreshToken);
+					
 					// parse the ID Token
 					JWT jwt = JWTParser.parse(idTokenTxt);
 					String subject = jwt.getJWTClaimsSet().getStringClaim("sub");
 
 					Log.d(TAG, "Loaded subject: " + subject);
 					
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
 					Editor edit = prefs.edit();
 					edit.putString("oidc_accesstoken", accessToken);
 					edit.putString("oidc_idtoken", idTokenTxt);
+					edit.putString("oidc_refreshtoken", refreshToken);
 					edit.putString("oidc_subject", subject);
 					edit.commit();
 
-					
-					// since we got an access token, pull the profile information
-					
-					loadProfile();
 					
 				}
 				
@@ -262,19 +365,26 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 		
 		try {
 			
-			HttpPost post = new HttpPost(url);
+			
+			
 			
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
 			
-			String accessToken = prefs.getString("oidc_accesstoken", "");
+			String accessToken = getAccesstoken(prefs);
+
+			url = url + "?access_token=" + accessToken;
 			
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("access_token", accessToken));
-			post.setEntity(new UrlEncodedFormEntity(params));
+			Log.d(TAG, "Fetching profile: " + url);
 			
-			HttpResponse response = client.execute(post);
+			HttpGet get = new HttpGet(url);
+
+			//get.setHeader("Authorization", "Basic " + accessToken);
+			
+			HttpResponse response = client.execute(get);
 			
 			StatusLine result = response.getStatusLine();
+
+			Log.d(TAG, "Fetched profile, got " + result.getStatusCode());
 			
 			if (result.getStatusCode() == HttpStatus.SC_OK) {
 				// get the body, parse as JSON
@@ -282,7 +392,7 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				
 				JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
 				JSONObject obj = (JSONObject) parser.parse(entity.getContent());
-
+				
 				String username = JSONObjectUtils.getString(obj, "preferred_username");
 				String email = JSONObjectUtils.getString(obj, "email");
 
