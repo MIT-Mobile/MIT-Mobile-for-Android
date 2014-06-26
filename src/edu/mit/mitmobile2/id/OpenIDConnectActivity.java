@@ -1,8 +1,10 @@
 package edu.mit.mitmobile2.id;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +12,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -218,6 +221,17 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 		String accessToken = getAccesstoken(prefs);
 		String refreshToken = getRefreshToken(prefs);
 		
+		idToken = checkExpiredToken(idToken);
+		accessToken = checkExpiredToken(accessToken);
+		refreshToken = checkExpiredToken(refreshToken);
+		// save the checked values
+		Editor edit = prefs.edit();
+		edit.putString("oidc_accesstoken", accessToken);
+		edit.putString("oidc_idtoken", idToken);
+		edit.putString("oidc_refreshtoken", refreshToken);
+		edit.commit();
+		
+		
 		String subjectVal = prefs.getString("oidc_subject", "");
 		String usernameVal = prefs.getString("oidc_username", "");
 		String emailVal = prefs.getString("oidc_email", "");
@@ -254,6 +268,34 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 		
 	}
 
+	private String checkExpiredToken(String token) {
+		if (token == null || token.equals("")) {
+			return "";
+		}
+		
+		try {
+			JWT jwt = JWTParser.parse(token);
+			
+			if (jwt.getJWTClaimsSet().getExpirationTime() != null) {
+				Date now = new Date();
+				if (jwt.getJWTClaimsSet().getExpirationTime().before(now)) {
+					// token is expired!
+					return "";					
+				} else {
+					return token;
+				}
+			} else {
+				return token;
+			}
+			
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
+
 	@Override
 	protected void onStart() {
 		Log.d(TAG, "onStart()");
@@ -267,95 +309,99 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 		//Log.d(TAG, "Query: " + intent.getData().getQuery());
 		
 		if (intent.getScheme() != null && intent.getScheme().equals("mitmobile2")) {
-			// processing a callback URL of some type
-			
-			String code = intent.getData().getQueryParameter("code");
-			String state = intent.getData().getQueryParameter("state");
-			
-			Log.d(TAG, "Code: " + code);
-			Log.d(TAG, "State: " + state);
-			
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
-			String savedState = prefs.getString("oidc_state", "");
-			
-			// TODO: check "state" for consistency
-			if (state.equals(savedState)) {
-				Log.d(TAG, "States match!");
-			} else {
-				Log.d(TAG, "States don't match :(");
-			}
-			
-			
-			// Fetch a token
-			HttpClient client = new DefaultHttpClient();
-			String url = tokenEndpoint;
-			
-			try {
-				
-				HttpPost post = new HttpPost(url);
-				
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				params.add(new BasicNameValuePair("client_id", clientId));
-				//params.add(new BasicNameValuePair("client_secret", clientSecret));
-				params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-				params.add(new BasicNameValuePair("code", code));
-				post.setEntity(new UrlEncodedFormEntity(params));
-				
-				HttpResponse response = client.execute(post);
-				
-				StatusLine result = response.getStatusLine();
-				
-				if (result.getStatusCode() == HttpStatus.SC_OK) {
-					// get the body, parse as JSON
-					HttpEntity entity = response.getEntity();
-					
-					JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
-					JSONObject obj = (JSONObject) parser.parse(entity.getContent());
-
-					String idTokenTxt = JSONObjectUtils.getString(obj, "id_token");
-					String accessToken = JSONObjectUtils.getString(obj, "access_token");
-					String refreshToken = JSONObjectUtils.getString(obj, "refresh_token");
-
-					Log.d(TAG, "Got ID Token: " + idTokenTxt);
-					Log.d(TAG, "Got Access Token: " + accessToken);
-					Log.d(TAG, "Got Refresh Token: " + refreshToken);
-					
-					// parse the ID Token
-					JWT jwt = JWTParser.parse(idTokenTxt);
-					String subject = jwt.getJWTClaimsSet().getStringClaim("sub");
-
-					Log.d(TAG, "Loaded subject: " + subject);
-					
-					Editor edit = prefs.edit();
-					edit.putString("oidc_accesstoken", accessToken);
-					edit.putString("oidc_idtoken", idTokenTxt);
-					edit.putString("oidc_refreshtoken", refreshToken);
-					edit.putString("oidc_subject", subject);
-					edit.commit();
-
-					
-				}
-				
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (java.text.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
+			// processing a callback URL of some type			
+			authorizationCallback(intent);
 		}
 		
 		updateDisplay();
+	}
+
+	private void authorizationCallback(Intent intent) {
+		String code = intent.getData().getQueryParameter("code");
+		String state = intent.getData().getQueryParameter("state");
+		
+		Log.d(TAG, "Code: " + code);
+		Log.d(TAG, "State: " + state);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
+		String savedState = prefs.getString("oidc_state", "");
+		
+		// TODO: check "state" for consistency
+		if (state.equals(savedState)) {
+			Log.d(TAG, "States match!");
+		} else {
+			Log.d(TAG, "States don't match :(");
+		}
+		
+		
+		// Fetch a token
+		HttpClient client = new DefaultHttpClient();
+		String url = tokenEndpoint;
+		
+		try {
+			
+			HttpPost post = new HttpPost(url);
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("client_id", clientId));
+			//params.add(new BasicNameValuePair("client_secret", clientSecret));
+			params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+			params.add(new BasicNameValuePair("code", code));
+			post.setEntity(new UrlEncodedFormEntity(params));
+			
+			post.setHeader("Accept", "application/json");
+			
+			HttpResponse response = client.execute(post);
+			
+			StatusLine result = response.getStatusLine();
+			
+			if (result.getStatusCode() == HttpStatus.SC_OK) {
+				// get the body, parse as JSON
+				HttpEntity entity = response.getEntity();
+				
+				JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
+				JSONObject obj = (JSONObject) parser.parse(entity.getContent());
+
+				String idTokenTxt = JSONObjectUtils.getString(obj, "id_token");
+				String accessToken = JSONObjectUtils.getString(obj, "access_token");
+				String refreshToken = JSONObjectUtils.getString(obj, "refresh_token");
+
+				Log.d(TAG, "Got ID Token: " + idTokenTxt);
+				Log.d(TAG, "Got Access Token: " + accessToken);
+				Log.d(TAG, "Got Refresh Token: " + refreshToken);
+				
+				// parse the ID Token
+				JWT jwt = JWTParser.parse(idTokenTxt);
+				String subject = jwt.getJWTClaimsSet().getStringClaim("sub");
+
+				Log.d(TAG, "Loaded subject: " + subject);
+				
+				Editor edit = prefs.edit();
+				edit.putString("oidc_accesstoken", accessToken);
+				edit.putString("oidc_idtoken", idTokenTxt);
+				edit.putString("oidc_refreshtoken", refreshToken);
+				edit.putString("oidc_subject", subject);
+				edit.commit();
+
+				
+			}
+			
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void loadProfile() {
@@ -371,20 +417,30 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
 			
 			String accessToken = getAccesstoken(prefs);
-
-			url = url + "?access_token=" + accessToken;
 			
-			Log.d(TAG, "Fetching profile: " + url);
+			if (accessToken == null || accessToken.isEmpty()) {
+				// if we don't have an access token, try to refresh it
+				refreshAccessToken();
+				accessToken = getAccesstoken(prefs);
+			
+				if (accessToken == null || accessToken.isEmpty()) {
+					// if we still don't have one, bail
+					Log.d(TAG, "Couldn't load profile: no access token");
+				}
+			}
+
+			//url = url + "?access_token=" + accessToken;
+			
+			//Log.d(TAG, "Fetching profile: " + url);
 			
 			HttpGet get = new HttpGet(url);
 
-			//get.setHeader("Authorization", "Basic " + accessToken);
+			get.setHeader("Authorization", "Bearer " + accessToken);
+			get.setHeader("Accept", "application/json");
 			
 			HttpResponse response = client.execute(get);
 			
 			StatusLine result = response.getStatusLine();
-
-			Log.d(TAG, "Fetched profile, got " + result.getStatusCode());
 			
 			if (result.getStatusCode() == HttpStatus.SC_OK) {
 				// get the body, parse as JSON
@@ -404,10 +460,96 @@ public class OpenIDConnectActivity extends NewModuleActivity implements
 				edit.putString("oidc_username", username);
 				edit.putString("oidc_email", email);
 				edit.commit();
-
+			} else {
+				// something went wrong, chuck the token
 				
+				revokeSingleToken(accessToken);
+				
+				Editor edit = prefs.edit();
+				edit.putString("oidc_accesstoken", "");
+				edit.commit();				
 				
 			}
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		updateDisplay();
+	}
+
+	private void refreshAccessToken() {
+		// Fetch a token
+		HttpClient client = new DefaultHttpClient();
+		String url = tokenEndpoint;
+		
+		try {
+			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenIDConnectActivity.this);
+			
+			String refreshToken = getRefreshToken(prefs);
+			
+			HttpPost post = new HttpPost(url);
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("client_id", clientId));
+			//params.add(new BasicNameValuePair("client_secret", clientSecret));
+			params.add(new BasicNameValuePair("grant_type", "refresh_token"));
+			params.add(new BasicNameValuePair("refresh_token", refreshToken));
+			post.setEntity(new UrlEncodedFormEntity(params));
+			
+			post.setHeader("Accept", "application/json");
+			
+			HttpResponse response = client.execute(post);
+			
+			StatusLine result = response.getStatusLine();
+			
+			if (result.getStatusCode() == HttpStatus.SC_OK) {
+				// get the body, parse as JSON
+				HttpEntity entity = response.getEntity();
+				
+				JSONParser parser = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
+				JSONObject obj = (JSONObject) parser.parse(entity.getContent());
+
+				String idTokenTxt = JSONObjectUtils.getString(obj, "id_token");
+				String accessToken = JSONObjectUtils.getString(obj, "access_token");
+				refreshToken = JSONObjectUtils.getString(obj, "refresh_token");
+
+				Log.d(TAG, "Got ID Token: " + idTokenTxt);
+				Log.d(TAG, "Got Access Token: " + accessToken);
+				Log.d(TAG, "Got Refresh Token: " + refreshToken);
+				
+				// parse the ID Token
+				JWT jwt = JWTParser.parse(idTokenTxt);
+				String subject = jwt.getJWTClaimsSet().getStringClaim("sub");
+
+				Log.d(TAG, "Loaded subject: " + subject);
+				
+				Editor edit = prefs.edit();
+				edit.putString("oidc_accesstoken", accessToken);
+				edit.putString("oidc_idtoken", idTokenTxt);
+				edit.putString("oidc_refreshtoken", refreshToken);
+				edit.putString("oidc_subject", subject);
+				edit.commit();
+
+				
+			}
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
