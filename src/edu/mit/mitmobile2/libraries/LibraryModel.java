@@ -9,7 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.MobileWebApi.HttpClientType;
@@ -18,6 +20,7 @@ import edu.mit.mitmobile2.MobileWebApi.ServerResponseException;
 import edu.mit.mitmobile2.MobileWebApi.DefaultCancelRequestListener;
 import edu.mit.mitmobile2.MobileWebApi.DefaultErrorListener;
 
+import edu.mit.mitmobile2.id.OpenIDConnectActivity;
 import edu.mit.mitmobile2.libraries.LibraryActivity.LinkItem;
 
 public class LibraryModel {
@@ -209,7 +212,7 @@ public class LibraryModel {
         	searchParameters.put("on_campus", onCampus);
         }
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.Default);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -233,7 +236,7 @@ public class LibraryModel {
         searchParameters.put("feedback", feedback);
         searchParameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.Default);
         webApi.requestJSONObject(searchParameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -264,7 +267,7 @@ public class LibraryModel {
         parameters.put("ask_type", "consultation");
         parameters.put("module", MODULE_LIBRARY);
 
-        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.MIT);
+        MobileWebApi webApi = new MobileWebApi(false, true, "Library", context, uiHandler, HttpClientType.Default);
         webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -307,7 +310,7 @@ public class LibraryModel {
     	parameters.put("module", "libraries");
     	parameters.put("command", "getUserIdentity");
     	
-    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler, HttpClientType.MIT); 
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler, HttpClientType.Default); 
     	webApi.requestJSONObject(parameters, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {
@@ -330,8 +333,14 @@ public class LibraryModel {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("module", "libraries");
 		params.put("command", "loans");
-
-    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+		
+		// send oidc access token with request
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+ 		String oidc_accesstoken = prefs.getString("oidc_accesstoken","");
+        params.put("access_token",oidc_accesstoken);
+        
+        Log.d(TAG,"access_token = " + oidc_accesstoken);
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.Default);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
@@ -351,6 +360,7 @@ public class LibraryModel {
 			public void onError() {
 				// TODO Auto-generated method stub
 				Log.d(TAG,"onError()");
+				Log.d(TAG,"error fetching loan data");
 			}
 			
 			
@@ -363,7 +373,12 @@ public class LibraryModel {
 		params.put("module", "libraries");
 		params.put("command", "holds");
 
-    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+		// send oidc access token with request
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+ 		String oidc_accesstoken = prefs.getString("oidc_accesstoken","");
+        params.put("access_token",oidc_accesstoken);
+
+		MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.Default);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
@@ -386,7 +401,12 @@ public class LibraryModel {
 		params.put("module", "libraries");
 		params.put("command", "fines");
 
-    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+		// send oidc access token with request
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+ 		String oidc_accesstoken = prefs.getString("oidc_accesstoken","");
+        params.put("access_token",oidc_accesstoken);
+		
+    	MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.Default);
     	webApi.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler),
                 new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
@@ -409,7 +429,13 @@ public class LibraryModel {
         parameters.put("command", "renewBooks");
         parameters.put("module", "libraries");
         parameters.put("barcodes", barcode);
-        MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.MIT);
+        
+		// send oidc access token with request
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+ 		String oidc_accesstoken = prefs.getString("oidc_accesstoken","");
+        parameters.put("access_token",oidc_accesstoken);
+
+        MobileWebApi webApi = new MobileWebApi(false, true, "Libraries", context, uiHandler,HttpClientType.Default);
         webApi.requestJSONArray(parameters, new MobileWebApi.JSONArrayResponseListener(
                 new MobileWebApi.DefaultErrorListener(uiHandler), new MobileWebApi.DefaultCancelRequestListener(
                         uiHandler)) {

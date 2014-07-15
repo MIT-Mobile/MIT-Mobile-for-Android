@@ -36,6 +36,7 @@ import edu.mit.mitmobile2.dining.DiningModule;
 import edu.mit.mitmobile2.emergency.EmergencyModule;
 import edu.mit.mitmobile2.events.EventsModule;
 import edu.mit.mitmobile2.facilities.FacilitiesModule;
+import edu.mit.mitmobile2.id.OpenIDConnectModule;
 import edu.mit.mitmobile2.libraries.LibrariesModule;
 import edu.mit.mitmobile2.links.LinksModule;
 import edu.mit.mitmobile2.maps.MapsModule;
@@ -124,6 +125,7 @@ public class HomeScreenActivity extends Activity implements OnSharedPreferenceCh
 				new DiningModule(),
 				new QRReaderModule(),
 				new LinksModule(),
+				new OpenIDConnectModule()
 		};
 		
 		mSpringBoard = (GridView) findViewById(R.id.homeSpringBoardGV);

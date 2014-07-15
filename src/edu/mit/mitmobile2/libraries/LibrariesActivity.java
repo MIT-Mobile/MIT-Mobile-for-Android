@@ -100,44 +100,37 @@ public class LibrariesActivity extends ModuleActivity implements OnSharedPrefere
     		mitClient.setPassword(prefs.getString("PREF_TOUCHSTONE_PASSWORD", null));
         }
         else {   
-	        //responseString = mitClient.getResponse(targetUrl);
-
-//        	MITClient client = null;
-//        	HttpGet get = new HttpGet("https://mobile-dev.mit.edu/secure/api/index.php?module=libraries&command=loans");
-//        	HttpResponse resp = client.getResponse(get);
-//        	Log.d(TAG,responseContentToString(resp));
-        	
         	//DEBUG
-			HashMap<String, String> params = new HashMap<String, String>();
-			params.put("module", "libraries");
-			params.put("command", "loans");
-
-        	MobileWebApi api = new MobileWebApi(false, true, "Libraries", mContext, uiHandler,HttpClientType.MIT);
-        	api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
-	                new MobileWebApi.DefaultErrorListener(uiHandler),
-	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
-				@Override
-				public void onResponse(JSONObject obj) {
-
-					Log.d(TAG,"on response");
-					Log.d(TAG,"obj = " + obj);
-					try {
-						Log.d(TAG,"total = " + obj.getString("total"));
-						Log.d(TAG,"start = " + obj.getString("start"));
-						Log.d(TAG,"overdue = " + obj.getString("overdue"));
-					}
-					catch (JSONException e) {
-						Log.d(TAG,"JSONException = " + e.getMessage());
-					}
-				}
-
-				@Override
-				public void onError() {
-					// TODO Auto-generated method stub
-					super.onError();
-					Log.d(TAG,"on error: requestJSONObject");
-				}
-		});			
+//			HashMap<String, String> params = new HashMap<String, String>();
+//			params.put("module", "libraries");
+//			params.put("command", "loans");
+//
+//        	MobileWebApi api = new MobileWebApi(false, true, "Libraries", mContext, uiHandler,HttpClientType.MIT);
+//        	api.requestJSONObject(params, new MobileWebApi.JSONObjectResponseListener(
+//	                new MobileWebApi.DefaultErrorListener(uiHandler),
+//	                new MobileWebApi.DefaultCancelRequestListener(uiHandler)) {
+//				@Override
+//				public void onResponse(JSONObject obj) {
+//
+//					Log.d(TAG,"on response");
+//					Log.d(TAG,"obj = " + obj);
+//					try {
+//						Log.d(TAG,"total = " + obj.getString("total"));
+//						Log.d(TAG,"start = " + obj.getString("start"));
+//						Log.d(TAG,"overdue = " + obj.getString("overdue"));
+//					}
+//					catch (JSONException e) {
+//						Log.d(TAG,"JSONException = " + e.getMessage());
+//					}
+//				}
+//
+//				@Override
+//				public void onError() {
+//					// TODO Auto-generated method stub
+//					super.onError();
+//					Log.d(TAG,"on error: requestJSONObject");
+//				}
+//		});			
 
         	//	        	//DEBUG
         }

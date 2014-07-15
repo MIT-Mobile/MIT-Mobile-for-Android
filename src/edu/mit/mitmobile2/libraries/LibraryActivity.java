@@ -3,6 +3,10 @@ package edu.mit.mitmobile2.libraries;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.jose.util.JSONObjectUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +24,10 @@ import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.OpenIDConnectHelper;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TwoLineActionRow;
+import edu.mit.mitmobile2.id.OpenIDConnectActivity;
 //import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
 public class LibraryActivity extends NewModuleActivity {
@@ -45,8 +51,8 @@ public class LibraryActivity extends NewModuleActivity {
 
         doSearch();
     }
-
-    private void createViews() {
+    
+	private void createViews() {
         setContentView(R.layout.library_main);
 
         mLinearLayout = (LinearLayout) findViewById(R.id.libraryMainLinearLayout);
@@ -60,8 +66,19 @@ public class LibraryActivity extends NewModuleActivity {
 
             @Override
             public void onClick(View v) {
-        		
-            	LibraryModel.getUserIdentity(mActivity,  getTouchStoneHandler(mActivity, "edu.mit.mitmobile2.libraries.LibraryYourAccount"));
+            	OpenIDConnectHelper oidHelper = new OpenIDConnectHelper(mActivity);
+            	JSONObject oid = oidHelper.getProfile();
+            	if (oid.get("oidc_username") == null) {
+            		Log.d(TAG,"no profile, log into openidc");
+            		Intent i = new Intent(mActivity,OpenIDConnectActivity.class);
+            		i.putExtra("returnActivity", LibraryYourAccount.class.getCanonicalName());
+					startActivity(i);  		
+            	}
+            	else {
+            		Intent i = new Intent(mActivity,LibraryYourAccount.class);
+					startActivity(i);  		
+            	}
+            	//LibraryModel.getUserIdentity(mActivity,  getTouchStoneHandler(mActivity, "edu.mit.mitmobile2.libraries.LibraryYourAccount"));
             }
         });
         locationRow.setOnClickListener(new OnClickListener() {
