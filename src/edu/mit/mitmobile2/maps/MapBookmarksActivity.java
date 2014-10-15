@@ -13,18 +13,15 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
-import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.TitleBar;
 import edu.mit.mitmobile2.TitleBarSwitch;
 import edu.mit.mitmobile2.TitleBarSwitch.OnToggledListener;
 import edu.mit.mitmobile2.objs.MapItem;
@@ -132,6 +129,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
 
 		mListView.setOnItemClickListener(
 				new AdapterView.OnItemClickListener() {
+					@SuppressWarnings({ "unchecked" })
 					@Override
 					public void onItemClick(AdapterView<?> listView, View view, int position, long id) {					
 					
@@ -207,7 +205,7 @@ public class MapBookmarksActivity extends NewModuleActivity {
             	}
             	catch (Exception e) {
             		Log.d(TAG,"getBookmarksHandler exception");
-            		Log.d(TAG,e.getStackTrace().toString());
+            		Log.d(TAG,""+e.getStackTrace().toString());
             	}
         }
     };

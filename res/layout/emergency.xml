@@ -6,46 +6,50 @@
   android:background="@drawable/main_repeat"
   android:layout_gravity="center"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
-  	
-		  	<WebView android:id="@+id/emergencyMsgTV" 
-		  		android:visibility="gone"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"/> 
-			
-			<ImageView
-				android:id="@+id/emergencyMsgLoader"
-				android:visibility="gone"
-				android:minHeight="150dip"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"  
-				android:scaleType="center"
-		  		android:background="#FFFFFF"
-		  		android:focusable="false"
-		  		android:src="@drawable/busybox" />
-		  	
-		    <edu.mit.mitmobile2.SectionHeader
-				mit:prominence="secondary"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="Emergency Contacts" />  
-		  	
-		    <ListView android:id="@+id/emergencyListView"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:background="#ffff"
-		        style="@style/Lists" 
-		        android:visibility="gone" />
-		        
-		    <ImageView
-				android:id="@+id/emergencyListLoader"
-				android:visibility="gone"
-				android:layout_width="fill_parent"
-				android:layout_height="fill_parent"
-				android:scaleType="center"
-		  		android:background="#FFFFFF"
-		  		android:focusable="false"
-		  		android:src="@drawable/busybox" />  
+  android:layout_height="fill_parent"
+  android:id="@+id/emergencyLayout" >
+      
+    <WebView android:id="@+id/emergencyMsgTV" 
+                android:visibility="gone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/> 
+                
+    <ImageView
+                android:id="@+id/emergencyMsgLoader"
+                android:visibility="gone"
+                android:minHeight="150dip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"  
+                android:scaleType="center"
+                android:background="#FFFFFF"
+                android:focusable="false"
+                android:src="@drawable/busybox"
+                android:contentDescription="loading"/>
+    
+    
+    <edu.mit.mitmobile2.SectionHeader 
+        mit:prominence="secondary"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"    
+        android:text="Emergency Contacts" />
+    
+    <ListView android:id="@+id/emergencyContactListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffff"
+        style="@style/Lists" 
+        android:visibility="gone" />
+    
+    <ImageView
+                android:id="@+id/emergencyListLoader"
+                android:visibility="gone"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="center"
+                android:background="#FFFFFF"
+                android:focusable="false"
+                android:src="@drawable/busybox" 
+                android:contentDescription="loading"/>
+ 
+ 
 </LinearLayout>
-        
-        

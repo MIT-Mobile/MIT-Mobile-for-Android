@@ -73,7 +73,7 @@ public class QRReaderModel {
 		public String type;
 		public String displayType;
 		public String displayName;
-		public ArrayList<QRAction> actions;
+		public ArrayList<QRAction> actions = new ArrayList<QRAction>();
 		public QRAction	shareAction;
 		
 		

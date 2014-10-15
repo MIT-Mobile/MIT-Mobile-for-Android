@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.tour;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -14,8 +13,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-
-
 import edu.mit.mitmobile2.AudioPlayer;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
@@ -158,11 +155,11 @@ public class TourStopSliderActivity extends SliderListNewModuleActivity {
 		for(TourItem tourItem : mTourItems) {
 			boolean isSite = (tourItem.getClass() == Site.class);
 			TourStopSliderInterface sliderInterface = new TourStopSliderInterface(this, mTour, tourItem, ap, progbar, isSite);
-			addScreen(sliderInterface, null, tourItem.getLabel());
+			addScreen(sliderInterface, tourItem.getLabel());
 			mTourStopSliderInterfaces.add(sliderInterface);
 		}
 		//Log.v("tour_debug", "tour_debug: getPositionValue="+String.valueOf(getPositionValue()));
-		addScreen(new TourThankYouSliderInterface(this, mTour.getFooter()), null, "Thank You");
+		addScreen(new TourThankYouSliderInterface(this, mTour.getFooter()), "Thank You");
 		setPosition(getPositionValue());
 		progbar.setProgress(getPositionValue()/2);
 	}

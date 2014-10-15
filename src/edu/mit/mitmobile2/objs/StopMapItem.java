@@ -1,26 +1,16 @@
 package edu.mit.mitmobile2.objs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
-import edu.mit.mitmobile2.maps.MITMapView;
-import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.shuttles.MITStopsSliderActivity;
 import edu.mit.mitmobile2.shuttles.ShuttleModel;
 
@@ -93,11 +83,13 @@ public class StopMapItem extends MapItem {
 	}
 	
 	class MyTimerTask extends TimerTask {
-		 public void run() {
+		 @Override
+		public void run() {
 			 // ERROR
-			 Log.d("ZZZ","timer");
+			 Log.d(TAG,"timer");
 			 try {
 				 RouteItem route = ShuttleModel.getRoute((String)itemData.get("route_id"));
+				 Log.d(TAG,route.route_id);
 			 }
 			 catch (Exception e) {
 				 Log.d("ZZZ","exception = " + e.getMessage());

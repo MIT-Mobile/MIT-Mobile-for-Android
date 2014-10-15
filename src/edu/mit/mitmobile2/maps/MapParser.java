@@ -3,14 +3,12 @@ package edu.mit.mitmobile2.maps;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-
 import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapItemContent;
@@ -30,7 +28,8 @@ public class MapParser {
 			JSONObject layerGroups = jobject.getJSONObject("basemaps");
 			
 			// loop through the layer groups
-			Iterator g = layerGroups.keys();
+			@SuppressWarnings("unchecked")
+			Iterator<String> g = layerGroups.keys();
 			while (g.hasNext()) {
 				String group = (String)g.next(); // name of the layer group, i.e. "default"
 				JSONArray layers = layerGroups.getJSONArray(group); // basemap layers in this group
@@ -93,7 +92,7 @@ public class MapParser {
 		
         	BuildingMapItem mi = new BuildingMapItem();
 
-        	ArrayList<String> category = new ArrayList();
+        	ArrayList<String> category = new ArrayList<String>();
 	        JSONArray temp = jItem.optJSONArray("category");
 	        if (temp!=null) {
 	        	for (int index=0; index<temp.length(); index++) {
@@ -107,7 +106,7 @@ public class MapParser {
 
 	        temp = jItem.optJSONArray("altname");
 	        if (temp!=null) {
-		        ArrayList<String> alts = new ArrayList();
+		        ArrayList<String> alts = new ArrayList<String>();
 	        	for (int index=0; index<temp.length(); index++) {
 	        		String it = temp.getString(index);
 	    	        alts.add(it);
@@ -117,7 +116,6 @@ public class MapParser {
 
 	        temp = jItem.optJSONArray("contents");
 	        if (temp!=null) {
-	        	ArrayList<String> contents = new ArrayList();
 	        	JSONObject j;
 	        	for (int index=0; index<temp.length(); index++) {
 	        		MapItemContent mapItemContent = new MapItemContent();

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+		<TextView
+		    android:id="@+id/newsRowMoreTV"
+		    style="@style/ListItemPrimary"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:background="@color/news_header_item"
+		    android:paddingBottom="@dimen/standardPadding"
+		    android:paddingLeft="10dp"
+		    android:paddingTop="@dimen/standardPadding"
+		    android:textStyle="bold"
+		    android:textColor="@android:color/white" />
+
+</LinearLayout>

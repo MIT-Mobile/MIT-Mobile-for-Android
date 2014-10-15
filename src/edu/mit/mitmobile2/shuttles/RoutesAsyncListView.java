@@ -1,10 +1,11 @@
 package edu.mit.mitmobile2.shuttles;
 
 import java.util.ArrayList;
-
 import java.util.Date;
 import java.util.List;
-import java.util.TimerTask;
+
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,23 +17,23 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
 import edu.mit.mitmobile2.MobileWebApi;
+import edu.mit.mitmobile2.NewModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.objs.RouteItem.Stops;
 
-public class RoutesAsyncListView  extends LinearLayout implements SliderInterface, OnItemClickListener   {
+public class RoutesAsyncListView extends LinearLayout implements SliderInterface, OnItemClickListener, OnRefreshListener   {
 
-	private static String TAG = "RoutesAsyncListView";
+	//private static String TAG = "RoutesAsyncListView";
 	Activity mActivity;
 	
 	private List<Stops> mStops;
@@ -47,6 +48,11 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 	RouteItem ri;
 	
 	ListView lv;
+
+	private Thread mUpdateThread;
+
+	private PullToRefreshAttacher mRefreshAttacher;
+
 	
 	/****************************************************/
 	
@@ -64,6 +70,15 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 	/****************************************************/
 	void terminate() {
 		cancelUpdateThread = true;	
+		if (mUpdateThread != null) {
+			mUpdateThread.interrupt();
+		}
+	}
+	
+	void refresh() {
+		if (updateThreadRunning) {
+			mUpdateThread.interrupt();
+		}
 	}
 	
 	/****************************************************/
@@ -86,8 +101,12 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
+				
 				lb.setLastLoaded(new Date());
 				lb.endLoading();
+				mRefreshAttacher.setEnabled(true);
+				mRefreshAttacher.setRefreshComplete();
+				
 				if(msg.arg1 == MobileWebApi.SUCCESS) {
 			    	 ri = ShuttleModel.getUpdatedRoute(ri);
 			    		mStops = ri.stops;
@@ -104,7 +123,7 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 			}
 		};
 		
-		new Thread() {
+		mUpdateThread = new Thread() {
 			@Override
 			public void run() {
 				 int refresh_wait = 1000*20;  // refresh every 20 seconds
@@ -120,7 +139,8 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		    	 }
 		    	 updateThreadRunning = false;
 			}
-		}.start();
+		};
+		mUpdateThread.start();
 		
 		updateThreadRunning = true;
 		
@@ -177,6 +197,10 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 		
 		addView(topView);
 		
+		mRefreshAttacher = ((NewModuleActivity) mActivity).createPullToRefreshAttacher();
+		mRefreshAttacher.setRefreshableView(lv, this);
+		mRefreshAttacher.setEnabled(false);
+		
 	}
 	 
 	public List<Stops> getStops() {
@@ -226,5 +250,9 @@ public class RoutesAsyncListView  extends LinearLayout implements SliderInterfac
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void onRefreshStarted(View view) {
+		refresh();		
 	}
 }

@@ -3,20 +3,8 @@ package edu.mit.mitmobile2.objs;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MITMapBrowseCatsActivity;
-import edu.mit.mitmobile2.maps.MITMapBrowseResultsActivity;
-import edu.mit.mitmobile2.maps.MITMapDetailsSliderActivity;
-import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.maps.MapData;
 
 public class VehicleMapItem extends MapItem {
 	

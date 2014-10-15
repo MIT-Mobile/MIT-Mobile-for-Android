@@ -148,7 +148,7 @@
   									android:layout_width="fill_parent"
     								android:layout_height="fill_parent" 
   									android:id="@+id/mapDetailsPhotoView"
-  									android:scaleType="center" />
+  									android:scaleType="fitCenter" />
   								
 								<TextView android:id="@+id/mapDetailsPhotosTV" 
 									style="@style/Caption"

@@ -5,16 +5,12 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.TruncatingTextView;
 import edu.mit.mitmobile2.objs.MapItem;
-import edu.mit.mitmobile2.objs.NewsItem;
 
 public class MapAdapterHelper  {
 
@@ -23,15 +19,15 @@ public class MapAdapterHelper  {
 	// while scrolling the list
 	// story_ids -> bitmaps
 	HashMap<Integer, SoftReference<Bitmap>> mThumbnails;
-	private MapModel mMapModel;
-	private ListView mListView;
+	//private MapModel mMapModel;
+	//private ListView mListView;
 	
 	public static String TAG = "NewsAdapterHelper";
 	
 	public MapAdapterHelper(ListView listView, MapModel mapModel) {
 		mThumbnails = new HashMap<Integer, SoftReference<Bitmap>>();
-		mMapModel = mapModel;
-		mListView = listView;
+		//mMapModel = mapModel;
+		//mListView = listView;
 	}
 
 	public void populateView(View view, final MapItem mapItem, boolean saveThumbnail) {

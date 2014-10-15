@@ -19,7 +19,6 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 
 	abstract protected View viewForMealOrDay(MealOrEmptyDay mealOrDay);
 	
-	private Context mContext;
 	private DiningMealIterator mMealIterator;
 	
 	private String mCurrentDateString;
@@ -31,7 +30,6 @@ public abstract class DiningHouseAbstractSliderAdapter implements SliderView.Ada
 
 	
 	public DiningHouseAbstractSliderAdapter(Context context) {
-		mContext = context;
 		long currentTime = DiningModel.currentTimeMillis();		
 		mCurrentDate = new Date(currentTime);
 		mFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);

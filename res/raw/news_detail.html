@@ -1,52 +1,34 @@
 <html>
     <head>
         <style type="text/css">
-            html {padding: 12px;}
-            body {font-family: Helvetica; margin: 0;padding: 0;}
+            html {padding: 0;}
+            body {font-family: "Helvetica Neue", Helvetica, sans-serif; font-size: 14px; margin: 0;padding: 0;}
             a { color: #990000; }
-            .slugline {font-weight: normal; font-size:24px; line-height: 28px; margin-bottom: 12px; color: #222222}
-            .dek {font-style: italic; font-size: 17px;line-height: 20px;margin: 14px 0;color: #222222;}
+            .slugline {font-weight: bold; font-size:20px; line-height: 24px; padding: 0; margin: 0;}
+            .dek {font-size: 16px;line-height: 20px;margin: 14px 0;color: #505050;}
             .dek:empty { margin: 0; } /* CSS 3: shrink if no content */
             
-            .inlineControls {
-            	font-size: 14px;
-            }
-            
-            .inlineControls a {
-            	display: inline-block;
-            	min-height: 47px;
-            	line-height: 47px;
-            	background-size: 25.5px 47px;
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
-                padding-left: 25.5px;
-                text-decoration: none;
-                color: #4b4b4b;
-            }
-            
-            #bookmarkButton.on {
-                background: url('file:///android_res/drawable/action_button_remove_bookmark.png') no-repeat 0 50%;
-            }
-            
-            #bookmarkButton.off {
-                background: url('file:///android_res/drawable/action_button_add_bookmark.png') no-repeat 0 50%;
-            }
-            
-            #shareButton {
-                background: url('file:///android_res/drawable/action_button_share.png') no-repeat 0 50%;
-            }
-            
-            .byline {font-size: 14px; color:rgba(34, 34, 34, 0.5); min-height:22px; margin: 0px;}
+            .byline {font-size: 11px; color:#505050; min-height:30px;}
             .inline-separator {margin: 0 3px;}
             #content {border-top: 1px dotted #F00;}
             .credential {font-size:8pt;}
-            #image {float:right;margin: 16px 0 -1px 8px;}
-            #image img.thumbnail {float:right; border: 1px solid #505050; /* scale to width respecting aspect */}
-            #image img.enlarge { float:right; margin-left: 4px; }
-            #image div { float:right; margin-top: 2px; margin-right:-2px; }
-            #image a { text-align:right; font-size:11px; line-height: 30px; text-decoration:none; color:#777;}
-            #image a div { margin-top: -4px; }
-            #image a+a div { margin-top: 2px; }
-            #body {font-size: 17px; line-height: 20px;color: #4b4b4b; margin-top: 14px;}
+
+            .slugline, .byline, #content {
+                margin: 12px;
+            }
+
+            #image {
+                max-width: 100%;
+                width: 100%;
+                margin-bottom: 10px;
+                text-align:center;
+            }
+
+            #image img {
+                max-width: 100%;
+            }
+
+            #body {line-height: 20px; color: #202020; margin-top: 14px;}
             
             #body img {max-width: 100%;}
         </style>
@@ -54,23 +36,16 @@
         <title>__TITLE__</title>
     </head>
     <body bgcolor="#FFFFFF" onload="init()">     
-        <h1 class="slugline">__TITLE__
-        </h1>
+        <div id="image"><a id="thumbnailLink" href="javascript:window.newsDetail.clickViewImage()">
+            <img class="thumbnail" src="__THUMBNAIL_URL__" />
+        </a>
+        </div>
+        <h1 class="slugline">__TITLE__</h1>
         <p class="byline">
             <span class="credit">by <span class="author">__AUTHOR__</span><br /></span>
             <span class="postdate">__DATE__</span>
         </p>
-        <div class="inlineControls">
-            <a id="shareButton">Share</a> 
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a id="bookmarkButton" class="__BOOKMARK__">Bookmark</a>
-            
-        </div>
         <div id="content">
-            <div id="image"><a id="thumbnailLink" href="javascript:window.newsDetail.clickViewImage()"><img class="thumbnail" src="__THUMBNAIL_URL__" />
-                <br /></a>
-                <a onClick="window.newsDetail.clickViewImage()"><div class="byline">View <span id="imageCount">image</span><img class="enlarge" src="button_zoom_in.png" width="30" height="30" alt="zoom"></div>
-            </a></div>
             <p class="dek">__DEK__</p><div id="body">__BODY__</div>
         </div>
     </body>
@@ -85,37 +60,8 @@
 		        creditNode.parentElement.removeChild(creditNode);
 		    }
 
-		    var imageCount = __GALLERY_COUNT__;
-		    // remove #image block there are no images at all
-		    if (imageCount == 0) {
-		        var imageNode = document.getElementById("image");
-		        imageNode.parentElement.removeChild(imageNode);
-		    } else {
-		        document.getElementById("imageCount").innerHTML = imageCount + ((imageCount == 1) ? " image" : " images");
-		    }
-
-		    // remove img.thumbnail if thumbnail is not set (empty src attributes == the base URL)
-		    if (document.getElementsByClassName("thumbnail").length > 0 && document.getElementsByClassName("thumbnail")[0].src.indexOf("file:") == 0) {
-		        var imageNode = document.getElementById("thumbnailLink");
-		        imageNode.parentElement.removeChild(imageNode);
-		    }
-
-		    var bookmarkButton = document.getElementById("bookmarkButton");
-		    bookmarkButton.addEventListener("touchstart", function() {
-		        addClass(bookmarkButton, "pressed");
-		    });
-		    bookmarkButton.addEventListener("touchend", function() {
-		        removeClass(bookmarkButton, "pressed");
-		        toggleBookmark();
-		    });
-		    var shareButton = document.getElementById("shareButton");
-		    shareButton.addEventListener("touchstart", function() {
-		        addClass(shareButton, "pressed");
-		    });        
-		    shareButton.addEventListener("touchend", function() {
-		        removeClass(shareButton, "pressed");
-		        window.newsDetail.clickShareButton();
-		    });
+            var imgNode = document.getElementById("image").getElementsByClassName("thumbnail")[0];
+            imgNode.style.maxHeight = Math.ceil(screen.width * (2 / 3) / window.devicePixelRatio);
 
             resizeVideos();
 		}
@@ -173,19 +119,5 @@
 	        }
 	    }
        
-       function toggleBookmark() {
-       	  var element = document.getElementById("bookmarkButton");
-       	  var newStatus;
-       	  if (hasClass(element, "on")) {
-       	    removeClass(element, "on");
-       	    addClass(element, "off");
-       	  	newStatus = "off";
-       	  } else {
-       	    removeClass(element, "off");
-       	    addClass(element, "on");
-       	    newStatus = "on";
-       	  }
-       	  window.newsDetail.clickBookmarkButton(newStatus);
-       }
 	</script>
 </html>

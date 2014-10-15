@@ -3,7 +3,6 @@ package edu.mit.mitmobile2;
 import android.R.attr;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -15,7 +14,7 @@ import android.graphics.drawable.StateListDrawable;
 
 public class TabBackgroundDrawable extends StateListDrawable {
 
-	private int mBackgroundColor;
+	//private int mBackgroundColor;
 	private int mUnderlineColor;
 	private int mSelectedUnderlineHeight;
 	private int mUnselectedUnderlineHeight;

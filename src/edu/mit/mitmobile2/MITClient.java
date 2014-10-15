@@ -1,16 +1,23 @@
 package edu.mit.mitmobile2;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -21,21 +28,24 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.CredentialsProvider;
+//import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectHandler;
-import org.apache.http.message.BasicNameValuePair;
+//import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import edu.mit.mitmobile2.touchstone.TouchstoneActivity;
+import org.apache.http.util.EntityUtils;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,12 +55,20 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.webkit.WebView;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import edu.mit.mitmobile2.touchstone.TouchstoneActivity;
+
 public class MITClient extends DefaultHttpClient {
 
 	private static final String TAG = "MITClient";
 	public static final String PREFS_STATE = "prefs";
 	public static final String OK_STATE = "ok";
-	public static final String WAYF_STATE = "wayf";
+	public static final String ECP_STATE = "ecp";
 	public static final String IDP_STATE = "idp";
 	public static final String AUTH_STATE = "auth";
 	public static final String ERROR_STATE = "error";	
@@ -64,11 +82,19 @@ public class MITClient extends DefaultHttpClient {
 	public static final String TOUCHSTONE_LOGIN = "TOUCHSTONE_LOGIN";    
 	public static final String TOUCHSTONE_CANCEL = "TOUCHSTONE_CANCEL";    
 	public static final String TOUCHSTONE_DIALOG = "TOUCHSTONE_DIALOG";    
+	
+	private static final String PAOS_MIME_TYPE = "text/html; application/vnd.paos+xml";
+	private static final String PAOS_HEADER = "PAOS";
+	private static final String PAOS_HEADER_VALUE = "ver=\"urn:liberty:paos:2003-08\";\"urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp\"";
+	private static final String PAOS_CONTENT_TYPE = "application/vnd.paos+xml";
+	private static final String MITIDP = "https://idp.mit.edu/idp/profile/SAML2/SOAP/ECP";
+	private static final String CAMSIDP = "https://idp.touchstonenetwork.net/idp/profile/SAML2/SOAP/ECP";
 	final SharedPreferences.Editor prefsEditor;
 
 	HttpGet mHttpGet;
 	String requestKey;
 	URI targetUri;
+	String ecpTarget;
 	
 	// Hashmap for keeping track of the status of requests made by the HttpClient 
 	// because this is not an activity, there is no context for startActivityForResult or UI handlers
@@ -137,20 +163,30 @@ public class MITClient extends DefaultHttpClient {
 					Header location = locations[0];
 					String uriString = location.getValue();
 					//Log.d(TAG,"uriString from redirect = " + uriString);
+                    /*
+                    if (state == null && state != OK_STATE) {
+                        if (getEcpTarget() == null || !getEcpTarget().equalsIgnoreCase(uriString)) {
+                            setEcpTarget(uriString);
+                        }
+                    }
+                    */
 					try {
 						uri = new URI(uriString);
 						host = uri.getHost();
+                        /*
 						if (host.equalsIgnoreCase("wayf.mit.edu")) {
-							state = WAYF_STATE;
+							state = ECP_STATE;
 							Log.d(TAG,"state = " + state);
 						}
 						else {
 							state = OK_STATE;
 						}
+						*/
+
 					} catch (URISyntaxException use) {
 						Log.e(TAG, "Invalid Location URI: "+uriString);
 					}
-					
+
 				}
 				return uri;
 			}
@@ -188,58 +224,57 @@ public class MITClient extends DefaultHttpClient {
 			requestKey = System.currentTimeMillis()/1000 + "";
 			Log.d(TAG,"requestKey " + requestKey + " created");
 			requestMap.put(requestKey, clientData);
+
+            httpGet.addHeader("accept", PAOS_MIME_TYPE);
+            httpGet.addHeader(PAOS_HEADER, PAOS_HEADER_VALUE);
+            //httpGet.addHeader("Content-Type", PAOS_CONTENT_TYPE);
+
 			response = this.execute(httpGet);
 			responseEntity = response.getEntity();
-			
-			if (state == OK_STATE) {
-				saveLogin();
-				return response;
-			}
-			
-			if (state == WAYF_STATE ) {
-				Log.d(TAG,"wayf state");
-				wayf();
-			}
-				
-			if (state == IDP_STATE) {
-				Log.d(TAG,"idp state");
-				idp();
-			}			
-	
-			if (state == AUTH_STATE) {
-				Log.d(TAG,"auth state");
-				authState();
-			}
-		
-			if (state == AUTH_ERROR_STATE) {
-				Log.d(TAG,"auth error state");
-				authError();
-			}
 
-			if (state == CANCELLED_STATE) {
-				Log.d(TAG,"status in cancelled state = " + response.getStatusLine().getStatusCode());
-				MITHttpEntity entity = new MITHttpEntity();
-				entity.setContent(MITHttpEntity.JSON_CANCEL);
-				response.setStatusCode(200);
-				response.setEntity(entity);
-				return response;
-			}
+            Header contentType = response.getFirstHeader("Content-Type");
+            String mimeType = contentType.getValue();
+            if (response.getStatusLine().getStatusCode() == 200 && mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
+            	setEcpTarget(uri.toString());
+                state = ECP_STATE;
+            } else if (response.getStatusLine().getStatusCode() == 200 && !mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
+                state = OK_STATE;
+            } else {
+                	Log.d(TAG, "sp response statu = " + response.getStatusLine().getStatusCode());
+            }
 
-			if (state == OK_STATE) {
-				saveLogin();
-				return response;
-			}
-
+                if (state == OK_STATE) {
+                    saveLogin();
+                    return response;
+                }
+                if (state == ECP_STATE) {
+                    Log.d(TAG, "ecp state");
+                    ecp();
+                }
+                if (state == AUTH_ERROR_STATE) {
+                    Log.d(TAG, "auth error state");
+                    authError();
+                }
+                if (state == CANCELLED_STATE) {
+                    Log.d(TAG, "status in cancelled state = " + response.getStatusLine().getStatusCode());
+                    MITHttpEntity entity = new MITHttpEntity();
+                    entity.setContent(MITHttpEntity.JSON_CANCEL);
+                    response.setStatusCode(200);
+                    response.setEntity(entity);
+                    return response;
+                }
+                if (state == OK_STATE) {
+                    saveLogin();
+                    return response;
+                }
 			return null;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			Log.d(TAG,"get response exception = " + e.getMessage());
 			return null;
 		}
-		
 	}
 
-	private void wayf() {
+	private void ecp() {
 		
 		// Launch preferences activity if user or password are not set
 		if (MITClient.user == null || MITClient.user.length() == 0 || MITClient.password == null || MITClient.password.length() == 0) {
@@ -251,251 +286,263 @@ public class MITClient extends DefaultHttpClient {
 			((Activity) mContext).startActivity(touchstoneIntent);
 		
 			Log.d(TAG,"requestKey " + requestKey + " value = " + MITClient.requestMap.get(requestKey));
-			while( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST) ) {
-				// do stuff
-			    // don't burn the CPU
-			    try {
-			    	Log.d(TAG,"requestMap " + requestKey + " = " + requestMap.get(requestKey));
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+            // do stuff,  don't burn the CPU
+            while( 	((MITClientData)MITClient.requestMap.get(requestKey)).getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_REQUEST) )
+                try {
+                    Log.d(TAG, "requestMap " + requestKey + " = " + requestMap.get(requestKey));
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 					
 		}
-		Log.d(TAG,"request key in wayf = " + requestKey);
+		Log.d(TAG,"request key in ecp = " + requestKey);
 		MITClientData clientData = (MITClientData)MITClient.requestMap.get(requestKey);
 		Log.d(TAG,"touchstone state = " + clientData.getTouchstoneState());
 		if ( clientData.getTouchstoneState() == null || clientData.getTouchstoneState().equalsIgnoreCase(TOUCHSTONE_LOGIN) ) {
-			post = new HttpPost();
-			
-			post.setURI(uri);
-			Log.d(TAG,"post uri in wayf = " + uri.toString() + " "  + uri.getHost() + " " + uri.getRawQuery());
-
-			String user_idp;
-			String tmpUser = user.toUpperCase();
-			Log.d(TAG,"user = " + user);
-			if (tmpUser.contains("@") && !tmpUser.contains("@MIT.EDU")) {
-				user_idp = "https://idp.touchstonenetwork.net/shibboleth-idp";
+			//ECP profile, paos httpget to sp
+			HttpGet paosGet = new HttpGet();
+			try {
+				uri = new URI(getEcpTarget());
+                
+			} catch (URISyntaxException e) {
+				Log.d(TAG, " paos sp httpget uri exception = " + e.getMessage());
 			}
-			else {
-				user_idp = "https://idp.mit.edu/shibboleth";				
+			paosGet.setURI(uri);
+			paosGet.addHeader("accept", PAOS_MIME_TYPE);
+			paosGet.addHeader(PAOS_HEADER, PAOS_HEADER_VALUE);
+			paosGet.addHeader("Content-Type", PAOS_CONTENT_TYPE);
+			
+			try {
+				response = this.execute(paosGet); 
+			} catch (IOException ioe) {
+				Log.d(TAG, getEcpTarget() + "paos sp httpget IO exception = "+ ioe.getMessage());
+			}
+
+			if (response.getStatusLine().getStatusCode() != 200) { 
+				Log.d(TAG, "ECP PAOS reponse from sp, request failed! status = " + response.getStatusLine().getStatusCode());
+                //state = ERROR_STATE;
+			}
+
+			HttpEntity paosEntity = response.getEntity();
+			String xmlString = null;
+			try {
+				xmlString = EntityUtils.toString(paosEntity);
+			} catch (IOException ioe) {
+				Log.d(TAG,
+						"paos sp httpget response, converting to string failed, IO exception =" + ioe.getMessage());
+			}
+			//Log.d(TAG, "paos sp httpget response  =" + xmlString);
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = null;
+			try {
+				builder = factory.newDocumentBuilder();
+			} catch (ParserConfigurationException pce) {
+				Log.d(TAG,
+                        " paos sp httpget response, creating dom parser,  exception = " + pce.getMessage());
+			}
+			Document doc = null;
+			try {
+				doc = builder.parse(new InputSource(new ByteArrayInputStream(
+						xmlString.getBytes("utf-8"))));
+			} catch (SAXException se) {
+				Log.d(TAG, "paos sp httpget response, create DOM document, SAXException = " + se.getMessage());
+			} catch (IOException ioe) {
+				Log.d(TAG, "paos sp httpget response, create DOM document, IOException = " + ioe.getMessage());
+			}
+			Element spRespnseRoot = doc.getDocumentElement();
+			String spSoapPrefix = spRespnseRoot.getNodeName();
+			if (spSoapPrefix != null && spSoapPrefix.contains(":")) {
+				spSoapPrefix = spSoapPrefix.substring(0, spSoapPrefix.indexOf(":"));
+			}
+			//error checking in paos soap message
+			String spSoapFault = spSoapPrefix + ":Fault";
+			NodeList faultList = null;
+			faultList = doc.getElementsByTagName(spSoapFault);
+			if (faultList != null && faultList.getLength() > 0) {
+				Log.d(TAG, " sp paos response error, SOAP FAULT in soap message");
+                //state = ERROR_STATE;
+			}
+			// relayState
+			NodeList rnds = doc.getElementsByTagName("ecp:RelayState");
+			Node relayStateNode = rnds.item(0);		
+			//Node newRelayStateNode = relayStateNode.cloneNode(true);
+			//Node newRelayStateNode = doc.importNode(relayStateNode, true);
+			//use doc.adoptNode, both cloneNode() and importNode() don't work for android 2.3.4
+			Node newRelayStateNode = doc.adoptNode(relayStateNode);		
+			Log.d(TAG, "relay_state = " + relayStateNode.getTextContent());
+
+			// responseConsumerURL
+			NodeList cnds = doc.getElementsByTagName("paos:Request");
+			//Node responseConsumerURLNode = cnds.item(0);
+			Element ce = (Element) cnds.item(0);
+			String responseConsumerURL = ce.getAttribute("responseConsumerURL");
+			Log.d(TAG, " getting - responseConsumerURL " + responseConsumerURL);
+
+			// remove S:Header node
+			Element element = (Element) doc.getElementsByTagName(spSoapPrefix + ":Header").item(0);
+			element.getParentNode().removeChild(element);
+			doc.normalize();
+
+			// Document To Byte Array
+			DOMSource source = new DOMSource(doc);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ElementToStream(doc.getDocumentElement(), out);
+
+			Log.d(TAG, "user = " + user);
+			String tmpUser = user.toUpperCase();
+			String user_idp = "";
+			if (tmpUser.contains("@") && !tmpUser.contains("@MIT.EDU")) {
+				user_idp = CAMSIDP;
+			} else {
+				user_idp = MITIDP;
 				// remove "@MIT.EDU from user name
 				if (tmpUser.contains("@MIT.EDU")) {
-					user = user.substring(0,user.length() - 8);
-					Log.d(TAG,"user = " + user);
+					user = user.substring(0, user.length() - 8);
+					Log.d(TAG, "user = " + user);
 				}
 			}
+			Log.d(TAG, "user_idp = " + user_idp);
+			HttpPost paosPost = new HttpPost(user_idp);
+			CredentialsProvider provider = new BasicCredentialsProvider();
+			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(user, password);
+			provider.setCredentials(AuthScope.ANY, creds);
+			this.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+			ByteArrayEntity be = new ByteArrayEntity(out.toByteArray());
+			paosPost.setEntity(be);
+			paosPost.setHeader("Content-Type", PAOS_CONTENT_TYPE);
+			try {
+				response = this.execute(paosPost); // post to idp			
+			} catch (ClientProtocolException cpe) {
+				Log.d(TAG, " paos idp post client protocol exception = " + cpe.getMessage());
+			} catch (IOException ioe) {
+				Log.d(TAG, " paos idp post io exception = " + ioe.getMessage());
+			}
+			
+			paosEntity = response.getEntity();
+			try {
+				xmlString = EntityUtils.toString(paosEntity);
+			} catch (IOException ioe) {
+				Log.d(TAG, "paos response from idp, ioexception = " + ioe.getMessage());
+			}
+			//Log.d(TAG, "paos httpost response from idp =" + xmlString);
+			if (response.getStatusLine().getStatusCode() != 200) {
+                if (response.getStatusLine().getStatusCode() == 401) {
+                    Log.d(TAG, "paos httpost response from idp status code  =" + response.getStatusLine().getStatusCode());
+                    state = AUTH_ERROR_STATE;
+                    return;
+                } else {
+                    Log.d(TAG, "paos httpost response from idp != 200, status code  =" + response.getStatusLine().getStatusCode());
+                }
+			} else {
+				try {
+					doc = builder.parse(new InputSource(new ByteArrayInputStream(
+						xmlString.getBytes("utf-8"))));
+				} catch (SAXException se) {
+					Log.d(TAG, " idp paos post response, create DOM document, SAXException =  "+se.getMessage());
+				} catch (IOException ioe) {
+					Log.d(TAG, " idp paos post response, create DOM document, IOException" + ioe.getMessage());
+				}
+				//get prefix and do error checking paos soap from idp
+				Element idpRespnseRoot = doc.getDocumentElement();
+				String idpSoapPrefix = idpRespnseRoot.getNodeName();
+				if (idpSoapPrefix != null && idpSoapPrefix.contains(":")) {
+					idpSoapPrefix = idpSoapPrefix.substring(0, idpSoapPrefix.indexOf(":"));
+				}
+				
+				String idpSoapFault = idpSoapPrefix + ":Fault";
+				faultList = doc.getElementsByTagName(idpSoapFault);
+				if (faultList.getLength() != 0) {
+					Log.d(TAG, " idp paos response error, SOAP FAULT  in soap message");
+				}
+				NodeList ands = doc.getElementsByTagName("ecp:Response");
+				//Node assertionConsumerServiceURLNode = ands.item(0);
+				Element ae = (Element) ands.item(0);
+				String assertionConsumerServiceURL = ae.getAttribute("AssertionConsumerServiceURL");
+				//check if assertionConsumerServiceURL ==  responseConsumerURL
+				if (!responseConsumerURL.equalsIgnoreCase(assertionConsumerServiceURL)) {
+					Log.d(TAG,
+						"Error!  responseConsumerURL from sp != assertionConsumerServiceURL from idp");
+					//state = AUTH_ERROR_STATE;
+					return;
+				}
+				// remove all child nodes from headerNode.
+				Node headerNode = doc.getElementsByTagName(idpSoapPrefix + ":Header").item(0);
+				NodeList childNodes = headerNode.getChildNodes();
+				int length = childNodes.getLength();
+				for (int i = 0; i < length; i++) {
+					Node child = childNodes.item(i);
+					headerNode.removeChild(child);
+				}
+				doc.normalize();
+				// insert relayState
+				Element ecpnd = doc.createElement("ecp:RelayState");
+				NamedNodeMap attributes = newRelayStateNode.getAttributes();
+				int numAttrs = attributes.getLength();
+				for (int i = 0; i < numAttrs; i++) {
+					Attr attr = (Attr) attributes.item(i);
+					String attrName = attr.getNodeName();
+					String attrValue = attr.getNodeValue();
 
-			Log.d(TAG,"user_idp = " + user_idp);
-			
-			// Add your data
-			List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(1);
-			nameValuePairs.add(new BasicNameValuePair("user_idp", user_idp));
-			try {
-				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}  
-			
-			try {
-				response = this.execute(post);
-				
-				Header[] locations = response.getHeaders("Location");
-				if (locations.length > 0) {
-					Header location = locations[0];
-					uriString = location.getValue();				
-					try {
-						uri = new URI(uriString);
+					if (attrName.contains(spSoapPrefix + ":")) {
+						String newAttrName = attrName.replace(spSoapPrefix + ":",
+							idpSoapPrefix + ":");
+						ecpnd.setAttribute(newAttrName, attrValue);
+						Log.d(TAG, " newRelayStateNode attribute name = " + newAttrName);
+					} else {
+						ecpnd.setAttribute(attrName, attrValue);
 					}
-					catch (URISyntaxException e) {
-						
-					}				
+					Log.d(TAG, "attr = " + attr.toString());
 				}
-				
-				if (response.getStatusLine().getStatusCode() == 200 && !uri.getHost().equalsIgnoreCase("wayf.mit.edu")) {
-					state = IDP_STATE;
-				}
-				else {
-					responseString = responseContentToString(response);
-				}
-				
-				//Log.d(TAG,"response string at end of wayf = " + responseString);
-				//Log.d(TAG,"state after WAYF post = " + state);
-			}
-			catch (IOException e) {
-				Log.d(TAG,"WAYF error " + e.getMessage());
-			}
+				ecpnd.setTextContent(newRelayStateNode.getTextContent());
+				headerNode.appendChild(ecpnd);
+				newRelayStateNode.normalize();
+				doc.normalize();
+				source = new DOMSource(doc);
+				out = new ByteArrayOutputStream();
+				ElementToStream(doc.getDocumentElement(), out);
+				// post to SP
+				String spuri = responseConsumerURL;
+				paosPost = new HttpPost(spuri);
+				provider = new BasicCredentialsProvider();
+				creds = new UsernamePasswordCredentials(user, password);
+				provider.setCredentials(AuthScope.ANY, creds);
+				this.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
+				be = new ByteArrayEntity(out.toByteArray());
+				paosPost.setEntity(be);
+				paosPost.setHeader("Content-Type", PAOS_CONTENT_TYPE);
 			
-		}
-		
-		else {
+				try {
+					response = this.execute(paosPost); // assertionComsumerURL, post to sp
+				} catch (ClientProtocolException cpe) {
+					Log.d(TAG, " paos sp post client protocol exception = " + cpe.getMessage());
+				} catch (IOException ioe) {
+					Log.d(TAG, " paos sp post io exception = " + ioe.getMessage());
+				}
+                if (response.getStatusLine().getStatusCode() != 200 ) {
+                    Log.d(TAG, "paos httpost response error from sp, status code  = " + response.getStatusLine().getStatusCode());
+                    //state = ERROR_STATE;
+                } else {
+                    Header contentType = response.getFirstHeader("Content-Type");
+                    String mimeType = contentType.getValue();
+                    if (mimeType.equalsIgnoreCase(PAOS_CONTENT_TYPE)) {
+                        Log.d(TAG, "paos httpost response error from sp, MIME type = " + mimeType);
+                    }
+					//clearing pref
+					state = OK_STATE;
+					if (!rememberLogin) {
+						prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", null);
+						prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", null);
+						prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
+					}
+				}
+			}
+		} else {
 			state = CANCELLED_STATE;
 		}
 	}
-	
-	private void idp() {
-		Log.d(TAG,"idp");
-		Elements elements;
-		Element form;
 		
-		String formAction = "";
-	
-		// parse response string to html document
-		String responseString = responseContentToString(response);
-		
-		//Log.d(TAG,"response string in idp = " + responseString);
-		document = Jsoup.parse(responseString);
-	
-		// get form action
-		elements = document.getElementsByTag("form");
-
-		for (int e = 0; e < elements.size(); e++) {
-			form = elements.get(e);
-			String tmpAction = form.attr("action");
-			if (tmpAction.contains("Username")) {
-				formAction = tmpAction;
-			}
-			if (tmpAction.contains("UserPassword")) {
-				formAction = "https://idp.touchstonenetwork.net" + tmpAction;
-			}	
-			Log.d(TAG,"action " + e + " = " + formAction);
-		}
-				
-		post = new HttpPost();
-		try {
-			uri = new URI(formAction);
-		}
-		catch (URISyntaxException e) {
-			Log.d(TAG,"idp exception = " + e.getMessage());
-		}
-		
-		post.setURI(uri);
-		
-		// Add post data
-		List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("j_username", user));
-		nameValuePairs.add(new BasicNameValuePair("j_password", password));
-		try {
-			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			Log.d(TAG,e1.getMessage());
-			//e1.printStackTrace();
-		}  
-	
-		try {
-			Log.d(TAG,"before post");
-			response = this.execute(post);
-			Log.d(TAG,"after post");
-			Log.d(TAG,"idp status code = " + response.getStatusLine().getStatusCode());
-			//this.saveCookies();
-			if (response.getStatusLine().getStatusCode() == 200) {
-				state = AUTH_STATE;
-			}
-		}
-		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
-		}
-	}
-	
-	private void authState() {
-		Log.d(TAG,"authState");
-		Elements elements;
-		Element form;
-		Element input;
-		
-		String formAction = "";
-		String SAMLResponse = "";
-		String TARGET = "";
-		String RelayState = "";
-		// parse response string to html document
-		String responseString = responseContentToString(response);
-		
-
-		// Check for an error message in the response string
-		if (responseString.contains(AUTH_ERROR_CAMS) || responseString.contains(AUTH_ERROR_KERBEROS)) {
-			state = AUTH_ERROR_STATE;
-			Log.d(TAG,"login error");
-		}
-		else {
-			document = Jsoup.parse(responseString);
-		
-			// get form action
-			elements = document.getElementsByTag("form");
-			form = elements.get(0);
-			formAction = form.attr("action");
-		
-			// get SAMLResponse
-			elements = document.getElementsByTag("input");
-			for (int e = 0; e < elements.size(); e++) {
-				input = elements.get(e);
-				Log.d(TAG,"element name " + e + " = " + input.attr("name"));
-				if (input.attr("name").equalsIgnoreCase("SAMLResponse")) {
-					SAMLResponse = input.attr("value");
-				}
-				if (input.attr("name").equalsIgnoreCase("TARGET")) {
-					TARGET = input.attr("value");				
-				}
-	
-				if (input.attr("name").equalsIgnoreCase("RelayState")) {
-					RelayState = input.attr("value");				
-				}
-	
-			}
-
-			post = new HttpPost();
-			try {
-				uri = new URI(formAction);
-			}
-			catch (URISyntaxException e) {
-				Log.d(TAG,"idp exception = " + e.getMessage());
-			}
-			
-			post.setURI(uri);
-		
-			// Add post data
-			List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("SAMLResponse",SAMLResponse));
-			nameValuePairs.add(new BasicNameValuePair("TARGET", TARGET));
-			nameValuePairs.add(new BasicNameValuePair("RelayState", RelayState));
-			try {
-				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}  
-		
-			try {
-				response = this.execute(post);
-				//this.saveCookies();
-				//Log.d(TAG,"status from IDP post = " + response.getStatusLine().getStatusCode());
-				if (response.getStatusLine().getStatusCode() == 200) {
-					//responseString = responseContentToString(response);
-					//Log.d(TAG,responseString);
-					//tmpResponse.
-					state = OK_STATE;
-					//Log.d(TAG,"ok state");
-					//ok();
-				}
-			}
-			catch (IOException e) {
-				Log.d(TAG,e.getMessage());
-			}
-		}
-		
-		// Clear user name and password is rememberLogin is false
-		Log.d(TAG,"state for rememberLogin = " + state);
-		if (!rememberLogin) {
-			prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", null);
-			prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", null);
-			prefsEditor.putBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);	
-		}
-	}
-	
-	
 	public void debugCookies() {
 		Log.d(TAG,"debugCookies()");
 		Log.d(TAG,"cookieStore = " + this.getCookieStore());
@@ -604,6 +651,14 @@ public class MITClient extends DefaultHttpClient {
 	public static void setPassword(String password) {
 		MITClient.password = password;
 	}
+	
+	public String getEcpTarget() {
+		return ecpTarget;
+	}
+
+	public void setEcpTarget(String ecpTarget) {
+		this.ecpTarget = ecpTarget;
+	}
 
 	public void saveLogin() {
 		rememberLogin = prefs.getBoolean("PREF_TOUCHSTONE_REMEMBER_LOGIN", false);
@@ -611,6 +666,18 @@ public class MITClient extends DefaultHttpClient {
 			prefsEditor.putString("PREF_TOUCHSTONE_USERNAME", MITClient.getUser());
 			prefsEditor.putString("PREF_TOUCHSTONE_PASSWORD", MITClient.getPassword());
 			prefsEditor.commit();
+		}
+	}
+	
+	public static void ElementToStream(Element element, OutputStream out) {
+		try {
+			DOMSource source = new DOMSource(element);
+			StreamResult result = new StreamResult(out);
+			TransformerFactory transFactory = TransformerFactory.newInstance();
+			Transformer transformer = transFactory.newTransformer();
+			transformer.transform(source, result);
+		} catch (Exception ex) {
+			Log.d(TAG, "XML element to stream error = " + ex.getMessage());
 		}
 	}
 }

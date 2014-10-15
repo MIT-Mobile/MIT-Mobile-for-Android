@@ -37,6 +37,7 @@ import edu.mit.mitmobile2.objs.FineListItem;
 import edu.mit.mitmobile2.objs.HoldListItem;
 import edu.mit.mitmobile2.objs.LoanListItem;
 import edu.mit.mitmobile2.objs.RenewResponseItem;
+//import edu.mit.mitmobile2.libraries.LibraryModel.UserIdentity;
 
 public class LibraryYourAccount extends NewModuleActivity {
 
@@ -315,11 +316,7 @@ public class LibraryYourAccount extends NewModuleActivity {
 	
 	// TAB LOADING METHODS
 	public void loadLoans() {
-			//if (!loggedIn) {
-			//	Log.d(TAG,"before log in");
-			//	LibraryModel.getUserIdentity(mActivity, loginUiHandler);
-			//	Log.d(TAG,"after log in");
-			//}
+			
 	        mLoanResults.setVisibility(View.GONE);
 	        loanLoadingView.setVisibility(View.VISIBLE);
 	        loanLoadingView.showLoading();
@@ -344,7 +341,6 @@ public class LibraryYourAccount extends NewModuleActivity {
 	// END TAB LOADING METHODS
 
 	
-	// UI HANDLERS
 	private Handler loansUiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

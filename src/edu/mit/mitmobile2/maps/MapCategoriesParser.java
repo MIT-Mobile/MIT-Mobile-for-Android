@@ -19,11 +19,13 @@ public class MapCategoriesParser extends JSONParser {
 		items = new ArrayList<MapCatItem>();
 	}
 	
+	@Override
 	public String getBaseUrl() {
 		return "http://" + Global.getMobileWebDomain() + "/api/map/";
 	}
 	
 	/////////////////////////////////////////
+	@SuppressWarnings("unchecked")
 	@Override
 	public void parseObj() {
 		

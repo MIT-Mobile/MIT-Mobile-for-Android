@@ -21,7 +21,6 @@ import edu.mit.mitmobile2.about.Config;
 import edu.mit.mitmobile2.alerts.C2DMReceiver;
 import edu.mit.mitmobile2.objs.EventDetailsItem;
 import edu.mit.mitmobile2.objs.MapCatItem;
-import edu.mit.mitmobile2.objs.NewsItem;
 
 public class Global extends Application {
 
@@ -37,7 +36,7 @@ public class Global extends Application {
 	public static final String PREF_KEY_EMERGENCY_VERSION = "pref_version";
 	
 	public static EventDetailsItem curEvent;
-	public static NewsItem curNews;
+	//public static NewsItem curNews;
 
 	// Mobile Server 
 	private static final String TAG = "Global";
