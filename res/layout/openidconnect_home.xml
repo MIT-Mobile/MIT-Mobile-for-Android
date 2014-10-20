@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"  android:orientation="vertical">
+    <TextView android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="OpenID Connect" android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <TextView android:id="@+id/textView2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Subject:" android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <TextView android:id="@+id/subjectVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="..." android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/boldBlack"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Username:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView android:id="@+id/usernameVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="..." android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/boldBlack"/>
+    <TextView android:id="@+id/textView3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="Email:" android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <TextView android:id="@+id/emailVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="..." android:textAppearance="?android:attr/textAppearanceSmall" android:textColor="@color/boldBlack"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+            <Button android:id="@+id/openid_login" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:text="Log In"/>
+            <Button android:id="@+id/openid_profile" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:text="Profile"/>
+            <Button android:id="@+id/openid_logout" android:layout_width="fill_parent" android:layout_height="0dp" android:layout_weight="1" android:text="Log Out"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent" android:orientation="vertical">
+            <ToggleButton android:id="@+id/openid_idtoken" android:layout_width="fill_parent" android:layout_height="wrap_content" android:clickable="false" android:text="ToggleButton" android:textOff="ID Token" android:textOn="ID Token"/>
+            <ToggleButton android:id="@+id/openid_access" android:layout_width="fill_parent" android:layout_height="wrap_content" android:clickable="false" android:text="ToggleButton" android:textOff="Access Token" android:textOn="Access Token"/>
+            <ToggleButton android:id="@+id/openid_refresh" android:layout_width="fill_parent" android:layout_height="wrap_content" android:clickable="false" android:text="ToggleButton" android:textOff="Refresh Token" android:textOn="Refresh Token"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

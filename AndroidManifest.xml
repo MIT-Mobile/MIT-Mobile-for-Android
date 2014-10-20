@@ -327,6 +327,14 @@
         <activity android:name=".libraries.LibraryFines"></activity>
         <activity android:name=".libraries.LibraryFineDetail"></activity>
         <activity android:name=".links.LinksActivity"></activity>
+        <activity android:name=".id.OpenIDConnectActivity">
+            <intent-filter android:label="OIDCCallback">
+                <data android:scheme="mitmobile2" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
 
     </application>
 
