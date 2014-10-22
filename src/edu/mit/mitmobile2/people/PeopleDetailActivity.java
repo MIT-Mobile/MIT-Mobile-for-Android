@@ -99,7 +99,7 @@ public class PeopleDetailActivity extends SliderListNewModuleActivity {
 		for(int index = 0; index < totalPersons; ++index) {
 			PersonItem person = mPeople.get(index);
 			String headerTitle = Integer.toString(index+1) + " of " + Integer.toString(totalPersons);
-			addScreen(new PersonSliderInterface(person), person.getName(), headerTitle);
+			addScreen(new PersonSliderInterface(person), headerTitle);
 		}
 		
 		int position = PeopleModel.getPosition(mPeople, uid);

@@ -117,6 +117,9 @@ public class C2DMReceiver extends BroadcastReceiver {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Log.d("C2DMReceiver", "Failed at parsing incoming notification");
+			} catch (Exception e){
+				e.printStackTrace();
+				Log.d("C2DMReceiver", "Failed at parsing incoming notification");
 			}
 		}
 		

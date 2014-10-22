@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -59,9 +60,11 @@ public class AskUsActivity extends NewModuleActivity {
     private String[] topicsArray;
     private String[] statusArray;
 	private Context mContext;
+	public static final String TAG = "AskUsActivity";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    	Log.d(TAG,"onCreate()");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.library_ask_us);

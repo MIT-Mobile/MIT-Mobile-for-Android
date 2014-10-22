@@ -650,28 +650,28 @@ public class FacilitiesDB {
 			db.delete(CATEGORY_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 		
 		try {
 			db.delete(LOCATION_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 		try {
 			db.delete(LOCATION_CATEGORY_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 		try {
 			db.delete(ROOMS_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 	}
@@ -682,14 +682,14 @@ public class FacilitiesDB {
 			db.delete(CATEGORY_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}		
 		
 		try {
 			db.delete(LOCATION_CATEGORY_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 	}
@@ -700,7 +700,7 @@ public class FacilitiesDB {
 			db.delete(PROBLEM_TYPE_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}		
 	}
 
@@ -711,28 +711,28 @@ public class FacilitiesDB {
 			db.delete(LOCATION_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 		try {
 			db.delete(LOCATION_CONTENT_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 		try {
 			db.delete(LOCATION_CONTENT_CATEGORY_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 		try {
 			db.delete(LOCATION_CONTENT_ALTNAME_TABLE, null, null);
 		}
 		catch (Exception e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}
 
 	}
@@ -785,7 +785,7 @@ public class FacilitiesDB {
 			db.execSQL(categoryTableSql);
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}		
 	}
 
@@ -813,7 +813,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"location table created");
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 	
@@ -832,7 +832,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"location category table created");
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 
@@ -852,7 +852,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"location category table created");
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 
@@ -872,7 +872,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"location content category table created");
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 
@@ -892,7 +892,7 @@ public class FacilitiesDB {
 			Log.d(TAG,"location content altname table created");
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 
@@ -911,7 +911,7 @@ public class FacilitiesDB {
 			db.execSQL(roomTableSql);
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 
@@ -928,7 +928,7 @@ public class FacilitiesDB {
 			db.execSQL(roomTableSql);
 		}
 		catch (SQLException e) {
-			Log.d(TAG,e.getMessage());
+			Log.d(TAG,""+e.getMessage());
 		}				
 	}
 
@@ -997,7 +997,7 @@ public class FacilitiesDB {
 
 							}
 							catch (Exception e) {
-								Log.d(TAG,e.getMessage());							
+								Log.d(TAG,""+e.getMessage());							
 							}
 						}
 						db.endTransaction();
@@ -1100,7 +1100,7 @@ public class FacilitiesDB {
 									}
 								}
 								catch (Exception e) {
-									Log.d(TAG,e.getMessage());							
+									Log.d(TAG,""+e.getMessage());							
 								}
 							}
 							db.endTransaction();
@@ -1110,7 +1110,7 @@ public class FacilitiesDB {
 								Global.setVersion("local", "map","location",Global.getVersion("remote","map","location") + "",Global.mContext);
 							}
 							catch (Exception e) {
-								Log.d(TAG,e.getMessage());
+								Log.d(TAG,""+e.getMessage());
 							}
 						}
 				});
@@ -1147,7 +1147,7 @@ public class FacilitiesDB {
 								Log.d(TAG,"adding problem type " + record.problem_type);
 							}
 							catch (Exception e) {
-								Log.d(TAG,e.getMessage());							
+								Log.d(TAG,""+e.getMessage());							
 							}
 						}
 						db.endTransaction();
@@ -1203,7 +1203,7 @@ public class FacilitiesDB {
 							}
 						}
 						catch (Exception e) {
-							Log.d(TAG,e.getMessage());							
+							Log.d(TAG,""+e.getMessage());							
 						}
 					}
 					// Set last updated field for location so rooms are not re-read for that location

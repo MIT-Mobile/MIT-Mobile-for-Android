@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,7 +8,6 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +46,7 @@ public class MITMapActivity extends NewModuleActivity {
 	Bundle extras;
 	ArrayList<MapItem> mapItems;
 	private MapUpdater mapUpdater;
-	private HashMap params;
+//	private HashMap params;
 	private String query;
 	protected ListView mListView;
 	MapItemsAdapter adapter;
@@ -178,13 +176,13 @@ public class MITMapActivity extends NewModuleActivity {
 		this.mapUpdater = mapUpdater;
 	}
 	
-	public HashMap getParams() {
-		return params;
-	}
-
-	public void setParams(HashMap params) {
-		this.params = params;
-	}
+//	public HashMap getParams() {
+//		return params;
+//	}
+//
+//	public void setParams(HashMap params) {
+//		this.params = params;
+//	}
 
 	@Override
 	protected void onPause() {
@@ -300,8 +298,8 @@ public class MITMapActivity extends NewModuleActivity {
             		MITSearchRecentSuggestions suggestions = new MITSearchRecentSuggestions(mContext, MapsSearchSuggestionsProvider.AUTHORITY,  MapsSearchSuggestionsProvider.MODE);
             		suggestions.saveRecentQuery(query.toLowerCase(Locale.US), null);
             		map.clearMapItems();
-            		ArrayList mapItems = (ArrayList)msg.obj;
-         			mSecondaryTitleBar.setTitle("\"" + query + "\":" + mapItems.size() + "  results");
+            		ArrayList<MapItem> mapItems = (ArrayList<MapItem>)msg.obj;
+         			mSecondaryTitleBar.setTitle("\"" + query + "\" :" + mapItems.size() + " results");
          			mSecondaryTitleBar.setVisibility(View.VISIBLE);
             		
          			adapter = new MapItemsAdapter(mContext, mapItems);
@@ -312,7 +310,6 @@ public class MITMapActivity extends NewModuleActivity {
          				@Override
          				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
          					ArrayList<MapItem> mapItems = map.getMao().getGraphicsLayers().get(MITMapView.DEFAULT_GRAPHICS_LAYER).getMapItems(); 					
-         					MapItem mapItem = mapItems.get(position);
          		  			Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
         	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
         	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);
@@ -330,7 +327,7 @@ public class MITMapActivity extends NewModuleActivity {
             	}
             	catch (Exception e) {
             		Log.d(TAG,"mapSearchUiHander exception");
-            		Log.d(TAG,e.getStackTrace().toString());
+            		Log.d(TAG,""+e.getStackTrace().toString());
             	}
             }
             else if (msg.arg1 == MobileWebApi.ERROR) {
@@ -356,7 +353,8 @@ public class MITMapActivity extends NewModuleActivity {
     	handleIntent(getIntent());
     }
 
-    private void handleIntent(Intent intent) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private void handleIntent(Intent intent) {
 	    this.extras = intent.getExtras();
 	    
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -380,7 +378,6 @@ public class MITMapActivity extends NewModuleActivity {
  				@Override
  				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
  					ArrayList<MapItem> mapItems = map.getMao().getGraphicsLayers().get(MITMapView.DEFAULT_GRAPHICS_LAYER).getMapItems(); 					
- 					MapItem mapItem = mapItems.get(position);
  		  			Intent i = new Intent(mContext, MITMapDetailsSliderActivity.class); 
 	            	i.putParcelableArrayListExtra(MITMapView.MAP_ITEMS_KEY, (ArrayList<? extends Parcelable>) mapItems);
 	            	i.putExtra(MITMapView.MAP_ITEM_INDEX_KEY, position);

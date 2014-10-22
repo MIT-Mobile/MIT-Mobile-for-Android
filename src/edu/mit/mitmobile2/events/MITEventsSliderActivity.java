@@ -139,7 +139,7 @@ public class MITEventsSliderActivity extends SliderListNewModuleActivity {
     	
     	for (EventDetailsItem event : mEvents) {
     		EventDetailsView eventView = new EventDetailsView(this, event, mBriefMode);
-    		addScreen(eventView, event.title, "Event Details");    
+    		addScreen(eventView,  "Event Details");    
     		eventViews.add(eventView);
     	}
     	

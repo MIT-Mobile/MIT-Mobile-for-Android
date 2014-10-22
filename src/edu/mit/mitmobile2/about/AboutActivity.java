@@ -77,9 +77,7 @@ public class AboutActivity extends NewModuleActivity implements OnGesturePerform
 		
 		TextView buildDateTV = (TextView) findViewById(R.id.aboutBuildDate);
 		buildDateTV.setVisibility(View.GONE);
-		
-		TextView buildSourceTV = (TextView) findViewById(R.id.aboutBuildSource);
-		
+				
 		TextView buildTagTV = (TextView) findViewById(R.id.aboutBuildTag);
 		buildTagTV.setVisibility(View.GONE);
 //		buildTagTV.setText("Built for: " + Config.BUILD_TAG);

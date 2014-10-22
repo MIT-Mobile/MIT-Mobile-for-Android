@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +41,7 @@ public class MITStopsSliderActivity extends SliderListNewModuleActivity implemen
 	
 	/****************************************************/
    
+	@SuppressLint({ "WorldReadableFiles", "WorldWriteableFiles" })
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG,"onCreate()");
@@ -112,7 +114,7 @@ public class MITStopsSliderActivity extends SliderListNewModuleActivity implemen
     	for (int i = 0; i < mStops.size(); i++) {
     	    Stops s = mStops.get(i);
     	    cv = new StopsAsyncView(this, s);
-    	    addScreen(cv, s.title, "" + (i+1) + " of " + mStops.size());
+    	    addScreen(cv, "" + (i+1) + " of " + mStops.size());
     	}
 
     	setPosition(last_pos);

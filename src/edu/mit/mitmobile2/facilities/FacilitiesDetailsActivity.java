@@ -89,7 +89,10 @@ public class FacilitiesDetailsActivity extends NewModuleActivity {
 	@Override
 	protected void onSaveInstanceState (Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(CAPTURED_IMAGE_URL_KEY, mCapturedImageUri.toString());
+		if (mCapturedImageUri != null) {
+			outState.putString(CAPTURED_IMAGE_URL_KEY, mCapturedImageUri.toString());
+			super.onSaveInstanceState(outState);
+		}
 	}
 	
 	public void createViews() {

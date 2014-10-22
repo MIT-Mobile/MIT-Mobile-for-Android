@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -31,18 +30,15 @@ import com.esri.android.map.MapView;
 import com.esri.android.map.ags.ArcGISTiledMapServiceLayer;
 import com.esri.android.map.event.OnSingleTapListener;
 import com.esri.android.map.event.OnStatusChangedListener;
-import com.esri.android.map.event.OnZoomListener;
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.map.Graphic;
-import com.esri.core.portal.BaseMap;
 import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
 
-import edu.mit.mitmobile2.AttributesParser;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.objs.MapItem;
@@ -108,9 +104,9 @@ public class MITMapView extends MapView  {
 
 	public void updateBaseLayersStatus() {
 		// loop through base layers
-		Iterator it = mao.getBaseLayers().entrySet().iterator();
+		Iterator<Map.Entry<String,MapBaseLayer>> it = mao.getBaseLayers().entrySet().iterator();
 		while (it.hasNext()) {
-	        Map.Entry glpairs = (Map.Entry)it.next();
+			Map.Entry<String,MapBaseLayer> glpairs = (Map.Entry<String,MapBaseLayer>)it.next();
 	        String layerName = (String)glpairs.getKey();
 	        Layer layer = this.getMapLayer(layerName);
 	        if (!layer.isInitialized()) {
@@ -177,20 +173,15 @@ public class MITMapView extends MapView  {
 		mapItem.setIndex(mao.getGraphicsLayers().get(layerName).getMapItems().size());
 		mao.getGraphicsLayers().get(layerName).synched = false; // display layer not synched with abstract layer as soon as we add a map item
 		mao.getGraphicsLayers().get(layerName).getMapItems().add(mapItem);
-
-		// add the graphic for the map item if the base layers are loaded
-		//if (baseLayersLoaded()) {
-	    //	syncGraphicsLayers();
-	    //}
 		
 	}
 
 	public void clearMapItems() {
 		// clears all graphics layers
-		Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+		Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry glpairs = (Map.Entry)it.next();
-		    String layerName = (String)glpairs.getKey();
+			Map.Entry<String,MapGraphicsLayer> glpairs = it.next();
+		    String layerName = glpairs.getKey();
 		    clearMapItems(layerName);
 		}
 
@@ -200,6 +191,7 @@ public class MITMapView extends MapView  {
 		// clears specified graphics layer
 		if (mao.getGraphicsLayers().get(layerName) != null) {
 			mao.getGraphicsLayers().get(layerName).getMapItems().clear();
+			mao.getGraphicsLayers().get(layerName).synched = false;
 		}
 	}
 	
@@ -238,11 +230,6 @@ public class MITMapView extends MapView  {
 	Point projectMapPoint(MapPoint mapPoint) {
 		Point point = (Point)GeometryEngine.project(new Point(mapPoint.long_wgs84,mapPoint.lat_wgs84), mao.getSpatialReference(),this.getSpatialReference());		
 		return point;
-	}
-
-	private Point projectMapPoint(Double lat,Double lon) {
-		MapPoint mapPoint = new MapPoint(lat,lon);
-		return projectMapPoint(mapPoint);
 	}
 
 	Polygon projectMapPolygon(Polygon mapPolygon) {
@@ -302,7 +289,7 @@ public class MITMapView extends MapView  {
 			pms.setOffsetY(mapItem.offsetY);
 			pms.setOffsetX(mapItem.offsetX);
 			
-			Map attributes = new HashMap();
+			Map<String, Object> attributes = new HashMap<String, Object>();
 		
 			Graphic g = new Graphic(point, pms,attributes, null);
 			gl = (GraphicsLayer)this.getMapLayer(mapItem.getGraphicsLayer()); 
@@ -411,9 +398,9 @@ public class MITMapView extends MapView  {
 		MapPoint mapPoint;
 		
 		if (mao != null) {
-			Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+			Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
 			while (it.hasNext()) {
-				Map.Entry glpairs = (Map.Entry)it.next();
+				Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)it.next();
 			    String layerName = (String)glpairs.getKey();
 				MapGraphicsLayer mgl = mao.getGraphicsLayers().get(layerName);
 				ArrayList<MapItem> mapItems = mgl.getMapItems();	
@@ -504,7 +491,12 @@ public class MITMapView extends MapView  {
 
 	    // OnStatusChangedListener
         this.setOnStatusChangedListener(new OnStatusChangedListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
 			public void onStatusChanged(Object source, STATUS status) {
             	//Log.d(TAG,"map status changed: " + source.getClass().getSimpleName() + " status = " + status.getValue());
             	updateBaseLayersStatus();
@@ -526,9 +518,9 @@ public class MITMapView extends MapView  {
     			}
     			
     			if (mao.getGraphicsLayers() != null) {
-    		    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+    		    	Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
     				while (it.hasNext()) {
-    			        Map.Entry glpairs = (Map.Entry)it.next();
+    			        Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)it.next();
     			        String layerName = (String)glpairs.getKey();
     			        MapGraphicsLayer mapGraphicsLayer = mapView.getMao().getGraphicsLayers().get(layerName);
     	    			GraphicsLayer gl = (GraphicsLayer)mapView.getMapLayer(layerName);
@@ -580,13 +572,12 @@ public class MITMapView extends MapView  {
 
             if (msg.arg1 == MobileWebApi.SUCCESS) {
             	//Log.d(TAG,"MobileWebApi success");
-                @SuppressWarnings("unchecked")
                 MapServerData mapServerData = (MapServerData)msg.obj;
                 // get the layers for the default group
                 String defaultBasemap = mapServerData.getDefaultBasemap();
                 
                 // add the base layers to the map
-                ArrayList<MapBaseLayer> baseMaps = mapServerData.getBaseLayerGroup().get(defaultBasemap);
+				ArrayList<MapBaseLayer> baseMaps = mapServerData.getBaseLayerGroup().get(defaultBasemap);
                 if (baseMaps != null) {
 	                for (int i = 0; i < baseMaps.size(); i++) {
 	                	MapBaseLayer layer = baseMaps.get(i);
@@ -653,9 +644,9 @@ public class MITMapView extends MapView  {
     public void syncBaseLayers() {
     	// loops through all base layers defined in the map abstraction object, mao, and adds them to the mapView if they don't already exists
 
-    	Iterator it = mao.getBaseLayers().entrySet().iterator();
+    	Iterator<Map.Entry<String,MapBaseLayer>> it = mao.getBaseLayers().entrySet().iterator();
 		while (it.hasNext()) {
-	        Map.Entry glpairs = (Map.Entry)it.next();
+	        Map.Entry<String,MapBaseLayer> glpairs = (Map.Entry<String,MapBaseLayer>)it.next();
 	        String layerName = (String)glpairs.getKey();
 	        MapBaseLayer layer = mao.getBaseLayers().get(layerName);
 	        Long layerId = mao.getLayerIdMap().get(layerName);
@@ -680,9 +671,9 @@ public class MITMapView extends MapView  {
     	// loops through all graphics layers defined in mao, adding them if they dont exist
     	// adds mapitem from each graphics layer in mao, overwriting mapitems
 
-    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+    	Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
 		while (it.hasNext()) {
-	        Map.Entry glpairs = (Map.Entry)it.next();
+	        Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)it.next();
 	        final String layerName = (String)glpairs.getKey();
 	        if (selectedLayerName == null || selectedLayerName.endsWith(layerName)) {
 		        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
@@ -693,7 +684,13 @@ public class MITMapView extends MapView  {
 		            	GraphicsLayer graphicsLayer = new GraphicsLayer();
 		            	graphicsLayer.setName(layerName);
 		                graphicsLayer.setOnStatusChangedListener(new OnStatusChangedListener() {
-		                    public void onStatusChanged(Object source, STATUS status) {
+		                    /**
+							 * 
+							 */
+							private static final long serialVersionUID = 1L;
+
+							@Override
+							public void onStatusChanged(Object source, STATUS status) {
 		                        if (OnStatusChangedListener.STATUS.INITIALIZED == status){
 		                        	Log.d(TAG,source.getClass().getName() + " " +  ((GraphicsLayer)source).getName() + " is initialized");
 		                        	if (baseLayersLoaded) {
@@ -736,6 +733,7 @@ public class MITMapView extends MapView  {
 
     	private static final long serialVersionUID = 1L;
 
+    	@Override
         public void onStatusChanged(Object source, STATUS status) {
             //conditional checks if mapView's status has changed to initialized 
              if (OnStatusChangedListener.STATUS.INITIALIZED == status && source == this) { 
@@ -745,7 +743,6 @@ public class MITMapView extends MapView  {
     }
     
     public Handler mapInitUiHandler = new Handler() {
-        @SuppressWarnings("unchecked")
 		@Override
         public void handleMessage(Message msg) {
         	Log.d(TAG,"mapInitUiHandler success");
@@ -785,27 +782,6 @@ public class MITMapView extends MapView  {
 			this.selectedExtent = getGraphicExtent();		
 		}
 	}
-
-	private MapItem getFirstMapItem() {
-		MapItem firstItem = null;
-		//loops through layers in MAO and returns the first map item found
-		Iterator it = mao.getBaseLayers().entrySet().iterator();
-		while (it.hasNext()) {
-	        Map.Entry glpairs = (Map.Entry)it.next();
-	        String layerName = (String)glpairs.getKey();
-	        MapGraphicsLayer mgl = mao.getGraphicsLayers().get(layerName);
-	        if (mgl != null) {
-	        	if (mgl.getMapItems() != null) {
-	        		if (mgl.getMapItems().size() > 0) {
-	        			firstItem = mgl.getMapItems().get(0);
-	        			return firstItem;
-	        		}
-	        	}
-	        }
-		}
-
-		return firstItem;
-	}
 	
     private void processMapItems(final String layerName) {
     	this.getCallout().hide();
@@ -836,7 +812,7 @@ public class MITMapView extends MapView  {
     		}
     		catch (Exception e) {
     			Log.d(TAG, "error processing map items");
-    			Log.d(TAG, e.getStackTrace().toString());
+    			Log.d(TAG, ""+e.getStackTrace().toString());
     		}
     		
     	}
@@ -859,9 +835,9 @@ public class MITMapView extends MapView  {
 	}
 
 	public void debugMAO() {
-		Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+		Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
 		while (it.hasNext()) {
-	        Map.Entry glpairs = (Map.Entry)it.next();
+	        Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)it.next();
 	        final String layerName = (String)glpairs.getKey();
 	        MapGraphicsLayer layer = mao.getGraphicsLayers().get(layerName);
 	        Log.d(TAG,"Graphics Layer: " + layerName);
@@ -884,12 +860,12 @@ public class MITMapView extends MapView  {
 		Log.d("PAUSE","unpause map");
 	}
 	
-	private ArrayList<Graphic> getCalloutGraphics() {
+	protected ArrayList<Graphic> getCalloutGraphics() {
 		ArrayList<Graphic> calloutGraphics = new ArrayList<Graphic>();
 		if (mao.getGraphicsLayers() != null) {
-	    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+	    	Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
 			while (it.hasNext()) {
-		        Map.Entry glpairs = (Map.Entry)it.next();
+		        Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)it.next();
 		        String layerName = (String)glpairs.getKey();
 		        MapGraphicsLayer mapGraphicsLayer = this.getMao().getGraphicsLayers().get(layerName);
     			GraphicsLayer gl = (GraphicsLayer)this.getMapLayer(layerName);
@@ -922,9 +898,9 @@ public class MITMapView extends MapView  {
 	private ArrayList<MapItem> getCalloutItems() {
 		ArrayList<MapItem> calloutItems = new ArrayList<MapItem>();
 		if (mao.getGraphicsLayers() != null) {
-	    	Iterator it = mao.getGraphicsLayers().entrySet().iterator();
+	    	Iterator<Map.Entry<String,MapGraphicsLayer>> it = mao.getGraphicsLayers().entrySet().iterator();
 			while (it.hasNext()) {
-		        Map.Entry glpairs = (Map.Entry)it.next();
+		        Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)it.next();
 		        String layerName = (String)glpairs.getKey();
 		        MapGraphicsLayer mapGraphicsLayer = this.getMao().getGraphicsLayers().get(layerName);
     			 

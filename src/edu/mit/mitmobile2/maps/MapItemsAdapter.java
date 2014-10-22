@@ -5,10 +5,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SimpleArrayAdapter;
 import edu.mit.mitmobile2.TwoLineActionRow;
@@ -45,7 +43,6 @@ public class MapItemsAdapter extends SimpleArrayAdapter<MapItem> {
 			String displayName = (String)mapItem.getItemData().get("displayName");
 			String name = (String)mapItem.getItemData().get("name");
 			String bldgnum = (String)mapItem.getItemData().get("bldgnum");
-			String room = (String)mapItem.getItemData().get("room");		
 	
 			// Building Number searches have categories with parenthesis
 			if (mCategory.contains("(")) {

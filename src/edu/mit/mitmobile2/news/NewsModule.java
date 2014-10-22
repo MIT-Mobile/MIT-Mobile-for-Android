@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.view.NewsTopListActivity;
 
 public class NewsModule extends NewModule {
 
@@ -24,7 +24,7 @@ public class NewsModule extends NewModule {
 	
 	@Override
 	public Class<? extends Activity> getModuleHomeActivity() {
-		return NewsListActivity.class;
+		return NewsTopListActivity.class;
 	}
 
 	@Override
@@ -46,18 +46,20 @@ public class NewsModule extends NewModule {
 
 	@Override
 	public List<MITMenuItem> getSecondaryOptions() {
-		ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
-		items.add(new MITMenuItem("bookmarks", "Bookmarks"));
-		return items;
+		/*ArrayList<MITMenuItem> items = new ArrayList<MITMenuItem>();
+		items.add(new MITMenuItem("share", "Share"));
+		return items;*/
+		return null;
 	}
 
 	@Override
 	public boolean onItemSelected(Activity activity, String id) {
+		//activity.onOptionsItemSelected("");
 		if(id.equals("bookmarks")) {
-			Intent intent = new Intent(activity, NewsBookmarksActivity.class);
+			/*Intent intent = new Intent(activity, NewsBookmarksActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			activity.startActivity(intent);
-			return true;
+			return true;*/
 		} else if(id.equals("search")) {
 			activity.onSearchRequested();
 		}

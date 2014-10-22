@@ -2,9 +2,7 @@ package edu.mit.mitmobile2.shuttles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -16,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ListView;
-import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
@@ -32,7 +29,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 
 	private static final String TAG = "ShuttlesMapActivity";
 	public MITMapView map;
-	private FullScreenLoader mLoadingView;
+	//private FullScreenLoader mLoadingView;
 	protected String module;
 	Context mContext;
 	Location location;
@@ -49,6 +46,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	public static final String SHUTTLE_ROUTE_LAYER = "shuttle_route_layer";
 	public static final String SHUTTLE_STOPS_LAYER = "shuttle_stops_layer";
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "oncreate()");
 		super.onCreate(savedInstanceState);
@@ -108,6 +106,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 		super.onDestroy();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes"})
 	@Override
 	protected void onNewIntent(Intent intent) {
 		Log.d(TAG, "onNewIntent");
@@ -182,14 +181,6 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 
 	public void addShuttleItems(RouteItem routeItem) {
 		HashMap<String,ArrayList<? extends MapItem>> layers = ShuttleModel.buildShuttleItems(routeItem);
-		//debug layers
-    	Iterator it = layers.entrySet().iterator();
-		while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        String key = (String)pairs.getKey();
-	        ArrayList<MapItem> m = (ArrayList<MapItem>) layers.get(key);
-	        Log.d(TAG,"DEBUG: layer " + key + " has " + m.size() + " map items");
-		}
 		map.pause();
 		map.addMapItems(layers.get(SHUTTLE_ROUTE_LAYER),SHUTTLE_ROUTE_LAYER);
 		map.addMapItems(layers.get(SHUTTLE_STOPS_LAYER),SHUTTLE_STOPS_LAYER);
@@ -198,7 +189,6 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 	}
 	
 	public Handler routeUiHandler = new Handler() {
-		@SuppressWarnings("unchecked")
 		@Override
 		public void handleMessage(Message msg) {
 			Log.d(TAG, "mapSearchUiHandler success");
@@ -212,7 +202,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 					map.fitMapItems();
 				} catch (Exception e) {
 					Log.d(TAG, "mapSearchUiHander exception");
-					Log.d(TAG, e.getStackTrace().toString());
+					Log.d(TAG,""+ e.getStackTrace().toString());
 				}
 			} else if (msg.arg1 == MobileWebApi.ERROR) {
 
@@ -267,7 +257,7 @@ public class ShuttlesMapActivity extends NewModuleActivity {
 					//map.syncGraphicsLayers();
 				} catch (Exception e) {
 					Log.d(TAG, "mapSearchUiHander exception");
-					Log.d(TAG, e.getStackTrace().toString());
+					Log.d(TAG,""+ e.getStackTrace().toString());
 				}
 			} else if (msg.arg1 == MobileWebApi.ERROR) {
 

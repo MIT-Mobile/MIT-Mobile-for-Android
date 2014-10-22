@@ -1,18 +1,16 @@
 package edu.mit.mitmobile2.maps;
 
-import edu.mit.mitmobile2.objs.MapItem;
-
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import edu.mit.mitmobile2.objs.MapItem;
 
 public class MapCursorAdapter extends CursorAdapter {
 	
-	private final static String TAG = "MapCursorAdapter";
+	//private final static String TAG = "MapCursorAdapter";
 	MapAdapterHelper mMapAdapterHelper;
 	
 	public MapCursorAdapter(Context context, ListView listView, MapModel mapModel, Cursor cursor) {

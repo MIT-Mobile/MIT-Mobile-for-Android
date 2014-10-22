@@ -1,18 +1,14 @@
 package edu.mit.mitmobile2;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.Transformation;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 
 public class SliderView extends HorizontalScrollView {
 	
@@ -298,23 +294,42 @@ public class SliderView extends HorizontalScrollView {
 
 	private ScreenPosition nearestPosition() {
 		float screenFraction = (float)(getScrollX() - mLeftXforMiddle) / (float)(mSliderViewLayout.getChildWidth());
-		if (screenFraction < -0.50) {
-			return ScreenPosition.Previous;
+		if(mSliderViewLayout.getChildCount()>2){
+			if (screenFraction < -0.50) {
+				return ScreenPosition.Previous;
+			}
+			if (screenFraction > 0.50) {
+				return ScreenPosition.Next;
+			}
+			return ScreenPosition.Current;
+		}else{
+			if (screenFraction <= 0.50) {
+				return ScreenPosition.Previous;
+			}else{
+				return ScreenPosition.Next;
+			}
 		}
-		if (screenFraction > 0.50) {
-			return ScreenPosition.Next;
-		}
-		return ScreenPosition.Current;
 	}
 	
 	private int scrollX(ScreenPosition screenPosition) {
-		switch (screenPosition) {
-			case Previous:
-				return mSliderViewLayout.getChildWidth() - getWidth();
-			case Current:
-				return mLeftXforMiddle;
-			case Next:
-				return mSliderViewLayout.getLeftXforRight();
+		if(mSliderViewLayout.getChildCount()>2){
+			switch (screenPosition) {
+				case Previous:
+					return mSliderViewLayout.getChildWidth() - getWidth();
+				case Current:
+					return mLeftXforMiddle;
+				case Next:
+					return mSliderViewLayout.getLeftXforRight();
+			}
+		}else if(mSliderViewLayout.getChildCount()==2){
+			switch (screenPosition) {
+				case Previous:
+					return mLeftXforMiddle;
+				case Next:
+					return mSliderViewLayout.getLeftXforRight();
+				case Current:
+					throw new RuntimeException("bad scroll position");
+			}
 		}
 		throw new RuntimeException("scroll position not found, must have received null for screen position");
 	}
@@ -434,7 +449,8 @@ public class SliderView extends HorizontalScrollView {
 		 */
 		mSliderViewLayout.clear();
 		View currentView = mSliderAdapter.getScreen(ScreenPosition.Current);
-		mSliderViewLayout.addViewToRight(currentView);
+		if(currentView!=null)
+			mSliderViewLayout.addViewToRight(currentView);
 		
 		mHasNextScreen = false;
 		if (mSliderAdapter.hasScreen(ScreenPosition.Next)) {

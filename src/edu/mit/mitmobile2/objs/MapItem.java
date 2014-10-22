@@ -2,27 +2,20 @@ package edu.mit.mitmobile2.objs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
+
+import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
 
 import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.SpatialReference;
-import com.esri.core.geometry.Unit;
-import com.esri.core.geometry.Unit.UnitType;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapAbstractionObject;
-import edu.mit.mitmobile2.maps.MITMapActivity;
-import edu.mit.mitmobile2.maps.MapData;
-import edu.mit.mitmobile2.maps.MapModel;
 
 public abstract class MapItem {
 	
@@ -168,7 +161,6 @@ public abstract class MapItem {
 		double maxLat;
 		
 		MapPoint mapPoint;
-		Point point;
 		
 		if (mapPoints.size() > 0) {
 			
@@ -238,25 +230,7 @@ public abstract class MapItem {
 		return bbox;
 
 	}
-	
-//	public static void getMapItemImage(Context mContext, Handler uiHandler,MapItem mapItem, final SpatialReference targetSpatialReference) {
-//		MapItem.getMapItemImage(mContext,uiHandler,mapItem,SpatialReference.create(mapItem.wikid), targetSpatialReference);
-//	}
-//
-//	public static void getMapItemImage(Context mContext, Handler uiHandler,MapItem mapItem,final SpatialReference sourceSpatialReference, final SpatialReference targetSpatialReference) {
-//		String boundingBox; // comma separate string of doubles in form of minX,minY,maxX,maxY
-//		if (mapItem.geometryType == MapItem.TYPE_POINT) {
-//			Point thumbnailPoint = (Point)GeometryEngine.project(new Point(mapItem.getMapPoints().get(0).long_wgs84,mapItem.getMapPoints().get(0).lat_wgs84), SpatialReference.create(mapItem.getWikid()),targetSpatialReference);
-//			double minX = thumbnailPoint.getX() - 100;
-//			double minY = thumbnailPoint.getY() - 100;
-//			double maxX = thumbnailPoint.getX() + 100;
-//			double maxY = thumbnailPoint.getY() + 100;
-//			Log.d(TAG,"bbox = " + minX + "," + minY + "," + maxX + "," + maxY);
-//			boundingBox = minX + "," + minY + "," + maxX + "," + maxY; 
-//			MapModel.exportMapBitmap(mContext,boundingBox, true, uiHandler);
-//		}
-//	}
-	
+		
 	public int getWkid() {
 		return wkid;
 	}

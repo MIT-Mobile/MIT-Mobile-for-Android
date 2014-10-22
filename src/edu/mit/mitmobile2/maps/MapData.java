@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,9 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.esri.android.map.LocationService;
 import com.esri.core.geometry.SpatialReference;
 
 import edu.mit.mitmobile2.objs.MapItem;
@@ -70,11 +66,11 @@ public class MapData {
 		JSONArray jMapItems = new JSONArray();
 		
 		// Get iterator for mapGraphicsLayers linked hashmap
-		Iterator gl = this.mapGraphicsLayers.entrySet().iterator();
+		Iterator<Map.Entry<String,MapGraphicsLayer>> gl = this.mapGraphicsLayers.entrySet().iterator();
 
 		// loop through graphics layers
 		while (gl.hasNext()) {
-	        Map.Entry glpairs = (Map.Entry)gl.next();
+	        Map.Entry<String,MapGraphicsLayer> glpairs = (Map.Entry<String,MapGraphicsLayer>)gl.next();
 	        String layerName = (String)glpairs.getKey();       
 	        MapGraphicsLayer mgl = this.mapGraphicsLayers.get(layerName);
 	        
@@ -100,9 +96,9 @@ public class MapData {
 				// create JSON object for itemData
 				JSONObject jItemData = new JSONObject();
 				//mapItem.getItemData().keySet()
-				Iterator it = mapItem.getItemData().entrySet().iterator();
+				Iterator<Map.Entry<String,Object>> it = mapItem.getItemData().entrySet().iterator();
 			    while (it.hasNext()) {
-			        Map.Entry pairs = (Map.Entry)it.next();
+			        Map.Entry<String,Object> pairs = (Map.Entry<String,Object>)it.next();
 			        try {
 				        jItemData.put((String)pairs.getKey(),pairs.getValue());
 				        jMapItem.put("itemData",jItemData);
@@ -227,14 +223,15 @@ public class MapData {
             	}
 
 				try {
-					Class cls = Class.forName(jMapItem.getString("mapItemClass"));
+					Class<?> cls = Class.forName(jMapItem.getString("mapItemClass"));
 					try {
 						MapItem mapItem = (MapItem) cls.newInstance();
 						mapItem.setGeometryType(jMapItem.getInt("geometryType"));
 						JSONObject jItemData = jMapItem.getJSONObject("itemData");
 	
 						// POPULATE itemDATA
-						Iterator keys = jItemData.keys();
+						@SuppressWarnings("unchecked")
+						Iterator<String> keys = jItemData.keys();
 						while (keys.hasNext()) {
 							String key = (String)keys.next();
 							Object value = jItemData.get(key);

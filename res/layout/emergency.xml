@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<edu.mit.mitmobile2.RefreshableScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:mit="http://schemas.android.com/apk/res/edu.mit.mitmobile2"
-  android:orientation="vertical"
-  android:background="@drawable/main_repeat"
-  android:layout_gravity="center"
+  android:id="@+id/emergencyMainScrollView" 
+  android:fillViewport="true"
   android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+  android:layout_height="fill_parent">  
+    
+	<LinearLayout
+  		android:orientation="vertical"
+  		android:background="@drawable/main_repeat"
+  		android:layout_gravity="center"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent">
   	
 		  	<WebView android:id="@+id/emergencyMsgTV" 
 		  		android:visibility="gone"
@@ -45,7 +51,11 @@
 				android:scaleType="center"
 		  		android:background="#FFFFFF"
 		  		android:focusable="false"
-		  		android:src="@drawable/busybox" />  
-</LinearLayout>
+		  		android:src="@drawable/busybox" />
+		    
+
+	</LinearLayout>
+	
+</edu.mit.mitmobile2.RefreshableScrollView>
         
         
