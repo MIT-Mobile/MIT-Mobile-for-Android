@@ -36,7 +36,7 @@ public class TourIntroductionActivity extends NewModuleActivity {
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if(url.equals("select_start")) {
+				if(url.equals("mitmobile2:select_start")) {
 					showMap();
 				} else {
 					CommonActions.viewURL(TourIntroductionActivity.this, url);
