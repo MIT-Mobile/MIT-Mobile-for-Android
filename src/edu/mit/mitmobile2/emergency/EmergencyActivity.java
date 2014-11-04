@@ -103,15 +103,18 @@ public class EmergencyActivity extends NewModuleActivity implements OnRefreshLis
 		emergencyListLoader.setVisibility(View.GONE);
 		
 		contactsListView.setVisibility(View.VISIBLE);
+		
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final TwoLineActionRow moreContactsRow = (TwoLineActionRow) inflater.inflate(R.layout.boring_action_row, null);;
+		moreContactsRow.setTitle("More Contacts");
+		contactsListView.addFooterView(moreContactsRow);
+
 		final EmergencyDB db = EmergencyDB.getInstance(this);
 		EmergencyContactsAdapter adapter = new EmergencyContactsAdapter(this, db.getLimitedContactsCursor());
 
 		contactsListView.setAdapter(adapter);
 
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final TwoLineActionRow moreContactsRow = (TwoLineActionRow) inflater.inflate(R.layout.boring_action_row, null);;
-		moreContactsRow.setTitle("More Contacts");
-		contactsListView.addFooterView(moreContactsRow);
+
 
 		contactsListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
