@@ -138,7 +138,9 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 						}
 						ImageView flagImageView = new ImageView(mContext);
 						DiningDietaryFlag flag = flags.get(i);
-						flagImageView.setImageResource(flag.getIconId());
+						if (flag != null) {
+							flagImageView.setImageResource(flag.getIconId());
+						}
 						tableRow.addView(flagImageView);
 					}
 					

@@ -154,7 +154,9 @@ class DiningComparisionSliderAdapter extends DiningHouseAbstractSliderAdapter {
 		layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
 		for (DiningDietaryFlag flag : menuItem.getDietaryFlags()) {
 			ImageView flagImageView = new ImageView(mContext);
-			flagImageView.setImageResource(flag.getIconId());
+			if (flag != null) {
+				flagImageView.setImageResource(flag.getIconId());
+			}
 			dietaryFlags.addView(flagImageView, layoutParams);
 		}
 		
