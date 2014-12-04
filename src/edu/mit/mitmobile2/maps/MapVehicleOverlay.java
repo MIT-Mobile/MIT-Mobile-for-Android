@@ -13,7 +13,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 import edu.mit.mitmobile2.R;
 
-public class MapVehicleOverlay extends ItemizedOverlay {
+public class MapVehicleOverlay extends ItemizedOverlay<OverlayItem> {
 
 	protected Drawable[] shuttleMarkers;
 

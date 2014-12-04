@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -19,13 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
 import edu.mit.mitmobile2.Global;
 import edu.mit.mitmobile2.LoaderBar;
 import edu.mit.mitmobile2.LockingScrollView;
@@ -39,7 +40,7 @@ import edu.mit.mitmobile2.objs.RouteItem.Stops;
 import edu.mit.mitmobile2.shuttles.ShuttleRouteArrayAdapter.SectionListItemView;
 
 
-public class StopsAsyncView  extends LinearLayout implements SliderInterface , OnItemClickListener {
+public class StopsAsyncView  extends LinearLayout implements SliderInterface , OnItemClickListener, OnRefreshListener {
 
 	ArrayList<Stops> m_stops;
 	
@@ -58,6 +59,8 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	Stops si;
 	
 	Context ctx;
+
+	private PullToRefreshAttacher mRefreshAttacher;
 	
 	/****************************************************/
 	class CheckStopsTask extends AsyncTask<String, Void, Void> {
@@ -104,6 +107,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 			
 			lb.setLastLoaded(new Date());
 			lb.endLoading();
+			mRefreshAttacher.setRefreshComplete();
 			 
 			boolean no_data = false;
 	    	if (sp==null) no_data = true;
@@ -223,7 +227,7 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	   				}
 	   				ArrayList<Predicted> predictions = sections.get(s.route_id);
 	    			 
-		    		Log.d("StopsAsyncView", s.toString());
+		    		Log.d("StopsAsyncView",""+ s.toString());
 
     				
 	    			// first stop...
@@ -384,6 +388,9 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 		topView.addView(lb, 0);
 		
 		addView(topView);
+		
+		mRefreshAttacher = top.createPullToRefreshAttacher();
+		mRefreshAttacher.setRefreshableView(stopsLV, this);
 
 	}
 	/****************************************************/
@@ -600,5 +607,10 @@ public class StopsAsyncView  extends LinearLayout implements SliderInterface , O
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		getData();
 	}
 }

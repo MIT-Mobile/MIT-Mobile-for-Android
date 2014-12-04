@@ -1,7 +1,5 @@
 package edu.mit.mitmobile2.objs;
 
-import java.util.HashMap;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -50,11 +48,13 @@ public class MapPoint implements Parcelable {
 	}
 	
     public static final Parcelable.Creator<MapPoint> CREATOR = new Parcelable.Creator<MapPoint>() {
-        public MapPoint createFromParcel(Parcel in) {
+        @Override
+		public MapPoint createFromParcel(Parcel in) {
             return new MapPoint(in);
         }
 
-        public MapPoint[] newArray(int size) {
+        @Override
+		public MapPoint[] newArray(int size) {
             return new MapPoint[size];
         }
 

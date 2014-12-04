@@ -1,20 +1,16 @@
 package edu.mit.mitmobile2.dining;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -142,7 +138,9 @@ public class DiningHouseScheduleSliderAdapter extends DiningHouseAbstractSliderA
 						}
 						ImageView flagImageView = new ImageView(mContext);
 						DiningDietaryFlag flag = flags.get(i);
-						flagImageView.setImageResource(flag.getIconId());
+						if (flag != null) {
+							flagImageView.setImageResource(flag.getIconId());
+						}
 						tableRow.addView(flagImageView);
 					}
 					

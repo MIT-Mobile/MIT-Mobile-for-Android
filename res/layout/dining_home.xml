@@ -27,7 +27,7 @@
 		            android:layout_width="fill_parent"
 		            android:layout_height="@dimen/tabHeight"/>
 		
-	        <ScrollView
+	        <edu.mit.mitmobile2.RefreshableScrollView
 	            	android:id="@+id/diningHomeMainScrollView"
 					android:layout_width="fill_parent" 
 					android:layout_height="wrap_content" >
@@ -100,7 +100,7 @@
 						   </LinearLayout> 
 		
 			       </FrameLayout>
-			</ScrollView>	
+			</edu.mit.mitmobile2.RefreshableScrollView>	
 	    </LinearLayout>
 	</TabHost>
 	

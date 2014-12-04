@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
-
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,13 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.DividerView;
 import edu.mit.mitmobile2.FullScreenLoader;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SectionHeader;
 import edu.mit.mitmobile2.TabConfigurator;
@@ -101,13 +98,9 @@ public class DiningHomeActivity extends NewModuleActivity implements OnRefreshLi
 	    ScrollView scrollView = (ScrollView) findViewById(R.id.diningHomeMainScrollView);
 
         // Create new PullToRefreshAttacher
-        mPullToRefreshAttacher = new PullToRefreshAttacher(this);
-        mPullToRefreshAttacher.setRefreshableView(scrollView, this);
-        DefaultHeaderTransformer ht = (DefaultHeaderTransformer) mPullToRefreshAttacher
-                .getHeaderTransformer();
-        ht.setPullText("Swipe to refresh");
-        ht.setRefreshingText("Refreshing...");
-        
+	    mPullToRefreshAttacher = createPullToRefreshAttacher();
+	    mPullToRefreshAttacher.setRefreshableView(scrollView, this);
+
 	}
 	
 	private void updateDiningData() {

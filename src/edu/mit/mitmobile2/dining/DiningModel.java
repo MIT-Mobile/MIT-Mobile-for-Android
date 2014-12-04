@@ -606,7 +606,9 @@ public class DiningModel {
 		public RetailDiningHall(JSONObject object) throws JSONException {
 			super(object);
 			
-			mDescriptionHtml = object.getString("description_html");
+			if (!object.isNull("description_html")) {
+				mDescriptionHtml = object.getString("description_html");
+			}
 			if (!object.isNull("menu_html")) {
 				mMenuHtml = object.getString("menu_html");
 			}

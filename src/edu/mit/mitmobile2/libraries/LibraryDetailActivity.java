@@ -55,7 +55,7 @@ public class LibraryDetailActivity extends SliderListNewModuleActivity {
     private void setLibraries(List<LibraryItem> libraries, int position) {
         mLibraries = libraries;
         for(LibraryItem library : mLibraries) {
-            addScreen(new LibraryDetailView(LibraryDetailActivity.this, library), library.library, "Library Detail");
+            addScreen(new LibraryDetailView(LibraryDetailActivity.this, library), "Library Detail");
         }
         
         setPosition(position);

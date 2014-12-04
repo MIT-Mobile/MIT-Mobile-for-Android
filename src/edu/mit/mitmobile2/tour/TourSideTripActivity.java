@@ -1,14 +1,5 @@
 package edu.mit.mitmobile2.tour;
 
-import edu.mit.mitmobile2.AudioPlayer;
-
-import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.NewModuleActivity;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.RemoteImageView;
-import edu.mit.mitmobile2.TitleBar;
-import edu.mit.mitmobile2.tour.Tour.SideTrip;
-import edu.mit.mitmobile2.tour.Tour.Site;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +7,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import edu.mit.mitmobile2.AudioPlayer;
+import edu.mit.mitmobile2.NewModule;
+import edu.mit.mitmobile2.NewModuleActivity;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.RemoteImageView;
+import edu.mit.mitmobile2.tour.Tour.SideTrip;
+import edu.mit.mitmobile2.tour.Tour.Site;
 
 
 public class TourSideTripActivity extends NewModuleActivity {

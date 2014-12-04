@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -43,7 +44,8 @@ public class ShuttleMapUpdater extends MapUpdater {
 	}
 
 	class MyTimerTask extends TimerTask {
-		 public void run() {
+		 @Override
+		public void run() {
 			 if (status != STATUS_RUNNING) {
 				 status = ShuttleMapUpdater.STATUS_RUNNING;
 				 Log.d(TAG,"status = " + status);
@@ -63,6 +65,7 @@ public class ShuttleMapUpdater extends MapUpdater {
 		timer.cancel();
 	}
 
+	@SuppressLint("HandlerLeak")
 	public Handler uiHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

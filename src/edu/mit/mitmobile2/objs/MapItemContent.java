@@ -63,10 +63,12 @@ public class MapItemContent implements Parcelable {
 	}
 	
     public static final Parcelable.Creator<MapItemContent> CREATOR = new Parcelable.Creator<MapItemContent>() {
-        public MapItemContent createFromParcel(Parcel in) {
+    	@Override
+    	public MapItemContent createFromParcel(Parcel in) {
             return new MapItemContent(in);
         }
 
+    	@Override
         public MapItemContent[] newArray(int size) {
 
             return new MapItemContent[size];

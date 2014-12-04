@@ -123,6 +123,7 @@ public class TellUsActivity extends NewModuleActivity {
             }
         });
         
+        /*
         showLoader();
         VerifyUserCredentials.VerifyUserHasFormAccess(mContext, new VerifyUserCredentialsListener() {
 			@Override
@@ -130,6 +131,7 @@ public class TellUsActivity extends NewModuleActivity {
 				showForm();
 			}
         });
+        */
     }
 
     TextWatcher mUpdateSubmitButtonTextWatcher = new TextWatcher() {

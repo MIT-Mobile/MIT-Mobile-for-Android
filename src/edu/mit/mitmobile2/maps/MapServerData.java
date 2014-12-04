@@ -7,16 +7,15 @@ import java.util.HashMap;
 public class MapServerData {
 
 	private String defaultBasemap = "";
-	private HashMap<String,ArrayList> baseLayerGroup = new HashMap<String,ArrayList>();
+	private HashMap<String,ArrayList<MapBaseLayer>> baseLayerGroup = new HashMap<String,ArrayList<MapBaseLayer>>();
 	
-	//private ArrayList<MapBaseLayer> baseMaps = new ArrayList<MapBaseLayer>();
 	private ArrayList<MapFeatureLayer> features = new ArrayList<MapFeatureLayer>();
 
-	public HashMap<String, ArrayList> getBaseLayerGroup() {
+	public HashMap<String, ArrayList<MapBaseLayer>> getBaseLayerGroup() {
 		return baseLayerGroup;
 	}
 
-	public void setBaseLayerGroup(HashMap<String, ArrayList> baseLayerGroup) {
+	public void setBaseLayerGroup(HashMap<String, ArrayList<MapBaseLayer>> baseLayerGroup) {
 		this.baseLayerGroup = baseLayerGroup;
 	}
 

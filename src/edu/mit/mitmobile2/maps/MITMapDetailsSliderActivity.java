@@ -1,78 +1,48 @@
 package edu.mit.mitmobile2.maps;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import com.esri.core.geometry.Envelope;
-import com.esri.core.geometry.GeometryEngine;
-import com.esri.core.geometry.Point;
-import com.esri.core.geometry.Polygon;
-import com.esri.core.geometry.SpatialReference;
 
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.ContactsContract;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageView.ScaleType;
-import android.widget.ToggleButton;
-import edu.mit.mitmobile2.CommonActions;
-import edu.mit.mitmobile2.IdEncoder;
+
+import com.esri.core.geometry.SpatialReference;
+
 import edu.mit.mitmobile2.LockingScrollView;
-import edu.mit.mitmobile2.MITMenuItem;
-import edu.mit.mitmobile2.MITPlainSecondaryTitleBar;
-import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
-import edu.mit.mitmobile2.OnMITMenuItemListener;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RemoteImageView;
 import edu.mit.mitmobile2.SliderInterface;
 import edu.mit.mitmobile2.SliderListNewModuleActivity;
 import edu.mit.mitmobile2.TabConfigurator;
-import edu.mit.mitmobile2.news.NewsDetailsActivity;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapItemContent;
-import edu.mit.mitmobile2.objs.MapPoint;
-import edu.mit.mitmobile2.objs.NewsItem;
 import edu.mit.mitmobile2.objs.PersonItem.PersonDetailViewMode;
 import edu.mit.mitmobile2.people.PeopleDetailActivity;
-import edu.mit.mitmobile2.people.PeopleDetailItemLayout;
 
 public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	
-	private final static String TAG = "MITMapDetailsSliderActivity";
+	//private final static String TAG = "MITMapDetailsSliderActivity";
 	public static final String UID_KEY = "uid";
 	public static final String MAP_ITEM_INDEX = "map_item_index";
 	public static final String SEARCH_TERM_KEY = "search_term";
 	public static final String RECENTLY_VIEWED_FLAG = "show_recents";
 	public static final int TARGET_WKID = 102113; // the wikid of the map used to export images 
 	private static final String MENU_BOOKMARKS = "bookmarks";
-	private static final String MENU_SHARE = "menu_share";
 
 	private List<MapItem> mMapItems = Collections.emptyList();
 	private int mapItemIndex = 0;
@@ -116,6 +86,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		return super.getPosition();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -126,9 +97,10 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		if(extras != null) {
-			List<MapItem> mapItems = null;
+			ArrayList<MapItem> mapItems = null;
 			if(extras.containsKey(MITMapView.MAP_ITEMS_KEY)) {
 				mapItems = (ArrayList)extras.getParcelableArrayList(MITMapView.MAP_ITEMS_KEY);
+				
 				//Log.d(TAG,"number of map items = " + mapItems.size());
 			} 	
 
@@ -140,6 +112,8 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 		} 
 	}
 	
+
+
 	private void setMapItems(List<MapItem> mapItems, int position) {
 		mMapItems = mapItems;
 		int totalMapItems = mMapItems.size();
@@ -149,7 +123,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			if (mapItem.getMapPoints() != null) {
 			}
 			String headerTitle = Integer.toString(index+1) + " of " + Integer.toString(totalMapItems);
-			addScreen(new MapSliderInterface(mapItem), (String)mapItem.getItemData().get("name"), headerTitle);
+			addScreen(new MapSliderInterface(mapItem), headerTitle);
 		}
 		
 		setPosition(position);
@@ -171,54 +145,11 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			startActivity(intent);
 		}
 	}
-	
-	private void addField(Intent intent, String extraField, List<String> values) {
-		if(!values.isEmpty()) {
-			intent.putExtra(extraField, values.get(0));
-		}
-	}
-	
-	private void addFields(Intent intent, List<String> values, String[] fields, String[] fieldTypes, int fieldType) {
 		
-		for(int i = 0; i < 3; i++) {
-			if(values.size() > i) {
-				intent.putExtra(fields[i], values.get(0));
-				intent.putExtra(fieldTypes[i], fieldType);
-			}
-		}
-	}
-	
-//	private void addToContact() {
-//		final PersonItem person = mPeople.get(getPosition());
-//		// create a dialog asking to create or add contact
-//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//		builder.setTitle("Add Contact");
-//		builder.setItems(new String[] {EDIT_CONTACT_TEXT, NEW_CONTACT_TEXT}, 
-//			new DialogInterface.OnClickListener() {
-//			
-//				@Override
-//				public void onClick(DialogInterface dialog, int which) {
-//					if(which == EDIT_CONTACT) {
-//						Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-//						mPersonToAddToContacts = person;
-//						PeopleDetailActivity.this.startActivityForResult(intent, EDIT_CONTACT_REQUEST);
-//					} else if(which == NEW_CONTACT) {
-//						Intent intent = new Intent(Insert.ACTION, ContactsContract.Contacts.CONTENT_URI);
-//						populateAddContactIntent(intent, person, false);
-//						PeopleDetailActivity.this.startActivity(intent);
-//					}
-//				}
-//			}
-//		);
-//
-//		builder.setNegativeButton("Cancel", null);
-//		builder.create().show();
-//	}
-	
 	private class MapSliderInterface implements SliderInterface {
 		private MapItem mMapItem;
 		private View mMainLayout;
-		private ViewGroup mListItemsLayout;
+		//private ViewGroup mListItemsLayout;
 		
 		MapSliderInterface(MapItem mapItem) {
 			mMapItem = mapItem;
@@ -238,8 +169,6 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			//initSecondaryTitleBar();
 			
 			TabHost tabHost;
-			TabHost.TabSpec specHere;
-			TabHost.TabSpec specPhotos;
 			
 			tabHost = (TabHost) mMainLayout.findViewById(R.id.mapDetailsTH);  
 			tabHost.setup();  // NEEDED!!!
@@ -307,13 +236,13 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 						MapsDB.getInstance(mContext).saveMapItem(mMapItem); 
 						((Button)v).setText(R.string.map_bookmark_on);
 						v.setTag("on");
-						Toast.makeText(mContext, "map item saved", 1).show();
+						Toast.makeText(mContext, "map item saved", Toast.LENGTH_LONG).show();
 					}
 					else {
 						MapsDB.getInstance(mContext).delete(mMapItem);
 						((Button)v).setText(R.string.map_bookmark_off);
 						v.setTag("off");
-						Toast.makeText(mContext, "map item removed", 1).show();						
+						Toast.makeText(mContext, "map item removed", Toast.LENGTH_LONG).show();						
 					}
 				}
 			});
@@ -334,6 +263,7 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 			// Photo
 			imgUrl = (String)mMapItem.getItemData().get("bldgimg") + "";
 			mapDetailsPhotoView = (RemoteImageView) tabHost.findViewById(R.id.mapDetailsPhotoView);
+			mapDetailsPhotoView.setScreenDensity(DisplayMetrics.DENSITY_MEDIUM);
 			mapDetailsPhotosTV = (TextView) tabHost.findViewById(R.id.mapDetailsPhotosTV);
 			
 			if (imgUrl == null || imgUrl.trim().length() == 0) {
@@ -391,26 +321,5 @@ public class MITMapDetailsSliderActivity extends SliderListNewModuleActivity {
 	    }
 		
 	}
-	
-	private boolean hasAction(String type) {
-	    List<String> typesWithActions = Arrays.asList("email", "phone", "office");
-	    return typesWithActions.contains(type);
-	}
-	
-	private void performAction(MapItem item) {
-	}
-	
-	private int getActionIconResourceId(String type) {
-	    if (type.equals("email")) {
-		return R.drawable.action_email;					
-	    } else if(type.equals("phone")) {
-		return R.drawable.action_phone;
-	    } else if(type.equals("office")) {
-		return R.drawable.action_map;
-	    }
-	    return -1;
-	}
-	
-
-
+		
 }

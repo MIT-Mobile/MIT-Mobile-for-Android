@@ -57,7 +57,7 @@ public class FullScreenLoader extends FrameLayout {
 			mIsLoading = true;
 		}
 		catch (Exception e) {
-			Log.d("ZZZ",e.getMessage());
+			Log.d("ZZZ",""+e.getMessage());
 		}
 	}
 	

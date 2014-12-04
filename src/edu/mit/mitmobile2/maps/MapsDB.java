@@ -1,26 +1,19 @@
 package edu.mit.mitmobile2.maps;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
-
+//import android.util.Log;
 import edu.mit.mitmobile2.objs.BuildingMapItem;
 import edu.mit.mitmobile2.objs.MapItem;
 import edu.mit.mitmobile2.objs.MapPoint;
-import edu.mit.mitmobile2.objs.PersonItem;
-import edu.mit.mitmobile2.people.PeopleDB;
 
 public class MapsDB {
-	private static final String TAG = "MapsDB";
+	//private static final String TAG = "MapsDB";
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_NAME = "maps.db";
 	private static final String MAPS_TABLE = "map_items";
@@ -42,7 +35,7 @@ public class MapsDB {
 	private static final String LONG_WGS84 = "long_wgs84";
 	private static final String LAT_WGS84 = "lat_wgs84";
 
-	private static final String ID_WHERE = ID + "=?";
+	//private static final String ID_WHERE = ID + "=?";
 	private static final String MAP_ID_WHERE = MAP_ID + "=?";
 	
 	
@@ -88,8 +81,7 @@ public class MapsDB {
 	
 	synchronized void delete(MapItem mi) {
 		SQLiteDatabase db = mMapsDBHelper.getWritableDatabase();
-		int result = db.delete(MAPS_TABLE, MAP_ID_WHERE, whereArgs(mi));
-
+		db.delete(MAPS_TABLE, MAP_ID_WHERE, whereArgs(mi));
 		db.close();
 		mMapsDBHelper.close();
 	}
@@ -121,16 +113,14 @@ public class MapsDB {
 		mapValues.put(LAT_WGS84, mi.getMapPoints().get(0).lat_wgs84);
 		
 		long row_id;
-		int rows;
+		//int rows;
 		String id = (String)mi.getItemData().get("id");
 		if(miExists(id)) {
-			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			//Log.d(TAG,"MapDB: updating "+rows);
+			db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
 		} else {
 			row_id = db.insert(MAPS_TABLE, SNIPPETS, mapValues);
 			mi.sql_id = row_id;
-			rows = db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
-			//Log.d(TAG,"MapDB: adding "+row_id);
+			db.update(MAPS_TABLE, mapValues, MAP_ID_WHERE, whereMapIdArgs(mi));
 		}
 		db.close();
 		mMapsDBHelper.close();

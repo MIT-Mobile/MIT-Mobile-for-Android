@@ -1,8 +1,9 @@
 package edu.mit.mitmobile2.shuttles;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,7 +27,6 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import edu.mit.mitmobile2.CommonActions;
 import edu.mit.mitmobile2.FullScreenLoader;
-import edu.mit.mitmobile2.MITMenuItem;
 import edu.mit.mitmobile2.MobileWebApi;
 import edu.mit.mitmobile2.NewModule;
 import edu.mit.mitmobile2.NewModuleActivity;
@@ -35,7 +35,7 @@ import edu.mit.mitmobile2.TwoLineActionRow;
 import edu.mit.mitmobile2.objs.RouteItem;
 import edu.mit.mitmobile2.shuttles.ShuttleRouteArrayAdapter.SectionListItemView;
 
-public class ShuttlesActivity extends NewModuleActivity {
+public class ShuttlesActivity extends NewModuleActivity implements OnRefreshListener {
 	
 	private static final String TAG = "ShuttlesActivity";
 	Context ctx;
@@ -45,6 +45,7 @@ public class ShuttlesActivity extends NewModuleActivity {
 	private View mFooterView;
 
 	private FullScreenLoader shuttleRouteLoader;
+	private PullToRefreshAttacher mPullToRefreshAttacher;
 
 	static final int MENU_HOME     = Menu.FIRST;
 	static final int MENU_CALL_SAFERIDE = Menu.FIRST+1;
@@ -131,7 +132,11 @@ public class ShuttlesActivity extends NewModuleActivity {
 		);
 		
 		routeListView.addFooterView(mFooterView);
-		
+			
+		mPullToRefreshAttacher = createPullToRefreshAttacher();
+	    mPullToRefreshAttacher.setRefreshableView(routeListView, this);
+	    mPullToRefreshAttacher.setEnabled(false);
+
 		getData(false);
 	
 	}
@@ -189,19 +194,26 @@ public class ShuttlesActivity extends NewModuleActivity {
 		};
 		
 		routeListView.setOnItemClickListener(listener);
+		
+		mPullToRefreshAttacher.setEnabled(true);
 
 	}
 	/****************************************************/
 	protected void getData(boolean forceRefresh) {
-		shuttleRouteLoader.setVisibility(View.VISIBLE);
-		shuttleRouteLoader.showLoading();
-		routeListView.setVisibility(View.GONE);
+		if (!forceRefresh) {
+			shuttleRouteLoader.setVisibility(View.VISIBLE);
+			shuttleRouteLoader.showLoading();
+			routeListView.setVisibility(View.GONE);
+		}
 		
 		// this Handler will run on this thread (UI)
 		final Handler myHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
+				
+				mPullToRefreshAttacher.setRefreshComplete();
+				
 				if(msg.arg1 == MobileWebApi.SUCCESS) {
 					updateView();
 				} else {
@@ -221,27 +233,19 @@ public class ShuttlesActivity extends NewModuleActivity {
 	
 	@Override
 	protected NewModule getNewModule() {
-		// TODO Auto-generated method stub
 		return new ShuttlesModule();
-	}
-	@Override
-	protected boolean isScrollable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	protected void onOptionSelected(String optionId) {
-		// TODO Auto-generated method stub
-		if (optionId.equals("refresh")) {
-			getData(true);
-		}
 	}
 	
 	@Override
-	protected List<MITMenuItem> getPrimaryMenuItems() {
-		// TODO Auto-generated method stub
-		ArrayList<MITMenuItem> menuItems = new ArrayList<MITMenuItem>();
-		menuItems.add(new MITMenuItem("refresh", "", R.drawable.menu_refresh));
-		return menuItems;
+	protected boolean isScrollable() {
+		return false;
 	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		getData(true);	
+	}
+	
+	@Override
+	protected void onOptionSelected(String optionId) { }
 }

@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.dining;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
