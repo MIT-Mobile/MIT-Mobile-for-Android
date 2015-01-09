@@ -109,7 +109,7 @@ public class MITMapView extends MapView  {
 			Map.Entry<String,MapBaseLayer> glpairs = (Map.Entry<String,MapBaseLayer>)it.next();
 	        String layerName = (String)glpairs.getKey();
 	        Layer layer = this.getMapLayer(layerName);
-	        if (!layer.isInitialized()) {
+	        if (layer != null && !layer.isInitialized()) {
 	        	this.baseLayersLoaded = false;
 	        }
 		}
@@ -790,7 +790,9 @@ public class MITMapView extends MapView  {
     	
 		// clear the graphics layer
 		gl = (GraphicsLayer)getMapLayer(layerName);
-		gl.removeAll();
+		if (gl != null) {
+			gl.removeAll();
+		}
 		//Log.d(TAG,"clearing graphics on layer " + layerName);
 		// get MapGraphicsLayer
 		MapGraphicsLayer mapGraphicsLayer = mao.getGraphicsLayers().get(layerName);
