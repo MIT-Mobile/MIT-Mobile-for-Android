@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:color="#ffffff" android:state_selected="true" />
+    <item android:color="#aaaaaa"/> <!--  default color -->
+</selector>
+<!-- From: file:/home/sseligma/AndroidstudioProjects/MITApp16/app/src/main/res/color/dining_tab_text_color.xml -->

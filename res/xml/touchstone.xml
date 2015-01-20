@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<EditTextPreference android:summary="@string/pref_touchstone_username_summary"
-		android:key="PREF_TOUCHSTONE_USERNAME" android:title="@string/pref_touchstone_username_title" />
-	<EditTextPreference android:summary="@string/pref_touchstone_password_summary"
-		android:key="PREF_TOUCHSTONE_PASSWORD" android:title="@string/pref_touchstone_password_title"
-		android:password="true" />
-</PreferenceScreen>

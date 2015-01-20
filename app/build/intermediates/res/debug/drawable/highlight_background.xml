@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@android:drawable/list_selector_background" />
+</layer-list>
+<!-- From: file:/home/sseligma/AndroidstudioProjects/MITApp16/app/src/main/res/drawable/highlight_background.xml -->

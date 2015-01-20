@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item android:color="#ffcccccc" android:state_enabled="false" />
+    <item android:color="#ff8c8c8c" android:state_enabled="true" />
+    <item android:color="#ff8c8c8c"/> <!--  default color -->
+</selector>
+<!-- From: file:/home/sseligma/AndroidstudioProjects/MITApp16/app/src/main/res/color/list_item_secondary_color.xml -->
