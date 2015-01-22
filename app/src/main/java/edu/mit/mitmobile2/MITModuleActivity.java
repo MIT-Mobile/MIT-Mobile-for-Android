@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +42,7 @@ import android.widget.Spinner;
 
 public abstract class MITModuleActivity extends Activity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
 
-	private Context mContext;
+	protected Context mContext;
     private DrawerLayout mDrawerLayout;
     private Spinner mSpinner;    
     private ListView mDrawerList;
@@ -54,6 +55,7 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
     protected int contentLayoutId;    
     private RelativeLayout contentLayout;
     private NavItem mNavItem;
+    protected MITAPIClient apiClient;
     
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
     	this.setTitle(this.getLong_name());
 		super.onCreate(savedInstanceState);
 		mContext = this;
+		this.apiClient = new MITAPIClient(mContext);
 		setTheme(android.R.style.Theme_Holo_Light);
 		
 		//loadNavigation(mContext);
@@ -228,74 +231,6 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-
-
-	
-//    private void  loadNavigation(Context mContext) {
-//    	Resources resources = mContext.getResources();
-//        JSONObject navigation;
-//    	if (MITModuleActivity.navMap == null) {
-//    		MITModuleActivity.navMap = new HashMap<String, NavItem>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
-//    		MITModuleActivity.moduleMap = new HashMap<String, String>(); // this maps module name to long_name for resolving intents
-//    		   
-//	    	String json = null;
-//	
-//	        try {
-//	        	InputStream is = getAssets().open("navigation.json");
-//	        	int size = is.available();
-//	        	byte[] buffer = new byte[size];
-//	        	is.read(buffer);
-//	        	is.close();
-//	        	json = new String(buffer, "UTF-8");
-//	        	Log.d("ZZZ",json);
-//	        } catch (IOException ex) {
-//	            ex.printStackTrace();
-//	        }
-//	        try {
-//	        	navigation = new JSONObject(json);
-//	        	
-//	        	Iterator n = navigation.keys();
-//	        	List<String> keysList = new ArrayList<String>();
-//	              while (n.hasNext()) {
-//	              	try {
-//	              		String key = (String)n.next();
-//	              		JSONObject module = navigation.getJSONObject(key);
-//	              		String long_name = module.getString("long_name");
-//	              		Log.d("ZZZ",long_name);
-//	              		keysList.add(long_name);
-//	              		NavItem navItem = new NavItem();
-//	              		navItem.setLong_name(long_name);
-//	              		navItem.setShort_name(module.getString("short_name"));
-//	              		
-//	              	   	// Get Home Icon
-//	              		int resourceId = resources.getIdentifier(module.getString("home_icon"), "drawable", mContext.getPackageName());
-//	              		navItem.setHome_icon(resourceId);
-//
-//	              		// Get Menu Icon
-//	              		resourceId = resources.getIdentifier(module.getString("menu_icon"), "drawable", mContext.getPackageName());
-//	              		navItem.setMenu_icon(resourceId);
-//
-//	              		navItem.setIntent(module.getString("intent"));
-//	              		navItem.setUrl(module.getString("url"));
-//	              		
-//	              		MITModuleActivity.navMap.put(long_name, navItem);
-//	              		MITModuleActivity.moduleMap.put(key,long_name);
-//	              		MITModuleActivity.navigationTitles.add(navItem);
-//
-//	              	}
-//	              	catch (JSONException e) {
-//	    	        	Log.d("ZZZ",e.getMessage().toString());
-//	              	}
-//	              }
-//	            
-//	        	
-//	        }
-//	        catch (Exception e) {
-//	        	Log.d("ZZZ",e.getMessage().toString());
-//	        }
-//    	}
-//    }
-
     
     @Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {

@@ -1,0 +1,12 @@
+{
+	"people":{
+		"dev":"http://mobile-dev.mit.edu/apis/people/",
+		"test":"http://mobile-test.mit.edu/apis/people/",
+		"prod":"http://m.mit.edu/apis/people/"
+	},
+	"resource":{
+		"dev":"http://kairos-dev.mit.edu:3000/resource/",
+		"test":"http://kairos-dev.mit.edu:3000/resource/",
+		"prod":"http://kairos.mit.edu:3000/resource/"		
+	}
+}
