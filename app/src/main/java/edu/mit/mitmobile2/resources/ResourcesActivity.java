@@ -18,11 +18,13 @@ import edu.mit.mitmobile2.R;
 public class ResourcesActivity extends MITModuleActivity {
 	private ListView resourceList;
 	ArrayAdapter<String> resourceAdapter;
+
 	MITAPIClient resource = new MITAPIClient(this.mContext);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		this.setContentLayoutId(R.layout.content_resources);
+        this.hasSearch = true;
 		super.onCreate(savedInstanceState);
 		Log.d("ZZZ","on create");
 		resourceList = (ListView) findViewById(R.id.resourceList);

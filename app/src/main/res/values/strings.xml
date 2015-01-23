@@ -7,17 +7,7 @@
     <string name="drawer_icon">Drawer Icon</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-
-    <array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Neptune</item>
-        <item>Uranus</item>
-    </array>
+    <string name="search_title">Search</string>
 
     <string name="title_activity_dining">Dining</string>
     <string name="title_activity_emergency">Emergency</string>
