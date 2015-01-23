@@ -11,14 +11,23 @@ import com.google.android.gms.maps.model.LatLng;
 
 public abstract class MapItem {
 
-    private final int markType = 1;
-    private final int polylineType = 2;
-    private final int polygonType = 3;
+    public static final int MARKERTYPE = 1;
+    public static final int POLYLINETYPE = 2;
+    public static final int POLYGONTYPE = 3;
 
-    public abstract int getMapItemType();
+    public int getMapItemType() {
+        return MapItem.MARKERTYPE;
+    };
 
-    public abstract MarkerOptions getMarkerOptions(); //market
-    public abstract PolylineOptions getPolylineOptions(); //polyline
-    public abstract PolygonOptions getPolygonOptions(); //polygan
+    public MarkerOptions getMarkerOptions() {
+        return null;
+    } //market
+    public PolylineOptions getPolylineOptions() {
+        return null;
+    } //polyline
+    public PolygonOptions getPolygonOptions() {
+        return null;
+    }; //polygan
+
 
 }
