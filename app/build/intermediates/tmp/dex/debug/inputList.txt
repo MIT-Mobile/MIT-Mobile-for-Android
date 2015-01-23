@@ -1,5 +1,0 @@
-/home/sseligma/AndroidstudioProjects/MITApp16/app/build/intermediates/classes/debug
-/home/sseligma/AndroidstudioProjects/MITApp16/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-e0acdf744d206477b06b8c712da235d8519f9b33.jar
-/home/sseligma/AndroidstudioProjects/MITApp16/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-37cd91596dd074e38122c5564b0498ee16b81009.jar
-/home/sseligma/AndroidstudioProjects/MITApp16/app/build/intermediates/pre-dexed/debug/classes-be0e2f539cac4595afa4e99f94a2ccdd18b881b8.jar
-/home/sseligma/AndroidstudioProjects/MITApp16/app/build/intermediates/pre-dexed/debug/classes-ef4f4876897c5b92f930e4103d0ef55b84db344c.jar
