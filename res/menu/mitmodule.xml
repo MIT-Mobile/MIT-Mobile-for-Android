@@ -1,11 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.mitapp16.MITModuleActivity" >
+    tools:context="edu.mit.mitmobile2.news.MITModuleActivity">
 
+
+    <item android:id="@+id/search"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_search"
+        android:showAsAction="always|collapseActionView|ifRoom"
+        android:actionViewClass="android.widget.SearchView" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        android:showAsAction="always"
         android:title="@string/action_settings"/>
+
 
 </menu>
