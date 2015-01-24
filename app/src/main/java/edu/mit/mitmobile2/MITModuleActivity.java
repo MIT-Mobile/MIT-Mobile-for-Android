@@ -147,7 +147,7 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
 		getMenuInflater().inflate(R.menu.mitmodule, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search)
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search)
                 .getActionView();
         if (null != searchView) {
             searchView.setSearchableInfo(searchManager
@@ -163,7 +163,9 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
 
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
-                return true;
+                Log.d("ZZZ","search triggered");
+                searchView.clearFocus();
+                return handleSearch(query);
             }
         };
 
@@ -204,8 +206,10 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
 	}
 
 
-    public void handleSearch(String search) {
-
+    // Placeholder handleSearch method
+    // Override this method in subclass to define search functionality
+    protected boolean handleSearch(String search) {
+        return true;
     }
 
 

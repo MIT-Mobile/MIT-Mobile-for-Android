@@ -95,6 +95,7 @@ public class MITAPIClient {
 	
 	public void getJson(String api,String path,Map<String,String> params, final Handler apiHandler) {
 		this.client = new AsyncHttpClient();
+        client.setEnableRedirects(true);
 		
 		// get the url of the api from the api key and the environment
 		APIEntry apiEntry = MITAPIClient.api.get(api);
@@ -117,6 +118,7 @@ public class MITAPIClient {
 				 queryString += pairs.getKey() + "=" + pairs.getValue();
 			}
 			apiUrl += queryString;
+            Log.d("API","api url = " + apiUrl);
 		}
 		
 		// Client GET

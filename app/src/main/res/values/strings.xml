@@ -22,4 +22,8 @@
     <string name="title_activity_resources">Resources</string>
     <string name="title_activity_shuttles">Shuttles</string>
     <string name="title_activity_tours">Tours</string>
+
+    <!-- RESOURCES -->
+    <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
+
 </resources>

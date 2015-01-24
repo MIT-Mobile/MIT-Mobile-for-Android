@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_resource"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <!-- NAME -->
+    <TextView
+        android:id="@+id/row_resource_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        />
+
+    <!-- ROOM -->
+    <TextView
+        android:id="@+id/row_resource_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/row_resource_name"
+        />
+
+    <TextView
+        android:id="@+id/row_resource_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="10dp" >
+    </TextView>
+
+</RelativeLayout>
+
+
+
