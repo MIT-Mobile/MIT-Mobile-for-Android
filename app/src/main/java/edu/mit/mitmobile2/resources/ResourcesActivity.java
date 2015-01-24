@@ -1,10 +1,5 @@
 package edu.mit.mitmobile2.resources;
 
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import edu.mit.mitmobile2.R;
 public class ResourcesActivity extends MITModuleActivity {
 	private ListView resourceListView;
     private List resourceList;
-    private String[] test;
     private TextView resourceInfoText;
   	ResourceRowAdapter resourceAdapter;
     ArrayAdapter<String> arrayAdapter;
@@ -100,13 +98,10 @@ public class ResourcesActivity extends MITModuleActivity {
                     ResourceItem r = new ResourceItem();
                     r.setNumber(i + 1);
                     r.setName(item.getString("name"));
-                    //test[i] = item.getString("name");
                     r.setRoom(item.getString("room"));
                     r.setStatus(item.getString("status"));
                     resourceList.add(r);
 				}
-
-                //arrayAdapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_list_item_1, android.R.id.text1, test);
 
 				resourceAdapter = new ResourceRowAdapter(mContext, R.id.row_resource, resourceList);
 				resourceListView.setAdapter(resourceAdapter);

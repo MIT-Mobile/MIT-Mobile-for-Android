@@ -88,7 +88,7 @@
 	          android:launchMode="singleTop" >
 	</activity>
 	    
-	<activity android:name=".resources.ResourcesActivity" 
+	<activity android:name=".resources.ResourcesActivity"
 	          android:launchMode="singleTop" >
         <intent-filter>
             <action android:name="android.intent.action.SEARCH" />
