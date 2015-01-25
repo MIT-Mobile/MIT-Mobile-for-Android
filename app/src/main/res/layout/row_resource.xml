@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        style="@style/ResourceRowName"
         />
 
     <!-- ROOM -->
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/row_resource_name"
+        style="@style/ResourceRowRoom"
         />
 
     <TextView
@@ -26,8 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:textSize="10dp" >
-    </TextView>
+        style="@style/ResourceRowStatus"/>
 
 </RelativeLayout>
 

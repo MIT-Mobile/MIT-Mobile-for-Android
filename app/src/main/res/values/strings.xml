@@ -17,7 +17,7 @@
     <string name="title_activity_links">Links</string>
     <string name="title_activity_maps">Maps</string>
     <string name="title_activity_news">News</string>
-    <string name="title_activity_people">People</string>    
+    <string name="title_activity_people">People</string>
     <string name="title_activity_qrreader">Qr Reader</string>
     <string name="title_activity_resources">Resources</string>
     <string name="title_activity_shuttles">Shuttles</string>
@@ -25,5 +25,7 @@
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
+    <string name="title_activity_view_resource">ViewResourceActivity</string>
+    <string name="title_activity_resource_view">ResourceViewActivity</string>
 
 </resources>

@@ -42,20 +42,15 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
             // Name
             TextView resource_name = (TextView) v.findViewById(R.id.row_resource_name);
             resource_name.setText(item.getNumber() + ". " + item.getName());
-            resource_name.setTextColor(Color.BLACK);
 
             // Room
             TextView resource_room = (TextView) v.findViewById(R.id.row_resource_room);
             resource_room.setText(item.getRoom());
-            resource_room.setTextColor(Color.BLACK);
 
             // Status
             TextView resource_status = (TextView) v.findViewById(R.id.row_resource_status);
             resource_status.setText(item.getStatus());
-            if (item.getStatus().equalsIgnoreCase(ResourceItem.ONLINE)) {
-                resource_status.setTextColor(Color.GREEN);
-            }
-            else if (item.getStatus().equalsIgnoreCase(ResourceItem.OFFLINE)) {
+            if (item.getStatus().equalsIgnoreCase(ResourceItem.OFFLINE)) {
                 resource_status.setTextColor(Color.RED);
             }
 

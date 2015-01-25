@@ -100,6 +100,33 @@ public class ResourcesActivity extends MITModuleActivity {
                     r.setName(item.getString("name"));
                     r.setRoom(item.getString("room"));
                     r.setStatus(item.getString("status"));
+
+                    // build a hashmap of attribute values
+                    Map attributeValues = new HashMap<String,String[]>();
+                    JSONArray jValues = item.getJSONArray("attribute_values");
+                    for (int v = 0; v < jValues.length(); v++) {
+                        JSONObject jValue = jValues.getJSONObject(v);
+                        JSONArray values = jValue.getJSONArray("value");
+                        String[] valueArray = new String[values.length()];
+                        for (int s = 0; s < values.length(); s++) {
+                            valueArray[s] = values.getString(s);
+                        }
+                        attributeValues.put(jValue.get("_attribute"),valueArray);
+                    }
+
+
+                    JSONArray jAttributes = item.getJSONObject("_template").getJSONArray("attributes");
+                    r.setAttributes(new ArrayList());
+                    for (int a = 0; a < jAttributes.length(); a++) {
+                        JSONObject jAttribute = jAttributes.getJSONObject(a);
+                        ResourceAttribute attribute = new ResourceAttribute();
+                        attribute.set_attribute(jAttribute.getString("_id"));
+                        attribute.setLabel(jAttribute.getString("label"));
+                        String[] val = (String[])attributeValues.get(attribute.get_attribute());
+                        attribute.setValue(val);
+                        r.getAttributes().add(attribute);
+                    }
+
                     resourceList.add(r);
 				}
 
@@ -113,6 +140,10 @@ public class ResourcesActivity extends MITModuleActivity {
                     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                         // TODO Auto-generated method stub
                         Log.d("ZZZ","Items " +  arg2);
+                        ResourceItem r = (ResourceItem)resourceList.get(arg2);
+                        Intent i = new Intent(mContext,ResourceViewActivity.class);
+                        i.putExtra("resourceItem",r);
+                        startActivity(i);
                     }
                 });
 
