@@ -37,19 +37,18 @@ public class MITAPIClient {
 	public MITAPIClient(Context mContext) {
 		super();
 		this.mContext = mContext;
-		initAPIMap();
 		// TODO Auto-generated constructor stub
 	}
-	
-	private void initAPIMap(){	
-		
+
+    public static void init(Context mContext) {
+
 		String json = "";
 		// read the api.json file to populate the api map the first time this class is initiated 
 		if (MITAPIClient.api == null) {
 			MITAPIClient.api = new HashMap<String,APIEntry>();
 			
 	        try {
-	        	InputStream is = this.mContext.getAssets().open("api.json");
+	        	InputStream is = mContext.getAssets().open("api.json");
 	        	int size = is.available();
 	        	byte[] buffer = new byte[size];
 	        	is.read(buffer);

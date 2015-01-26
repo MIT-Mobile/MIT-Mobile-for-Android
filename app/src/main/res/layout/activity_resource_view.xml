@@ -1,5 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+<LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -9,34 +14,71 @@
 
     <TextView
         android:id="@+id/resource_view_name"
-        style="@style/PageTitle"
+        style="@style/ResourceViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/resource_view_status"
+        style="@style/ResourceViewStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/resource_view_room_label"
-        android:text="Location"
+        style="@style/ResourceViewLocationLabel"
+        android:text="LOCATION"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingTop="20dip"/>
+
 
     <TextView
-        android:id="@+id/resource_view_room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    android:layout_width="fill_parent"
+    android:layout_height="1dip"
+    android:background="@color/color_dark_grey" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/resource_view_room"
+            style="@style/ResourceViewRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"/>
+
+        <ImageView
+            android:src="@drawable/menu_maps"
+            android:id="@+id/resource_view_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+
 
     <TextView
         android:id="@+id/resource_view_specifications_label"
+        style="@style/ResourceViewSpecificationsLabel"
         android:text="Specifications"
+        android:paddingTop="20dip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@+id/resource_view_attribute_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+
+    <TableLayout
+        android:id="@+id/resource_view_attribute_table"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:paddingLeft="3dip"
+        android:paddingRight="3dip"
+        android:stretchColumns="0" />
+
 </LinearLayout>
+
+</ScrollView>

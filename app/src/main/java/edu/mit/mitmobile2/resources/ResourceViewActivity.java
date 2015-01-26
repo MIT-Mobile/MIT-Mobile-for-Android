@@ -7,9 +7,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.List;
@@ -19,7 +25,7 @@ import edu.mit.mitmobile2.R;
 public class ResourceViewActivity extends Activity {
 
     private Context mContext;
-    private ListView resourceAttributeListView;
+    private TableLayout resourceAttributeTable;
     private List resourceAttributeList;
     private ResourceAttributeAdapter resourceAttributeAdapter;
 
@@ -32,6 +38,8 @@ public class ResourceViewActivity extends Activity {
         setContentView(R.layout.activity_resource_view);
         Intent intent = getIntent();
         if(intent.hasExtra("resourceItem")) {
+            LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             ResourceItem r = intent.getExtras().getParcelable("resourceItem");
 
             TextView resource_view_name = (TextView)findViewById(R.id.resource_view_name);
@@ -46,14 +54,37 @@ public class ResourceViewActivity extends Activity {
             TextView resource_view_room = (TextView)findViewById(R.id.resource_view_room);
             resource_view_room.setText(r.getRoom());
 
-            resourceAttributeListView = (ListView)findViewById(R.id.resource_view_attribute_list);
-            Log.d("ZZZ","list view null = " + (resourceAttributeListView == null));
-            Log.d("ZZZ","adapter  null = " + (resourceAttributeAdapter == null));
-            Log.d("ZZZ","attributes null = " + (r.getAttributes() == null));
+            resourceAttributeTable = (TableLayout)findViewById(R.id.resource_view_attribute_table);
 
+            // add attributes to the attribute view
+            for (int i = 0; i < r.getAttributes().size(); i++) {
+                ResourceAttribute a = r.getAttributes().get(i);
+                TableRow tr = (TableRow)vi.inflate(R.layout.row_label_value, null);
 
-            //resourceAttributeAdapter = new ResourceAttributeAdapter(mContext, R.id.row_label_value, r.getAttributes());
-            //resourceAttributeListView.setAdapter(resourceAttributeAdapter);
+                //Label
+                TextView label = (TextView)tr.findViewById(R.id.row_label);
+                label.setText(a.getLabel());
+
+                //Value
+                TextView value = (TextView)tr.findViewById(R.id.row_value);
+                String valueString = "";
+                if (!a.getValue().isEmpty()) {
+                    for (int v = 0; v < a.getValue().size(); v++) {
+                        String s = (String)a.getValue().get(v);
+                        if (!s.trim().equals("")) {
+                            valueString += s + "\n";
+                        }
+                    }
+                }
+
+                value.setText(valueString);
+
+                // only add the attribute if the value is not empty
+                if (!valueString.isEmpty()) {
+                    resourceAttributeTable.addView(tr);
+                }
+            }
+
 
         }
 

@@ -3,21 +3,24 @@ package edu.mit.mitmobile2.resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.security.PrivateKey;
+import java.util.ArrayList;
+
 /**
  * Created by sseligma on 1/23/15.
  */
 public class ResourceAttribute implements Parcelable {
-    private String _id;
     private String _attribute;
     private String label;
-    private String[] value;
+    private ArrayList<String> value;
+    private String value_id;
 
-    public String[] getValue() {
-        return value;
+    public String get_attribute() {
+        return _attribute;
     }
 
-    public void setValue(String[] value) {
-        this.value = value;
+    public void set_attribute(String _attribute) {
+        this._attribute = _attribute;
     }
 
     public String getLabel() {
@@ -28,31 +31,24 @@ public class ResourceAttribute implements Parcelable {
         this.label = label;
     }
 
-    public String get_attribute() {
-        return _attribute;
+    public ArrayList getValue() {
+        return value;
     }
 
-    public void set_attribute(String _attribute) {
-        this._attribute = _attribute;
+    public void setValue(ArrayList value) {
+        this.value = value;
     }
 
-    public String get_id() {
-        return _id;
+    public String getValue_id() {
+        return value_id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setValue_id(String value_id) {
+        this.value_id = value_id;
     }
-
 
     public ResourceAttribute(){
 
-    }
-
-    protected ResourceAttribute(Parcel in) {
-        _id = in.readString();
-        _attribute = in.readString();
-        label = in.readString();
     }
 
     @Override
@@ -62,19 +58,24 @@ public class ResourceAttribute implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(_id);
-        dest.writeString(_attribute);
-        dest.writeString(label);
+        dest.writeString(this._attribute);
+        dest.writeString(this.label);
+        dest.writeSerializable(this.value);
+        dest.writeString(this.value_id);
     }
 
-    @SuppressWarnings("unused")
+    private ResourceAttribute(Parcel in) {
+        this._attribute = in.readString();
+        this.label = in.readString();
+        this.value = (ArrayList<String>) in.readSerializable();
+        this.value_id = in.readString();
+    }
+
     public static final Parcelable.Creator<ResourceAttribute> CREATOR = new Parcelable.Creator<ResourceAttribute>() {
-        @Override
-        public ResourceAttribute createFromParcel(Parcel in) {
-            return new ResourceAttribute(in);
+        public ResourceAttribute createFromParcel(Parcel source) {
+            return new ResourceAttribute(source);
         }
 
-        @Override
         public ResourceAttribute[] newArray(int size) {
             return new ResourceAttribute[size];
         }

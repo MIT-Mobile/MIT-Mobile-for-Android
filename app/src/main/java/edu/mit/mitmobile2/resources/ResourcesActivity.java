@@ -99,21 +99,13 @@ public class ResourcesActivity extends MITModuleActivity {
                     r.setNumber(i + 1);
                     r.setName(item.getString("name"));
                     r.setRoom(item.getString("room"));
-                    r.setStatus(item.getString("status"));
-
-                    // build a hashmap of attribute values
-                    Map attributeValues = new HashMap<String,String[]>();
-                    JSONArray jValues = item.getJSONArray("attribute_values");
-                    for (int v = 0; v < jValues.length(); v++) {
-                        JSONObject jValue = jValues.getJSONObject(v);
-                        JSONArray values = jValue.getJSONArray("value");
-                        String[] valueArray = new String[values.length()];
-                        for (int s = 0; s < values.length(); s++) {
-                            valueArray[s] = values.getString(s);
-                        }
-                        attributeValues.put(jValue.get("_attribute"),valueArray);
+                    if (item.has("latitude")) {
+                        r.setLatitude(item.getDouble("latitude"));
                     }
-
+                    if (item.has("longitude")) {
+                        r.setLongitude(item.getDouble("longitude"));
+                    }
+                    r.setStatus(item.getString("status"));
 
                     JSONArray jAttributes = item.getJSONObject("_template").getJSONArray("attributes");
                     r.setAttributes(new ArrayList());
@@ -122,8 +114,12 @@ public class ResourcesActivity extends MITModuleActivity {
                         ResourceAttribute attribute = new ResourceAttribute();
                         attribute.set_attribute(jAttribute.getString("_id"));
                         attribute.setLabel(jAttribute.getString("label"));
-                        String[] val = (String[])attributeValues.get(attribute.get_attribute());
-                        attribute.setValue(val);
+                        JSONArray jValue = jAttribute.getJSONArray("value");
+                        attribute.setValue(new ArrayList<String>());
+                        for (int v = 0; v < jValue.length(); v++) {
+                            attribute.getValue().add(jValue.getString(v));
+                        }
+                        attribute.setValue_id(jAttribute.getString("value_id"));
                         r.getAttributes().add(attribute);
                     }
 

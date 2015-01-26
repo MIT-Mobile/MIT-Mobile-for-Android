@@ -43,6 +43,7 @@ public class ModuleSelectorActivity extends Activity {
 		mContext = this;
 		setTheme(android.R.style.Theme_Holo_Light);
 		loadNavigation(mContext);
+        MITAPIClient.init(mContext);
 	}
 
 

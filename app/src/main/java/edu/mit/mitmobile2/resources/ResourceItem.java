@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -15,7 +16,7 @@ import edu.mit.mitmobile2.maps.MapItem;
 /**
  * Created by sseligma on 1/23/15.
  */
-public class ResourceItem extends MapItem implements Parcelable{
+public class ResourceItem extends MapItem implements Parcelable {
 
     public static final String ONLINE = "online";
     public static final String OFFLINE = "offline";
@@ -26,6 +27,8 @@ public class ResourceItem extends MapItem implements Parcelable{
     private String type;
     private String name;
     private String room;
+    private double latitude;
+    private double longitude;
     private String status;
     private ArrayList<ResourceAttribute> attributes;
 
@@ -87,6 +90,22 @@ public class ResourceItem extends MapItem implements Parcelable{
         this.room = room;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -108,21 +127,6 @@ public class ResourceItem extends MapItem implements Parcelable{
 
     }
 
-    protected ResourceItem(Parcel in) {
-        number = in.readInt();
-        index = in.readInt();
-        category = in.readString();
-        type = in.readString();
-        name = in.readString();
-        room = in.readString();
-        status = in.readString();
-        if (in.readByte() == 0x01) {
-            attributes = new ArrayList<ResourceAttribute>();
-            in.readList(attributes, ResourceAttribute.class.getClassLoader());
-        } else {
-            attributes = null;
-        }
-    }
 
     @Override
     public int describeContents() {
@@ -131,29 +135,37 @@ public class ResourceItem extends MapItem implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(number);
-        dest.writeInt(index);
-        dest.writeString(category);
-        dest.writeString(type);
-        dest.writeString(name);
-        dest.writeString(room);
-        dest.writeString(status);
-        if (attributes == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(attributes);
-        }
+        dest.writeInt(this.number);
+        dest.writeInt(this.index);
+        dest.writeString(this.category);
+        dest.writeString(this.type);
+        dest.writeString(this.name);
+        dest.writeString(this.room);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeString(this.status);
+        dest.writeList(this.attributes);
+        //dest.writeSerializable(this.attributes);
     }
 
-    @SuppressWarnings("unused")
+    private ResourceItem(Parcel in) {
+        this.number = in.readInt();
+        this.index = in.readInt();
+        this.category = in.readString();
+        this.type = in.readString();
+        this.name = in.readString();
+        this.room = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.status = in.readString();
+        this.attributes = (ArrayList<ResourceAttribute>) in.readArrayList(ResourceAttribute.class.getClassLoader());
+    }
+
     public static final Parcelable.Creator<ResourceItem> CREATOR = new Parcelable.Creator<ResourceItem>() {
-        @Override
-        public ResourceItem createFromParcel(Parcel in) {
-            return new ResourceItem(in);
+        public ResourceItem createFromParcel(Parcel source) {
+            return new ResourceItem(source);
         }
 
-        @Override
         public ResourceItem[] newArray(int size) {
             return new ResourceItem[size];
         }

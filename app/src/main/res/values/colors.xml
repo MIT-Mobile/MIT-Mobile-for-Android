@@ -15,7 +15,9 @@
  limitations under the License.
  -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+  <color name="color_okay">#007f00</color>
   <color name="hold_ready_text">#007f00</color>
+  <color name="color_dark_grey">#ff404040</color>
   <color name="contents_text">#ff000000</color>
   <color name="encode_view">#ffffffff</color>
   <color name="help_button_view">#ffcccccc</color>

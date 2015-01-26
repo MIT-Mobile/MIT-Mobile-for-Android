@@ -33,6 +33,41 @@
 		<item name="android:listSelector">@drawable/highlight_background</item>
 	</style>
 
+    <!-- RESOURCE VIEW STYLES -->
+    <style name="ResourceViewName">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="ResourceViewStatus">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_okay</item>
+    </style>
+
+    <style name="ResourceViewLocationLabel">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_dark_grey</item>
+    </style>
+
+    <style name="ResourceViewSpecificationsLabel">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_dark_grey</item>
+    </style>
+
+    <style name="ResourceViewRoom">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="ResourceViewAttributeLabel">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <style name="ResourceViewAttributeValue">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <!-- END RESOURCE VIEW STYLES -->
+
     <style name="ResourceRowName">
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">20sp</item>
@@ -41,6 +76,7 @@
     </style>
 
     <style name="ResourceRowRoom">
+
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#666666</item>
@@ -53,6 +89,8 @@
         <item name="android:textColor">#00FF00</item>
         <item name="android:typeface">sans</item>
     </style>
+
+    <!-- END RESOURCE STYLES -->
 
     <style name="PageTitle">
 		<item name="android:textStyle">normal</item>

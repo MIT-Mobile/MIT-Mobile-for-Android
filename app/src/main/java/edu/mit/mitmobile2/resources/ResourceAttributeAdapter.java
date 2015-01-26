@@ -44,7 +44,13 @@ public class ResourceAttributeAdapter extends ArrayAdapter<ResourceAttribute> {
 
             // VALUE
             TextView row_value = (TextView) v.findViewById(R.id.row_value);
-            row_value.setText(attribute.getValue()[0]);
+            String valueText = "";
+            if (!attribute.getValue().isEmpty()) {
+                for (int i = 0; i < attribute.getValue().size(); i++) {
+                    valueText += attribute.getValue().get(i) + "\n";
+                }
+            }
+            row_value.setText(valueText);
 
         }
 
