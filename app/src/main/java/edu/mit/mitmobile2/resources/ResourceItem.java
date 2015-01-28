@@ -1,7 +1,12 @@
 package edu.mit.mitmobile2.resources;
 
+import android.content.ClipData;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -11,6 +16,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 
 /**
@@ -27,6 +33,8 @@ public class ResourceItem extends MapItem implements Parcelable {
     private String type;
     private String name;
     private String room;
+    private String building;
+    private Boolean showBuilding = false;
     private double latitude;
     private double longitude;
     private String status;
@@ -90,6 +98,22 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.room = room;
     }
 
+    public String getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(String building) {
+        this.building = building;
+    }
+
+    public Boolean getShowBuilding() {
+        return showBuilding;
+    }
+
+    public void setShowBuilding(Boolean showBuilding) {
+        this.showBuilding = showBuilding;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -141,11 +165,12 @@ public class ResourceItem extends MapItem implements Parcelable {
         dest.writeString(this.type);
         dest.writeString(this.name);
         dest.writeString(this.room);
+        dest.writeString(this.building);
+        dest.writeByte((byte) (this.showBuilding ? 1 : 0));
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeString(this.status);
         dest.writeList(this.attributes);
-        //dest.writeSerializable(this.attributes);
     }
 
     private ResourceItem(Parcel in) {
@@ -155,6 +180,8 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.type = in.readString();
         this.name = in.readString();
         this.room = in.readString();
+        this.building = in.readString();
+        this.showBuilding = in.readByte() != 0;
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.status = in.readString();
@@ -170,4 +197,5 @@ public class ResourceItem extends MapItem implements Parcelable {
             return new ResourceItem[size];
         }
     };
+
 }

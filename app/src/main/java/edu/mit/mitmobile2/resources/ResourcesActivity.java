@@ -92,6 +92,8 @@ public class ResourcesActivity extends MITModuleActivity {
 				JSONArray items = collection.getJSONArray("items");
 
                 resourceList = new ArrayList<ResourceItem>();
+                String previousBuilding = "";
+
                 //test = new String[items.length()];
 				for (int i = 0; i < items.length(); i++) {
 					JSONObject item = items.getJSONObject(i);
@@ -99,6 +101,16 @@ public class ResourcesActivity extends MITModuleActivity {
                     r.setNumber(i + 1);
                     r.setName(item.getString("name"));
                     r.setRoom(item.getString("room"));
+                    String[] parts = r.getRoom().split("-");
+                    r.setBuilding(parts[0]);
+
+                    // show the building header for the first resource in a building
+
+                    if (!r.getBuilding().equals(previousBuilding)) {
+                        r.setShowBuilding(true);
+                        previousBuilding = r.getBuilding();
+                    }
+
                     if (item.has("latitude")) {
                         r.setLatitude(item.getDouble("latitude"));
                     }
@@ -146,7 +158,7 @@ public class ResourcesActivity extends MITModuleActivity {
 
 
                 //resourceListView.setAdapter(arrayAdapter);
-                resourceInfoText.setVisibility(View.GONE);
+                findViewById(R.id.resourceInfo).setVisibility(View.GONE);
                 resourceListView.setVisibility(View.VISIBLE);
 
 			} catch (JSONException e) {
