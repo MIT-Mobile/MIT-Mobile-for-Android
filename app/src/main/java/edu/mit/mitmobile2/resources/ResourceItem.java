@@ -46,7 +46,12 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     @Override
     public MarkerOptions getMarkerOptions() {
-        return null;
+        MarkerOptions m = new MarkerOptions();
+        m.title(this.name);
+        m.snippet(this.name + "\n" + this.getRoom() + "\n" + this.getStatus());
+        LatLng position = new LatLng(this.latitude, this.longitude);
+        m.position(position);
+        return m;
     } //market
 
 

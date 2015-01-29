@@ -104,12 +104,14 @@ public class ResourcesActivity extends MITModuleActivity {
                     String[] parts = r.getRoom().split("-");
                     r.setBuilding(parts[0]);
 
-                    // show the building header for the first resource in a building
-
-                    if (!r.getBuilding().equals(previousBuilding)) {
-                        r.setShowBuilding(true);
-                        previousBuilding = r.getBuilding();
-                    }
+                    // add a building header before the first resource in a building
+//                    if (!r.getBuilding().equals(previousBuilding)) {
+//                        ResourceItem rh = new ResourceItem();
+//                        rh.setShowBuilding(true);
+//                        rh.setBuilding(parts[0]);
+//                        resourceList.add(rh);
+//                        previousBuilding = r.getBuilding();
+//                    }
 
                     if (item.has("latitude")) {
                         r.setLatitude(item.getDouble("latitude"));
@@ -147,10 +149,10 @@ public class ResourcesActivity extends MITModuleActivity {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                         // TODO Auto-generated method stub
-                        Log.d("ZZZ","Items " +  arg2);
-                        ResourceItem r = (ResourceItem)resourceList.get(arg2);
-                        Intent i = new Intent(mContext,ResourceViewActivity.class);
-                        i.putExtra("resourceItem",r);
+                        Log.d("ZZZ", "Items " + arg2);
+                        ResourceItem r = (ResourceItem) resourceList.get(arg2);
+                        Intent i = new Intent(mContext, ResourceViewActivity.class);
+                        i.putExtra("resourceItem", r);
                         startActivity(i);
                     }
                 });

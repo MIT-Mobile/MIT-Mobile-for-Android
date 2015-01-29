@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -18,13 +20,16 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapsActivity;
 
 public class ResourceViewActivity extends Activity {
 
     private Context mContext;
+    private ResourceItem r;
     private TableLayout resourceAttributeTable;
     private List resourceAttributeList;
     private ResourceAttributeAdapter resourceAttributeAdapter;
@@ -40,7 +45,7 @@ public class ResourceViewActivity extends Activity {
         if(intent.hasExtra("resourceItem")) {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            ResourceItem r = intent.getExtras().getParcelable("resourceItem");
+            this.r = intent.getExtras().getParcelable("resourceItem");
 
             TextView resource_view_name = (TextView)findViewById(R.id.resource_view_name);
             resource_view_name.setText(r.getName());
@@ -53,6 +58,18 @@ public class ResourceViewActivity extends Activity {
 
             TextView resource_view_room = (TextView)findViewById(R.id.resource_view_room);
             resource_view_room.setText(r.getRoom());
+
+            ImageView resource_view_map = (ImageView)findViewById(R.id.resource_view_map);
+            resource_view_map.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    ArrayList mapItems = new ArrayList();
+                    mapItems.add(r);
+                    Intent i = new Intent(mContext, MapsActivity.class);
+                    i.putExtra(MapsActivity.MAP_ITEMS,mapItems);
+                    startActivity(i);
+                }
+            });
+
 
             resourceAttributeTable = (TableLayout)findViewById(R.id.resource_view_attribute_table);
 

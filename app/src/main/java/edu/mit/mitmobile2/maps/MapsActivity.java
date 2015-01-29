@@ -2,10 +2,12 @@ package edu.mit.mitmobile2.maps;
 
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.resources.ResourceItem;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
-        import android.os.Bundle;
+import android.content.Intent;
+import android.os.Bundle;
         import android.app.Activity;
         import android.view.Menu;
 
@@ -21,6 +23,8 @@ import edu.mit.mitmobile2.R;
 public class  MapsActivity extends MITModuleActivity {
 
     private GoogleMap mMap;
+    public static String MAP_ITEMS = "MAP_ITEMS";
+    private ArrayList<MapItem> mapItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,14 @@ public class  MapsActivity extends MITModuleActivity {
         ciu1.setDraggable(true);
         ciu2.setDraggable(true);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CIU1, 14));
+
+        Intent intent = getIntent();
+        if(intent.hasExtra(MapsActivity.MAP_ITEMS)) {
+            this.mapItems = intent.getExtras().getParcelableArrayList(MapsActivity.MAP_ITEMS);
+            for (int i = 0; i < this.mapItems.size(); i++) {
+                mMap.addMarker(this.mapItems.get(i).getMarkerOptions());
+            }
+        }
 		/*
 		Marker ciu = mMap.addMarker(new MarkerOptions().position(CIU1).title("My Office"));
 		ciu.setDraggable(true);
