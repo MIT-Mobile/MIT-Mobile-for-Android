@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.resources;
 
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +26,12 @@ import java.util.Map;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MITMapView;
+import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.maps.MapsActivity;
 
 
-public class ResourcesActivity extends MITModuleActivity {
+public class ResourcesActivity extends MapsActivity {
 	private ListView resourceListView;
     private ArrayList resourceList;
     private TextView resourceInfoText;
@@ -38,19 +41,28 @@ public class ResourcesActivity extends MITModuleActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		this.setContentLayoutId(R.layout.content_resources);
+        this.setMapContentLayoutId(R.layout.content_resources);
         this.hasSearch = true;
-		super.onCreate(savedInstanceState);
-		Log.d("ZZZ","on create");
-
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d("ZZZ","do search");
-        }
+        super.onCreate(savedInstanceState);
 
         resourceInfoText = (TextView)findViewById(R.id.resourceInfoText);
         resourceListView = (ListView) findViewById(R.id.resourceListView);
+
+
+//        setContentView(R.layout.content_resources);
+//        FragmentManager fm = getFragmentManager();
+//        mapView = new MITMapView(fm,R.id.map);
+//        this.hasSearch = true;
+//		Log.d("ZZZ","on create");
+//
+//        Intent intent = getIntent();
+//        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            Log.d("ZZZ","do search");
+//        }
+
+        //resourceInfoText = (TextView)findViewById(R.id.resourceInfoText);
+        //resourceListView = (ListView) findViewById(R.id.resourceListView);
 	}
 
 	@Override
@@ -85,6 +97,7 @@ public class ResourcesActivity extends MITModuleActivity {
     }
 
     Handler resourceHandler = new Handler(){
+
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -145,6 +158,9 @@ public class ResourcesActivity extends MITModuleActivity {
 				resourceAdapter = new ResourceRowAdapter(mContext, R.id.row_resource, resourceList);
 				resourceListView.setAdapter(resourceAdapter);
 
+                if (mapView != null) {
+                    mapView.addMapItemList(resourceList);
+                }
 
                 resourceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

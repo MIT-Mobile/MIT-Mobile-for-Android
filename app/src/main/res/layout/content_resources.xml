@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#FFF"
+    android:id="@+id/content_resources"
     tools:context="edu.mit.mitmobile2.resources.ResourcesActivityNoModule" >
+
 
     <RelativeLayout
         android:id="@+id/resourceInfo"
@@ -28,15 +30,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"/>
 
-    <ListView
-        android:id="@+id/resourceListView"
-        android:padding="0dip"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:dividerHeight="0dp"
-        android:scrollbars="none"
-        android:visibility="gone"/>
+
+        <ListView
+            android:id="@+id/resourceListView"
+            android:padding="0dip"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:visibility="gone"/>
 
 </LinearLayout>

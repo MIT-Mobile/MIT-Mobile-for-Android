@@ -22,4 +22,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:+'
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'com.google.maps.android:android-maps-utils:0.3+'
+    compile 'com.sothree.slidinguppanel:library:2.0.4'
 }

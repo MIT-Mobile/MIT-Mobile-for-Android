@@ -7,7 +7,7 @@
     android:layout_height="match_parent" >
 
     <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions. -->
+ space available using match_parent in both dimensions. -->
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -28,5 +28,6 @@
         android:choiceMode="singleChoice"
         android:dividerHeight="0dp"
         android:background="#111"/>
+
 </android.support.v4.widget.DrawerLayout>
 

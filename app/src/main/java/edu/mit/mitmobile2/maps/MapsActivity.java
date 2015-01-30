@@ -6,12 +6,15 @@ import edu.mit.mitmobile2.resources.ResourceItem;
 
 import java.util.ArrayList;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
         import android.app.Activity;
-        import android.view.Menu;
+import android.util.Log;
+import android.view.Menu;
+import android.view.ViewStub;
 
-        import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdate;
         import com.google.android.gms.maps.CameraUpdateFactory;
         import com.google.android.gms.maps.GoogleMap;
         import com.google.android.gms.maps.MapFragment;
@@ -22,40 +25,38 @@ import android.os.Bundle;
 
 public class  MapsActivity extends MITModuleActivity {
 
-    private GoogleMap mMap;
+    protected MITMapView mapView;
     public static String MAP_ITEMS = "MAP_ITEMS";
     private ArrayList<MapItem> mapItems;
+    protected int mapContentLayoutId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.setContentLayoutId(R.layout.content_maps);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_maps);
 
-        mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        if (mapContentLayoutId > 0) {
+            ViewStub v = (ViewStub) findViewById(R.id.mapContentStub);
+            v.setLayoutResource(mapContentLayoutId);
+            v.inflate();
+        }
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        //MAP_TYPE_NONE   		No base map tiles.
-        //MAP_TYPE_NORMAL		Basic maps.
-        //MAP_TYPE_SATELLITE	Satellite maps with no labels.
-        //MAP_TYPE_HYBRID		Satellite maps with a transparent layer of major streets.
-        //MAP_TYPE_TERRAIN		Terrain maps.
-        //final LatLng CIU = new LatLng(35.21843892856462, 33.41662287712097);
-
-        //set initial latlng for zoom in MIT area
-        final LatLng initialLatLng = new LatLng(42.359858, -71.09913);
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, 14));
+        initMap();
 
         Intent intent = getIntent();
         if(intent.hasExtra(MapsActivity.MAP_ITEMS)) {
             this.mapItems = intent.getExtras().getParcelableArrayList(MapsActivity.MAP_ITEMS);
             for (int i = 0; i < this.mapItems.size(); i++) {
-                mMap.addMarker(this.mapItems.get(i).getMarkerOptions());
+                mapView.addMapItem(this.mapItems.get(i));
             }
         }
 
     }
 
+    private void initMap() {
+        FragmentManager fm = getFragmentManager();
+        mapView = new MITMapView(fm,R.id.map);
+    }
 
     private static void zoomToCoverAllMarkers(ArrayList<LatLng> latLngList, GoogleMap googleMap)
     {
@@ -73,6 +74,11 @@ public class  MapsActivity extends MITModuleActivity {
         googleMap.animateCamera(cu);
     }
 
+    public int getMapContentLayoutId() {
+        return mapContentLayoutId;
+    }
 
-
+    public void setMapContentLayoutId(int mapContentLayoutId) {
+        this.mapContentLayoutId = mapContentLayoutId;
+    }
 }
