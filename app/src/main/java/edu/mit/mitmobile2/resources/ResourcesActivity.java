@@ -120,13 +120,13 @@ public class ResourcesActivity extends MapsActivity {
                     r.setBuilding(parts[0]);
 
                     // add a building header before the first resource in a building
-//                    if (!r.getBuilding().equals(previousBuilding)) {
-//                        ResourceItem rh = new ResourceItem();
-//                        rh.setShowBuilding(true);
-//                        rh.setBuilding(parts[0]);
-//                        resourceList.add(rh);
-//                        previousBuilding = r.getBuilding();
-//                    }
+                    if (!r.getBuilding().equals(previousBuilding)) {
+                        ResourceItem rh = new ResourceItem();
+                        rh.setBuildingHeader(true);
+                        rh.setBuilding(parts[0]);
+                        resourceList.add(rh);
+                        previousBuilding = r.getBuilding();
+                    }
 
                     if (item.has("latitude")) {
                         r.setLatitude(item.getDouble("latitude"));
@@ -169,9 +169,13 @@ public class ResourcesActivity extends MapsActivity {
                         // TODO Auto-generated method stub
                         Log.d("ZZZ", "Items " + arg2);
                         ResourceItem r = (ResourceItem) resourceList.get(arg2);
-                        Intent i = new Intent(mContext, ResourceViewActivity.class);
-                        i.putExtra("resourceItem", r);
-                        startActivity(i);
+
+                        // If the item is a building header, do nothing
+                        if (!r.getBuildingHeader()) {
+                            Intent i = new Intent(mContext, ResourceViewActivity.class);
+                            i.putExtra("resourceItem", r);
+                            startActivity(i);
+                        }
                     }
                 });
 

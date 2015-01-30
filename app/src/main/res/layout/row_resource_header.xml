@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    >
+
+    <!-- BUILDING HEADER -->
+    <TextView
+        android:id="@+id/row_resource_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        style="@style/ResourceRowHeader"
+    />
+
+    <!-- NAME -->
+    <TextView
+        android:id="@+id/row_resource_name"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone"
+        style="@style/ResourceRowName"
+        />
+
+    <!-- ROOM -->
+    <TextView
+        android:id="@+id/row_resource_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/row_resource_name"
+        android:visibility="gone"
+        style="@style/ResourceRowRoom"
+        />
+
+    <TextView
+        android:id="@+id/row_resource_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        style="@style/ResourceRowStatus"/>
+
+
+</LinearLayout>
+

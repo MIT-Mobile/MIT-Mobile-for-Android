@@ -92,6 +92,11 @@
         <item name="android:textColor">@color/color_okay</item>
     </style>
 
+    <style name="ResourceRowStatusOffline">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">#FF0000</item>
+    </style>
+
     <!-- END RESOURCE STYLES -->
 
     <style name="PageTitle">

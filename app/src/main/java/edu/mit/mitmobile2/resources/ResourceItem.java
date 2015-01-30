@@ -31,10 +31,10 @@ public class ResourceItem extends MapItem implements Parcelable {
     private int index;
     private String category;
     private String type;
-    private String name;
+    private String name = "";
     private String room;
-    private String building;
-    private Boolean showBuilding = false;
+    private String building = "";
+    private Boolean buildingHeader = false;
     private double latitude;
     private double longitude;
     private String status;
@@ -111,12 +111,12 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.building = building;
     }
 
-    public Boolean getShowBuilding() {
-        return showBuilding;
+    public Boolean getBuildingHeader() {
+        return buildingHeader;
     }
 
-    public void setShowBuilding(Boolean showBuilding) {
-        this.showBuilding = showBuilding;
+    public void setBuildingHeader(Boolean buildingHeader) {
+        this.buildingHeader = buildingHeader;
     }
 
     public double getLatitude() {
@@ -171,7 +171,7 @@ public class ResourceItem extends MapItem implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.room);
         dest.writeString(this.building);
-        dest.writeByte((byte) (this.showBuilding ? 1 : 0));
+        dest.writeByte((byte) (this.buildingHeader ? 1 : 0));
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeString(this.status);
@@ -186,7 +186,7 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.name = in.readString();
         this.room = in.readString();
         this.building = in.readString();
-        this.showBuilding = in.readByte() != 0;
+        this.buildingHeader = in.readByte() != 0;
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.status = in.readString();

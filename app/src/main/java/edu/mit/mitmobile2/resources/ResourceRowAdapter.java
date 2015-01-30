@@ -18,9 +18,10 @@ import edu.mit.mitmobile2.R;
  */
 public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
 
-    private static final int TYPE_ITEM = 0;
-    private static final int TYPE_SEPARATOR = 1;
-    private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+    private static final int TYPE_ONLINE = 0;
+    private static final int TYPE_OFFLINE = 1;
+    private static final int TYPE_HEADER = 2;
+    private static final int TYPE_MAX_COUNT = 3;
 
 
     private Context mContext;
@@ -35,25 +36,48 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewHolderItem viewHolder;
+        ViewHolderItem viewHolder = null;
+
+        int type = getItemViewType(position);
 
         if(convertView==null){
             ResourceItem item = (ResourceItem)getItem(position);
             // inflate the layout
 
-            convertView = mInflater.inflate(R.layout.row_resource, parent, false);
 
             // well set up the ViewHolder
             viewHolder = new ViewHolderItem();
+            switch (type) {
+                case TYPE_ONLINE:
+                    convertView = mInflater.inflate(R.layout.row_resource, parent, false);
+                    // Name
+                    viewHolder.resourceName = (TextView)convertView.findViewById(R.id.row_resource_name);
 
-            // Name
-            viewHolder.resourceName = (TextView)convertView.findViewById(R.id.row_resource_name);
+                    // Room
+                    viewHolder.resourceRoom = (TextView)convertView.findViewById(R.id.row_resource_room);
 
-            // Room
-            viewHolder.resourceRoom = (TextView)convertView.findViewById(R.id.row_resource_room);
+                    // Status
+                    viewHolder.resourceStatus = (TextView)convertView.findViewById(R.id.row_resource_status);
+                    break;
+                case TYPE_OFFLINE:
+                    convertView = mInflater.inflate(R.layout.row_resource_offline, parent, false);
+                    // Name
+                    viewHolder.resourceName = (TextView)convertView.findViewById(R.id.row_resource_name);
 
-            // Status
-            viewHolder.resourceStatus = (TextView)convertView.findViewById(R.id.row_resource_status);
+                    // Room
+                    viewHolder.resourceRoom = (TextView)convertView.findViewById(R.id.row_resource_room);
+
+                    // Status
+                    viewHolder.resourceStatus = (TextView)convertView.findViewById(R.id.row_resource_status);
+                    break;
+
+                case TYPE_HEADER:
+                    convertView = mInflater.inflate(R.layout.row_resource_header, parent, false);
+                    // Building Header
+                    viewHolder.resourceHeader = (TextView)convertView.findViewById(R.id.row_resource_header);
+                    break;
+            }
+
 
             // store the holder with the view.
             convertView.setTag(viewHolder);
@@ -69,17 +93,36 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
 
         // assign values if the object is not null
         if(item != null) {
-            //Name
-            viewHolder.resourceName.setText(item.getNumber() + ". " + item.getName());
 
-            // Room
-            viewHolder.resourceRoom.setText(item.getRoom());
+            switch (type) {
+                case TYPE_ONLINE:
+                    viewHolder.resourceName.setText(item.getNumber() + ". " + item.getName());
 
-            // Status
-            viewHolder.resourceStatus.setText(item.getStatus());
-            if (viewHolder.resourceStatus.getText().equals(ResourceItem.OFFLINE)) {
-                viewHolder.resourceStatus.setTextColor(Color.RED);
+                    // Room
+                    viewHolder.resourceRoom.setText(item.getRoom());
+
+                    // Status
+                    viewHolder.resourceStatus.setText(item.getStatus());
+
+                    break;
+
+                case TYPE_OFFLINE:
+                    viewHolder.resourceName.setText(item.getNumber() + ". " + item.getName());
+
+                    // Room
+                    viewHolder.resourceRoom.setText(item.getRoom());
+
+                    // Status
+                    viewHolder.resourceStatus.setText(item.getStatus());
+
+                    break;
+
+                case TYPE_HEADER:
+                    // Header
+                    viewHolder.resourceHeader.setText("Building " + item.getBuilding());
+                    break;
             }
+
         }
 
         return convertView;
@@ -88,7 +131,12 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
 
     @Override
     public int getItemViewType(int position) {
-        return resourceItems.get(position).getShowBuilding() ? TYPE_SEPARATOR : TYPE_ITEM;
+        if (resourceItems.get(position).getBuildingHeader()) {
+            return TYPE_HEADER;
+        }
+        else {
+            return resourceItems.get(position).getStatus().equals(ResourceItem.ONLINE) ? TYPE_ONLINE : TYPE_OFFLINE;
+        }
     }
 
     @Override
@@ -97,6 +145,7 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
     }
 
     static class ViewHolderItem {
+        TextView resourceHeader;
         TextView resourceName;
         TextView resourceRoom;
         TextView resourceStatus;
