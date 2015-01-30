@@ -123,6 +123,7 @@ public class ResourcesActivity extends MapsActivity {
                     if (!r.getBuilding().equals(previousBuilding)) {
                         ResourceItem rh = new ResourceItem();
                         rh.setBuildingHeader(true);
+                        rh.setMapItemType(0); // not a map item
                         rh.setBuilding(parts[0]);
                         resourceList.add(rh);
                         previousBuilding = r.getBuilding();

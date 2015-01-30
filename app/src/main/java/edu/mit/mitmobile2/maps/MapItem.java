@@ -17,9 +17,15 @@ public abstract class MapItem implements Parcelable{
     public static final int POLYLINETYPE = 2;
     public static final int POLYGONTYPE = 3;
 
+    public int mapItemType = MapItem.MARKERTYPE;
+
     public int getMapItemType() {
-        return MapItem.MARKERTYPE;
-    };
+        return mapItemType;
+    }
+
+    public void setMapItemType(int mapItemType) {
+        this.mapItemType = mapItemType;
+    }
 
     public MarkerOptions getMarkerOptions() {
         return null;

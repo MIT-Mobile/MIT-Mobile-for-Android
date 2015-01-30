@@ -37,12 +37,25 @@ public class MITMapView {
 
     public void addMapItem(MapItem mItem) {
         if (mMap != null) {
-            if (mItem != null && mItem.getMapItemType() == 1) {
-                mMap.addMarker(mItem.getMarkerOptions());
-            } else if (mItem != null && mItem.getMapItemType() == 2) {
-                mMap.addPolyline(mItem.getPolylineOptions());
-            } else if (mItem != null && mItem.getMapItemType() == 3) {
-                mMap.addPolygon(mItem.getPolygonOptions());
+            int type = mItem.mapItemType;
+
+            switch (type) {
+                case 0:
+                   break;
+
+                case MapItem.MARKERTYPE:
+                    mMap.addMarker(mItem.getMarkerOptions());
+                    break;
+
+                case MapItem.POLYGONTYPE:
+                    mMap.addPolyline(mItem.getPolylineOptions());
+                    break;
+
+
+                case MapItem.POLYLINETYPE:
+                    mMap.addPolygon(mItem.getPolygonOptions());
+                    break;
+
             }
         }
     }
