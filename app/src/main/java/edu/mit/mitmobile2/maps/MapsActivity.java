@@ -55,7 +55,7 @@ public class  MapsActivity extends MITModuleActivity {
 
     private void initMap() {
         FragmentManager fm = getFragmentManager();
-        mapView = new MITMapView(fm,R.id.map);
+        mapView = new MITMapView(mContext,fm,R.id.map);
     }
 
     private static void zoomToCoverAllMarkers(ArrayList<LatLng> latLngList, GoogleMap googleMap)

@@ -175,17 +175,6 @@ public class ResourcesActivity extends MapsActivity {
                     }
                 });
 
-
-                ImageView resource_view_map = (ImageView)findViewById(R.id.resource_view_map);
-                resource_view_map.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent i = new Intent(mContext, MapsActivity.class);
-                        i.putExtra(MapsActivity.MAP_ITEMS,resourceList);
-                        startActivity(i);
-                    }
-                });
-
-                //resourceListView.setAdapter(arrayAdapter);
                 findViewById(R.id.resourceInfo).setVisibility(View.GONE);
                 resourceListView.setVisibility(View.VISIBLE);
 

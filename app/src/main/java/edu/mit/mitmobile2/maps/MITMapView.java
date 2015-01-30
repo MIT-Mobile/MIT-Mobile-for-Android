@@ -26,8 +26,8 @@ public class MITMapView {
     final int initialZoom = 14;
     private Context mContext;
 
-    public MITMapView(FragmentManager fm, int resourceId) {
-
+    public MITMapView(Context mContext, FragmentManager fm, int resourceId) {
+        this.mContext = mContext;
         mMap = ((MapFragment) fm.findFragmentById(resourceId)).getMap();
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, initialZoom));

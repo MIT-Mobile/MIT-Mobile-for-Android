@@ -17,6 +17,12 @@ import edu.mit.mitmobile2.R;
  * Created by sseligma on 1/23/15.
  */
 public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
+
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_SEPARATOR = 1;
+    private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+
+
     private Context mContext;
     private List<ResourceItem> resourceItems;
 
@@ -28,35 +34,72 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewHolderItem viewHolder;
 
-        View v = convertView;
-        if (v == null) {
-            LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.row_resource, null);
-        }
+        if(convertView==null){
+            ResourceItem item = (ResourceItem)getItem(position);
+            // inflate the layout
 
-        ResourceItem item = (ResourceItem) getItem(position);
+            convertView = mInflater.inflate(R.layout.row_resource, parent, false);
 
-        if (item != null) {
+            // well set up the ViewHolder
+            viewHolder = new ViewHolderItem();
 
             // Name
-            TextView resource_name = (TextView) v.findViewById(R.id.row_resource_name);
-            resource_name.setText(item.getNumber() + ". " + item.getName());
+            viewHolder.resourceName = (TextView)convertView.findViewById(R.id.row_resource_name);
 
             // Room
-            TextView resource_room = (TextView) v.findViewById(R.id.row_resource_room);
-            resource_room.setText(item.getRoom());
+            viewHolder.resourceRoom = (TextView)convertView.findViewById(R.id.row_resource_room);
 
             // Status
-            TextView resource_status = (TextView) v.findViewById(R.id.row_resource_status);
-            resource_status.setText(item.getStatus());
-            if (item.getStatus().equalsIgnoreCase(ResourceItem.OFFLINE)) {
-                resource_status.setTextColor(Color.RED);
-            }
+            viewHolder.resourceStatus = (TextView)convertView.findViewById(R.id.row_resource_status);
 
+            // store the holder with the view.
+            convertView.setTag(viewHolder);
+        }
+        else {
+            // we've just avoided calling findViewById() on resource everytime
+            // just use the viewHolder
+            viewHolder = (ViewHolderItem) convertView.getTag();
         }
 
-        return v;
+        // object item based on the position
+        ResourceItem item = getItem(position);
+
+        // assign values if the object is not null
+        if(item != null) {
+            //Name
+            viewHolder.resourceName.setText(item.getNumber() + ". " + item.getName());
+
+            // Room
+            viewHolder.resourceRoom.setText(item.getRoom());
+
+            // Status
+            viewHolder.resourceStatus.setText(item.getStatus());
+            if (viewHolder.resourceStatus.getText().equals(ResourceItem.OFFLINE)) {
+                viewHolder.resourceStatus.setTextColor(Color.RED);
+            }
+        }
+
+        return convertView;
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        return resourceItems.get(position).getShowBuilding() ? TYPE_SEPARATOR : TYPE_ITEM;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return TYPE_MAX_COUNT;
+    }
+
+    static class ViewHolderItem {
+        TextView resourceName;
+        TextView resourceRoom;
+        TextView resourceStatus;
     }
 
 }

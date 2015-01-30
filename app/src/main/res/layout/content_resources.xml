@@ -23,13 +23,15 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:src="@drawable/menu_maps"
-        android:id="@+id/resource_view_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"/>
-
+        <TextView
+            android:id="@+id/resourceListResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip"
+            android:text="LIST RESULTS" />
 
         <ListView
             android:id="@+id/resourceListView"

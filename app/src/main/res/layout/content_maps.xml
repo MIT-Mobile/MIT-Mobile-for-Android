@@ -9,6 +9,7 @@
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="0.5"
         android:gravity="bottom"
         sothree:panelHeight="68dp"
         sothree:shadowHeight="4dp">
