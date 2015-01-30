@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,11 +25,12 @@ import java.util.Map;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapsActivity;
 
 
 public class ResourcesActivity extends MITModuleActivity {
 	private ListView resourceListView;
-    private List resourceList;
+    private ArrayList resourceList;
     private TextView resourceInfoText;
   	ResourceRowAdapter resourceAdapter;
     ArrayAdapter<String> arrayAdapter;
@@ -158,6 +160,14 @@ public class ResourcesActivity extends MITModuleActivity {
                 });
 
 
+                ImageView resource_view_map = (ImageView)findViewById(R.id.resource_view_map);
+                resource_view_map.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent i = new Intent(mContext, MapsActivity.class);
+                        i.putExtra(MapsActivity.MAP_ITEMS,resourceList);
+                        startActivity(i);
+                    }
+                });
 
                 //resourceListView.setAdapter(arrayAdapter);
                 findViewById(R.id.resourceInfo).setVisibility(View.GONE);

@@ -21,6 +21,12 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:src="@drawable/menu_maps"
+        android:id="@+id/resource_view_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"/>
 
     <ListView
         android:id="@+id/resourceListView"
