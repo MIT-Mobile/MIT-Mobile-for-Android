@@ -10,8 +10,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import android.graphics.*;
+import android.content.res.Resources;
+import com.google.maps.android.ui.IconGenerator;
+
 
 import edu.mit.mitmobile2.R;
 
@@ -44,7 +51,13 @@ public class MITMapView {
                    break;
 
                 case MapItem.MARKERTYPE:
-                    mMap.addMarker(mItem.getMarkerOptions());
+                    //mMap.addMarker(mItem.getMarkerOptions());
+                    IconGenerator iconGenerator = new IconGenerator(mContext);
+                    iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
+                    iconGenerator.setTextAppearance(20); //set font size?
+                    Bitmap bitmap = iconGenerator.makeIcon("Hello");
+                    mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+
                     break;
 
                 case MapItem.POLYGONTYPE:
