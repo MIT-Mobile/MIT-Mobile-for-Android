@@ -60,7 +60,10 @@ public class MITMapView {
         }
     }
 
-    public void addMapItemList(ArrayList<MapItem> mapItems) {
+    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear) {
+        if (clear) {
+            mMap.clear();
+        }
         if (mMap != null && mapItems != null && mapItems.size()>0) {
             Iterator<MapItem> iterator = mapItems.iterator();
             while (iterator.hasNext()) {
@@ -68,6 +71,10 @@ public class MITMapView {
                 addMapItem(item);
             }
         }
+    }
+
+    public void addMapItemList(ArrayList<MapItem> mapItems) {
+        addMapItemList(mapItems, true);
     }
 
 }
