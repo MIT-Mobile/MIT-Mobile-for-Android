@@ -40,6 +40,7 @@ public class ResourcesActivity extends MapsActivity {
 	private ListView resourceListView;
     private ArrayList resourceList;
     private TextView resourceInfoText;
+    private ViewGroup parent;
   	ResourceRowAdapter resourceAdapter;
     ArrayAdapter<String> arrayAdapter;
 	MITAPIClient resource = new MITAPIClient(this.mContext);
@@ -50,38 +51,12 @@ public class ResourcesActivity extends MapsActivity {
         this.hasSearch = true;
         super.onCreate(savedInstanceState);
         //slidingUpPanelLayout.expandPanel();
+        parent = (ViewGroup)findViewById(R.id.sliding_layout);
+        mapView.getMap().setInfoWindowAdapter(new ResourceItemInfoWindow(mContext,parent));
         resourceInfoText = (TextView)findViewById(R.id.resourceInfoText);
         resourceListView = (ListView) findViewById(R.id.resourceListView);
         //slidingUpPanelLayout.setDragView(resourceListView);
 
-//        resourceListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//
-//            private int mInitialScroll = 0;
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                Log.d("ZZZ", "first = " + firstVisibleItem);
-//                Log.d("ZZZ", "visible = " + visibleItemCount);
-//                Log.d("ZZZ", "total = " + totalItemCount);
-//                if (firstVisibleItem > 0) {
-//                    mInitialScroll = firstVisibleItem;
-//
-//                    contentViewStub.animate();
-//
-//                    mapView.hide();
-//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT);
-//                    params.weight = 1;
-//                    contentViewStub.setLayoutParams(params);
-//                }
-//            }
-//
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//
-//            }
-//        });
     }
 
 	@Override
@@ -131,9 +106,9 @@ public class ResourcesActivity extends MapsActivity {
                 if (items.length() > 0) {
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject item = items.getJSONObject(i);
-                        ResourceItem r = new ResourceItem();
+                        ResourceItem r = new ResourceItem(mContext,parent);
                         r.setNumber(i + 1);
-                        r.setMarkerText(r.getNumber() + "");
+                        //r.setMarkerText(r.getNumber() + "");
                         r.setName(item.getString("name"));
                         r.setRoom(item.getString("room"));
                         String[] parts = r.getRoom().split("-");

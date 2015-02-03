@@ -3,7 +3,11 @@
  <!-- the theme applied to the application or activity -->
     <style name="MITMobile"
            parent="android:Theme.Holo.Light">
+        <item name="android:windowActionBarOverlay">true</item>
+
     </style>
+
+
 
     <!-- ActionBar styles -->
     <style name="MyActionBar"
@@ -89,6 +93,20 @@
 
     <style name="ResourceRowStatus">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_okay</item>
+    </style>
+
+
+    <style name="ResourceRowNameInfoWindow">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="ResourceRowRoomInfoWindow">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="ResourceRowStatusInfoWindow">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
         <item name="android:textColor">@color/color_okay</item>
     </style>
 

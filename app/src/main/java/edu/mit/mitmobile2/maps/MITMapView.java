@@ -77,6 +77,7 @@ public class MITMapView {
                     if (mItem.getMarkerText() != null) {
                         IconGenerator iconGenerator = new IconGenerator(mContext);
                         iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
+
                         iconGenerator.setTextAppearance(10); //set font size?
                         Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
                         mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
@@ -131,5 +132,9 @@ public class MITMapView {
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
         mMap.animateCamera(cu);
+    }
+
+    public GoogleMap getMap() {
+        return this.mMap;
     }
 }

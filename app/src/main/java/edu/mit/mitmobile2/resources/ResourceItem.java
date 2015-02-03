@@ -1,17 +1,26 @@
 package edu.mit.mitmobile2.resources;
 
 import android.content.ClipData;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +36,9 @@ public class ResourceItem extends MapItem implements Parcelable {
     public static final String ONLINE = "online";
     public static final String OFFLINE = "offline";
 
+    private Context mContext;
+    private ViewGroup parent;
+
     private int number; // Number to display on lists and maps
     private int index;
     private String category;
@@ -40,6 +52,7 @@ public class ResourceItem extends MapItem implements Parcelable {
     private String status;
     private ArrayList<ResourceAttribute> attributes;
 
+
     public int getMapItemType() {
         return MapItem.MARKERTYPE;
     }
@@ -48,7 +61,16 @@ public class ResourceItem extends MapItem implements Parcelable {
     public MarkerOptions getMarkerOptions() {
         MarkerOptions m = new MarkerOptions();
         m.title(this.name);
-        m.snippet(this.name + "\n" + this.getRoom() + "\n" + this.getStatus());
+        JSONObject data = new JSONObject();
+        try {
+            data.put("name", this.getName());
+            data.put("room",this.getRoom());
+            data.put("status",this.getStatus());
+        }
+        catch (JSONException e) {
+            Log.d("ZZZ", e.getMessage());
+        }
+        m.snippet(data.toString());
         LatLng position = new LatLng(this.latitude, this.longitude);
         m.position(position);
         return m;
@@ -156,6 +178,11 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     }
 
+    public ResourceItem(Context mContext, ViewGroup parent) {
+        this.mContext = mContext;
+        this.parent = parent;
+    }
+
 
     @Override
     public int describeContents() {
@@ -202,5 +229,6 @@ public class ResourceItem extends MapItem implements Parcelable {
             return new ResourceItem[size];
         }
     };
+
 
 }
