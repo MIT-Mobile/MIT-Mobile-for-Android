@@ -44,7 +44,7 @@ public class MITMapView {
         this.mapResourceId = mapResourceId;
         mMap = ((MapFragment) fm.findFragmentById(mapResourceId)).getMap();
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, initialZoom));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, initialZoom));
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
     }

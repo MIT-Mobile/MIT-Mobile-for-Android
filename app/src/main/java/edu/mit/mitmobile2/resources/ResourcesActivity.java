@@ -51,10 +51,12 @@ public class ResourcesActivity extends MapsActivity {
         this.hasSearch = true;
         super.onCreate(savedInstanceState);
         //slidingUpPanelLayout.expandPanel();
-        parent = (ViewGroup)findViewById(R.id.sliding_layout);
-        mapView.getMap().setInfoWindowAdapter(new ResourceItemInfoWindow(mContext,parent));
-        resourceInfoText = (TextView)findViewById(R.id.resourceInfoText);
-        resourceListView = (ListView) findViewById(R.id.resourceListView);
+
+        parent = (ViewGroup)findViewById(R.id.map);
+
+        mapView.getMap().setInfoWindowAdapter(new ResourceItemInfoWindow(mContext));
+        //resourceInfoText = (TextView)findViewById(R.id.resourceInfoText);
+        resourceListView = (ListView) findViewById(R.id.list);
         //slidingUpPanelLayout.setDragView(resourceListView);
 
     }
@@ -185,7 +187,7 @@ public class ResourcesActivity extends MapsActivity {
                     Toast.makeText(mContext, "No resources were found for your search criteria",Toast.LENGTH_SHORT).show();
                 }
 
-                findViewById(R.id.resourceInfoText).setVisibility(View.GONE);
+                //findViewById(R.id.resourceInfoText).setVisibility(View.GONE);
                 mapView.show();
 
 			} catch (JSONException e) {

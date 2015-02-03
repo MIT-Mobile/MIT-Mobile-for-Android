@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,11 +25,9 @@ import edu.mit.mitmobile2.R;
 public class ResourceItemInfoWindow implements GoogleMap.InfoWindowAdapter {
 
     private Context mContext;
-    private ViewGroup parent;
 
-    ResourceItemInfoWindow(Context mContext, ViewGroup parent) {
+    ResourceItemInfoWindow(Context mContext) {
         this.mContext = mContext;
-        this.parent = parent;
     }
 
 
@@ -42,7 +41,7 @@ public class ResourceItemInfoWindow implements GoogleMap.InfoWindowAdapter {
         try {
             JSONObject data = new JSONObject(snippet);
             layoutId = R.layout.resource_info_window;
-            view = (LinearLayout)mInflater.inflate(layoutId,parent);
+            view = (LinearLayout)mInflater.inflate(layoutId,null);
 
             // Name
             TextView resourceName = (TextView)view.findViewById(R.id.row_resource_name);

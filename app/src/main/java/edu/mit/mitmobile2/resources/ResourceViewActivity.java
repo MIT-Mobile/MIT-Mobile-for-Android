@@ -64,7 +64,7 @@ public class ResourceViewActivity extends Activity {
                 public void onClick(View v) {
                     ArrayList mapItems = new ArrayList();
                     mapItems.add(r);
-                    Intent i = new Intent(mContext, MapsActivity.class);
+                    Intent i = new Intent(mContext, ResourcesActivity.class);
                     i.putExtra(MapsActivity.MAP_ITEMS,mapItems);
                     startActivity(i);
                 }

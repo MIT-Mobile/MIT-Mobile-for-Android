@@ -31,20 +31,20 @@ public class  MapsActivity extends MITModuleActivity {
     private ArrayList<MapItem> mapItems;
     protected int mapContentLayoutId;
     protected ViewStub contentViewStub;
-    protected com.sothree.slidinguppanel.SlidingUpPanelLayout  slidingUpPanelLayout;
+    protected com.sothree.slidinguppanel.SlidingUpPanelLayout  slidingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.setContentLayoutId(R.layout.content_maps);
         super.onCreate(savedInstanceState);
 
-        slidingUpPanelLayout = (SlidingUpPanelLayout)findViewById(R.id.sliding_layout);
-
-        if (mapContentLayoutId > 0) {
-            contentViewStub = (ViewStub) findViewById(R.id.mapContentStub);
-            contentViewStub.setLayoutResource(mapContentLayoutId);
-            contentViewStub.inflate();
-        }
+        slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.slidingLayout);
+//
+//        if (mapContentLayoutId > 0) {
+//            contentViewStub = (ViewStub) findViewById(R.id.mapContentStub);
+//            contentViewStub.setLayoutResource(mapContentLayoutId);
+//            contentViewStub.inflate();
+//        }
 
         initMap();
 
@@ -61,12 +61,6 @@ public class  MapsActivity extends MITModuleActivity {
     private void initMap() {
         FragmentManager fm = getFragmentManager();
         mapView = new MITMapView(mContext,fm,R.id.map);
-
-
-
-
-
-
     }
 
     private static void zoomToCoverAllMarkers(ArrayList<LatLng> latLngList, GoogleMap googleMap)

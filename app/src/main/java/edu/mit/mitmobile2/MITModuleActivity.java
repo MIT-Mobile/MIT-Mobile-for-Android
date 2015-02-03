@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.SearchManager;
+import android.content.DialogInterface;
 import android.util.Log;
 
 import org.json.JSONException;
