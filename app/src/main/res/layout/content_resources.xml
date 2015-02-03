@@ -8,35 +8,18 @@
     tools:context="edu.mit.mitmobile2.resources.ResourcesActivityNoModule" >
 
 
-    <RelativeLayout
-        android:id="@+id/resourceInfo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <TextView
             android:id="@+id/resourceInfoText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:gravity="center"
             android:text="@string/resource_info_text" />
 
-    </RelativeLayout>
-
-        <TextView
-            android:id="@+id/resourceListResults"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dip"
-            android:paddingBottom="10dip"
-            android:paddingLeft="20dip"
-            android:paddingRight="20dip"
-            android:text="LIST RESULTS" />
 
         <ListView
             android:id="@+id/resourceListView"
             android:padding="0dip"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_gravity="start"
             android:choiceMode="singleChoice"
@@ -44,4 +27,24 @@
             android:scrollbars="none"
             android:visibility="gone"/>
 
+    <!--
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <ImageView
+            android:src="@drawable/ic_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"/>
+
+        <ImageView
+            android:src="@drawable/ic_drawer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+-->
 </LinearLayout>

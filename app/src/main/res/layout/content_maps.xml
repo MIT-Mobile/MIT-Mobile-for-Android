@@ -1,19 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity" >
-
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
         android:gravity="bottom"
-        sothree:panelHeight="68dp"
+        sothree:panelHeight="300dp"
         sothree:shadowHeight="4dp">
-
         <fragment
             android:id="@+id/map"
             android:layout_width="match_parent"
@@ -22,10 +16,8 @@
 
         <ViewStub android:id="@+id/mapContentStub"
             android:inflatedId="@+id/mapContentLayout"
+            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-
-</RelativeLayout>

@@ -1,15 +1,19 @@
 package edu.mit.mitmobile2.maps;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -20,20 +24,40 @@ public class MITMapView {
     private GoogleMap mMap;
     private MapItem  mItem;
     public static String MAP_ITEMS = "MAP_ITEMS";
+    private FragmentManager mFm;
+    private int mapResourceId;
 
     //set initial latlng for zoom in MIT area
     final LatLng initialLatLng = new LatLng(42.359858, -71.09913);
     final int initialZoom = 14;
     private Context mContext;
 
-    public MITMapView(Context mContext, FragmentManager fm, int resourceId) {
+    public MITMapView(Context mContext, FragmentManager fm, int mapResourceId) {
         this.mContext = mContext;
-        mMap = ((MapFragment) fm.findFragmentById(resourceId)).getMap();
+        this.mFm = fm;
+        this.mapResourceId = mapResourceId;
+        mMap = ((MapFragment) fm.findFragmentById(mapResourceId)).getMap();
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, initialZoom));
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
     }
 
     private ArrayList<MapItem> mapItems;
+
+    public void show() {
+       Fragment f = mFm.findFragmentById(mapResourceId);
+        mFm.beginTransaction()
+                .show(f)
+                .commit();
+    };
+
+    public void hide() {
+        Fragment f = mFm.findFragmentById(mapResourceId);
+        mFm.beginTransaction()
+                .hide(f)
+                .commit();
+    }
 
     public void addMapItem(MapItem mItem) {
         if (mMap != null) {
@@ -60,7 +84,8 @@ public class MITMapView {
         }
     }
 
-    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear) {
+    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear,Boolean fit) {
+        this.mapItems = mapItems;
         if (clear) {
             mMap.clear();
         }
@@ -74,7 +99,22 @@ public class MITMapView {
     }
 
     public void addMapItemList(ArrayList<MapItem> mapItems) {
-        addMapItemList(mapItems, true);
+        addMapItemList(mapItems, true,true);
     }
 
+    public void fitMapItems() {
+
+        //Calculate the markers to get their position
+        LatLngBounds.Builder b = new LatLngBounds.Builder();
+        for (int i = 0; i < mapItems.size(); i++) {
+            MapItem mItem = mapItems.get(i);
+            if (mItem.getMapItemType() == MapItem.MARKERTYPE) {
+                b.include(mItem.getMarkerOptions().getPosition());
+            }
+        }
+        LatLngBounds bounds = b.build();
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
+        mMap.animateCamera(cu);
+    }
 }
