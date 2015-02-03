@@ -133,6 +133,7 @@ public class ResourcesActivity extends MapsActivity {
                         JSONObject item = items.getJSONObject(i);
                         ResourceItem r = new ResourceItem();
                         r.setNumber(i + 1);
+                        r.setMarkerText(r.getNumber() + "");
                         r.setName(item.getString("name"));
                         r.setRoom(item.getString("room"));
                         String[] parts = r.getRoom().split("-");

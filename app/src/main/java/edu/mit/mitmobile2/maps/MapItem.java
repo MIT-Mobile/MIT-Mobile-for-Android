@@ -18,6 +18,7 @@ public abstract class MapItem implements Parcelable{
     public static final int POLYGONTYPE = 3;
 
     public int mapItemType = MapItem.MARKERTYPE;
+    private String markerText;
 
     public int getMapItemType() {
         return mapItemType;
@@ -30,6 +31,15 @@ public abstract class MapItem implements Parcelable{
     public MarkerOptions getMarkerOptions() {
         return null;
     } //market
+
+    public String getMarkerText() {
+        return markerText;
+    }
+
+    public void setMarkerText(String markerText) {
+        this.markerText = markerText;
+    }
+
     public PolylineOptions getPolylineOptions() {
         return null;
     } //polyline

@@ -16,6 +16,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import android.graphics.*;
+import android.content.res.Resources;
+import com.google.maps.android.ui.IconGenerator;
+
 
 import edu.mit.mitmobile2.R;
 
@@ -68,7 +74,16 @@ public class MITMapView {
                    break;
 
                 case MapItem.MARKERTYPE:
-                    mMap.addMarker(mItem.getMarkerOptions());
+                    if (mItem.getMarkerText() != null) {
+                        IconGenerator iconGenerator = new IconGenerator(mContext);
+                        iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
+                        iconGenerator.setTextAppearance(10); //set font size?
+                        Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
+                        mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                    }
+                    else {
+                        mMap.addMarker(mItem.getMarkerOptions());
+                    }
                     break;
 
                 case MapItem.POLYGONTYPE:
