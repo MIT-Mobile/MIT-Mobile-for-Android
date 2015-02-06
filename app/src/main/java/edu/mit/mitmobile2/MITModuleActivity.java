@@ -40,6 +40,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -57,7 +58,8 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
     protected String long_name; // may be able to lose this in place of mTitle     
     protected List spinnerList; 
     protected int contentLayoutId;    
-    private RelativeLayout contentLayout;
+    private ViewStub contentViewStub;
+    private ProgressBar progressBar;
     private NavItem mNavItem;
     protected Boolean hasSearch = false;
     protected MITAPIClient apiClient;
@@ -72,22 +74,20 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
 		mContext = this;
 		this.apiClient = new MITAPIClient(mContext);
 		setTheme(android.R.style.Theme_Holo_Light);
-		
-		//loadNavigation(mContext);
-		
-		setContentView(R.layout.mit_module_layout);
-	
-		// inflate content layout
-		
+
+		// Set content view for MIT Module (includes navigation drawer)
+        setContentView(R.layout.mit_module_layout);
+
+        // get progress bar
+        this.progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+
+        // inflate content layout
 		if (contentLayoutId > 0) {
 			Log.d("ZZZ","setting content layout");
-			ViewStub v = (ViewStub) findViewById(R.id.contentStub);
-			v.setLayoutResource(contentLayoutId);
-			v.inflate();
-//	        
-//	        RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) contentLayout.getLayoutParams();
-//	        params.addRule(RelativeLayout.BELOW, R.id.drawer_layout);
-	        //v.addView(contentLayout);
+			this.contentViewStub = (ViewStub) findViewById(R.id.contentViewStub);
+            this.contentViewStub.setLayoutResource(contentLayoutId);
+            this.contentViewStub.inflate();
 		}
 		
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -320,6 +320,16 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}
+
+    public void showProgressBar() {
+        this.progressBar.setVisibility(View.VISIBLE);
+        this.contentViewStub.setVisibility(View.GONE);
+    }
+
+    public void hideProgressBar() {
+        this.progressBar.setVisibility(View.GONE);
+        this.contentViewStub.setVisibility(View.VISIBLE);
+    }
 
 	public List getSpinnerList() {
 		return spinnerList;

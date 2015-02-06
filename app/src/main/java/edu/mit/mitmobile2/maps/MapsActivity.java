@@ -5,14 +5,20 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.resources.ResourceItem;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
         import android.app.Activity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
         import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,21 +36,24 @@ public class  MapsActivity extends MITModuleActivity {
     public static String MAP_ITEMS = "MAP_ITEMS";
     private ArrayList<MapItem> mapItems;
     protected int mapContentLayoutId;
-    protected ViewStub contentViewStub;
-    protected com.sothree.slidinguppanel.SlidingUpPanelLayout  slidingLayout;
+    protected ViewStub mapContentViewStub;
+    protected View mapContentView; // inflated vew stub
+    protected ImageView showListButton;
+    protected ImageView showLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.setContentLayoutId(R.layout.content_maps);
         super.onCreate(savedInstanceState);
 
-        slidingLayout = (SlidingUpPanelLayout)findViewById(R.id.slidingLayout);
-//
-//        if (mapContentLayoutId > 0) {
-//            contentViewStub = (ViewStub) findViewById(R.id.mapContentStub);
-//            contentViewStub.setLayoutResource(mapContentLayoutId);
-//            contentViewStub.inflate();
-//        }
+        // Set the map content if it is defined in the child activity
+        if (this.mapContentLayoutId > 0) {
+            Log.d("ZZZ", "setting map content layout");
+            mapContentViewStub = (ViewStub) findViewById(R.id.mapContentViewStub);
+            mapContentViewStub.setLayoutResource(mapContentLayoutId);
+            mapContentViewStub.inflate();
+            mapContentView = (View)findViewById(R.id.mapContentView);
+        }
 
         initMap();
 
@@ -61,6 +70,24 @@ public class  MapsActivity extends MITModuleActivity {
     private void initMap() {
         FragmentManager fm = getFragmentManager();
         mapView = new MITMapView(mContext,fm,R.id.map);
+        showLocationButton = (ImageView)findViewById(R.id.showLocationButton);
+        showListButton = (ImageView)findViewById(R.id.showListButton);
+
+        showListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleMap();
+            }
+        });
+
+        showLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.showLocation();
+            }
+        });
+
+        // set initial height
     }
 
     private static void zoomToCoverAllMarkers(ArrayList<LatLng> latLngList, GoogleMap googleMap)
@@ -85,5 +112,25 @@ public class  MapsActivity extends MITModuleActivity {
 
     public void setMapContentLayoutId(int mapContentLayoutId) {
         this.mapContentLayoutId = mapContentLayoutId;
+    }
+
+    public void toggleMap() {
+        // this method toggles between the full size map view and the split screen map with content view
+
+        // collapse the map
+        if (mapContentView.getVisibility() == View.GONE) {
+            mapContentView.setVisibility(View.VISIBLE);
+            showListButton.setVisibility(View.GONE);
+            showLocationButton.setVisibility(View.GONE);
+            mapView.toggle();
+        }
+        // expand the map
+        else {
+            mapContentView.setVisibility(View.GONE);
+            showListButton.setVisibility(View.VISIBLE);
+            showLocationButton.setVisibility(View.VISIBLE);
+            mapView.toggle();
+        }
+
     }
 }

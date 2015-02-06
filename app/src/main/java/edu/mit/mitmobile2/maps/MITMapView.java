@@ -3,6 +3,10 @@ package edu.mit.mitmobile2.maps;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.location.Location;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -20,6 +25,9 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import android.graphics.*;
 import android.content.res.Resources;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
 import com.google.maps.android.ui.IconGenerator;
 
 
@@ -28,6 +36,7 @@ import edu.mit.mitmobile2.R;
 public class MITMapView {
 
     private GoogleMap mMap;
+    private MapFragment mapFragment;
     private MapItem  mItem;
     public static String MAP_ITEMS = "MAP_ITEMS";
     private FragmentManager mFm;
@@ -35,16 +44,17 @@ public class MITMapView {
 
     //set initial latlng for zoom in MIT area
     final LatLng initialLatLng = new LatLng(42.359858, -71.09913);
-    final int initialZoom = 14;
+    public static final int INITIAL_ZOOM = 14;
     private Context mContext;
 
     public MITMapView(Context mContext, FragmentManager fm, int mapResourceId) {
         this.mContext = mContext;
         this.mFm = fm;
         this.mapResourceId = mapResourceId;
-        mMap = ((MapFragment) fm.findFragmentById(mapResourceId)).getMap();
+        this.mapFragment = (MapFragment) fm.findFragmentById(mapResourceId);
+        mMap = this.mapFragment.getMap();
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, initialZoom));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, MITMapView.INITIAL_ZOOM));
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
     }
@@ -137,4 +147,30 @@ public class MITMapView {
     public GoogleMap getMap() {
         return this.mMap;
     }
+
+    public void toggle() {
+        if (isExpanded()) {
+            float map_height = mContext.getResources().getDimension(R.dimen.map_height);
+            mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int)map_height));
+        }
+        else {
+            mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        }
+    }
+
+    public Boolean isExpanded() {
+        // return true if the current map height != the collapsed map height defined at R.dimen.map_height
+        float h = mapFragment.getView().getHeight();
+        float map_height = mContext.getResources().getDimension(R.dimen.map_height);
+        return (h != map_height);
+    }
+
+    public void showLocation() {
+        Location location = mMap.getMyLocation();
+        CameraPosition position = new CameraPosition.Builder()
+                .target(new LatLng(location.getLatitude(), location.getLongitude())).zoom(MITMapView.INITIAL_ZOOM).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+    }
+
 }
+

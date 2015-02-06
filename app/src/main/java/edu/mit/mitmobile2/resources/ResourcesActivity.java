@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -50,14 +51,25 @@ public class ResourcesActivity extends MapsActivity {
         this.setMapContentLayoutId(R.layout.content_resources);
         this.hasSearch = true;
         super.onCreate(savedInstanceState);
-        //slidingUpPanelLayout.expandPanel();
 
         parent = (ViewGroup)findViewById(R.id.map);
-
+        parent.setVisibility(View.GONE);
         mapView.getMap().setInfoWindowAdapter(new ResourceItemInfoWindow(mContext));
-        //resourceInfoText = (TextView)findViewById(R.id.resourceInfoText);
-        resourceListView = (ListView) findViewById(R.id.list);
-        //slidingUpPanelLayout.setDragView(resourceListView);
+        resourceListView = (ListView) findViewById(R.id.resourceListView);
+        resourceInfoText = (TextView) findViewById(R.id.resourceInfoText);
+
+
+        // Add transparent header to list to set initial posiiton below the map
+        LayoutInflater inflater = getLayoutInflater();
+        LinearLayout header = (LinearLayout)inflater.inflate(R.layout.map_list_header, resourceListView, false);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleMap();
+            }
+        });
+        resourceListView.addHeaderView(header, null, false);
+
 
     }
 
@@ -88,6 +100,7 @@ public class ResourcesActivity extends MapsActivity {
     protected boolean handleSearch(String query) {
         Map params = new HashMap<String,String>();
         params.put("q",query);
+        this.showProgressBar();
         resource.getJson("resource",null,params,resourceHandler);
         return true;
     }
@@ -156,6 +169,7 @@ public class ResourcesActivity extends MapsActivity {
                     resourceAdapter = new ResourceRowAdapter(mContext, R.id.row_resource, resourceList);
                     resourceListView.setAdapter(resourceAdapter);
 
+
                     if (mapView != null) {
                         mapView.addMapItemList(resourceList);
                         //mapView.fitMapItems();
@@ -179,13 +193,13 @@ public class ResourcesActivity extends MapsActivity {
                     });
 
                     resourceListView.setVisibility(View.VISIBLE);
-                    //slidingUpPanelLayout.setPanelHeight(300);
-                    //slidingUpPanelLayout.setAnchorPoint(0.5f);
-
+                    parent.setVisibility(View.VISIBLE);
+                    resourceInfoText.setVisibility(View.GONE);
                 }
                 else {
                     Toast.makeText(mContext, "No resources were found for your search criteria",Toast.LENGTH_SHORT).show();
                 }
+                hideProgressBar();
 
                 //findViewById(R.id.resourceInfoText).setVisibility(View.GONE);
                 mapView.show();

@@ -17,35 +17,5 @@
         style="@style/ResourceRowHeader"
     />
 
-    <!-- NAME -->
-    <TextView
-        android:id="@+id/row_resource_name"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:visibility="gone"
-        style="@style/ResourceRowName"
-        />
-
-    <!-- ROOM -->
-    <TextView
-        android:id="@+id/row_resource_room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/row_resource_name"
-        android:visibility="gone"
-        style="@style/ResourceRowRoom"
-        />
-
-    <TextView
-        android:id="@+id/row_resource_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:visibility="gone"
-        style="@style/ResourceRowStatus"/>
-
-
 </LinearLayout>
 

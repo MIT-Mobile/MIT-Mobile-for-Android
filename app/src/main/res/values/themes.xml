@@ -117,6 +117,15 @@
 
     <!-- END RESOURCE STYLES -->
 
+    <!-- MAP STYLES -->
+    <style name="mapViewExpanded">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="mapViewCollapsed">
+        <item name="android:layout_height">@dimen/map_height</item>
+    </style>
+
     <style name="PageTitle">
 		<item name="android:textStyle">normal</item>
 		<item name="android:textSize">17sp</item>

@@ -1,63 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/slidingLayout"
-        android:gravity="bottom"
-        app:shadowHeight="0dp"
-        app:panelHeight="300dp"
-        app:paralaxOffset="10dp"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        style="@style/mapViewCollapsed"
+        class="com.google.android.gms.maps.MapFragment" />
 
-        <FrameLayout
-            android:gravity="top"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+    <ImageButton
+        android:id="@+id/showListButton"
+        android:src="@drawable/ic_list_grey600_48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignLeft="@+id/map"
+        android:layout_alignBottom="@+id/map"
+        android:layout_above="@+id/map"
+        android:visibility="gone"/>
 
-            <RelativeLayout
-                android:id="@+id/mapContainer"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+    <ImageButton
+        android:id="@+id/showLocationButton"
+        android:src="@drawable/ic_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignRight="@+id/map"
+        android:layout_alignBottom="@+id/map"
+        android:layout_above="@+id/map"
+        android:visibility="gone"/>
 
-                <fragment
-                    android:id="@+id/map"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    class="com.google.android.gms.maps.MapFragment"/>
+    <ViewStub
+        android:id="@+id/mapContentViewStub"
+        android:inflatedId="@+id/mapContentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-            </RelativeLayout>
-        </FrameLayout>
-
-        <RelativeLayout
-            android:id="@+id/slidingContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <View
-                android:id="@+id/transparentView"
-                android:visibility="gone"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"/>
-
-            <ListView
-                android:id="@+id/list"
-                android:cacheColorHint="@android:color/white"
-                android:drawSelectorOnTop="true"
-                android:dividerHeight="1dp"
-                android:divider="@android:color/darker_gray"
-                android:background="@android:color/transparent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/transparentView"
-                android:smoothScrollbar="false"/>
-        </RelativeLayout>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-    <!-- more code here -->
 </RelativeLayout>
