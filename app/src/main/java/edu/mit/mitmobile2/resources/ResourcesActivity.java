@@ -75,13 +75,17 @@ public class ResourcesActivity extends MapsActivity {
 
 	@Override
 	protected void onResume() {
-	
-		// TODO Auto-generated method stub
-		super.onResume();
-		Log.d("ZZZ","onResume");	
-		// Initialize the resource proxy.
-		Log.d("ZZZ","create client");
-	}
+
+        // TODO Auto-generated method stub
+        super.onResume();
+        Log.d("ZZZ", "onResume");
+        // Initialize the resource proxy.
+        Intent intent = getIntent();
+        if (intent.hasExtra(MITMapView.MAP_ITEMS)) {
+            this.resourceList = intent.getExtras().getParcelableArrayList(MITMapView.MAP_ITEMS);
+            displayMapItems();
+        }
+    }
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -131,7 +135,7 @@ public class ResourcesActivity extends MapsActivity {
 
                         // add a building header before the first resource in a building
                         if (!r.getBuilding().equals(previousBuilding)) {
-                            ResourceItem rh = new ResourceItem();
+                            ResourceItem rh = new ResourceHeader();
                             rh.setBuildingHeader(true);
                             rh.setMapItemType(0); // not a map item
                             rh.setBuilding(parts[0]);
@@ -166,35 +170,8 @@ public class ResourcesActivity extends MapsActivity {
                         resourceList.add(r);
                     }
 
-                    resourceAdapter = new ResourceRowAdapter(mContext, R.id.row_resource, resourceList);
-                    resourceListView.setAdapter(resourceAdapter);
+                    displayMapItems();
 
-
-                    if (mapView != null) {
-                        mapView.addMapItemList(resourceList);
-                        //mapView.fitMapItems();
-                    }
-
-                    resourceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                            // TODO Auto-generated method stub
-                            Log.d("ZZZ", "Items " + arg2);
-                            ResourceItem r = (ResourceItem) resourceList.get(arg2);
-
-                            // If the item is a building header, do nothing
-                            if (!r.getBuildingHeader()) {
-                                Intent i = new Intent(mContext, ResourceViewActivity.class);
-                                i.putExtra("resourceItem", r);
-                                startActivity(i);
-                            }
-                        }
-                    });
-
-                    resourceListView.setVisibility(View.VISIBLE);
-                    parent.setVisibility(View.VISIBLE);
-                    resourceInfoText.setVisibility(View.GONE);
                 }
                 else {
                     Toast.makeText(mContext, "No resources were found for your search criteria",Toast.LENGTH_SHORT).show();
@@ -211,5 +188,34 @@ public class ResourcesActivity extends MapsActivity {
 		}
 		
 	};
-		
+
+    @Override
+    public void displayMapItems() {
+        resourceAdapter = new ResourceRowAdapter(mContext, R.id.row_resource, resourceList);
+        resourceListView.setAdapter(resourceAdapter);
+
+        if (mapView != null) {
+            mapView.addMapItemList(resourceList);
+        }
+
+        resourceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+                // TODO Auto-generated method stub
+                 ResourceItem r = (ResourceItem) resourceList.get((int)id);
+
+                // If the item is a building header, do nothing
+                if (!r.getBuildingHeader()) {
+                    Intent i = new Intent(mContext, ResourceViewActivity.class);
+                    i.putExtra("resourceItem", r);
+                    startActivity(i);
+                }
+            }
+        });
+
+        resourceListView.setVisibility(View.VISIBLE);
+        parent.setVisibility(View.VISIBLE);
+        resourceInfoText.setVisibility(View.GONE);
+    }
 }

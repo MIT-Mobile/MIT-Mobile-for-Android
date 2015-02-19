@@ -77,35 +77,36 @@ public class MITMapView {
 
     public void addMapItem(MapItem mItem) {
         if (mMap != null) {
-            int type = mItem.mapItemType;
+            if (MapItem.class.isAssignableFrom(mItem.getClass())) {
+                int type = mItem.getMapItemType();
 
-            switch (type) {
-                case 0:
-                   break;
+                switch (type) {
+                    case 0:
+                        break;
 
-                case MapItem.MARKERTYPE:
-                    if (mItem.getMarkerText() != null) {
-                        IconGenerator iconGenerator = new IconGenerator(mContext);
-                        iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
+                    case MapItem.MARKERTYPE:
+                        if (mItem.getMarkerText() != null) {
+                            IconGenerator iconGenerator = new IconGenerator(mContext);
+                            iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
 
-                        iconGenerator.setTextAppearance(10); //set font size?
-                        Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
-                        mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
-                    }
-                    else {
-                        mMap.addMarker(mItem.getMarkerOptions());
-                    }
-                    break;
+                            iconGenerator.setTextAppearance(10); //set font size?
+                            Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
+                            mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                        } else {
+                            mMap.addMarker(mItem.getMarkerOptions());
+                        }
+                        break;
 
-                case MapItem.POLYGONTYPE:
-                    mMap.addPolyline(mItem.getPolylineOptions());
-                    break;
+                    case MapItem.POLYGONTYPE:
+                        mMap.addPolyline(mItem.getPolylineOptions());
+                        break;
 
 
-                case MapItem.POLYLINETYPE:
-                    mMap.addPolygon(mItem.getPolygonOptions());
-                    break;
+                    case MapItem.POLYLINETYPE:
+                        mMap.addPolygon(mItem.getPolygonOptions());
+                        break;
 
+                }
             }
         }
     }
@@ -120,6 +121,10 @@ public class MITMapView {
             while (iterator.hasNext()) {
                 MapItem item = (MapItem) iterator.next();
                 addMapItem(item);
+            }
+
+            if (fit) {
+                this.fitMapItems();
             }
         }
     }
@@ -141,7 +146,7 @@ public class MITMapView {
         LatLngBounds bounds = b.build();
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
-        mMap.animateCamera(cu);
+        mMap.moveCamera(cu);
     }
 
     public GoogleMap getMap() {

@@ -48,7 +48,7 @@ import android.widget.Spinner;
 public abstract class MITModuleActivity extends Activity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
 
 	protected Context mContext;
-    private DrawerLayout mDrawerLayout;
+    private static DrawerLayout mDrawerLayout;
     private Spinner mSpinner;    
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -84,7 +84,6 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
 
         // inflate content layout
 		if (contentLayoutId > 0) {
-			Log.d("ZZZ","setting content layout");
 			this.contentViewStub = (ViewStub) findViewById(R.id.contentViewStub);
             this.contentViewStub.setLayoutResource(contentLayoutId);
             this.contentViewStub.inflate();

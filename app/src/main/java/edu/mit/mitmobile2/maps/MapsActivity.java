@@ -28,7 +28,6 @@ import com.google.android.gms.maps.CameraUpdate;
         import com.google.android.gms.maps.model.LatLngBounds;
         import com.google.android.gms.maps.model.Marker;
         import com.google.android.gms.maps.model.MarkerOptions;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class  MapsActivity extends MITModuleActivity {
 
@@ -48,7 +47,6 @@ public class  MapsActivity extends MITModuleActivity {
 
         // Set the map content if it is defined in the child activity
         if (this.mapContentLayoutId > 0) {
-            Log.d("ZZZ", "setting map content layout");
             mapContentViewStub = (ViewStub) findViewById(R.id.mapContentViewStub);
             mapContentViewStub.setLayoutResource(mapContentLayoutId);
             mapContentViewStub.inflate();
@@ -133,4 +131,7 @@ public class  MapsActivity extends MITModuleActivity {
         }
 
     }
+
+    // Override this method to handle displaying map items on MapsActivity subclasses
+    public void displayMapItems() {}
 }
