@@ -30,7 +30,6 @@ public class ResourceItemInfoWindow implements GoogleMap.InfoWindowAdapter {
         this.mContext = mContext;
     }
 
-
     @Override
     public View getInfoContents(Marker marker) {
         LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,6 +57,11 @@ public class ResourceItemInfoWindow implements GoogleMap.InfoWindowAdapter {
             if (status.equals(ResourceItem.OFFLINE)) {
                 resourceStatus.setTextColor(Color.RED);
             }
+
+            //MapItemIndex
+            TextView mapItemIndex = (TextView)view.findViewById(R.id.mapItemIndex);
+            String index = data.getString("mapItemIndex");
+            mapItemIndex.setText(index);
 
         }
             catch (JSONException e) {

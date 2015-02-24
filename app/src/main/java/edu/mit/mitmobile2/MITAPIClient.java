@@ -30,7 +30,10 @@ public class MITAPIClient {
 	public static String environment = MITAPIClient.DEFAULT_ENVIRONMENT;
 	public static int API_SUCCESS = 1;
 	public static int API_ERROR = 0;
-	
+    protected static final int FORMAT_DEFAULT = 0;
+    protected static final int FORMAT_HTML = 1;
+    protected static final int FORMAT_JSON = 2;
+
 	protected Context mContext;
 	protected AsyncHttpClient client ;
 	
@@ -92,7 +95,7 @@ public class MITAPIClient {
 		MITAPIClient.environment = env;
 	}
 	
-	public void getJson(String api,String path,Map<String,String> params, final Handler apiHandler) {
+    public void get(String api,String path,Map<String,String> params, final Handler apiHandler, final int format) {
 		this.client = new AsyncHttpClient();
         client.setEnableRedirects(true);
 		
@@ -142,10 +145,12 @@ public class MITAPIClient {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+
 		    	Message apiMessage = new Message();
 		    	apiMessage.arg1 = MITAPIClient.API_SUCCESS;
 		    	apiMessage.arg2 = statusCode;
-		    	apiMessage.obj = jObject;
+		    	apiMessage.obj = buildResponse(statusCode,headers,response,format);
 		    	apiHandler.sendMessage(apiMessage);
 		    	Log.d("API",res);
 		    }
@@ -168,7 +173,38 @@ public class MITAPIClient {
 		});
 
 	}
- 	
-	
-	
+
+    public void getJson(String api,String path,Map<String,String> params, final Handler apiHandler) {
+        get(api, path, params, apiHandler, FORMAT_JSON);
+    }
+
+    private Object buildResponse(int statusCode, Header[] headers, byte[] response, int format) {
+
+        APIResponse r  = null;
+
+        Message apiMessage = new Message();
+        apiMessage.arg1 = MITAPIClient.API_SUCCESS;
+        apiMessage.arg2 = statusCode;
+
+        switch(format) {
+
+            case FORMAT_HTML:
+                r = new APITextResponse(statusCode,headers,response);
+            break;
+
+            case FORMAT_JSON:
+                r = new APIJsonResponse(statusCode,headers,response);
+            break;
+
+            case FORMAT_DEFAULT:
+                r = new APIResponse();
+                r.statusCode = statusCode;
+                r.headers = headers;
+                r.response = response;
+            break;
+        }
+
+        return r;
+    }
+
 }

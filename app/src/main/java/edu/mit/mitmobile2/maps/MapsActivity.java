@@ -88,6 +88,17 @@ public class  MapsActivity extends MITModuleActivity {
         Log.d(TAG,"initMap()");
         FragmentManager fm = getFragmentManager();
         mapView = new MITMapView(mContext,fm,R.id.map);
+
+        // set the InfoWindowAdapter if not null
+        if (this.getInfoWindowAdapter() != null) {
+            mapView.getMap().setInfoWindowAdapter(this.getInfoWindowAdapter());
+        }
+
+        //OnInfoWindowClickListener
+        if (this.getOnInfoWindowClickListener() != null) {
+            mapView.getMap().setOnInfoWindowClickListener(this.getOnInfoWindowClickListener());
+        }
+
         mapListView = (ListView)findViewById(R.id.mapListView);
         mapListView.addHeaderView(getMapListHeader());
 
@@ -181,7 +192,11 @@ public class  MapsActivity extends MITModuleActivity {
         return null;
     }
 
-    // override this method to use a custom onclick listener
+    // Override this method to use a custom OnInfoWindowClickListener
+    protected GoogleMap.OnInfoWindowClickListener getOnInfoWindowClickListener() {
+        return null;
+    }
+        // override this method to use a custom onclick listener
     protected AdapterView.OnItemClickListener getOnItemClickListener() {
         return null;
     }
@@ -198,4 +213,8 @@ public class  MapsActivity extends MITModuleActivity {
         mapListView.setOnItemClickListener(this.getOnItemClickListener());
         toggleMap();
     }
+
+    // Override this method to get map items
+    protected void viewMapItem(int mapItemIndex) {}
+
 }

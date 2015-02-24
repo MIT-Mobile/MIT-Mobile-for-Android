@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.resources;
 
+import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.R;
 
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,8 +49,8 @@ public class ResourcesActivity extends MapsActivity {
             @Override
             public void handleMessage(Message msg) {
                 try {
-                    JSONObject jObject = (JSONObject) msg.obj;
-                    JSONObject collection = jObject.getJSONObject("collection");
+                    APIJsonResponse response = (APIJsonResponse) msg.obj;
+                    JSONObject collection = response.jsonArray.getJSONObject(0).getJSONObject("collection");
                     JSONArray items = collection.getJSONArray("items");
 
                     mapItems = new ArrayList<ResourceItem>();
@@ -74,6 +76,9 @@ public class ResourcesActivity extends MapsActivity {
                                 mapItems.add(rh);
                                 previousBuilding = r.getBuilding();
                             }
+
+                            // store the index of the map item in the mapItems list
+                            r.setMapItemIndex(mapItems.size());
 
                             if (item.has("latitude")) {
                                 r.setLatitude(item.getDouble("latitude"));
@@ -143,15 +148,7 @@ public class ResourcesActivity extends MapsActivity {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-                // TODO Auto-generated method stub
-                ResourceItem r = (ResourceItem) mapItems.get((int)id);
-
-                // If the item is a building header, do nothing
-                if (!r.getBuildingHeader()) {
-                    Intent i = new Intent(mContext, ResourceViewActivity.class);
-                    i.putExtra("resourceItem", r);
-                    startActivity(i);
-                }
+                viewMapItem( (int)id);
             }
         };
     }
@@ -160,6 +157,26 @@ public class ResourcesActivity extends MapsActivity {
     protected GoogleMap.InfoWindowAdapter getInfoWindowAdapter() {
         Log.d(TAG, "getInfoWindowAdapter()");
         return new ResourceItemInfoWindow(this.mContext);
+    }
+
+    protected GoogleMap.OnInfoWindowClickListener getOnInfoWindowClickListener() {
+        return new GoogleMap.OnInfoWindowClickListener() {
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Log.d(TAG,"info window clicked");
+                Log.d(TAG,"snippet =" + marker.getSnippet());
+                try {
+                    JSONObject data = new JSONObject(marker.getSnippet());
+                    int index = data.getInt("mapItemIndex");
+                    viewMapItem(index);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
     }
 
     @Override
@@ -171,4 +188,15 @@ public class ResourcesActivity extends MapsActivity {
         return true;
     }
 
+    protected void viewMapItem(int mapItemIndex) {
+        Log.d(TAG,"map item index = " + mapItemIndex);
+        ResourceItem r = (ResourceItem) mapItems.get(mapItemIndex);
+
+        // If the item is a building header, do nothing
+        if (!r.getBuildingHeader()) {
+            Intent i = new Intent(mContext, ResourceViewActivity.class);
+            i.putExtra("resourceItem", r);
+            startActivity(i);
+        }
+    }
 }

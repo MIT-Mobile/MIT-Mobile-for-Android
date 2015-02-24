@@ -42,6 +42,7 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     private int number; // Number to display on lists and maps
     private int index;
+    private int mapItemIndex; // index in the mapItems array
     private String category;
     private String type;
     private String name = "";
@@ -64,6 +65,7 @@ public class ResourceItem extends MapItem implements Parcelable {
         m.title(this.name);
         JSONObject data = new JSONObject();
         try {
+            data.put("mapItemIndex",this.getMapItemIndex());
             data.put("name", this.getName());
             data.put("room",this.getRoom());
             data.put("status",this.getStatus());
@@ -92,6 +94,14 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public int getMapItemIndex() {
+        return mapItemIndex;
+    }
+
+    public void setMapItemIndex(int mapItemIndex) {
+        this.mapItemIndex = mapItemIndex;
     }
 
     public String getCategory() {
