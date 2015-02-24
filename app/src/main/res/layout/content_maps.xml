@@ -1,13 +1,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
-        style="@style/mapViewCollapsed"
+        android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment" />
 
     <ImageButton
@@ -30,12 +31,18 @@
         android:layout_alignRight="@+id/map"
         android:layout_alignBottom="@+id/map"
         android:layout_above="@+id/map"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
-    <ViewStub
-        android:id="@+id/mapContentViewStub"
-        android:inflatedId="@+id/mapContentView"
+    <ListView
+        android:id="@+id/mapListView"
+        android:padding="0dip"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="#aaaaaa"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"
+        android:visibility="gone"/>
 
 </RelativeLayout>

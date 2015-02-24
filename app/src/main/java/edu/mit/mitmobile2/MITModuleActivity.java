@@ -10,6 +10,7 @@ import java.util.Map;
 
 import android.app.SearchManager;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -45,9 +46,8 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
-public abstract class MITModuleActivity extends Activity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
+public abstract class MITModuleActivity extends MITActivity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
 
-	protected Context mContext;
     private static DrawerLayout mDrawerLayout;
     private Spinner mSpinner;    
     private ListView mDrawerList;
@@ -60,19 +60,19 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
     protected int contentLayoutId;    
     private ViewStub contentViewStub;
     private ProgressBar progressBar;
+    protected LayoutInflater inflater;
+
     private NavItem mNavItem;
     protected Boolean hasSearch = false;
-    protected MITAPIClient apiClient;
+    protected Handler handler;
     
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
-    	
+
     	Intent intent = getIntent();
     	this.setLong_name(intent.getStringExtra("long_name"));
     	this.setTitle(this.getLong_name());
 		super.onCreate(savedInstanceState);
-		mContext = this;
-		this.apiClient = new MITAPIClient(mContext);
 		setTheme(android.R.style.Theme_Holo_Light);
 
 		// Set content view for MIT Module (includes navigation drawer)
@@ -81,6 +81,8 @@ public abstract class MITModuleActivity extends Activity implements ActionBar.Ta
         // get progress bar
         this.progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
+        // get layout inflater
+        this.inflater = getLayoutInflater();
 
         // inflate content layout
 		if (contentLayoutId > 0) {

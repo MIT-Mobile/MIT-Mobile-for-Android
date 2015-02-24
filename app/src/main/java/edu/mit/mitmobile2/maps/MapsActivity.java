@@ -4,21 +4,22 @@ import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.resources.ResourceItem;
 
+import android.app.SearchManager;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-        import android.app.Activity;
+import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewStub;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdate;
         import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,41 +34,63 @@ public class  MapsActivity extends MITModuleActivity {
 
     protected MITMapView mapView;
     public static String MAP_ITEMS = "MAP_ITEMS";
-    private ArrayList<MapItem> mapItems;
-    protected int mapContentLayoutId;
-    protected ViewStub mapContentViewStub;
-    protected View mapContentView; // inflated vew stub
+    protected ListView mapListView;
     protected ImageView showListButton;
     protected ImageView showLocationButton;
+    protected ArrayList mapItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.setContentLayoutId(R.layout.content_maps);
         super.onCreate(savedInstanceState);
-
-        // Set the map content if it is defined in the child activity
-        if (this.mapContentLayoutId > 0) {
-            mapContentViewStub = (ViewStub) findViewById(R.id.mapContentViewStub);
-            mapContentViewStub.setLayoutResource(mapContentLayoutId);
-            mapContentViewStub.inflate();
-            mapContentView = (View)findViewById(R.id.mapContentView);
-        }
-
         initMap();
 
         Intent intent = getIntent();
         if(intent.hasExtra(MapsActivity.MAP_ITEMS)) {
             this.mapItems = intent.getExtras().getParcelableArrayList(MapsActivity.MAP_ITEMS);
             for (int i = 0; i < this.mapItems.size(); i++) {
-                mapView.addMapItem(this.mapItems.get(i));
+                Object m = this.mapItems.get(i);
+                if (MapItem.class.isAssignableFrom(m.getClass())) {
+                    mapView.addMapItem((MapItem)m);
+                }
             }
         }
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("ZZZ", "onResume");
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(MITMapView.MAP_ITEMS)) {
+            this.mapItems = intent.getExtras().getParcelableArrayList(MITMapView.MAP_ITEMS);
+            displayMapItems();
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            handleSearch(query);
+        }
+    }
+
     private void initMap() {
+        Log.d(TAG,"initMap()");
         FragmentManager fm = getFragmentManager();
         mapView = new MITMapView(mContext,fm,R.id.map);
+        mapListView = (ListView)findViewById(R.id.mapListView);
+        mapListView.addHeaderView(getMapListHeader());
+
         showLocationButton = (ImageView)findViewById(R.id.showLocationButton);
         showListButton = (ImageView)findViewById(R.id.showListButton);
 
@@ -84,8 +107,7 @@ public class  MapsActivity extends MITModuleActivity {
                 mapView.showLocation();
             }
         });
-
-        // set initial height
+        Log.d(TAG, "initMap()");
     }
 
     private static void zoomToCoverAllMarkers(ArrayList<LatLng> latLngList, GoogleMap googleMap)
@@ -104,27 +126,22 @@ public class  MapsActivity extends MITModuleActivity {
         googleMap.animateCamera(cu);
     }
 
-    public int getMapContentLayoutId() {
-        return mapContentLayoutId;
-    }
-
-    public void setMapContentLayoutId(int mapContentLayoutId) {
-        this.mapContentLayoutId = mapContentLayoutId;
-    }
-
     public void toggleMap() {
         // this method toggles between the full size map view and the split screen map with content view
 
-        // collapse the map
-        if (mapContentView.getVisibility() == View.GONE) {
-            mapContentView.setVisibility(View.VISIBLE);
+
+        // collapse the map if there the map items list is not empty
+        // the map list button shouldn't be visible if there are no map items to display
+        if (!mapItems.isEmpty() && mapListView.getVisibility() == View.GONE) {
+            mapListView.setVisibility(View.VISIBLE);
+            Log.d(TAG,"list view height = " + mapListView.getHeight());
             showListButton.setVisibility(View.GONE);
             showLocationButton.setVisibility(View.GONE);
             mapView.toggle();
         }
         // expand the map
         else {
-            mapContentView.setVisibility(View.GONE);
+            mapListView.setVisibility(View.GONE);
             showListButton.setVisibility(View.VISIBLE);
             showLocationButton.setVisibility(View.VISIBLE);
             mapView.toggle();
@@ -132,6 +149,53 @@ public class  MapsActivity extends MITModuleActivity {
 
     }
 
-    // Override this method to handle displaying map items on MapsActivity subclasses
-    public void displayMapItems() {}
+    // Add transparent header to list to set initial position below the map
+    protected LinearLayout getMapListHeader() {
+        LinearLayout header = (LinearLayout)inflater.inflate(R.layout.map_list_header, mapListView, false);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleMap();
+            }
+        });
+
+        return header;
+    }
+
+    // Override this method to get map items
+    protected void getMapItems(Map params) {
+    }
+
+    // Override this method to specify the map item handler
+    protected Handler getMapItemHandler() {
+        return null;
+    }
+
+    // Override this method to use a custom ArrayAdapter
+    protected ArrayAdapter<MapItem> getMapItemAdapter() {
+        return null;
+    }
+
+    // Override this method to use a custom InfoWindowAdapter
+    protected GoogleMap.InfoWindowAdapter getInfoWindowAdapter() {
+        return null;
+    }
+
+    // override this method to use a custom onclick listener
+    protected AdapterView.OnItemClickListener getOnItemClickListener() {
+        return null;
+    }
+
+    protected void displayMapItems() {
+        Log.d(TAG,"displayMapItems()");
+        ArrayAdapter<MapItem> arrayAdapter = this.getMapItemAdapter();
+        mapListView.setAdapter(arrayAdapter);
+
+        if (mapView != null) {
+            mapView.addMapItemList(this.mapItems);
+        }
+
+        mapListView.setOnItemClickListener(this.getOnItemClickListener());
+        toggleMap();
+    }
 }
