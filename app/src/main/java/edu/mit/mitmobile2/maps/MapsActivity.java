@@ -99,7 +99,16 @@ public class  MapsActivity extends MITModuleActivity {
             mapView.getMap().setOnInfoWindowClickListener(this.getOnInfoWindowClickListener());
         }
 
-        mapListView = (ListView)findViewById(R.id.mapListView);
+        // set onmarker click listener
+        mapView.getMap().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                mapView.setLastClickedMarker(marker);
+                return false;
+            }
+        });
+
+                mapListView = (ListView)findViewById(R.id.mapListView);
         mapListView.addHeaderView(getMapListHeader());
 
         showLocationButton = (ImageView)findViewById(R.id.showLocationButton);
@@ -144,6 +153,9 @@ public class  MapsActivity extends MITModuleActivity {
         // collapse the map if there the map items list is not empty
         // the map list button shouldn't be visible if there are no map items to display
         if (!mapItems.isEmpty() && mapListView.getVisibility() == View.GONE) {
+            if (mapView.getLastClickedMarker() != null) {
+                mapView.getLastClickedMarker().hideInfoWindow();
+            }
             mapListView.setVisibility(View.VISIBLE);
             Log.d(TAG,"list view height = " + mapListView.getHeight());
             showListButton.setVisibility(View.GONE);

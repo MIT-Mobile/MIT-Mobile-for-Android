@@ -41,6 +41,7 @@ public class MITMapView {
     public static String MAP_ITEMS = "MAP_ITEMS";
     private FragmentManager mFm;
     private int mapResourceId;
+    private Marker lastClickedMarker;
 
     //set initial latlng for zoom in MIT area
     final LatLng initialLatLng = new LatLng(42.359858, -71.09913);
@@ -57,6 +58,7 @@ public class MITMapView {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, MITMapView.INITIAL_ZOOM));
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
+        mMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
     private ArrayList<MapItem> mapItems;
@@ -177,5 +179,12 @@ public class MITMapView {
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
     }
 
+    public Marker getLastClickedMarker() {
+        return lastClickedMarker;
+    }
+
+    public void setLastClickedMarker(Marker lastClickedMarker) {
+        this.lastClickedMarker = lastClickedMarker;
+    }
 }
 
