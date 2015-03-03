@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 public class MITShuttleStopWrapper {
 
     @Expose
-    private Double id;
+    private String id;
     @Expose
     private String url;
     @SerializedName("route_id")
@@ -31,12 +31,12 @@ public class MITShuttleStopWrapper {
     private String predictionsUrl;
 
 
-    public Double getId() {
+    public String getId() {
         return id;
     }
 
 
-    public void setId(Double id) {
+    public void setId(String id) {
         this.id = id;
     }
 

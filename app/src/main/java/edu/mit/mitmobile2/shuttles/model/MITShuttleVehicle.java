@@ -3,7 +3,7 @@ package edu.mit.mitmobile2.shuttles.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITShuttleVehicles {
+public class MITShuttleVehicle {
 
     @Expose
     private String id;

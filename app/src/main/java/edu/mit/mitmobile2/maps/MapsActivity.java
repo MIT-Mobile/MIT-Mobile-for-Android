@@ -1,15 +1,10 @@
 package edu.mit.mitmobile2.maps;
 
-import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import android.app.SearchManager;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import android.app.FragmentManager;
@@ -56,24 +51,6 @@ public class  MapsActivity extends MITModuleActivity {
                 }
             }
         }
-
-
-        HashMap<String, String> queries = new HashMap<>();
-        queries.put("agency", "mit");
-
-        apiClient.get(Constants.SHUTTLES, "shuttles/predictions", null, queries, new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                Log.d("ZZZ", "onResume");
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d("ZZZ", "onResume");
-
-            }
-        });
     }
 
     @Override
