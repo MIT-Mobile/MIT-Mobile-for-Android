@@ -55,6 +55,8 @@ public class ModuleSelectorActivity extends Activity {
 		Log.d("ZZZ", "Intent: " + intent.getDataString());
 		Log.d("ZZZ", "Scheme: " + intent.getScheme());
 
+        //If the intent has come from a URL
+        //Could swap activities w/fragments, make the call to show fragment in here
 		if (intent.getScheme() != null && intent.getScheme().equals("mitmobile2")) {
 			String intentString = intent.getDataString();
 			String[] data = intentString.split("://");
@@ -66,6 +68,7 @@ public class ModuleSelectorActivity extends Activity {
 			}
 		}
 		else {
+            //If it's coming from app startup
 			this.module = ModuleSelectorActivity.DEFAULT_MODULE;
 		}
 

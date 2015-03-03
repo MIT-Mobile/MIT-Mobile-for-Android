@@ -21,7 +21,7 @@ public class MITShuttleVehiclesWrapper {
     @Expose
     private Boolean predictable;
     @Expose
-    private List<MITShuttleVehicles> vehicles = new ArrayList<MITShuttleVehicles>();
+    private List<MITShuttleVehicle> vehicles = new ArrayList<MITShuttleVehicle>();
 
 
     public String getRouteId() {
@@ -74,7 +74,7 @@ public class MITShuttleVehiclesWrapper {
     }
 
 
-    public List<MITShuttleVehicles> getVehicles() {
+    public List<MITShuttleVehicle> getVehicles() {
         return vehicles;
     }
 
@@ -83,7 +83,7 @@ public class MITShuttleVehiclesWrapper {
      * @param vehicles
      * The vehicles
      */
-    public void setVehicles(List<MITShuttleVehicles> vehicles) {
+    public void setVehicles(List<MITShuttleVehicle> vehicles) {
         this.vehicles = vehicles;
     }
 
