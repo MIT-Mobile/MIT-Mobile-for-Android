@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MITApp-marty.iml" filepath="$PROJECT_DIR$/MITApp-marty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MIT-Mobile-for-Android.iml" filepath="$PROJECT_DIR$/MIT-Mobile-for-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-async-http-1.4.6/android-async-http-1.4.6.iml" filepath="$PROJECT_DIR$/android-async-http-1.4.6/android-async-http-1.4.6.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

@@ -2,60 +2,53 @@
 <items version="2" >
 
     <item
-        jar="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/classes-290f5d25680fa7a13e7273564e10bc9c47bb6e91.jar" />
-    </item>
-    <item
-        jar="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="686344a780033e4ba22b926cd225f8d4941247e6">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/classes-60920cd7576a821226dc1074a1d8091465f8193c.jar" />
-    </item>
-    <item
-        jar="/opt/android-sdk-linux/extras/android/m2repository/com/android/support/support-annotations/21.0.0/support-annotations-21.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="1a578b9607b36266c63d43a4fa0ab5664dbe911e">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.0-e0acdf744d206477b06b8c712da235d8519f9b33.jar" />
-    </item>
-    <item
-        jar="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/exploded-aar/com.sothree.slidinguppanel/library/3.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c1200ab3b93b8f42c0878b00eb79a84c1f112cf7">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/classes-56efb6cd26976d45005fd69ab322efbff14a31b1.jar" />
-    </item>
-    <item
-        jar="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/libs/internal_impl-21.0.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="1609e6d42d0480b0f4188e2c29f75388fa12a8f0">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.0-524799a66cf995ffff2be69c0c877713cae312a8.jar" />
-    </item>
-    <item
-        jar="/home/sseligma/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/library-2.4.0-2ebef481418618eebbc7e6a0d49e3f965aa753b8.jar" />
-    </item>
-    <item
-        jar="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.3.4/classes.jar"
+        jar="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.3.4/classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="cf251baf39f5c5138224b67b4106eb6331abbd13">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/classes-8fcd8e43da1bdb2fbf8f8dd26b6219ae6243cca1.jar" />
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/classes-b3232a3c8e1803ba0adc181aed59a9373a53f3b0.jar" />
     </item>
     <item
-        jar="/home/sseligma/.gradle/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.6/a845a88238be0b5be9d238652c1bc0605ef91f52/android-async-http-1.4.6.jar"
+        jar="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/classes-4815913c2c18195b4919f6d101ea67ad27497e80.jar" />
+    </item>
+    <item
+        jar="/Users/Chris/Android SDK/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-54e01403845c8890ec1b1af840018544ec0fc16f.jar" />
+    </item>
+    <item
+        jar="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-3086c161dbe6421ddbbbdb190e0472b55ad301f8.jar" />
+    </item>
+    <item
+        jar="/Users/Chris/.gradle/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.6/a845a88238be0b5be9d238652c1bc0605ef91f52/android-async-http-1.4.6.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="a845a88238be0b5be9d238652c1bc0605ef91f52">
-        <dex dex="/home/sseligma/AndroidstudioProjects/MITApp-marty/app/build/intermediates/pre-dexed/debug/android-async-http-1.4.6-0d3ec0d34b441354cd4a7fa24c0822083e405a71.jar" />
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/android-async-http-1.4.6-6b418e1debf51fae65a40027ce7660bfa3df2af8.jar" />
+    </item>
+    <item
+        jar="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/classes-e5ab97d10c432b56e41da0a34df02cb50929f8c5.jar" />
+    </item>
+    <item
+        jar="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/Chris/Desktop/Dev/Intrepid Client/MIT-Android-Old/MIT-Mobile-for-Android/app/build/intermediates/pre-dexed/debug/classes-3850a3a6934f2d942f54aea3fd453f75244e4e9f.jar" />
     </item>
 
 </items>

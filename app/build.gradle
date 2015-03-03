@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 20
+    compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
@@ -19,7 +19,9 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:+'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'com.google.maps.android:android-maps-utils:0.3+'
     //compile ('org.restlet.android:org.restlet:2.3.1')
