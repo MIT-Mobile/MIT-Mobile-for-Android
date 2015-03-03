@@ -1,8 +1,11 @@
 package edu.mit.mitmobile2.maps;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.resources.ResourceItem;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import android.app.SearchManager;
 import java.util.ArrayList;
@@ -24,11 +27,9 @@ import android.widget.ListView;
 import com.google.android.gms.maps.CameraUpdate;
         import com.google.android.gms.maps.CameraUpdateFactory;
         import com.google.android.gms.maps.GoogleMap;
-        import com.google.android.gms.maps.MapFragment;
         import com.google.android.gms.maps.model.LatLng;
         import com.google.android.gms.maps.model.LatLngBounds;
         import com.google.android.gms.maps.model.Marker;
-        import com.google.android.gms.maps.model.MarkerOptions;
 
 public class  MapsActivity extends MITModuleActivity {
 
@@ -56,6 +57,23 @@ public class  MapsActivity extends MITModuleActivity {
             }
         }
 
+
+        HashMap<String, String> queries = new HashMap<>();
+        queries.put("agency", "mit");
+
+        apiClient.get(Constants.SHUTTLES, "shuttles/predictions", null, queries, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Log.d("ZZZ", "onResume");
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("ZZZ", "onResume");
+
+            }
+        });
     }
 
     @Override

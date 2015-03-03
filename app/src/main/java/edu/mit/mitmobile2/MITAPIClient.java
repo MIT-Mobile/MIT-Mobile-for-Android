@@ -21,7 +21,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 public class MITAPIClient {
-	
+
 	protected static Map<String,APIEntry> api;
 	public static final String DEV = "dev";
 	public static final String TEST = "test";
@@ -34,22 +34,25 @@ public class MITAPIClient {
     protected static final int FORMAT_HTML = 1;
     protected static final int FORMAT_JSON = 2;
 
+    private RetrofitManager retrofitManager;
+
 	protected Context mContext;
 	protected AsyncHttpClient client ;
-	
+
 	public MITAPIClient(Context mContext) {
 		super();
 		this.mContext = mContext;
 		// TODO Auto-generated constructor stub
+        this.retrofitManager = new RetrofitManager();
 	}
 
     public static void init(Context mContext) {
 
 		String json = "";
-		// read the api.json file to populate the api map the first time this class is initiated 
+		// read the api.json file to populate the api map the first time this class is initiated
 		if (MITAPIClient.api == null) {
 			MITAPIClient.api = new HashMap<String,APIEntry>();
-			
+
 	        try {
 	        	InputStream is = mContext.getAssets().open("api.json");
 	        	int size = is.available();
@@ -61,10 +64,10 @@ public class MITAPIClient {
 	        } catch (IOException ex) {
 	            ex.printStackTrace();
 	        }
-	        
+
 	        try {
 	        	JSONObject jObject = new JSONObject(json);
-	        	
+
 	        	Iterator n = jObject.keys();
 	        	List<String> keysList = new ArrayList<String>();
 	              while (n.hasNext()) {
@@ -87,25 +90,25 @@ public class MITAPIClient {
 	        	Log.d("API",e.getMessage().toString());
 	        }
 
-			
+
 		}
 	}
-	
+
 	public void setEnvironment(String env) {
 		MITAPIClient.environment = env;
 	}
-	
+
     public void get(String api,String path,Map<String,String> params, final Handler apiHandler, final int format) {
 		this.client = new AsyncHttpClient();
         client.setEnableRedirects(true);
-		
+
 		// get the url of the api from the api key and the environment
 		APIEntry apiEntry = MITAPIClient.api.get(api);
 		String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
 		if (path != null) {
 			apiUrl += path;
 		}
-		
+
 		if (params != null) {
 			String queryString = "";
 			Iterator it = params.entrySet().iterator();
@@ -122,7 +125,7 @@ public class MITAPIClient {
 			apiUrl += queryString;
             Log.d("API","api url = " + apiUrl);
 		}
-		
+
 		// Client GET
 		client.get(apiUrl, new AsyncHttpResponseHandler() {
 
@@ -131,7 +134,7 @@ public class MITAPIClient {
 		        // called before request is started
 		    	Log.d("ZZZ","start");
 		    }
-		    
+
 		    @Override
 		    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
 				JSONObject jObject = new JSONObject();
@@ -154,7 +157,7 @@ public class MITAPIClient {
 		    	apiHandler.sendMessage(apiMessage);
 		    	Log.d("API",res);
 		    }
-	
+
 		    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
 		        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
 		    	Log.d("API","failure");
@@ -165,7 +168,7 @@ public class MITAPIClient {
 		    	apiMessage.obj = null;
 		    	apiHandler.sendMessage(apiMessage);
 		    }
-	
+
 		    public void onRetry(int retryNo) {
 		        // called when request is retried
 		    	Log.d("API","retry");
@@ -205,6 +208,10 @@ public class MITAPIClient {
         }
 
         return r;
+    }
+
+    public void get(String api, String path, HashMap<String,String> pathParams, HashMap<String,String> queryParams, Object callback) {
+        retrofitManager.reflectOnObjects(api, path, pathParams, queryParams, callback);
     }
 
 }

@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.resources;
 
 import edu.mit.mitmobile2.APIJsonResponse;
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 
 import android.content.Intent;
@@ -25,9 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.maps.MapsActivity;
-import edu.mit.mitmobile2.resources.ResourceRowAdapter;
 
 
 
@@ -133,7 +132,7 @@ public class ResourcesActivity extends MapsActivity {
     protected void getMapItems(Map params) {
         Log.d(TAG, "getMapItems()");
         this.showProgressBar();
-        this.apiClient.getJson("resource",null,params,this.getMapItemHandler());
+        this.apiClient.getJson(Constants.RESOURCES,null,params,this.getMapItemHandler());
     }
 
     @Override
