@@ -36,7 +36,6 @@ public class ShuttlesActivity extends MITModuleActivity {
             @Override
             public void success(List<MITShuttlePredictionWrapper.Predictions> mitShuttlePredictionWrapper, Response response) {
                 Log.d("ZZZ", "onResume");
-                Log.d("ZZZ", "onResume");
                 Toast.makeText(ShuttlesActivity.this, "Finished", Toast.LENGTH_SHORT).show();
             }
 

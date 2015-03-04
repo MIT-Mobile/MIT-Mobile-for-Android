@@ -22,25 +22,23 @@ public class RetrofitManager {
 
     private static class MitEndpoint implements Endpoint {
 
-        public static MitEndpoint create(String endpoint) {
-            return new MitEndpoint(endpoint);
+        public static MitEndpoint create() {
+            return new MitEndpoint();
         }
 
-        public MitEndpoint(String url) {
-            this.url = url;
+        public MitEndpoint() {
         }
 
         private String url;
 
         public void setUrl(String url) {
-            this.url = url;
+            // Remove the last backslash because retrofit also requires a backslash at the beginning of the HTTP call path
+            String modifiedUrl = url.substring(0, url.length() - 1);
+            this.url = modifiedUrl;
         }
 
         @Override
         public String getUrl() {
-            if (url == null) {
-                throw new IllegalStateException("Url not set");
-            }
             return url;
         }
 
@@ -50,15 +48,10 @@ public class RetrofitManager {
         }
     }
 
-    public static final String PROD_ENDPOINT = "http://m.mit.edu/apis";
-    public static final String DEV_ENDPOINT = "http://mobile-dev.mit.edu/apis";
-    public static final String TEST_ENDPOINT = "http://mobile-test.mit.edu/apis";
-    public static final String DEFAULT_ENDPOINT = DEV_ENDPOINT;
-
     private static HashMap<String, String> paths;
     private static HashMap<String, String> queries;
 
-    private static MitEndpoint mitEndpoint = MitEndpoint.create(DEFAULT_ENDPOINT);
+    private static MitEndpoint mitEndpoint = MitEndpoint.create();
 
     private static RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
@@ -103,7 +96,7 @@ public class RetrofitManager {
         paths = pathParams;
         queries = queryParams;
 
-        for (int i = 2; i < pathSections.length; i++) {
+        for (int i = 1; i < pathSections.length; i++) {
             // Skip the first
             if (!pathSections[i].contains("{")) {
                 methodName += pathSections[i];
@@ -124,7 +117,13 @@ public class RetrofitManager {
     }
 
     public static void changeEndpoint(String url) {
-        mitEndpoint.setUrl(url);
+        if (mitEndpoint.getUrl() != null) {
+            if (!(mitEndpoint.getUrl() + "/").equals(url)) {
+                mitEndpoint.setUrl(url);
+            }
+        } else {
+            mitEndpoint.setUrl(url);
+        }
     }
 
     public interface MitShuttleService {
