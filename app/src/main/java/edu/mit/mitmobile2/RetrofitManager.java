@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2;
 
-import android.util.Log;
-
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -31,7 +30,26 @@ public class RetrofitManager {
     public RetrofitManager() {
     }
 
-    public void reflectOnObjects(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) {
+    private static RequestInterceptor requestInterceptor = new RequestInterceptor() {
+        @Override
+        public void intercept(RequestFacade request) {
+            if (paths != null) {
+                for (Map.Entry<String, String> set : paths.entrySet()) {
+                    request.addPathParam(set.getKey(), set.getValue());
+                }
+                paths.clear();
+            }
+
+            if (queries != null) {
+                for (Map.Entry<String, String> set : queries.entrySet()) {
+                    request.addQueryParam(set.getKey(), set.getValue());
+                }
+                queries.clear();
+            }
+        }
+    };
+
+    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) {
         Method m;
         String[] pathSections = path.split("/");
         String methodName = "get";
@@ -48,23 +66,14 @@ public class RetrofitManager {
             }
         }
 
-        switch (apiType) {
-            case Constants.SHUTTLES:
-                try {
-                    m = MIT_SHUTTLE_SERVICE.getClass().getDeclaredMethod(methodName, Callback.class);
-                    m.invoke(MIT_SHUTTLE_SERVICE, callback);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    Log.e("ERR", e.getMessage());
-                }
-                break;
-            case Constants.RESOURCES:
-                try {
-                    m = MIT_RESOURCES_SERVICE.getClass().getDeclaredMethod(methodName, Callback.class);
-                    m.invoke(MIT_RESOURCES_SERVICE, callback);
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    Log.e("ERR", e.getMessage());
-                }
-                break;
+        String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
+        try {
+            Field f = RetrofitManager.class.getDeclaredField(serviceName);
+            m = f.getType().getDeclaredMethod(methodName, Callback.class);
+            Object o = f.get(Class.forName(f.getType().getName()));
+            m.invoke(o, callback);
+        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+            Timber.e(e, "Reflection");
         }
     }
 
@@ -76,30 +85,13 @@ public class RetrofitManager {
                     Timber.d(message);
                 }
             })
-            .setRequestInterceptor(new RequestInterceptor() {
-                @Override
-                public void intercept(RequestFacade request) {
-                    if (paths != null) {
-                        for (Map.Entry<String, String> set : paths.entrySet()) {
-                            request.addPathParam(set.getKey(), set.getValue());
-                        }
-                        paths.clear();
-                    }
-
-                    if (queries != null) {
-                        for (Map.Entry<String, String> set : queries.entrySet()) {
-                            request.addQueryParam(set.getKey(), set.getValue());
-                        }
-                        queries.clear();
-                    }
-                }
-            })
+            .setRequestInterceptor(requestInterceptor)
             .setLogLevel(RestAdapter.LogLevel.FULL)
             .build();
 
-    private static final MitShuttleService MIT_SHUTTLE_SERVICE = MBTA_RT_REST_ADAPTER.create(MitShuttleService.class);
+    // These require specific naming conventions: "MIT_(Module Name)_SERVICE"
+    private static final MitShuttleService MIT_SHUTTLES_SERVICE = MBTA_RT_REST_ADAPTER.create(MitShuttleService.class);
     private static final MitResourcesService MIT_RESOURCES_SERVICE = MBTA_RT_REST_ADAPTER.create(MitResourcesService.class);
-
 
     public interface MitShuttleService {
 
@@ -120,6 +112,6 @@ public class RetrofitManager {
     }
 
     public interface MitResourcesService {
-
+        //TODO: Add resources calls here
     }
 }

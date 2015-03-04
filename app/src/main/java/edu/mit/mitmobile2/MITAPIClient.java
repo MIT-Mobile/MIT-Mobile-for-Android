@@ -34,8 +34,6 @@ public class MITAPIClient {
     protected static final int FORMAT_HTML = 1;
     protected static final int FORMAT_JSON = 2;
 
-    private RetrofitManager retrofitManager;
-
 	protected Context mContext;
 	protected AsyncHttpClient client ;
 
@@ -43,7 +41,6 @@ public class MITAPIClient {
 		super();
 		this.mContext = mContext;
 		// TODO Auto-generated constructor stub
-        this.retrofitManager = new RetrofitManager();
 	}
 
     public static void init(Context mContext) {
@@ -211,7 +208,7 @@ public class MITAPIClient {
     }
 
     public void get(String api, String path, HashMap<String,String> pathParams, HashMap<String,String> queryParams, Object callback) {
-        retrofitManager.reflectOnObjects(api, path, pathParams, queryParams, callback);
+        RetrofitManager.makeHttpCall(api, path, pathParams, queryParams, callback);
     }
 
 }

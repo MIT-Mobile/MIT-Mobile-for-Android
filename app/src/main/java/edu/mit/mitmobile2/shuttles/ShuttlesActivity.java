@@ -10,6 +10,7 @@ import retrofit.client.Response;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ public class ShuttlesActivity extends MITModuleActivity {
             public void success(List<MITShuttlePredictionWrapper.Predictions> mitShuttlePredictionWrapper, Response response) {
                 Log.d("ZZZ", "onResume");
                 Log.d("ZZZ", "onResume");
+                Toast.makeText(ShuttlesActivity.this, "Finished", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -68,15 +70,13 @@ public class ShuttlesActivity extends MITModuleActivity {
             @Override
             public void success(List<MITShuttleRouteWrapper> mitShuttleRouteWrappers, Response response) {
                 Log.d("ZZZ", "onResume");
-                Log.d("ZZZ", "onResume");
-
+                Toast.makeText(ShuttlesActivity.this, "Finished", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d("ZZZ", "onResume");
                 Log.d("ZZZ", "onResume");
-
             }
         });*/
 
