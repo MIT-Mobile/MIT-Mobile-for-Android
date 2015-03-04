@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.mit.mitmobile2"
-    android:versionCode="1"
-    android:versionName="1.0" >
-
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="21" />
+    package="edu.mit.mitmobile2">
 
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
@@ -24,7 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<!--        android:theme="@android:style/Theme.Holo.Light" -->
+    <!--        android:theme="@android:style/Theme.Holo.Light" -->
 
     <application
         android:name=".MitMobileApplication"
@@ -32,16 +26,17 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/mit_logo_for_action_bar"
-        android:theme="@style/MITMobile" >
+        android:theme="@style/MITMobile">
         <activity
             android:name=".ModuleSelectorActivity"
-            android:launchMode="singleTop" >
-            <intent-filter android:label="MIT Mobile" >
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme">
+            <intent-filter android:label="MIT Mobile">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="moduleSelector" >
+            <intent-filter android:label="moduleSelector">
                 <data android:scheme="mitmobile2" />
 
                 <action android:name="android.intent.action.VIEW" />
@@ -51,51 +46,64 @@
         </activity>
         <activity
             android:name=".news.NewsActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_news"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".shuttles.ShuttlesActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_shuttles"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".maps.MapsActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_maps"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".events.EventsActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_events"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".tour.TourActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_tours"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".emergency.EmergencyActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_emergency"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".libraries.LibrariesActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_libraries"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".facilities.FacilitiesActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_facilities"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".dining.DiningActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_dining"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".qrreader.QrreaderActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_qrreader"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".links.LinksActivity"
-            android:launchMode="singleTop" >
-        </activity>
+            android:label="@string/title_activity_links"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
         <activity
             android:name=".resources.ResourcesActivity"
-            android:launchMode="singleTop" >
+            android:label="@string/title_activity_resources"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -116,10 +124,11 @@
 
         <activity
             android:name=".resources.ResourceViewActivity"
-            android:label="@string/title_activity_resource_view" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                    android:value="edu.mit.mitmobile2.resources.ResourcesActivity">
-            </meta-data>
+            android:label="@string/title_activity_resource_view"
+            android:theme="@style/Theme.MyTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.mit.mitmobile2.resources.ResourcesActivity"/>
         </activity>
     </application>
 

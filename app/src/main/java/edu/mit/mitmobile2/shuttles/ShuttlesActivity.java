@@ -1,19 +1,9 @@
 package edu.mit.mitmobile2.shuttles;
 
-import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.model.MITShuttlePredictionWrapper;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class ShuttlesActivity extends MITModuleActivity {
 
@@ -28,7 +18,9 @@ public class ShuttlesActivity extends MITModuleActivity {
          * Samples of how to use the API Call with Retrofit
          */
 
-        HashMap<String, String> queries = new HashMap<>();
+//        setTitle(getString(R.string.title_activity_shuttles));
+
+        /*HashMap<String, String> queries = new HashMap<>();
         queries.put("agency", "mit");
         queries.put("stop_number", "1");
 
@@ -44,7 +36,7 @@ public class ShuttlesActivity extends MITModuleActivity {
             public void failure(RetrofitError error) {
                 Log.d("ZZZ", "onResume");
             }
-        });
+        });*/
 
         /*HashMap<String, String> pathParams = new HashMap<>();
         pathParams.put("route", "tech");

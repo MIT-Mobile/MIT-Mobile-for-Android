@@ -1,12 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.mitapp16.MITModuleActivity" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.mitapp16.MITModuleActivity">
 
     <item android:id="@+id/search"
         android:title="@string/search_title"
         android:icon="@drawable/action_search"
         android:showAsAction="ifRoom"
-        android:actionViewClass="android.widget.SearchView" />
+        app:actionViewClass="android.support.v7.widget.SearchView" />
 
     <item
         android:id="@+id/action_settings"
