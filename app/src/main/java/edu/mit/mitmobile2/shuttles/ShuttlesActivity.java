@@ -27,13 +27,13 @@ public class ShuttlesActivity extends MITModuleActivity {
         apiClient.get(Constants.SHUTTLES, Constants.Shuttles.PREDICTIONS_PATH, null, queries, new Callback<List<MITShuttlePredictionWrapper.Predictions>>() {
             @Override
             public void success(List<MITShuttlePredictionWrapper.Predictions> mitShuttlePredictionWrapper, Response response) {
-                Log.d("ZZZ", "onResume");
+                Timber.d("Success");
                 Toast.makeText(ShuttlesActivity.this, "Finished", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("ZZZ", "onResume");
+                Timber.e(error, "Failed");
             }
         });*/
 

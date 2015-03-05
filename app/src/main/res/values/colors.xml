@@ -44,7 +44,7 @@
     <color name="overdue_text">#ff990000</color>
     <color name="libraries_gray">#404649</color>
     <color name="news_header_item">#383838</color>
-    <color name="mit_app_color">#ff464646</color>
+    <color name="mit_app_color">#ff4b4b4b</color>
     <color name="mit_app_color_dark">#ff2e2e2e</color>
 
 </resources>

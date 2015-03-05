@@ -65,6 +65,11 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme"/>
         <activity
+            android:name=".people.PeopleActivity"
+            android:label="@string/title_activity_people"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme"/>
+        <activity
             android:name=".tour.TourActivity"
             android:label="@string/title_activity_tours"
             android:launchMode="singleTop"
