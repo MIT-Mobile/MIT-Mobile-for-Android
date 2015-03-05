@@ -10,13 +10,13 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search</string>
     <string name="title_activity_dining">Dining</string>
-    <string name="title_activity_emergency">Emergency</string>
+    <string name="title_activity_emergency">Emergency Info</string>
     <string name="title_activity_events">Events</string>
     <string name="title_activity_facilities">Facilities</string>
     <string name="title_activity_libraries">Libraries</string>
     <string name="title_activity_links">Links</string>
     <string name="title_activity_maps">Maps</string>
-    <string name="title_activity_news">News</string>
+    <string name="title_activity_news">MIT News</string>
     <string name="title_activity_people">People</string>
     <string name="title_activity_qrreader">Qr Reader</string>
     <string name="title_activity_resources">Resources</string>

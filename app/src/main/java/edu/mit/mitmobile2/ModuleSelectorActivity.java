@@ -41,7 +41,7 @@ public class ModuleSelectorActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mContext = this;
-		setTheme(android.R.style.Theme_Holo_Light);
+		setTheme(R.style.Theme_MyTheme);
 		loadNavigation(mContext);
         MITAPIClient.init(mContext);
 	}
