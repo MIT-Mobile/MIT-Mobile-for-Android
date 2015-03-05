@@ -16,10 +16,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--        android:theme="@android:style/Theme.Holo.Light" -->
 
+    <!-- android:theme="@android:style/Theme.Holo.Light" -->
     <application
         android:name=".MitMobileApplication"
         android:allowBackup="true"
@@ -48,62 +47,62 @@
             android:name=".news.NewsActivity"
             android:label="@string/title_activity_news"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".shuttles.ShuttlesActivity"
             android:label="@string/title_activity_shuttles"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".maps.MapsActivity"
             android:label="@string/title_activity_maps"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".events.EventsActivity"
             android:label="@string/title_activity_events"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".people.PeopleActivity"
             android:label="@string/title_activity_people"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.TourActivity"
             android:label="@string/title_activity_tours"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".emergency.EmergencyActivity"
             android:label="@string/title_activity_emergency"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".libraries.LibrariesActivity"
             android:label="@string/title_activity_libraries"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".facilities.FacilitiesActivity"
             android:label="@string/title_activity_facilities"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".dining.DiningActivity"
             android:label="@string/title_activity_dining"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".qrreader.QrreaderActivity"
             android:label="@string/title_activity_qrreader"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".links.LinksActivity"
             android:label="@string/title_activity_links"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".resources.ResourcesActivity"
             android:label="@string/title_activity_resources"
@@ -133,8 +132,13 @@
             android:theme="@style/Theme.MyTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.mit.mitmobile2.resources.ResourcesActivity"/>
+                android:value="edu.mit.mitmobile2.resources.ResourcesActivity" />
         </activity>
+        <activity
+            android:name=".shuttles.ShuttleStopsActivity"
+            android:label="@string/title_activity_shuttle_stops"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"/>
     </application>
 
 </manifest>

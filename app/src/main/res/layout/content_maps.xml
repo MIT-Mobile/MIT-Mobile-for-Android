@@ -31,7 +31,7 @@
         android:layout_alignRight="@+id/map"
         android:layout_alignBottom="@+id/map"
         android:layout_above="@+id/map"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/mapListView"

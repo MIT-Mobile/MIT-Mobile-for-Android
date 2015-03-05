@@ -27,5 +27,6 @@
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
     <string name="title_activity_view_resource">ViewResourceActivity</string>
     <string name="title_activity_resource_view">ResourceViewActivity</string>
+    <string name="title_activity_shuttle_stops">ShuttleStopsActivity</string>
 
 </resources>

@@ -4,10 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.location.Location;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,12 +16,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
 import android.graphics.*;
-import android.content.res.Resources;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.google.maps.android.ui.IconGenerator;
@@ -37,7 +30,7 @@ public class MITMapView {
 
     private GoogleMap mMap;
     private MapFragment mapFragment;
-    private MapItem  mItem;
+    private MapItem mItem;
     public static String MAP_ITEMS = "MAP_ITEMS";
     private FragmentManager mFm;
     private int mapResourceId;
@@ -64,11 +57,11 @@ public class MITMapView {
     private ArrayList<MapItem> mapItems;
 
     public void show() {
-       Fragment f = mFm.findFragmentById(mapResourceId);
+        Fragment f = mFm.findFragmentById(mapResourceId);
         mFm.beginTransaction()
                 .show(f)
                 .commit();
-    };
+    }
 
     public void hide() {
         Fragment f = mFm.findFragmentById(mapResourceId);
@@ -113,12 +106,12 @@ public class MITMapView {
         }
     }
 
-    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear,Boolean fit) {
+    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear, Boolean fit) {
         this.mapItems = mapItems;
         if (clear) {
             mMap.clear();
         }
-        if (mMap != null && mapItems != null && mapItems.size()>0) {
+        if (mMap != null && mapItems != null && mapItems.size() > 0) {
             Iterator<MapItem> iterator = mapItems.iterator();
             while (iterator.hasNext()) {
                 MapItem item = (MapItem) iterator.next();
@@ -132,7 +125,7 @@ public class MITMapView {
     }
 
     public void addMapItemList(ArrayList<MapItem> mapItems) {
-        addMapItemList(mapItems, true,true);
+        addMapItemList(mapItems, true, true);
     }
 
     public void fitMapItems() {
@@ -147,7 +140,7 @@ public class MITMapView {
         }
         LatLngBounds bounds = b.build();
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 80);
         mMap.moveCamera(cu);
     }
 
@@ -158,9 +151,8 @@ public class MITMapView {
     public void toggle() {
         if (isExpanded()) {
             float map_height = mContext.getResources().getDimension(R.dimen.map_height);
-            mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int)map_height));
-        }
-        else {
+            mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) map_height));
+        } else {
             mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         }
     }

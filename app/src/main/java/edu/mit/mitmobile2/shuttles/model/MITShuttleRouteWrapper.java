@@ -1,5 +1,8 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MITShuttleRouteWrapper {
+public class MITShuttleRouteWrapper implements Parcelable {
 
     @Expose
     private String id;
@@ -142,4 +145,48 @@ public class MITShuttleRouteWrapper {
         this.stops = stops;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(url);
+        dest.writeString(title);
+        dest.writeString(agency);
+        dest.writeInt(this.scheduled ? 1 : 0);
+        dest.writeInt(this.predictable ? 1 : 0);
+        dest.writeString(description);
+        dest.writeString(predictionsUrl);
+        dest.writeString(vehiclesUrl);
+        dest.writeParcelable(path, 0);
+        dest.writeTypedList(stops);
+    }
+
+    private MITShuttleRouteWrapper(Parcel p) {
+        this.id = p.readString();
+        this.url = p.readString();
+        this.title = p.readString();
+        this.agency = p.readString();
+        this.scheduled = p.readInt() == 1;
+        this.predictable = p.readInt() == 1;
+        this.description = p.readString();
+        this.predictionsUrl = p.readString();
+        this.vehiclesUrl = p.readString();
+        this.path = p.readParcelable(MITShuttlePath.class.getClassLoader());
+        p.readTypedList(this.stops, MITShuttleStopWrapper.CREATOR);
+//        this.stops = p.readArrayList(MITShuttleStopWrapper.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MITShuttleRouteWrapper> CREATOR = new Parcelable.Creator<MITShuttleRouteWrapper>() {
+        public MITShuttleRouteWrapper createFromParcel(Parcel source) {
+            return new MITShuttleRouteWrapper(source);
+        }
+
+        public MITShuttleRouteWrapper[] newArray(int size) {
+            return new MITShuttleRouteWrapper[size];
+        }
+    };
 }

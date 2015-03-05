@@ -1,11 +1,19 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITShuttleStopWrapper {
+import edu.mit.mitmobile2.maps.MapItem;
+
+public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
     @Expose
     private String id;
@@ -24,6 +32,8 @@ public class MITShuttleStopWrapper {
     private String stopNumber;
     @Expose
     private Double lat;
+    @Expose
+    private Double lon;
     @Expose
     private List<MITShuttlePrediction> predictions = new ArrayList<MITShuttlePrediction>();
     @SerializedName("predictions_url")
@@ -95,11 +105,17 @@ public class MITShuttleStopWrapper {
         return lat;
     }
 
-
     public void setLat(Double lat) {
         this.lat = lat;
     }
 
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
 
     public List<MITShuttlePrediction> getPredictions() {
         return predictions;
@@ -120,4 +136,59 @@ public class MITShuttleStopWrapper {
         this.predictionsUrl = predictionsUrl;
     }
 
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions m = new MarkerOptions();
+        m.title(this.title);
+        LatLng position = new LatLng(this.lat, this.lon);
+        m.position(position);
+        return m;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.routeId);
+        dest.writeString(this.routeUrl);
+        dest.writeString(this.title);
+        dest.writeString(this.stopNumber);
+        dest.writeDouble(this.lat);
+        dest.writeDouble(this.lon);
+        dest.writeList(this.predictions);
+        dest.writeString(this.predictionsUrl);
+    }
+
+    private MITShuttleStopWrapper(Parcel p) {
+        this.id = p.readString();
+        this.url = p.readString();
+        this.routeId = p.readString();
+        this.routeUrl = p.readString();
+        this.title = p.readString();
+        this.stopNumber = p.readString();
+        this.lat = p.readDouble();
+        this.lon = p.readDouble();
+        this.predictions = (List<MITShuttlePrediction>) p.readArrayList(MITShuttlePrediction.class.getClassLoader());
+        this.predictionsUrl = p.readString();
+    }
+
+    public static final Parcelable.Creator<MITShuttleStopWrapper> CREATOR = new Parcelable.Creator<MITShuttleStopWrapper>() {
+        public MITShuttleStopWrapper createFromParcel(Parcel source) {
+            return new MITShuttleStopWrapper(source);
+        }
+
+        public MITShuttleStopWrapper[] newArray(int size) {
+            return new MITShuttleStopWrapper[size];
+        }
+    };
 }
