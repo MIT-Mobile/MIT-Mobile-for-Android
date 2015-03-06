@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.maps;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Location;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import android.graphics.*;
+import android.util.TypedValue;
 import android.widget.RelativeLayout;
 
 import com.google.maps.android.ui.IconGenerator;
@@ -140,8 +142,13 @@ public class MITMapView {
         }
         LatLngBounds bounds = b.build();
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 150, 100, 0);
+        Resources resources = mContext.getResources();
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, resources.getDisplayMetrics().widthPixels, dpToPx(resources, 200), 100);
         mMap.moveCamera(cu);
+    }
+
+    public int dpToPx(Resources res, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
 
     public GoogleMap getMap() {

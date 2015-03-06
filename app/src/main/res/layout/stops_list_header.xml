@@ -11,6 +11,15 @@
         android:layout_width="fill_parent"
         android:layout_height="200dp" />
 
+    <Button
+        android:id="@+id/list_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/route_map"
+        android:padding="5dp"
+        android:text="LIST"
+        android:visibility="invisible" />
+
     <View
         android:id="@+id/transparent_map_overlay"
         android:layout_width="fill_parent"
@@ -22,8 +31,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/route_map"
-        android:orientation="vertical"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/route_information_top"
