@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,7 +23,7 @@ import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
 import timber.log.Timber;
 
-public class SoloMapActivity extends MITActivity {
+public class SoloMapActivity extends MITActivity implements Animation.AnimationListener {
 
     private ListView mapItemsListview;
     private ArrayList mapItems;
@@ -154,6 +155,7 @@ public class SoloMapActivity extends MITActivity {
 
         ResizeAnimation a = new ResizeAnimation(view);
         a.setDuration(250);
+        a.setAnimationListener(this);
 
         if (!getMapViewStatus()) {
             mapViewExpanded = true;
@@ -189,5 +191,22 @@ public class SoloMapActivity extends MITActivity {
 
     public int dpToPx(Resources res, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if (!mapViewExpanded) {
+            mapView.setToDefaultBounds();
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 }

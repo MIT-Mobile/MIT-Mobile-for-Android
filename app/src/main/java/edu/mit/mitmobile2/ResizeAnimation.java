@@ -4,9 +4,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-/**
- * Created by Chris on 3/6/15.
- */
 public class ResizeAnimation extends Animation {
     private int startHeight;
     private int deltaHeight; // distance between start and end height
@@ -40,7 +37,6 @@ public class ResizeAnimation extends Animation {
      *            height in pixels
      */
     public void setParams(int start, int end) {
-
         this.startHeight = start;
         deltaHeight = end - startHeight;
     }

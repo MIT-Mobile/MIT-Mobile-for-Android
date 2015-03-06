@@ -37,6 +37,7 @@ public class MITMapView {
     private FragmentManager mFm;
     private int mapResourceId;
     private Marker lastClickedMarker;
+    private LatLngBounds defaultBounds;
 
     //set initial latlng for zoom in MIT area
     final LatLng initialLatLng = new LatLng(42.359858, -71.09913);
@@ -140,10 +141,13 @@ public class MITMapView {
                 b.include(mItem.getMarkerOptions().getPosition());
             }
         }
-        LatLngBounds bounds = b.build();
+        defaultBounds = b.build();
+        setToDefaultBounds();
+    }
 
+    public void setToDefaultBounds() {
         Resources resources = mContext.getResources();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, resources.getDisplayMetrics().widthPixels, dpToPx(resources, 200), 100);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, dpToPx(resources, 200), 130);
         mMap.moveCamera(cu);
     }
 
