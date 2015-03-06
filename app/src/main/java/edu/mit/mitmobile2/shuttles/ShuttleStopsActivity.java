@@ -1,91 +1,37 @@
 package edu.mit.mitmobile2.shuttles;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-
-import com.google.android.gms.maps.GoogleMap;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.maps.MapsActivity;
+import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapters.ShuttleStopsAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRouteWrapper;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
-public class ShuttleStopsActivity extends MapsActivity {
+public class ShuttleStopsActivity extends SoloMapActivity {
 
     ShuttleStopsAdapter adapter;
-    List<MITShuttleStopWrapper> stops = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_shuttle_stops);
 
         MITShuttleRouteWrapper routeWrapper = getIntent().getParcelableExtra("A");
-        mapItems = (ArrayList) routeWrapper.getStops();
-
         adapter = new ShuttleStopsAdapter(this, R.layout.stops_list_row, routeWrapper.getStops());
 
-        super.mapView.getMap().setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                displayMapItems();
-            }
-        });
-    }
+        setMapItems((ArrayList) routeWrapper.getStops());
+        displayMapItems();
 
-    @Override
-    protected LinearLayout getMapListHeader() {
-        return super.getMapListHeader();
-    }
 
-    @Override
-    protected void getMapItems(Map params) {
-        super.getMapItems(params);
-    }
-
-    @Override
-    protected Handler getMapItemHandler() {
-        return super.getMapItemHandler();
     }
 
     @Override
     protected ArrayAdapter getMapItemAdapter() {
         return adapter;
-    }
-
-    @Override
-    protected GoogleMap.InfoWindowAdapter getInfoWindowAdapter() {
-        return super.getInfoWindowAdapter();
-    }
-
-    @Override
-    protected GoogleMap.OnInfoWindowClickListener getOnInfoWindowClickListener() {
-        return super.getOnInfoWindowClickListener();
-    }
-
-    @Override
-    protected AdapterView.OnItemClickListener getOnItemClickListener() {
-        return super.getOnItemClickListener();
-    }
-
-    @Override
-    protected void displayMapItems() {
-        super.displayMapItems();
-    }
-
-    @Override
-    protected void viewMapItem(int mapItemIndex) {
-        super.viewMapItem(mapItemIndex);
     }
 
     @Override

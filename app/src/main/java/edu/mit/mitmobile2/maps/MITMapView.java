@@ -140,7 +140,7 @@ public class MITMapView {
         }
         LatLngBounds bounds = b.build();
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 80);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 150, 100, 0);
         mMap.moveCamera(cu);
     }
 
@@ -177,6 +177,10 @@ public class MITMapView {
 
     public void setLastClickedMarker(Marker lastClickedMarker) {
         this.lastClickedMarker = lastClickedMarker;
+    }
+
+    public MapFragment getMapFragment() {
+        return mapFragment;
     }
 }
 
