@@ -14,6 +14,7 @@
  limitations under the License.
  -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
     <color name="color_okay">#007f00</color>
     <color name="hold_ready_text">#007f00</color>
     <color name="color_dark_grey">#ff404040</color>
@@ -46,5 +47,6 @@
     <color name="news_header_item">#383838</color>
     <color name="mit_app_color">#ff4b4b4b</color>
     <color name="mit_app_color_dark">#ff2e2e2e</color>
+    <color name="mit_tintColor">#a31f34</color>
 
 </resources>
