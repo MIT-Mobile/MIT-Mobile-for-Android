@@ -25,10 +25,13 @@ public class MITShuttleStopWrapper {
     @Expose
     private Double lat;
     @Expose
+    private Double lon;
+    @Expose
     private List<MITShuttlePrediction> predictions = new ArrayList<MITShuttlePrediction>();
     @SerializedName("predictions_url")
     @Expose
     private String predictionsUrl;
+    private float distance;
 
 
     public String getId() {
@@ -101,6 +104,17 @@ public class MITShuttleStopWrapper {
     }
 
 
+    public Double getLon() {
+        return lon;
+    }
+
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+
+
+
     public List<MITShuttlePrediction> getPredictions() {
         return predictions;
     }
@@ -119,5 +133,15 @@ public class MITShuttleStopWrapper {
     public void setPredictionsUrl(String predictionsUrl) {
         this.predictionsUrl = predictionsUrl;
     }
+
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
 
 }
