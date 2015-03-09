@@ -38,12 +38,10 @@ public class ShuttlesActivity extends MITModuleActivity {
 
     int contentLayoutId = R.layout.content_shuttles;
 
-    private final static long UPDATE_SHUTTLE_VIEW = 36000;
     private final static long REFRESH_TIME = 1000;
 
     private MITShuttleAdapter mitShuttleAdapter;
     private final List<MITShuttle> mitshuttles = new ArrayList<>();
-    private Timer updateTimer;
 
     @InjectView(R.id.shuttle_refresh_layout)
     SwipeRefreshLayout shuttleRefreshLayout;
@@ -71,23 +69,6 @@ public class ShuttlesActivity extends MITModuleActivity {
                 }, REFRESH_TIME);
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateTimer = new Timer();
-        updateTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //TODO: refreshing shuttle adapter
-                    }
-                });
-            }
-        }, 0, UPDATE_SHUTTLE_VIEW);
     }
 
     private void initialShuttleView() {
