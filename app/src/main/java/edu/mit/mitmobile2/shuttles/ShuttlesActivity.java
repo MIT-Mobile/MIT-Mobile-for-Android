@@ -22,10 +22,10 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -212,9 +212,9 @@ public class ShuttlesActivity extends MITModuleActivity {
     public void initialListViewFooter(View footer) {
         final RelativeLayout parkOffice = (RelativeLayout) footer.findViewById(R.id.park_office);
         final RelativeLayout saferide = (RelativeLayout) footer.findViewById(R.id.saferide);
-        final RelativeLayout realTimeBusArrivals = (RelativeLayout) footer.findViewById(R.id.real_time_bus_arrivals);
-        final RelativeLayout realTimeTrainArribals = (RelativeLayout) footer.findViewById(R.id.real_time_train_arrivals);
-        final RelativeLayout googleTransit = (RelativeLayout) footer.findViewById(R.id.google_transit);
+        final LinearLayout realTimeBusArrivals = (LinearLayout) footer.findViewById(R.id.real_time_bus_arrivals);
+        final LinearLayout realTimeTrainArribals = (LinearLayout) footer.findViewById(R.id.real_time_train_arrivals);
+        final LinearLayout googleTransit = (LinearLayout) footer.findViewById(R.id.google_transit);
 
         parkOffice.setOnClickListener(new View.OnClickListener() {
             @Override

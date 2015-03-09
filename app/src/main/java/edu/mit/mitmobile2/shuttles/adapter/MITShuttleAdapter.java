@@ -56,7 +56,7 @@ public class MITShuttleAdapter extends BaseAdapter{
         }
 
         if (mitShuttles.get(position).isPredicable()) {
-            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.menu_shuttles);
+            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.home_shuttles);
         } else {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.menu_shuttles);
         }
@@ -76,7 +76,7 @@ public class MITShuttleAdapter extends BaseAdapter{
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
-                viewHolder.firstStopMinuteTextView.setText("-");
+                viewHolder.firstStopMinuteTextView.setText("––");
                 viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
             }
 
@@ -89,7 +89,7 @@ public class MITShuttleAdapter extends BaseAdapter{
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
-                viewHolder.secondStopMinuteTextView.setText("-");
+                viewHolder.secondStopMinuteTextView.setText("––");
                 viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
             }
         } else {
