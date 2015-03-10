@@ -189,7 +189,7 @@ public class ShuttlesActivity extends MITModuleActivity {
             } else if (mitShuttle.isScheduled()) {
                 shuttleRouteStatusUnknown.add(mitShuttle);
             } else {
-                shuttleRouteStatusUnknown.add(mitShuttle);
+                shuttleRouteStatusNotInservice.add(mitShuttle);
             }
         }
         mitshuttles.clear();
