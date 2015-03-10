@@ -140,7 +140,6 @@ public class MITShuttleRouteWrapper implements Parcelable {
         return stops;
     }
 
-
     public void setStops(List<MITShuttleStopWrapper> stops) {
         this.stops = stops;
     }

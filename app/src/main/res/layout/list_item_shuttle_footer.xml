@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="20dp">
+
+    <TextView
+        android:id="@+id/shuttle_contact_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+        android:paddingBottom="@dimen/shuttle_routes_content_padding"
+        android:text="@string/shuttle_contact_title"
+        android:textColor="@color/sbc_header_text"
+        />
+
+    <View
+        style="@style/MITShuttleRoutesView"
+        />
+
+    <RelativeLayout
+        android:id="@+id/park_office"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sbc_header_view">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/shuttle_routes_content_padding"
+                android:textColor="@color/contents_text"
+                android:textSize="@dimen/shuttle_routes_content_size"
+                android:text="@string/parking_office_name"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/shuttle_routes_content_padding"
+                android:textColor="@color/contents_text"
+                android:textSize="@dimen/shuttle_routes_phone_number_size"
+                android:text="@string/parking_office_number"
+                />
+            <View
+                style="@style/MITShuttleRoutesView"
+                />
+        </LinearLayout>
+
+        <ImageView
+            style="@style/MITShuttleRoutesImage"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menu_shuttles"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/saferide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sbc_header_view">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/shuttle_routes_content_padding"
+                android:textColor="@color/contents_text"
+                android:textSize="@dimen/shuttle_routes_content_size"
+                android:text="@string/saferide_name"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/shuttle_routes_content_padding"
+                android:textColor="@color/contents_text"
+                android:textSize="@dimen/shuttle_routes_phone_number_size"
+                android:text="@string/saferide_number"
+                />
+        </LinearLayout>
+
+        <ImageView
+            style="@style/MITShuttleRoutesImage"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menu_shuttles"
+            />
+    </RelativeLayout>
+
+    <View
+        style="@style/MITShuttleRoutesView"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="@dimen/shuttle_routes_content_padding"
+        android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+        android:text="@string/shuttle_mbta_title"
+        android:textColor="@color/sbc_header_text"
+        />
+
+    <View
+        style="@style/MITShuttleRoutesView"
+        />
+
+    <LinearLayout
+        android:id="@+id/real_time_bus_arrivals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/sbc_header_view">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+            android:orientation="vertical">
+            <TextView
+                style="@style/MITShuttleRoutesStopsContent"
+                android:text="@string/real_time_bus"
+                />
+            <ImageView
+                style="@style/MITShuttleRoutesImage"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/menu_shuttles"
+                />
+        </RelativeLayout>
+
+        <View
+            style="@style/MITShuttleRoutesView"
+            android:layout_marginLeft="@dimen/shuttle_routes_info_content_margin"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/real_time_train_arrivals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/sbc_header_view">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+            android:orientation="vertical">
+            <TextView
+                style="@style/MITShuttleRoutesStopsContent"
+                android:text="@string/real_time_train"
+                />
+            <ImageView
+                style="@style/MITShuttleRoutesImage"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/menu_shuttles"
+                />
+        </RelativeLayout>
+
+        <View
+            style="@style/MITShuttleRoutesView"
+            android:layout_marginLeft="@dimen/shuttle_routes_info_content_margin"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/google_transit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/sbc_header_view">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/MITShuttleRoutesStopsContent"
+                android:paddingLeft="@dimen/shuttle_routes_info_content_margin"
+                android:text="@string/google_transit"
+                />
+            <ImageView
+                style="@style/MITShuttleRoutesImage"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/menu_shuttles" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        style="@style/MITShuttleRoutesView"
+        />
+</LinearLayout>
