@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.shuttles;
 
-import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePredictionWrapper;
@@ -28,7 +27,9 @@ public class ShuttlesActivity extends MITModuleActivity {
          * Samples of how to use the API Call with Retrofit
          */
 
-        HashMap<String, String> queries = new HashMap<>();
+//        setTitle(getString(R.string.title_activity_shuttles));
+
+        /*HashMap<String, String> queries = new HashMap<>();
         queries.put("agency", "mit");
         queries.put("stop_number", "1");
 
@@ -42,7 +43,7 @@ public class ShuttlesActivity extends MITModuleActivity {
             public void failure(RetrofitError error) {
                 Timber.e(error, TAG);
             }
-        });
+        });*/
 
 
     }

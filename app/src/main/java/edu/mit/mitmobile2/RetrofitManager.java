@@ -86,7 +86,7 @@ public class RetrofitManager {
 
     // These require specific naming conventions: "MIT_(MODULENAME)_SERVICE"
     private static final MitShuttleService MIT_SHUTTLES_SERVICE = MIT_REST_ADAPTER.create(MitShuttleService.class);
-    private static final MitResourcesService MIT_RESOURCES_SERVICE = MIT_REST_ADAPTER.create(MitResourcesService.class);
+    private static final MitResourceService MIT_RESOURCE_SERVICE = MIT_REST_ADAPTER.create(MitResourceService.class);
 
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) {
         Method m;
@@ -144,7 +144,7 @@ public class RetrofitManager {
         void getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);
     }
 
-    public interface MitResourcesService {
+    public interface MitResourceService {
         //TODO: Add resources calls here
     }
 }
