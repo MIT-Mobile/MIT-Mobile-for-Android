@@ -159,7 +159,7 @@ public class ShuttlesActivity extends MITModuleActivity {
                 stopParams, null, new Callback<MITShuttleStopWrapper>() {
                     @Override
                     public void success(MITShuttleStopWrapper mitShuttleStopWrapper, Response response) {
-                        if (mitShuttleStopWrapper.getPredictions().size() != 0) {
+                        if (mitShuttleStopWrapper.getPredictions() != null && mitShuttleStopWrapper.getPredictions().size() > 0) {
                             if (isFirstStop) {
                                 mitShuttle.setFirstMinute(mitShuttleStopWrapper.getPredictions().get(0).
                                         getSeconds() / 60 + "m");
@@ -187,7 +187,7 @@ public class ShuttlesActivity extends MITModuleActivity {
             } else if (mitShuttle.isScheduled()) {
                 shuttleRouteStatusUnknown.add(mitShuttle);
             } else {
-                shuttleRouteStatusUnknown.add(mitShuttle);
+                shuttleRouteStatusNotInservice.add(mitShuttle);
             }
         }
         mitshuttles.clear();
