@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles.adapters;
+package edu.mit.mitmobile2.shuttles.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
