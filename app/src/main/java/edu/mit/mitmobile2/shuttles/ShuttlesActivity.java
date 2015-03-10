@@ -33,7 +33,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class ShuttlesActivity extends MITModuleActivity {
+public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback{
 
     int contentLayoutId = R.layout.content_shuttles;
     private MITShuttleRouteWrapper data;
@@ -72,7 +72,7 @@ public class ShuttlesActivity extends MITModuleActivity {
     }
 
     private void initialShuttleView() {
-        mitShuttleAdapter = new MITShuttleAdapter(getApplicationContext(), mitshuttles);
+        mitShuttleAdapter = new MITShuttleAdapter(this, mitshuttles);
         shuttleListView.setAdapter(mitShuttleAdapter);
         View footer = ((LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.list_item_shuttle_footer, null, false);
@@ -256,5 +256,30 @@ public class ShuttlesActivity extends MITModuleActivity {
                     "Please install a map app.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void shuttleRouteClick(String routeID) {
+        HashMap<String, String> routeParams = new HashMap<>();
+        routeParams.put("route", routeID);
+        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ROUTE_INFO_PATH, routeParams, null,
+                new Callback<MITShuttleRouteWrapper>() {
+                    @Override
+                    public void success(final MITShuttleRouteWrapper mitShuttleRouteWrapper, Response response) {
+                        Intent intent = new Intent(getApplicationContext(), ShuttleStopsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("route", mitShuttleRouteWrapper);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                    }
+                });
+    }
+
+    @Override
+    public void shuttleStopClick(String stopID) {
+
     }
 }

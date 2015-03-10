@@ -6,6 +6,7 @@
     android:background="@color/sbc_header_view">
 
     <RelativeLayout
+        android:id="@+id/shuttle_route"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -34,6 +35,7 @@
         android:paddingLeft="@dimen/shuttle_routes_image_size"
         android:orientation="vertical">
         <RelativeLayout
+            android:id="@+id/shuttle_route_first_stop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/sbc_header_view">
@@ -53,6 +55,7 @@
             />
 
         <RelativeLayout
+            android:id="@+id/shuttle_route_second_stop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/sbc_header_view">
