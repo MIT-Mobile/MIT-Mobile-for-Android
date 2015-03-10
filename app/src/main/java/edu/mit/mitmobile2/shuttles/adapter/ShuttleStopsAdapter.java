@@ -45,7 +45,11 @@ public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
         MITShuttleStopWrapper stopWrapper = getItem(position);
 
         viewHolder.stopName.setText(stopWrapper.getTitle());
-        viewHolder.stopPrediction.setText(String.valueOf(stopWrapper.getPredictions().get(0).getSeconds()));
+        if (stopWrapper.getPredictions() != null && stopWrapper.getPredictions().size() > 0) {
+            viewHolder.stopPrediction.setText(String.valueOf(stopWrapper.getPredictions().get(0).getSeconds()));
+        } else {
+            viewHolder.stopPrediction.setText("-");
+        }
 
         return convertView;
     }

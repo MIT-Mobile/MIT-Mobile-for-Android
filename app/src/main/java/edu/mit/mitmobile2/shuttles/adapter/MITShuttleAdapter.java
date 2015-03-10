@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.shuttles.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,26 +8,29 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shuttles.ShuttleAdapterCallback;
+import edu.mit.mitmobile2.shuttles.ShuttlesActivity;
 import edu.mit.mitmobile2.shuttles.model.MITShuttle;
 
 
-public class MITShuttleAdapter extends BaseAdapter{
+public class MITShuttleAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
     private List<MITShuttle> mitShuttles = new ArrayList<>();
     private Context context;
+    private MITAPIClient apiClient;
 
     public MITShuttleAdapter (Context context, List<MITShuttle> mitShuttles) {
         listContainer = LayoutInflater.from(context);
         this.mitShuttles = mitShuttles;
         this.context = context;
+        apiClient = new MITAPIClient(context);
     }
 
     @Override
@@ -101,9 +103,7 @@ public class MITShuttleAdapter extends BaseAdapter{
         viewHolder.shuttleRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("routeID", mitShuttles.get(position).getRouteID());
-                context.startActivity(intent);
+                ((ShuttleAdapterCallback)context).shuttleRouteClick(mitShuttles.get(position).getRouteID());
             }
         });
 
