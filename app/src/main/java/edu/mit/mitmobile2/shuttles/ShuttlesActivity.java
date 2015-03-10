@@ -159,15 +159,13 @@ public class ShuttlesActivity extends MITModuleActivity {
                 stopParams, null, new Callback<MITShuttleStopWrapper>() {
                     @Override
                     public void success(MITShuttleStopWrapper mitShuttleStopWrapper, Response response) {
-                        if (mitShuttleStopWrapper.getPredictions() != null) {
-                            if (mitShuttleStopWrapper.getPredictions().size() != 0) {
-                                if (isFirstStop) {
-                                    mitShuttle.setFirstMinute(mitShuttleStopWrapper.getPredictions().get(0).
-                                            getSeconds() / 60 + "m");
-                                } else {
-                                    mitShuttle.setSecondMinute(mitShuttleStopWrapper.getPredictions().get(0).
-                                            getSeconds() / 60 + "m");
-                                }
+                        if (mitShuttleStopWrapper.getPredictions() != null && mitShuttleStopWrapper.getPredictions().size() > 0) {
+                            if (isFirstStop) {
+                                mitShuttle.setFirstMinute(mitShuttleStopWrapper.getPredictions().get(0).
+                                        getSeconds() / 60 + "m");
+                            } else {
+                                mitShuttle.setSecondMinute(mitShuttleStopWrapper.getPredictions().get(0).
+                                        getSeconds() / 60 + "m");
                             }
                         }
                         mitShuttleAdapter.notifyDataSetChanged();
