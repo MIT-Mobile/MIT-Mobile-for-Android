@@ -138,7 +138,7 @@ public class RetrofitManager {
         void getroutes_stops_(Callback<MITShuttleStopWrapper> callback);
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
-        void getpredictions(Callback<List<MITShuttlePredictionWrapper.Predictions>> callback);
+        void getpredictions(Callback<List<MITShuttlePredictionWrapper>> callback);
 
         @GET(Constants.Shuttles.VEHICLES_PATH)
         void getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);

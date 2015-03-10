@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,8 +10,11 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
 
-public class MITShuttlePath implements Parcelable {
+
+public class MITShuttlePath extends DatabaseObject implements Parcelable {
 
     @Expose
     private List<Double> bbox = new ArrayList<>();
@@ -62,4 +67,19 @@ public class MITShuttlePath implements Parcelable {
             return new MITShuttlePath[size];
         }
     };
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

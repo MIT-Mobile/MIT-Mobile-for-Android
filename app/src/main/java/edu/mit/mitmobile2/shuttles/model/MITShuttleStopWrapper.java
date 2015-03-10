@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,6 +13,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.MapItem;
 
 public class MITShuttleStopWrapper extends MapItem implements Parcelable {
@@ -191,4 +195,39 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
             return new MITShuttleStopWrapper[size];
         }
     };
+
+    @Override
+    protected String getTableName() {
+        return Schema.Stop.TABLE_NAME;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+        //TODO: Pull predictions from relational DB
+
+        setId(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_ID)));
+        setUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_URL)));
+        setRouteId(cursor.getString(cursor.getColumnIndex(Schema.Stop.ROUTE_ID)));
+        setRouteUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.ROUTE_URL)));
+        setTitle(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_TITLE)));
+        setStopNumber(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_NUMBER)));
+        setLat(cursor.getDouble(cursor.getColumnIndex(Schema.Stop.STOP_LAT)));
+        setLon(cursor.getDouble(cursor.getColumnIndex(Schema.Stop.STOP_LON)));
+        setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.PREDICTIONS_URL)));
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        //TODO: Store Predictions in their own table, also store ids in relational stop<->pred table
+
+        values.put(Schema.Stop.STOP_ID, this.id);
+        values.put(Schema.Stop.STOP_URL, this.url);
+        values.put(Schema.Stop.ROUTE_ID, this.routeId);
+        values.put(Schema.Stop.ROUTE_URL, this.routeUrl);
+        values.put(Schema.Stop.STOP_TITLE, this.title);
+        values.put(Schema.Stop.STOP_NUMBER, this.stopNumber);
+        values.put(Schema.Stop.STOP_LAT, this.lat);
+        values.put(Schema.Stop.STOP_LON, this.lon);
+        values.put(Schema.Stop.PREDICTIONS_URL, this.predictionsUrl);
+    }
 }

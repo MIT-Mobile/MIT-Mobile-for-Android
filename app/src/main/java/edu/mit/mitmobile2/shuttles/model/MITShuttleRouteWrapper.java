@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,8 +11,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.Schema;
 
-public class MITShuttleRouteWrapper implements Parcelable {
+
+public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable {
 
     @Expose
     private String id;
@@ -189,4 +195,43 @@ public class MITShuttleRouteWrapper implements Parcelable {
             return new MITShuttleRouteWrapper[size];
         }
     };
+
+    @Override
+    protected String getTableName() {
+        return Schema.Route.TABLE_NAME;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+        //TODO: 2 calls - get MITPath object for ID, get all routestops with this route's db ID
+
+        setId(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_ID)));
+        setUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_URL)));
+        setAgency(cursor.getString(cursor.getColumnIndex(Schema.Route.AGENCY)));
+        setDescription(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_DESCRIPTION)));
+        setPredictable(cursor.getInt(cursor.getColumnIndex(Schema.Route.PREDICTABLE)) == 1);
+        setScheduled(cursor.getInt(cursor.getColumnIndex(Schema.Route.SCHEDULED)) == 1);
+        setTitle(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_TITLE)));
+        setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
+        setVehiclesUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        dbAdapter.batchPersistStops(this.stops, Schema.Stop.TABLE_NAME);
+
+        dbAdapter.acquire(this.path);
+        long pathId = path.persistToDatabase();
+
+        values.put(Schema.Route.ROUTE_ID, this.id);
+        values.put(Schema.Route.AGENCY, this.agency);
+        values.put(Schema.Route.PREDICTABLE, this.predictable ? 1 : 0);
+        values.put(Schema.Route.PREDICTIONS_URL, this.predictionsUrl);
+        values.put(Schema.Route.SCHEDULED, this.scheduled ? 1 : 0);
+        values.put(Schema.Route.ROUTE_DESCRIPTION, this.description);
+        values.put(Schema.Route.ROUTE_TITLE, this.title);
+        values.put(Schema.Route.VEHICLES_URL, this.vehiclesUrl);
+        values.put(Schema.Route.ROUTE_URL, this.url);
+        values.put(Schema.Route.MIT_PATH_ID, pathId);
+    }
 }
