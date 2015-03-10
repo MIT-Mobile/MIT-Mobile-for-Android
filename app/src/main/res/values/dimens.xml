@@ -5,4 +5,14 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="map_height">250dp</dimen>
 
+    <!--shuttle-->
+    <dimen name="shuttle_routes_content_size">14sp</dimen>
+    <dimen name="shuttle_routes_phone_number_size">10sp</dimen>
+    <dimen name="shuttle_routes_view_height">1dp</dimen>
+    <dimen name="shuttle_routes_content_height">30dp</dimen>
+    <dimen name="shuttle_routes_content_padding">6dp</dimen>
+    <dimen name="shuttle_routes_stops_content_margin">20dp</dimen>
+    <dimen name="shuttle_routes_info_content_margin">12dp</dimen>
+    <dimen name="shuttle_routes_image_size">40dp</dimen>
+
 </resources>

@@ -146,7 +146,6 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
         return stops;
     }
 
-
     public void setStops(List<MITShuttleStopWrapper> stops) {
         this.stops = stops;
     }

@@ -43,6 +43,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     @SerializedName("predictions_url")
     @Expose
     private String predictionsUrl;
+    private float distance;
 
 
     public String getId() {
@@ -138,6 +139,14 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
     public void setPredictionsUrl(String predictionsUrl) {
         this.predictionsUrl = predictionsUrl;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 
     @Override
