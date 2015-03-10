@@ -5,14 +5,17 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
-
+import edu.mit.mitmobile2.Schema;
 
 public class MITShuttlePath extends DatabaseObject implements Parcelable {
 
@@ -70,16 +73,21 @@ public class MITShuttlePath extends DatabaseObject implements Parcelable {
 
     @Override
     protected String getTableName() {
-        return null;
+        return Schema.Path.TABLE_NAME;
     }
 
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-
+        String segmentString = cursor.getString(cursor.getColumnIndex(Schema.Path.SEGMENTS));
+        Gson gson = new Gson();
+        Type nestedListType = new TypeToken<List<List<List<Double>>>>() {
+        }.getType();
+        List<List<List<Double>>> segments = gson.fromJson(segmentString, nestedListType);
+        setSegments(segments);
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-
+        values.put(Schema.Path.SEGMENTS, this.getSegments().toString());
     }
 }

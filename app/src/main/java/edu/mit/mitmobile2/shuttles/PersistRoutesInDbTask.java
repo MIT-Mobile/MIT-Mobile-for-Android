@@ -12,8 +12,12 @@ import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRouteWrapper;
+import timber.log.Timber;
 
 public class PersistRoutesInDbTask extends AsyncTask<List<MITShuttleRouteWrapper>, Void, Void> {
+
+    public PersistRoutesInDbTask() {
+    }
 
     @Override
     protected Void doInBackground(List<MITShuttleRouteWrapper>... params) {
@@ -30,7 +34,7 @@ public class PersistRoutesInDbTask extends AsyncTask<List<MITShuttleRouteWrapper
                 ContentValues values = new ContentValues();
                 r.fillInContentValues(values, dbAdapter);
                 dbAdapter.db.update(Schema.Route.TABLE_NAME, values,
-                        Schema.Route.ROUTE_ID + " = " + r.getId(), null);
+                        Schema.Route.ROUTE_ID + " = \'" + r.getId() + "\'", null);
             } else {
                 updatedRoutes.add(r);
             }
@@ -40,4 +44,8 @@ public class PersistRoutesInDbTask extends AsyncTask<List<MITShuttleRouteWrapper
         return null;
     }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        Timber.d("Finished");
+    }
 }

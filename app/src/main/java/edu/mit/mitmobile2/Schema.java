@@ -84,7 +84,7 @@ public class Schema {
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, ROUTE_URL, ROUTE_TITLE, AGENCY, SCHEDULED, PREDICTABLE, ROUTE_DESCRIPTION, PREDICTIONS_URL, VEHICLES_URL, MIT_PATH_ID
+                ID_COL, ROUTE_URL, ROUTE_ID, ROUTE_TITLE, AGENCY, SCHEDULED, PREDICTABLE, ROUTE_DESCRIPTION, PREDICTIONS_URL, VEHICLES_URL, MIT_PATH_ID
         };
     }
 
@@ -121,11 +121,11 @@ public class Schema {
                         STOP_ID + " text not null, " +
                                 STOP_URL + " text not null, " +
                                 STOP_TITLE + " text not null, " +
-                                ROUTE_ID + " text not null, " +
-                                ROUTE_URL + " text not null, " +
+                                ROUTE_ID + " text, " +
+                                ROUTE_URL + " text, " +
                                 STOP_LAT + " double not null, " +
                                 STOP_LON + " double not null, " +
-                                STOP_NUMBER + " text not null, " +
+                                STOP_NUMBER + " text, " +
                                 PREDICTIONS_URL + " text not null"
                 );
 
@@ -147,6 +147,20 @@ public class Schema {
 
         public static final String[] ALL_COLUMNS = new String[]{
                 ID_COL, STOP_ID, PREDICTION_ID
+        };
+    }
+
+    public static class Path extends Table {
+        public static final String TABLE_NAME = "paths";
+        public static final String SEGMENTS = "segment";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                        SEGMENTS + " text not null"
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, SEGMENTS
         };
     }
 

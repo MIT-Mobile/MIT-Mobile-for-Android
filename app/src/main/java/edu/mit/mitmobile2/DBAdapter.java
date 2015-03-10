@@ -131,6 +131,7 @@ public class DBAdapter {
         db.execSQL("DELETE FROM " + Schema.RouteStops.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.Stop.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.StopPredictions.TABLE_NAME);
+        db.execSQL("DELETE FROM " + Schema.Path.TABLE_NAME);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -179,6 +180,7 @@ public class DBAdapter {
             db.execSQL(Schema.RouteStops.CREATE_TABLE_SQL);
             db.execSQL(Schema.Stop.CREATE_TABLE_SQL);
             db.execSQL(Schema.StopPredictions.CREATE_TABLE_SQL);
+            db.execSQL(Schema.Path.CREATE_TABLE_SQL);
             Timber.d("Tables created!");
         }
 
@@ -190,6 +192,7 @@ public class DBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + Schema.RouteStops.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Stop.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.StopPredictions.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.Path.TABLE_NAME);
         }
 
         private static void runMigrations(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -213,7 +216,7 @@ public class DBAdapter {
     private long insertOrUpdate(DatabaseObject dbObject, ContentValues values) {
         String tableName = dbObject.getTableName();
         long databaseId = dbObject.getDatabaseId();
-        if (databaseId == DatabaseObject.INVALID_ID) {
+        if (databaseId == DatabaseObject.INVALID_ID || databaseId == 0) {
             // Insert
             databaseId = db.insertOrThrow(tableName, null, values);
             dbObject.setDatabaseId(databaseId);
@@ -269,39 +272,58 @@ public class DBAdapter {
 
     }
 
-    public void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId) {
-        // Store in Stops table
-        db.beginTransaction();
+    public boolean exists(String tableName, String[] columns) {
+        Cursor cursor = db.query(tableName, columns, null, null, null, null, null);
+
+        int count = 0;
+
         try {
-            for (DatabaseObject obj : dbObjects) {
-                ContentValues cv = new ContentValues();
-                obj.fillInContentValues(cv, this);
-                long newID = db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
-                if (newID <= 0) {
-                    throw new SQLException("Error");
-                }
+            while (cursor.moveToNext()) {
+                count++;
             }
-            db.setTransactionSuccessful();
         } finally {
-            db.endTransaction();
+            cursor.close();
         }
 
-        //Store IDs in RouteStops table
-        db.beginTransaction();
-        try {
-            for (MITShuttleStopWrapper stop : dbObjects) {
-                RouteStop routeStop = new RouteStop(routeId, stop.getId());
-                ContentValues cv = new ContentValues();
-                routeStop.fillInContentValues(cv, this);
-                long newID = db.insertWithOnConflict(Schema.RouteStops.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
-                if (newID <= 0) {
-                    throw new SQLException("Error");
+        return count >= 13;
+    }
+
+    public void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId) {
+        List<DatabaseObject> updatedObjects = new ArrayList<>();
+        Set<String> ids = getAllIds(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, Schema.Stop.STOP_ID);
+
+        checkObjectAndPersist(dbObjects, updatedObjects, ids, Schema.Stop.TABLE_NAME, Schema.Stop.STOP_ID, null);
+
+        updatedObjects.clear();
+        ids.clear();
+
+        ids = getAllIds(Schema.RouteStops.TABLE_NAME, Schema.RouteStops.ALL_COLUMNS, Schema.RouteStops.STOP_ID);
+        checkObjectAndPersist(dbObjects, updatedObjects, ids, Schema.RouteStops.TABLE_NAME, Schema.RouteStops.STOP_ID, routeId);
+    }
+
+    private void checkObjectAndPersist(List<MITShuttleStopWrapper> dbObjects, List<DatabaseObject> updatedObjects, Set<String> ids, String tableName, String columnToIndex, String extra) {
+        for (MITShuttleStopWrapper s : dbObjects) {
+            if (ids.contains(s.getId())) {
+                ContentValues values = new ContentValues();
+                if (extra != null) {
+                    RouteStop routeStop = new RouteStop(extra, s.getId());
+                    routeStop.fillInContentValues(values, this);
+                } else {
+                    s.fillInContentValues(values, this);
+                }
+                db.update(tableName, values,
+                        columnToIndex + " = \'" + s.getId() + "\'", null);
+            } else {
+                if (extra != null) {
+                    RouteStop routeStop = new RouteStop(extra, s.getId());
+                    updatedObjects.add(routeStop);
+                } else {
+                    updatedObjects.add(s);
                 }
             }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
+
+        batchPersist(updatedObjects, tableName);
     }
 
     public void batchPersistPredictions(List<MITShuttlePrediction> dbObjects, String stopId) {

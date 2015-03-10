@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,10 +96,12 @@ public class ShuttlesActivity extends MITModuleActivity {
                         }
                         sortShuttleRoutesByStatus();
                         mitShuttleAdapter.notifyDataSetChanged();
+                        new PersistRoutesInDbTask().execute(mitShuttleRouteWrappers);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        //TODO: Add global otto listener to handle errors
                     }
                 });
     }
