@@ -14,5 +14,6 @@
     <dimen name="shuttle_routes_stops_content_margin">20dp</dimen>
     <dimen name="shuttle_routes_info_content_margin">12dp</dimen>
     <dimen name="shuttle_routes_image_size">40dp</dimen>
+    <dimen name="stop_margin">8dp</dimen>
 
 </resources>

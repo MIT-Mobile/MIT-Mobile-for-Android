@@ -2,26 +2,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:padding="15dp">
+    android:background="@color/sbc_layout_view">
 
     <ImageView
         android:id="@+id/stop_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/shuttle_routes_image_size"
+        android:layout_height="@dimen/shuttle_routes_image_size"
+        android:paddingLeft="@dimen/stop_margin"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/stop_name"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/stop_icon" />
+        android:layout_toRightOf="@id/stop_icon"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp">
+        <TextView
+            android:id="@+id/stop_name"
+            style="@style/MITShuttleRoutesStopsContent"
+            />
 
-    <TextView
-        android:id="@+id/stop_prediction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
+        <TextView
+            android:id="@+id/stop_prediction"
+            style="@style/MITShuttleRoutesMinutesContent"
+            />
+    </RelativeLayout>
 
+    <View
+        android:id="@+id/stop_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="55dp"
+        style="@style/MITShuttleRoutesView"
+        />
 </RelativeLayout>

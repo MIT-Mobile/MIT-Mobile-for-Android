@@ -31,21 +31,40 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/route_map"
-        android:background="@android:color/white"
+        android:background="@color/sbc_layout_view"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/route_information_top"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="In Service" />
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="@dimen/stop_margin">
+            <ImageView
+                android:id="@+id/shuttle_imageview"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/home_shuttles"
+                />
+            <TextView
+                android:id="@+id/route_information_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/shuttle_imageview"
+                android:paddingLeft="@dimen/stop_margin"
+                android:layout_centerVertical="true"
+                android:textColor="@color/contents_text"
+                android:textStyle="bold"
+                android:text="In service" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/route_information_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Runs weekdays" />
+            android:paddingLeft="@dimen/stop_margin"
+            android:paddingBottom="@dimen/stop_margin"
+            android:text="Runs weekdays"
+            />
     </LinearLayout>
 </RelativeLayout>
