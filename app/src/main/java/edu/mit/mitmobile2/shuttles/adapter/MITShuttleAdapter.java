@@ -1,11 +1,13 @@
 package edu.mit.mitmobile2.shuttles.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class MITShuttleAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         ViewHolder viewHolder;
         if (view != null) {
             viewHolder = (ViewHolder) view.getTag();
@@ -96,6 +98,15 @@ public class MITShuttleAdapter extends BaseAdapter{
             initialViewVisibility(viewHolder, View.GONE);
         }
 
+        viewHolder.shuttleRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("routeID", mitShuttles.get(position).getRouteID());
+                context.startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -132,6 +143,9 @@ public class MITShuttleAdapter extends BaseAdapter{
 
         @InjectView(R.id.bottom_view)
         View bottomView;
+
+        @InjectView(R.id.shuttle_route)
+        RelativeLayout shuttleRoute;
 
         ViewHolder(View view) {
             ButterKnife.inject(this, view);
