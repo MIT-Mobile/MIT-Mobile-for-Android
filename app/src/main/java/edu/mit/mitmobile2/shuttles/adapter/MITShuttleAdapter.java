@@ -12,10 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.ShuttleAdapterCallback;
-import edu.mit.mitmobile2.shuttles.ShuttlesActivity;
 import edu.mit.mitmobile2.shuttles.model.MITShuttle;
 
 
@@ -24,13 +22,11 @@ public class MITShuttleAdapter extends BaseAdapter {
     private LayoutInflater listContainer;
     private List<MITShuttle> mitShuttles = new ArrayList<>();
     private Context context;
-    private MITAPIClient apiClient;
 
     public MITShuttleAdapter (Context context, List<MITShuttle> mitShuttles) {
         listContainer = LayoutInflater.from(context);
         this.mitShuttles = mitShuttles;
         this.context = context;
-        apiClient = new MITAPIClient(context);
     }
 
     @Override
