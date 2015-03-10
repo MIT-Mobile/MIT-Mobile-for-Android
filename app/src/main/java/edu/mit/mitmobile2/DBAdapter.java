@@ -2,6 +2,7 @@ package edu.mit.mitmobile2;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -10,9 +11,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.RouteStop;
+import edu.mit.mitmobile2.shuttles.model.StopPrediction;
 import timber.log.Timber;
 
 public class DBAdapter {
@@ -231,11 +237,21 @@ public class DBAdapter {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Added Code Here
 
+    public Set<String> getAllIds(String tableName, String[] columns, String columnToIndex) {
+        Set<String> set = new HashSet<>();
+        Cursor cursor = db.query(tableName, columns,
+                null, null, null, null, null);
+        try {
+            while (cursor.moveToNext()) {
+                set.add(cursor.getString(cursor.getColumnIndex(columnToIndex)));
+            }
+        } finally {
+            cursor.close();
+        }
+        return set;
+    }
 
-    public void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String tableName, String routeId) {
-        //TODO: Also Add to RouteStops with params
-
-        // Store in Stops table
+    public void batchPersist(List<DatabaseObject> dbObjects, String tableName) {
         db.beginTransaction();
         try {
             for (DatabaseObject obj : dbObjects) {
@@ -251,13 +267,68 @@ public class DBAdapter {
             db.endTransaction();
         }
 
+    }
+
+    public void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId) {
+        // Store in Stops table
+        db.beginTransaction();
+        try {
+            for (DatabaseObject obj : dbObjects) {
+                ContentValues cv = new ContentValues();
+                obj.fillInContentValues(cv, this);
+                long newID = db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
+                if (newID <= 0) {
+                    throw new SQLException("Error");
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
         //Store IDs in RouteStops table
         db.beginTransaction();
         try {
-            for (MITShuttleStopWrapper obj : dbObjects) {
+            for (MITShuttleStopWrapper stop : dbObjects) {
+                RouteStop routeStop = new RouteStop(routeId, stop.getId());
+                ContentValues cv = new ContentValues();
+                routeStop.fillInContentValues(cv, this);
+                long newID = db.insertWithOnConflict(Schema.RouteStops.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
+                if (newID <= 0) {
+                    throw new SQLException("Error");
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void batchPersistPredictions(List<MITShuttlePrediction> dbObjects, String stopId) {
+        // Store in Stops table
+        db.beginTransaction();
+        try {
+            for (DatabaseObject obj : dbObjects) {
                 ContentValues cv = new ContentValues();
                 obj.fillInContentValues(cv, this);
-                long newID = db.insertWithOnConflict(Schema.RouteStops.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
+                long newID = db.insertWithOnConflict(Schema.Prediction.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
+                if (newID <= 0) {
+                    throw new SQLException("Error");
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        //Store IDs in RouteStops table
+        db.beginTransaction();
+        try {
+            for (MITShuttlePrediction prediction : dbObjects) {
+                StopPrediction stopPrediction = new StopPrediction(stopId, prediction.getVehicleId());
+                ContentValues cv = new ContentValues();
+                stopPrediction.fillInContentValues(cv, this);
+                long newID = db.insertWithOnConflict(Schema.StopPredictions.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_FAIL);
                 if (newID <= 0) {
                     throw new SQLException("Error");
                 }

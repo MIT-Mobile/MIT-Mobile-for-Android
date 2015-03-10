@@ -218,7 +218,7 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        dbAdapter.batchPersistStops(this.stops, Schema.Stop.TABLE_NAME);
+        dbAdapter.batchPersistStops(this.stops, this.id);
 
         dbAdapter.acquire(this.path);
         long pathId = path.persistToDatabase();

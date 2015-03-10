@@ -219,6 +219,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
         //TODO: Store Predictions in their own table, also store ids in relational stop<->pred table
+        dbAdapter.batchPersistPredictions(this.predictions, this.id);
 
         values.put(Schema.Stop.STOP_ID, this.id);
         values.put(Schema.Stop.STOP_URL, this.url);
