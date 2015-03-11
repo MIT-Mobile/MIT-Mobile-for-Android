@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -46,6 +45,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         mapItemsListview.addHeaderView(header);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
+        mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
+
         routeInfoSegment = (LinearLayout) findViewById(R.id.route_info_segment);
         transparentView = findViewById(R.id.transparent_map_overlay);
         listButton = (Button) findViewById(R.id.list_button);
@@ -77,39 +78,10 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             }
         });
 
-        transparentView.setOnTouchListener(new View.OnTouchListener() {
+        transparentView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mapViewExpanded) {
-                    int action = event.getAction();
-
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                            // Disallow ScrollView to intercept touch events.
-                            mapItemsListview.requestDisallowInterceptTouchEvent(true);
-                            // Disable touch on transparent view
-                            return false;
-
-                        case MotionEvent.ACTION_UP:
-                            // Allow ScrollView to intercept touch events.
-                            mapItemsListview.requestDisallowInterceptTouchEvent(false);
-                            return true;
-
-                        case MotionEvent.ACTION_MOVE:
-                            mapItemsListview.requestDisallowInterceptTouchEvent(true);
-                            return false;
-
-                        default:
-                            return true;
-                    }
-                } else {
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        toggleMap();
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
+            public void onClick(View v) {
+                toggleMap();
             }
         });
 
@@ -169,6 +141,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             transparentView.setLayoutParams(new RelativeLayout.LayoutParams(layoutParams.width, displayMetrics.heightPixels - height));
             transparentView.requestLayout();
 
+            mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
 
             listButton.setVisibility(View.VISIBLE);
         } else {
