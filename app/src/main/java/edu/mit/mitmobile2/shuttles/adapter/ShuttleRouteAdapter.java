@@ -10,16 +10,15 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import java.util.List;
-import java.util.Objects;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
-public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
+public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
 
     private Context mContext;
 
-    public ShuttleStopsAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects) {
+    public ShuttleRouteAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects) {
         super(context, resource, objects);
         mContext = context;
     }
@@ -31,7 +30,7 @@ public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
         ViewHolderItem viewHolder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.stops_list_row, parent, false);
+            convertView = mInflater.inflate(R.layout.stop_list_item, parent, false);
             viewHolder = new ViewHolderItem(convertView);
             convertView.setTag(viewHolder);
         } else {

@@ -168,7 +168,7 @@
                 android:value="edu.mit.mitmobile2.resources.ResourcesActivity" />
         </activity>
         <activity
-            android:name=".shuttles.ShuttleStopsActivity"
+            android:name=".shuttles.ShuttleRouteActivity"
             android:label="@string/title_activity_shuttle_stops"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme" />
