@@ -233,6 +233,8 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
                 break;
             }
         }
+        // Move back 1 since we looked ahead to the next ID
+        cursor.moveToPrevious();
     }
 
     @Override

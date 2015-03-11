@@ -388,7 +388,7 @@ public class DBAdapter {
         List<MITShuttleRoute> routes = new ArrayList<>();
 
         //TODO: Refactor the SQL statement
-        String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number " +
+        String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance " +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id";
@@ -410,7 +410,7 @@ public class DBAdapter {
     public MITShuttleRoute getRoute(String routeId) {
 
         //TODO: Refactor the SQL statement
-        String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number " +
+        String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance " +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +

@@ -16,7 +16,10 @@ import butterknife.InjectView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.View;
 import android.content.ActivityNotFoundException;
 import android.location.Location;
@@ -36,7 +39,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback{
+public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback, LoaderManager.LoaderCallbacks<Cursor> {
 
     int contentLayoutId = R.layout.content_shuttles;
     private MITShuttleRoute data;
@@ -307,5 +310,20 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     public void shuttleStopClick(String stopID) {
         Intent intent = new Intent(this, ShuttleStopActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

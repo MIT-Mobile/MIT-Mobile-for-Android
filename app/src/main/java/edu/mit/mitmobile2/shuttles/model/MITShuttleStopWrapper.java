@@ -225,6 +225,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         setLat(cursor.getDouble(cursor.getColumnIndex(Schema.Stop.STOP_LAT)));
         setLon(cursor.getDouble(cursor.getColumnIndex(Schema.Stop.STOP_LON)));
         setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.PREDICTIONS_URL)));
+        setDistance(cursor.getFloat(cursor.getColumnIndex(Schema.Stop.DISTANCE)));
     }
 
     @Override
@@ -243,5 +244,6 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         values.put(Schema.Stop.STOP_LAT, this.lat);
         values.put(Schema.Stop.STOP_LON, this.lon);
         values.put(Schema.Stop.PREDICTIONS_URL, this.predictionsUrl);
+        values.put(Schema.Stop.DISTANCE, this.distance);
     }
 }
