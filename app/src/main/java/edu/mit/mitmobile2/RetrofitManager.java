@@ -116,6 +116,37 @@ public class RetrofitManager {
         }
     }
 
+    public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) {
+        Method m;
+        Object data = null;
+        String[] pathSections = path.split("/");
+        String methodName = "get";
+
+        paths = pathParams;
+        queries = queryParams;
+
+        for (int i = 1; i < pathSections.length; i++) {
+            // Skip the first
+            if (!pathSections[i].contains("{")) {
+                methodName += pathSections[i];
+            } else {
+                methodName += "_";
+            }
+        }
+
+        String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
+        try {
+            Field f = RetrofitManager.class.getDeclaredField(serviceName);
+            m = f.getType().getDeclaredMethod(methodName);
+            Object o = f.get(Class.forName(f.getType().getName()));
+            data = m.invoke(o);
+        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+            Timber.e(e, "Reflection");
+        }
+
+        return data;
+    }
+
     public static void changeEndpoint(String url) {
         if (mitEndpoint.getUrl() != null) {
             if (!(mitEndpoint.getUrl() + "/").equals(url)) {
@@ -142,6 +173,23 @@ public class RetrofitManager {
 
         @GET(Constants.Shuttles.VEHICLES_PATH)
         void getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);
+
+        // Real-time calls for use in the SyncAdapter
+
+        @GET(Constants.Shuttles.ALL_ROUTES_PATH)
+        List<MITShuttleRoute> getroutes();
+
+        @GET(Constants.Shuttles.ROUTE_INFO_PATH)
+        MITShuttleRoute getroutes_();
+
+        @GET(Constants.Shuttles.STOP_INFO_PATH)
+        MITShuttleStopWrapper getroutes_stops_();
+
+        @GET(Constants.Shuttles.PREDICTIONS_PATH)
+        List<MITShuttlePredictionWrapper> getpredictions();
+
+        @GET(Constants.Shuttles.VEHICLES_PATH)
+        List<MITShuttleVehiclesWrapper> getvehicles();
     }
 
     public interface MitResourceService {

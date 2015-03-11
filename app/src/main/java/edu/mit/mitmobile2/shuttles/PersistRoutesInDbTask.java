@@ -46,6 +46,7 @@ public class PersistRoutesInDbTask extends AsyncTask<List<MITShuttleRoute>, Void
 
     @Override
     protected void onPostExecute(Void aVoid) {
+//        List<MITShuttleRoute> allRoutes = MitMobileApplication.dbAdapter.getAllRoutes();
         Timber.d("Finished");
     }
 }

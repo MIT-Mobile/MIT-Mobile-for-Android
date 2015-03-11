@@ -33,9 +33,9 @@ public class ModuleSelectorActivity extends Activity {
     // An account type, in the form of a domain name
     public static final String ACCOUNT_TYPE = "m.mit.edu";
     // The account name
-    public static final String ACCOUNT = "mitdummyaccount";
+    public static final String ACCOUNT = "mitaccount";
 
-    public static final int INTERVAL_SECS = 10;
+    public static final int INTERVAL_SECS = 600;
     // Instance fields
     private Account mAccount;
     // A content resolver for accessing the provider
@@ -62,6 +62,8 @@ public class ModuleSelectorActivity extends Activity {
 
         mAccount = createSyncAccount(this);
         mResolver = getContentResolver();
+        ContentResolver.setIsSyncable(mAccount, AUTHORITY, 1);
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
         ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, INTERVAL_SECS);
 	}
 

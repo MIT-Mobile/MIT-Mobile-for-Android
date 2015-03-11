@@ -214,4 +214,12 @@ public class MITAPIClient {
         RetrofitManager.makeHttpCall(api, path, pathParams, queryParams, callback);
     }
 
+    public Object get(String api, String path, HashMap<String,String> pathParams, HashMap<String,String> queryParams) {
+        APIEntry apiEntry = MITAPIClient.api.get(api);
+        String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
+        RetrofitManager.changeEndpoint(apiUrl);
+        Object o = RetrofitManager.makeHttpCall(api, path, pathParams, queryParams);
+        return o;
+    }
+
 }

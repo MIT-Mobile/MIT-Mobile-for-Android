@@ -11,6 +11,7 @@ public class MITSyncService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         synchronized (syncAdapterLock) {
             if (syncAdapter == null) {
                 syncAdapter = new MITSyncAdapter(getApplicationContext(), true);
