@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePredictionWrapper;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRouteWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleVehiclesWrapper;
 import retrofit.Callback;
@@ -129,16 +129,16 @@ public class RetrofitManager {
     public interface MitShuttleService {
 
         @GET(Constants.Shuttles.ALL_ROUTES_PATH)
-        void getroutes(Callback<List<MITShuttleRouteWrapper>> callback);
+        void getroutes(Callback<List<MITShuttleRoute>> callback);
 
         @GET(Constants.Shuttles.ROUTE_INFO_PATH)
-        void getroutes_(Callback<MITShuttleRouteWrapper> callback);
+        void getroutes_(Callback<MITShuttleRoute> callback);
 
         @GET(Constants.Shuttles.STOP_INFO_PATH)
         void getroutes_stops_(Callback<MITShuttleStopWrapper> callback);
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
-        void getpredictions(Callback<List<MITShuttlePredictionWrapper.Predictions>> callback);
+        void getpredictions(Callback<List<MITShuttlePredictionWrapper>> callback);
 
         @GET(Constants.Shuttles.VEHICLES_PATH)
         void getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);

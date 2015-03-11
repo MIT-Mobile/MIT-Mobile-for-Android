@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
     <!-- android:theme="@android:style/Theme.Holo.Light" -->
     <application
@@ -27,6 +30,35 @@
         android:label="@string/app_name"
         android:logo="@drawable/mit_logo_for_action_bar"
         android:theme="@style/MITMobile">
+
+        <service android:name=".MITAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <service
+            android:name=".MITSyncService"
+            android:exported="true"
+            android:process=":sync">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+
+        <provider
+            android:name=".MITProvider"
+            android:authorities="edu.mit.mitmobile2.provider"
+            android:label="MitProvider"
+            android:exported="false"
+            android:syncable="true" />
+
         <activity
             android:name=".ModuleSelectorActivity"
             android:launchMode="singleTop"
@@ -139,7 +171,7 @@
             android:name=".shuttles.ShuttleStopsActivity"
             android:label="@string/title_activity_shuttle_stops"
             android:launchMode="standard"
-            android:theme="@style/Theme.MyTheme"/>
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
