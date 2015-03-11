@@ -59,19 +59,6 @@
             android:exported="false"
             android:syncable="true" />
 
-        <meta-data
-            android:name="DATABASE"
-            android:value="mit_mobile.db" />
-        <meta-data
-            android:name="VERSION"
-            android:value="1" />
-        <meta-data
-            android:name="QUERY_LOG"
-            android:value="true" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="edu.mit.mitmobile2" />
-
         <activity
             android:name=".ModuleSelectorActivity"
             android:launchMode="singleTop"
