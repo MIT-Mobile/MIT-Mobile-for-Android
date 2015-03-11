@@ -18,13 +18,15 @@ public class ShuttleStopsActivity extends SoloMapActivity {
 
     ShuttleStopsAdapter adapter;
     private List<MITShuttleStopWrapper> stops = new ArrayList<>();
+    private String routeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //TODO: Change this to get route ID from intent, which will be used to get the route's data from the database
-        MITShuttleRoute routeWrapper = getIntent().getParcelableExtra("ROUTES");
+        //routeID = getIntent().getStringExtra("routeID");
+        MITShuttleRoute routeWrapper = getIntent().getParcelableExtra("route");
         stops.addAll(routeWrapper.getStops());
         adapter = new ShuttleStopsAdapter(this, R.layout.stops_list_row, routeWrapper.getStops());
 

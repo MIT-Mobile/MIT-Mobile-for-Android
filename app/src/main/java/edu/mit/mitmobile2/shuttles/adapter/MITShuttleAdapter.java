@@ -6,18 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shuttles.ShuttleAdapterCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttle;
 
 
-public class MITShuttleAdapter extends BaseAdapter{
+public class MITShuttleAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
     private List<MITShuttle> mitShuttles = new ArrayList<>();
@@ -45,7 +45,7 @@ public class MITShuttleAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         ViewHolder viewHolder;
         if (view != null) {
             viewHolder = (ViewHolder) view.getTag();
@@ -96,6 +96,13 @@ public class MITShuttleAdapter extends BaseAdapter{
             initialViewVisibility(viewHolder, View.GONE);
         }
 
+        viewHolder.shuttleRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ShuttleAdapterCallback)context).shuttleRouteClick(mitShuttles.get(position).getRouteID());
+            }
+        });
+
         return view;
     }
 
@@ -132,6 +139,9 @@ public class MITShuttleAdapter extends BaseAdapter{
 
         @InjectView(R.id.bottom_view)
         View bottomView;
+
+        @InjectView(R.id.shuttle_route)
+        RelativeLayout shuttleRoute;
 
         ViewHolder(View view) {
             ButterKnife.inject(this, view);
