@@ -138,7 +138,7 @@ public class DBAdapter {
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
-        private static final int DATABASE_VERSION = 3; // Current DB version
+        private static final int DATABASE_VERSION = 1; // Current DB version
         private static final int CREATE_TABLE_VERSION = 1; // This is where createTables() gets us. Will be locked down once the DB stabilizes.
 
         DatabaseHelper(Context context) {
