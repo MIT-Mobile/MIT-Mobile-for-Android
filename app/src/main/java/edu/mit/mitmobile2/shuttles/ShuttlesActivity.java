@@ -13,6 +13,8 @@ import retrofit.client.Response;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -215,13 +217,14 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         parkOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setPhoneCall(getResources().getString(R.string.parking_office_number));
+                phoneCallDialog(getResources().getString(R.string.parking_office_number));
+
             }
         });
         saferide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setPhoneCall(getResources().getString(R.string.saferide_number));
+                phoneCallDialog(getResources().getString(R.string.saferide_number));
             }
         });
         realTimeBusArrivals.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +245,25 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 openMBTAUrl(getResources().getString(R.string.real_time_google_transit_url));
             }
         });
+    }
+
+    public void phoneCallDialog(final String phoneNumber) {
+         String[] splittedPhoneNumber = phoneNumber.split("\\.");
+         new AlertDialog.Builder(this)
+                 .setMessage("Call 1 (" + splittedPhoneNumber[0] + ")" + splittedPhoneNumber[1] + "-" + splittedPhoneNumber[2] + "?")
+                 .setPositiveButton(getResources().getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         setPhoneCall(phoneNumber);
+                     }
+                 })
+                 .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         dialog.cancel();
+                     }
+                 })
+                 .show();
     }
 
     public void setPhoneCall(String phoneNumber) {

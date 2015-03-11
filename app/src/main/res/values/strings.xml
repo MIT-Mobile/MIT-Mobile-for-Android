@@ -42,5 +42,7 @@
     <string name="real_time_bus_url">http://www.nextbus.com/webkit</string>
     <string name="real_time_train_url">http://www.mbtainfo.com/</string>
     <string name="real_time_google_transit_url">http://www.google.com/transit</string>
+    <string name="ok_button">Ok</string>
+    <string name="cancel_button">Cancel</string>
 
 </resources>
