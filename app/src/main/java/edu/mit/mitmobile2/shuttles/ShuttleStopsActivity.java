@@ -11,7 +11,7 @@ import java.util.List;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopsAdapter;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRouteWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopsActivity extends SoloMapActivity {
@@ -26,7 +26,7 @@ public class ShuttleStopsActivity extends SoloMapActivity {
 
         //TODO: Change this to get route ID from intent, which will be used to get the route's data from the database
         //routeID = getIntent().getStringExtra("routeID");
-        MITShuttleRouteWrapper routeWrapper = getIntent().getParcelableExtra("route");
+        MITShuttleRoute routeWrapper = getIntent().getParcelableExtra("route");
         stops.addAll(routeWrapper.getStops());
         adapter = new ShuttleStopsAdapter(this, R.layout.stops_list_row, routeWrapper.getStops());
 

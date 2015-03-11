@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,8 +11,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.Schema;
 
-public class MITShuttleRouteWrapper implements Parcelable {
+
+public class MITShuttleRoute extends DatabaseObject implements Parcelable {
 
     @Expose
     private String id;
@@ -37,6 +43,8 @@ public class MITShuttleRouteWrapper implements Parcelable {
     @Expose
     private List<MITShuttleStopWrapper> stops = new ArrayList<MITShuttleStopWrapper>();
 
+    public MITShuttleRoute() {
+    }
 
     public String getId() {
         return id;
@@ -164,7 +172,7 @@ public class MITShuttleRouteWrapper implements Parcelable {
         dest.writeTypedList(stops);
     }
 
-    private MITShuttleRouteWrapper(Parcel p) {
+    private MITShuttleRoute(Parcel p) {
         this.id = p.readString();
         this.url = p.readString();
         this.title = p.readString();
@@ -179,13 +187,73 @@ public class MITShuttleRouteWrapper implements Parcelable {
 //        this.stops = p.readArrayList(MITShuttleStopWrapper.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<MITShuttleRouteWrapper> CREATOR = new Parcelable.Creator<MITShuttleRouteWrapper>() {
-        public MITShuttleRouteWrapper createFromParcel(Parcel source) {
-            return new MITShuttleRouteWrapper(source);
+    public static final Parcelable.Creator<MITShuttleRoute> CREATOR = new Parcelable.Creator<MITShuttleRoute>() {
+        public MITShuttleRoute createFromParcel(Parcel source) {
+            return new MITShuttleRoute(source);
         }
 
-        public MITShuttleRouteWrapper[] newArray(int size) {
-            return new MITShuttleRouteWrapper[size];
+        public MITShuttleRoute[] newArray(int size) {
+            return new MITShuttleRoute[size];
         }
     };
+
+    @Override
+    protected String getTableName() {
+        return Schema.Route.TABLE_NAME;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+        long pathId = cursor.getLong(cursor.getColumnIndex(Schema.Route.MIT_PATH_ID));
+        setPath(dbAdapter.getPath(pathId));
+        setId(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_ID)));
+        setUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_URL)));
+        setAgency(cursor.getString(cursor.getColumnIndex(Schema.Route.AGENCY)));
+        setDescription(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_DESCRIPTION)));
+        setPredictable(cursor.getInt(cursor.getColumnIndex(Schema.Route.PREDICTABLE)) == 1);
+        setScheduled(cursor.getInt(cursor.getColumnIndex(Schema.Route.SCHEDULED)) == 1);
+        setTitle(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_TITLE)));
+        setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
+        setVehiclesUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
+
+        buildSubclassFromCursor(cursor, dbAdapter, "");
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter, String prefix) {
+        long id = getDatabaseId();
+        this.stops = new ArrayList<>();
+
+        while (cursor.getLong(cursor.getColumnIndex(Schema.Route.ID_COL)) == id) {
+            MITShuttleStopWrapper stopWrapper = new MITShuttleStopWrapper();
+            stopWrapper.buildSubclassFromCursor(cursor, dbAdapter);
+            this.stops.add(stopWrapper);
+            boolean itemsRemaining = cursor.moveToNext();
+            if (!itemsRemaining) {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        dbAdapter.batchPersistStops(this.stops, this.id);
+
+        //TODO: Remove this IF condition when SyncAdapter added; paths will just get cleared each time
+        if (!dbAdapter.exists(Schema.Path.TABLE_NAME, Schema.Path.ALL_COLUMNS)) {
+            dbAdapter.acquire(this.path);
+            long pathId = path.persistToDatabase();
+            values.put(Schema.Route.MIT_PATH_ID, pathId);
+        }
+
+        values.put(Schema.Route.ROUTE_ID, this.id);
+        values.put(Schema.Route.AGENCY, this.agency);
+        values.put(Schema.Route.PREDICTABLE, this.predictable ? 1 : 0);
+        values.put(Schema.Route.PREDICTIONS_URL, this.predictionsUrl);
+        values.put(Schema.Route.SCHEDULED, this.scheduled ? 1 : 0);
+        values.put(Schema.Route.ROUTE_DESCRIPTION, this.description);
+        values.put(Schema.Route.ROUTE_TITLE, this.title);
+        values.put(Schema.Route.VEHICLES_URL, this.vehiclesUrl);
+        values.put(Schema.Route.ROUTE_URL, this.url);
+    }
 }

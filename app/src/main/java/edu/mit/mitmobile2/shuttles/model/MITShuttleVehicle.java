@@ -1,9 +1,16 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITShuttleVehicle {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.Schema;
+
+public class MITShuttleVehicle extends DatabaseObject {
 
     @Expose
     private String id;
@@ -80,4 +87,18 @@ public class MITShuttleVehicle {
         this.secondsSinceReport = secondsSinceReport;
     }
 
+    @Override
+    protected String getTableName() {
+        return Schema.Vehicle.TABLE_NAME;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

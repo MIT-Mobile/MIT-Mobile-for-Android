@@ -3,15 +3,13 @@ package edu.mit.mitmobile2.maps;
 
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.LatLng;
 
-public abstract class MapItem implements Parcelable{
+import edu.mit.mitmobile2.DatabaseObject;
+
+public abstract class MapItem extends DatabaseObject implements Parcelable{
 
     public static final int MARKERTYPE = 1;
     public static final int POLYLINETYPE = 2;

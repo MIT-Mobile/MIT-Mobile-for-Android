@@ -3,7 +3,7 @@ package edu.mit.mitmobile2.shuttles;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRouteWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttle;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ import java.util.List;
 public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback{
 
     int contentLayoutId = R.layout.content_shuttles;
-    private MITShuttleRouteWrapper data;
+    private MITShuttleRoute data;
 
     private final static long REFRESH_TIME = 1000;
 
@@ -84,29 +85,31 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     public void updateShuttleView() {
         apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ALL_ROUTES_PATH, null, null,
-                new Callback<List<MITShuttleRouteWrapper>>() {
+                new Callback<List<MITShuttleRoute>>() {
                     @Override
-                    public void success(final List<MITShuttleRouteWrapper> mitShuttleRouteWrappers, Response response) {
-                        setShuttleRoutesStopDistance(mitShuttleRouteWrappers);
-                        sortShuttleRoutesByDistance(mitShuttleRouteWrappers);
-                        for (MITShuttleRouteWrapper shuttleRoute : mitShuttleRouteWrappers) {
+                    public void success(final List<MITShuttleRoute> mitShuttleRoutes, Response response) {
+                        setShuttleRoutesStopDistance(mitShuttleRoutes);
+                        sortShuttleRoutesByDistance(mitShuttleRoutes);
+                        for (MITShuttleRoute shuttleRoute : mitShuttleRoutes) {
                             final MITShuttle mitShuttle = new MITShuttle();
                             setShuttleRoutesStop(mitShuttle, shuttleRoute);
                         }
                         sortShuttleRoutesByStatus();
                         mitShuttleAdapter.notifyDataSetChanged();
+                        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        //TODO: Add global otto listener to handle errors
                     }
                 });
     }
 
-    public void setShuttleRoutesStopDistance(List<MITShuttleRouteWrapper> mitShuttleRouteWrappers) {
-        for (MITShuttleRouteWrapper mitShuttleRouteWrapper : mitShuttleRouteWrappers) {
-            if (mitShuttleRouteWrapper.getPredictable()) {
-                for (MITShuttleStopWrapper mitShuttleStopWrapper : mitShuttleRouteWrapper.getStops()) {
+    public void setShuttleRoutesStopDistance(List<MITShuttleRoute> mitShuttleRoutes) {
+        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
+            if (mitShuttleRoute.getPredictable()) {
+                for (MITShuttleStopWrapper mitShuttleStopWrapper : mitShuttleRoute.getStops()) {
                     if (location != null) {
                         Location stopLocation = new Location("");
                         stopLocation.setLatitude(mitShuttleStopWrapper.getLat());
@@ -118,9 +121,9 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         }
     }
 
-    public void sortShuttleRoutesByDistance(List<MITShuttleRouteWrapper> mitShuttleRouteWrappers) {
-        for (MITShuttleRouteWrapper mitShuttleRouteWrapper : mitShuttleRouteWrappers) {
-            Collections.sort(mitShuttleRouteWrapper.getStops(), new Comparator<MITShuttleStopWrapper>() {
+    public void sortShuttleRoutesByDistance(List<MITShuttleRoute> mitShuttleRoutes) {
+        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
+            Collections.sort(mitShuttleRoute.getStops(), new Comparator<MITShuttleStopWrapper>() {
                 @Override
                 public int compare(MITShuttleStopWrapper lhs, MITShuttleStopWrapper rhs) {
                     return (int) (lhs.getDistance() - rhs.getDistance());
@@ -129,7 +132,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         }
     }
 
-    public void setShuttleRoutesStop(MITShuttle mitShuttle, MITShuttleRouteWrapper shuttleRoute) {
+    public void setShuttleRoutesStop(MITShuttle mitShuttle, MITShuttleRoute shuttleRoute) {
         mitShuttle.setRouteName(shuttleRoute.getTitle());
         mitShuttle.setPredicable(shuttleRoute.getPredictable());
         mitShuttle.setScheduled(shuttleRoute.getScheduled());
@@ -263,9 +266,9 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         HashMap<String, String> routeParams = new HashMap<>();
         routeParams.put("route", routeID);
         apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ROUTE_INFO_PATH, routeParams, null,
-                new Callback<MITShuttleRouteWrapper>() {
+                new Callback<MITShuttleRoute>() {
                     @Override
-                    public void success(final MITShuttleRouteWrapper mitShuttleRouteWrapper, Response response) {
+                    public void success(final MITShuttleRoute mitShuttleRouteWrapper, Response response) {
                         Intent intent = new Intent(getApplicationContext(), ShuttleStopsActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("route", mitShuttleRouteWrapper);

@@ -8,7 +8,6 @@ import java.util.List;
 
 public class MITShuttlePredictionWrapper {
 
-    public class Predictions {
         @SerializedName("route_id")
         @Expose
         private String routeId;
@@ -99,6 +98,4 @@ public class MITShuttlePredictionWrapper {
         public void setPredictions(List<MITShuttlePrediction> predictions) {
             this.predictions = predictions;
         }
-    }
-
 }

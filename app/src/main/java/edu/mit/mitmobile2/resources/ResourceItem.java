@@ -1,32 +1,22 @@
 package edu.mit.mitmobile2.resources;
 
-import android.content.ClipData;
+import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
 
 /**
@@ -65,12 +55,11 @@ public class ResourceItem extends MapItem implements Parcelable {
         m.title(this.name);
         JSONObject data = new JSONObject();
         try {
-            data.put("mapItemIndex",this.getMapItemIndex());
+            data.put("mapItemIndex", this.getMapItemIndex());
             data.put("name", this.getName());
-            data.put("room",this.getRoom());
-            data.put("status",this.getStatus());
-        }
-        catch (JSONException e) {
+            data.put("room", this.getRoom());
+            data.put("status", this.getStatus());
+        } catch (JSONException e) {
             Log.d("ZZZ", e.getMessage());
         }
         m.snippet(data.toString());
@@ -241,5 +230,18 @@ public class ResourceItem extends MapItem implements Parcelable {
         }
     };
 
+    @Override
+    protected String getTableName() {
+        return null;
+    }
 
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }
