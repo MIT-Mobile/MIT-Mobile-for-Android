@@ -50,7 +50,7 @@ public class MITShuttleAdapter extends BaseAdapter {
         if (view != null) {
             viewHolder = (ViewHolder) view.getTag();
         } else {
-            view = listContainer.inflate(R.layout.list_item_shuttle, parent, false);
+            view = listContainer.inflate(R.layout.shuttle_list_item, parent, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         }

@@ -79,7 +79,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         mitShuttleAdapter = new MITShuttleAdapter(this, mitshuttles);
         shuttleListView.setAdapter(mitShuttleAdapter);
         View footer = ((LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.list_item_shuttle_footer, null, false);
+                .inflate(R.layout.shuttle_list_footer, null, false);
         shuttleListView.addFooterView(footer);
         initialListViewFooter(footer);
         updateShuttleView();
@@ -272,7 +272,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 new Callback<MITShuttleRoute>() {
                     @Override
                     public void success(final MITShuttleRoute mitShuttleRouteWrapper, Response response) {
-                        Intent intent = new Intent(getApplicationContext(), ShuttleStopsActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), ShuttleRouteActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("route", mitShuttleRouteWrapper);
                         startActivity(intent);

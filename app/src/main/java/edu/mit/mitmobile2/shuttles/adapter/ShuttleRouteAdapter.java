@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
-public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
+public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
 
     private Context mContext;
 
-    public ShuttleStopsAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects) {
+    public ShuttleRouteAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects) {
         super(context, resource, objects);
         mContext = context;
     }
@@ -29,13 +30,8 @@ public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
         ViewHolderItem viewHolder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.stops_list_row, parent, false);
-
-            viewHolder = new ViewHolderItem();
-            viewHolder.stopIcon = (ImageView) convertView.findViewById(R.id.stop_icon);
-            viewHolder.stopName = (TextView) convertView.findViewById(R.id.stop_name);
-            viewHolder.stopPrediction = (TextView) convertView.findViewById(R.id.stop_prediction);
-
+            convertView = mInflater.inflate(R.layout.stop_list_item, parent, false);
+            viewHolder = new ViewHolderItem(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolderItem) convertView.getTag();
@@ -44,9 +40,16 @@ public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
         // object item based on the position
         MITShuttleStopWrapper stopWrapper = getItem(position);
 
+        if (position == 0) {
+            viewHolder.stopView.setVisibility(View.GONE);
+        } else {
+            viewHolder.stopView.setVisibility(View.VISIBLE);
+        }
+
+        viewHolder.stopName.setText(stopWrapper.getTitle());
         viewHolder.stopName.setText(stopWrapper.getTitle());
         if (stopWrapper.getPredictions() != null && stopWrapper.getPredictions().size() > 0) {
-            viewHolder.stopPrediction.setText(String.valueOf(stopWrapper.getPredictions().get(0).getSeconds()));
+            viewHolder.stopPrediction.setText(String.valueOf(stopWrapper.getPredictions().get(0).getSeconds() / 60) + "m");
         } else {
             viewHolder.stopPrediction.setText("-");
         }
@@ -55,8 +58,20 @@ public class ShuttleStopsAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
     }
 
     static class ViewHolderItem {
+        @InjectView(R.id.stop_icon)
         ImageView stopIcon;
+
+        @InjectView(R.id.stop_name)
         TextView stopName;
+
+        @InjectView(R.id.stop_prediction)
         TextView stopPrediction;
+
+        @InjectView(R.id.stop_view)
+        View stopView;
+
+        ViewHolderItem(View view) {
+            ButterKnife.inject(this, view);
+        }
     }
 }

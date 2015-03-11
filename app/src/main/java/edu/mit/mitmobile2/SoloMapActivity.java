@@ -42,7 +42,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         setContentView(R.layout.activity_solo_map);
 
         mapItemsListview = (ListView) findViewById(R.id.map_list_view);
-        View header = View.inflate(this, R.layout.stops_list_header, null);
+        View header = View.inflate(this, R.layout.stop_list_header, null);
         mapItemsListview.addHeaderView(header);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
