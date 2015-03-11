@@ -16,7 +16,7 @@ import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.Schema;
 
 
-public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable {
+public class MITShuttleRoute extends DatabaseObject implements Parcelable {
 
     @Expose
     private String id;
@@ -43,6 +43,8 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
     @Expose
     private List<MITShuttleStopWrapper> stops = new ArrayList<MITShuttleStopWrapper>();
 
+    public MITShuttleRoute() {
+    }
 
     public String getId() {
         return id;
@@ -170,7 +172,7 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
         dest.writeTypedList(stops);
     }
 
-    private MITShuttleRouteWrapper(Parcel p) {
+    private MITShuttleRoute(Parcel p) {
         this.id = p.readString();
         this.url = p.readString();
         this.title = p.readString();
@@ -185,13 +187,13 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
 //        this.stops = p.readArrayList(MITShuttleStopWrapper.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<MITShuttleRouteWrapper> CREATOR = new Parcelable.Creator<MITShuttleRouteWrapper>() {
-        public MITShuttleRouteWrapper createFromParcel(Parcel source) {
-            return new MITShuttleRouteWrapper(source);
+    public static final Parcelable.Creator<MITShuttleRoute> CREATOR = new Parcelable.Creator<MITShuttleRoute>() {
+        public MITShuttleRoute createFromParcel(Parcel source) {
+            return new MITShuttleRoute(source);
         }
 
-        public MITShuttleRouteWrapper[] newArray(int size) {
-            return new MITShuttleRouteWrapper[size];
+        public MITShuttleRoute[] newArray(int size) {
+            return new MITShuttleRoute[size];
         }
     };
 
@@ -202,8 +204,8 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
 
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-        //TODO: 2 calls - get MITPath object for ID, get all routestops with this route's db ID
-
+        long pathId = cursor.getLong(cursor.getColumnIndex(Schema.Route.MIT_PATH_ID));
+        setPath(dbAdapter.getPath(pathId));
         setId(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_ID)));
         setUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_URL)));
         setAgency(cursor.getString(cursor.getColumnIndex(Schema.Route.AGENCY)));
@@ -213,6 +215,24 @@ public class MITShuttleRouteWrapper extends DatabaseObject implements Parcelable
         setTitle(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_TITLE)));
         setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
         setVehiclesUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
+
+        buildSubclassFromCursor(cursor, dbAdapter, "");
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter, String prefix) {
+        long id = getDatabaseId();
+        this.stops = new ArrayList<>();
+
+        while (cursor.getLong(cursor.getColumnIndex(Schema.Route.ID_COL)) == id) {
+            MITShuttleStopWrapper stopWrapper = new MITShuttleStopWrapper();
+            stopWrapper.buildSubclassFromCursor(cursor, dbAdapter);
+            this.stops.add(stopWrapper);
+            boolean itemsRemaining = cursor.moveToNext();
+            if (!itemsRemaining) {
+                break;
+            }
+        }
     }
 
     @Override

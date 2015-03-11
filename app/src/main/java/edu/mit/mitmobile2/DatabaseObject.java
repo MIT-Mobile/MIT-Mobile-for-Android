@@ -62,6 +62,9 @@ public abstract class DatabaseObject extends Observable implements Observer {
      */
     protected abstract void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter);
 
+    // For JOINs
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter, String prefix) { };
+
     /**
      * Store this object in the database.  The framework does most of the work but subclasses
      * must fill in the provided ContentValues with appropriate values.

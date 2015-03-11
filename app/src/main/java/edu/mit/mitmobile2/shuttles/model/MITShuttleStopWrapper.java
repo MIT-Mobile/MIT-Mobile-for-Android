@@ -45,6 +45,8 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     private String predictionsUrl;
     private float distance;
 
+    public MITShuttleStopWrapper() {
+    }
 
     public String getId() {
         return id;
@@ -212,7 +214,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-        //TODO: Pull predictions from relational DB
+        //TODO: Pull predictions from their table
 
         setId(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_ID)));
         setUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_URL)));

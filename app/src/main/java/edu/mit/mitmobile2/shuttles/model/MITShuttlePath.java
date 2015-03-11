@@ -44,6 +44,9 @@ public class MITShuttlePath extends DatabaseObject implements Parcelable {
         this.segments = segments;
     }
 
+    public MITShuttlePath() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
