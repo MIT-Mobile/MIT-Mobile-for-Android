@@ -305,6 +305,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public void shuttleStopClick(String stopID) {
-
+        Intent intent = new Intent(this, ShuttleStopActivity.class);
+        startActivity(intent);
     }
 }
