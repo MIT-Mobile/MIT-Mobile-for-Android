@@ -1,18 +1,12 @@
 package edu.mit.mitmobile2.shuttles.model;
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import edu.mit.mitmobile2.DBAdapter;
-import edu.mit.mitmobile2.DatabaseObject;
-import edu.mit.mitmobile2.Schema;
-
-public class MITShuttlePrediction extends DatabaseObject implements Parcelable {
+public class MITShuttlePrediction implements Parcelable {
 
     @SerializedName("vehicle_id")
     @Expose
@@ -22,6 +16,8 @@ public class MITShuttlePrediction extends DatabaseObject implements Parcelable {
     @Expose
     private Integer seconds;
 
+    public MITShuttlePrediction() {
+    }
 
     public String getVehicleId() {
         return vehicleId;
@@ -81,22 +77,12 @@ public class MITShuttlePrediction extends DatabaseObject implements Parcelable {
     };
 
     @Override
-    protected String getTableName() {
-        return Schema.Prediction.TABLE_NAME;
-    }
-
-    @Override
-    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-        setVehicleId(cursor.getString(cursor.getColumnIndex(Schema.Prediction.VEHICLE_ID)));
-        setTimestamp(cursor.getInt(cursor.getColumnIndex(Schema.Prediction.TIMESTAMP)));
-        setSeconds(cursor.getInt(cursor.getColumnIndex(Schema.Prediction.SECONDS)));
-    }
-
-    @Override
-    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        values.put(Schema.Prediction.VEHICLE_ID, this.vehicleId);
-        values.put(Schema.Prediction.TIMESTAMP, this.timestamp);
-        values.put(Schema.Prediction.SECONDS, this.seconds);
+    public String toString() {
+        return "{" +
+                "\"vehicle_id\":\"" + vehicleId + "\"" +
+                ", \"timestamp\":" + timestamp +
+                ", \"seconds\":" + seconds +
+                '}';
     }
 }
 

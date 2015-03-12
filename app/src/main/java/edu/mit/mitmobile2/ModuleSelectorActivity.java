@@ -27,19 +27,6 @@ import android.util.Log;
 
 public class ModuleSelectorActivity extends Activity {
 
-    // Constants
-    // The authority for the sync adapter's content provider
-    public static final String AUTHORITY = "edu.mit.mitmobile2.provider";
-    // An account type, in the form of a domain name
-    public static final String ACCOUNT_TYPE = "m.mit.edu";
-    // The account name
-    public static final String ACCOUNT = "mitaccount";
-
-    public static final int INTERVAL_SECS = 600;
-    // Instance fields
-    private Account mAccount;
-    // A content resolver for accessing the provider
-    ContentResolver mResolver;
 
 	private String module; // name of module
 	private static final String DEFAULT_MODULE = "news";
@@ -60,12 +47,13 @@ public class ModuleSelectorActivity extends Activity {
 		loadNavigation(mContext);
         MITAPIClient.init(mContext);
 
-        mAccount = createSyncAccount(this);
-        mResolver = getContentResolver();
-        ContentResolver.setIsSyncable(mAccount, AUTHORITY, 1);
-        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, INTERVAL_SECS);
-	}
+        if (MitMobileApplication.mAccount == null) {
+            MitMobileApplication.mAccount = createSyncAccount(this);
+            ContentResolver.setIsSyncable(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, true);
+        }
+        ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, Bundle.EMPTY, MitMobileApplication.INTERVAL_SECS);
+    }
 
 	@Override
 	protected void onStart() {
@@ -121,7 +109,7 @@ public class ModuleSelectorActivity extends Activity {
     public static Account createSyncAccount(Context context) {
         // Create the account type and default account
         Account newAccount = new Account(
-                ACCOUNT, ACCOUNT_TYPE);
+                MitMobileApplication.ACCOUNT, MitMobileApplication.ACCOUNT_TYPE);
         // Get an instance of the Android account manager
         AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
         /*
