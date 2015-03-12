@@ -14,6 +14,7 @@ import java.util.List;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shuttles.ShuttlesDatabaseHelper;
 
 
 public class MITShuttleRoute extends DatabaseObject implements Parcelable {
@@ -205,7 +206,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
         long pathId = cursor.getLong(cursor.getColumnIndex(Schema.Route.MIT_PATH_ID));
-        setPath(dbAdapter.getPath(pathId));
+        setPath(ShuttlesDatabaseHelper.getPath(pathId));
         setId(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_ID)));
         setUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_URL)));
         setAgency(cursor.getString(cursor.getColumnIndex(Schema.Route.AGENCY)));
@@ -239,7 +240,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        dbAdapter.batchPersistStops(this.stops, this.id);
+        ShuttlesDatabaseHelper.batchPersistStops(this.stops, this.id);
 
         //TODO: Remove this IF condition when SyncAdapter added; paths will just get cleared each time
         if (!dbAdapter.exists(Schema.Path.TABLE_NAME, Schema.Path.ALL_COLUMNS)) {

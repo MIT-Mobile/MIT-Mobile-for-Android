@@ -5,13 +5,16 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.Schema;
@@ -39,7 +42,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     @Expose
     private Double lon;
     @Expose
-    private List<MITShuttlePrediction> predictions = new ArrayList<MITShuttlePrediction>();
+    private List<MITShuttlePrediction> predictions = new ArrayList<>();
     @SerializedName("predictions_url")
     @Expose
     private String predictionsUrl;
@@ -214,8 +217,6 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-        //TODO: Pull predictions from their table
-
         setId(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_ID)));
         setUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.STOP_URL)));
         setRouteId(cursor.getString(cursor.getColumnIndex(Schema.Stop.ROUTE_ID)));
@@ -226,13 +227,25 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         setLon(cursor.getDouble(cursor.getColumnIndex(Schema.Stop.STOP_LON)));
         setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.PREDICTIONS_URL)));
         setDistance(cursor.getFloat(cursor.getColumnIndex(Schema.Stop.DISTANCE)));
+
+        buildSubclassFromCursor(cursor, dbAdapter, "");
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter, String prefix) {
+        String segmentString = cursor.getString(cursor.getColumnIndex(Schema.Stop.PREDICTIONS));
+        Gson gson = new Gson();
+        Type nestedListType = new TypeToken<List<MITShuttlePrediction>>() {
+        }.getType();
+        List<MITShuttlePrediction> predictions = gson.fromJson(segmentString, nestedListType);
+        setPredictions(predictions);
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        //TODO: Store Predictions in their own table, also store ids in relational stop<->pred table
         if (predictions != null) {
-            dbAdapter.batchPersistPredictions(this.predictions, this.id);
+            String preds = predictions.toString();
+            values.put(Schema.Stop.PREDICTIONS, preds);
         }
 
         values.put(Schema.Stop.STOP_ID, this.id);
