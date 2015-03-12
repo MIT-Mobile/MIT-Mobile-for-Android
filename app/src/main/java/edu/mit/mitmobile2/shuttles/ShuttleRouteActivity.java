@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
@@ -23,8 +24,8 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         super.onCreate(savedInstanceState);
 
         //TODO: Change this to get route ID from intent, which will be used to get the route's data from the database
-        //routeID = getIntent().getStringExtra("routeID");
-        MITShuttleRoute routeWrapper = getIntent().getParcelableExtra("route");
+        routeID = getIntent().getStringExtra("routeID");
+        MITShuttleRoute routeWrapper = DBAdapter.getInstance().getRoute(routeID);
         stops.addAll(routeWrapper.getStops());
         adapter = new ShuttleRouteAdapter(this, R.layout.stop_list_item, routeWrapper.getStops());
 

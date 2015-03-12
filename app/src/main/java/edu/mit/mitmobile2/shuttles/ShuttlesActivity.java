@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.shuttles;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
@@ -70,7 +71,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                     @Override
                     public void run() {
                         shuttleRefreshLayout.setRefreshing(false);
-                        //TODO: refreshing shuttle adapter
+                        mitshuttles.clear();
+                        List<MITShuttleRoute> mitShuttleRoutesFromDB = DBAdapter.getInstance().getAllRoutes();
+                        setShuttleList(mitShuttleRoutesFromDB);
+                        mitShuttleAdapter.notifyDataSetChanged();
                     }
                 }, REFRESH_TIME);
             }
@@ -93,15 +97,8 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 new Callback<List<MITShuttleRoute>>() {
                     @Override
                     public void success(final List<MITShuttleRoute> mitShuttleRoutes, Response response) {
-                        setShuttleRoutesStopDistance(mitShuttleRoutes);
-                        sortShuttleRoutesByDistance(mitShuttleRoutes);
-                        for (MITShuttleRoute shuttleRoute : mitShuttleRoutes) {
-                            final MITShuttle mitShuttle = new MITShuttle();
-                            setShuttleRoutesStop(mitShuttle, shuttleRoute);
-                        }
-                        sortShuttleRoutesByStatus();
-                        mitShuttleAdapter.notifyDataSetChanged();
                         new PersistRoutesInDbTask().execute(mitShuttleRoutes);
+                        setShuttleList(mitShuttleRoutes);
                     }
 
                     @Override
@@ -109,6 +106,17 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                         //TODO: Add global otto listener to handle errors
                     }
                 });
+    }
+
+    public void setShuttleList(List<MITShuttleRoute> mitShuttleRoutes) {
+        setShuttleRoutesStopDistance(mitShuttleRoutes);
+        sortShuttleRoutesByDistance(mitShuttleRoutes);
+        for (MITShuttleRoute shuttleRoute : mitShuttleRoutes) {
+            final MITShuttle mitShuttle = new MITShuttle();
+            setShuttleRoutesStop(mitShuttle, shuttleRoute);
+        }
+        sortShuttleRoutesByStatus();
+        mitShuttleAdapter.notifyDataSetChanged();
     }
 
     public void setShuttleRoutesStopDistance(List<MITShuttleRoute> mitShuttleRoutes) {
@@ -287,23 +295,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     }
 
     @Override
-    public void shuttleRouteClick(String routeID) {
-        HashMap<String, String> routeParams = new HashMap<>();
-        routeParams.put("route", routeID);
-        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ROUTE_INFO_PATH, routeParams, null,
-                new Callback<MITShuttleRoute>() {
-                    @Override
-                    public void success(final MITShuttleRoute mitShuttleRouteWrapper, Response response) {
-                        Intent intent = new Intent(getApplicationContext(), ShuttleRouteActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("route", mitShuttleRouteWrapper);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                    }
-                });
+    public void shuttleRouteClick(final String routeID) {
+        Intent intent = new Intent(getApplicationContext(), ShuttleRouteActivity.class);
+        intent.putExtra("routeID", routeID);
+        startActivity(intent);
     }
 
     @Override
