@@ -38,24 +38,6 @@ public class Schema {
         };
     }
 
-    public static class Prediction extends Table {
-        public static final String TABLE_NAME = "predictions";
-        public static final String VEHICLE_ID = "vehicle_id";
-        public static final String TIMESTAMP = "timestamp";
-        public static final String SECONDS = "seconds";
-
-        public static final String CREATE_TABLE_SQL =
-                buildCreateSQL(TABLE_NAME,
-                        VEHICLE_ID + " text not null, " +
-                                TIMESTAMP + " integer not null, " +
-                                SECONDS + " integer not null"
-                );
-
-        public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, VEHICLE_ID, TIMESTAMP, SECONDS
-        };
-    }
-
     public static class Route extends Table {
         public static final String TABLE_NAME = "routes";
         public static final String ROUTE_ID = "route_id";
@@ -115,6 +97,7 @@ public class Schema {
         public static final String STOP_LAT = "stop_lat";
         public static final String STOP_LON = "stop_lon";
         public static final String PREDICTIONS_URL = "predictions_url";
+        public static final String PREDICTIONS = "predictions";
         public static final String DISTANCE = "distance";
 
         public static final String CREATE_TABLE_SQL =
@@ -128,27 +111,12 @@ public class Schema {
                                 STOP_LON + " double not null, " +
                                 STOP_NUMBER + " text, " +
                                 DISTANCE + " float, " +
+                                PREDICTIONS + " text, " +
                                 PREDICTIONS_URL + " text not null"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, STOP_ID, STOP_URL, ROUTE_ID, ROUTE_URL, STOP_TITLE, STOP_NUMBER, STOP_LAT, STOP_LON, DISTANCE, PREDICTIONS_URL
-        };
-    }
-
-    public static class StopPredictions extends Table {
-        public static final String TABLE_NAME = "stop_predictions";
-        public static final String STOP_ID = "stop_id";
-        public static final String PREDICTION_ID = "prediction_id";
-
-        public static final String CREATE_TABLE_SQL =
-                buildCreateSQL(TABLE_NAME,
-                        STOP_ID + " long not null, " +
-                                PREDICTION_ID + " long not null"
-                );
-
-        public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, STOP_ID, PREDICTION_ID
+                ID_COL, STOP_ID, STOP_URL, ROUTE_ID, ROUTE_URL, STOP_TITLE, STOP_NUMBER, STOP_LAT, STOP_LON, DISTANCE, PREDICTIONS, PREDICTIONS_URL
         };
     }
 
