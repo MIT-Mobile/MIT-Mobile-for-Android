@@ -12,7 +12,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,8 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -70,8 +67,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                     @Override
                     public void run() {
                         shuttleRefreshLayout.setRefreshing(false);
-                        mitshuttles.clear();
-                        setShuttleFromDb();
+                        setShuttlefromDB();
                     }
                 }, REFRESH_TIME);
             }
@@ -85,19 +81,54 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 .inflate(R.layout.shuttle_list_footer, null, false);
         shuttleListView.addFooterView(footer);
         initialListViewFooter(footer);
-        updateShuttleView();
+
+        if (ShuttlesDatabaseHelper.getAllRoutes().size() > 0) {
+            setShuttlefromDB();
+        }
+
+        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ALL_ROUTES_PATH, null, null,
+                new Callback<List<MITShuttleRoute>>() {
+                    @Override
+                    public void success(final List<MITShuttleRoute> mitShuttleRoutes, Response response) {
+                        setShuttleFromServer(mitShuttleRoutes);
+                        insertShuttleToDB(mitShuttleRoutes);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        //TODO: Add global otto listener to handle errors
+                    }
+                });
     }
 
-    public List<MITShuttleRoute> getShuttlefromDB() {
+    public void setShuttlefromDB() {
+        mitshuttles.clear();
         List<MITShuttleRoute> mitShuttleRoutes = ShuttlesDatabaseHelper.getAllRoutes();
         setShuttleRoutesStopDistance(mitShuttleRoutes);
         sortShuttleRoutesByDistance(mitShuttleRoutes);
         sortShuttleRoutesByStatus();
-        return mitShuttleRoutes;
+        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
+            MITShuttle mitShuttle = new MITShuttle();
+            setShuttleRoutesStop(mitShuttle, mitShuttleRoute, true);
+        }
+        sortShuttleRoutesByStatus();
+        mitShuttleAdapter.notifyDataSetChanged();
+    }
+
+    public void setShuttleFromServer(List<MITShuttleRoute> mitShuttleRoutes) {
+        mitshuttles.clear();
+        setShuttleRoutesStopDistance(mitShuttleRoutes);
+        sortShuttleRoutesByDistance(mitShuttleRoutes);
+        for (MITShuttleRoute shuttleRoute : mitShuttleRoutes) {
+            final MITShuttle mitShuttle = new MITShuttle();
+            setShuttleRoutesStop(mitShuttle, shuttleRoute, false);
+        }
+        sortShuttleRoutesByStatus();
+        mitShuttleAdapter.notifyDataSetChanged();
     }
 
     public void insertShuttleToDB(List<MITShuttleRoute> mitShuttleRoutes) {
-        setShuttleRoutesStopDistance(mitShuttleRoutes);
+        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
         for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
             HashMap<String, String> routeParams = new HashMap<>();
             routeParams.put("route", mitShuttleRoute.getId());
@@ -116,59 +147,6 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                         }
                     });
         }
-    }
-
-
-    public void updateShuttleView() {
-        if (ShuttlesDatabaseHelper.getAllRoutes().size() > 0) {
-            setShuttleFromDb();
-        }
-
-        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ALL_ROUTES_PATH, null, null,
-                new Callback<List<MITShuttleRoute>>() {
-                    @Override
-                    public void success(final List<MITShuttleRoute> mitShuttleRoutes, Response response) {
-                        setShuttleFromWeb(mitShuttleRoutes);
-                        insertShuttleToDB(mitShuttleRoutes);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        //TODO: Add global otto listener to handle errors
-                    }
-                });
-    }
-
-    public void setShuttleFromDb() {
-        for (MITShuttleRoute mitShuttleRoute : getShuttlefromDB()) {
-            MITShuttle mitShuttle = new MITShuttle();
-            mitShuttle.setRouteName(mitShuttleRoute.getTitle());
-            mitShuttle.setPredicable(mitShuttleRoute.getPredictable());
-            mitShuttle.setScheduled(mitShuttleRoute.getScheduled());
-            mitShuttle.setRouteID(mitShuttleRoute.getId());
-            mitShuttle.setFirstStopName(mitShuttleRoute.getStops().get(0).getTitle());
-            mitShuttle.setFirstStopID(mitShuttleRoute.getStops().get(0).getId());
-            mitShuttle.setSecondStopName(mitShuttleRoute.getStops().get(1).getTitle());
-            mitShuttle.setSecondStopID(mitShuttleRoute.getStops().get(1).getId());
-            //if (mitShuttleRoute.getPredictable()) {
-            //    mitShuttle.setFirstMinute(mitShuttleRoute.getStops().get(0).getPredictions().get(0).getSeconds() / 60 + "m");
-            //    mitShuttle.setSecondMinute(mitShuttleRoute.getStops().get(1).getPredictions().get(0).getSeconds() / 60 + "m");
-            //}
-            mitshuttles.add(mitShuttle);
-        }
-        sortShuttleRoutesByStatus();
-        mitShuttleAdapter.notifyDataSetChanged();
-    }
-
-    public void setShuttleFromWeb(List<MITShuttleRoute> mitShuttleRoutes) {
-        setShuttleRoutesStopDistance(mitShuttleRoutes);
-        sortShuttleRoutesByDistance(mitShuttleRoutes);
-        for (MITShuttleRoute shuttleRoute : mitShuttleRoutes) {
-            final MITShuttle mitShuttle = new MITShuttle();
-            setShuttleRoutesStop(mitShuttle, shuttleRoute);
-        }
-        sortShuttleRoutesByStatus();
-        mitShuttleAdapter.notifyDataSetChanged();
     }
 
     public void setShuttleRoutesStopDistance(List<MITShuttleRoute> mitShuttleRoutes) {
@@ -197,7 +175,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         }
     }
 
-    public void setShuttleRoutesStop(MITShuttle mitShuttle, MITShuttleRoute shuttleRoute) {
+    public void setShuttleRoutesStop(MITShuttle mitShuttle, MITShuttleRoute shuttleRoute, boolean isFromDB) {
         mitShuttle.setRouteName(shuttleRoute.getTitle());
         mitShuttle.setPredicable(shuttleRoute.getPredictable());
         mitShuttle.setScheduled(shuttleRoute.getScheduled());
@@ -206,14 +184,25 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         mitShuttle.setFirstStopID(shuttleRoute.getStops().get(0).getId());
         mitShuttle.setSecondStopName(shuttleRoute.getStops().get(1).getTitle());
         mitShuttle.setSecondStopID(shuttleRoute.getStops().get(1).getId());
-        if (mitShuttle.isPredicable()) {
-            updateShuttleRoutesStopView(mitShuttle, true);
-            updateShuttleRoutesStopView(mitShuttle, false);
+        if (isFromDB) {
+            if (shuttleRoute.getPredictable()) {
+                if (shuttleRoute.getStops().get(0).getPredictions().size() > 0) {
+                    mitShuttle.setFirstMinute(shuttleRoute.getStops().get(0).getPredictions().get(0).getSeconds() / 60 + "m");
+                }
+                if (shuttleRoute.getStops().get(1).getPredictions().size() > 0) {
+                    mitShuttle.setSecondMinute(shuttleRoute.getStops().get(1).getPredictions().get(0).getSeconds() / 60 + "m");
+                }
+            }
+        } else {
+            if (mitShuttle.isPredicable()) {
+                setStopPredictionFromServer(mitShuttle, true);
+                setStopPredictionFromServer(mitShuttle, false);
+            }
         }
         mitshuttles.add(mitShuttle);
     }
 
-    public void updateShuttleRoutesStopView(final MITShuttle mitShuttle, final boolean isFirstStop) {
+    public void setStopPredictionFromServer(final MITShuttle mitShuttle, final boolean isFirstStop) {
         HashMap<String, String> stopParams = new HashMap<>();
 
         stopParams.put("route", mitShuttle.getRouteID());
