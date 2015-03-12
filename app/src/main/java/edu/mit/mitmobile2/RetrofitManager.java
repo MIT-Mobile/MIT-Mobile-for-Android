@@ -134,6 +134,7 @@ public class RetrofitManager {
             }
         }
 
+        Timber.d("Method name= " + methodName);
         String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
         try {
             Field f = RetrofitManager.class.getDeclaredField(serviceName);

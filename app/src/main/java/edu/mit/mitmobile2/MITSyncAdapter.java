@@ -74,7 +74,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             queryparams = gson.fromJson(q, hashMapType);
         }
 
-        Timber.d("Retrieved info from bundle");
+        Timber.d("Retrieved info from bundle:" + module + ", " + path + ", " + uri);
 
         Object object = mitapiClient.get(getContext(), module, path, pathParams, queryparams);
 
@@ -96,9 +96,10 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         ContentValues contentValues = new ContentValues();
         dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
 
-        Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri), null, map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'", null, null);
+        String selection = map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'";
+        Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri), null, selection, null, null);
         if (cursor.getCount() > 0) {
-            getContext().getContentResolver().update(Uri.parse(uri), contentValues, map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'", null);
+            getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
         } else {
             getContext().getContentResolver().insert(Uri.parse(uri), contentValues);
         }

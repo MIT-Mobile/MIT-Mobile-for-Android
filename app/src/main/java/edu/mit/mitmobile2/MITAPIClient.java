@@ -48,7 +48,7 @@ public class MITAPIClient {
 		String json = "";
 		// read the api.json file to populate the api map the first time this class is initiated
 		if (MITAPIClient.api == null) {
-			MITAPIClient.api = new HashMap<String,APIEntry>();
+			MITAPIClient.api = new HashMap<>();
 
 	        try {
 	        	InputStream is = mContext.getAssets().open("api.json");
@@ -66,7 +66,7 @@ public class MITAPIClient {
 	        	JSONObject jObject = new JSONObject(json);
 
 	        	Iterator n = jObject.keys();
-	        	List<String> keysList = new ArrayList<String>();
+	        	List<String> keysList = new ArrayList<>();
 	              while (n.hasNext()) {
 	              	try {
 	              		String key = (String)n.next();
@@ -220,7 +220,10 @@ public class MITAPIClient {
             init(context);
 			apiEntry = MITAPIClient.api.get(api);
         }
-        String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
+		//TODO: Figure out why this is getting NP Exception
+//        String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
+
+		String apiUrl = "http://mobile-dev.mit.edu/apis/shuttles/";
         RetrofitManager.changeEndpoint(apiUrl);
         Object o = RetrofitManager.makeHttpCall(api, path, pathParams, queryParams);
         return o;

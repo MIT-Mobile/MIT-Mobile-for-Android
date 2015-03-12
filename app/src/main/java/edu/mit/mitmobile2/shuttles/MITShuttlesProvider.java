@@ -50,12 +50,14 @@ public class MITShuttlesProvider extends ContentProvider {
 
         int uriType = sURIMatcher.match(uri);
         Timber.d("Uri= " + uriType);
+        Timber.d("Selection= " + selection);
+
         switch (uriType) {
             case ROUTES:
-                Timber.d("Selection= " + selection);
                 cursor = MitMobileApplication.dbAdapter.db.query(Schema.Route.TABLE_NAME, Schema.Route.ALL_COLUMNS, selection, null, null, null, null);
                 break;
-            case ROUTE_ID:
+            case STOPS:
+                cursor = MitMobileApplication.dbAdapter.db.query(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, selection, null, null, null, null);
                 break;
         }
         return cursor;
@@ -74,13 +76,18 @@ public class MITShuttlesProvider extends ContentProvider {
         Timber.d("Uri= " + uriType);
         switch (uriType) {
             case ROUTES:
-                long newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                long newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
                 Timber.d("DB id= " + newID);
                 if (newID <= 0) {
                     throw new SQLException("Error");
                 }
                 break;
-            case ROUTE_ID:
+            case STOPS:
+                long newStopID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
+                Timber.d("DB id= " + newStopID);
+                if (newStopID <= 0) {
+                    throw new SQLException("Error");
+                }
                 break;
 
         }
@@ -102,7 +109,9 @@ public class MITShuttlesProvider extends ContentProvider {
                 MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values,
                         Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
                 break;
-            case ROUTE_ID:
+            case STOPS:
+                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
+                        Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
                 break;
 
         }
