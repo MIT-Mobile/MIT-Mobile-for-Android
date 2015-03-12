@@ -4,4 +4,9 @@
         android:state_pressed="true"
         android:drawable="@color/sbc_header_text"
         />
+
+    <item
+        android:state_pressed="false"
+        android:drawable="@color/sbc_layout_view"
+        />
 </selector>

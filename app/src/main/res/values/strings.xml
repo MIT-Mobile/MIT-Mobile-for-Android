@@ -44,5 +44,8 @@
     <string name="real_time_google_transit_url">http://www.google.com/transit</string>
     <string name="ok_button">Ok</string>
     <string name="cancel_button">Cancel</string>
+    <string name="route_in_service">In service</string>
+    <string name="route_not_in_service">Not in service</string>
+    <string name="route_unknown">No current predictions</string>
 
 </resources>

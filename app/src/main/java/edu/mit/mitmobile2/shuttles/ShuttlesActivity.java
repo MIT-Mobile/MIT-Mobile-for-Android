@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.shuttles;
 
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
@@ -72,7 +71,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                     public void run() {
                         shuttleRefreshLayout.setRefreshing(false);
                         mitshuttles.clear();
-                        List<MITShuttleRoute> mitShuttleRoutesFromDB = DBAdapter.getInstance().getAllRoutes();
+                        List<MITShuttleRoute> mitShuttleRoutesFromDB = ShuttlesDatabaseHelper.getAllRoutes();
                         setShuttleList(mitShuttleRoutesFromDB);
                         mitShuttleAdapter.notifyDataSetChanged();
                     }
@@ -84,7 +83,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     private void initialShuttleView() {
         mitShuttleAdapter = new MITShuttleAdapter(this, mitshuttles);
         shuttleListView.setAdapter(mitShuttleAdapter);
-        View footer = ((LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE))
+        View footer = ((LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.shuttle_list_footer, null, false);
         shuttleListView.addFooterView(footer);
         initialListViewFooter(footer);
@@ -296,7 +295,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public void shuttleRouteClick(final String routeID) {
-        Intent intent = new Intent(getApplicationContext(), ShuttleRouteActivity.class);
+        Intent intent = new Intent(this, ShuttleRouteActivity.class);
         intent.putExtra("routeID", routeID);
         startActivity(intent);
     }
