@@ -72,7 +72,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                         }
 
                         translation = (originalPosition - newPosition) / 2;
-                        mapView.getMapFragment().getView().setTranslationY(translation);
+                        mapView.getMapFragment().getView().setTranslationY(-translation);
                     }
                 }
             }
