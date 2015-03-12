@@ -8,7 +8,7 @@
         android:id="@+id/route_map"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="200dp" />
+        android:layout_height="fill_parent" />
 
     <ListView
         android:id="@+id/map_list_view"
@@ -16,5 +16,13 @@
         android:layout_height="fill_parent"
         android:divider="@null"
         android:dividerHeight="0dp" />
+
+    <Button
+        android:id="@+id/list_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="LIST"
+        android:visibility="invisible" />
 
 </FrameLayout>

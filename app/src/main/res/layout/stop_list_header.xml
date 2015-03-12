@@ -11,15 +11,6 @@
         android:layout_height="200dp"
         android:background="@color/transparent" />
 
-    <Button
-        android:id="@+id/list_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/transparent_map_overlay"
-        android:padding="5dp"
-        android:text="LIST"
-        android:visibility="invisible" />
-
     <LinearLayout
         android:id="@+id/route_info_segment"
         android:layout_width="fill_parent"

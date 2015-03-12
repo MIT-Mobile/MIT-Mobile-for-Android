@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 
@@ -123,7 +122,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         View view = mapView.getMapFragment().getView();
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
 
         ResizeAnimation a = new ResizeAnimation(view);
         a.setDuration(250);
@@ -133,27 +132,18 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapViewExpanded = true;
             getMapItemAdapter().clear();
             mapItemsListview.setVerticalScrollBarEnabled(false);
-            routeInfoSegment.setVisibility(View.GONE);
             a.setParams(lp.height, displayMetrics.heightPixels);
-
-            ViewGroup.LayoutParams layoutParams = transparentView.getLayoutParams();
-            int height = getSupportActionBar().getHeight();
-            transparentView.setLayoutParams(new RelativeLayout.LayoutParams(layoutParams.width, displayMetrics.heightPixels - height));
-            transparentView.requestLayout();
-
             mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
 
             listButton.setVisibility(View.VISIBLE);
+            mapItemsListview.setVisibility(View.GONE);
         } else {
             mapViewExpanded = false;
             fillAdapter();
             routeInfoSegment.setVisibility(View.VISIBLE);
+            mapItemsListview.setVisibility(View.VISIBLE);
             mapItemsListview.setVerticalScrollBarEnabled(true);
             a.setParams(lp.height, dpToPx(getResources(), 200));
-
-            ViewGroup.LayoutParams layoutParams = transparentView.getLayoutParams();
-            transparentView.setLayoutParams(new RelativeLayout.LayoutParams(layoutParams.width, dpToPx(getResources(), 200)));
-            transparentView.requestLayout();
         }
         view.startAnimation(a);
     }
