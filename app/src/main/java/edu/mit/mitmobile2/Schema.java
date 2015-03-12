@@ -62,7 +62,7 @@ public class Schema {
                                 ROUTE_DESCRIPTION + " text not null, " +
                                 PREDICTIONS_URL + " text not null, " +
                                 VEHICLES_URL + " text not null, " +
-                                MIT_PATH_ID + " long not null"
+                                MIT_PATH_ID + " long"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{

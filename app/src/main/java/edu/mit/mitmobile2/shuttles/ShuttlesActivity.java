@@ -99,7 +99,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                         }
                         sortShuttleRoutesByStatus();
                         mitShuttleAdapter.notifyDataSetChanged();
-                        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
+//                        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
                     }
 
                     @Override
@@ -291,6 +291,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//        Uri contentUri = Uri.parse(Constants.Shuttles.URI + Constants.Shuttles.ROUTE_URI);
         return null;
     }
 
