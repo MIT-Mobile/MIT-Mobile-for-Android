@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -234,16 +235,18 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter, String prefix) {
         String segmentString = cursor.getString(cursor.getColumnIndex(Schema.Stop.PREDICTIONS));
-        Gson gson = new Gson();
-        Type nestedListType = new TypeToken<List<MITShuttlePrediction>>() {
-        }.getType();
-        List<MITShuttlePrediction> predictions = gson.fromJson(segmentString, nestedListType);
-        setPredictions(predictions);
+        if (!TextUtils.isEmpty(segmentString)) {
+            Gson gson = new Gson();
+            Type nestedListType = new TypeToken<List<MITShuttlePrediction>>() {
+            }.getType();
+            List<MITShuttlePrediction> predictions = gson.fromJson(segmentString, nestedListType);
+            setPredictions(predictions);
+        }
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        if (predictions != null) {
+        if (predictions != null && predictions.size() > 0) {
             String preds = predictions.toString();
             values.put(Schema.Stop.PREDICTIONS, preds);
         }
