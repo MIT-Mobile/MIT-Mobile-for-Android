@@ -4,27 +4,24 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.location.Location;
-
-import java.util.ArrayList;
-import java.util.Iterator;
+import android.util.TypedValue;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
-import android.graphics.*;
-import android.util.TypedValue;
-import android.widget.RelativeLayout;
-
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import edu.mit.mitmobile2.R;
 
@@ -149,6 +146,12 @@ public class MITMapView {
         Resources resources = mContext.getResources();
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, dpToPx(resources, 200), 130);
         mMap.moveCamera(cu);
+    }
+
+    public void setToFullScreenBounds() {
+        Resources resources = mContext.getResources();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, resources.getDisplayMetrics().heightPixels, 130);
+        mMap.animateCamera(cameraUpdate);
     }
 
     public int dpToPx(Resources res, int dp) {
