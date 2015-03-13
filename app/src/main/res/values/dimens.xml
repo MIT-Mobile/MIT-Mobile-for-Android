@@ -16,4 +16,5 @@
     <dimen name="shuttle_routes_image_size">40dp</dimen>
     <dimen name="stop_margin">8dp</dimen>
 
+    <dimen name="shuttle_routes_map_header_size">200dp</dimen>
 </resources>

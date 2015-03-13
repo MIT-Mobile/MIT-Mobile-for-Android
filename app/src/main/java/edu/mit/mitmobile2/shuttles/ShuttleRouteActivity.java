@@ -63,16 +63,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
             routeStatusTextView.setText(getResources().getString(R.string.route_not_in_service));
         }
 
-        fillAdapter();
         updatePredictions();
 
         getSupportLoaderManager().initLoader(1, null, this);
-    }
-
-    @Override
-    protected void fillAdapter() {
-        adapter.addAll(route.getStops());
-        adapter.notifyDataSetChanged();
     }
 
     @Override

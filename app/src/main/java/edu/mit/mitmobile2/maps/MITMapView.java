@@ -148,12 +148,6 @@ public class MITMapView {
         mMap.moveCamera(cu);
     }
 
-    public void setToFullScreenBounds() {
-        Resources resources = mContext.getResources();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, resources.getDisplayMetrics().heightPixels, 130);
-        mMap.animateCamera(cameraUpdate);
-    }
-
     public int dpToPx(Resources res, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }

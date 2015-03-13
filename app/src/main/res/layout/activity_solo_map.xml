@@ -8,7 +8,7 @@
         android:id="@+id/route_map"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="200dp" />
+        android:layout_height="@dimen/shuttle_routes_map_header_size" />
 
     <ListView
         android:id="@+id/map_list_view"
