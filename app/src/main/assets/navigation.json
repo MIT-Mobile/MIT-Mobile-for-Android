@@ -108,12 +108,12 @@
 		"url":"mitmobile2://links"
 	},
 	
-	"resources":{
-		"long_name":"Resource Reservations",
-		"short_name":"Resources",
-		"menu_icon":"ic_settings",
+	"mobius":{
+		"long_name":"Mobius",
+		"short_name":"Mobius",
+		"menu_icon":"menu_mobius",
 		"home_icon":"ic_settings",
-		"intent":"edu.mit.mitmobile2.resources.ResourcesActivity",
-		"url":"mitmobile2://resources"
+		"intent":"edu.mit.mitmobile2.mobius.ResourcesActivity",
+		"url":"mitmobile2://mobius"
 	}
 }

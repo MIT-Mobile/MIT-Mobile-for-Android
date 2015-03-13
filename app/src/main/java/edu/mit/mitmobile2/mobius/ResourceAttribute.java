@@ -1,9 +1,8 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.security.PrivateKey;
 import java.util.ArrayList;
 
 /**
