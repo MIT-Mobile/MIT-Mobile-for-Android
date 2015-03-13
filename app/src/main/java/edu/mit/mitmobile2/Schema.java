@@ -134,4 +134,21 @@ public class Schema {
         };
     }
 
+    public static class Location extends Table {
+        public static final String TABLE_NAME = "location";
+        public static final String LATITUDE = "latitude";
+        public static final String LONGITUDE = "longitude";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                        LATITUDE + " double not null, " +
+                                LONGITUDE + " double not null"
+
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, LATITUDE, LONGITUDE
+        };
+    }
+
 }

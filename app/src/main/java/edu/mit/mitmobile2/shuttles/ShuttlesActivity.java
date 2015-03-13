@@ -2,7 +2,9 @@ package edu.mit.mitmobile2.shuttles;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttle;
@@ -12,7 +14,9 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -58,7 +62,17 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         super.onCreate(savedInstanceState);
 
         ButterKnife.inject(this);
-        initialShuttleView();
+//        initialShuttleView();
+        Cursor cursor = getContentResolver().query(MITShuttlesProvider.CONTENT_URI, Schema.Route.ALL_COLUMNS, null, null, null);
+        mitShuttleAdapter = new MITShuttleAdapter(this, cursor, false);
+        shuttleListView.setAdapter(mitShuttleAdapter);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("module", Constants.SHUTTLES);
+        bundle.putString("path", Constants.Shuttles.ALL_ROUTES_PATH);
+        bundle.putString("uri", MITShuttlesProvider.CONTENT_URI.toString() + "/routes");
+
+        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
 
         shuttleRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -73,11 +87,13 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 }, REFRESH_TIME);
             }
         });
+
+        getSupportLoaderManager().initLoader(0, null, this);
     }
 
     private void initialShuttleView() {
-        mitShuttleAdapter = new MITShuttleAdapter(this, mitshuttles);
-        shuttleListView.setAdapter(mitShuttleAdapter);
+        //TODO: Grab cursor from DB query
+
         View footer = ((LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.shuttle_list_footer, null, false);
         shuttleListView.addFooterView(footer);
@@ -99,7 +115,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                         }
                         sortShuttleRoutesByStatus();
                         mitShuttleAdapter.notifyDataSetChanged();
-//                        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
+                        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
                     }
 
                     @Override
@@ -111,7 +127,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     public void setShuttleRoutesStopDistance(List<MITShuttleRoute> mitShuttleRoutes) {
         for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
-            if (mitShuttleRoute.getPredictable()) {
+            if (mitShuttleRoute.isPredictable()) {
                 for (MITShuttleStopWrapper mitShuttleStopWrapper : mitShuttleRoute.getStops()) {
                     if (location != null) {
                         Location stopLocation = new Location("");
@@ -137,7 +153,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     public void setShuttleRoutesStop(MITShuttle mitShuttle, MITShuttleRoute shuttleRoute) {
         mitShuttle.setRouteName(shuttleRoute.getTitle());
-        mitShuttle.setPredicable(shuttleRoute.getPredictable());
+        mitShuttle.setPredicable(shuttleRoute.isPredictable());
         mitShuttle.setScheduled(shuttleRoute.getScheduled());
         mitShuttle.setRouteID(shuttleRoute.getId());
         mitShuttle.setFirstStopName(shuttleRoute.getStops().get(0).getTitle());
@@ -152,7 +168,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     }
 
     public void updateShuttleRoutesStopView(final MITShuttle mitShuttle, final boolean isFirstStop) {
-        HashMap<String, String> stopParams = new HashMap<String, String>();
+        HashMap<String, String> stopParams = new HashMap<>();
 
         stopParams.put("route", mitShuttle.getRouteID());
         if (isFirstStop) {
@@ -291,13 +307,13 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        Uri contentUri = Uri.parse(Constants.Shuttles.URI + Constants.Shuttles.ROUTE_URI);
-        return null;
+        MitCursorLoader cursorLoader = new MitCursorLoader(this, MITShuttlesProvider.CONTENT_URI);
+        return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        Timber.d("Notified!");
     }
 
     @Override

@@ -76,6 +76,10 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Timber.d("Retrieved info from bundle:" + module + ", " + path + ", " + uri);
 
+        if (module == null || path == null || uri == null) {
+            return;
+        }
+
         Object object = mitapiClient.get(getContext(), module, path, pathParams, queryparams);
 
         if (object instanceof List) {
@@ -84,9 +88,11 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             for (DatabaseObject obj : objects) {
                 insertObject(uri, obj);
             }
+            getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
         } else {
             Timber.d("Is single object");
             insertObject(uri, (DatabaseObject) object);
+            getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
         }
 
     }

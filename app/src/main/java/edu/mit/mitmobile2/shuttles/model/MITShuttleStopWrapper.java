@@ -260,6 +260,5 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         values.put(Schema.Stop.STOP_LAT, this.lat);
         values.put(Schema.Stop.STOP_LON, this.lon);
         values.put(Schema.Stop.PREDICTIONS_URL, this.predictionsUrl);
-        values.put(Schema.Stop.DISTANCE, this.distance);
     }
 }

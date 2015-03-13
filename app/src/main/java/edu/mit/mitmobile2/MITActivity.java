@@ -1,8 +1,12 @@
 package edu.mit.mitmobile2;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
@@ -12,12 +16,14 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import timber.log.Timber;
+
 
 public class MITActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final long UPDATE_INTERVAL = 1000;
+    private static final long UPDATE_INTERVAL = 60000;
 
     protected String TAG;
     protected Context mContext;
@@ -77,5 +83,10 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
     @Override
     public void onLocationChanged(Location location) {
         this.location = location;
+        ContentValues cv = new ContentValues();
+        cv.put(Schema.Location.LATITUDE, location.getLatitude());
+        cv.put(Schema.Location.LONGITUDE, location.getLongitude());
+        cv.put(Schema.Location.ID_COL, 1);
+        MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Location.TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
 }

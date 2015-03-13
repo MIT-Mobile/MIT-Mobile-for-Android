@@ -36,6 +36,7 @@ public class MITShuttlesProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/routes", ROUTES);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/routes/*", ROUTE_ID);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/stops", STOPS);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/s", STOPS);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class MITShuttlesProvider extends ContentProvider {
         Timber.d("Uri= " + uriType);
         Timber.d("Selection= " + selection);
 
+        //TODO: Add query to return to Activity that has the loader listeners
         switch (uriType) {
             case ROUTES:
                 cursor = MitMobileApplication.dbAdapter.db.query(Schema.Route.TABLE_NAME, Schema.Route.ALL_COLUMNS, selection, null, null, null, null);
@@ -60,6 +62,8 @@ public class MITShuttlesProvider extends ContentProvider {
                 cursor = MitMobileApplication.dbAdapter.db.query(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, selection, null, null, null, null);
                 break;
         }
+
+        //TODO: Set notification
         return cursor;
     }
 

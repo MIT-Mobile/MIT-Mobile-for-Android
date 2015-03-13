@@ -53,15 +53,15 @@ public class ModuleSelectorActivity extends Activity {
             MitMobileApplication.mAccount = createSyncAccount(this);
             ContentResolver.setIsSyncable(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, 1);
             ContentResolver.setSyncAutomatically(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, true);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("module", Constants.SHUTTLES);
+            bundle.putString("path", Constants.Shuttles.ALL_ROUTES_PATH);
+            bundle.putString("uri", MITShuttlesProvider.CONTENT_URI.toString() + "/routes");
+
+            ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle, MitMobileApplication.INTERVAL_SECS);
         }
-        ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, Bundle.EMPTY, MitMobileApplication.INTERVAL_SECS);
-
-        Bundle bundle = new Bundle();
         /*bundle.putString("module", Constants.SHUTTLES);
-        bundle.putString("path", Constants.Shuttles.ALL_ROUTES_PATH);
-        bundle.putString("uri", MITShuttlesProvider.CONTENT_URI.toString() + "/routes");*/
-
-        bundle.putString("module", Constants.SHUTTLES);
         bundle.putString("path", Constants.Shuttles.STOP_INFO_PATH);
         bundle.putString("uri", MITShuttlesProvider.CONTENT_URI.toString() + "/stops");
 
@@ -69,9 +69,7 @@ public class ModuleSelectorActivity extends Activity {
         pathParams.put("route", "tech");
         pathParams.put("stop", "kendsq_d");
         String s = pathParams.toString();
-        bundle.putString("paths", s);
-
-        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+        bundle.putString("paths", s);*/
     }
 
     @Override

@@ -42,7 +42,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     @Expose
     private MITShuttlePath path;
     @Expose
-    private List<MITShuttleStopWrapper> stops = new ArrayList<MITShuttleStopWrapper>();
+    private List<MITShuttleStopWrapper> stops = new ArrayList<>();
 
     public MITShuttleRoute() {
     }
@@ -95,7 +95,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     }
 
 
-    public Boolean getPredictable() {
+    public Boolean isPredictable() {
         return predictable;
     }
 
@@ -250,7 +250,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         values.put(Schema.Route.VEHICLES_URL, this.vehiclesUrl);
         values.put(Schema.Route.ROUTE_URL, this.url);
 
-        ShuttlesDatabaseHelper.batchPersistStops(this.stops, this.id);
+        ShuttlesDatabaseHelper.batchPersistStops(this.stops, this.id, this.predictable);
 
         //TODO: Remove this IF condition when SyncAdapter added; paths will just get cleared each time
         if (!dbAdapter.exists(Schema.Path.TABLE_NAME, Schema.Path.ALL_COLUMNS)) {
