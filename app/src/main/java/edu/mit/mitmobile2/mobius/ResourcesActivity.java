@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.Constants;

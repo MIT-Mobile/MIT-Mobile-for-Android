@@ -1,7 +1,6 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

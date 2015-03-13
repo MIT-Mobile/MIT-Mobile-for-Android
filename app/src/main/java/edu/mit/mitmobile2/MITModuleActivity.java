@@ -11,6 +11,9 @@ import android.util.Log;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -37,8 +40,7 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
     private ActionBarDrawerToggle mDrawerToggle;
     private Tab mTab;
     private CharSequence mDrawerTitle;
-    protected CharSequence mTitle;
-    protected String long_name; // may be able to lose this in place of mTitle     
+    protected String long_name; // may be able to lose this in place of mTitle
     protected List spinnerList;
     protected int contentLayoutId;
     private ViewStub contentViewStub;
@@ -124,7 +126,7 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         getMenuInflater().inflate(R.menu.mitmodule, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem item = menu.findItem(R.id.search);
+        MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         if (null != searchView) {
             searchView.setSearchableInfo(searchManager
@@ -150,7 +152,7 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
 
 
         // show or hide the search menu based on the hasSearch property
-        MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         if (searchItem != null) {
             searchItem.setVisible(this.hasSearch);
         }
@@ -168,7 +170,7 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
             return true;
         }
 
-        if (id == R.id.search) {
+        if (id == R.id.action_search) {
             this.handleSearch("test");
         }
         // Handle presses on the action bar items
@@ -215,27 +217,6 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         startActivity(intent);
 
 
-//    	// update the main content by replacing fragments
-//        Fragment fragment = new PlanetFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//        fragment.setArguments(args);
-//
-//        android.app.FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-//
-//        // update selected item and title, then close the drawer
-//        mDrawerList.setItemChecked(position, true);
-//        setTitle(navigationTitles[position]);
-//        mDrawerLayout.closeDrawer(mDrawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        if (mTitle != null) {
-            getSupportActionBar().setTitle(mTitle);
-        }
     }
 
     /**
@@ -312,14 +293,6 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
 
     public void setSpinnerList(List spinnerList) {
         this.spinnerList = spinnerList;
-    }
-
-    public CharSequence getmTitle() {
-        return mTitle;
-    }
-
-    public void setmTitle(CharSequence mTitle) {
-        this.mTitle = mTitle;
     }
 
     public String getLong_name() {
