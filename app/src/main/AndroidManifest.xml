@@ -173,6 +173,11 @@
             android:label="@string/title_activity_shuttle_stops"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".shuttles.ShuttleStopActivity"
+            android:label="@string/title_activity_shuttle_stops"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
