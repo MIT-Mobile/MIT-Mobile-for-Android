@@ -85,7 +85,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     }
 
 
-    public Boolean getScheduled() {
+    public Boolean isScheduled() {
         return scheduled;
     }
 

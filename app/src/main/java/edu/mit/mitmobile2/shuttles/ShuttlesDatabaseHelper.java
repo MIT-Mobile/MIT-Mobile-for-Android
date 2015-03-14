@@ -100,6 +100,11 @@ public class ShuttlesDatabaseHelper {
 
         Cursor cursor = db.rawQuery(queryString, null);
 
+        generateRouteObjects(routes, cursor);
+        return routes;
+    }
+
+    public static void generateRouteObjects(List<MITShuttleRoute> routes, Cursor cursor) {
         try {
             while (cursor.moveToNext()) {
                 MITShuttleRoute route = new MITShuttleRoute();
@@ -109,7 +114,6 @@ public class ShuttlesDatabaseHelper {
         } finally {
             cursor.close();
         }
-        return routes;
     }
 
     public static MITShuttleRoute getRoute(String routeId) {

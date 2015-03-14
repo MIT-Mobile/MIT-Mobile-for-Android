@@ -1,11 +1,10 @@
 package edu.mit.mitmobile2.shuttles.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,28 +14,33 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.ShuttleAdapterCallback;
-import edu.mit.mitmobile2.shuttles.model.MITShuttle;
+import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 
-public class MITShuttleAdapter extends CursorAdapter {
+public class MITShuttleAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
+    private List<MITShuttleRoute> routes = new ArrayList<>();
     private Context context;
 
-    public MITShuttleAdapter(Context context, Cursor c, boolean autoRequery) {
-        super(context, c, autoRequery);
+    public MITShuttleAdapter(Context context, List<MITShuttleRoute> routes) {
         listContainer = LayoutInflater.from(context);
+        this.routes = routes;
         this.context = context;
     }
 
-    public MITShuttleAdapter(Context context, Cursor c, int flags) {
-        super(context, c, flags);
-        listContainer = LayoutInflater.from(context);
-        this.context = context;
+    @Override
+    public int getCount() {
+        return routes.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return routes.get(position);
     }
 
     @Override
@@ -45,43 +49,38 @@ public class MITShuttleAdapter extends CursorAdapter {
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         ViewHolder viewHolder;
-        View view = listContainer.inflate(R.layout.shuttle_list_item, parent, false);
-        viewHolder = new ViewHolder(view);
-        view.setTag(viewHolder);
-        return view;
-    }
+        if (view != null) {
+            viewHolder = (ViewHolder) view.getTag();
+        } else {
+            view = listContainer.inflate(R.layout.shuttle_list_item, parent, false);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }
 
-    @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
-        ViewHolder viewHolder;
-        viewHolder = (ViewHolder) view.getTag();
-
-        MITShuttleRoute shuttleRoute = new MITShuttleRoute();
-        shuttleRoute.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
-
-        if (shuttleRoute.isPredictable()) {
+        if (routes.get(position).isPredictable()) {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.home_shuttles);
         } else {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.menu_shuttles);
         }
 
-        //TODO: Continue changing to user CursorAdapter
-        /*viewHolder.shuttleRouteTextview.setText(shuttleRoute.getTitle());
-        if (shuttleRoute.isPredictable()) {
+        viewHolder.shuttleRouteTextview.setText(routes.get(position).getTitle());
+        if (routes.get(position).isPredictable()) {
             initialViewVisibility(viewHolder, View.VISIBLE);
-            viewHolder.firstStopTextView.setText(shuttleRoute.getStops().get(0).getTitle());
-            viewHolder.secondStopTextView.setText(shuttleRoute.getStops().get(1).getTitle());
+            MITShuttleStopWrapper stop1 = routes.get(position).getStops().get(0);
+            MITShuttleStopWrapper stop2 = routes.get(position).getStops().get(1);
 
-            //Not going to be able to see the predictions until we make a second call
+            viewHolder.firstStopTextView.setText(stop1.getTitle());
+            viewHolder.secondStopTextView.setText(stop2.getTitle());
 
-            if (mitShuttle.getFirstMinute() != null) {
-                if (mitShuttle.getFirstMinute().equals("0m")) {
+            if (stop1.getPredictions() != null && stop1.getPredictions().size() > 0) {
+                MITShuttlePrediction prediction = stop1.getPredictions().get(0);
+                if (prediction.getSeconds() == 0) {
                     viewHolder.firstStopMinuteTextView.setText("now");
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
                 } else {
-                    viewHolder.firstStopMinuteTextView.setText(mitShuttle.getFirstMinute());
+                    viewHolder.firstStopMinuteTextView.setText(prediction.getSeconds() / 60 + "m");
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
@@ -89,12 +88,12 @@ public class MITShuttleAdapter extends CursorAdapter {
                 viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
             }
 
-            if (mitShuttle.getSecondMinute() != null) {
-                if (mitShuttle.getSecondMinute().equals("0m")) {
+            if (stop2.getPredictions() != null && stop2.getPredictions().size() > 0) {
+                if (stop2.getPredictions().get(0).getSeconds() == 0) {
                     viewHolder.secondStopMinuteTextView.setText("now");
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
                 } else {
-                    viewHolder.secondStopMinuteTextView.setText(mitShuttle.getSecondMinute());
+                    viewHolder.secondStopMinuteTextView.setText(stop2.getPredictions().get(0).getSeconds() / 60 + "m");
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
@@ -108,10 +107,11 @@ public class MITShuttleAdapter extends CursorAdapter {
         viewHolder.shuttleRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback) context).shuttleRouteClick(mitShuttle.getRouteID());
+                ((ShuttleAdapterCallback) context).shuttleRouteClick(routes.get(position).getId());
             }
-        });*/
+        });
 
+        return view;
     }
 
     public void initialViewVisibility(ViewHolder viewHolder, int view) {
@@ -154,5 +154,34 @@ public class MITShuttleAdapter extends CursorAdapter {
         ViewHolder(View view) {
             ButterKnife.inject(this, view);
         }
+    }
+
+    public void updateListItems(List<MITShuttleRoute> routes) {
+        this.routes = routes;
+        notifyDataSetChanged();
+    }
+
+    public String getRouteStopTuples(String agency) {
+        StringBuilder sb = new StringBuilder();
+        for (MITShuttleRoute route : routes) {
+            if (route.isPredictable() && route.getAgency().equals(agency)) {
+                MITShuttleStopWrapper stop1 = route.getStops().get(0);
+                MITShuttleStopWrapper stop2 = route.getStops().get(1);
+
+                appendTuples(sb, route, stop1);
+                appendTuples(sb, route, stop2);
+            }
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    private void appendTuples(StringBuilder sb, MITShuttleRoute route, MITShuttleStopWrapper stop1) {
+        sb.append(route.getId());
+        sb.append(",");
+        sb.append(stop1.getId());
+        sb.append(";");
     }
 }

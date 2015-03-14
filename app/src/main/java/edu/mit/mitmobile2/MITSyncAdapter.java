@@ -3,26 +3,22 @@ package edu.mit.mitmobile2;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import timber.log.Timber;
 
 public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -37,6 +33,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/routes", Schema.Route.ROUTE_ID);
         map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/stops", Schema.Stop.STOP_ID);
+        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/predictions", Schema.Stop.STOP_ID);
     }
 
     public MITSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
@@ -56,30 +53,41 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         String path = extras.getString("path");
         String uri = extras.getString("uri");
 
-        Gson gson = new Gson();
-
-        HashMap<String, String> pathParams = null;
-        HashMap<String, String> queryparams = null;
-
-        Type hashMapType = new TypeToken<HashMap<String, String>>() {
-        }.getType();
-
-        if (extras.containsKey("paths")) {
-            String p = extras.getString("paths");
-            pathParams = gson.fromJson(p, hashMapType);
-        }
-
-        if (extras.containsKey("queries")) {
-            String q = extras.getString("queries");
-            queryparams = gson.fromJson(q, hashMapType);
-        }
-
-        Timber.d("Retrieved info from bundle:" + module + ", " + path + ", " + uri);
-
         if (module == null || path == null || uri == null) {
+            //TODO: Default URI for background downloads. Probably predictions data?
             return;
         }
 
+        if (uri.contains("predictions")) {
+            handleDualAgenciesForPredictions(module, path, uri, extras);
+        } else {
+            Gson gson = new Gson();
+
+            HashMap<String, String> pathParams = null;
+            HashMap<String, String> queryparams = null;
+
+            Type hashMapType = new TypeToken<HashMap<String, String>>() {
+            }.getType();
+
+            if (extras.containsKey("paths")) {
+                String p = extras.getString("paths");
+                pathParams = gson.fromJson(p, hashMapType);
+            }
+
+            if (extras.containsKey("queries")) {
+                String q = extras.getString("queries");
+                queryparams = gson.fromJson(q, hashMapType);
+            }
+
+            Timber.d("Retrieved info from bundle:" + module + ", " + path + ", " + uri);
+
+            requestDataAndStoreInDb(module, path, uri, pathParams, queryparams);
+            Timber.d("Notifying URI: " + uri);
+            getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
+        }
+    }
+
+    private void requestDataAndStoreInDb(String module, String path, String uri, HashMap<String, String> pathParams, HashMap<String, String> queryparams) {
         Object object = mitapiClient.get(getContext(), module, path, pathParams, queryparams);
 
         if (object instanceof List) {
@@ -88,13 +96,10 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             for (DatabaseObject obj : objects) {
                 insertObject(uri, obj);
             }
-            getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
         } else {
             Timber.d("Is single object");
             insertObject(uri, (DatabaseObject) object);
-            getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
         }
-
     }
 
     private void insertObject(String uri, DatabaseObject object) {
@@ -103,13 +108,45 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
 
         String selection = map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'";
-        Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri), null, selection, null, null);
-        if (cursor.getCount() > 0) {
+
+        if (uri.contains("predictions")) {
+            //special case for predictions
+            contentValues.remove(Schema.Route.ROUTE_ID);
+            contentValues.remove(Schema.Stop.STOP_ID);
             getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
         } else {
-            getContext().getContentResolver().insert(Uri.parse(uri), contentValues);
+
+            Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
+            if (cursor.getCount() > 0) {
+                getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
+            } else {
+                getContext().getContentResolver().insert(Uri.parse(uri), contentValues);
+            }
+
+            cursor.close();
+        }
+    }
+
+    private void handleDualAgenciesForPredictions(String module, String path, String uri, Bundle extras) {
+
+        String mitTuples = extras.getString("mitTuples");
+        String crTuples = extras.getString("crTuples");
+
+        if (!TextUtils.isEmpty(mitTuples)) {
+            HashMap<String, String> queryparams = new HashMap<>();
+            queryparams.put("agency", "mit");
+            queryparams.put("stops", mitTuples);
+            requestDataAndStoreInDb(module, path, uri, null, queryparams);
         }
 
-        cursor.close();
+        if(!TextUtils.isEmpty(crTuples)) {
+            HashMap<String, String> queryparams = new HashMap<>();
+            queryparams.put("agency", "charles-river");
+            queryparams.put("stops", crTuples);
+            requestDataAndStoreInDb(module, path, uri, null, queryparams);
+        }
+
+        Timber.d("Notifying URI: " + uri);
+        getContext().getContentResolver().notifyChange(MITShuttlesProvider.ALL_ROUTES_URI, null);
     }
 }
