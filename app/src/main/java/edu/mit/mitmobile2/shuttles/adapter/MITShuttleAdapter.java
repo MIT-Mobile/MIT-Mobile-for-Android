@@ -116,13 +116,13 @@ public class MITShuttleAdapter extends BaseAdapter {
         viewHolder.shuttleFirstStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback)context).shuttleStopClick(mitShuttles.get(position).getFirstStopID());
+                ((ShuttleAdapterCallback) context).shuttleStopClick(routes.get(position).getStops().get(0).getId());
             }
         });
         viewHolder.shuttleSecondStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback)context).shuttleStopClick(mitShuttles.get(position).getSecondStopID());
+                ((ShuttleAdapterCallback)context).shuttleStopClick(routes.get(position).getStops().get(1).getId());
             }
         });
 
