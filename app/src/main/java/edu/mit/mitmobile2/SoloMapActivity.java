@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -123,6 +122,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         if (mapView != null) {
             mapView.addMapItemList(this.mapItems);
+            mapView.adjustCameraToShowInHeader(false);
         }
     }
 
@@ -140,36 +140,27 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         View view = mapView.getMapFragment().getView();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
 
-        ResizeAnimation resizeAnimation = new ResizeAnimation(view);
-        resizeAnimation.setDuration(ANIMATION_LENGTH);
-        resizeAnimation.setAnimationListener(this);
-
         TranslateAnimation translateAnimation;
-        float bottomY = displayMetrics.heightPixels - getResources().getDimension(R.dimen.shuttle_routes_map_header_size);
+        float bottomY = displayMetrics.heightPixels - getResources().getDimension(R.dimen.shuttle_routes_map_header_height);
         if (mapViewExpanded) {
             translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, bottomY, NO_TRANSLATION);
         } else {
             translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, NO_TRANSLATION, bottomY);
         }
         translateAnimation.setDuration(ANIMATION_LENGTH);
+        translateAnimation.setAnimationListener(this);
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            resizeAnimation.setParams(layoutParams.height, displayMetrics.heightPixels);
-            mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
+            mapView.setToDefaultBounds(true);
             listButton.setVisibility(View.VISIBLE);
         } else {
             mapViewExpanded = false;
+            mapView.adjustCameraToShowInHeader(true);
             routeInfoSegment.setVisibility(View.VISIBLE);
             mapItemsListview.setVisibility(View.VISIBLE);
-            resizeAnimation.setParams(layoutParams.height, (int) getResources().getDimension(R.dimen.shuttle_routes_map_header_size));
         }
-        view.startAnimation(resizeAnimation);
         mapItemsListview.startAnimation(translateAnimation);
-    }
-
-    public int dpToPx(Resources res, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
 
     private void startTimerTask() {
@@ -192,10 +183,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        if (!mapViewExpanded) {
-            mapView.setToDefaultBounds();
-        } else {
+        if (mapViewExpanded) {
             mapItemsListview.setVisibility(View.GONE);
+            mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
         }
         animating = false;
     }
