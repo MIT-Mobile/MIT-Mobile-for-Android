@@ -40,9 +40,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         displayMapItems();
 
         routeDescriptionTextView.setText(routeWrapper.getDescription());
-        if (routeWrapper.getPredictable()) {
+        if (routeWrapper.isPredictable()) {
             routeStatusTextView.setText(getResources().getString(R.string.route_in_service));
-        } else if (routeWrapper.getScheduled()) {
+        } else if (routeWrapper.isScheduled()) {
             routeStatusTextView.setText(getResources().getString(R.string.route_unknown));
         } else {
             routeStatusTextView.setText(getResources().getString(R.string.route_not_in_service));

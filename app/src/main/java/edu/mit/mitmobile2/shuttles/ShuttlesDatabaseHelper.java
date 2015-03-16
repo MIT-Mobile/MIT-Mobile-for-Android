@@ -3,6 +3,8 @@ package edu.mit.mitmobile2.shuttles;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,17 +19,18 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttlePath;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import edu.mit.mitmobile2.shuttles.model.RouteStop;
+import timber.log.Timber;
 
 public class ShuttlesDatabaseHelper {
 
     public static SQLiteDatabase db = MitMobileApplication.dbAdapter.db;
     public static DBAdapter dbAdapter = MitMobileApplication.dbAdapter;
 
-    public static void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId) {
+    public static void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId, boolean predictable) {
         List<DatabaseObject> updatedObjects = new ArrayList<>();
         Set<String> ids = dbAdapter.getAllIds(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, Schema.Stop.STOP_ID);
 
-        checkObjectAndPersist(dbObjects, updatedObjects, ids, Schema.Stop.TABLE_NAME, Schema.Stop.STOP_ID);
+        checkObjectAndPersist(dbObjects, updatedObjects, ids, Schema.Stop.TABLE_NAME, Schema.Stop.STOP_ID, predictable);
 
         updatedObjects.clear();
 
@@ -49,11 +52,36 @@ public class ShuttlesDatabaseHelper {
         dbAdapter.batchPersist(updatedObjects, Schema.RouteStops.TABLE_NAME);
     }
 
-    private static void checkObjectAndPersist(List<MITShuttleStopWrapper> dbObjects, List<DatabaseObject> updatedObjects, Set<String> ids, String tableName, String columnToIndex) {
+    private static void checkObjectAndPersist(List<MITShuttleStopWrapper> dbObjects, List<DatabaseObject> updatedObjects, Set<String> ids, String tableName, String columnToIndex, boolean predictable) {
         for (MITShuttleStopWrapper s : dbObjects) {
             if (ids.contains(s.getId())) {
                 ContentValues values = new ContentValues();
                 s.fillInContentValues(values, dbAdapter);
+
+                if (predictable) {
+                    // Calculate location in here
+                    Location stopLocation = new Location("");
+                    stopLocation.setLatitude(values.getAsDouble(Schema.Stop.STOP_LAT));
+                    stopLocation.setLongitude(values.getAsDouble(Schema.Stop.STOP_LON));
+
+                    Cursor c = db.query(Schema.Location.TABLE_NAME, Schema.Location.ALL_COLUMNS, null, null, null, null, null);
+                    if (c.getCount() > 0) {
+                        c.moveToFirst();
+
+                        double lat = c.getDouble(c.getColumnIndex(Schema.Location.LATITUDE));
+                        double lon = c.getDouble(c.getColumnIndex(Schema.Location.LONGITUDE));
+
+                        Location myLocation = new Location("");
+                        myLocation.setLatitude(lat);
+                        myLocation.setLongitude(lon);
+
+                        float distance = myLocation.distanceTo(stopLocation);
+
+                        values.put(Schema.Stop.DISTANCE, distance);
+                    }
+                    c.close();
+                }
+
                 db.update(tableName, values,
                         columnToIndex + " = \'" + s.getId() + "\'", null);
             } else {
@@ -75,6 +103,11 @@ public class ShuttlesDatabaseHelper {
 
         Cursor cursor = db.rawQuery(queryString, null);
 
+        generateRouteObjects(routes, cursor);
+        return routes;
+    }
+
+    public static void generateRouteObjects(List<MITShuttleRoute> routes, Cursor cursor) {
         try {
             while (cursor.moveToNext()) {
                 MITShuttleRoute route = new MITShuttleRoute();
@@ -84,7 +117,6 @@ public class ShuttlesDatabaseHelper {
         } finally {
             cursor.close();
         }
-        return routes;
     }
 
     public static MITShuttleRoute getRoute(String routeId) {

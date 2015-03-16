@@ -2,28 +2,26 @@ package edu.mit.mitmobile2.shuttles;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
-import edu.mit.mitmobile2.shuttles.model.MITShuttle;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import timber.log.Timber;
+import android.content.ContentResolver;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.content.ActivityNotFoundException;
-import android.location.Location;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -31,25 +29,27 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback, LoaderManager.LoaderCallbacks<Cursor> {
 
     int contentLayoutId = R.layout.content_shuttles;
-    private MITShuttleRoute data;
 
-    private final static long REFRESH_TIME = 1000;
+    private static final int PREDICTIONS_PERIOD = 15000;
+    private static final int PREDICTIONS_TIMER_OFFSET = 10000;
+
+    private static int loopCount = 0;
 
     private MITShuttleAdapter mitShuttleAdapter;
-    private final List<MITShuttle> mitshuttles = new ArrayList<>();
 
     @InjectView(R.id.shuttle_refresh_layout)
     SwipeRefreshLayout shuttleRefreshLayout;
     @InjectView(R.id.shuttle_listview)
     ListView shuttleListView;
+
+    private static Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,204 +59,144 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         ButterKnife.inject(this);
         initialShuttleView();
 
+        loadCursorInBackground();
+
+        mitShuttleAdapter = new MITShuttleAdapter(this, new ArrayList<MITShuttleRoute>());
+        shuttleListView.setAdapter(mitShuttleAdapter);
+
+        updateAllRoutes();
+
         shuttleRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 shuttleRefreshLayout.setRefreshing(true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        shuttleRefreshLayout.setRefreshing(false);
-                        setShuttlefromDB();
-                    }
-                }, REFRESH_TIME);
+                updatePredictions();
             }
         });
+
+        shuttleRefreshLayout.setRefreshing(true);
+
+        getSupportLoaderManager().initLoader(0, null, this);
+
+        timer = new Timer();
+        startTimerTask();
+    }
+
+    private void loadCursorInBackground() {
+        new AsyncTask<Void, Void, List<MITShuttleRoute>>() {
+            @Override
+            protected List<MITShuttleRoute> doInBackground(Void... params) {
+                Cursor cursor = getContentResolver().query(MITShuttlesProvider.ALL_ROUTES_URI, Schema.Route.ALL_COLUMNS, null, null, null);
+
+                List<MITShuttleRoute> routes = new ArrayList<>();
+                ShuttlesDatabaseHelper.generateRouteObjects(routes, cursor);
+                cursor.close();
+
+                if (routes.size() > 0) {
+                    routes = sortShuttleRoutesByStatus(routes);
+
+                }
+
+                return routes;
+            }
+
+            @Override
+            protected void onPostExecute(List<MITShuttleRoute> routes) {
+                mitShuttleAdapter.updateListItems(routes);
+            }
+        }.execute();
+    }
+
+    private void startTimerTask() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (mitShuttleAdapter.getCount() == 0) {
+                    return;
+                }
+
+                if (timer == null) {
+                    return;
+                }
+
+                if (loopCount == 5) {
+                    updateAllRoutes();
+                } else {
+                    updatePredictions();
+                }
+
+                loopCount++;
+                loopCount = loopCount % 6;
+            }
+        }, PREDICTIONS_TIMER_OFFSET, PREDICTIONS_PERIOD);
+    }
+
+    private void updatePredictions() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
+        bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.PREDICTIONS_PATH);
+        bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.PREDICTIONS_URI.toString());
+
+        String mitTuples = mitShuttleAdapter.getRouteStopTuples("mit");
+        String crTuples = mitShuttleAdapter.getRouteStopTuples("charles-river");
+
+        bundle.putString(Constants.Shuttles.MIT_TUPLES_KEY, mitTuples);
+        bundle.putString(Constants.Shuttles.CR_TUPLES_KEY, crTuples);
+
+        Timber.d("Requesting Predictions");
+
+        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+    }
+
+    private void updateAllRoutes() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
+        bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.ALL_ROUTES_PATH);
+        bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.ALL_ROUTES_URI.toString());
+
+        // FORCE THE SYNC - No matter what
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        // Request All Routes info
+        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
     }
 
     private void initialShuttleView() {
-        mitShuttleAdapter = new MITShuttleAdapter(this, mitshuttles);
-        shuttleListView.setAdapter(mitShuttleAdapter);
-        View footer = ((LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE))
+        View footer = ((LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.shuttle_list_footer, null, false);
-        shuttleListView.addFooterView(footer);
         initialListViewFooter(footer);
-
-        if (ShuttlesDatabaseHelper.getAllRoutes().size() > 0) {
-            setShuttlefromDB();
-        }
-
-        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ALL_ROUTES_PATH, null, null,
-                new Callback<List<MITShuttleRoute>>() {
-                    @Override
-                    public void success(final List<MITShuttleRoute> mitShuttleRoutes, Response response) {
-                        setShuttleFromServer(mitShuttleRoutes);
-                        insertShuttleToDB(mitShuttleRoutes);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        //TODO: Add global otto listener to handle errors
-                    }
-                });
+        shuttleListView.addFooterView(footer);
     }
 
-    public void setShuttlefromDB() {
-        mitshuttles.clear();
-        List<MITShuttleRoute> mitShuttleRoutes = ShuttlesDatabaseHelper.getAllRoutes();
-        setShuttleRoutesStopDistance(mitShuttleRoutes);
-        sortShuttleRoutesByDistance(mitShuttleRoutes);
-        sortShuttleRoutesByStatus();
-        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
-            MITShuttle mitShuttle = new MITShuttle();
-            setShuttleRoutesStop(mitShuttle, mitShuttleRoute, true);
-        }
-        sortShuttleRoutesByStatus();
-        mitShuttleAdapter.notifyDataSetChanged();
-    }
+    public List<MITShuttleRoute> sortShuttleRoutesByStatus(List<MITShuttleRoute> routes) {
+        List<MITShuttleRoute> shuttleRouteStatusInService = new ArrayList<>();
+        List<MITShuttleRoute> shuttleRouteStatusNotInservice = new ArrayList<>();
+        List<MITShuttleRoute> shuttleRouteStatusUnknown = new ArrayList<>();
 
-    public void setShuttleFromServer(List<MITShuttleRoute> mitShuttleRoutes) {
-        mitshuttles.clear();
-        setShuttleRoutesStopDistance(mitShuttleRoutes);
-        sortShuttleRoutesByDistance(mitShuttleRoutes);
-        for (MITShuttleRoute shuttleRoute : mitShuttleRoutes) {
-            final MITShuttle mitShuttle = new MITShuttle();
-            setShuttleRoutesStop(mitShuttle, shuttleRoute, false);
-        }
-        sortShuttleRoutesByStatus();
-        mitShuttleAdapter.notifyDataSetChanged();
-    }
-
-    public void insertShuttleToDB(List<MITShuttleRoute> mitShuttleRoutes) {
-        new PersistRoutesInDbTask().execute(mitShuttleRoutes);
-        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
-            HashMap<String, String> routeParams = new HashMap<>();
-            routeParams.put("route", mitShuttleRoute.getId());
-            apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ROUTE_INFO_PATH, routeParams, null,
-                    new Callback<MITShuttleRoute>() {
-                        @Override
-                        public void success(final MITShuttleRoute mitShuttleRoute, Response response) {
-                            List<MITShuttleRoute> mitShuttleRouteSingleList = new ArrayList<>();
-                            mitShuttleRouteSingleList.add(mitShuttleRoute);
-                            new PersistRoutesInDbTask().execute(mitShuttleRouteSingleList);
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            //TODO: Add global otto listener to handle errors
-                        }
-                    });
-        }
-    }
-
-    public void setShuttleRoutesStopDistance(List<MITShuttleRoute> mitShuttleRoutes) {
-        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
-            if (mitShuttleRoute.getPredictable()) {
-                for (MITShuttleStopWrapper mitShuttleStopWrapper : mitShuttleRoute.getStops()) {
-                    if (location != null) {
-                        Location stopLocation = new Location("");
-                        stopLocation.setLatitude(mitShuttleStopWrapper.getLat());
-                        stopLocation.setLongitude(mitShuttleStopWrapper.getLon());
-                        mitShuttleStopWrapper.setDistance(location.distanceTo(stopLocation));
-                    }
-                }
-            }
-        }
-    }
-
-    public void sortShuttleRoutesByDistance(List<MITShuttleRoute> mitShuttleRoutes) {
-        for (MITShuttleRoute mitShuttleRoute : mitShuttleRoutes) {
-            Collections.sort(mitShuttleRoute.getStops(), new Comparator<MITShuttleStopWrapper>() {
-                @Override
-                public int compare(MITShuttleStopWrapper lhs, MITShuttleStopWrapper rhs) {
-                    return (int) (lhs.getDistance() - rhs.getDistance());
-                }
-            });
-        }
-    }
-
-    public void setShuttleRoutesStop(MITShuttle mitShuttle, MITShuttleRoute shuttleRoute, boolean isFromDB) {
-        mitShuttle.setRouteName(shuttleRoute.getTitle());
-        mitShuttle.setPredicable(shuttleRoute.getPredictable());
-        mitShuttle.setScheduled(shuttleRoute.getScheduled());
-        mitShuttle.setRouteID(shuttleRoute.getId());
-        mitShuttle.setFirstStopName(shuttleRoute.getStops().get(0).getTitle());
-        mitShuttle.setFirstStopID(shuttleRoute.getStops().get(0).getId());
-        mitShuttle.setSecondStopName(shuttleRoute.getStops().get(1).getTitle());
-        mitShuttle.setSecondStopID(shuttleRoute.getStops().get(1).getId());
-        if (isFromDB) {
-            if (shuttleRoute.getPredictable()) {
-                if (shuttleRoute.getStops().get(0).getPredictions().size() > 0) {
-                    mitShuttle.setFirstMinute(shuttleRoute.getStops().get(0).getPredictions().get(0).getSeconds() / 60 + "m");
-                }
-                if (shuttleRoute.getStops().get(1).getPredictions().size() > 0) {
-                    mitShuttle.setSecondMinute(shuttleRoute.getStops().get(1).getPredictions().get(0).getSeconds() / 60 + "m");
-                }
-            }
-        } else {
-            if (mitShuttle.isPredicable()) {
-                setStopPredictionFromServer(mitShuttle, true);
-                setStopPredictionFromServer(mitShuttle, false);
-            }
-        }
-        mitshuttles.add(mitShuttle);
-    }
-
-    public void setStopPredictionFromServer(final MITShuttle mitShuttle, final boolean isFirstStop) {
-        HashMap<String, String> stopParams = new HashMap<>();
-
-        stopParams.put("route", mitShuttle.getRouteID());
-        if (isFirstStop) {
-            stopParams.put("stop", mitShuttle.getFirstStopID());
-        } else {
-            stopParams.put("stop", mitShuttle.getSecondStopID());
-        }
-
-        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.STOP_INFO_PATH,
-                stopParams, null, new Callback<MITShuttleStopWrapper>() {
-                    @Override
-                    public void success(MITShuttleStopWrapper mitShuttleStopWrapper, Response response) {
-                        if (mitShuttleStopWrapper.getPredictions() != null && mitShuttleStopWrapper.getPredictions().size() > 0) {
-                            if (isFirstStop) {
-                                mitShuttle.setFirstMinute(mitShuttleStopWrapper.getPredictions().get(0).
-                                        getSeconds() / 60 + "m");
-                            } else {
-                                mitShuttle.setSecondMinute(mitShuttleStopWrapper.getPredictions().get(0).
-                                        getSeconds() / 60 + "m");
-                            }
-                        }
-                        mitShuttleAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                    }
-                });
-    }
-
-    public void sortShuttleRoutesByStatus() {
-        List<MITShuttle> shuttleRouteStatusInService = new ArrayList<>();
-        List<MITShuttle> shuttleRouteStatusNotInservice = new ArrayList<>();
-        List<MITShuttle> shuttleRouteStatusUnknown = new ArrayList<>();
-        for (MITShuttle mitShuttle : mitshuttles) {
-            if (mitShuttle.isPredicable()) {
-                shuttleRouteStatusInService.add(mitShuttle);
-            } else if (mitShuttle.isScheduled()) {
-                shuttleRouteStatusUnknown.add(mitShuttle);
+        for (MITShuttleRoute route : routes) {
+            if (route.isPredictable()) {
+                shuttleRouteStatusInService.add(route);
+            } else if (route.isScheduled()) {
+                shuttleRouteStatusUnknown.add(route);
             } else {
-                shuttleRouteStatusNotInservice.add(mitShuttle);
+                shuttleRouteStatusNotInservice.add(route);
             }
         }
-        mitshuttles.clear();
-        for (MITShuttle shuttleRoute : shuttleRouteStatusInService) {
-            mitshuttles.add(shuttleRoute);
+
+        routes.clear();
+
+        for (MITShuttleRoute shuttleRoute : shuttleRouteStatusInService) {
+            routes.add(shuttleRoute);
         }
-        for (MITShuttle shuttleRoute : shuttleRouteStatusUnknown) {
-            mitshuttles.add(shuttleRoute);
+        for (MITShuttleRoute shuttleRoute : shuttleRouteStatusUnknown) {
+            routes.add(shuttleRoute);
         }
-        for (MITShuttle shuttleRoute : shuttleRouteStatusNotInservice) {
-            mitshuttles.add(shuttleRoute);
+        for (MITShuttleRoute shuttleRoute : shuttleRouteStatusNotInservice) {
+            routes.add(shuttleRoute);
         }
+
+        return routes;
     }
 
     public void initialListViewFooter(View footer) {
@@ -270,7 +210,6 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
             @Override
             public void onClick(View v) {
                 phoneCallDialog(getResources().getString(R.string.parking_office_number));
-
             }
         });
         saferide.setOnClickListener(new View.OnClickListener() {
@@ -350,16 +289,44 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        MitCursorLoader cursorLoader = new MitCursorLoader(this, MITShuttlesProvider.ALL_ROUTES_URI);
+        return cursorLoader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Timber.d("Notified!");
+        List<MITShuttleRoute> routes = new ArrayList<>();
+        ShuttlesDatabaseHelper.generateRouteObjects(routes, data);
+        routes = sortShuttleRoutesByStatus(routes);
+        mitShuttleAdapter.updateListItems(routes);
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (shuttleRefreshLayout.isRefreshing()) {
+                    shuttleRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timer = new Timer();
+        startTimerTask();
+    }
+
+    @Override
+    protected void onPause() {
+        timer.cancel();
+        timer.purge();
+        timer = null;
+        super.onPause();
     }
 }

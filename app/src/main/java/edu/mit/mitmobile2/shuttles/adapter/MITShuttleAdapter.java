@@ -8,35 +8,39 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.ShuttleAdapterCallback;
-import edu.mit.mitmobile2.shuttles.model.MITShuttle;
+import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 
 public class MITShuttleAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<MITShuttle> mitShuttles = new ArrayList<>();
+    private List<MITShuttleRoute> routes = new ArrayList<>();
     private Context context;
 
-    public MITShuttleAdapter (Context context, List<MITShuttle> mitShuttles) {
+    public MITShuttleAdapter(Context context, List<MITShuttleRoute> routes) {
         listContainer = LayoutInflater.from(context);
-        this.mitShuttles = mitShuttles;
+        this.routes = routes;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return mitShuttles.size();
+        return routes.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mitShuttles.get(position);
+        return routes.get(position);
     }
 
     @Override
@@ -55,24 +59,29 @@ public class MITShuttleAdapter extends BaseAdapter {
             view.setTag(viewHolder);
         }
 
-        if (mitShuttles.get(position).isPredicable()) {
+        if (routes.get(position).isPredictable()) {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.home_shuttles);
         } else {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.menu_shuttles);
         }
 
-        viewHolder.shuttleRouteTextview.setText(mitShuttles.get(position).getRouteName());
-        if (mitShuttles.get(position).isPredicable()) {
+        viewHolder.shuttleRouteTextview.setText(routes.get(position).getTitle());
+        if (routes.get(position).isPredictable()) {
             initialViewVisibility(viewHolder, View.VISIBLE);
-            viewHolder.firstStopTextView.setText(mitShuttles.get(position).getFirstStopName());
-            viewHolder.secondStopTextView.setText(mitShuttles.get(position).getSecondStopName());
+            MITShuttleStopWrapper stop1 = routes.get(position).getStops().get(0);
+            MITShuttleStopWrapper stop2 = routes.get(position).getStops().get(1);
 
-            if (mitShuttles.get(position).getFirstMinute() != null) {
-                if (mitShuttles.get(position).getFirstMinute().equals("0m")) {
+            viewHolder.firstStopTextView.setText(stop1.getTitle());
+            viewHolder.secondStopTextView.setText(stop2.getTitle());
+
+            if (stop1.getPredictions() != null && stop1.getPredictions().size() > 0) {
+                MITShuttlePrediction prediction = stop1.getPredictions().get(0);
+                int timeInMins = prediction.getSeconds() / 60;
+                if (timeInMins == 0) {
                     viewHolder.firstStopMinuteTextView.setText("now");
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
                 } else {
-                    viewHolder.firstStopMinuteTextView.setText(mitShuttles.get(position).getFirstMinute());
+                    viewHolder.firstStopMinuteTextView.setText(timeInMins + "m");
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
@@ -80,12 +89,14 @@ public class MITShuttleAdapter extends BaseAdapter {
                 viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
             }
 
-            if (mitShuttles.get(position).getSecondMinute() != null) {
-                if (mitShuttles.get(position).getSecondMinute().equals("0m")) {
+            if (stop2.getPredictions() != null && stop2.getPredictions().size() > 0) {
+                MITShuttlePrediction prediction = stop2.getPredictions().get(0);
+                int timeInMins = prediction.getSeconds() / 60;
+                if (timeInMins == 0) {
                     viewHolder.secondStopMinuteTextView.setText("now");
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
                 } else {
-                    viewHolder.secondStopMinuteTextView.setText(mitShuttles.get(position).getSecondMinute());
+                    viewHolder.secondStopMinuteTextView.setText(timeInMins + "m");
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
@@ -99,19 +110,19 @@ public class MITShuttleAdapter extends BaseAdapter {
         viewHolder.shuttleRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback)context).shuttleRouteClick(mitShuttles.get(position).getRouteID());
+                ((ShuttleAdapterCallback) context).shuttleRouteClick(routes.get(position).getId());
             }
         });
         viewHolder.shuttleFirstStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback)context).shuttleStopClick(mitShuttles.get(position).getFirstStopID());
+                ((ShuttleAdapterCallback) context).shuttleStopClick(routes.get(position).getStops().get(0).getId());
             }
         });
         viewHolder.shuttleSecondStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback)context).shuttleStopClick(mitShuttles.get(position).getSecondStopID());
+                ((ShuttleAdapterCallback)context).shuttleStopClick(routes.get(position).getStops().get(1).getId());
             }
         });
 
@@ -164,5 +175,34 @@ public class MITShuttleAdapter extends BaseAdapter {
         ViewHolder(View view) {
             ButterKnife.inject(this, view);
         }
+    }
+
+    public void updateListItems(List<MITShuttleRoute> routes) {
+        this.routes = routes;
+        notifyDataSetChanged();
+    }
+
+    public String getRouteStopTuples(String agency) {
+        StringBuilder sb = new StringBuilder();
+        for (MITShuttleRoute route : routes) {
+            if (route.isPredictable() && route.getAgency().equals(agency)) {
+                MITShuttleStopWrapper stop1 = route.getStops().get(0);
+                MITShuttleStopWrapper stop2 = route.getStops().get(1);
+
+                appendTuples(sb, route, stop1);
+                appendTuples(sb, route, stop2);
+            }
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    private void appendTuples(StringBuilder sb, MITShuttleRoute route, MITShuttleStopWrapper stop1) {
+        sb.append(route.getId());
+        sb.append(",");
+        sb.append(stop1.getId());
+        sb.append(";");
     }
 }

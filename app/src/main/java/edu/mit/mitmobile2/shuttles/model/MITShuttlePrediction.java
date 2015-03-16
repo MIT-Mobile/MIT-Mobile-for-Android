@@ -1,12 +1,17 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITShuttlePrediction implements Parcelable {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+
+public class MITShuttlePrediction extends DatabaseObject implements Parcelable {
 
     @SerializedName("vehicle_id")
     @Expose
@@ -83,6 +88,21 @@ public class MITShuttlePrediction implements Parcelable {
                 ", \"timestamp\":" + timestamp +
                 ", \"seconds\":" + seconds +
                 '}';
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
     }
 }
 

@@ -88,7 +88,7 @@ public class RetrofitManager {
     private static final MitShuttleService MIT_SHUTTLES_SERVICE = MIT_REST_ADAPTER.create(MitShuttleService.class);
     private static final MitResourceService MIT_RESOURCE_SERVICE = MIT_REST_ADAPTER.create(MitResourceService.class);
 
-    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) {
+    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
         Method m;
         String[] pathSections = path.split("/");
         String methodName = "get";
@@ -106,19 +106,19 @@ public class RetrofitManager {
         }
 
         String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
-        try {
-            Field f = RetrofitManager.class.getDeclaredField(serviceName);
-            m = f.getType().getDeclaredMethod(methodName, Callback.class);
-            Object o = f.get(Class.forName(f.getType().getName()));
-            m.invoke(o, callback);
-        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            Timber.e(e, "Reflection");
-        }
+        Field f = RetrofitManager.class.getDeclaredField(serviceName);
+        m = f.getType().getDeclaredMethod(methodName, Callback.class);
+        Object o = f.get(Class.forName(f.getType().getName()));
+        m.invoke(o, callback);
+
     }
 
-    public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) {
-        Method m;
-        Object data = null;
+    public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) throws NoSuchFieldException,
+            NoSuchMethodException,
+            ClassNotFoundException,
+            IllegalAccessException,
+            InvocationTargetException {
+
         String[] pathSections = path.split("/");
         String methodName = "get";
 
@@ -134,15 +134,13 @@ public class RetrofitManager {
             }
         }
 
+        Timber.d("Method name= " + methodName);
         String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
-        try {
-            Field f = RetrofitManager.class.getDeclaredField(serviceName);
-            m = f.getType().getDeclaredMethod(methodName);
-            Object o = f.get(Class.forName(f.getType().getName()));
-            data = m.invoke(o);
-        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            Timber.e(e, "Reflection");
-        }
+
+        Field f = RetrofitManager.class.getDeclaredField(serviceName);
+        Method m = f.getType().getDeclaredMethod(methodName);
+        Object o = f.get(Class.forName(f.getType().getName()));
+        Object data = m.invoke(o);
 
         return data;
     }

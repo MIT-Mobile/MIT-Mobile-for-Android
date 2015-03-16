@@ -15,7 +15,7 @@ public class MitMobileApplication extends Application {
     // The account name
     public static final String ACCOUNT = "mitaccount";
 
-    public static final int INTERVAL_SECS = 600;
+    public static final int INTERVAL_SECS = 1200;
     // Instance fields
     public static Account mAccount;
 

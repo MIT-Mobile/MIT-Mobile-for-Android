@@ -127,6 +127,7 @@ public class DBAdapter {
         db.execSQL("DELETE FROM " + Schema.RouteStops.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.Stop.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.Path.TABLE_NAME);
+        db.execSQL("DELETE FROM " + Schema.Location.TABLE_NAME);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -174,6 +175,7 @@ public class DBAdapter {
             db.execSQL(Schema.RouteStops.CREATE_TABLE_SQL);
             db.execSQL(Schema.Stop.CREATE_TABLE_SQL);
             db.execSQL(Schema.Path.CREATE_TABLE_SQL);
+            db.execSQL(Schema.Location.CREATE_TABLE_SQL);
             Timber.d("Tables created!");
         }
 
@@ -184,6 +186,7 @@ public class DBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + Schema.RouteStops.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Stop.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Path.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.Location.TABLE_NAME);
         }
 
         private static void runMigrations(SQLiteDatabase db, int oldVersion, int newVersion) {

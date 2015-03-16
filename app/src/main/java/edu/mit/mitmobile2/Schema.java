@@ -62,7 +62,7 @@ public class Schema {
                                 ROUTE_DESCRIPTION + " text not null, " +
                                 PREDICTIONS_URL + " text not null, " +
                                 VEHICLES_URL + " text not null, " +
-                                MIT_PATH_ID + " long not null"
+                                MIT_PATH_ID + " long"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
@@ -131,6 +131,23 @@ public class Schema {
 
         public static final String[] ALL_COLUMNS = new String[]{
                 ID_COL, SEGMENTS
+        };
+    }
+
+    public static class Location extends Table {
+        public static final String TABLE_NAME = "location";
+        public static final String LATITUDE = "latitude";
+        public static final String LONGITUDE = "longitude";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                        LATITUDE + " double not null, " +
+                                LONGITUDE + " double not null"
+
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, LATITUDE, LONGITUDE
         };
     }
 

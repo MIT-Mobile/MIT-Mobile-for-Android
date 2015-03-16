@@ -54,7 +54,7 @@
         </service>
 
         <provider
-            android:name=".MITProvider"
+            android:name=".shuttles.MITShuttlesProvider"
             android:authorities="edu.mit.mitmobile2.provider"
             android:label="MitProvider"
             android:exported="false"

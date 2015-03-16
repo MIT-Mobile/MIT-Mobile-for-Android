@@ -42,7 +42,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     @Expose
     private MITShuttlePath path;
     @Expose
-    private List<MITShuttleStopWrapper> stops = new ArrayList<MITShuttleStopWrapper>();
+    private List<MITShuttleStopWrapper> stops = new ArrayList<>();
 
     public MITShuttleRoute() {
     }
@@ -85,7 +85,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     }
 
 
-    public Boolean getScheduled() {
+    public Boolean isScheduled() {
         return scheduled;
     }
 
@@ -95,7 +95,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     }
 
 
-    public Boolean getPredictable() {
+    public Boolean isPredictable() {
         return predictable;
     }
 
@@ -240,15 +240,6 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        ShuttlesDatabaseHelper.batchPersistStops(this.stops, this.id);
-
-        //TODO: Remove this IF condition when SyncAdapter added; paths will just get cleared each time
-        if (!dbAdapter.exists(Schema.Path.TABLE_NAME, Schema.Path.ALL_COLUMNS)) {
-            dbAdapter.acquire(this.path);
-            long pathId = path.persistToDatabase();
-            values.put(Schema.Route.MIT_PATH_ID, pathId);
-        }
-
         values.put(Schema.Route.ROUTE_ID, this.id);
         values.put(Schema.Route.AGENCY, this.agency);
         values.put(Schema.Route.PREDICTABLE, this.predictable ? 1 : 0);
@@ -258,5 +249,14 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         values.put(Schema.Route.ROUTE_TITLE, this.title);
         values.put(Schema.Route.VEHICLES_URL, this.vehiclesUrl);
         values.put(Schema.Route.ROUTE_URL, this.url);
+
+        ShuttlesDatabaseHelper.batchPersistStops(this.stops, this.id, this.predictable);
+
+        //TODO: Remove this IF condition when SyncAdapter added; paths will just get cleared each time
+        if (!dbAdapter.exists(Schema.Path.TABLE_NAME, Schema.Path.ALL_COLUMNS)) {
+            dbAdapter.acquire(this.path);
+            long pathId = path.persistToDatabase();
+            values.put(Schema.Route.MIT_PATH_ID, pathId);
+        }
     }
 }

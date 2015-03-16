@@ -1,12 +1,19 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MITShuttlePredictionWrapper {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.Schema;
+
+public class MITShuttlePredictionWrapper extends DatabaseObject {
 
         @SerializedName("route_id")
         @Expose
@@ -27,7 +34,7 @@ public class MITShuttlePredictionWrapper {
         @Expose
         private String stopTitle;
         @Expose
-        private List<MITShuttlePrediction> predictions = new ArrayList<MITShuttlePrediction>();
+        private List<MITShuttlePrediction> predictions = new ArrayList<>();
 
 
         public String getRouteId() {
@@ -98,4 +105,21 @@ public class MITShuttlePredictionWrapper {
         public void setPredictions(List<MITShuttlePrediction> predictions) {
             this.predictions = predictions;
         }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        values.put(Schema.Route.ROUTE_ID, this.routeId);
+        values.put(Schema.Stop.STOP_ID, this.stopId);
+        values.put(Schema.Stop.PREDICTIONS, this.predictions.toString());
+    }
 }
