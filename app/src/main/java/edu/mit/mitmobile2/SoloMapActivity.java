@@ -1,7 +1,10 @@
 package edu.mit.mitmobile2;
 
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -16,12 +19,17 @@ import android.widget.ListView;
 import com.google.android.gms.maps.GoogleMap;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
 import timber.log.Timber;
 
-public class SoloMapActivity extends MITActivity implements Animation.AnimationListener {
+public class SoloMapActivity extends MITActivity implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final int PREDICTIONS_PERIOD = 15000;
+    private static final int PREDICTIONS_TIMER_OFFSET = 10000;
 
     private ListView mapItemsListview;
     private ArrayList mapItems;
@@ -33,6 +41,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private boolean mapViewExpanded = false;
 
     private int originalPosition = -1;
+
+    private static Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +166,19 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
 
+    private void startTimerTask() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updatePredictions();
+            }
+        }, PREDICTIONS_TIMER_OFFSET, PREDICTIONS_PERIOD);
+    }
+
+    protected void updatePredictions() {
+
+    }
+
     @Override
     public void onAnimationStart(Animation animation) {
 
@@ -171,5 +194,35 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        timer.cancel();
+        timer.purge();
+        timer = null;
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timer = new Timer();
+        startTimerTask();
     }
 }

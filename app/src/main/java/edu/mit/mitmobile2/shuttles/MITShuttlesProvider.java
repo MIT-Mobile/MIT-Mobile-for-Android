@@ -1,7 +1,6 @@
 package edu.mit.mitmobile2.shuttles;
 
 import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -9,10 +8,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-import org.apache.http.auth.AUTH;
-
-import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.Schema;
 import timber.log.Timber;
@@ -84,6 +79,10 @@ public class MITShuttlesProvider extends ContentProvider {
                 break;
             case STOPS_ID:
                 cursor = MitMobileApplication.dbAdapter.db.query(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, selection, null, null, null, null);
+                break;
+            case ROUTE_ID:
+                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildQueryString(Schema.Route.TABLE_NAME + "." + selection), null, null);
+                break;
         }
 
         //TODO: Set notification
@@ -145,8 +144,21 @@ public class MITShuttlesProvider extends ContentProvider {
                 MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
                         selection, null);
                 break;
+            case ROUTE_ID:
+                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values,
+                        selection, null);
+                break;
         }
 
         return 0;
+    }
+
+    public String buildQueryString(String selection) {
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+                "FROM routes " +
+                "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
+                "JOIN stops ON route_stops.stop_id = stops.stop_id " +
+                "WHERE " + selection +
+                "ORDER BY routes._id ASC, s_id ASC";
     }
 }
