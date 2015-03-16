@@ -31,9 +31,9 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         mitapiClient = new MITAPIClient(context);
         MITAPIClient.init(context);
 
-        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/routes", Schema.Route.ROUTE_ID);
-        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/stops", Schema.Stop.STOP_ID);
-        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/predictions", Schema.Stop.STOP_ID);
+        map.put(MITShuttlesProvider.ALL_ROUTES_URI.toString(), Schema.Route.ROUTE_ID);
+        map.put(MITShuttlesProvider.STOPS_URI.toString(), Schema.Stop.STOP_ID);
+        map.put(MITShuttlesProvider.PREDICTIONS_URI.toString(), Schema.Stop.STOP_ID);
     }
 
     public MITSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {

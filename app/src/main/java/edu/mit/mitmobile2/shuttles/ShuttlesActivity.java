@@ -10,6 +10,7 @@ import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
+
 import android.content.ContentResolver;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -40,7 +42,8 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     private static final int PREDICTIONS_PERIOD = 15000;
     private static final int PREDICTIONS_TIMER_OFFSET = 10000;
 
-    private static int loopCount = 0;
+    private int loopCount = 0;
+    private boolean immediatelyReloadPredictions = false;
 
     private MITShuttleAdapter mitShuttleAdapter;
 
@@ -70,16 +73,15 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
             @Override
             public void onRefresh() {
                 shuttleRefreshLayout.setRefreshing(true);
-                updatePredictions();
+                updateAllRoutes();
+                immediatelyReloadPredictions = true;
+                loopCount = 0;
             }
         });
 
         shuttleRefreshLayout.setRefreshing(true);
 
         getSupportLoaderManager().initLoader(0, null, this);
-
-        timer = new Timer();
-        startTimerTask();
     }
 
     private void loadCursorInBackground() {
@@ -94,7 +96,6 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
                 if (routes.size() > 0) {
                     routes = sortShuttleRoutesByStatus(routes);
-
                 }
 
                 return routes;
@@ -119,8 +120,11 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                     return;
                 }
 
+                Timber.d("Timer fired");
+
                 if (loopCount == 5) {
                     updateAllRoutes();
+                    immediatelyReloadPredictions = true;
                 } else {
                     updatePredictions();
                 }
@@ -143,6 +147,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         bundle.putString(Constants.Shuttles.MIT_TUPLES_KEY, mitTuples);
         bundle.putString(Constants.Shuttles.CR_TUPLES_KEY, crTuples);
 
+        // FORCE THE SYNC
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
         Timber.d("Requesting Predictions");
 
         ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
@@ -154,7 +162,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.ALL_ROUTES_PATH);
         bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.ALL_ROUTES_URI.toString());
 
-        // FORCE THE SYNC - No matter what
+        // FORCE THE SYNC
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 
@@ -239,22 +247,22 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     }
 
     public void phoneCallDialog(final String phoneNumber) {
-         String[] splittedPhoneNumber = phoneNumber.split("\\.");
-         new AlertDialog.Builder(this)
-                 .setMessage("Call 1 (" + splittedPhoneNumber[0] + ")" + splittedPhoneNumber[1] + "-" + splittedPhoneNumber[2] + "?")
-                 .setPositiveButton(getResources().getString(R.string.ok_button), new DialogInterface.OnClickListener() {
-                     @Override
-                     public void onClick(DialogInterface dialog, int which) {
-                         setPhoneCall(phoneNumber);
-                     }
-                 })
-                 .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-                     @Override
-                     public void onClick(DialogInterface dialog, int which) {
-                         dialog.cancel();
-                     }
-                 })
-                 .show();
+        String[] splittedPhoneNumber = phoneNumber.split("\\.");
+        new AlertDialog.Builder(this)
+                .setMessage("Call 1 (" + splittedPhoneNumber[0] + ")" + splittedPhoneNumber[1] + "-" + splittedPhoneNumber[2] + "?")
+                .setPositiveButton(getResources().getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setPhoneCall(phoneNumber);
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
     public void setPhoneCall(String phoneNumber) {
@@ -296,19 +304,24 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Timber.d("Notified!");
-        List<MITShuttleRoute> routes = new ArrayList<>();
-        ShuttlesDatabaseHelper.generateRouteObjects(routes, data);
-        routes = sortShuttleRoutesByStatus(routes);
-        mitShuttleAdapter.updateListItems(routes);
+        if (!immediatelyReloadPredictions) {
+            List<MITShuttleRoute> routes = new ArrayList<>();
+            ShuttlesDatabaseHelper.generateRouteObjects(routes, data);
+            routes = sortShuttleRoutesByStatus(routes);
+            mitShuttleAdapter.updateListItems(routes);
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (shuttleRefreshLayout.isRefreshing()) {
-                    shuttleRefreshLayout.setRefreshing(false);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (shuttleRefreshLayout.isRefreshing()) {
+                        shuttleRefreshLayout.setRefreshing(false);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            immediatelyReloadPredictions = false;
+            updatePredictions();
+        }
     }
 
     @Override
