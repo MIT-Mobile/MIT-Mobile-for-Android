@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttlePath;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import edu.mit.mitmobile2.shuttles.model.RouteStop;
-import timber.log.Timber;
 
 public class ShuttlesDatabaseHelper {
 
@@ -65,9 +63,7 @@ public class ShuttlesDatabaseHelper {
                     stopLocation.setLongitude(values.getAsDouble(Schema.Stop.STOP_LON));
 
                     Cursor c = db.query(Schema.Location.TABLE_NAME, Schema.Location.ALL_COLUMNS, null, null, null, null, null);
-                    if (c.getCount() > 0) {
-                        c.moveToFirst();
-
+                    if (c.moveToFirst()) {
                         double lat = c.getDouble(c.getColumnIndex(Schema.Location.LATITUDE));
                         double lon = c.getDouble(c.getColumnIndex(Schema.Location.LONGITUDE));
 

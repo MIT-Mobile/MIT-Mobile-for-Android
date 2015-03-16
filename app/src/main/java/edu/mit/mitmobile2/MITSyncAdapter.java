@@ -31,9 +31,9 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         mitapiClient = new MITAPIClient(context);
         MITAPIClient.init(context);
 
-        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/routes", Schema.Route.ROUTE_ID);
-        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/stops", Schema.Stop.STOP_ID);
-        map.put(MITShuttlesProvider.CONTENT_URI.toString() + "/predictions", Schema.Stop.STOP_ID);
+        map.put(MITShuttlesProvider.ALL_ROUTES_URI.toString(), Schema.Route.ROUTE_ID);
+        map.put(MITShuttlesProvider.STOPS_URI.toString(), Schema.Stop.STOP_ID);
+        map.put(MITShuttlesProvider.PREDICTIONS_URI.toString(), Schema.Stop.STOP_ID);
     }
 
     public MITSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
@@ -113,7 +113,10 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         ContentValues contentValues = new ContentValues();
         dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
 
-        String selection = map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'";
+        String selection = null;
+        if (map.containsKey(uri)) {
+            selection = map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'";
+        }
 
         if (uri.contains("predictions")) {
             //special case for predictions
@@ -121,15 +124,18 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             contentValues.remove(Schema.Stop.STOP_ID);
             getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
         } else {
+            if (!TextUtils.isEmpty(selection)) {
+                Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
+                if (cursor.getCount() > 0) {
+                    getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
+                } else {
+                    getContext().getContentResolver().insert(Uri.parse(uri), contentValues);
+                }
 
-            Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
-            if (cursor.getCount() > 0) {
-                getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
+                cursor.close();
             } else {
-                getContext().getContentResolver().insert(Uri.parse(uri), contentValues);
+                getContext().getContentResolver().update(Uri.parse(uri), contentValues, Schema.Route.ROUTE_ID + "=\'" + contentValues.get(Schema.Route.ROUTE_ID) + "\'", null);
             }
-
-            cursor.close();
         }
     }
 
@@ -152,7 +158,6 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             requestDataAndStoreInDb(module, path, uri, null, queryparams);
         }
 
-        Timber.d("Notifying URI: " + uri);
         getContext().getContentResolver().notifyChange(MITShuttlesProvider.ALL_ROUTES_URI, null);
     }
 }
