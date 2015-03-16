@@ -65,17 +65,20 @@ public class ShuttlesDatabaseHelper {
                     stopLocation.setLongitude(values.getAsDouble(Schema.Stop.STOP_LON));
 
                     Cursor c = db.query(Schema.Location.TABLE_NAME, Schema.Location.ALL_COLUMNS, null, null, null, null, null);
-                    c.moveToFirst();
-                    double lat = c.getDouble(c.getColumnIndex(Schema.Location.LATITUDE));
-                    double lon = c.getDouble(c.getColumnIndex(Schema.Location.LONGITUDE));
+                    if (c.getCount() > 0) {
+                        c.moveToFirst();
 
-                    Location myLocation = new Location("");
-                    myLocation.setLatitude(lat);
-                    myLocation.setLongitude(lon);
+                        double lat = c.getDouble(c.getColumnIndex(Schema.Location.LATITUDE));
+                        double lon = c.getDouble(c.getColumnIndex(Schema.Location.LONGITUDE));
 
-                    float distance = myLocation.distanceTo(stopLocation);
+                        Location myLocation = new Location("");
+                        myLocation.setLatitude(lat);
+                        myLocation.setLongitude(lon);
 
-                    values.put(Schema.Stop.DISTANCE, distance);
+                        float distance = myLocation.distanceTo(stopLocation);
+
+                        values.put(Schema.Stop.DISTANCE, distance);
+                    }
                     c.close();
                 }
 

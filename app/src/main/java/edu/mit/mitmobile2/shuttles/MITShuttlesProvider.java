@@ -144,7 +144,6 @@ public class MITShuttlesProvider extends ContentProvider {
             case PREDICTIONS:
                 MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
                         selection, null);
-
                 break;
         }
 

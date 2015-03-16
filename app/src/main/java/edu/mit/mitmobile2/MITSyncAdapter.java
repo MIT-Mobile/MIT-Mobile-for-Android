@@ -49,13 +49,15 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             MITAPIClient.init(getContext());
         }
 
-        String module = extras.getString("module");
-        String path = extras.getString("path");
-        String uri = extras.getString("uri");
+        String module = extras.getString(Constants.Shuttles.MODULE_KEY);
+        String path = extras.getString(Constants.Shuttles.PATH_KEY);
+        String uri = extras.getString(Constants.Shuttles.URI_KEY);
 
         if (module == null || path == null || uri == null) {
-            //TODO: Default URI for background downloads. Probably predictions data?
-            return;
+            // Default: Get all routes data for periodic sync
+            module = Constants.SHUTTLES;
+            path = Constants.Shuttles.ALL_ROUTES_PATH;
+            uri = MITShuttlesProvider.ALL_ROUTES_URI.toString();
         }
 
         if (uri.contains("predictions")) {
@@ -69,13 +71,13 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             Type hashMapType = new TypeToken<HashMap<String, String>>() {
             }.getType();
 
-            if (extras.containsKey("paths")) {
-                String p = extras.getString("paths");
+            if (extras.containsKey(Constants.Shuttles.PATHS_KEY)) {
+                String p = extras.getString(Constants.Shuttles.PATHS_KEY);
                 pathParams = gson.fromJson(p, hashMapType);
             }
 
-            if (extras.containsKey("queries")) {
-                String q = extras.getString("queries");
+            if (extras.containsKey(Constants.Shuttles.QUERIES_KEY)) {
+                String q = extras.getString(Constants.Shuttles.QUERIES_KEY);
                 queryparams = gson.fromJson(q, hashMapType);
             }
 
@@ -103,6 +105,10 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private void insertObject(String uri, DatabaseObject object) {
+        if (object == null) {
+            return;
+        }
+
         DatabaseObject dbObject = object;
         ContentValues contentValues = new ContentValues();
         dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
@@ -129,8 +135,8 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void handleDualAgenciesForPredictions(String module, String path, String uri, Bundle extras) {
 
-        String mitTuples = extras.getString("mitTuples");
-        String crTuples = extras.getString("crTuples");
+        String mitTuples = extras.getString(Constants.Shuttles.MIT_TUPLES_KEY);
+        String crTuples = extras.getString(Constants.Shuttles.CR_TUPLES_KEY);
 
         if (!TextUtils.isEmpty(mitTuples)) {
             HashMap<String, String> queryparams = new HashMap<>();
@@ -139,7 +145,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             requestDataAndStoreInDb(module, path, uri, null, queryparams);
         }
 
-        if(!TextUtils.isEmpty(crTuples)) {
+        if (!TextUtils.isEmpty(crTuples)) {
             HashMap<String, String> queryparams = new HashMap<>();
             queryparams.put("agency", "charles-river");
             queryparams.put("stops", crTuples);

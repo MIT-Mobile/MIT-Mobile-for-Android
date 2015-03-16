@@ -241,12 +241,14 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
             }.getType();
             List<MITShuttlePrediction> predictions = gson.fromJson(segmentString, nestedListType);
             setPredictions(predictions);
+        } else {
+            setPredictions(new ArrayList<MITShuttlePrediction>());
         }
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        if (predictions != null && predictions.size() > 0) {
+        if (predictions != null/* && predictions.size() > 0*/) {
             String preds = predictions.toString();
             values.put(Schema.Stop.PREDICTIONS, preds);
         }

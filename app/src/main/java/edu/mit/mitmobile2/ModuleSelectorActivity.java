@@ -54,12 +54,7 @@ public class ModuleSelectorActivity extends Activity {
             ContentResolver.setIsSyncable(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, 1);
             ContentResolver.setSyncAutomatically(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, true);
 
-            Bundle bundle = new Bundle();
-            bundle.putString("module", Constants.SHUTTLES);
-            bundle.putString("path", Constants.Shuttles.ALL_ROUTES_PATH);
-            bundle.putString("uri", MITShuttlesProvider.CONTENT_URI.toString() + "/routes");
-
-            ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle, MitMobileApplication.INTERVAL_SECS);
+            ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, Bundle.EMPTY, MitMobileApplication.INTERVAL_SECS);
         }
         /*bundle.putString("module", Constants.SHUTTLES);
         bundle.putString("path", Constants.Shuttles.STOP_INFO_PATH);

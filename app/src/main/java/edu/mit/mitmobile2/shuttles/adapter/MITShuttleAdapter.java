@@ -76,11 +76,12 @@ public class MITShuttleAdapter extends BaseAdapter {
 
             if (stop1.getPredictions() != null && stop1.getPredictions().size() > 0) {
                 MITShuttlePrediction prediction = stop1.getPredictions().get(0);
-                if (prediction.getSeconds() == 0) {
+                int timeInMins = prediction.getSeconds() / 60;
+                if (timeInMins == 0) {
                     viewHolder.firstStopMinuteTextView.setText("now");
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
                 } else {
-                    viewHolder.firstStopMinuteTextView.setText(prediction.getSeconds() / 60 + "m");
+                    viewHolder.firstStopMinuteTextView.setText(timeInMins + "m");
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
@@ -89,11 +90,13 @@ public class MITShuttleAdapter extends BaseAdapter {
             }
 
             if (stop2.getPredictions() != null && stop2.getPredictions().size() > 0) {
-                if (stop2.getPredictions().get(0).getSeconds() == 0) {
+                MITShuttlePrediction prediction = stop2.getPredictions().get(0);
+                int timeInMins = prediction.getSeconds() / 60;
+                if (timeInMins == 0) {
                     viewHolder.secondStopMinuteTextView.setText("now");
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
                 } else {
-                    viewHolder.secondStopMinuteTextView.setText(stop2.getPredictions().get(0).getSeconds() / 60 + "m");
+                    viewHolder.secondStopMinuteTextView.setText(timeInMins + "m");
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
