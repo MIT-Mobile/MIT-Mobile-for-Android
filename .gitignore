@@ -32,4 +32,9 @@ Thumbs.db
 build
 .idea
 .settings
-*.iml
+app/app.iml
+android-async-http-1.4.6/android-async-http-1.4.6.iml
+MIT-Mobile-for-Android.iml
+MITApp-marty.iml
+
+

@@ -113,6 +113,18 @@ public class MITShuttleAdapter extends BaseAdapter {
                 ((ShuttleAdapterCallback) context).shuttleRouteClick(routes.get(position).getId());
             }
         });
+        viewHolder.shuttleFirstStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ShuttleAdapterCallback)context).shuttleStopClick(mitShuttles.get(position).getFirstStopID());
+            }
+        });
+        viewHolder.shuttleSecondStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ShuttleAdapterCallback)context).shuttleStopClick(mitShuttles.get(position).getSecondStopID());
+            }
+        });
 
         return view;
     }
@@ -153,6 +165,12 @@ public class MITShuttleAdapter extends BaseAdapter {
 
         @InjectView(R.id.shuttle_route)
         RelativeLayout shuttleRoute;
+
+        @InjectView(R.id.shuttle_route_first_stop)
+        RelativeLayout shuttleFirstStop;
+
+        @InjectView(R.id.shuttle_route_second_stop)
+        RelativeLayout shuttleSecondStop;
 
         ViewHolder(View view) {
             ButterKnife.inject(this, view);

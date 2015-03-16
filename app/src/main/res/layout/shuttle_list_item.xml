@@ -8,7 +8,8 @@
     <RelativeLayout
         android:id="@+id/shuttle_route"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/shuttle_route_selector">
         <ImageView
             android:id="@+id/shuttle_route_imageview"
             style="@style/MITShuttleRoutesImage"

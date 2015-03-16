@@ -7,14 +7,12 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
-
 import android.content.ContentResolver;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -30,10 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -99,6 +94,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
                 if (routes.size() > 0) {
                     routes = sortShuttleRoutesByStatus(routes);
+
                 }
 
                 return routes;
@@ -169,8 +165,8 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     private void initialShuttleView() {
         View footer = ((LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.shuttle_list_footer, null, false);
-        shuttleListView.addFooterView(footer);
         initialListViewFooter(footer);
+        shuttleListView.addFooterView(footer);
     }
 
     public List<MITShuttleRoute> sortShuttleRoutesByStatus(List<MITShuttleRoute> routes) {
@@ -213,13 +209,13 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         parkOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setPhoneCall(getResources().getString(R.string.parking_office_number));
+                phoneCallDialog(getResources().getString(R.string.parking_office_number));
             }
         });
         saferide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setPhoneCall(getResources().getString(R.string.saferide_number));
+                phoneCallDialog(getResources().getString(R.string.saferide_number));
             }
         });
         realTimeBusArrivals.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +238,25 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         });
     }
 
+    public void phoneCallDialog(final String phoneNumber) {
+         String[] splittedPhoneNumber = phoneNumber.split("\\.");
+         new AlertDialog.Builder(this)
+                 .setMessage("Call 1 (" + splittedPhoneNumber[0] + ")" + splittedPhoneNumber[1] + "-" + splittedPhoneNumber[2] + "?")
+                 .setPositiveButton(getResources().getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         setPhoneCall(phoneNumber);
+                     }
+                 })
+                 .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                     @Override
+                     public void onClick(DialogInterface dialog, int which) {
+                         dialog.cancel();
+                     }
+                 })
+                 .show();
+    }
+
     public void setPhoneCall(String phoneNumber) {
         String uri = "tel:" + phoneNumber.trim();
         Intent intent = new Intent(Intent.ACTION_CALL);
@@ -260,28 +275,16 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     }
 
     @Override
-    public void shuttleRouteClick(String routeID) {
-        HashMap<String, String> routeParams = new HashMap<>();
-        routeParams.put("route", routeID);
-        apiClient.get(Constants.SHUTTLES, Constants.Shuttles.ROUTE_INFO_PATH, routeParams, null,
-                new Callback<MITShuttleRoute>() {
-                    @Override
-                    public void success(final MITShuttleRoute mitShuttleRouteWrapper, Response response) {
-                        Intent intent = new Intent(getApplicationContext(), ShuttleRouteActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("route", mitShuttleRouteWrapper);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                    }
-                });
+    public void shuttleRouteClick(final String routeID) {
+        Intent intent = new Intent(this, ShuttleRouteActivity.class);
+        intent.putExtra("routeID", routeID);
+        startActivity(intent);
     }
 
     @Override
     public void shuttleStopClick(String stopID) {
-
+        Intent intent = new Intent(this, ShuttleStopActivity.class);
+        startActivity(intent);
     }
 
     @Override
