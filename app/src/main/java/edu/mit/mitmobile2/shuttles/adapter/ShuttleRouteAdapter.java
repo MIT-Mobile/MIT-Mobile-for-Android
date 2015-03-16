@@ -20,12 +20,10 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
 
     private Context mContext;
-    private String routeId;
 
-    public ShuttleRouteAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects, String routeId) {
+    public ShuttleRouteAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects) {
         super(context, resource, objects);
         mContext = context;
-        this.routeId = routeId;
     }
 
     @Override

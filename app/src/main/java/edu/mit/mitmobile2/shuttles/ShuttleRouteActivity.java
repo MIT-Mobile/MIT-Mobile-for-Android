@@ -43,7 +43,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
 
         //TODO: Save routeId in bundle for rotation
         routeID = getIntent().getStringExtra("routeID");
-        adapter = new ShuttleRouteAdapter(this, R.layout.stop_list_item, new ArrayList<MITShuttleStopWrapper>(), routeID);
+        adapter = new ShuttleRouteAdapter(this, R.layout.stop_list_item, new ArrayList<MITShuttleStopWrapper>());
 
         uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeID;
         Cursor cursor = getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeID + "\' ", null, null);
