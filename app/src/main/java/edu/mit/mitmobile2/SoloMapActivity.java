@@ -72,7 +72,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (!mapViewExpanded) {
+                if (!mapViewExpanded && !animating) {
                     int[] location = new int[2];
                     routeInfoSegment.getLocationOnScreen(location);
 
@@ -122,7 +122,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         if (mapView != null) {
             mapView.addMapItemList(this.mapItems);
-            mapView.adjustCameraToShowInHeader(false);
+            mapView.adjustCameraToShowInHeader(false, 0);
         }
     }
 
@@ -152,11 +152,19 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            mapView.setToDefaultBounds(true);
+            mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
             listButton.setVisibility(View.VISIBLE);
+
+            if (mapView.getMapFragment().getView().getTranslationY() != 0) {
+                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getMapFragment().getView().getTranslationY(), NO_TRANSLATION);
+                mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
+                //The way translatation animations are setup, this is done to avoid flicker
+                mapView.getMapFragment().getView().setTranslationY(0);
+                mapView.getMapFragment().getView().startAnimation(mapTranslateAnimation);
+            }
         } else {
             mapViewExpanded = false;
-            mapView.adjustCameraToShowInHeader(true);
+            mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH);
             routeInfoSegment.setVisibility(View.VISIBLE);
             mapItemsListview.setVisibility(View.VISIBLE);
         }
@@ -184,6 +192,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     @Override
     public void onAnimationEnd(Animation animation) {
         if (mapViewExpanded) {
+            mapItemsListview.setSelection(0);
             mapItemsListview.setVisibility(View.GONE);
             mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
         }

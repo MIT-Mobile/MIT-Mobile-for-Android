@@ -143,14 +143,14 @@ public class MITMapView {
             }
         }
         defaultBounds = b.build();
-        setToDefaultBounds(false);
+        setToDefaultBounds(false, 0);
     }
 
-    public void setToDefaultBounds(boolean animate) {
+    public void setToDefaultBounds(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), MAP_BOUNDS_PADDING);
         if (animate) {
-            mMap.animateCamera(cameraUpdate, 500, new GoogleMap.CancelableCallback() {
+            mMap.animateCamera(cameraUpdate, animationLength, new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
 
@@ -166,7 +166,7 @@ public class MITMapView {
         }
     }
 
-    public void adjustCameraToShowInHeader(boolean animate) {
+    public void adjustCameraToShowInHeader(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
         Projection projection = mMap.getProjection();
 
@@ -184,7 +184,7 @@ public class MITMapView {
         float zoom = mMap.getCameraPosition().zoom;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(offsetCenter, zoom);
         if (animate) {
-            mMap.animateCamera(cameraUpdate, 500, new GoogleMap.CancelableCallback() {
+            mMap.animateCamera(cameraUpdate, animationLength, new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
 
