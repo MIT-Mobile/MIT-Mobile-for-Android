@@ -8,14 +8,28 @@
         android:id="@+id/route_map"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
-    <ListView
-        android:id="@+id/map_list_view"
+    <LinearLayout
+        android:id="@+id/map_list_view_with_footer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/map_list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/map_list_view"
+            android:background="@android:color/white"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/list_button"
