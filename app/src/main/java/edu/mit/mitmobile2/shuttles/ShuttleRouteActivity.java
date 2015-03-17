@@ -71,9 +71,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
             routeStatusTextView.setText(getResources().getString(R.string.route_not_in_service));
         }
 
-        fillAdapter();
         updateData();
-
         getSupportLoaderManager().initLoader(1, null, this);
 
         // TODO: Build this into MapView instead
@@ -90,12 +88,6 @@ public class ShuttleRouteActivity extends SoloMapActivity {
             options.width(8f);
             getMapView().addPolyline(options);
         }
-    }
-
-    @Override
-    protected void fillAdapter() {
-        adapter.addAll(route.getStops());
-        adapter.notifyDataSetChanged();
     }
 
     @Override
