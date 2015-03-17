@@ -19,15 +19,16 @@ import edu.mit.mitmobile2.shuttles.ShuttleAdapterCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 
 
 public class MITShuttleAdapter extends BaseAdapter {
 
     private LayoutInflater listContainer;
-    private List<MITShuttleRoute> routes = new ArrayList<>();
+    private List<MitMiniShuttleRoute> routes = new ArrayList<>();
     private Context context;
 
-    public MITShuttleAdapter(Context context, List<MITShuttleRoute> routes) {
+    public MITShuttleAdapter(Context context, List<MitMiniShuttleRoute> routes) {
         listContainer = LayoutInflater.from(context);
         this.routes = routes;
         this.context = context;
@@ -177,7 +178,7 @@ public class MITShuttleAdapter extends BaseAdapter {
         }
     }
 
-    public void updateListItems(List<MITShuttleRoute> routes) {
+    public void updateListItems(List<MitMiniShuttleRoute> routes) {
         this.routes = routes;
         notifyDataSetChanged();
     }

@@ -19,6 +19,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleVehicle;
 import edu.mit.mitmobile2.shuttles.model.RouteStop;
+import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 
 public class ShuttlesDatabaseHelper {
 
@@ -108,6 +109,18 @@ public class ShuttlesDatabaseHelper {
         try {
             while (cursor.moveToNext()) {
                 MITShuttleRoute route = new MITShuttleRoute();
+                route.buildFromCursor(cursor, dbAdapter);
+                routes.add(route);
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+    public static void generateMiniRouteObjects(List<MitMiniShuttleRoute> routes, Cursor cursor) {
+        try {
+            while (cursor.moveToNext()) {
+                MitMiniShuttleRoute route = new MitMiniShuttleRoute();
                 route.buildFromCursor(cursor, dbAdapter);
                 routes.add(route);
             }
