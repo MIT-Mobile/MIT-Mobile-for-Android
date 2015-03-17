@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 import edu.mit.mitmobile2.R;
 
-public class MITMapView {
+public class MITMapView implements GoogleMap.OnMapLoadedCallback {
 
     public static final int MAP_BOUNDS_PADDING = 130;
 
@@ -56,6 +56,7 @@ public class MITMapView {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setOnMapLoadedCallback(this);
     }
 
     private ArrayList<MapItem> mapItems;
@@ -143,7 +144,6 @@ public class MITMapView {
             }
         }
         defaultBounds = b.build();
-        setToDefaultBounds(false, 0);
     }
 
     public void setToDefaultBounds(boolean animate, int animationLength) {
@@ -201,6 +201,15 @@ public class MITMapView {
         }
     }
 
+
+    @Override
+    public void onMapLoaded() {
+        if (defaultBounds != null) {
+            setToDefaultBounds(false, 0);
+            adjustCameraToShowInHeader(false, 0);
+        }
+    }
+
     public int dpToPx(Resources res, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
@@ -243,5 +252,6 @@ public class MITMapView {
     public MapFragment getMapFragment() {
         return mapFragment;
     }
+
 }
 

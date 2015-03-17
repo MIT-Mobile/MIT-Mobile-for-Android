@@ -122,7 +122,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         if (mapView != null) {
             mapView.addMapItemList(this.mapItems);
-            mapView.adjustCameraToShowInHeader(false, 0);
         }
     }
 
