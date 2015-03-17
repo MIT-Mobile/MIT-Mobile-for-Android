@@ -2,14 +2,20 @@ package edu.mit.mitmobile2.shuttles;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolylineOptions;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -21,6 +27,7 @@ import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleVehicle;
 import timber.log.Timber;
 
 public class ShuttleRouteActivity extends SoloMapActivity {
@@ -35,6 +42,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
     private MITShuttleRoute route = new MITShuttleRoute();
     private String routeID;
     private String uriString;
+    private List<Marker> vehicles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +71,23 @@ public class ShuttleRouteActivity extends SoloMapActivity {
             routeStatusTextView.setText(getResources().getString(R.string.route_not_in_service));
         }
 
-        updatePredictions();
-
+        updateData();
         getSupportLoaderManager().initLoader(1, null, this);
+
+        // TODO: Build this into MapView instead
+        for (List<List<Double>> outerList : route.getPath().getSegments()) {
+            List<LatLng> points = new ArrayList<>();
+            PolylineOptions options = new PolylineOptions();
+            for (List<Double> innerList : outerList) {
+                LatLng point = new LatLng(innerList.get(1), innerList.get(0));
+                points.add(point);
+            }
+            options.addAll(points);
+            options.color(Color.BLUE);
+            options.visible(true);
+            options.width(8f);
+            getMapView().addPolyline(options);
+        }
     }
 
     @Override
@@ -86,12 +108,18 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
+
+        for (Marker vehicleMarker : vehicles) {
+            vehicleMarker.remove();
+        }
+
+        for (MITShuttleVehicle vehicle : route.getVehicles()) {
+            vehicles.add(getMapView().addMarker(vehicle.getMarkerOptions()));
+        }
     }
 
     @Override
-    protected void updatePredictions() {
-        //TODO: Get Vehicle Positions
-
+    protected void updateData() {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
         bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.ROUTE_INFO_PATH);
@@ -109,4 +137,26 @@ public class ShuttleRouteActivity extends SoloMapActivity {
 
         ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
     }
+
+    /*private void updateVehicles() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
+        bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.VEHICLES_PATH);
+        bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.VEHICLES_URI.toString());
+
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("agency", route.getAgency());
+        queryParams.put("routes", route.getId());
+        bundle.putString(Constants.Shuttles.QUERIES_KEY, queryParams.toString());
+
+        bundle.putString("return", uriString);
+
+        // FORCE THE SYNC
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        Timber.d("Requesting Vehicles");
+
+        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+    }*/
 }

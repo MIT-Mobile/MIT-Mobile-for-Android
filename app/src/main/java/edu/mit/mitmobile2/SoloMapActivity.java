@@ -179,12 +179,12 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                updatePredictions();
+                updateData();
             }
         }, PREDICTIONS_TIMER_OFFSET, PREDICTIONS_PERIOD);
     }
 
-    protected void updatePredictions() {
+    protected void updateData() {
 
     }
 

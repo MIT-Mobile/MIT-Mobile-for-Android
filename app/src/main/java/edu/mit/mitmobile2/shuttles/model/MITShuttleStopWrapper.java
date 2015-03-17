@@ -248,7 +248,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-        if (predictions != null/* && predictions.size() > 0*/) {
+        if (predictions != null) {
             String preds = predictions.toString();
             values.put(Schema.Stop.PREDICTIONS, preds);
         }

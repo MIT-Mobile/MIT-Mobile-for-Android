@@ -43,6 +43,8 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     private MITShuttlePath path;
     @Expose
     private List<MITShuttleStopWrapper> stops = new ArrayList<>();
+    @Expose
+    private List<MITShuttleVehicle> vehicles = new ArrayList<>();
 
     public MITShuttleRoute() {
     }
@@ -153,6 +155,14 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         this.stops = stops;
     }
 
+    public List<MITShuttleVehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(List<MITShuttleVehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -216,6 +226,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         setTitle(cursor.getString(cursor.getColumnIndex(Schema.Route.ROUTE_TITLE)));
         setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
         setVehiclesUrl(cursor.getString(cursor.getColumnIndex(Schema.Route.PREDICTIONS_URL)));
+        setVehicles(ShuttlesDatabaseHelper.getVehicles(this.id));
 
         buildSubclassFromCursor(cursor, dbAdapter, "");
     }
@@ -251,6 +262,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         values.put(Schema.Route.ROUTE_URL, this.url);
 
         ShuttlesDatabaseHelper.batchPersistStops(this.stops, this.id, this.predictable);
+        ShuttlesDatabaseHelper.batchPersistVehicles(this.vehicles, this.id);
 
         //TODO: Remove this IF condition when SyncAdapter added; paths will just get cleared each time
         if (!dbAdapter.exists(Schema.Path.TABLE_NAME, Schema.Path.ALL_COLUMNS)) {

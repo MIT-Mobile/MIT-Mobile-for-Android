@@ -97,12 +97,12 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
                         }
                         break;
 
-                    case MapItem.POLYGONTYPE:
+                    case MapItem.POLYLINETYPE:
                         mMap.addPolyline(mItem.getPolylineOptions());
                         break;
 
 
-                    case MapItem.POLYLINETYPE:
+                    case MapItem.POLYGONTYPE:
                         mMap.addPolygon(mItem.getPolygonOptions());
                         break;
 
@@ -141,6 +141,10 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
             MapItem mItem = mapItems.get(i);
             if (mItem.getMapItemType() == MapItem.MARKERTYPE) {
                 b.include(mItem.getMarkerOptions().getPosition());
+            } else if (mItem.getMapItemType() == MapItem.POLYLINETYPE) {
+                for (LatLng point : mItem.getPolylineOptions().getPoints()) {
+                    b.include(point);
+                }
             }
         }
         defaultBounds = b.build();

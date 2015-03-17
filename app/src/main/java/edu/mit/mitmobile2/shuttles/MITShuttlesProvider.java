@@ -33,6 +33,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final Uri CHECK_ROUTES_URI = Uri.parse(ALL_ROUTES_URI.toString() + "/check");
     public static final Uri CHECK_STOPS_URI = Uri.parse(STOPS_URI.toString() + "/check");
     public static final Uri PREDICTIONS_URI = Uri.parse(CONTENT_URI.toString() + "/predictions");
+    public static final Uri VEHICLES_URI = Uri.parse(CONTENT_URI.toString() + "/vehicles");
 
     private static final String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
             "FROM routes " +
@@ -66,7 +67,6 @@ public class MITShuttlesProvider extends ContentProvider {
         Timber.d("Uri= " + uriType);
         Timber.d("Selection= " + selection);
 
-        //TODO: Add query to return to Activity that has the loader listeners
         switch (uriType) {
             case CHECK_ROUTES:
                 cursor = MitMobileApplication.dbAdapter.db.query(Schema.Route.TABLE_NAME, new String[]{Schema.Route.ID_COL}, selection, null, null, null, null);
@@ -85,7 +85,6 @@ public class MITShuttlesProvider extends ContentProvider {
                 break;
         }
 
-        //TODO: Set notification
         return cursor;
     }
 
@@ -133,20 +132,16 @@ public class MITShuttlesProvider extends ContentProvider {
         int uriType = sURIMatcher.match(uri);
         switch (uriType) {
             case ROUTES:
-                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values,
-                        Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
+                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
                 break;
             case STOPS:
-                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
-                        Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
+                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
                 break;
             case PREDICTIONS:
-                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
-                        selection, null);
+                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, selection, null);
                 break;
             case ROUTE_ID:
-                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values,
-                        selection, null);
+                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, selection, null);
                 break;
         }
 
@@ -159,6 +154,6 @@ public class MITShuttlesProvider extends ContentProvider {
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +
                 "WHERE " + selection +
-                "ORDER BY routes._id ASC, s_id ASC";
+                "ORDER BY routes._id ASC, rs_id ASC";
     }
 }

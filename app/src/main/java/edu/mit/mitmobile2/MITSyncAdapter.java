@@ -34,6 +34,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         map.put(MITShuttlesProvider.ALL_ROUTES_URI.toString(), Schema.Route.ROUTE_ID);
         map.put(MITShuttlesProvider.STOPS_URI.toString(), Schema.Stop.STOP_ID);
         map.put(MITShuttlesProvider.PREDICTIONS_URI.toString(), Schema.Stop.STOP_ID);
+        map.put(MITShuttlesProvider.VEHICLES_URI.toString(), Schema.Vehicle.VEHICLE_ID);
     }
 
     public MITSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
@@ -84,8 +85,13 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             Timber.d("Retrieved info from bundle:" + module + ", " + path + ", " + uri);
 
             requestDataAndStoreInDb(module, path, uri, pathParams, queryparams);
-            Timber.d("Notifying URI: " + uri);
-            getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
+
+            if (extras.containsKey("return")) {
+                getContext().getContentResolver().notifyChange(Uri.parse(extras.getString("return")), null);
+            } else {
+                Timber.d("Notifying URI: " + uri);
+                getContext().getContentResolver().notifyChange(Uri.parse(uri), null);
+            }
         }
     }
 
@@ -113,6 +119,11 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         ContentValues contentValues = new ContentValues();
         dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
 
+        if (uri.contains("vehicles")) {
+            //Special case for vehicles, fillInContentValues does the persisting
+            return;
+        }
+
         String selection = null;
         if (map.containsKey(uri)) {
             selection = map.get(uri) + "=\'" + contentValues.get(map.get(uri)) + "\'";
@@ -126,7 +137,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         } else {
             if (!TextUtils.isEmpty(selection)) {
                 Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
-                if (cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
                     getContext().getContentResolver().update(Uri.parse(uri), contentValues, selection, null);
                 } else {
                     getContext().getContentResolver().insert(Uri.parse(uri), contentValues);

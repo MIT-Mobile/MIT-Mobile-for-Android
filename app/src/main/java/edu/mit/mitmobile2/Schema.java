@@ -22,6 +22,7 @@ public class Schema {
         public static final String HEADING = "vehicle_heading";
         public static final String SPEED = "vehicle_speed";
         public static final String SECS_SINCE_REPORT = "secs_since_report";
+        public static final String ROUTE_ID = "route_id";
 
         public static final String CREATE_TABLE_SQL =
                 buildCreateSQL(TABLE_NAME,
@@ -30,11 +31,12 @@ public class Schema {
                                 VEHICLE_LON + " double not null, " +
                                 HEADING + " integer not null, " +
                                 SPEED + " integer not null, " +
-                                SECS_SINCE_REPORT + " integer not null"
+                                SECS_SINCE_REPORT + " integer not null, " +
+                                ROUTE_ID + " test not null"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, VEHICLE_ID, VEHICLE_LAT, VEHICLE_LON, HEADING, SPEED, SECS_SINCE_REPORT
+                ID_COL, VEHICLE_ID, VEHICLE_LAT, VEHICLE_LON, HEADING, SPEED, SECS_SINCE_REPORT, ROUTE_ID
         };
     }
 

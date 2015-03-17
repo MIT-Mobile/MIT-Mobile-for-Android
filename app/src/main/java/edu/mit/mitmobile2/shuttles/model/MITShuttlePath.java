@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.shuttles.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,20 +10,22 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 import edu.mit.mitmobile2.DBAdapter;
-import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.maps.MapItem;
 
-public class MITShuttlePath extends DatabaseObject implements Parcelable {
+public class MITShuttlePath extends MapItem {
 
     @Expose
     private List<Double> bbox = new ArrayList<>();
     @Expose
-    private List<List<List<Double>>> segments = new ArrayList<List<List<Double>>>();
+    private List<List<List<Double>>> segments = new ArrayList<>();
 
 
     public List<Double> getBbox() {
@@ -92,5 +95,29 @@ public class MITShuttlePath extends DatabaseObject implements Parcelable {
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
         values.put(Schema.Path.SEGMENTS, this.getSegments().toString());
+    }
+
+    @Override
+    public int getMapItemType() {
+        return POLYLINETYPE;
+    }
+
+    @Override
+    public PolylineOptions getPolylineOptions() {
+        PolylineOptions polylineOptions = new PolylineOptions();
+        List<LatLng> points = new ArrayList<>();
+
+        for (List<List<Double>> outerList : this.segments) {
+            for (List<Double> innerList : outerList) {
+                LatLng point = new LatLng(innerList.get(1), innerList.get(0));
+                points.add(point);
+            }
+        }
+
+        polylineOptions.addAll(points);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.visible(true);
+        polylineOptions.width(10f);
+        return polylineOptions;
     }
 }
