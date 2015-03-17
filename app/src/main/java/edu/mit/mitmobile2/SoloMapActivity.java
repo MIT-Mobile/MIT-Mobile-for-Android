@@ -141,7 +141,12 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
 
         TranslateAnimation translateAnimation;
-        float bottomY = displayMetrics.heightPixels - getResources().getDimension(R.dimen.shuttle_routes_map_header_height);
+
+        int[] location = new int[2];
+        routeInfoSegment.getLocationOnScreen(location);
+        int currentRouteInfoTop = location[1];
+
+        float bottomY = displayMetrics.heightPixels - currentRouteInfoTop;
         if (mapViewExpanded) {
             translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, bottomY, NO_TRANSLATION);
         } else {
