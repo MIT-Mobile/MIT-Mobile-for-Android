@@ -150,17 +150,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         Resources resources = mContext.getResources();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), MAP_BOUNDS_PADDING);
         if (animate) {
-            mMap.animateCamera(cameraUpdate, animationLength, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
+            mMap.animateCamera(cameraUpdate, animationLength, null);
         } else {
             mMap.moveCamera(cameraUpdate);
         }
@@ -184,17 +174,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         float zoom = mMap.getCameraPosition().zoom;
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(offsetCenter, zoom);
         if (animate) {
-            mMap.animateCamera(cameraUpdate, animationLength, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-
-                }
-
-                @Override
-                public void onCancel() {
-
-                }
-            });
+            mMap.animateCamera(cameraUpdate, animationLength, null);
         } else {
             mMap.moveCamera(cameraUpdate);
 

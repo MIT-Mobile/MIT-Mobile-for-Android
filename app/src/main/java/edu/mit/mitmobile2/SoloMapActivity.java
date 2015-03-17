@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2;
 
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -168,6 +167,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             }
         } else {
             mapViewExpanded = false;
+            mapView.setToDefaultBounds(false, 0);
             mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH);
             routeInfoSegment.setVisibility(View.VISIBLE);
             mapItemsListview.setVisibility(View.VISIBLE);
