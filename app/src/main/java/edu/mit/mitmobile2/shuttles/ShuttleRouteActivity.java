@@ -35,6 +35,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
     private MITShuttleRoute route = new MITShuttleRoute();
     private String routeID;
     private String uriString;
+    private boolean immediatelyGetVehicles = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         }
 
         fillAdapter();
-        updatePredictions();
+        updateData();
 
         getSupportLoaderManager().initLoader(1, null, this);
     }
@@ -93,12 +94,16 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
+
+        if (immediatelyGetVehicles) {
+            updateVehicles();
+        } else {
+            //Update vehicles on map
+        }
     }
 
     @Override
-    protected void updatePredictions() {
-        //TODO: Get Vehicle Positions
-
+    protected void updateData() {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
         bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.ROUTE_INFO_PATH);
@@ -115,5 +120,29 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         Timber.d("Requesting Predictions");
 
         ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+        immediatelyGetVehicles = true;
+    }
+
+    private void updateVehicles() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
+        bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.VEHICLES_PATH);
+        bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.VEHICLES_URI.toString());
+
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("agency", route.getAgency());
+        queryParams.put("routes", route.getId());
+        bundle.putString(Constants.Shuttles.QUERIES_KEY, queryParams.toString());
+
+        bundle.putString("return", uriString);
+
+        // FORCE THE SYNC
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        Timber.d("Requesting Vehicles");
+
+        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+        immediatelyGetVehicles = false;
     }
 }

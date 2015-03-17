@@ -17,6 +17,7 @@ import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePath;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleVehicle;
 import edu.mit.mitmobile2.shuttles.model.RouteStop;
 
 public class ShuttlesDatabaseHelper {
@@ -153,5 +154,41 @@ public class ShuttlesDatabaseHelper {
         }
 
         return path;
+    }
+
+    public static List<MITShuttleVehicle> getVehicles(String routeId) {
+        List<MITShuttleVehicle> vehicles = new ArrayList<>();
+
+        Cursor cursor = db.query(Schema.Vehicle.TABLE_NAME, Schema.Vehicle.ALL_COLUMNS, Schema.Vehicle.ROUTE_ID + "=\'" + routeId + "\'", null, null, null, null);
+
+        try {
+            while (cursor.moveToNext()) {
+                MITShuttleVehicle vehicle = new MITShuttleVehicle();
+                vehicle.buildFromCursor(cursor, dbAdapter);
+                vehicles.add(vehicle);
+            }
+        } finally {
+            cursor.close();
+        }
+        return vehicles;
+    }
+
+    public static void batchPersistVehicles(List<MITShuttleVehicle> dbObjects, String routeId) {
+        List<DatabaseObject> updatedObjects = new ArrayList<>();
+        Set<String> ids = dbAdapter.getAllIds(Schema.Vehicle.TABLE_NAME, Schema.Vehicle.ALL_COLUMNS, Schema.Vehicle.VEHICLE_ID);
+
+        for (MITShuttleVehicle v : dbObjects) {
+            v.setRouteId(routeId);
+            if (ids.contains(v.getId())) {
+                ContentValues values = new ContentValues();
+                v.fillInContentValues(values, dbAdapter);
+                dbAdapter.db.update(Schema.Vehicle.TABLE_NAME, values,
+                        Schema.Vehicle.VEHICLE_ID + " = \'" + v.getId() + "\'", null);
+            } else {
+                updatedObjects.add(v);
+            }
+        }
+
+        dbAdapter.batchPersist(updatedObjects, Schema.Vehicle.TABLE_NAME);
     }
 }

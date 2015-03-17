@@ -27,6 +27,10 @@ public class MITShuttleVehicle extends DatabaseObject {
     @Expose
     private Integer secondsSinceReport;
 
+    private String routeId;
+
+    public MITShuttleVehicle() {
+    }
 
     public String getId() {
         return id;
@@ -87,6 +91,14 @@ public class MITShuttleVehicle extends DatabaseObject {
         this.secondsSinceReport = secondsSinceReport;
     }
 
+    public String getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
+    }
+
     @Override
     protected String getTableName() {
         return Schema.Vehicle.TABLE_NAME;
@@ -94,11 +106,23 @@ public class MITShuttleVehicle extends DatabaseObject {
 
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-
+        setId(cursor.getString(cursor.getColumnIndex(Schema.Vehicle.VEHICLE_ID)));
+        setLat(cursor.getDouble(cursor.getColumnIndex(Schema.Vehicle.VEHICLE_LAT)));
+        setLon(cursor.getDouble(cursor.getColumnIndex(Schema.Vehicle.VEHICLE_LON)));
+        setHeading(cursor.getInt(cursor.getColumnIndex(Schema.Vehicle.HEADING)));
+        setSpeedKph(cursor.getInt(cursor.getColumnIndex(Schema.Vehicle.SPEED)));
+        setSecondsSinceReport(cursor.getInt(cursor.getColumnIndex(Schema.Vehicle.SECS_SINCE_REPORT)));
+        setRouteId(cursor.getString(cursor.getColumnIndex(Schema.Vehicle.ROUTE_ID)));
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-
+        values.put(Schema.Vehicle.VEHICLE_ID, this.id);
+        values.put(Schema.Vehicle.VEHICLE_LAT, this.lat);
+        values.put(Schema.Vehicle.VEHICLE_LON, this.lon);
+        values.put(Schema.Vehicle.HEADING, this.heading);
+        values.put(Schema.Vehicle.SPEED, this.speedKph);
+        values.put(Schema.Vehicle.SECS_SINCE_REPORT, this.secondsSinceReport);
+        values.put(Schema.Vehicle.ROUTE_ID, this.routeId);
     }
 }
