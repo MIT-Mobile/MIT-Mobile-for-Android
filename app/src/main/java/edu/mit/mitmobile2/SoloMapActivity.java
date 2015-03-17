@@ -33,10 +33,11 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     public static final int NO_TRANSLATION = 0;
     public static final int ANIMATION_LENGTH = 500;
 
-    private ListView mapItemsListview;
+    private ListView mapItemsListView;
     private ArrayList mapItems;
     private MITMapView mapView;
     private LinearLayout routeInfoSegment;
+    private LinearLayout mapItemsListViewWithFooter;
     private View transparentView;
     private Button listButton;
 
@@ -52,9 +53,11 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_map);
 
-        mapItemsListview = (ListView) findViewById(R.id.map_list_view);
+        mapItemsListView = (ListView) findViewById(R.id.map_list_view);
         View header = View.inflate(this, R.layout.stop_list_header, null);
-        mapItemsListview.addHeaderView(header);
+        mapItemsListView.addHeaderView(header);
+
+        mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
@@ -63,7 +66,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         transparentView = findViewById(R.id.transparent_map_overlay);
         listButton = (Button) findViewById(R.id.list_button);
 
-        mapItemsListview.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -117,7 +120,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     protected void displayMapItems() {
         Timber.d(TAG, "displayMapItems()");
         ArrayAdapter<MapItem> arrayAdapter = this.getMapItemAdapter();
-        mapItemsListview.setAdapter(arrayAdapter);
+        mapItemsListView.setAdapter(arrayAdapter);
 
         if (mapView != null) {
             mapView.addMapItemList(this.mapItems);
@@ -167,12 +170,13 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             }
         } else {
             mapViewExpanded = false;
+            mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
             mapView.setToDefaultBounds(false, 0);
             mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH);
             routeInfoSegment.setVisibility(View.VISIBLE);
-            mapItemsListview.setVisibility(View.VISIBLE);
+            mapItemsListViewWithFooter.setVisibility(View.VISIBLE);
         }
-        mapItemsListview.startAnimation(translateAnimation);
+        mapItemsListViewWithFooter.startAnimation(translateAnimation);
     }
 
     private void startTimerTask() {
@@ -196,8 +200,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     @Override
     public void onAnimationEnd(Animation animation) {
         if (mapViewExpanded) {
-            mapItemsListview.setSelection(0);
-            mapItemsListview.setVisibility(View.GONE);
+            mapItemsListView.setSelection(0);
+            mapItemsListViewWithFooter.setVisibility(View.GONE);
             mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
         }
         animating = false;
