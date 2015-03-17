@@ -1,14 +1,13 @@
 package edu.mit.mitmobile2;
 
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +30,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private static final int PREDICTIONS_PERIOD = 15000;
     private static final int PREDICTIONS_TIMER_OFFSET = 10000;
 
+    public static final int NO_TRANSLATION = 0;
+    public static final int ANIMATION_LENGTH = 500;
+
     private ListView mapItemsListview;
     private ArrayList mapItems;
     private MITMapView mapView;
@@ -39,6 +41,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private Button listButton;
 
     private boolean mapViewExpanded = false;
+    private boolean animating = false;
 
     private int originalPosition = -1;
 
@@ -68,7 +71,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (!mapViewExpanded) {
+                if (!mapViewExpanded && !animating) {
                     int[] location = new int[2];
                     routeInfoSegment.getLocationOnScreen(location);
 
@@ -90,15 +93,19 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         transparentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleMap();
+                if (!animating) {
+                    toggleMap();
+                }
             }
         });
 
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listButton.setVisibility(View.INVISIBLE);
-                toggleMap();
+                if (!animating) {
+                    listButton.setVisibility(View.INVISIBLE);
+                    toggleMap();
+                }
             }
         });
     }
@@ -125,45 +132,47 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         return null;
     }
 
-    protected void fillAdapter() {
-    }
-
     private void toggleMap() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         View view = mapView.getMapFragment().getView();
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) view.getLayoutParams();
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
 
-        ResizeAnimation a = new ResizeAnimation(view);
-        a.setDuration(250);
-        a.setAnimationListener(this);
+        TranslateAnimation translateAnimation;
 
-        if (!getMapViewStatus()) {
+        int[] location = new int[2];
+        routeInfoSegment.getLocationOnScreen(location);
+        int currentRouteInfoTop = location[1];
+
+        float bottomY = displayMetrics.heightPixels - currentRouteInfoTop;
+        if (mapViewExpanded) {
+            translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, bottomY, NO_TRANSLATION);
+        } else {
+            translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, NO_TRANSLATION, bottomY);
+        }
+        translateAnimation.setDuration(ANIMATION_LENGTH);
+        translateAnimation.setAnimationListener(this);
+
+        if (!mapViewExpanded) {
             mapViewExpanded = true;
-            getMapItemAdapter().clear();
-            mapItemsListview.setVerticalScrollBarEnabled(false);
-            a.setParams(lp.height, displayMetrics.heightPixels);
-            mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
-
+            mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
             listButton.setVisibility(View.VISIBLE);
-            mapItemsListview.setVisibility(View.GONE);
+
+            if (mapView.getMapFragment().getView().getTranslationY() != 0) {
+                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getMapFragment().getView().getTranslationY(), NO_TRANSLATION);
+                mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
+                //The way translatation animations are setup, this is done to avoid flicker
+                mapView.getMapFragment().getView().setTranslationY(0);
+                mapView.getMapFragment().getView().startAnimation(mapTranslateAnimation);
+            }
         } else {
             mapViewExpanded = false;
-            fillAdapter();
+            mapView.setToDefaultBounds(false, 0);
+            mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH);
             routeInfoSegment.setVisibility(View.VISIBLE);
             mapItemsListview.setVisibility(View.VISIBLE);
-            mapItemsListview.setVerticalScrollBarEnabled(true);
-            a.setParams(lp.height, dpToPx(getResources(), 200));
         }
-        view.startAnimation(a);
-    }
-
-    private boolean getMapViewStatus() {
-        return mapViewExpanded;
-    }
-
-    public int dpToPx(Resources res, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
+        mapItemsListview.startAnimation(translateAnimation);
     }
 
     private void startTimerTask() {
@@ -181,14 +190,17 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     @Override
     public void onAnimationStart(Animation animation) {
-
+        animating = true;
     }
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        if (!mapViewExpanded) {
-            mapView.setToDefaultBounds();
+        if (mapViewExpanded) {
+            mapItemsListview.setSelection(0);
+            mapItemsListview.setVisibility(View.GONE);
+            mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
         }
+        animating = false;
     }
 
     @Override

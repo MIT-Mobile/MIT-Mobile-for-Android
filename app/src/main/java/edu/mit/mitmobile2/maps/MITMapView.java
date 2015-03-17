@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.location.Location;
 import android.util.TypedValue;
 import android.widget.RelativeLayout;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -25,7 +27,9 @@ import java.util.Iterator;
 
 import edu.mit.mitmobile2.R;
 
-public class MITMapView {
+public class MITMapView implements GoogleMap.OnMapLoadedCallback {
+
+    public static final int MAP_BOUNDS_PADDING = 130;
 
     private GoogleMap mMap;
     private MapFragment mapFragment;
@@ -52,6 +56,7 @@ public class MITMapView {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setOnMapLoadedCallback(this);
     }
 
     private ArrayList<MapItem> mapItems;
@@ -139,19 +144,50 @@ public class MITMapView {
             }
         }
         defaultBounds = b.build();
-        setToDefaultBounds();
     }
 
-    public void setToDefaultBounds() {
+    public void setToDefaultBounds(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, dpToPx(resources, 200), 130);
-        mMap.moveCamera(cu);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), MAP_BOUNDS_PADDING);
+        if (animate) {
+            mMap.animateCamera(cameraUpdate, animationLength, null);
+        } else {
+            mMap.moveCamera(cameraUpdate);
+        }
     }
 
-    public void setToFullScreenBounds() {
+    public void adjustCameraToShowInHeader(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, resources.getDisplayMetrics().heightPixels, 130);
-        mMap.animateCamera(cameraUpdate);
+        Projection projection = mMap.getProjection();
+
+        TypedValue typedValue = new TypedValue();
+        int actionBarHeight = 0;
+        if (mContext.getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+            actionBarHeight = (int) TypedValue.complexToDimension(typedValue.data, resources.getDisplayMetrics());
+        }
+
+        int x = resources.getDisplayMetrics().widthPixels / 2;
+        int y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - MAP_BOUNDS_PADDING;
+        Point point = new Point (x, y);
+
+        LatLng offsetCenter = projection.fromScreenLocation(point);
+        float zoom = mMap.getCameraPosition().zoom;
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(offsetCenter, zoom);
+        if (animate) {
+            mMap.animateCamera(cameraUpdate, animationLength, null);
+        } else {
+            mMap.moveCamera(cameraUpdate);
+
+        }
+    }
+
+
+    @Override
+    public void onMapLoaded() {
+        if (defaultBounds != null) {
+            setToDefaultBounds(false, 0);
+            adjustCameraToShowInHeader(false, 0);
+        }
     }
 
     public int dpToPx(Resources res, int dp) {
@@ -196,5 +232,6 @@ public class MITMapView {
     public MapFragment getMapFragment() {
         return mapFragment;
     }
+
 }
 
