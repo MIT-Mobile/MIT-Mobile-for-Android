@@ -5,10 +5,10 @@ import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 import timber.log.Timber;
 
 import android.content.ContentResolver;
@@ -39,7 +39,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     int contentLayoutId = R.layout.content_shuttles;
 
-    private static final int PREDICTIONS_PERIOD = 15000;
+    private static final int PREDICTIONS_PERIOD = 20000;
     private static final int PREDICTIONS_TIMER_OFFSET = 10000;
 
     private int loopCount = 0;
@@ -64,7 +64,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
         loadCursorInBackground();
 
-        mitShuttleAdapter = new MITShuttleAdapter(this, new ArrayList<MITShuttleRoute>());
+        mitShuttleAdapter = new MITShuttleAdapter(this, new ArrayList<MitMiniShuttleRoute>());
         shuttleListView.setAdapter(mitShuttleAdapter);
 
         updateAllRoutes();
@@ -85,24 +85,24 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     }
 
     private void loadCursorInBackground() {
-        new AsyncTask<Void, Void, List<MITShuttleRoute>>() {
+        new AsyncTask<Void, Void, List<MitMiniShuttleRoute>>() {
             @Override
-            protected List<MITShuttleRoute> doInBackground(Void... params) {
+            protected List<MitMiniShuttleRoute> doInBackground(Void... params) {
                 Cursor cursor = getContentResolver().query(MITShuttlesProvider.ALL_ROUTES_URI, Schema.Route.ALL_COLUMNS, null, null, null);
 
-                List<MITShuttleRoute> routes = new ArrayList<>();
-                ShuttlesDatabaseHelper.generateRouteObjects(routes, cursor);
+                List<MitMiniShuttleRoute> routes = new ArrayList<>();
+                ShuttlesDatabaseHelper.generateMiniRouteObjects(routes, cursor);
                 cursor.close();
 
                 if (routes.size() > 0) {
-                    routes = sortShuttleRoutesByStatus(routes);
+                    routes = sortRoutesByStatus(routes);
                 }
 
                 return routes;
             }
 
             @Override
-            protected void onPostExecute(List<MITShuttleRoute> routes) {
+            protected void onPostExecute(List<MitMiniShuttleRoute> routes) {
                 mitShuttleAdapter.updateListItems(routes);
             }
         }.execute();
@@ -177,12 +177,12 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         shuttleListView.addFooterView(footer);
     }
 
-    public List<MITShuttleRoute> sortShuttleRoutesByStatus(List<MITShuttleRoute> routes) {
-        List<MITShuttleRoute> shuttleRouteStatusInService = new ArrayList<>();
-        List<MITShuttleRoute> shuttleRouteStatusNotInservice = new ArrayList<>();
-        List<MITShuttleRoute> shuttleRouteStatusUnknown = new ArrayList<>();
+    public List<MitMiniShuttleRoute> sortRoutesByStatus(List<MitMiniShuttleRoute> routes) {
+        List<MitMiniShuttleRoute> shuttleRouteStatusInService = new ArrayList<>();
+        List<MitMiniShuttleRoute> shuttleRouteStatusNotInservice = new ArrayList<>();
+        List<MitMiniShuttleRoute> shuttleRouteStatusUnknown = new ArrayList<>();
 
-        for (MITShuttleRoute route : routes) {
+        for (MitMiniShuttleRoute route : routes) {
             if (route.isPredictable()) {
                 shuttleRouteStatusInService.add(route);
             } else if (route.isScheduled()) {
@@ -194,13 +194,13 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
         routes.clear();
 
-        for (MITShuttleRoute shuttleRoute : shuttleRouteStatusInService) {
+        for (MitMiniShuttleRoute shuttleRoute : shuttleRouteStatusInService) {
             routes.add(shuttleRoute);
         }
-        for (MITShuttleRoute shuttleRoute : shuttleRouteStatusUnknown) {
+        for (MitMiniShuttleRoute shuttleRoute : shuttleRouteStatusUnknown) {
             routes.add(shuttleRoute);
         }
-        for (MITShuttleRoute shuttleRoute : shuttleRouteStatusNotInservice) {
+        for (MitMiniShuttleRoute shuttleRoute : shuttleRouteStatusNotInservice) {
             routes.add(shuttleRoute);
         }
 
@@ -305,9 +305,9 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Timber.d("Notified!");
         if (!immediatelyReloadPredictions) {
-            List<MITShuttleRoute> routes = new ArrayList<>();
-            ShuttlesDatabaseHelper.generateRouteObjects(routes, data);
-            routes = sortShuttleRoutesByStatus(routes);
+            List<MitMiniShuttleRoute> routes = new ArrayList<>();
+            ShuttlesDatabaseHelper.generateMiniRouteObjects(routes, data);
+            routes = sortRoutesByStatus(routes);
             mitShuttleAdapter.updateListItems(routes);
 
             runOnUiThread(new Runnable() {
