@@ -123,15 +123,15 @@ public class DBAdapter {
     //Delete all the data from the tables
     public void deletePreviousData() {
         flushStaleData();
-        db.execSQL("DELETE FROM " + Schema.Path.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.Location.TABLE_NAME);
     }
 
-    private void flushStaleData() {
+    public void flushStaleData() {
         db.execSQL("DELETE FROM " + Schema.Vehicle.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.Route.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.RouteStops.TABLE_NAME);
         db.execSQL("DELETE FROM " + Schema.Stop.TABLE_NAME);
+        db.execSQL("DELETE FROM " + Schema.Path.TABLE_NAME);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {

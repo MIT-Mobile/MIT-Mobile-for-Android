@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.shuttles;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
@@ -16,7 +17,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -41,6 +41,8 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     private static final int PREDICTIONS_PERIOD = 20000;
     private static final int PREDICTIONS_TIMER_OFFSET = 10000;
+    private static final int PREDICTIONS_TIMEOUT = 60000;
+    private static final int ROUTES_TIMEOUT = 80000;
 
     private int loopCount = 0;
     private boolean immediatelyReloadPredictions = false;
@@ -60,14 +62,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         super.onCreate(savedInstanceState);
 
         ButterKnife.inject(this);
-        initialShuttleView();
-
-        loadCursorInBackground();
 
         mitShuttleAdapter = new MITShuttleAdapter(this, new ArrayList<MitMiniShuttleRoute>());
         shuttleListView.setAdapter(mitShuttleAdapter);
-
-        updateAllRoutes();
+        initialShuttleView();
 
         shuttleRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -79,33 +77,45 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
             }
         });
 
-        shuttleRefreshLayout.setRefreshing(true);
-
         getSupportLoaderManager().initLoader(0, null, this);
     }
 
-    private void loadCursorInBackground() {
-        new AsyncTask<Void, Void, List<MitMiniShuttleRoute>>() {
-            @Override
-            protected List<MitMiniShuttleRoute> doInBackground(Void... params) {
-                Cursor cursor = getContentResolver().query(MITShuttlesProvider.ALL_ROUTES_URI, Schema.Route.ALL_COLUMNS, null, null, null);
+    private void loadCursor() {
+        Cursor cursor = getContentResolver().query(MITShuttlesProvider.ALL_ROUTES_URI, Schema.Route.ALL_COLUMNS, null, null, null);
 
-                List<MitMiniShuttleRoute> routes = new ArrayList<>();
-                ShuttlesDatabaseHelper.generateMiniRouteObjects(routes, cursor);
-                cursor.close();
+        List<MitMiniShuttleRoute> routes = new ArrayList<>();
+        ShuttlesDatabaseHelper.generateMiniRouteObjects(routes, cursor);
+        cursor.close();
 
-                if (routes.size() > 0) {
-                    routes = sortRoutesByStatus(routes);
-                }
+        if (routes.size() > 0) {
+            routes = sortRoutesByStatus(routes);
+        }
 
-                return routes;
+        mitShuttleAdapter.updateListItems(routes);
+    }
+
+    private void checkStatusOfDatabase() {
+        long routesTimestamp = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getLong(Constants.ROUTES_TIMESTAMP, 0);
+        long diff = System.currentTimeMillis() - routesTimestamp;
+        if (diff < ROUTES_TIMEOUT) {
+            long predictionsTimestamp = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getLong(Constants.PREDICTIONS_TIMESTAMP, 0);
+            if ((System.currentTimeMillis() - predictionsTimestamp) < PREDICTIONS_TIMEOUT) {
+                // load route info WITH preference data
+                loadCursor();
+                Timber.d("Predictions OK");
+            } else {
+                ShuttlesDatabaseHelper.clearAllPredictions();
+                loadCursor();
+                updatePredictions();
+                Timber.d("Routes OK, refreshing predictions");
             }
-
-            @Override
-            protected void onPostExecute(List<MitMiniShuttleRoute> routes) {
-                mitShuttleAdapter.updateListItems(routes);
-            }
-        }.execute();
+        } else {
+            mitShuttleAdapter.updateListItems(new ArrayList<MitMiniShuttleRoute>());
+            MitMobileApplication.dbAdapter.flushStaleData();
+            updateAllRoutes();
+            immediatelyReloadPredictions = true;
+            Timber.d("Refreshing routes");
+        }
     }
 
     private void startTimerTask() {
@@ -331,6 +341,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     @Override
     protected void onResume() {
         super.onResume();
+        checkStatusOfDatabase();
         timer = new Timer();
         startTimerTask();
     }
