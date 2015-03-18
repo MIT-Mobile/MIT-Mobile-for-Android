@@ -36,10 +36,13 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private ListView mapItemsListView;
     private ArrayList mapItems;
     private MITMapView mapView;
-    private LinearLayout routeInfoSegment;
+
     private LinearLayout mapItemsListViewWithFooter;
-    private View transparentView;
     private Button listButton;
+    private View transparentView;
+
+    private boolean hasHeader;
+    private LinearLayout routeInfoSegment;
 
     private boolean mapViewExpanded = false;
     private boolean animating = false;
@@ -54,17 +57,11 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         setContentView(R.layout.activity_solo_map);
 
         mapItemsListView = (ListView) findViewById(R.id.map_list_view);
-        View header = View.inflate(this, R.layout.stop_list_header, null);
-        mapItemsListView.addHeaderView(header);
-
         mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
+        listButton = (Button) findViewById(R.id.list_button);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
-
-        routeInfoSegment = (LinearLayout) findViewById(R.id.route_info_segment);
-        transparentView = findViewById(R.id.transparent_map_overlay);
-        listButton = (Button) findViewById(R.id.list_button);
 
         mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -75,10 +72,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (!mapViewExpanded && !animating) {
-                    int[] location = new int[2];
-                    routeInfoSegment.getLocationOnScreen(location);
-
-                    int newPosition = location[1];
+                    int newPosition = calculateScrollOffset();
 
                     if (getMapView() != null && newPosition != 0) {
                         int translation;
@@ -89,15 +83,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                         translation = (originalPosition - newPosition) / 2;
                         mapView.getMapFragment().getView().setTranslationY(-translation);
                     }
-                }
-            }
-        });
-
-        transparentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!animating) {
-                    toggleMap();
                 }
             }
         });
@@ -135,6 +120,22 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         return null;
     }
 
+    protected void addHeaderView(View headerView) {
+        hasHeader = true;
+        mapItemsListView.addHeaderView(headerView);
+        routeInfoSegment = (LinearLayout) headerView.findViewById(R.id.route_info_segment);
+        transparentView = headerView.findViewById(R.id.transparent_map_overlay);
+
+        transparentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!animating) {
+                    toggleMap();
+                }
+            }
+        });
+    }
+
     private void toggleMap() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
@@ -143,11 +144,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         TranslateAnimation translateAnimation;
 
-        int[] location = new int[2];
-        routeInfoSegment.getLocationOnScreen(location);
-        int currentRouteInfoTop = location[1];
+        int currentScrollOffset = calculateScrollOffset();
 
-        float bottomY = displayMetrics.heightPixels - currentRouteInfoTop;
+        float bottomY = displayMetrics.heightPixels - currentScrollOffset;
         if (mapViewExpanded) {
             translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, bottomY, NO_TRANSLATION);
         } else {
@@ -173,10 +172,17 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
             mapView.setToDefaultBounds(false, 0);
             mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH);
-            routeInfoSegment.setVisibility(View.VISIBLE);
             mapItemsListViewWithFooter.setVisibility(View.VISIBLE);
         }
         mapItemsListViewWithFooter.startAnimation(translateAnimation);
+    }
+
+    private int calculateScrollOffset() {
+        int[] location = new int[2];
+        if (hasHeader) {
+            routeInfoSegment.getLocationOnScreen(location);
+        }
+        return location[1];
     }
 
     private void startTimerTask() {
