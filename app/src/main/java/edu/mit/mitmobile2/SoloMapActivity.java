@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
@@ -43,6 +44,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     private boolean hasHeader;
     private LinearLayout routeInfoSegment;
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     private boolean mapViewExpanded = false;
     private boolean animating = false;
@@ -59,6 +61,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         mapItemsListView = (ListView) findViewById(R.id.map_list_view);
         mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
         listButton = (Button) findViewById(R.id.list_button);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.shuttle_route_refresh_layout);
+
+        swipeRefreshLayout.setEnabled(false);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
@@ -131,6 +136,15 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                 if (!animating) {
                     toggleMap();
                 }
+            }
+        });
+
+        swipeRefreshLayout.setEnabled(true);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                updateData();
             }
         });
     }
