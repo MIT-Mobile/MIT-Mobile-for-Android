@@ -4,12 +4,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.MapItem;
 
@@ -33,6 +35,8 @@ public class MITShuttleVehicle extends MapItem {
     private String routeId;
 
     public MITShuttleVehicle() {
+        isDynamic = true;
+        setMarkerText(null);
     }
 
     public String getId() {
@@ -103,6 +107,11 @@ public class MITShuttleVehicle extends MapItem {
     }
 
     @Override
+    public boolean isDynamic() {
+        return true;
+    }
+
+    @Override
     protected String getTableName() {
         return Schema.Vehicle.TABLE_NAME;
     }
@@ -148,6 +157,9 @@ public class MITShuttleVehicle extends MapItem {
     public MarkerOptions getMarkerOptions() {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(this.lat, this.lon));
+        markerOptions.title(null);
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_shuttles));
+        markerOptions.flat(true);
         return markerOptions;
     }
 }

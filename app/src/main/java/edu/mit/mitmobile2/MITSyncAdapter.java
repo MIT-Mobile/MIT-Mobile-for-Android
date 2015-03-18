@@ -37,10 +37,6 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         map.put(MITShuttlesProvider.VEHICLES_URI.toString(), Schema.Vehicle.VEHICLE_ID);
     }
 
-    public MITSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
-        super(context, autoInitialize, allowParallelSyncs);
-    }
-
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Timber.d("Sync Called");
@@ -85,6 +81,9 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             Timber.d("Retrieved info from bundle:" + module + ", " + path + ", " + uri);
 
             requestDataAndStoreInDb(module, path, uri, pathParams, queryparams);
+
+            PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getContext()).edit().putLong(Constants.ROUTES_TIMESTAMP, System.currentTimeMillis()).apply();
+            Timber.d("Saved Routes Timestamp");
 
             if (extras.containsKey("return")) {
                 getContext().getContentResolver().notifyChange(Uri.parse(extras.getString("return")), null);
@@ -169,6 +168,8 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             requestDataAndStoreInDb(module, path, uri, null, queryparams);
         }
 
+        PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getContext()).edit().putLong(Constants.PREDICTIONS_TIMESTAMP, System.currentTimeMillis()).apply();
+        Timber.d("Saved Predictions Timestamp");
         getContext().getContentResolver().notifyChange(MITShuttlesProvider.ALL_ROUTES_URI, null);
     }
 }

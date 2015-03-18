@@ -204,4 +204,11 @@ public class ShuttlesDatabaseHelper {
 
         dbAdapter.batchPersist(updatedObjects, Schema.Vehicle.TABLE_NAME);
     }
+
+    public static void clearAllPredictions() {
+        ContentValues values = new ContentValues();
+        values.put(Schema.Stop.PREDICTIONS, "[]");
+        dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
+                null, null);
+    }
 }

@@ -17,6 +17,7 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
 
     public int mapItemType;
     private String markerText;
+    protected boolean isDynamic = false;
 
     public int getMapItemType() {
         return mapItemType;
@@ -43,7 +44,14 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
     } //polyline
     public PolygonOptions getPolygonOptions() {
         return null;
-    }; //polygan
+    } //polygon
 
 
+    public boolean isDynamic() {
+        return isDynamic;
+    }
+
+    public void setDynamic(boolean isDynamic) {
+        this.isDynamic = isDynamic;
+    }
 }

@@ -98,18 +98,17 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         });
     }
 
-    protected void setMapItems(ArrayList mapItems) {
-        this.mapItems = mapItems;
+    protected void updateMapItems(ArrayList mapItems) {
+        if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
+            mapView.clearDynamic();
+        }
+        mapView.addMapItemList(mapItems, false);
     }
 
     protected void displayMapItems() {
         Timber.d(TAG, "displayMapItems()");
         ArrayAdapter<MapItem> arrayAdapter = this.getMapItemAdapter();
         mapItemsListView.setAdapter(arrayAdapter);
-
-        if (mapView != null) {
-            mapView.addMapItemList(this.mapItems);
-        }
     }
 
     protected GoogleMap getMapView() {
