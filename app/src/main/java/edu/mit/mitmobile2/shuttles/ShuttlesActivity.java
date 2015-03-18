@@ -46,6 +46,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     private int loopCount = 0;
     private boolean immediatelyReloadPredictions = false;
+    private boolean blockServerCalls = false;
 
     private MITShuttleAdapter mitShuttleAdapter;
 
@@ -110,8 +111,8 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 Timber.d("Routes OK, refreshing predictions");
             }
         } else {
-            mitShuttleAdapter.updateListItems(new ArrayList<MitMiniShuttleRoute>());
             MitMobileApplication.dbAdapter.flushStaleData();
+            loadCursor();
             updateAllRoutes();
             immediatelyReloadPredictions = true;
             Timber.d("Refreshing routes");
@@ -127,6 +128,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 }
 
                 if (timer == null) {
+                    return;
+                }
+
+                if (blockServerCalls) {
                     return;
                 }
 
@@ -164,6 +169,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         Timber.d("Requesting Predictions");
 
         ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+        blockServerCalls = true;
     }
 
     private void updateAllRoutes() {
@@ -178,6 +184,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
         // Request All Routes info
         ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+        blockServerCalls = true;
     }
 
     private void initialShuttleView() {
@@ -307,13 +314,14 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        MitCursorLoader cursorLoader = new MitCursorLoader(this, MITShuttlesProvider.ALL_ROUTES_URI);
-        return cursorLoader;
+        return new MitCursorLoader(this, MITShuttlesProvider.ALL_ROUTES_URI);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Timber.d("Notified!");
+        blockServerCalls = false;
+
         if (!immediatelyReloadPredictions) {
             List<MitMiniShuttleRoute> routes = new ArrayList<>();
             ShuttlesDatabaseHelper.generateMiniRouteObjects(routes, data);
