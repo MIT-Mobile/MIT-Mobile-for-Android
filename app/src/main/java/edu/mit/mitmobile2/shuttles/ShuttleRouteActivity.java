@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class ShuttleRouteActivity extends SoloMapActivity {
     private MITShuttleRoute route = new MITShuttleRoute();
     private String routeID;
     private String uriString;
-    private List<Marker> vehicles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +57,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
 
-        setMapItems((ArrayList) route.getStops());
+        updateMapItems((ArrayList) route.getStops());
         displayMapItems();
 
         routeDescriptionTextView.setText(route.getDescription());
@@ -74,7 +72,6 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         updateData();
         getSupportLoaderManager().initLoader(1, null, this);
 
-        // TODO: Build this into MapView instead
         for (List<List<Double>> outerList : route.getPath().getSegments()) {
             List<LatLng> points = new ArrayList<>();
             PolylineOptions options = new PolylineOptions();
@@ -109,13 +106,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
 
-        for (Marker vehicleMarker : vehicles) {
-            vehicleMarker.remove();
-        }
-
-        for (MITShuttleVehicle vehicle : route.getVehicles()) {
-            vehicles.add(getMapView().addMarker(vehicle.getMarkerOptions()));
-        }
+        updateMapItems((ArrayList) route.getVehicles());
     }
 
     @Override

@@ -56,11 +56,8 @@ public class MITShuttlePath extends MapItem {
     }
 
 
-    //TODO: Need to parcel/unparcel the bbox and segments
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeList(this.bbox);
-//        dest.writeTypedList(this.segments);
     }
 
     private MITShuttlePath(Parcel p) {

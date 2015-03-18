@@ -214,7 +214,7 @@ public class  MapsActivity extends MITModuleActivity {
         mapListView.setAdapter(arrayAdapter);
 
         if (mapView != null) {
-            mapView.addMapItemList(this.mapItems);
+            mapView.addMapItemList(this.mapItems, true);
         }
 
         mapListView.setOnItemClickListener(this.getOnItemClickListener());
