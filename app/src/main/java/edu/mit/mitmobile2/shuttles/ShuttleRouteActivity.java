@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -47,6 +48,10 @@ public class ShuttleRouteActivity extends SoloMapActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        View headerView = View.inflate(this, R.layout.stop_list_header, null);
+        addHeaderView(headerView);
+
         ButterKnife.inject(this);
 
         //TODO: Save routeId in bundle for rotation
