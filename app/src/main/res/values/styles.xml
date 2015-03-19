@@ -30,7 +30,7 @@
     <style name="MITShuttleRoutesView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/shuttle_listview_divider_height</item>
-        <item name="android:background">@color/result_minor_text</item>
+        <item name="android:background">@color/divider_grey</item>
     </style>
 
     <style name="MITShuttleRoutesStopsContent">
