@@ -16,18 +16,26 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/map_list_view"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/shuttle_route_refresh_layout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:divider="@null"
-            android:dividerHeight="0dp"/>
+            android:layout_height="fill_parent">
+
+            <ListView
+                android:id="@+id/map_list_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="0dp"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/map_list_view"
             android:background="@android:color/white"/>
+
 
     </LinearLayout>
 

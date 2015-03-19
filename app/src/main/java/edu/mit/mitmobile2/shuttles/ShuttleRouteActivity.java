@@ -27,7 +27,6 @@ import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleVehicle;
 import timber.log.Timber;
 
 public class ShuttleRouteActivity extends SoloMapActivity {
@@ -112,6 +111,15 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         adapter.notifyDataSetChanged();
 
         updateMapItems((ArrayList) route.getVehicles());
+        
+        if (swipeRefreshLayout.isRefreshing()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
     }
 
     @Override
