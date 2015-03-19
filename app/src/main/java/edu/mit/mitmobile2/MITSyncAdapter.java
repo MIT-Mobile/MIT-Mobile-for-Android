@@ -3,18 +3,22 @@ package edu.mit.mitmobile2;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -116,36 +120,65 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             values[i] = contentValues;
         }
 
-        String selection = map.get(uri) + "=\'" + values[0].get(map.get(uri)) + "\'";
-
         if (uri.contains("predictions")) {
             //special case for predictions
+            List<ContentProviderOperation> operations = new ArrayList<>();
+
             for (ContentValues v : values) {
-                v.remove(Schema.Route.ROUTE_ID);
-                v.remove(Schema.Stop.STOP_ID);
-                getContext().getContentResolver().update(Uri.parse(uri), v, selection, null);
+                if (v.get(Schema.Route.PREDICTABLE) == true) {
+                    String selection = map.get(uri) + "=\'" + v.get(map.get(uri)) + "\'";
+
+                    ContentProviderOperation operation = ContentProviderOperation.newUpdate(Uri.parse(uri))
+                            .withValue(Schema.Stop.PREDICTIONS, v.getAsString(Schema.Stop.PREDICTIONS))
+                            .withSelection(selection, null)
+                            .build();
+
+                    operations.add(operation);
+                }
+            }
+
+            try {
+                getContext().getContentResolver().applyBatch(MitMobileApplication.AUTHORITY, (ArrayList<ContentProviderOperation>) operations);
+            } catch (RemoteException | OperationApplicationException e) {
+                Timber.e(e, "Batch Update");
             }
         } else {
             /**
              * For routes/stops: If ONE of the IDs is in the DB, ALL of them are. So only check 1 to save time
              */
+            String selection = map.get(uri) + "=\'" + values[0].get(map.get(uri)) + "\'";
+
             Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
             boolean containsData = cursor.moveToFirst();
             cursor.close();
 
             if (containsData) {
                 Timber.d("Updating values");
-                updateAllValues(uri, values);
+                batchUpdateAllValues(uri, values);
             } else {
                 getContext().getContentResolver().bulkInsert(Uri.parse(uri), values);
             }
         }
     }
 
-    private void updateAllValues(String uri, ContentValues[] values) {
+    private void batchUpdateAllValues(String uri, ContentValues[] values) {
+        List<ContentProviderOperation> operations = new ArrayList<>();
+
         for (ContentValues v : values) {
             String selection = map.get(uri) + "=\'" + v.get(map.get(uri)) + "\'";
-            getContext().getContentResolver().update(Uri.parse(uri), v, selection, null);
+
+            ContentProviderOperation operation = ContentProviderOperation.newUpdate(Uri.parse(uri))
+                    .withValues(v)
+                    .withSelection(selection, null)
+                    .build();
+
+            operations.add(operation);
+        }
+
+        try {
+            getContext().getContentResolver().applyBatch(MitMobileApplication.AUTHORITY, (ArrayList<ContentProviderOperation>) operations);
+        } catch (RemoteException | OperationApplicationException e) {
+            Timber.e(e, "Batch Update");
         }
     }
 

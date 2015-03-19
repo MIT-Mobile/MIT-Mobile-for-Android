@@ -1,12 +1,17 @@
 package edu.mit.mitmobile2.shuttles;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+
+import java.util.ArrayList;
 
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.Schema;
@@ -126,8 +131,8 @@ public class MITShuttlesProvider extends ContentProvider {
 
         int uriType = sURIMatcher.match(uri);
         Timber.d("Uri= " + uriType);
-        long newID = 0;
 
+        long newID;
         switch (uriType) {
             case ROUTES:
                 for (ContentValues v : values) {
@@ -149,7 +154,6 @@ public class MITShuttlesProvider extends ContentProvider {
                 break;
 
         }
-        Timber.d("DB id= " + newID);
         return 0;
     }
 
@@ -163,22 +167,37 @@ public class MITShuttlesProvider extends ContentProvider {
         Timber.d("Update");
 
         int uriType = sURIMatcher.match(uri);
+        Timber.d("Uri= " + uriType);
+
+        int rows = 0;
+
         switch (uriType) {
             case ROUTES:
-                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
+                rows = MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
                 break;
             case STOPS:
-                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
+                rows = MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
                 break;
             case PREDICTIONS:
-                MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, selection, null);
+                rows = MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, selection, null);
                 break;
             case ROUTE_ID:
-                MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, selection, null);
+                rows = MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, selection, null);
                 break;
         }
 
-        return 0;
+        return rows;
+    }
+
+    @Override
+    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException {
+        Timber.d("Batch Update");
+
+        for (ContentProviderOperation operation : operations) {
+            operation.apply(this, null, 1);
+        }
+
+        return new ContentProviderResult[operations.size()];
     }
 
     public String buildQueryString(String selection) {
