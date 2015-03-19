@@ -121,6 +121,39 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        Timber.d("Bulk Insert");
+
+        int uriType = sURIMatcher.match(uri);
+        Timber.d("Uri= " + uriType);
+        long newID = 0;
+
+        switch (uriType) {
+            case ROUTES:
+                for (ContentValues v : values) {
+                    newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, v, SQLiteDatabase.CONFLICT_FAIL);
+                    Timber.d("Bulk Insert - ID = " + newID);
+                    if (newID <= 0) {
+                        throw new SQLException("Error");
+                    }
+                }
+                break;
+            case STOPS:
+                for (ContentValues v : values) {
+                    newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, v, SQLiteDatabase.CONFLICT_FAIL);
+                    Timber.d("Bulk Insert - ID = " + newID);
+                    if (newID <= 0) {
+                        throw new SQLException("Error");
+                    }
+                }
+                break;
+
+        }
+        Timber.d("DB id= " + newID);
+        return 0;
+    }
+
+    @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;
     }

@@ -99,13 +99,53 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         if (object instanceof List) {
             Timber.d("Is List");
-            List<DatabaseObject> objects = (List<DatabaseObject>) object;
-            for (DatabaseObject obj : objects) {
-                insertObject(uri, obj);
-            }
+            //noinspection unchecked
+            bulkInsertObjects(uri, (List<DatabaseObject>) object);
         } else {
             Timber.d("Is single object");
             insertObject(uri, (DatabaseObject) object);
+        }
+    }
+
+    private void bulkInsertObjects(String uri, List<DatabaseObject> objects) {
+        ContentValues[] values = new ContentValues[objects.size()];
+
+        for (int i = 0; i < objects.size(); i++) {
+            ContentValues contentValues = new ContentValues();
+            objects.get(i).fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
+            values[i] = contentValues;
+        }
+
+        String selection = map.get(uri) + "=\'" + values[0].get(map.get(uri)) + "\'";
+
+        if (uri.contains("predictions")) {
+            //special case for predictions
+            for (ContentValues v : values) {
+                v.remove(Schema.Route.ROUTE_ID);
+                v.remove(Schema.Stop.STOP_ID);
+                getContext().getContentResolver().update(Uri.parse(uri), v, selection, null);
+            }
+        } else {
+            /**
+             * For routes/stops: If ONE of the IDs is in the DB, ALL of them are. So only check 1 to save time
+             */
+            Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
+            boolean containsData = cursor.moveToFirst();
+            cursor.close();
+
+            if (containsData) {
+                Timber.d("Updating values");
+                updateAllValues(uri, values);
+            } else {
+                getContext().getContentResolver().bulkInsert(Uri.parse(uri), values);
+            }
+        }
+    }
+
+    private void updateAllValues(String uri, ContentValues[] values) {
+        for (ContentValues v : values) {
+            String selection = map.get(uri) + "=\'" + v.get(map.get(uri)) + "\'";
+            getContext().getContentResolver().update(Uri.parse(uri), v, selection, null);
         }
     }
 
