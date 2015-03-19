@@ -33,6 +33,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:2.4.1'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.getbase:floatingactionbutton:1.7.0'
     //compile ('org.restlet.android:org.restlet:2.3.1')
     //compile ('org.restlet.android:org.restlet.ext.jackson:2.3.1')
 }

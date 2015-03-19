@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -98,6 +99,13 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             }
         });
 
+        mapItemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listItemClicked(position);
+            }
+        });
+
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +119,10 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             listButton.setVisibility(View.INVISIBLE);
             toggleMap();
         }
+    }
+
+    protected void listItemClicked(int position) {
+
     }
 
     protected void updateMapItems(ArrayList mapItems) {

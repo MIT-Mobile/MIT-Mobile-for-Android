@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.shuttles;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -91,6 +92,14 @@ public class ShuttleRouteActivity extends SoloMapActivity {
             options.width(8f);
             getMapView().addPolyline(options);
         }
+    }
+
+    @Override
+    protected void listItemClicked(int position) {
+        MITShuttleStopWrapper stop = adapter.getItem(position);
+        Intent intent = new Intent(this, ShuttleStopActivity.class);
+        intent.putExtra(Constants.STOP_ID_KEY, stop.getId());
+        startActivity(intent);
     }
 
     @Override
