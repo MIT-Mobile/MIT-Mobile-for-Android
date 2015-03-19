@@ -49,5 +49,10 @@
     <color name="mit_app_color_dark">#ff2e2e2e</color>
     <color name="mit_tintColor">#a31f34</color>
     <color name="silver">#C8C8C8</color>
-
+    
+    <color name="mit_red">#A31F34</color>
+    <color name="mit_red_dark">#831725</color>
+    <color name="light_grey">#F8F8F8</color>
+    <color name="divider_grey">#1E000000</color>
+    <color name="mit_grey">#8A8B8C</color>
 </resources>
