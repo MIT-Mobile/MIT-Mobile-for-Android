@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/sbc_layout_view">
+
+    <TextView
+        android:id="@+id/predicion_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textColor="@color/contents_text"
+        />
+
+    <ImageView
+        android:layout_width="@dimen/shuttle_routes_image_size"
+        android:layout_height="@dimen/shuttle_routes_image_size"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/home_shuttles"
+        />
+</RelativeLayout>
