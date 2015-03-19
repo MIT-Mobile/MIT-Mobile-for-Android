@@ -1,15 +1,20 @@
 package edu.mit.mitmobile2;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -39,7 +44,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private MITMapView mapView;
 
     private LinearLayout mapItemsListViewWithFooter;
-    private Button listButton;
+    protected Button listButton;
     private View transparentView;
     private FrameLayout predictionFragment;
 
@@ -47,7 +52,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private LinearLayout routeInfoSegment;
     protected SwipeRefreshLayout swipeRefreshLayout;
 
-    private boolean mapViewExpanded = false;
+    protected boolean mapViewExpanded = false;
     private boolean animating = false;
 
     private int originalPosition = -1;
@@ -74,6 +79,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         } else {
             mapItemsListView.setVisibility(View.GONE);
         }
+        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
@@ -102,15 +109,30 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             }
         });
 
+        mapItemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listItemClicked(position);
+            }
+        });
+
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!animating) {
-                    listButton.setVisibility(View.INVISIBLE);
-                    toggleMap();
-                }
+                showListView();
             }
         });
+    }
+
+    protected void showListView() {
+        if (!animating) {
+            listButton.setVisibility(View.INVISIBLE);
+            toggleMap();
+        }
+    }
+
+    protected void listItemClicked(int position) {
+
     }
 
     protected void updateMapItems(ArrayList mapItems) {
@@ -258,6 +280,30 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                                    // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
