@@ -26,6 +26,7 @@ public class MITShuttlesProvider extends ContentProvider {
     private static final int CHECK_ROUTES = 50;
     private static final int CHECK_STOPS = 60;
     private static final int PREDICTIONS = 70;
+    private static final int LOCATION = 80;
 
     private static final String AUTHORITY = "edu.mit.mitmobile2.provider";
 
@@ -39,6 +40,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final Uri CHECK_STOPS_URI = Uri.parse(STOPS_URI.toString() + "/check");
     public static final Uri PREDICTIONS_URI = Uri.parse(CONTENT_URI.toString() + "/predictions");
     public static final Uri VEHICLES_URI = Uri.parse(CONTENT_URI.toString() + "/vehicles");
+    public static final Uri LOCATION_URI = Uri.parse(CONTENT_URI.toString() + "/location");
 
     private static final String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
             "FROM routes " +
@@ -56,6 +58,7 @@ public class MITShuttlesProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/routes/*", ROUTE_ID);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/stops/*", STOPS_ID);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/predictions", PREDICTIONS);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/location", LOCATION);
     }
 
     @Override
@@ -119,7 +122,12 @@ public class MITShuttlesProvider extends ContentProvider {
                     throw new SQLException("Error");
                 }
                 break;
-
+            case LOCATION:
+                newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Location.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                if (newID <= 0) {
+                    throw new SQLException("Error");
+                }
+                break;
         }
         Timber.d("DB id= " + newID);
         return null;
