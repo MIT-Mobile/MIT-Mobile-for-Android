@@ -37,7 +37,7 @@
             android:id="@+id/shuttle_route_first_stop"
             android:layout_width="match_parent"
             android:layout_height="@dimen/shuttle_home_cell_height"
-            android:background="@color/sbc_header_view">
+            android:background="@drawable/shuttle_route_selector">
             <TextView
                 android:id="@+id/first_stop_textview"
                 style="@style/MITShuttleRoutesStopsContent"
@@ -57,7 +57,7 @@
             android:id="@+id/shuttle_route_second_stop"
             android:layout_width="match_parent"
             android:layout_height="@dimen/shuttle_home_cell_height"
-            android:background="@color/sbc_header_view">
+            android:background="@drawable/shuttle_route_selector">
             <TextView
                 android:id="@+id/second_stop_textview"
                 style="@style/MITShuttleRoutesStopsContent"
