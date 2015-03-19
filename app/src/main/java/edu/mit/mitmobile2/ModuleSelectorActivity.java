@@ -35,7 +35,7 @@ public class ModuleSelectorActivity extends Activity {
     private String[] params;
     private NavItem navItem;
     private Context mContext;
-    public static List<NavItem> navigationTitles = new ArrayList<NavItem>();
+    public static List<NavItem> navigationTitles = new ArrayList<>();
     public static Map<String, NavItem> navMap = null;
     public static Map<String, String> moduleMap = null;
     private NavItem mNavItem;
@@ -56,15 +56,6 @@ public class ModuleSelectorActivity extends Activity {
 
             ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, Bundle.EMPTY, MitMobileApplication.INTERVAL_SECS);
         }
-        /*bundle.putString("module", Constants.SHUTTLES);
-        bundle.putString("path", Constants.Shuttles.STOP_INFO_PATH);
-        bundle.putString("uri", MITShuttlesProvider.CONTENT_URI.toString() + "/stops");
-
-        HashMap<String, String> pathParams = new HashMap<>();
-        pathParams.put("route", "tech");
-        pathParams.put("stop", "kendsq_d");
-        String s = pathParams.toString();
-        bundle.putString("paths", s);*/
     }
 
     @Override
@@ -147,8 +138,8 @@ public class ModuleSelectorActivity extends Activity {
         Resources resources = mContext.getResources();
         JSONObject navigation;
         if (ModuleSelectorActivity.navMap == null) {
-            ModuleSelectorActivity.navMap = new HashMap<String, NavItem>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
-            ModuleSelectorActivity.moduleMap = new HashMap<String, String>(); // this maps module name to long_name for resolving intents
+            ModuleSelectorActivity.navMap = new HashMap<>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
+            ModuleSelectorActivity.moduleMap = new HashMap<>(); // this maps module name to long_name for resolving intents
 
             String json = null;
 
@@ -167,7 +158,7 @@ public class ModuleSelectorActivity extends Activity {
                 navigation = new JSONObject(json);
 
                 Iterator n = navigation.keys();
-                List<String> keysList = new ArrayList<String>();
+                List<String> keysList = new ArrayList<>();
                 while (n.hasNext()) {
                     try {
                         String key = (String) n.next();
