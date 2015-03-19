@@ -41,6 +41,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private LinearLayout mapItemsListViewWithFooter;
     private Button listButton;
     private View transparentView;
+    private FrameLayout predictionFragment;
 
     private boolean hasHeader;
     private LinearLayout routeInfoSegment;
@@ -53,10 +54,13 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     private static Timer timer;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_map);
+
+        predictionFragment = (FrameLayout) findViewById(R.id.prediction_fragment);
 
         mapItemsListView = (ListView) findViewById(R.id.map_list_view);
         mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
@@ -64,6 +68,12 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.shuttle_route_refresh_layout);
 
         swipeRefreshLayout.setEnabled(false);
+
+        if (getIntent().getExtras() != null) {
+            predictionFragment.setVisibility(View.GONE);
+        } else {
+            mapItemsListView.setVisibility(View.GONE);
+        }
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
@@ -147,6 +157,10 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                 updateData();
             }
         });
+    }
+
+    public void addTransparentView(View view) {
+        transparentView = view;
     }
 
     private void toggleMap() {

@@ -49,6 +49,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     private boolean blockServerCalls = false;
 
     private MITShuttleAdapter mitShuttleAdapter;
+    private ArrayList<MitMiniShuttleRoute> mitShuttleRoutes = new ArrayList<>();
 
     @InjectView(R.id.shuttle_refresh_layout)
     SwipeRefreshLayout shuttleRefreshLayout;
@@ -64,7 +65,12 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
         ButterKnife.inject(this);
 
-        mitShuttleAdapter = new MITShuttleAdapter(this, new ArrayList<MitMiniShuttleRoute>());
+        if (savedInstanceState != null) {
+            mitShuttleRoutes = savedInstanceState.getParcelableArrayList("routes");
+            mitShuttleAdapter = new MITShuttleAdapter(this, mitShuttleRoutes);
+        } else {
+            mitShuttleAdapter = new MITShuttleAdapter(this, new ArrayList<MitMiniShuttleRoute>());
+        }
         shuttleListView.setAdapter(mitShuttleAdapter);
         initialShuttleView();
 
@@ -221,6 +227,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
             routes.add(shuttleRoute);
         }
 
+        for (MitMiniShuttleRoute shuttleRoute : routes) {
+            mitShuttleRoutes.add(shuttleRoute);
+        }
+
         return routes;
     }
 
@@ -360,5 +370,11 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
         timer.purge();
         timer = null;
         super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("routes", mitShuttleRoutes);
     }
 }

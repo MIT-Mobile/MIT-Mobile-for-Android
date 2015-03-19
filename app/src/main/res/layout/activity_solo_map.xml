@@ -16,6 +16,11 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
+        <FrameLayout
+            android:id="@+id/prediction_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/shuttle_route_refresh_layout"
             android:layout_width="fill_parent"
