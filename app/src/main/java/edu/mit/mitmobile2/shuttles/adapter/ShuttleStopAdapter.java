@@ -17,9 +17,9 @@ import edu.mit.mitmobile2.R;
 public class ShuttleStopAdapter extends ArrayAdapter<String> {
 
     private final static int STOP_PREDICTION_VIEW = 0;
-    private final static int INTERSETING_ROUTES_VIEW_HEADER = 1;
-    private final static int INTERSETING_ROUTES_VIEW = 2;
-    private final static int INTERSETING_ROUTES_VIEW_FOOTER = 3;
+    private final static int INTERSECTING_ROUTES_VIEW_HEADER = 1;
+    private final static int INTERSECTING_ROUTES_VIEW = 2;
+    private final static int INTERSECTING_ROUTES_VIEW_FOOTER = 3;
 
     private ArrayList<String> stop = new ArrayList<>();
     private LayoutInflater listContainer;
@@ -37,11 +37,11 @@ public class ShuttleStopAdapter extends ArrayAdapter<String> {
         if (position < prediciontsSize) {
             return STOP_PREDICTION_VIEW;
         } else if (position == prediciontsSize) {
-            return INTERSETING_ROUTES_VIEW_HEADER;
+            return INTERSECTING_ROUTES_VIEW_HEADER;
         } else if (position < stop.size() - 1 && position > prediciontsSize) {
-            return INTERSETING_ROUTES_VIEW;
+            return INTERSECTING_ROUTES_VIEW;
         } else {
-            return INTERSETING_ROUTES_VIEW_FOOTER;
+            return INTERSECTING_ROUTES_VIEW_FOOTER;
         }
     }
 
@@ -56,11 +56,11 @@ public class ShuttleStopAdapter extends ArrayAdapter<String> {
             viewHolder.predictionTextView.setText(stop.get(position));
 
             return view;
-        } else if (getItemViewType(position) == INTERSETING_ROUTES_VIEW_HEADER) {
+        } else if (getItemViewType(position) == INTERSECTING_ROUTES_VIEW_HEADER) {
             view = listContainer.inflate(R.layout.intersecting_routes_list_header, parent, false);
 
             return view;
-        } else if (getItemViewType(position) == INTERSETING_ROUTES_VIEW) {
+        } else if (getItemViewType(position) == INTERSECTING_ROUTES_VIEW) {
             BottomViewHolder viewHolder;
             view = listContainer.inflate(R.layout.intersecting_routes_list_item, parent, false);
             viewHolder = new BottomViewHolder(view);
