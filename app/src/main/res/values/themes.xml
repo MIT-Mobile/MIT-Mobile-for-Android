@@ -12,8 +12,8 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
 
         <!-- Set AppCompat’s color theming attrs -->
-        <item name="colorPrimary">@color/mit_app_color</item>
-        <item name="colorPrimaryDark">@color/mit_app_color_dark</item>
+        <item name="colorPrimary">@color/mit_red</item>
+        <item name="colorPrimaryDark">@color/mit_red_dark</item>
 
         <!-- The rest of your attributes -->
         <item name="colorAccent">@color/mit_app_color</item>
