@@ -11,6 +11,8 @@
             android:id="@+id/shuttle_listview"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:divider="@color/result_minor_text"
+            android:dividerHeight="@dimen/shuttle_listview_divider_height"
             />
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

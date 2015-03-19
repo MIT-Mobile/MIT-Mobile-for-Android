@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,9 +62,14 @@ public class MITShuttleAdapter extends BaseAdapter {
         }
 
         if (routes.get(position).isPredictable()) {
-            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.home_shuttles);
+            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.shuttle_big_active);
+            viewHolder.shuttleStopView.setVisibility(View.VISIBLE);
+        } else if (routes.get(position).isScheduled()){
+            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.shuttle_big_unknown);
+            viewHolder.shuttleStopView.setVisibility(View.GONE);
         } else {
-            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.menu_shuttles);
+            viewHolder.shuttleRouteImageView.setImageResource(R.drawable.shuttle_big_inactive);
+            viewHolder.shuttleStopView.setVisibility(View.GONE);
         }
 
         viewHolder.shuttleRouteTextview.setText(routes.get(position).getTitle());
@@ -86,7 +92,7 @@ public class MITShuttleAdapter extends BaseAdapter {
                     viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
-                viewHolder.firstStopMinuteTextView.setText("––");
+                viewHolder.firstStopMinuteTextView.setText("–");
                 viewHolder.firstStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
             }
 
@@ -101,7 +107,7 @@ public class MITShuttleAdapter extends BaseAdapter {
                     viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
                 }
             } else {
-                viewHolder.secondStopMinuteTextView.setText("––");
+                viewHolder.secondStopMinuteTextView.setText("–");
                 viewHolder.secondStopMinuteTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
             }
         } else {
@@ -172,6 +178,9 @@ public class MITShuttleAdapter extends BaseAdapter {
 
         @InjectView(R.id.shuttle_route_second_stop)
         RelativeLayout shuttleSecondStop;
+
+        @InjectView(R.id.shuttle_stop_view)
+        LinearLayout shuttleStopView;
 
         ViewHolder(View view) {
             ButterKnife.inject(this, view);

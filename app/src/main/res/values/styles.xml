@@ -21,35 +21,31 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:paddingBottom">@dimen/shuttle_routes_content_padding</item>
-        <item name="android:paddingTop">@dimen/shuttle_routes_content_padding</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/shuttle_routes_content_size</item>
+        <item name="android:textSize">@dimen/shuttle_home_content_size</item>
         <item name="android:textColor">@color/contents_text</item>
+        <item name="android:paddingLeft">@dimen/shuttle_home_route_padding</item>
     </style>
     
     <style name="MITShuttleRoutesView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/shuttle_routes_view_height</item>
-        <item name="android:background">@color/silver</item>
+        <item name="android:layout_height">@dimen/shuttle_listview_divider_height</item>
+        <item name="android:background">@color/result_minor_text</item>
     </style>
 
     <style name="MITShuttleRoutesStopsContent">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:paddingBottom">@dimen/shuttle_routes_content_padding</item>
-        <item name="android:paddingTop">@dimen/shuttle_routes_content_padding</item>
         <item name="android:textColor">@color/contents_text</item>
-        <item name="android:textSize">@dimen/shuttle_routes_content_size</item>
+        <item name="android:textSize">@dimen/shuttle_home_content_size</item>
     </style>
 
     <style name="MITShuttleRoutesImage">
-        <item name="android:layout_width">@dimen/shuttle_routes_image_size</item>
-        <item name="android:layout_height">@dimen/shuttle_routes_image_size</item>
-        <item name="android:paddingBottom">@dimen/shuttle_routes_content_padding</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:paddingTop">@dimen/shuttle_routes_content_padding</item>
+        <item name="android:paddingLeft">@dimen/shuttle_home_image_padding</item>
     </style>
 
     <style name="MITShuttleRoutesMinutesContent">
@@ -58,10 +54,8 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">@dimen/shuttle_routes_stops_content_margin</item>
-        <item name="android:paddingBottom">@dimen/shuttle_routes_content_padding</item>
-        <item name="android:paddingTop">@dimen/shuttle_routes_content_padding</item>
         <item name="android:textColor">@color/contents_text</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/shuttle_routes_content_size</item>
+        <item name="android:textSize">@dimen/shuttle_home_content_size</item>
     </style>
 </resources>

@@ -14,8 +14,8 @@
         />
 
     <ImageView
-        android:layout_width="@dimen/shuttle_routes_image_size"
-        android:layout_height="@dimen/shuttle_routes_image_size"
+        android:layout_width="@dimen/shuttle_home_stop_padding"
+        android:layout_height="@dimen/shuttle_home_stop_padding"
         android:layout_alignParentRight="true"
         android:src="@drawable/home_shuttles"
         />
