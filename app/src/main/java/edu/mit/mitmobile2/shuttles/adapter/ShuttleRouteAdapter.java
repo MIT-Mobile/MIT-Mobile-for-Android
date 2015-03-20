@@ -57,12 +57,15 @@ public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
             if (timeInMins == 0) {
                 viewHolder.stopPrediction.setText("now");
                 viewHolder.stopPrediction.setTextColor(mContext.getResources().getColor(R.color.mit_tintColor));
+                viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_red);
             } else {
                 viewHolder.stopPrediction.setText(timeInMins + "m");
                 viewHolder.stopPrediction.setTextColor(mContext.getResources().getColor(R.color.contents_text));
+                viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_def);
             }
         } else {
             viewHolder.stopPrediction.setText("-");
+            viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_def);
         }
 
         return convertView;

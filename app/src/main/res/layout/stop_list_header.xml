@@ -11,45 +11,41 @@
         android:layout_height="@dimen/shuttle_routes_map_header_height"
         android:background="@color/transparent" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/route_info_segment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/transparent_map_overlay"
-        android:background="@color/sbc_layout_view"
-        android:orientation="vertical">
+        android:paddingTop="10dp"
+        android:background="@color/sbc_layout_view">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/shuttle_imageview"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="@dimen/stop_margin">
-            <ImageView
-                android:id="@+id/shuttle_imageview"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/home_shuttles"
-                />
-            <TextView
-                android:id="@+id/route_information_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/shuttle_imageview"
-                android:paddingLeft="@dimen/stop_margin"
-                android:layout_centerVertical="true"
-                android:textColor="@color/contents_text"
-                android:textStyle="bold"
-                android:text="In service" />
-        </RelativeLayout>
+            android:layout_marginLeft="13dp" />
+
+        <TextView
+            android:id="@+id/route_information_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/shuttle_imageview"
+            android:layout_marginLeft="@dimen/stop_margin"
+            android:textColor="@color/contents_text"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="In service" />
 
         <TextView
             android:id="@+id/route_information_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/stop_margin"
             android:paddingBottom="@dimen/stop_margin"
+            android:textSize="14sp"
             android:text="Runs weekdays"
-            />
-    </LinearLayout>
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/route_information_top"
+            android:layout_alignLeft="@+id/route_information_top" />
+    </RelativeLayout>
 </RelativeLayout>
