@@ -2,6 +2,7 @@ package edu.mit.mitmobile2;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
@@ -16,12 +17,15 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -44,7 +48,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private MITMapView mapView;
 
     private LinearLayout mapItemsListViewWithFooter;
-    protected Button listButton;
     private View transparentView;
     private FrameLayout predictionFragment;
 
@@ -59,6 +62,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     private static Timer timer;
 
+    private FloatingActionButton listButton;
+    private FloatingActionButton myLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +74,21 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         mapItemsListView = (ListView) findViewById(R.id.map_list_view);
         mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
-        listButton = (Button) findViewById(R.id.list_button);
+        listButton = (FloatingActionButton) findViewById(R.id.list_button);
+        myLocationButton = (FloatingActionButton) findViewById(R.id.my_location_button);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.shuttle_route_refresh_layout);
+
+        listButton.setSize(FloatingActionButton.SIZE_NORMAL);
+        listButton.setColorNormalResId(R.color.mit_red);
+        listButton.setColorPressedResId(R.color.mit_red_dark);
+        listButton.setIcon(R.drawable.ic_list);
+        listButton.setStrokeVisible(false);
+
+        myLocationButton.setSize(FloatingActionButton.SIZE_NORMAL);
+        myLocationButton.setColorNormalResId(R.color.white);
+        myLocationButton.setColorPressedResId(R.color.light_grey);
+        myLocationButton.setIcon(R.drawable.ic_my_location);
+        myLocationButton.setStrokeVisible(false);
 
         swipeRefreshLayout.setEnabled(false);
 
@@ -79,7 +97,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         } else {
             mapItemsListView.setVisibility(View.GONE);
         }
-        
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
@@ -122,11 +140,20 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                 showListView();
             }
         });
+
+        myLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location myLocation = getMapView().getMyLocation();
+                getMapView().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f), 200, null);
+            }
+        });
     }
 
     protected void showListView() {
         if (!animating) {
             listButton.setVisibility(View.INVISIBLE);
+            myLocationButton.setVisibility(View.INVISIBLE);
             toggleMap();
         }
     }
@@ -189,7 +216,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         View view = mapView.getMapFragment().getView();
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
 
         TranslateAnimation translateAnimation;
 
@@ -208,6 +235,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapViewExpanded = true;
             mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
             listButton.setVisibility(View.VISIBLE);
+            myLocationButton.setVisibility(View.VISIBLE);
 
             if (mapView.getMapFragment().getView().getTranslationY() != 0) {
                 final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getMapFragment().getView().getTranslationY(), NO_TRANSLATION);
