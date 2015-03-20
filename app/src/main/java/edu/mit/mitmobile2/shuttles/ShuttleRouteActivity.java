@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -37,6 +38,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
 
     @InjectView(R.id.route_information_bottom)
     TextView routeDescriptionTextView;
+
+    @InjectView(R.id.shuttle_imageview)
+    ImageView serviceIcon;
 
     private ShuttleRouteAdapter adapter;
     private MITShuttleRoute route = new MITShuttleRoute();
@@ -70,10 +74,13 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         routeDescriptionTextView.setText(route.getDescription());
         if (route.isPredictable()) {
             routeStatusTextView.setText(getResources().getString(R.string.route_in_service));
+            serviceIcon.setImageResource(R.drawable.shuttle_small_active);
         } else if (route.isScheduled()) {
             routeStatusTextView.setText(getResources().getString(R.string.route_unknown));
+            serviceIcon.setImageResource(R.drawable.shuttle_small_active);
         } else {
             routeStatusTextView.setText(getResources().getString(R.string.route_not_in_service));
+            serviceIcon.setImageResource(R.drawable.shuttle_small_inactive);
         }
 
         updateData();

@@ -52,7 +52,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private FrameLayout predictionFragment;
 
     private boolean hasHeader;
-    private LinearLayout routeInfoSegment;
+    private RelativeLayout routeInfoSegment;
     protected SwipeRefreshLayout swipeRefreshLayout;
 
     protected boolean mapViewExpanded = false;
@@ -86,7 +86,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         myLocationButton.setSize(FloatingActionButton.SIZE_NORMAL);
         myLocationButton.setColorNormalResId(R.color.white);
-        myLocationButton.setColorPressedResId(R.color.light_grey);
+        myLocationButton.setColorPressedResId(R.color.medium_grey);
         myLocationButton.setIcon(R.drawable.ic_my_location);
         myLocationButton.setStrokeVisible(false);
 
@@ -145,7 +145,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             @Override
             public void onClick(View v) {
                 Location myLocation = getMapView().getMyLocation();
-                getMapView().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f), 200, null);
+                getMapView().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f), 400, null);
             }
         });
     }
@@ -186,7 +186,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     protected void addHeaderView(View headerView) {
         hasHeader = true;
         mapItemsListView.addHeaderView(headerView);
-        routeInfoSegment = (LinearLayout) headerView.findViewById(R.id.route_info_segment);
+        routeInfoSegment = (RelativeLayout) headerView.findViewById(R.id.route_info_segment);
         transparentView = headerView.findViewById(R.id.transparent_map_overlay);
 
         transparentView.setOnClickListener(new View.OnClickListener() {
@@ -234,8 +234,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         if (!mapViewExpanded) {
             mapViewExpanded = true;
             mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
-            listButton.setVisibility(View.VISIBLE);
-            myLocationButton.setVisibility(View.VISIBLE);
 
             if (mapView.getMapFragment().getView().getTranslationY() != 0) {
                 final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getMapFragment().getView().getTranslationY(), NO_TRANSLATION);
@@ -286,6 +284,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapItemsListView.setSelection(0);
             mapItemsListViewWithFooter.setVisibility(View.GONE);
             mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
+
+            listButton.setVisibility(View.VISIBLE);
+            myLocationButton.setVisibility(View.VISIBLE);
         }
         animating = false;
     }
