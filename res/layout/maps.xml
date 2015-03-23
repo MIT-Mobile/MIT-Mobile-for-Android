@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:id="@+id/newModuleMain">
+	
+    <FrameLayout
+        android:id="@+id/newModuleMainFullScreenFrameLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />  
+
+    
+    <!-- MapView layout and initial extent -->
+    <edu.mit.mitmobile2.maps.MITMapView
+  		android:id="@+id/map"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent"
+ 		spacialReference = "102113" 
+ 		initExtent = "-7914314.738504024 5214534.8430830045 -7913764.950289598 5215325.163641242"
+ 		calloutStyle="@xml/callout" >
+ 		<!--  -7917505.05755645 5212853.80272828 -7912805.54356814 5215904.60739899"   --> 		
+  	</edu.mit.mitmobile2.maps.MITMapView>
+
+    <ListView
+		android:id="@+id/mapListView"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		style="@style/Lists" />
+    	
+    <edu.mit.mitmobile2.FullScreenLoader
+            android:id="@+id/mapLoading"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" 
+            android:layout_weight="1"
+    />
+    
+</LinearLayout>

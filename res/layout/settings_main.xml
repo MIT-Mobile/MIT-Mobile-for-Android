@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@drawable/main_repeat" >         	
+
+    <!-- MIT Touchstone -->
+	<edu.mit.mitmobile2.SectionHeader
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="MIT Touchstone" />
+
+   <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/touchstoneSettingsButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"      
+  		android:background="@color/rowBackground"
+        android:text="Touchstone Settings" />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+		
+	<TextView
+			android:id="@+id/touchstoneSettingsInfo"
+       		android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+           	android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding" 
+			android:gravity="center_horizontal"
+        	android:text="Touchstone is MIT's single sign-on authentication service." 
+          	android:background="@drawable/main_repeat"          	
+          	style="@style/Byline" />		
+
+</LinearLayout>

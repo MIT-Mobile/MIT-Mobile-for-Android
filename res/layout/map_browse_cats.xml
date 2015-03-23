@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:id="@+id/newModuleMain">
+	
+    <FrameLayout
+        android:id="@+id/newModuleMainFullScreenFrameLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />  
+
+    
+	<ListView android:id="@+id/boringListLV"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		style="@style/Lists" />
+
+	<TextView android:id="@+id/boringListEmptyTV"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#ffffffff"
+		android:paddingLeft="@dimen/horizontalPadding"
+		android:paddingRight="@dimen/horizontalPadding"
+		android:paddingTop="@dimen/verticalPadding"
+		android:visibility="gone"
+		style="@style/BodyText" />
+
+	<edu.mit.mitmobile2.DividerView
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight" />
+
+	<edu.mit.mitmobile2.FullScreenLoader
+		android:id="@+id/boringListLoader"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+    
+</LinearLayout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffffff" >
+  
+    <edu.mit.mitmobile2.TitleBar
+        android:text="Fines"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+  
+    <edu.mit.mitmobile2.DividerView
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/dividerHeight" />
+  
+  
+  	<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="6dip"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/fineTitleTV"
+			android:text="fineTitleTV"
+			android:textColor="@color/contents_text"
+			android:textStyle="bold"
+			android:textSize="17sp"
+			android:typeface="sans" />
+							
+  	<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:id="@+id/fineAuthorTV"
+			android:textColor="@color/contents_text" />
+        
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+  			<!-- LIBRARY LABEL -->
+  			<TextView
+				android:layout_width="65dip"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="Library:"
+				android:id="@+id/fineLibraryLabelTV"
+				android:textColor="@color/contents_text" />
+				
+		  	<!-- LIBRARY -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/fineLibraryTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+  			<!-- ISBN LABEL -->
+  			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="ISBN: "
+				android:id="@+id/fineISBNLabelTV"
+				android:textColor="@color/contents_text" />
+				
+		  	<!-- ISBN -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/fineISBNTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+	
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+  			<!-- FINE DATE LABEL -->
+  			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="Fine date: "
+				android:id="@+id/fineFineDateLabelTV"
+				android:textColor="@color/contents_text" />
+				
+		  	<!-- FINE DATE -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/fineFineDateTV"
+				android:textColor="@color/contents_text" />
+				
+	</LinearLayout>
+
+	<LinearLayout
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal" >
+
+  			<!-- AMOUNT OWED LABEL -->
+  			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="@dimen/horizontalPadding"
+				android:text="Amount owed: "
+				android:id="@+id/fineAmountOwedLabelTV"
+				android:textColor="@color/contents_text" />
+				
+		  	<!-- AMOUNT OWED -->
+  			<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/fineAmountOwedTV"
+				android:textColor="#FFFF0000" />
+				
+	</LinearLayout>
+
+    <edu.mit.mitmobile2.FullScreenLoader
+        android:id="@+id/librarySearchLoading"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+            
+</LinearLayout>

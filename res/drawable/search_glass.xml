@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- pressed state --> 
+    <item android:drawable="@drawable/searchbar_button_pressed"
+          android:state_pressed="true" />
+    <!-- default -->
+    <item android:drawable="@drawable/searchbar_button_normal" />
+</selector>

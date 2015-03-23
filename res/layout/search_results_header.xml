@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+  
+  	<LinearLayout
+  		android:layout_alignParentTop="true"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content"
+  		android:orientation="vertical" >
+  		
+  		<ImageView
+  			android:layout_width="fill_parent"
+  			android:layout_height="wrap_content"
+  			android:layout_alignParentTop="true"
+  			android:id="@+id/searchResultsHeaderDropShadow"
+  			android:src="@drawable/search_results_header_drop_shadow" 
+  			android:scaleType="fitXY" />
+  	
+
+  		<ImageView
+  			android:layout_width="fill_parent"
+  			android:layout_height="20dip"
+  			android:layout_alignTop="@id/searchResultsHeaderDropShadow"
+  			android:src="@drawable/search_results_header_main_background" 
+  			android:scaleType="fitXY" />
+ 
+ 	</LinearLayout>
+  	
+  <TextView
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_centerVertical="true"
+  	android:layout_alignParentLeft="true"
+  	android:paddingLeft="10dip"
+  	android:textColor="#ffffff"
+  	android:id="@+id/searchResultsHeaderText" 
+  	/>
+</RelativeLayout>

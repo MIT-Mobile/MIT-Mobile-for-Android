@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+	<dimen name="tourPathWidth">2dip</dimen>
+	<dimen name="tourSingleSegmentPathWidth">4dip</dimen>
+	<dimen name="tourArrowPadding">2dip</dimen>
+	<color name="tourPathColor">#CCCC0000</color>
+	
+	
+	<string name="tourHomeIntro">One of the best ways to experience MIT is to take a self-guided walking tour. See some of MIT\'s award-winning architecture and artwork and learn about our history, programs, campus life and more.</string>
+	<string name="tourThankYou">Thank you for taking this walking tour of MIT. We hope you\'ve enjoyed the experience and learned something interesting.</string>
+	
+	<style name="TourHomeText">
+		<item name="android:textStyle">normal</item>
+		<item name="android:textSize">16sp</item>
+		<item name="android:textColor">#ffffffff</item>
+		<item name="android:typeface">sans</item>
+	</style>
+	
+<color name="tourHomeRowBackground">#d9ffffff</color>
+</resources>

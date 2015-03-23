@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.mit.mitmobile2.LockingScrollView
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:orientation="vertical"
+  	android:fillViewport="true"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent">
+  		
+	<LinearLayout
+	  android:id="@+id/tourThankYouContent"
+	  android:orientation="vertical"
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent">
+
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/tourThankYou" 
+			android:paddingLeft="@dimen/horizontalPadding"
+			android:paddingRight="@dimen/horizontalPadding"
+			android:paddingTop="@dimen/verticalPadding"
+			android:paddingBottom="@dimen/verticalPadding"
+			style="@style/ListItemPrimary" />
+			
+		<edu.mit.mitmobile2.DividerView
+			android:layout_width="fill_parent"
+			android:layout_height="@dimen/dividerHeight" />
+			
+	</LinearLayout>
+	
+</edu.mit.mitmobile2.LockingScrollView>

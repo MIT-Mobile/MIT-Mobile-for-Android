@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/facilitiesLocationLayout"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <edu.mit.mitmobile2.TitleBar
+  		android:text="Where is it?"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+
+  	<edu.mit.mitmobile2.FullScreenLoader
+  		android:id="@+id/facilitiesLoader"
+  		android:background="#00ffffff"
+  		android:layout_width="fill_parent"
+  		android:layout_height="fill_parent" />
+	  		
+</LinearLayout>
+

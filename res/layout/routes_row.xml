@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+
+    <TextView android:id="@+id/routesRowNextTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/standardPadding"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+		style="@style/ListValue" />
+        
+     <LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/routesRowNextTV"
+		android:paddingLeft="@dimen/standardPadding"
+		android:paddingRight="@dimen/standardPadding"
+		android:layout_alignParentLeft="true"
+		>
+         
+        <edu.mit.mitmobile2.shuttles.ShuttlesStatusView
+            android:id="@+id/routesRowStatus"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			/>
+             
+      	<TextView android:id="@+id/routesRowStopTV"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/standardPadding"
+			android:paddingBottom="@dimen/standardPadding"
+        	android:paddingLeft="@dimen/standardPadding"
+        	android:singleLine="true"
+        	android:ellipsize="end"
+        	style="@style/ListItemPrimary" />
+              
+         
+     </LinearLayout>
+		
+
+	
+</RelativeLayout>

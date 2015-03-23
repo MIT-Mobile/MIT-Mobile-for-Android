@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="113dip"
+    android:padding="10dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/newsRowDeckInMediaTV"
+        style="@style/ListItemSecondary"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:gravity="top"
+        android:layout_weight="1"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"/>
+
+    <ImageView
+        android:id="@+id/newsRowIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:contentDescription="@string/imageContent"
+        android:maxHeight="34dip"
+        android:maxWidth="175dip"
+        android:scaleType="fitEnd"
+        android:adjustViewBounds="true"
+        android:src="@drawable/news_placeholder" />
+
+</LinearLayout>

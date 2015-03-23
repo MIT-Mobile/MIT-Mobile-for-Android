@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+  			android:id="@+id/simpleRowTextContent"
+  			android:layout_alignParentLeft="true"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:layout_gravity="center_vertical"
+  			android:orientation="vertical"
+  			android:paddingLeft="@dimen/horizontalPadding"
+  			android:paddingTop="@dimen/verticalPadding"
+  			android:paddingBottom="@dimen/verticalPadding" >
+  	
+  			<TextView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:paddingRight="30dip"
+  				android:id="@+id/libraryWorldCatBookRowTitle" 
+  				style="@style/ListItemPrimary" />
+  		
+  			<TextView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:paddingTop="@dimen/interlinePadding"
+  				android:paddingRight="@dimen/horizontalPadding"
+  				android:id="@+id/libraryWorldCatBookRowSubtitle"
+  				android:singleLine="true"
+  				android:ellipsize="end" 
+  				style="@style/ListItemSecondary" />
+  				
+</LinearLayout>

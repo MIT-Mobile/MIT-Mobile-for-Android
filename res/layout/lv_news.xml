@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+
+	<TextView android:id="@+id/newsTitleTV"  android:textStyle="bold" android:padding="3px" android:gravity="center"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+				
+	<!-- Top menu bar -->
+	<LinearLayout 
+		android:id="@+id/newsMenuLL"
+		android:orientation="horizontal"
+		android:background="#FC30"
+		android:paddingBottom="3px"
+		android:paddingTop="3px"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" >
+		
+			<ImageView 
+				android:id="@+id/newsSearchIV"
+				android:src="@drawable/searchfield_star"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />
+		<!-- 
+			<Spinner
+				android:id="@+id/newsCatsSpin"
+				android:layout_gravity="center"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content" />
+ 		-->
+			<EditText
+				android:id="@+id/newsSearchET"
+				android:layout_weight="1"
+				android:paddingBottom="3px"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" />			
+			<Button
+				android:id="@+id/newsSearchButton"
+				android:text="Cancel"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"/>			
+	</LinearLayout>
+	
+	<ListView android:id="@+id/newsLV"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" 
+		android:layout_weight="1"/>
+	
+	<Button
+		android:id="@+id/newsMoreBtn"
+		android:text="More"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"/>	
+					
+		
+</LinearLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:paddingLeft="@dimen/standardPadding"
+  android:paddingRight="@dimen/standardPadding"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+
+    <ImageView 
+      android:id="@+id/shuttleRowRouteIV"
+      android:src="@drawable/shuttle"
+      android:layout_width="wrap_content" 
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+	  />
+      
+    <TextView
+      android:id="@+id/shuttleRowRouteTV"
+      android:layout_width="wrap_content" 
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/standardPadding"
+      android:paddingTop="@dimen/standardPadding"
+      android:paddingBottom="@dimen/standardPadding"
+      style="@style/ListItemPrimary"
+      />
+      
+</LinearLayout>

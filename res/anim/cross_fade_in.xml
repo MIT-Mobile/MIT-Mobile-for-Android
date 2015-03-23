@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+       		android:fillAfter="true"
+	        android:fillBefore="true"
+	        android:fillEnabled="true">
+<!-- 
+	        android:fromXDelta="0%"
+	        android:toXDelta="15%"
+	        android:fromXDelta="-15%"
+	        android:toXDelta="0%"
+ -->
+  		<translate
+	        android:fromXDelta="-10%"
+	        android:toXDelta="0%"
+	        android:duration="5000"/>
+
+	    <alpha
+	        android:fromAlpha="0.6"
+	        android:toAlpha="1.0"
+	        android:startOffset="3000"
+	        android:duration="2000"/>      
+	        <!--  
+	    <alpha
+	        android:fromAlpha="0.3"
+	        android:toAlpha="1.0"
+	        android:duration="5000"/>     
+	         -->  
+	       
+</set>

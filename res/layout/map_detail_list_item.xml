@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/halfStandardPadding"
+	android:paddingRight="@dimen/halfStandardPadding"
+    android:orientation="vertical" >
+    
+	<TextView 
+	    android:id="@+id/mapDetailListItemTitle"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:paddingLeft="@dimen/halfStandardPadding"
+		android:paddingRight="@dimen/halfStandardPadding"
+		android:paddingTop="@dimen/standardPadding"
+	    style="@style/InfoTitle"/>
+	
+	<edu.mit.mitmobile2.DividerView
+	    android:layout_width="match_parent"
+	    android:layout_height="@dimen/dividerHeight"/>
+	
+	<LinearLayout 
+	    android:id="@+id/mapDetailListItemActionButton"
+	    android:background="@drawable/highlight_background"
+	    android:paddingLeft="@dimen/halfStandardPadding"
+		android:paddingRight="@dimen/halfStandardPadding"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	    
+	    <TextView 
+	      	android:id="@+id/mapDetailListItemContent"
+	    	android:layout_width="0dip"
+	    	android:layout_height="wrap_content"
+	    	android:layout_weight="1"
+	    	android:paddingTop="@dimen/halfStandardPadding"
+	    	android:paddingBottom="@dimen/halfStandardPadding"
+	    	style="@style/ListItemPrimary"/>
+	    
+	    <ImageView
+	    	    android:id="@+id/mapDetailListItemIcon"
+	    	    android:paddingLeft="@dimen/standardPadding"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="center_vertical"
+	    	    />
+
+	</LinearLayout>
+</LinearLayout>
