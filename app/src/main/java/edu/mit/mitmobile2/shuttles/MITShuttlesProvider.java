@@ -86,7 +86,7 @@ public class MITShuttlesProvider extends ContentProvider {
                 cursor = MitMobileApplication.dbAdapter.db.rawQuery(queryString, null, null);
                 break;
             case STOPS_ID:
-                cursor = MitMobileApplication.dbAdapter.db.query(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, selection, null, null, null, null);
+                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildStopQueryString(selection), null, null);
                 break;
             case ROUTE_ID:
                 cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildQueryString(Schema.Route.TABLE_NAME + "." + selection), null, null);
@@ -213,6 +213,15 @@ public class MITShuttlesProvider extends ContentProvider {
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +
+                "WHERE " + selection +
+                "ORDER BY routes._id ASC, rs_id ASC";
+    }
+
+    public String buildStopQueryString(String selection) {
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+                "FROM stops " +
+                "INNER JOIN route_stops ON stops.stop_id = route_stops.stop_id " +
+                "JOIN routes ON route_stops.route_id = routes.route_id " +
                 "WHERE " + selection +
                 "ORDER BY routes._id ASC, rs_id ASC";
     }

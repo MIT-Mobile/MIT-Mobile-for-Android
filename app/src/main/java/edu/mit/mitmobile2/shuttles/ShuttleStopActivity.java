@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
@@ -14,6 +16,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopActivity extends SoloMapActivity {
@@ -25,7 +28,9 @@ public class ShuttleStopActivity extends SoloMapActivity {
     View transparentView;
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
-    private MITShuttleStopWrapper stop;
+    private MITShuttleRoute route = new MITShuttleRoute();
+    private List<MITShuttleStopWrapper> stops;
+    private String routeId;
     private String stopId;
     private String uriString;
 
@@ -35,18 +40,35 @@ public class ShuttleStopActivity extends SoloMapActivity {
         setContentView(R.layout.activity_shuttle_stop);
         ButterKnife.inject(this);
 
+        routeId = getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         stopId = getIntent().getStringExtra(Constants.STOP_ID_KEY);
         uriString = MITShuttlesProvider.STOPS_URI + "/" + stopId;
-        Cursor cursor = getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, Schema.Stop.STOP_ID + "=\'" + stopId + "\' ", null, null);
+        String selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
+        Cursor cursor = getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
         cursor.moveToFirst();
-        stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
 
-        stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getSupportFragmentManager(), 3);
+        stops = route.getStops();
+        stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getSupportFragmentManager(), stops);
 
         predictionViewPager.setAdapter(stopViewPagerAdapter);
-        predictionViewPager.setCurrentItem(0);
+        predictionViewPager.setCurrentItem(getStartPosition());
 
         addTransparentView(transparentView);
+    }
+
+    private int getStartPosition() {
+        for (MITShuttleStopWrapper stop : stops) {
+            if (stop.getId().equals(stopId)) {
+                return stops.indexOf(stop);
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    protected void updateData() {
+        super.updateData();
     }
 }

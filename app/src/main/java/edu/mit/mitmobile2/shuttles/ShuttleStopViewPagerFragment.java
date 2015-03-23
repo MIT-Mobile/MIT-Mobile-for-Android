@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopAdapter;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopViewPagerFragment extends Fragment{
 
@@ -21,6 +22,10 @@ public class ShuttleStopViewPagerFragment extends Fragment{
     ListView stopListView;
 
     private ShuttleStopAdapter shuttleStopAdapter;
+
+    public static ShuttleStopViewPagerFragment newInstance(MITShuttleStopWrapper stop) {
+        return new ShuttleStopViewPagerFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

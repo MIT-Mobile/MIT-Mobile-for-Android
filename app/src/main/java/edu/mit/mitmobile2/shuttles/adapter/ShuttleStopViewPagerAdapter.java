@@ -5,24 +5,35 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.List;
+
 import edu.mit.mitmobile2.shuttles.ShuttleStopViewPagerFragment;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
 
-    private int routeNum;
+    private List<MITShuttleStopWrapper> stops;
+    private ShuttleStopViewPagerFragment[] fragments;
 
-    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, int routesNum) {
+    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, List<MITShuttleStopWrapper> stops) {
         super(fragmentManager);
-        this.routeNum = routesNum;
+        this.stops = stops;
+        fragments = new ShuttleStopViewPagerFragment[stops.size()];
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new ShuttleStopViewPagerFragment();
+        if (fragments[position] == null) {
+            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(stops.get(position));
+            fragments[position] = fragment;
+            return fragment;
+        } else {
+            return fragments[position];
+        }
     }
 
     @Override
     public int getCount() {
-        return routeNum;
+        return stops.size();
     }
 }
