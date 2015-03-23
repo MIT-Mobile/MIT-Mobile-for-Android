@@ -48,8 +48,6 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
     protected LayoutInflater inflater;
 
     private NavItem mNavItem;
-    protected Boolean hasSearch = false;
-    protected Handler handler;
     private NavigationArrayAdapter adapter;
 
     @Override
@@ -120,45 +118,45 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.mitmodule, menu);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        if (null != searchView) {
-            searchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(false);
-        }
-
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-            public boolean onQueryTextChange(String newText) {
-                // this is your adapter that will be filtered
-                return true;
-            }
-
-            public boolean onQueryTextSubmit(String query) {
-                //Here u can get the value "query" which is entered in the search box.
-                Log.d("ZZZ", "search triggered");
-                searchView.clearFocus();
-                return handleSearch(query);
-            }
-        };
-
-        searchView.setOnQueryTextListener(queryTextListener);
-
-
-        // show or hide the search menu based on the hasSearch property
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        if (searchItem != null) {
-            searchItem.setVisible(this.hasSearch);
-        }
-        return true;
-    }
-
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.mitmodule, menu);
+//
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        MenuItem item = menu.findItem(R.id.action_search);
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+//        if (null != searchView) {
+//            searchView.setSearchableInfo(searchManager
+//                    .getSearchableInfo(getComponentName()));
+//            searchView.setIconifiedByDefault(false);
+//        }
+//
+//        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+//            public boolean onQueryTextChange(String newText) {
+//                // this is your adapter that will be filtered
+//                return true;
+//            }
+//
+//            public boolean onQueryTextSubmit(String query) {
+//                //Here u can get the value "query" which is entered in the search box.
+//                Log.d("ZZZ", "search triggered");
+//                searchView.clearFocus();
+//                return handleSearch(query);
+//            }
+//        };
+//
+//        searchView.setOnQueryTextListener(queryTextListener);
+//
+//
+//        // show or hide the search menu based on the hasSearch property
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        if (searchItem != null) {
+//            searchItem.setVisible(this.hasSearch);
+//        }
+//        return true;
+//    }
+//
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -166,13 +164,6 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         // as you specify a parent activity in AndroidManifest.xml.
 
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_search) {
-            this.handleSearch("test");
-        }
         // Handle presses on the action bar items
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -180,13 +171,13 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    // Placeholder handleSearch method
-    // Override this method in subclass to define search functionality
-    protected boolean handleSearch(String search) {
-        return true;
-    }
+//
+//
+//    // Placeholder handleSearch method
+//    // Override this method in subclass to define search functionality
+//    protected boolean handleSearch(String search) {
+//        return true;
+//    }
 
 
     /* The click listner for ListView in the navigation drawer */

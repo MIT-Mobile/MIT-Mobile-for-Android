@@ -1,11 +1,17 @@
 package edu.mit.mitmobile2;
 
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,6 +30,8 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
     protected String TAG;
     protected Context mContext;
     protected MITAPIClient apiClient;
+    protected Boolean hasSearch = false;
+    protected Handler handler;
     protected GoogleApiClient googleApiClient;
     protected LocationRequest locationRequest;
     protected Location location;
@@ -85,4 +93,69 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         cv.put(Schema.Location.ID_COL, 1);
         getContentResolver().insert(MITShuttlesProvider.LOCATION_URI, cv);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.mitmodule, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        if (null != searchView) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+        }
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                // this is your adapter that will be filtered
+                return true;
+            }
+
+            public boolean onQueryTextSubmit(String query) {
+                //Here u can get the value "query" which is entered in the search box.
+                Log.d("ZZZ", "search triggered");
+                searchView.clearFocus();
+                return handleSearch(query);
+            }
+        };
+
+        searchView.setOnQueryTextListener(queryTextListener);
+
+
+        // show or hide the search menu based on the hasSearch property
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null) {
+            searchItem.setVisible(this.hasSearch);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_search) {
+            this.handleSearch(null);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    // Placeholder handleSearch method
+    // Override this method in subclass to define search functionality
+    protected boolean handleSearch(String search) {
+        return true;
+    }
+
 }
