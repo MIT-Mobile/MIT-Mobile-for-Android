@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles.fragment;
+package edu.mit.mitmobile2.shuttles;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

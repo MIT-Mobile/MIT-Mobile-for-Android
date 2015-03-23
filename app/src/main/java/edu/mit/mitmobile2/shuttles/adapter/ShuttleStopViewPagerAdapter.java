@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import edu.mit.mitmobile2.shuttles.fragment.ShuttleStopViewPagerFragment;
+import edu.mit.mitmobile2.shuttles.ShuttleStopViewPagerFragment;
 
 public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
 
