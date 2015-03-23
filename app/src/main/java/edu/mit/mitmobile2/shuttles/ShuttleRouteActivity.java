@@ -43,7 +43,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
 
     private ShuttleRouteAdapter adapter;
     private MITShuttleRoute route = new MITShuttleRoute();
-    private String routeID;
+    private String routeId;
     private String uriString;
 
     @Override
@@ -56,11 +56,11 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         ButterKnife.inject(this);
 
         //TODO: Save routeId in bundle for rotation
-        routeID = getIntent().getStringExtra("routeID");
+        routeId = getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         adapter = new ShuttleRouteAdapter(this, R.layout.stop_list_item, new ArrayList<MITShuttleStopWrapper>());
 
-        uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeID;
-        Cursor cursor = getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeID + "\' ", null, null);
+        uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeId;
+        Cursor cursor = getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
         route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
@@ -107,6 +107,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
     protected void listItemClicked(int position) {
         MITShuttleStopWrapper stop = adapter.getItem(position);
         Intent intent = new Intent(this, ShuttleStopActivity.class);
+        intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
         intent.putExtra(Constants.STOP_ID_KEY, stop.getId());
         startActivity(intent);
     }
@@ -118,7 +119,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MitCursorLoader(this, Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeID + "\' ", null, null);
+        return new MitCursorLoader(this, Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         bundle.putString(Constants.Shuttles.URI_KEY, uriString);
 
         HashMap<String, String> pathparams = new HashMap<>();
-        pathparams.put("route", routeID);
+        pathparams.put("route", routeId);
         bundle.putString(Constants.Shuttles.PATHS_KEY, pathparams.toString());
 
         // FORCE THE SYNC
