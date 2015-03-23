@@ -27,5 +27,27 @@
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
     <string name="title_activity_view_resource">ViewResourceActivity</string>
     <string name="title_activity_resource_view">ResourceViewActivity</string>
+    <string name="title_activity_shuttle_stops">ShuttleStopsActivity</string>
 
+    <!--Shuttle Info -->
+    <string name="shuttle_contact_title">CONTACT INFORMATION</string>
+    <string name="shuttle_mbta_title">MBTA INFORMATION</string>
+    <string name="parking_office_name">Parking Office</string>
+    <string name="parking_office_number">617.258.6510</string>
+    <string name="saferide_name">Saferide</string>
+    <string name="saferide_number">617.253.2997</string>
+    <string name="real_time_bus">Real-time Bus Arrivals</string>
+    <string name="real_time_train">Real-time Train Arrivals</string>
+    <string name="google_transit">Google Transit</string>
+    <string name="real_time_bus_url">http://www.nextbus.com/webkit</string>
+    <string name="real_time_train_url">http://www.mbtainfo.com/</string>
+    <string name="real_time_google_transit_url">http://www.google.com/transit</string>
+    <string name="ok_button">Ok</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="route_in_service">In service</string>
+    <string name="route_not_in_service">Not in service</string>
+    <string name="route_unknown">No current predictions</string>
+    <string name="belll_info">Tap bell to be notified 5 minutes before arrival.</string>
+    <string name="intersecting_routes">INTERSECTING ROUTES</string>
+    <string name="other_routes_info">Other routes stopping at or near this stop.</string>
 </resources>

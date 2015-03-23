@@ -1,9 +1,17 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITShuttlePrediction {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+
+public class MITShuttlePrediction extends DatabaseObject implements Parcelable {
 
     @SerializedName("vehicle_id")
     @Expose
@@ -13,6 +21,8 @@ public class MITShuttlePrediction {
     @Expose
     private Integer seconds;
 
+    public MITShuttlePrediction() {
+    }
 
     public String getVehicleId() {
         return vehicleId;
@@ -43,5 +53,56 @@ public class MITShuttlePrediction {
         this.seconds = seconds;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.vehicleId);
+        dest.writeInt(this.timestamp);
+        dest.writeInt(this.seconds);
+    }
+
+    private MITShuttlePrediction(Parcel p) {
+        this.vehicleId = p.readString();
+        this.timestamp = p.readInt();
+        this.seconds = p.readInt();
+    }
+
+    public static final Parcelable.Creator<MITShuttlePrediction> CREATOR = new Parcelable.Creator<MITShuttlePrediction>() {
+        public MITShuttlePrediction createFromParcel(Parcel source) {
+            return new MITShuttlePrediction(source);
+        }
+
+        public MITShuttlePrediction[] newArray(int size) {
+            return new MITShuttlePrediction[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"vehicle_id\":\"" + vehicleId + "\"" +
+                ", \"timestamp\":" + timestamp +
+                ", \"seconds\":" + seconds +
+                '}';
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }
 

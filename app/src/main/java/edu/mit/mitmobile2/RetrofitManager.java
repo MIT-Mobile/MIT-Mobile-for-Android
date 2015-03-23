@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePredictionWrapper;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRouteWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleVehiclesWrapper;
 import retrofit.Callback;
@@ -88,7 +88,7 @@ public class RetrofitManager {
     private static final MitShuttleService MIT_SHUTTLES_SERVICE = MIT_REST_ADAPTER.create(MitShuttleService.class);
     private static final MitResourceService MIT_RESOURCE_SERVICE = MIT_REST_ADAPTER.create(MitResourceService.class);
 
-    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) {
+    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
         Method m;
         String[] pathSections = path.split("/");
         String methodName = "get";
@@ -106,14 +106,43 @@ public class RetrofitManager {
         }
 
         String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
-        try {
-            Field f = RetrofitManager.class.getDeclaredField(serviceName);
-            m = f.getType().getDeclaredMethod(methodName, Callback.class);
-            Object o = f.get(Class.forName(f.getType().getName()));
-            m.invoke(o, callback);
-        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
-            Timber.e(e, "Reflection");
+        Field f = RetrofitManager.class.getDeclaredField(serviceName);
+        m = f.getType().getDeclaredMethod(methodName, Callback.class);
+        Object o = f.get(Class.forName(f.getType().getName()));
+        m.invoke(o, callback);
+
+    }
+
+    public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) throws NoSuchFieldException,
+            NoSuchMethodException,
+            ClassNotFoundException,
+            IllegalAccessException,
+            InvocationTargetException {
+
+        String[] pathSections = path.split("/");
+        String methodName = "get";
+
+        paths = pathParams;
+        queries = queryParams;
+
+        for (int i = 1; i < pathSections.length; i++) {
+            // Skip the first
+            if (!pathSections[i].contains("{")) {
+                methodName += pathSections[i];
+            } else {
+                methodName += "_";
+            }
         }
+
+        Timber.d("Method name= " + methodName);
+        String serviceName = "MIT_" + apiType.toUpperCase() + "_SERVICE";
+
+        Field f = RetrofitManager.class.getDeclaredField(serviceName);
+        Method m = f.getType().getDeclaredMethod(methodName);
+        Object o = f.get(Class.forName(f.getType().getName()));
+        Object data = m.invoke(o);
+
+        return data;
     }
 
     public static void changeEndpoint(String url) {
@@ -129,19 +158,36 @@ public class RetrofitManager {
     public interface MitShuttleService {
 
         @GET(Constants.Shuttles.ALL_ROUTES_PATH)
-        void getroutes(Callback<List<MITShuttleRouteWrapper>> callback);
+        void getroutes(Callback<List<MITShuttleRoute>> callback);
 
         @GET(Constants.Shuttles.ROUTE_INFO_PATH)
-        void getroutes_(Callback<MITShuttleRouteWrapper> callback);
+        void getroutes_(Callback<MITShuttleRoute> callback);
 
         @GET(Constants.Shuttles.STOP_INFO_PATH)
         void getroutes_stops_(Callback<MITShuttleStopWrapper> callback);
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
-        void getpredictions(Callback<List<MITShuttlePredictionWrapper.Predictions>> callback);
+        void getpredictions(Callback<List<MITShuttlePredictionWrapper>> callback);
 
         @GET(Constants.Shuttles.VEHICLES_PATH)
         void getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);
+
+        // Real-time calls for use in the SyncAdapter
+
+        @GET(Constants.Shuttles.ALL_ROUTES_PATH)
+        List<MITShuttleRoute> getroutes();
+
+        @GET(Constants.Shuttles.ROUTE_INFO_PATH)
+        MITShuttleRoute getroutes_();
+
+        @GET(Constants.Shuttles.STOP_INFO_PATH)
+        MITShuttleStopWrapper getroutes_stops_();
+
+        @GET(Constants.Shuttles.PREDICTIONS_PATH)
+        List<MITShuttlePredictionWrapper> getpredictions();
+
+        @GET(Constants.Shuttles.VEHICLES_PATH)
+        List<MITShuttleVehiclesWrapper> getvehicles();
     }
 
     public interface MitResourceService {

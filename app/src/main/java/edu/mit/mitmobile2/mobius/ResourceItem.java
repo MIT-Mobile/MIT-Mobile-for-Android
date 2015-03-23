@@ -1,6 +1,9 @@
 package edu.mit.mitmobile2.mobius;
 
 import android.content.Context;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -14,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
 
 /**
@@ -52,12 +56,11 @@ public class ResourceItem extends MapItem implements Parcelable {
         m.title(this.name);
         JSONObject data = new JSONObject();
         try {
-            data.put("mapItemIndex",this.getMapItemIndex());
+            data.put("mapItemIndex", this.getMapItemIndex());
             data.put("name", this.getName());
-            data.put("room",this.getRoom());
-            data.put("status",this.getStatus());
-        }
-        catch (JSONException e) {
+            data.put("room", this.getRoom());
+            data.put("status", this.getStatus());
+        } catch (JSONException e) {
             Log.d("ZZZ", e.getMessage());
         }
         m.snippet(data.toString());
@@ -228,5 +231,18 @@ public class ResourceItem extends MapItem implements Parcelable {
         }
     };
 
+    @Override
+    protected String getTableName() {
+        return null;
+    }
 
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

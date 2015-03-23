@@ -3,45 +3,51 @@ package edu.mit.mitmobile2.maps;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.location.Location;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
-
-import java.util.ArrayList;
-import java.util.Iterator;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import android.graphics.*;
-import android.content.res.Resources;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.android.ui.IconGenerator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import edu.mit.mitmobile2.R;
 
-public class MITMapView {
+public class MITMapView implements GoogleMap.OnMapLoadedCallback {
+
+    public static final int MAP_BOUNDS_PADDING = 130;
 
     private GoogleMap mMap;
     private MapFragment mapFragment;
-    private MapItem  mItem;
+    private MapItem mItem;
     public static String MAP_ITEMS = "MAP_ITEMS";
     private FragmentManager mFm;
     private int mapResourceId;
     private Marker lastClickedMarker;
+    private LatLngBounds defaultBounds;
+
+    private ArrayList<MapItem> mapItems = new ArrayList<>();
+
+    private List<Marker> dynamicMarkers = new ArrayList<>();
+    private List<Polyline> dynamicLines = new ArrayList<>();
+    private List<Polygon> dynamicPolygons = new ArrayList<>();
 
     //set initial latlng for zoom in MIT area
     final LatLng initialLatLng = new LatLng(42.359858, -71.09913);
@@ -59,16 +65,15 @@ public class MITMapView {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setOnMapLoadedCallback(this);
     }
 
-    private ArrayList<MapItem> mapItems;
-
     public void show() {
-       Fragment f = mFm.findFragmentById(mapResourceId);
+        Fragment f = mFm.findFragmentById(mapResourceId);
         mFm.beginTransaction()
                 .show(f)
                 .commit();
-    };
+    }
 
     public void hide() {
         Fragment f = mFm.findFragmentById(mapResourceId);
@@ -93,19 +98,30 @@ public class MITMapView {
 
                             iconGenerator.setTextAppearance(10); //set font size?
                             Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
-                            mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                            Marker marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                            if (mItem.isDynamic()) {
+                                dynamicMarkers.add(marker);
+                            }
                         } else {
-                            mMap.addMarker(mItem.getMarkerOptions());
+                            Marker marker = mMap.addMarker(mItem.getMarkerOptions());
+                            if (mItem.isDynamic()) {
+                                dynamicMarkers.add(marker);
+                            }
+                        }
+                        break;
+
+                    case MapItem.POLYLINETYPE:
+                        Polyline polyline = mMap.addPolyline(mItem.getPolylineOptions());
+                        if (mItem.isDynamic()) {
+                            dynamicLines.add(polyline);
                         }
                         break;
 
                     case MapItem.POLYGONTYPE:
-                        mMap.addPolyline(mItem.getPolylineOptions());
-                        break;
-
-
-                    case MapItem.POLYLINETYPE:
-                        mMap.addPolygon(mItem.getPolygonOptions());
+                        Polygon polygon = mMap.addPolygon(mItem.getPolygonOptions());
+                        if (mItem.isDynamic()) {
+                            dynamicPolygons.add(polygon);
+                        }
                         break;
 
                 }
@@ -113,15 +129,47 @@ public class MITMapView {
         }
     }
 
-    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear,Boolean fit) {
-        this.mapItems = mapItems;
+    public void clearDynamic() {
+        for (Marker m : dynamicMarkers) {
+            m.remove();
+        }
+        dynamicMarkers.clear();
+
+        for (Polyline pl : dynamicLines) {
+            pl.remove();
+        }
+        dynamicLines.clear();
+
+        for (Polygon pg : dynamicPolygons) {
+            pg.remove();
+        }
+        dynamicPolygons.clear();
+
+        removeDynamicItems();
+    }
+
+    public void removeDynamicItems() {
+        List<Integer> indicesToRemove = new ArrayList<>();
+        for (MapItem item : mapItems) {
+            if (item.isDynamic()) {
+                indicesToRemove.add(mapItems.indexOf(item));
+            }
+        }
+
+        Collections.reverse(indicesToRemove);
+
+        for (Integer i : indicesToRemove) {
+            mapItems.remove(i.intValue());
+        }
+    }
+
+    public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear, Boolean fit) {
+        this.mapItems.addAll(mapItems);
         if (clear) {
             mMap.clear();
         }
-        if (mMap != null && mapItems != null && mapItems.size()>0) {
-            Iterator<MapItem> iterator = mapItems.iterator();
-            while (iterator.hasNext()) {
-                MapItem item = (MapItem) iterator.next();
+        if (mMap != null && mapItems != null && mapItems.size() > 0) {
+            for (MapItem item : mapItems) {
                 addMapItem(item);
             }
 
@@ -131,8 +179,8 @@ public class MITMapView {
         }
     }
 
-    public void addMapItemList(ArrayList<MapItem> mapItems) {
-        addMapItemList(mapItems, true,true);
+    public void addMapItemList(ArrayList<MapItem> mapItems, boolean clear) {
+        addMapItemList(mapItems, clear, true);
     }
 
     public void fitMapItems() {
@@ -143,12 +191,61 @@ public class MITMapView {
             MapItem mItem = mapItems.get(i);
             if (mItem.getMapItemType() == MapItem.MARKERTYPE) {
                 b.include(mItem.getMarkerOptions().getPosition());
+            } else if (mItem.getMapItemType() == MapItem.POLYLINETYPE) {
+                for (LatLng point : mItem.getPolylineOptions().getPoints()) {
+                    b.include(point);
+                }
             }
         }
-        LatLngBounds bounds = b.build();
+        defaultBounds = b.build();
+    }
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
-        mMap.moveCamera(cu);
+    public void setToDefaultBounds(boolean animate, int animationLength) {
+        Resources resources = mContext.getResources();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), MAP_BOUNDS_PADDING);
+        if (animate) {
+            mMap.animateCamera(cameraUpdate, animationLength, null);
+        } else {
+            mMap.moveCamera(cameraUpdate);
+        }
+    }
+
+    public void adjustCameraToShowInHeader(boolean animate, int animationLength) {
+        Resources resources = mContext.getResources();
+        Projection projection = mMap.getProjection();
+
+        TypedValue typedValue = new TypedValue();
+        int actionBarHeight = 0;
+        if (mContext.getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+            actionBarHeight = (int) TypedValue.complexToDimension(typedValue.data, resources.getDisplayMetrics());
+        }
+
+        int x = resources.getDisplayMetrics().widthPixels / 2;
+        int y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - MAP_BOUNDS_PADDING;
+        Point point = new Point(x, y);
+
+        LatLng offsetCenter = projection.fromScreenLocation(point);
+        float zoom = mMap.getCameraPosition().zoom;
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(offsetCenter, zoom);
+        if (animate) {
+            mMap.animateCamera(cameraUpdate, animationLength, null);
+        } else {
+            mMap.moveCamera(cameraUpdate);
+
+        }
+    }
+
+
+    @Override
+    public void onMapLoaded() {
+        if (defaultBounds != null) {
+            setToDefaultBounds(false, 0);
+            adjustCameraToShowInHeader(false, 0);
+        }
+    }
+
+    public int dpToPx(Resources res, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, res.getDisplayMetrics());
     }
 
     public GoogleMap getMap() {
@@ -158,9 +255,8 @@ public class MITMapView {
     public void toggle() {
         if (isExpanded()) {
             float map_height = mContext.getResources().getDimension(R.dimen.map_height);
-            mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int)map_height));
-        }
-        else {
+            mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) map_height));
+        } else {
             mapFragment.getView().setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
         }
     }
@@ -186,5 +282,10 @@ public class MITMapView {
     public void setLastClickedMarker(Marker lastClickedMarker) {
         this.lastClickedMarker = lastClickedMarker;
     }
+
+    public MapFragment getMapFragment() {
+        return mapFragment;
+    }
+
 }
 

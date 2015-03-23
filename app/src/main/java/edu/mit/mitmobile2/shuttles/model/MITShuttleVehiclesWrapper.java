@@ -1,12 +1,19 @@
 package edu.mit.mitmobile2.shuttles.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MITShuttleVehiclesWrapper {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.shuttles.ShuttlesDatabaseHelper;
+
+public class MITShuttleVehiclesWrapper extends DatabaseObject {
 
     @SerializedName("route_id")
     @Expose
@@ -79,12 +86,25 @@ public class MITShuttleVehiclesWrapper {
     }
 
     /**
-     *
-     * @param vehicles
-     * The vehicles
+     * @param vehicles The vehicles
      */
     public void setVehicles(List<MITShuttleVehicle> vehicles) {
         this.vehicles = vehicles;
     }
 
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        // I only care about the vehicle objs, don't need anything from
+        ShuttlesDatabaseHelper.batchPersistVehicles(this.vehicles, this.routeId);
+    }
 }
