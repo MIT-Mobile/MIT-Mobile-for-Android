@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+        
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/askUsItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Ask Us!" 
+        android:src="@drawable/action_secure"
+        android:background="@color/rowBackground" 
+        />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+        
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/makeAppointmentItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Make a research consultation appointment" 
+        android:src="@drawable/action_secure"
+         android:background="@color/rowBackground" 
+        />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+       
+    <!-- Gap --> 
+    <View
+    	android:layout_width="fill_parent"
+    	android:layout_height="30dip"
+    	android:background="@color/transparent" />
+    	
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+        
+    <edu.mit.mitmobile2.TwoLineActionRow
+        android:id="@+id/generalHelpItem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:background="@color/rowBackground" 
+        />
+        
+    <edu.mit.mitmobile2.DividerView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dividerHeight" />
+    
+</LinearLayout>

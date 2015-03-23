@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edu.mit.mitmobile2.LockingScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+<LinearLayout
+  android:id="@+id/newsImagesLL"
+  android:orientation="vertical"
+  android:background="#8FFF"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  
+  <ImageView
+  	android:layout_width="fill_parent"
+  	android:layout_height="300dip"
+  	android:id="@+id/newsImageLoadingView"
+  	android:scaleType="center"
+  	android:background="#FFFFFF"
+  	android:src="@drawable/busybox" />
+  	
+  <WebView
+  	android:id="@+id/newsLargeImageWV"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:scrollbars="none" 
+  	/>
+  	
+  <TextView
+  	android:paddingLeft="10dip"
+  	android:paddingRight="10dip"
+  	android:paddingBottom="2dip"
+  	android:background="#FFFFFF"
+	android:id="@+id/newsImageCaption"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	style="@style/Deck"
+	/>
+	
+  <TextView
+    android:paddingLeft="10dip"
+  	android:paddingRight="10dip"
+  	android:paddingBottom="2dip"
+  	android:background="#FFFFFF"
+  	android:id="@+id/newsImageCredit"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	style="@style/Byline"
+  	/>
+	
+
+</LinearLayout>
+</edu.mit.mitmobile2.LockingScrollView>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+	<dimen name="titleBarPrimaryItemWidth">48dip</dimen>
+	<dimen name="titleBarOverflowItemWidth">35dip</dimen>
+	<dimen name="titleBarPadding">2.5dip</dimen>
+</resources>

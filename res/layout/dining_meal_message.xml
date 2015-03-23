@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  >
+  
+    <LinearLayout
+	  android:orientation="vertical"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"    
+	  android:background="#fff"    
+	  >	  
+  		<TextView
+  	  		android:layout_width="match_parent"
+  			android:layout_height="wrap_content"
+  			android:id="@+id/diningMealMessageText"
+  			android:padding="@dimen/standardPadding"
+  			
+  			android:gravity="center_horizontal"
+  			style="@style/ListItemPrimary"
+  			/>
+  		<edu.mit.mitmobile2.DividerView 
+  		    android:layout_width="match_parent"
+  		    android:layout_height="@dimen/dividerHeight" />
+  	
+	  	 <include layout="@layout/dining_rotate_legend" />
+	  	 
+	</LinearLayout>
+	
+ </FrameLayout>

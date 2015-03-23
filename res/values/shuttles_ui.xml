@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+	<dimen name="shuttlesStatusRedRadius">6dip</dimen>
+	<dimen name="shuttlesStatusGrayRadius">4.5dip</dimen>
+	<dimen name="shuttlesStatusGrayWidth">3.5dip</dimen>
+	<dimen name="shuttlesStatusWidth">13dip</dimen>
+	<color name="shuttlesStatusOnColor">#ff993333</color>
+    <color name="shuttlesStatusOffColor">#ffd2d2d2</color>
+</resources>
+	

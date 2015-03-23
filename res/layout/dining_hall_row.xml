@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:minHeight="78dip"
+  android:background="@drawable/highlight_background">
+  
+  <FrameLayout
+      android:layout_width="46dip"
+      android:layout_height="46dip"
+      android:id="@+id/diningHallRowImageWrapper"
+      android:layout_marginLeft="@dimen/standardPadding"
+	  android:layout_marginTop="16dip"
+      >
+      
+	  <edu.mit.mitmobile2.RemoteImageView
+	      android:id="@+id/diningHallRowImage"
+	      android:layout_width="match_parent"
+	      android:layout_height="match_parent"
+	      />
+	  
+  </FrameLayout>
+  
+  <TextView 
+      android:id="@+id/diningHallRowStatus"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_width="wrap_content"
+  	  android:layout_height="wrap_content"
+  	  android:paddingRight="@dimen/standardPadding"
+      style="@style/ListItemSecondary"
+      />
+  
+  <LinearLayout 
+     android:layout_toLeftOf="@id/diningHallRowStatus"
+     android:layout_toRightOf="@id/diningHallRowImageWrapper"
+     android:orientation="vertical"
+     android:padding="@dimen/standardPadding"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     >
+      
+     <TextView
+         android:id="@+id/diningHallRowTitle" 
+         android:layout_width="wrap_content"
+  		 android:layout_height="wrap_content"
+         android:paddingBottom="@dimen/standardPadding"
+         style="@style/ListItemPrimary"
+         />
+     
+      <TextView
+         android:id="@+id/diningHallRowSubtitle"  
+         android:layout_width="wrap_content"
+  		 android:layout_height="wrap_content"
+         style="@style/ListItemSecondary"
+         />
+  </LinearLayout>
+  
+</RelativeLayout>
+  

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+  <declare-styleable name="ViewfinderView">
+  </declare-styleable>
+  <declare-styleable name="TourGallery">
+        <attr name="android:galleryItemBackground" />
+  </declare-styleable>
+  
+ 
+  <declare-styleable name="SectionHeader">
+  	<attr name="prominence" format="enum"> 
+  		<enum name="primary" value="0"/>
+  		<enum name="secondary" value="1"/>
+  	</attr>
+  </declare-styleable>
+
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:background="@drawable/main_repeat"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+	
+    <TextView android:id="@+id/routesTitleTV"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/standardPadding"
+        android:paddingRight="@dimen/standardPadding"
+        android:paddingTop="@dimen/standardPadding"
+        android:paddingBottom="5.25dip"
+        style="@style/ContentTitle" />
+	
+    <TextView android:id="@+id/routesInfoTV"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/standardPadding"
+        android:paddingRight="@dimen/standardPadding"
+        android:paddingBottom="@dimen/standardPadding"
+        style="@style/SmallPrint" />
+		
+	<ListView android:id="@+id/routesLV"
+		android:layout_width="fill_parent" 
+		android:layout_height="0dip" 
+		android:layout_weight="1"
+	 	style="@style/Lists" />
+
+</LinearLayout>

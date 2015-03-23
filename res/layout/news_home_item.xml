@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:id="@+id/newsSummary"
+  		android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+		<!-- 
+			we use this view to add padding on the left,
+			we cant use padding for this because we are going
+			to use padding to create a background
+		 -->
+		
+		<View
+			android:layout_width="9dip"
+			android:layout_height="10dip"/>
+			
+		<ImageView android:id="@+id/newsSummaryIV"
+				android:paddingLeft="3dip"
+				android:paddingRight="3dip"
+				android:paddingTop="3dip"
+				android:paddingBottom="3dip"
+				android:background="#FFFFFF"
+				android:layout_width="140dip" 		
+				android:layout_height="140dip"/>
+				
+		<LinearLayout
+			android:id="@+id/newHomeTeaserBox"
+			android:paddingLeft="7dip" 
+			android:orientation="vertical"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:visibility="invisible">
+		
+			<TextView	
+				android:layout_height="wrap_content"
+            	android:layout_width="wrap_content"
+				android:text="LATEST NEWS:"
+				android:textColor="#80ffffff"
+				android:textSize="11sp" 
+				android:textStyle="bold" 
+				android:typeface="sans" />
+				
+			<TextView
+				android:paddingRight="5dip"
+            	android:id="@+id/newsSummaryTitleTV"
+            	android:layout_height="wrap_content"
+            	android:layout_width="wrap_content"
+            	android:textColor="#ffffffff"
+				android:textSize="17sp" 
+				android:textStyle="normal" 
+				android:typeface="sans"
+            	android:paddingTop="6dip" />
+            	
+            <TextView
+            	android:id="@+id/newsSummarySubtitleTV"
+				android:paddingRight="5dip"
+            	android:layout_height="fill_parent"
+            	android:layout_width="wrap_content"
+            	android:textColor="#ff999999"
+				android:textSize="13sp" 
+				android:textStyle="normal" 
+				android:typeface="sans"
+            	android:paddingTop="6dip" />
+			
+		</LinearLayout>	
+
+ </LinearLayout>

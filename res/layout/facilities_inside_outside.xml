@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/main_repeat"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content">
+  
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Inisde -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesInsideLocationActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Inside"  />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+	<!-- Outside -->
+    <edu.mit.mitmobile2.TwoLineActionRow android:id="@+id/facilitiesOutsideLocationActionRow"
+            	android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/rowBackground"
+                android:text="Outside"  />
+
+	<!-- Divider -->
+	<View
+		android:layout_width="fill_parent"
+		android:layout_height="@dimen/dividerHeight"
+		android:background="@color/dividerColor" />
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+   android:label="@string/people_search_label"
+   android:hint="@string/people_search_hint"
+   android:searchMode="showSearchLabelAsBadge"
+   
+   android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+   android:voiceLanguageModel="free_form"
+   android:voicePromptText="@string/search_invoke"
+   
+   android:searchSuggestAuthority="edu.mit.mitmobile2.people.SuggestionsProvider"
+   android:searchSuggestSelection=" ?"
+/>

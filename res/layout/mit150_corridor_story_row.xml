@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout
+			xmlns:android="http://schemas.android.com/apk/res/android"
+  			android:layout_alignParentLeft="true"
+  			android:layout_width="wrap_content"
+  			android:layout_height="wrap_content"
+  			android:orientation="vertical"
+  			android:paddingLeft="@dimen/horizontalPadding"
+  			android:paddingRight="@dimen/horizontalPadding"
+  			android:paddingTop="@dimen/verticalPadding"
+  			android:paddingBottom="@dimen/verticalPadding" >
+  	
+  			<TextView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:id="@+id/corridorListTitle" 
+  				style="@style/ListItemPrimary" />
+  		
+  			<TextView
+  				android:layout_width="wrap_content"
+  				android:layout_height="wrap_content"
+  				android:id="@+id/corridorListSummary" 
+  				android:maxLines="2"
+  				android:ellipsize="end"
+  				style="@style/ListItemSecondary" />
+</LinearLayout>	

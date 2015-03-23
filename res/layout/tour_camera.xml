@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android" 
+	android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    
+  	<edu.mit.mitmobile2.TitleBar
+  		android:text="Tour Picture Gallery"
+  		android:layout_width="fill_parent"
+  		android:layout_height="wrap_content" />
+  		
+<!-- 
+<GridView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/gridview"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:columnWidth="150dp"
+    android:numColumns="auto_fit"
+    android:verticalSpacing="15dp"
+    android:horizontalSpacing="5dp"
+    android:stretchMode="columnWidth"
+    android:gravity="center"/>
+ -->
+ 
+
+<Gallery 
+    android:id="@+id/gallery"
+    android:gravity="center_vertical"
+    android:layout_gravity="center_vertical"
+    android:layout_weight="1"
+    android:layout_width="fill_parent"
+    android:layout_height="240dp"/>    
+    
+
+<TextView
+    android:id="@+id/tourGalleryTV"
+    android:text="this will contain photo info"
+    android:textColor="#FF000000"
+    android:gravity="center_horizontal"
+    android:paddingTop="10dp"
+    android:paddingBottom="40dp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"/>
+ 
+</LinearLayout>

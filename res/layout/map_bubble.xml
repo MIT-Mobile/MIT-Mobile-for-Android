@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/balloon_main_layout"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" 
+        android:orientation="horizontal" 
+        android:background="@drawable/map_detail_bubble">
+         
+        <LinearLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:orientation="vertical"
+                android:layout_weight="1"
+                android:id="@+id/balloon_inner_layout">
+                <TextView android:layout_height="wrap_content"
+                        android:layout_width="fill_parent" android:id="@+id/balloon_item_title"
+                        android:text="balloon_item_title" android:textSize="16dip"
+                        android:textColor="#FF000000"/>
+                <TextView android:layout_height="wrap_content"
+                		android:textColor="#FF666666"
+                        android:layout_width="fill_parent" android:id="@+id/balloon_item_snippet"
+                        android:text="balloon_item_snippet" android:textSize="12dip"/>
+        </LinearLayout>
+
+		<!-- 
+        <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:id="@+id/close_img_button" 
+                android:src="@drawable/balloon_overlay_close"
+                android:paddingLeft="10dip"
+                android:paddingBottom="10dip" android:paddingRight="8dip"
+                android:paddingTop="8dip"/>
+         -->
+</LinearLayout>

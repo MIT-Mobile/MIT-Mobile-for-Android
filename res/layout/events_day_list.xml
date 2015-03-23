@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+  
+
+  <ListView
+  	android:id="@+id/eventsDayList"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:visibility="gone" 
+  	style="@style/Lists" />
+  
+  <TextView android:id="@+id/eventsDayListEmptyTV"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#ffffffff"
+		android:paddingLeft="@dimen/horizontalPadding"
+		android:paddingRight="@dimen/horizontalPadding"
+		android:paddingTop="@dimen/verticalPadding"
+		android:text="@string/events_nothing_today"
+		android:visibility="gone"
+		style="@style/BodyText" />
+		
+  <edu.mit.mitmobile2.FullScreenLoader
+  	android:id="@+id/eventsDayListLoader"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent" />
+  	
+  <edu.mit.mitmobile2.DividerView
+  	android:layout_width="fill_parent"
+  	android:layout_height="@dimen/dividerHeight" />  
+  
+</LinearLayout>

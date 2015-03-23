@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+	
+   	<RelativeLayout
+   		android:orientation="vertical"
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:paddingTop="@dimen/verticalPadding"
+   		android:paddingBottom="@dimen/verticalPadding">
+   		
+   		<LinearLayout
+   			android:layout_width="wrap_content"
+   			android:layout_height="wrap_content"
+   			android:layout_alignParentLeft="true"
+   			android:layout_alignParentTop="true"
+   			android:orientation="vertical">
+   			
+   			<TextView		
+   				android:text="Not sure where to begin?"	
+   				android:layout_width="wrap_content"
+   				android:layout_height="wrap_content"
+   				android:paddingLeft="@dimen/horizontalPadding"
+   				android:paddingRight="@dimen/horizontalPadding"
+   				style="@style/ListItemPrimary" />
+   			
+   			<TextView
+   				android:text="Browse suggested starting points."
+   				android:layout_width="wrap_content"
+   				android:layout_height="wrap_content"
+   				android:paddingLeft="@dimen/horizontalPadding"
+   				android:paddingRight="@dimen/horizontalPadding"
+   				style="@style/ListItemSecondary" />   		
+   				
+   		</LinearLayout>	
+   		
+   		<ImageView
+   			android:layout_width="wrap_content"
+   			android:layout_height="wrap_content"
+   			android:paddingRight="@dimen/horizontalPadding"
+   			android:src="@drawable/tour_notsure_arrow"
+   			android:layout_centerVertical="true"
+   			android:layout_alignParentRight="true" />
+   			
+   	</RelativeLayout>
+   	
+</FrameLayout>

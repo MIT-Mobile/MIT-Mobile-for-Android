@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent"
+	>
+
+	<TextView
+		android:id="@+id/titleBarSwitchLabel1"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"	
+		android:gravity="center_vertical"
+		android:textColor="@color/title_bar_switch_text_color"
+		android:background="@drawable/highlight_background"
+		android:paddingLeft="5dip"
+		android:paddingRight="5dip"
+		/>
+		
+	<View
+		android:layout_width="2dip"
+		android:layout_height="15dip"
+		android:layout_gravity="center_vertical"
+		android:background="#FFFFFFFF"
+		/>
+
+	<TextView
+		android:id="@+id/titleBarSwitchLabel2"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"	
+		android:gravity="center_vertical"
+		android:textColor="@color/title_bar_switch_text_color"
+		android:background="@drawable/highlight_background"
+		android:paddingLeft="5dip"
+		android:paddingRight="5dip"
+		/>		
+</LinearLayout>
