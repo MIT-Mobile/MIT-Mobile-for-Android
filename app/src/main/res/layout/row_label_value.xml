@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="0dip"
+    >
+
+    <!-- LABEL -->
+    <TextView
+        android:id="@+id/row_label"
+        android:layout_width="0dip"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        style="@style/ResourceViewAttributeLabel"
+        android:paddingRight="5dip"
+        />
+
+    <!-- VALUE -->
+    <TextView
+        android:id="@+id/row_value"
+        android:layout_width="0dip"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        style="@style/ResourceViewAttributeValue"
+        android:paddingLeft="5dip"
+        />
+
+
+</TableRow>
+
+

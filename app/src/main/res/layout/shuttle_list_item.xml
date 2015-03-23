@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/sbc_header_view">
+
+    <RelativeLayout
+        android:id="@+id/shuttle_route"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shuttle_home_cell_height"
+        android:background="@drawable/shuttle_route_selector">
+
+        <ImageView
+            android:id="@+id/shuttle_route_imageview"
+            style="@style/MITShuttleRoutesImage"
+            />
+        <TextView
+            android:id="@+id/shuttle_route_textview"
+            android:layout_toRightOf="@id/shuttle_route_imageview"
+            style="@style/MITShuttleRoutesLabel"
+            />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/top_view"
+        style="@style/MITShuttleRoutesView"
+        />
+
+    <LinearLayout
+        android:id="@+id/shuttle_stop_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/shuttle_home_stop_padding"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/shuttle_route_first_stop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shuttle_home_cell_height"
+            android:background="@drawable/shuttle_route_selector">
+            <TextView
+                android:id="@+id/first_stop_textview"
+                style="@style/MITShuttleRoutesStopsContent"
+                />
+            <TextView
+                android:id="@+id/first_minute_textview"
+                style="@style/MITShuttleRoutesMinutesContent"
+                />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/bottom_view"
+            style="@style/MITShuttleRoutesView"
+            />
+
+        <RelativeLayout
+            android:id="@+id/shuttle_route_second_stop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shuttle_home_cell_height"
+            android:background="@drawable/shuttle_route_selector">
+            <TextView
+                android:id="@+id/second_stop_textview"
+                style="@style/MITShuttleRoutesStopsContent"
+                />
+            <TextView
+                android:id="@+id/second_minute_textview"
+                style="@style/MITShuttleRoutesMinutesContent"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

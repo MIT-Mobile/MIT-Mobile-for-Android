@@ -1,14 +1,40 @@
-*.DS_Store
+#built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
 *.class
-.classpath
-.extenralToolBuilders
-.settings
+
+# generated files
 bin/
 gen/
-src/edu/mit/mitmobile/about/BuildSettings.java
-src/edu/mit/mitmobile2/about/Config.java
+
+# Local configuration file (sdk path, etc)
 local.properties
-res/values/build_settings_resource.xml
-res/raw/*.mp4
-build-deployment/build_settings.py
-ant.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Eclipse project files
+.classpath
+.project
+
+# Android Studio
+#.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build
+.idea
+.settings
+app/app.iml
+android-async-http-1.4.6/android-async-http-1.4.6.iml
+MIT-Mobile-for-Android.iml
+MITApp-marty.iml
+
+

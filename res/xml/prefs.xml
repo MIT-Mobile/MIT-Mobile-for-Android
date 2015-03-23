@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<ListPreference android:entries="@array/mobile_web_domain_options"
-		android:entryValues="@array/mobile_web_domain_values"
-		android:dialogTitle="Preferences" 
-		android:key="mit_mobile_server"
-		android:title="MIT Mobile Server" >
-	</ListPreference>
-</PreferenceScreen>

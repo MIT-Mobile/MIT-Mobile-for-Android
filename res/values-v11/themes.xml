@@ -1,8 +1,0 @@
-<resources>
-	<style name="Main" parent="android:Theme.Holo.Light">
-		<item name="android:windowBackground">@drawable/main_repeat</item>
-		<item name="android:background">@android:color/transparent</item>
-		<item name="android:windowNoTitle">true</item>
-		<item name="android:listViewStyle">@style/Lists</item>
-	</style>
-</resources>

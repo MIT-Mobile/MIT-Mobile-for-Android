@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('android-async-http-1.4.6.jar'))

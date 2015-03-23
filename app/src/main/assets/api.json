@@ -1,0 +1,17 @@
+{
+	"people":{
+		"dev":"http://mobile-dev.mit.edu/apis/people/",
+		"test":"http://mobile-test.mit.edu/apis/people/",
+		"prod":"http://m.mit.edu/apis/people/"
+	},
+	"resource":{
+		"dev":"https://kairos-dev.mit.edu/resource/",
+		"test":"https://kairos-test.mit.edu/resource/",
+		"prod":"http://kairos.mit.edu:3000/resource/"		
+	},
+	"shuttles":{
+	    "dev":"http://mobile-dev.mit.edu/apis/shuttles/",
+        "test":"http://mobile-test.mit.edu/apis/shuttles/",
+        "prod":"http://m.mit.edu/apis/shuttles/"
+	}
+}

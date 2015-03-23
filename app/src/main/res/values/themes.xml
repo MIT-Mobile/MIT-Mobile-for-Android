@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- the theme applied to the application or activity -->
+    <style name="MITMobile" parent="android:Theme.Holo.Light">
+        <item name="android:windowActionBarOverlay">true</item>
+
+    </style>
+
+
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Set AppCompat’s actionBarStyle -->
+        <item name="actionBarStyle">@style/MyActionBar</item>
+
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/mit_red</item>
+        <item name="colorPrimaryDark">@color/mit_red_dark</item>
+
+        <!-- The rest of your attributes -->
+        <item name="colorAccent">@color/mit_app_color</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+
+    <!-- ActionBar styles -->
+    <style name="MyActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@drawable/actionbar_background</item>
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="Main">
+        <item name="android:windowBackground">@drawable/main_repeat</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:listViewStyle">@style/Lists</item>
+    </style>
+
+    <style name="PlainBackground" parent="@style/Main">
+        <item name="android:windowBackground">@color/plainBackground</item>
+    </style>
+
+    <!--  row styles -->
+    <style name="Lists">
+        <item name="android:background">#ffffffff</item>
+        <item name="android:cacheColorHint">#ffffffff</item>
+
+        <item name="android:divider">@color/dividerColor</item>
+        <item name="android:dividerHeight">@dimen/dividerHeight</item>
+        <item name="android:listSelector">@drawable/highlight_background</item>
+    </style>
+
+    <!-- RESOURCE VIEW STYLES -->
+    <style name="ResourceViewName">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="ResourceViewStatus">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_okay</item>
+    </style>
+
+    <style name="ResourceViewLocationLabel">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_dark_grey</item>
+    </style>
+
+    <style name="ResourceViewSpecificationsLabel">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_dark_grey</item>
+    </style>
+
+    <style name="ResourceViewRoom">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="ResourceViewAttributeLabel">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <style name="ResourceViewAttributeValue">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <!-- END RESOURCE VIEW STYLES -->
+
+    <style name="ResourceRowHeader">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:background">#f0f0f0</item>
+    </style>
+
+
+    <style name="ResourceRowName">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="ResourceRowRoom">
+
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ResourceRowStatus">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/color_okay</item>
+    </style>
+
+
+    <style name="ResourceRowNameInfoWindow">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="ResourceRowRoomInfoWindow">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
+
+    <style name="ResourceRowStatusInfoWindow">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">@color/color_okay</item>
+    </style>
+
+    <style name="ResourceRowStatusOffline">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">#FF0000</item>
+    </style>
+
+    <!-- END RESOURCE STYLES -->
+
+    <!-- MAP STYLES -->
+    <style name="mapViewExpanded">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="mapViewCollapsed">
+        <item name="android:layout_height">@dimen/map_height</item>
+    </style>
+
+    <style name="PageTitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="PageSubtitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#fff0f0f0</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ListItemPrimary">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#ff222222</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ListItemSecondary">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#8c222222</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ListValue">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="Label">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ff990000</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="FormLabel">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#ff333333</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:paddingTop">@dimen/halfStandardPadding</item>
+        <item name="android:paddingBottom">@dimen/halfStandardPadding</item>
+    </style>
+
+    <!--  content styles -->
+    <style name="ContentTitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#ff222222</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="Deck">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#ff505050</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="Byline">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#ff505050</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="Caption">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#ff999999</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="BoldBodyText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ff202020</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="BodyText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ff202020</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="SubHead">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="SmallPrint">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#8c222222</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ToolbarTappable">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <color name="ToolbarTappableDisabled">#ff999999</color>
+
+    <style name="ToolbarTitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="ActionButtons">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ff4b4b4b</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="InfoTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#8c222222</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="TabTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/tab_text_color</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="MenuItemLabel">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="BoldRed">
+        <item name="android:textColor">#ff990000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- library status -->
+    <style name="LibraryStatus">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="LibraryFineStatus">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/libraries_gray</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="FineBalance">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <dimen name="standardPadding">12dip</dimen>
+    <dimen name="halfStandardPadding">6dip</dimen>
+
+    <dimen name="moduleHomeUnderlineWidth">2dip</dimen>
+    <color name="moduleHomeUnderlineColor">#993333</color>
+    <color name="homeButtonBackgroundColor">#993333</color>
+    <color name="tabUnderlineColor">#993333</color>
+
+</resources>
