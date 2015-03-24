@@ -8,23 +8,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 import edu.mit.mitmobile2.shuttles.ShuttleStopViewPagerFragment;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
 
-    private List<MITShuttleStopWrapper> stops;
+    private List<String> stopIds;
     private ShuttleStopViewPagerFragment[] fragments;
 
-    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, List<MITShuttleStopWrapper> stops) {
+    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, List<String> stopIds) {
         super(fragmentManager);
-        this.stops = stops;
-        fragments = new ShuttleStopViewPagerFragment[stops.size()];
+        this.stopIds = stopIds;
+        fragments = new ShuttleStopViewPagerFragment[stopIds.size()];
     }
 
     @Override
     public Fragment getItem(int position) {
         if (fragments[position] == null) {
-            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(stops.get(position));
+            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(stopIds.get(position));
             fragments[position] = fragment;
             return fragment;
         } else {
@@ -34,6 +33,6 @@ public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public int getCount() {
-        return stops.size();
+        return stopIds.size();
     }
 }

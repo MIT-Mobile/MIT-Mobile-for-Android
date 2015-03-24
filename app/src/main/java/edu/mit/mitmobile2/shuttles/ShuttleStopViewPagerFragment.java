@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.shuttles;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,15 +14,16 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.AdapterView;
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopViewPagerFragment extends Fragment{
-
-    public static final String STOP_KEY = "STOP_KEY";
 
     @InjectView(R.id.stop_prediction_adapter_view)
     AdapterView predictionAdapterView;
@@ -32,12 +34,13 @@ public class ShuttleStopViewPagerFragment extends Fragment{
     private ShuttleStopPredictionsAdapter predictionsAdapter;
     private ShuttleStopIntersectingAdapter intersectingAdapter;
 
-    private MITShuttleStopWrapper stop;
+    private String stopId;
+    private MITShuttleStopWrapper stop = new MITShuttleStopWrapper();
 
-    public static ShuttleStopViewPagerFragment newInstance(MITShuttleStopWrapper stop) {
+    public static ShuttleStopViewPagerFragment newInstance(String stopId) {
         ShuttleStopViewPagerFragment fragment = new ShuttleStopViewPagerFragment();
         Bundle args = new Bundle();
-        args.putParcelable(STOP_KEY, stop);
+        args.putString(Constants.STOP_ID_KEY, stopId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +50,13 @@ public class ShuttleStopViewPagerFragment extends Fragment{
         final View view = inflater.inflate(R.layout.fragment_stop_viewpager, container, false);
         ButterKnife.inject(this, view);
 
-        stop = getArguments().getParcelable(STOP_KEY);
+        stopId = getArguments().getString(Constants.STOP_ID_KEY);
+
+        String selectionString = Schema.Stop.TABLE_NAME + "." + Schema.Stop.STOP_ID + "=\'" + stopId + "\'";
+        Cursor cursor = getActivity().getContentResolver().query(MITShuttlesProvider.SINGLE_STOP_URI, Schema.Stop.ALL_COLUMNS, selectionString, null, null);
+        cursor.moveToFirst();
+        stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        cursor.close();
 
         predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), stop.getPredictions());
         //TODO: Remove and replace with actual intersecting routes passed from other class

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -50,7 +51,11 @@ public class ShuttleStopActivity extends SoloMapActivity {
         cursor.close();
 
         stops = route.getStops();
-        stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getSupportFragmentManager(), stops);
+        List<String> stopIds = new ArrayList<String>();
+        for (MITShuttleStopWrapper stop : stops) {
+            stopIds.add(stop.getId());
+        }
+        stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getSupportFragmentManager(), stopIds);
 
         predictionViewPager.setAdapter(stopViewPagerAdapter);
         predictionViewPager.setCurrentItem(getStartPosition());
