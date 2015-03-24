@@ -20,6 +20,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
+import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
@@ -70,5 +71,10 @@ public class ShuttleStopViewPagerFragment extends Fragment{
         intersectingRoutesAdapterView.setAdapter(intersectingAdapter);
 
         return view;
+    }
+
+    public void updatePredictions(List<MITShuttlePrediction> predictions) {
+        predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), predictions);
+        predictionAdapterView.setAdapter(predictionsAdapter);
     }
 }

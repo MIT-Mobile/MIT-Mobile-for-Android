@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.List;
 
 import edu.mit.mitmobile2.shuttles.ShuttleStopViewPagerFragment;
+import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
 public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
 
@@ -34,5 +35,11 @@ public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
     @Override
     public int getCount() {
         return stopIds.size();
+    }
+
+    public void updatePredictions(int position, List<MITShuttlePrediction> predictions) {
+        if (fragments[position] != null) {
+            fragments[position].updatePredictions(predictions);
+        }
     }
 }

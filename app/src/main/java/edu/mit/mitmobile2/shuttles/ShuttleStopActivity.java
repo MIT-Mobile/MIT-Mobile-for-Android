@@ -1,12 +1,15 @@
 package edu.mit.mitmobile2.shuttles;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -19,6 +22,7 @@ import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import timber.log.Timber;
 
 public class ShuttleStopActivity extends SoloMapActivity {
 
@@ -34,6 +38,7 @@ public class ShuttleStopActivity extends SoloMapActivity {
     private String routeId;
     private String stopId;
     private String uriString;
+    private String selectionString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,7 @@ public class ShuttleStopActivity extends SoloMapActivity {
         routeId = getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         stopId = getIntent().getStringExtra(Constants.STOP_ID_KEY);
         uriString = MITShuttlesProvider.STOPS_URI + "/" + stopId;
-        String selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
+        selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
         Cursor cursor = getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
         cursor.moveToFirst();
         route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
@@ -61,6 +66,9 @@ public class ShuttleStopActivity extends SoloMapActivity {
         predictionViewPager.setCurrentItem(getStartPosition());
 
         addTransparentView(transparentView);
+
+        updateData();
+        getSupportLoaderManager().initLoader(0, null, this);
     }
 
     private int getStartPosition() {
@@ -74,6 +82,36 @@ public class ShuttleStopActivity extends SoloMapActivity {
 
     @Override
     protected void updateData() {
-        super.updateData();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
+        bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.ROUTE_INFO_PATH);
+        bundle.putString(Constants.Shuttles.URI_KEY, uriString);
+
+        HashMap<String, String> pathparams = new HashMap<>();
+        pathparams.put("route", routeId);
+        bundle.putString(Constants.Shuttles.PATHS_KEY, pathparams.toString());
+
+        // FORCE THE SYNC
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        Timber.d("Requesting Predictions");
+
+        ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new MitCursorLoader(this, Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        data.moveToFirst();
+        MITShuttleRoute route = new MITShuttleRoute();
+        route.buildFromCursor(data, MitMobileApplication.dbAdapter);
+        stops = route.getStops();
+        int currentStop = predictionViewPager.getCurrentItem();
+        stopViewPagerAdapter.updatePredictions(currentStop, stops.get(currentStop).getPredictions());
     }
 }
