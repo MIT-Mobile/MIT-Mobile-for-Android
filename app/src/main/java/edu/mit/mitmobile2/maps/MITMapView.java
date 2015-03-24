@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.maps;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -30,9 +31,9 @@ import java.util.List;
 
 import edu.mit.mitmobile2.R;
 
-public class MITMapView implements GoogleMap.OnMapLoadedCallback {
+public class MITMapView {
 
-    public static final int MAP_BOUNDS_PADDING = 130;
+    private static int mapBoundsPadding;
 
     private GoogleMap mMap;
     private MapFragment mapFragment;
@@ -66,7 +67,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setOnMapLoadedCallback(this);
+        mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
     }
 
     public void show() {
@@ -219,7 +220,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
 
     public void setToDefaultBounds(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), MAP_BOUNDS_PADDING);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), mapBoundsPadding);
         if (animate) {
             mMap.animateCamera(cameraUpdate, animationLength, null);
         } else {
@@ -227,7 +228,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         }
     }
 
-    public void adjustCameraToShowInHeader(boolean animate, int animationLength) {
+    public void adjustCameraToShowInHeader(boolean animate, int animationLength, int orientation) {
         Resources resources = mContext.getResources();
         Projection projection = mMap.getProjection();
 
@@ -237,8 +238,16 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
             actionBarHeight = (int) TypedValue.complexToDimension(typedValue.data, resources.getDisplayMetrics());
         }
 
-        int x = resources.getDisplayMetrics().widthPixels / 2;
-        int y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - MAP_BOUNDS_PADDING;
+        int x, y;
+
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            x = resources.getDisplayMetrics().widthPixels / 2;
+            y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - mapBoundsPadding;
+        } else {
+            x = resources.getDisplayMetrics().widthPixels - ((resources.getDisplayMetrics().widthPixels - (int) (resources.getDimension(R.dimen.shuttle_routes_listview_landscape_width))) / 2);
+            y = (resources.getDisplayMetrics().heightPixels / 2) - actionBarHeight;
+        }
+
         Point point = new Point(x, y);
 
         LatLng offsetCenter = projection.fromScreenLocation(point);
@@ -248,16 +257,6 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
             mMap.animateCamera(cameraUpdate, animationLength, null);
         } else {
             mMap.moveCamera(cameraUpdate);
-
-        }
-    }
-
-
-    @Override
-    public void onMapLoaded() {
-        if (defaultBounds != null) {
-            setToDefaultBounds(false, 0);
-            adjustCameraToShowInHeader(false, 0);
         }
     }
 
@@ -302,6 +301,10 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
 
     public MapFragment getMapFragment() {
         return mapFragment;
+    }
+
+    public LatLngBounds getDefaultBounds() {
+        return defaultBounds;
     }
 }
 
