@@ -6,25 +6,40 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.mit.mitmobile2.AdapterView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopAdapter;
+import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
+import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopViewPagerFragment extends Fragment{
 
-    @InjectView(R.id.stop_listview)
-    ListView stopListView;
+    public static final String STOP_KEY = "STOP_KEY";
 
-    private ShuttleStopAdapter shuttleStopAdapter;
+    @InjectView(R.id.stop_prediction_adapter_view)
+    AdapterView predictionAdapterView;
+
+    @InjectView(R.id.intersecting_routes_adapter_view)
+    AdapterView intersectingRoutesAdapterView;
+
+    private ShuttleStopPredictionsAdapter predictionsAdapter;
+    private ShuttleStopIntersectingAdapter intersectingAdapter;
+
+    private MITShuttleStopWrapper stop;
 
     public static ShuttleStopViewPagerFragment newInstance(MITShuttleStopWrapper stop) {
-        return new ShuttleStopViewPagerFragment();
+        ShuttleStopViewPagerFragment fragment = new ShuttleStopViewPagerFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(STOP_KEY, stop);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -32,17 +47,18 @@ public class ShuttleStopViewPagerFragment extends Fragment{
         final View view = inflater.inflate(R.layout.fragment_stop_viewpager, container, false);
         ButterKnife.inject(this, view);
 
-        ArrayList<String> stops = new ArrayList<>();
-        stops.add("14m");
-        stops.add("22m");
-        stops.add("14m");
-        stops.add("Saferide Boston All");
-        stops.add("Saferide Boston All");
-        stops.add("Saferide Boston All");
-        stops.add("end");
+        stop = getArguments().getParcelable(STOP_KEY);
 
-        shuttleStopAdapter = new ShuttleStopAdapter(this.getActivity(), stops, 3);
-        stopListView.setAdapter(shuttleStopAdapter);
+        predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), stop.getPredictions());
+        //TODO: Remove and replace with actual intersecting routes passed from other class
+        MITShuttleRoute testRoute = new MITShuttleRoute();
+        testRoute.setTitle("Testing");
+        List<MITShuttleRoute> testRoutes = new ArrayList<>();
+        testRoutes.add(testRoute);
+        intersectingAdapter = new ShuttleStopIntersectingAdapter(getActivity(), testRoutes);
+
+        predictionAdapterView.setAdapter(predictionsAdapter);
+        intersectingRoutesAdapterView.setAdapter(intersectingAdapter);
 
         return view;
     }
