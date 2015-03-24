@@ -1,18 +1,18 @@
-package edu.mit.mitmobile2;
+package edu.mit.mitmobile2.shuttles.fragment;
 
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.Loader;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
@@ -26,18 +26,18 @@ import android.widget.RelativeLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
-import timber.log.Timber;
 
-public class SoloMapActivity extends MITActivity implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
-
+public class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
     private static final int PREDICTIONS_PERIOD = 15000;
     private static final int PREDICTIONS_TIMER_OFFSET = 10000;
 
@@ -69,22 +69,22 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private FloatingActionButton listButton;
     private FloatingActionButton myLocationButton;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_solo_map);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_solo_map, null);
 
         if (savedInstanceState != null) {
             mapViewExpanded = savedInstanceState.getBoolean(MAP_EXPANDED_KEY, false);
         }
 
-        predictionFragment = (FrameLayout) findViewById(R.id.prediction_fragment);
+        predictionFragment = (FrameLayout) view.findViewById(R.id.prediction_fragment);
 
-        mapItemsListView = (ListView) findViewById(R.id.map_list_view);
-        mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
-        listButton = (FloatingActionButton) findViewById(R.id.list_button);
-        myLocationButton = (FloatingActionButton) findViewById(R.id.my_location_button);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.shuttle_route_refresh_layout);
+        mapItemsListView = (ListView) view.findViewById(R.id.map_list_view);
+        mapItemsListViewWithFooter = (LinearLayout) view.findViewById(R.id.map_list_view_with_footer);
+        listButton = (FloatingActionButton) view.findViewById(R.id.list_button);
+        myLocationButton = (FloatingActionButton) view.findViewById(R.id.my_location_button);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.shuttle_route_refresh_layout);
 
         listButton.setSize(FloatingActionButton.SIZE_NORMAL);
         listButton.setColorNormalResId(R.color.mit_red);
@@ -100,19 +100,18 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         swipeRefreshLayout.setEnabled(false);
 
-        if (getIntent().getExtras() != null) {
+        if (getActivity().getIntent().getExtras() != null) {
             predictionFragment.setVisibility(View.GONE);
         } else {
             mapItemsListView.setVisibility(View.GONE);
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        MapFragment mapFragment = new MapFragment();
+        getFragmentManager().beginTransaction().replace(R.id.route_map, mapFragment).commit();
 
-        mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
+        mapView = new MITMapView(getActivity(), getActivity().getFragmentManager(), mapFragment);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
         mapView.getMap().setOnMapLoadedCallback(this);
-
-        mapView.getMap().getMapType();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -139,7 +138,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                 }
             });
         } else {
-            transparentLandscapeView = findViewById(R.id.transparent_map_overlay_landscape);
+            transparentLandscapeView = view.findViewById(R.id.transparent_map_overlay_landscape);
             transparentLandscapeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -180,9 +179,11 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             listButton.setVisibility(View.VISIBLE);
             myLocationButton.setVisibility(View.VISIBLE);
         }
+
+        return view;
     }
 
-    protected void showListView() {
+    public void showListView() {
         if (!animating) {
             listButton.setVisibility(View.INVISIBLE);
             myLocationButton.setVisibility(View.INVISIBLE);
@@ -206,7 +207,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     }
 
     protected void displayMapItems() {
-        Timber.d(TAG, "displayMapItems()");
         ArrayAdapter<MapItem> arrayAdapter = this.getMapItemAdapter();
         mapItemsListView.setAdapter(arrayAdapter);
     }
@@ -376,32 +376,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                                    // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         timer.cancel();
         timer.purge();
         timer = null;
@@ -409,14 +386,14 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         timer = new Timer();
         startTimerTask();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(MAP_EXPANDED_KEY, mapViewExpanded);
     }
@@ -427,8 +404,12 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapView.setToDefaultBounds(false, 0);
 
             if (!mapViewExpanded) {
-                mapView.adjustCameraToShowInHeader(false, 0, mContext.getResources().getConfiguration().orientation);
+                mapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
             }
         }
+    }
+
+    public boolean isMapViewExpanded() {
+        return mapViewExpanded;
     }
 }

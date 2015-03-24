@@ -69,6 +69,19 @@ public class MITMapView {
         mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
     }
 
+    public MITMapView(Context context, FragmentManager fm, MapFragment mapFragment) {
+        this.mContext = context;
+        this.mFm = fm;
+        this.mapFragment = mapFragment;
+        mMap = this.mapFragment.getMap();
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, MITMapView.INITIAL_ZOOM));
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
+    }
+
     public void show() {
         Fragment f = mFm.findFragmentById(mapResourceId);
         mFm.beginTransaction()

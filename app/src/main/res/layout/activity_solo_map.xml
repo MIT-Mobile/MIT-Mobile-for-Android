@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/route_map"
-        class="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
     <LinearLayout
         android:id="@+id/map_list_view_with_footer"

@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,7 @@ public class ModuleSelectorActivity extends Activity {
     public static List<NavItem> navigationTitles = new ArrayList<>();
     public static Map<String, NavItem> navMap = null;
     public static Map<String, String> moduleMap = null;
+    public static Map<String, Fragment> fragmentMap = new HashMap<>();
     private NavItem mNavItem;
 
     @Override
