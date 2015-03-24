@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.shuttles;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -84,9 +83,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
                 points.add(point);
             }
             options.addAll(points);
-            options.color(Color.BLUE);
+            options.color(mContext.getResources().getColor(R.color.map_path_color));
             options.visible(true);
-            options.width(8f);
+            options.width(12f);
             getMapView().addPolyline(options);
         }
     }

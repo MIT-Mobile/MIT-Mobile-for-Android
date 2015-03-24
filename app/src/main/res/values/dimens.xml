@@ -23,4 +23,5 @@
     <dimen name="shuttle_phone_number_top_padding">8dp</dimen>
     <dimen name="shuttle_home_content_size">16sp</dimen>
     <dimen name="shuttle_home_phone_size">14sp</dimen>
+    <dimen name="shuttle_map_prediction_size">12sp</dimen>
 </resources>

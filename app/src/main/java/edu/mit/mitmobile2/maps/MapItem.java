@@ -18,6 +18,7 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
     public int mapItemType;
     private String markerText;
     protected boolean isDynamic = false;
+    protected boolean isVehicle = false;
 
     public int getMapItemType() {
         return mapItemType;
@@ -53,5 +54,13 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
 
     public void setDynamic(boolean isDynamic) {
         this.isDynamic = isDynamic;
+    }
+
+    public boolean isVehicle() {
+        return isVehicle;
+    }
+
+    public void setVehicle(boolean isVehicle) {
+        this.isVehicle = isVehicle;
     }
 }

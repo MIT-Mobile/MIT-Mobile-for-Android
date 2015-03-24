@@ -46,6 +46,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
     private ArrayList<MapItem> mapItems = new ArrayList<>();
 
     private List<Marker> dynamicMarkers = new ArrayList<>();
+    private List<Marker> staticMarkers = new ArrayList<>();
     private List<Polyline> dynamicLines = new ArrayList<>();
     private List<Polygon> dynamicPolygons = new ArrayList<>();
 
@@ -103,9 +104,16 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
                                 dynamicMarkers.add(marker);
                             }
                         } else {
-                            Marker marker = mMap.addMarker(mItem.getMarkerOptions());
+                            Marker marker;
+                            if (mItem.isVehicle()) {
+                                marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.maps_shuttle_indicator)));
+                            } else {
+                                marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
+                            }
                             if (mItem.isDynamic()) {
                                 dynamicMarkers.add(marker);
+                            } else {
+                                staticMarkers.add(marker);
                             }
                         }
                         break;
@@ -123,7 +131,6 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
                             dynamicPolygons.add(polygon);
                         }
                         break;
-
                 }
             }
         }
@@ -146,6 +153,16 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         dynamicPolygons.clear();
 
         removeDynamicItems();
+    }
+
+    public void updateStaticItems(boolean mapViewExpanded) {
+        for (Marker m : staticMarkers) {
+            if (mapViewExpanded) {
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops));
+            } else {
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin));
+            }
+        }
     }
 
     public void removeDynamicItems() {
@@ -286,6 +303,5 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
     public MapFragment getMapFragment() {
         return mapFragment;
     }
-
 }
 
