@@ -19,14 +19,14 @@ import timber.log.Timber;
 
 public class MITShuttlesProvider extends ContentProvider {
 
-    private static final int ROUTES = 10;
-    private static final int ROUTE_ID = 20;
-    private static final int STOPS = 30;
-    private static final int STOPS_ID = 40;
-    private static final int CHECK_ROUTES = 50;
-    private static final int CHECK_STOPS = 60;
-    private static final int PREDICTIONS = 70;
-    private static final int LOCATION = 80;
+    public static final int ROUTES = 10;
+    public static final int ROUTE_ID = 20;
+    public static final int STOPS = 30;
+    public static final int STOPS_ID = 40;
+    public static final int CHECK_ROUTES = 50;
+    public static final int CHECK_STOPS = 60;
+    public static final int PREDICTIONS = 70;
+    public static final int LOCATION = 80;
 
     private static final String AUTHORITY = "edu.mit.mitmobile2.provider";
 
@@ -48,7 +48,7 @@ public class MITShuttlesProvider extends ContentProvider {
             "JOIN stops ON route_stops.stop_id = stops.stop_id " +
             "ORDER BY routes._id ASC, stops.distance ASC";
 
-    private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    public static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/routes", ROUTES);
