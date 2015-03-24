@@ -115,36 +115,34 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
         mapView.getMap().setOnMapLoadedCallback(this);
 
-        if (mapView.getMap().getMapType() == MapItem.MARKERTYPE) {
-            mapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
+        mapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                if (marker.getTitle() != null) {
+                    View view = getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
+                    TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
+                    TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+                    stopNameTextView.setText(marker.getTitle());
+                    stopPredictionView.setText(marker.getSnippet());
+                    return view;
+                } else {
                     return null;
                 }
+            }
+        });
 
-                @Override
-                public View getInfoContents(Marker marker) {
-                    if (marker.getTitle() != null) {
-                        View view = getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
-                        TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
-                        TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
-                        stopNameTextView.setText(marker.getTitle());
-                        stopPredictionView.setText(marker.getSnippet());
-                        return view;
-                    } else {
-                        return null;
-                    }
-                }
-            });
-
-            mapView.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Intent intent = new Intent(SoloMapActivity.this, ShuttleStopActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
+        mapView.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(SoloMapActivity.this, ShuttleStopActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
