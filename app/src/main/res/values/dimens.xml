@@ -27,5 +27,5 @@
     <dimen name="shuttle_map_prediction_size">12sp</dimen>
     <dimen name="solo_map_fab_margin">10dp</dimen>
     <dimen name="map_bounds_padding">40dp</dimen>
-
+    <dimen name="map_popup_view_padding">2dp</dimen>
 </resources>

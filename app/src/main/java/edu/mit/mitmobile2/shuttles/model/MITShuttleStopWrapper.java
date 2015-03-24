@@ -170,8 +170,6 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
             } else {
                 m.snippet("Arriving in " + this.predictions.get(0).getSeconds() / 60 + " minutes");
             }
-        } else {
-            m.snippet("Not in service");
         }
         LatLng position = new LatLng(this.lat, this.lon);
         m.position(position);

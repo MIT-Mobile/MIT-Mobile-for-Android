@@ -70,6 +70,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         updateMapItems((ArrayList) route.getStops());
         displayMapItems();
 
+        isRoutePredictable = route.isPredictable();
+        isRouteScheduled = route.isScheduled();
+
         routeDescriptionTextView.setText(route.getDescription());
         if (route.isPredictable()) {
             routeStatusTextView.setText(getResources().getString(R.string.route_in_service));

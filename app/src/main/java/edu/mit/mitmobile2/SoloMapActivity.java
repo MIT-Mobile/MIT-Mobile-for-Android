@@ -72,10 +72,15 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private FloatingActionButton listButton;
     private FloatingActionButton myLocationButton;
 
+    protected boolean isRoutePredictable = false;
+    protected boolean isRouteScheduled =false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_map);
+
+        mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
 
         if (savedInstanceState != null) {
             mapViewExpanded = savedInstanceState.getBoolean(MAP_EXPANDED_KEY, false);
@@ -111,7 +116,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
         mapView.getMap().setOnMapLoadedCallback(this);
 
@@ -128,7 +132,13 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                     TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
                     TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
                     stopNameTextView.setText(marker.getTitle());
-                    stopPredictionView.setText(marker.getSnippet());
+                    if (isRoutePredictable) {
+                        stopPredictionView.setText(marker.getSnippet());
+                    } else if (isRouteScheduled) {
+                        stopPredictionView.setText(getString(R.string.route_unknown));
+                    } else {
+                        stopPredictionView.setText(getString(R.string.route_not_in_service));
+                    }
                     return view;
                 } else {
                     return null;
@@ -334,6 +344,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
 
+        updateMITMapView(mapView);
+
         if (!mapViewExpanded) {
             mapViewExpanded = true;
             mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
@@ -467,5 +479,4 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     public void updateMITMapView(MITMapView mapView) {
         mapView.updateStaticItems(mapViewExpanded);
     }
-
 }
