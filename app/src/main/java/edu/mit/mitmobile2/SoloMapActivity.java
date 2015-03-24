@@ -22,11 +22,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -34,6 +36,7 @@ import java.util.TimerTask;
 
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shuttles.ShuttleStopActivity;
 import timber.log.Timber;
 
 public class SoloMapActivity extends MITActivity implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
@@ -69,10 +72,15 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
     private FloatingActionButton listButton;
     private FloatingActionButton myLocationButton;
 
+    protected boolean isRoutePredictable = false;
+    protected boolean isRouteScheduled =false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_map);
+
+        mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
 
         if (savedInstanceState != null) {
             mapViewExpanded = savedInstanceState.getBoolean(MAP_EXPANDED_KEY, false);
@@ -108,9 +116,43 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mapView = new MITMapView(this, getFragmentManager(), R.id.route_map);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
         mapView.getMap().setOnMapLoadedCallback(this);
+
+        mapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                if (marker.getTitle() != null) {
+                    View view = getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
+                    TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
+                    TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+                    stopNameTextView.setText(marker.getTitle());
+                    if (isRoutePredictable) {
+                        stopPredictionView.setText(marker.getSnippet());
+                    } else if (isRouteScheduled) {
+                        stopPredictionView.setText(getString(R.string.route_unknown));
+                    } else {
+                        stopPredictionView.setText(getString(R.string.route_not_in_service));
+                    }
+                    return view;
+                } else {
+                    return null;
+                }
+            }
+        });
+
+        mapView.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(SoloMapActivity.this, ShuttleStopActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -265,6 +307,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
 
+        updateMITMapView(mapView);
+
         if (!mapViewExpanded) {
             mapViewExpanded = true;
             mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
@@ -299,6 +343,8 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
+
+        updateMITMapView(mapView);
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
@@ -428,5 +474,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                 mapView.adjustCameraToShowInHeader(false, 0, mContext.getResources().getConfiguration().orientation);
             }
         }
+    }
+
+    public void updateMITMapView(MITMapView mapView) {
+        mapView.updateStaticItems(mapViewExpanded);
     }
 }

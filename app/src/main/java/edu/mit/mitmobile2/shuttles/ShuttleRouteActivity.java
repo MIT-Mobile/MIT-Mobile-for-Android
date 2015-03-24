@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.shuttles;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
@@ -71,6 +70,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         updateMapItems((ArrayList) route.getStops());
         displayMapItems();
 
+        isRoutePredictable = route.isPredictable();
+        isRouteScheduled = route.isScheduled();
+
         routeDescriptionTextView.setText(route.getDescription());
         if (route.isPredictable()) {
             routeStatusTextView.setText(getResources().getString(R.string.route_in_service));
@@ -94,9 +96,9 @@ public class ShuttleRouteActivity extends SoloMapActivity {
                 points.add(point);
             }
             options.addAll(points);
-            options.color(Color.BLUE);
+            options.color(mContext.getResources().getColor(R.color.map_path_color));
             options.visible(true);
-            options.width(8f);
+            options.width(12f);
             getMapView().addPolyline(options);
         }
     }
