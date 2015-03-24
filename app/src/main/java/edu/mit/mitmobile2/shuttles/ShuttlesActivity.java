@@ -329,6 +329,10 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() == 0) {
+            return;
+        }
+
         Timber.d("Notified!");
         blockServerCalls = false;
 

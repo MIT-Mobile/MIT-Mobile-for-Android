@@ -53,7 +53,6 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(android.R.style.Theme_Holo_Light);
 
         // Set content view for MIT Module (includes navigation drawer)
         setContentView(R.layout.mit_module_layout);
