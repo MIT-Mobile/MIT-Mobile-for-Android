@@ -8,17 +8,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
+    <FrameLayout
+        android:id="@+id/shuttle_stop_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <LinearLayout
         android:id="@+id/map_list_view_with_footer"
         android:layout_width="@dimen/shuttle_routes_listview_landscape_width"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/prediction_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/shuttle_route_refresh_layout"

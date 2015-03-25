@@ -46,10 +46,12 @@ public class MITMapView {
     private int mapResourceId;
     private Marker lastClickedMarker;
     private LatLngBounds defaultBounds;
+    private boolean isMapExpanded = false;
 
     private ArrayList<MapItem> mapItems = new ArrayList<>();
 
     private List<Marker> dynamicMarkers = new ArrayList<>();
+    private List<Marker> staticMarkers = new ArrayList<>();
     private List<Polyline> dynamicLines = new ArrayList<>();
     private List<Polygon> dynamicPolygons = new ArrayList<>();
 
@@ -120,9 +122,20 @@ public class MITMapView {
                                 dynamicMarkers.add(marker);
                             }
                         } else {
-                            Marker marker = mMap.addMarker(mItem.getMarkerOptions());
+                            Marker marker;
+                            if (mItem.isVehicle()) {
+                                marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.maps_shuttle_indicator)));
+                            } else {
+                                if (!isMapExpanded) {
+                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
+                                } else {
+                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin)));
+                                }
+                            }
                             if (mItem.isDynamic()) {
                                 dynamicMarkers.add(marker);
+                            } else {
+                                staticMarkers.add(marker);
                             }
                         }
                         break;
@@ -140,7 +153,6 @@ public class MITMapView {
                             dynamicPolygons.add(polygon);
                         }
                         break;
-
                 }
             }
         }
@@ -163,6 +175,16 @@ public class MITMapView {
         dynamicPolygons.clear();
 
         removeDynamicItems();
+    }
+
+    public void updateStaticItems(boolean mapViewExpanded) {
+        for (Marker m : staticMarkers) {
+            if (mapViewExpanded) {
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops));
+            } else {
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin));
+            }
+        }
     }
 
     public void removeDynamicItems() {
@@ -304,6 +326,10 @@ public class MITMapView {
 
     public LatLngBounds getDefaultBounds() {
         return defaultBounds;
+    }
+
+    public void setMapViewExpanded(boolean isMapExpanded) {
+        this.isMapExpanded = isMapExpanded;
     }
 }
 

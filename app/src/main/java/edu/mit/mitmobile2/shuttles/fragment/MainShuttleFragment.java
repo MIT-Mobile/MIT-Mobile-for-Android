@@ -70,7 +70,7 @@ public class MainShuttleFragment extends Fragment implements LoaderManager.Loade
         @Override
         public void shuttleRouteClick(final String routeID) {
             Intent intent = new Intent(getActivity(), ShuttleRouteActivity.class);
-            intent.putExtra("routeID", routeID);
+            intent.putExtra(Constants.ROUTE_ID_KEY, routeID);
             startActivity(intent);
         }
 

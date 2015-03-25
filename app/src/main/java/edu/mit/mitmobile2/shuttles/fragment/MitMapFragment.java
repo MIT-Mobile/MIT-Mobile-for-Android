@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.shuttles.fragment;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -22,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdate;
@@ -29,14 +31,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shuttles.ShuttleStopActivity;
 
 public class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
     private static final int PREDICTIONS_PERIOD = 15000;
@@ -63,12 +68,18 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
     protected boolean mapViewExpanded = false;
     private boolean animating = false;
 
+    private boolean stopMode;
+    private FrameLayout shuttleStopContent;
+
     private int originalPosition = -1;
 
     private static Timer timer;
 
     private FloatingActionButton listButton;
     private FloatingActionButton myLocationButton;
+
+    protected boolean isRoutePredictable = false;
+    protected boolean isRouteScheduled =false;
 
     @Nullable
     @Override
@@ -77,7 +88,12 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
         if (savedInstanceState != null) {
             mapViewExpanded = savedInstanceState.getBoolean(MAP_EXPANDED_KEY, false);
+
         }
+
+        shuttleStopContent = (FrameLayout) view.findViewById(R.id.shuttle_stop_content);
+        shuttleStopContent.setVisibility(View.GONE);
+        stopMode = false;
 
         predictionFragment = (FrameLayout) view.findViewById(R.id.prediction_fragment);
         MapView googleMapView = (MapView) view.findViewById(R.id.route_map);
@@ -103,13 +119,43 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
         swipeRefreshLayout.setEnabled(false);
 
-        if (getActivity().getIntent().getExtras() != null) {
-            predictionFragment.setVisibility(View.GONE);
-        } else {
-            mapItemsListView.setVisibility(View.GONE);
-        }
-
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
+        mitMapView.setMapViewExpanded(mapViewExpanded);
+
+        mitMapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                if (marker.getTitle() != null) {
+                    View view = View.inflate(getActivity(), R.layout.mit_map_info_window, null);
+                    TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
+                    TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+                    stopNameTextView.setText(marker.getTitle());
+                    if (isRoutePredictable) {
+                        stopPredictionView.setText(marker.getSnippet());
+                    } else if (isRouteScheduled) {
+                        stopPredictionView.setText(getString(R.string.route_unknown));
+                    } else {
+                        stopPredictionView.setText(getString(R.string.route_not_in_service));
+                    }
+                    return view;
+                } else {
+                    return null;
+                }
+            }
+        });
+
+        mitMapView.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -216,6 +262,13 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
     protected ArrayAdapter<MapItem> getMapItemAdapter() {
         return null;
+    }
+
+    protected void addShuttleStopContent(View content) {
+        stopMode = true;
+        shuttleStopContent.addView(content);
+        mapItemsListViewWithFooter.setVisibility(View.GONE);
+        shuttleStopContent.setVisibility(View.VISIBLE);
     }
 
     protected void addHeaderView(View headerView) {
@@ -421,6 +474,10 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
                 mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
             }
         }
+    }
+
+    public void updateMITMapView(MITMapView mapView) {
+        mapView.updateStaticItems(mapViewExpanded);
     }
 
     public boolean isMapViewExpanded() {
