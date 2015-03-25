@@ -132,6 +132,7 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         adapter.notifyDataSetChanged();
 
         updateMapItems((ArrayList) route.getVehicles());
+        updateMapItems((ArrayList) route.getStops());
 
         if (swipeRefreshLayout.isRefreshing()) {
             runOnUiThread(new Runnable() {
