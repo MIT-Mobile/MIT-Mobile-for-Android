@@ -5,4 +5,9 @@
         <enum name="match_parent" value="-1" />
         <enum name="wrap_content" value="-2" />
     </attr>
+
+    <declare-styleable name="AdapterView">
+        <attr name="android:divider"/>
+        <attr name="android:dividerHeight"/>
+    </declare-styleable>
 </resources>

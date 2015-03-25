@@ -6,17 +6,16 @@
     android:background="@color/sbc_layout_view">
 
     <TextView
-        android:id="@+id/predicion_textview"
+        android:id="@+id/predicion_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textColor="@color/contents_text"
-        />
+        android:textColor="@color/contents_text"/>
 
     <ImageView
         android:layout_width="@dimen/shuttle_home_stop_padding"
         android:layout_height="@dimen/shuttle_home_stop_padding"
         android:layout_alignParentRight="true"
-        android:src="@drawable/home_shuttles"
-        />
+        android:src="@drawable/home_shuttles"/>
+
 </RelativeLayout>

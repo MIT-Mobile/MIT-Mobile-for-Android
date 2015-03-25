@@ -1,13 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:background="@color/medium_grey">
 
-   <ListView
-       android:id="@+id/stop_listview"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <edu.mit.mitmobile2.AdapterView
+            android:id="@+id/stop_prediction_adapter_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </edu.mit.mitmobile2.AdapterView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/bell_info"
+            android:textColor="@color/color_dark_grey"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/intersecting_routes"
+            android:textColor="@color/color_dark_grey"/>
+
+        <edu.mit.mitmobile2.AdapterView
+            android:id="@+id/intersecting_routes_adapter_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+        </edu.mit.mitmobile2.AdapterView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/other_routes_info"
+            android:textColor="@color/color_dark_grey"/>
+
+    </LinearLayout>
+
+</ScrollView>

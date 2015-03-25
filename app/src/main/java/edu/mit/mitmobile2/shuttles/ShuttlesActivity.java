@@ -1,30 +1,18 @@
 package edu.mit.mitmobile2.shuttles;
 
-import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.MITModuleActivity;
-import edu.mit.mitmobile2.MitMobileApplication;
-import edu.mit.mitmobile2.PreferenceUtils;
-import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
-import timber.log.Timber;
-
-import android.content.ContentResolver;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.view.View;
-import android.content.ActivityNotFoundException;
-import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -34,6 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.PreferenceUtils;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
+import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
+import timber.log.Timber;
 
 public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -310,15 +310,17 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
     }
 
     @Override
-    public void shuttleRouteClick(final String routeID) {
+    public void shuttleRouteClick(final String routeId) {
         Intent intent = new Intent(this, ShuttleRouteActivity.class);
-        intent.putExtra("routeID", routeID);
+        intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
         startActivity(intent);
     }
 
     @Override
-    public void shuttleStopClick(String stopID) {
+    public void shuttleStopClick(String routeId, String stopId) {
         Intent intent = new Intent(this, ShuttleStopActivity.class);
+        intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
+        intent.putExtra(Constants.STOP_ID_KEY, stopId);
         startActivity(intent);
     }
 
