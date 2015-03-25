@@ -55,12 +55,14 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     private LinearLayout mapItemsListViewWithFooter;
     private View transparentView;
-    private FrameLayout predictionFragment;
     private View transparentLandscapeView;
 
     private boolean hasHeader;
     private RelativeLayout routeInfoSegment;
     protected SwipeRefreshLayout swipeRefreshLayout;
+
+    private boolean stopMode;
+    private FrameLayout shuttleStopContent;
 
     protected boolean mapViewExpanded = false;
     private boolean animating = false;
@@ -87,7 +89,9 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapView.setMapViewExpanded(mapViewExpanded);
         }
 
-        predictionFragment = (FrameLayout) findViewById(R.id.prediction_fragment);
+        shuttleStopContent = (FrameLayout) findViewById(R.id.shuttle_stop_content);
+        shuttleStopContent.setVisibility(View.GONE);
+        stopMode = false;
 
         mapItemsListView = (ListView) findViewById(R.id.map_list_view);
         mapItemsListViewWithFooter = (LinearLayout) findViewById(R.id.map_list_view_with_footer);
@@ -108,12 +112,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         myLocationButton.setStrokeVisible(false);
 
         swipeRefreshLayout.setEnabled(false);
-
-        if (getIntent().getExtras() != null) {
-            predictionFragment.setVisibility(View.GONE);
-        } else {
-            mapItemsListView.setVisibility(View.GONE);
-        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -258,6 +256,13 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
     protected ArrayAdapter<MapItem> getMapItemAdapter() {
         return null;
+    }
+
+    protected void addShuttleStopContent(View content) {
+        stopMode = true;
+        shuttleStopContent.addView(content);
+        mapItemsListViewWithFooter.setVisibility(View.GONE);
+        shuttleStopContent.setVisibility(View.VISIBLE);
     }
 
     protected void addHeaderView(View headerView) {

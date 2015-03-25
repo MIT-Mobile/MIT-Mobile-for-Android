@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
@@ -26,10 +24,7 @@ import timber.log.Timber;
 
 public class ShuttleStopActivity extends SoloMapActivity {
 
-    @InjectView(R.id.prediction_viewpager)
     ViewPager predictionViewPager;
-
-    @InjectView(R.id.transparent_map_overlay)
     View transparentView;
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
@@ -43,8 +38,10 @@ public class ShuttleStopActivity extends SoloMapActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shuttle_stop);
-        ButterKnife.inject(this);
+        View shuttleStopContent = View.inflate(this, R.layout.shuttle_stop_content, null);
+
+        predictionViewPager = (ViewPager) shuttleStopContent.findViewById(R.id.prediction_view_pager);
+        transparentView = shuttleStopContent.findViewById(R.id.transparent_map_overlay);
 
         routeId = getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         stopId = getIntent().getStringExtra(Constants.STOP_ID_KEY);
@@ -66,6 +63,7 @@ public class ShuttleStopActivity extends SoloMapActivity {
         predictionViewPager.setCurrentItem(getStartPosition());
 
         addTransparentView(transparentView);
+        addShuttleStopContent(shuttleStopContent);
 
         updateData();
         getSupportLoaderManager().initLoader(0, null, this);
