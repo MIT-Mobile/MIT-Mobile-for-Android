@@ -43,7 +43,7 @@ public class MITMapView {
     private int mapResourceId;
     private Marker lastClickedMarker;
     private LatLngBounds defaultBounds;
-    private boolean isMapExpanded = true;
+    private boolean isMapExpanded = false;
 
     private ArrayList<MapItem> mapItems = new ArrayList<>();
 
@@ -110,7 +110,7 @@ public class MITMapView {
                             if (mItem.isVehicle()) {
                                 marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.maps_shuttle_indicator)));
                             } else {
-                                if (isMapExpanded) {
+                                if (!isMapExpanded) {
                                     marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
                                 } else {
                                     marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin)));
