@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/shuttle_stop_predictions_cell_height"
+    android:layout_height="@dimen/shuttle_stop_cell_height"
     android:background="@color/sbc_layout_view">
 
     <TextView
@@ -11,11 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_centerVertical="true"
-        android:textColor="@color/contents_text"/>
+        android:textColor="@color/contents_text"
+        android:textStyle="bold"/>
 
     <ImageView
-        android:layout_width="@dimen/shuttle_stop_predictions_alert_icon_size"
-        android:layout_height="@dimen/shuttle_stop_predictions_alert_icon_size"
+        android:layout_width="@dimen/shuttle_stop_icon_size"
+        android:layout_height="@dimen/shuttle_stop_icon_size"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
