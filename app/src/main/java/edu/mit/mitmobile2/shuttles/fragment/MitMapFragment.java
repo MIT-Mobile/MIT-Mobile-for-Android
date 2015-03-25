@@ -24,9 +24,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
     private ListView mapItemsListView;
     private ArrayList mapItems;
-    private MITMapView mapView;
+    private MITMapView mitMapView;
 
     private LinearLayout mapItemsListViewWithFooter;
     private View transparentView;
@@ -79,6 +80,8 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
         }
 
         predictionFragment = (FrameLayout) view.findViewById(R.id.prediction_fragment);
+        MapView googleMapView = (MapView) view.findViewById(R.id.route_map);
+        googleMapView.onCreate(savedInstanceState);
 
         mapItemsListView = (ListView) view.findViewById(R.id.map_list_view);
         mapItemsListViewWithFooter = (LinearLayout) view.findViewById(R.id.map_list_view_with_footer);
@@ -106,12 +109,7 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
             mapItemsListView.setVisibility(View.GONE);
         }
 
-        MapFragment mapFragment = new MapFragment();
-        getFragmentManager().beginTransaction().replace(R.id.route_map, mapFragment).commit();
-
-        mapView = new MITMapView(getActivity(), getActivity().getFragmentManager(), mapFragment);
-        mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
-        mapView.getMap().setOnMapLoadedCallback(this);
+        mitMapView = new MITMapView(getActivity(), googleMapView, this);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -132,7 +130,7 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
                             }
 
                             translation = (originalPosition - newPosition) / 2;
-                            mapView.getMapFragment().getView().setTranslationY(-translation);
+                            mitMapView.getGoogleMapView().setTranslationY(-translation);
                         }
                     }
                 }
@@ -164,8 +162,9 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
         myLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Location myLocation = getMapView().getMyLocation();
-                getMapView().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f), 400, null);
+                Location myLocation = mitMapView.getMap().getMyLocation();
+                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f);
+                mitMapView.getMap().animateCamera(update, 400, null);
             }
         });
 
@@ -201,9 +200,9 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
     protected void updateMapItems(ArrayList mapItems) {
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
-            mapView.clearDynamic();
+            mitMapView.clearDynamic();
         }
-        mapView.addMapItemList(mapItems, false);
+        mitMapView.addMapItemList(mapItems, false);
     }
 
     protected void displayMapItems() {
@@ -212,7 +211,7 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
     }
 
     protected GoogleMap getMapView() {
-        return mapView.getMap();
+        return mitMapView.getMap();
     }
 
     protected ArrayAdapter<MapItem> getMapItemAdapter() {
@@ -269,20 +268,20 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
 
-            if (mapView.getMapFragment().getView().getTranslationY() != 0) {
-                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getMapFragment().getView().getTranslationY(), NO_TRANSLATION);
+            if (mitMapView.getGoogleMapView().getTranslationY() != 0) {
+                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mitMapView.getGoogleMapView().getTranslationY(), NO_TRANSLATION);
                 mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
                 //The way translatation animations are setup, this is done to avoid flicker
-                mapView.getMapFragment().getView().setTranslationY(0);
-                mapView.getMapFragment().getView().startAnimation(mapTranslateAnimation);
+                mitMapView.getGoogleMapView().setTranslationY(0);
+                mitMapView.getGoogleMapView().startAnimation(mapTranslateAnimation);
             }
         } else {
             mapViewExpanded = false;
-            mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
-            mapView.setToDefaultBounds(false, 0);
-            mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
+            mitMapView.getMap().getUiSettings().setAllGesturesEnabled(false);
+            mitMapView.setToDefaultBounds(false, 0);
+            mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
             mapItemsListViewWithFooter.setVisibility(View.VISIBLE);
         }
         mapItemsListViewWithFooter.startAnimation(translateAnimation);
@@ -304,12 +303,12 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
             transparentLandscapeView.setVisibility(View.INVISIBLE);
         } else {
             mapViewExpanded = false;
-            mapView.setToDefaultBounds(false, 0);
-            mapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
+            mitMapView.setToDefaultBounds(false, 0);
+            mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
             transparentLandscapeView.setVisibility(View.VISIBLE);
             mapItemsListViewWithFooter.setVisibility(View.VISIBLE);
         }
@@ -348,7 +347,7 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
         if (mapViewExpanded) {
             mapItemsListView.setSelection(0);
             mapItemsListViewWithFooter.setVisibility(View.GONE);
-            mapView.getMap().getUiSettings().setAllGesturesEnabled(true);
+            mitMapView.getMap().getUiSettings().setAllGesturesEnabled(true);
 
             listButton.setVisibility(View.VISIBLE);
             myLocationButton.setVisibility(View.VISIBLE);
@@ -382,29 +381,44 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
         timer.cancel();
         timer.purge();
         timer = null;
+        mitMapView.getGoogleMapView().onPause();
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mitMapView.getGoogleMapView().onResume();
         timer = new Timer();
         startTimerTask();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mitMapView.getGoogleMapView().onLowMemory();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(MAP_EXPANDED_KEY, mapViewExpanded);
+        mitMapView.getGoogleMapView().onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroy() {
+        mitMapView.getGoogleMapView().onDestroy();
+        super.onDestroy();
     }
 
     @Override
     public void onMapLoaded() {
-        if (mapView.getDefaultBounds() != null) {
-            mapView.setToDefaultBounds(false, 0);
+        if (mitMapView.getDefaultBounds() != null) {
+            mitMapView.setToDefaultBounds(false, 0);
 
             if (!mapViewExpanded) {
-                mapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
+                mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
             }
         }
     }

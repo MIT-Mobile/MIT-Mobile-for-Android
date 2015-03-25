@@ -153,6 +153,18 @@ public class ShuttleRouteFragment extends MitMapFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MitMobileApplication.bus.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        MitMobileApplication.bus.register(this);
+        super.onPause();
+    }
+
+    @Override
     protected void updateData() {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);

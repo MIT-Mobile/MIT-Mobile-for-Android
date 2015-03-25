@@ -133,7 +133,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
                             }
 
                             translation = (originalPosition - newPosition) / 2;
-                            mapView.getMapFragment().getView().setTranslationY(-translation);
+                            mapView.getGoogleMapView().setTranslationY(-translation);
                         }
                     }
                 }
@@ -271,12 +271,12 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
             mapViewExpanded = true;
             mapView.setToDefaultBounds(true, ANIMATION_LENGTH);
 
-            if (mapView.getMapFragment().getView().getTranslationY() != 0) {
-                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getMapFragment().getView().getTranslationY(), NO_TRANSLATION);
+            if (mapView.getGoogleMapView().getTranslationY() != 0) {
+                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mapView.getGoogleMapView().getTranslationY(), NO_TRANSLATION);
                 mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
                 //The way translatation animations are setup, this is done to avoid flicker
-                mapView.getMapFragment().getView().setTranslationY(0);
-                mapView.getMapFragment().getView().startAnimation(mapTranslateAnimation);
+                mapView.getGoogleMapView().setTranslationY(0);
+                mapView.getGoogleMapView().startAnimation(mapTranslateAnimation);
             }
         } else {
             mapViewExpanded = false;

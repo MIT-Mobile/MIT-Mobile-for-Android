@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
+    <com.google.android.gms.maps.MapView
         android:id="@+id/route_map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="fill_parent" />
 
     <LinearLayout
         android:id="@+id/map_list_view_with_footer"

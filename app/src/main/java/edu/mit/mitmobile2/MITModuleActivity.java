@@ -42,6 +42,7 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.mitmobile2.news.NewsFragment;
 import edu.mit.mitmobile2.shuttles.fragment.MainShuttleFragment;
 
 public class MITModuleActivity extends MITActivity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
@@ -117,7 +118,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, ModuleSelectorActivity.navigationTitles);
+        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, MITModuleActivity.navigationTitles);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -237,10 +238,10 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
     private void selectItem(int position) {
         // get long_name from position
-        String long_name = ModuleSelectorActivity.navigationTitles.get(position).getLong_name();
+        String long_name = MITModuleActivity.navigationTitles.get(position).getLong_name();
 
         // get NavItem from long_name
-        mNavItem = ModuleSelectorActivity.navMap.get(long_name);
+        mNavItem = MITModuleActivity.navMap.get(long_name);
         String intentString = mNavItem.getIntent();
 
         mDrawerLayout.closeDrawer(mDrawerList);
@@ -256,8 +257,14 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         startActivity(intent);*/
 
         // TDOD: Based on URI, swap in the correct fragment
-        MainShuttleFragment fragment = new MainShuttleFragment();
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+        if (position == 0) {
+            NewsFragment newsFragment = new NewsFragment();
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, newsFragment).commit();
+        } else if (position == 1) {
+            MainShuttleFragment fragment = new MainShuttleFragment();
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        }
 
 //    	// update the main content by replacing fragments
 //        Fragment fragment = new PlanetFragment();
@@ -354,9 +361,9 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     private void loadNavigation(Context mContext) {
         Resources resources = mContext.getResources();
         JSONObject navigation;
-        if (ModuleSelectorActivity.navMap == null) {
-            ModuleSelectorActivity.navMap = new HashMap<>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
-            ModuleSelectorActivity.moduleMap = new HashMap<>(); // this maps module name to long_name for resolving intents
+        if (MITModuleActivity.navMap == null) {
+            MITModuleActivity.navMap = new HashMap<>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
+            MITModuleActivity.moduleMap = new HashMap<>(); // this maps module name to long_name for resolving intents
 
             String json = null;
 
