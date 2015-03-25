@@ -84,6 +84,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         if (savedInstanceState != null) {
             mapViewExpanded = savedInstanceState.getBoolean(MAP_EXPANDED_KEY, false);
+            mapView.setMapViewExpanded(!mapViewExpanded);
         }
 
         predictionFragment = (FrameLayout) findViewById(R.id.prediction_fragment);
