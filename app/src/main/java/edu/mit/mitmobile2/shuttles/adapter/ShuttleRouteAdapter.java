@@ -8,13 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
+import edu.mit.mitmobile2.shuttles.ShuttleUtils;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
@@ -50,22 +49,14 @@ public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
         }
 
         viewHolder.stopName.setText(stopWrapper.getTitle());
-        viewHolder.stopName.setText(stopWrapper.getTitle());
-        if (stopWrapper.getPredictions() != null && stopWrapper.getPredictions().size() > 0) {
-            MITShuttlePrediction prediction = stopWrapper.getPredictions().get(0);
-            int timeInMins = prediction.getSeconds() / 60;
-            if (timeInMins == 0) {
-                viewHolder.stopPrediction.setText("now");
-                viewHolder.stopPrediction.setTextColor(mContext.getResources().getColor(R.color.mit_tintColor));
-                viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_red);
-            } else {
-                viewHolder.stopPrediction.setText(timeInMins + "m");
-                viewHolder.stopPrediction.setTextColor(mContext.getResources().getColor(R.color.contents_text));
-                viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_def);
-            }
-        } else {
-            viewHolder.stopPrediction.setText("-");
-            viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_def);
+
+        viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_def);
+        viewHolder.stopPrediction.setTextColor(mContext.getResources().getColor(R.color.contents_text));
+        viewHolder.stopPrediction.setText(ShuttleUtils.formatPredictionFromStop(stopWrapper));
+
+        if (viewHolder.stopPrediction.getText().toString().equals(ShuttleUtils.NOW)) {
+            viewHolder.stopPrediction.setTextColor(mContext.getResources().getColor(R.color.mit_tintColor));
+            viewHolder.stopIcon.setImageResource(R.drawable.stop_icon_red);
         }
 
         return convertView;
