@@ -112,6 +112,11 @@ public class MITShuttleVehicle extends MapItem {
     }
 
     @Override
+    public boolean isVehicle() {
+        return true;
+    }
+
+    @Override
     protected String getTableName() {
         return Schema.Vehicle.TABLE_NAME;
     }
@@ -158,7 +163,6 @@ public class MITShuttleVehicle extends MapItem {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(this.lat, this.lon));
         markerOptions.title(null);
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.home_shuttles));
         markerOptions.flat(true);
         return markerOptions;
     }

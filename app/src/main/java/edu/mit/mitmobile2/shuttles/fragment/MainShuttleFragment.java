@@ -68,15 +68,17 @@ public class MainShuttleFragment extends Fragment implements LoaderManager.Loade
     private static Timer timer;
     private ShuttleAdapterCallback callback = new ShuttleAdapterCallback() {
         @Override
-        public void shuttleRouteClick(final String routeID) {
+        public void shuttleRouteClick(final String routeId) {
             Intent intent = new Intent(getActivity(), ShuttleRouteActivity.class);
-            intent.putExtra(Constants.ROUTE_ID_KEY, routeID);
+            intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
             startActivity(intent);
         }
 
         @Override
-        public void shuttleStopClick(String stopID) {
+        public void shuttleStopClick(String routeId, String stopId) {
             Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
+            intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
+            intent.putExtra(Constants.STOP_ID_KEY, stopId);
             startActivity(intent);
         }
     };

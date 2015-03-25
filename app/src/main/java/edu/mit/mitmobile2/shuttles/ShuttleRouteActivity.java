@@ -1,10 +1,11 @@
 package edu.mit.mitmobile2.shuttles;
 
+import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
+
 import android.os.Bundle;
 
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
 
 public class ShuttleRouteActivity extends MITActivity implements MapFragmentCallback {
 

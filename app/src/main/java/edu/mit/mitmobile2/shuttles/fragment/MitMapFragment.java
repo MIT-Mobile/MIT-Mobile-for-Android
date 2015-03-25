@@ -319,6 +319,8 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
 
+        updateMITMapView(mitMapView);
+
         if (!mapViewExpanded) {
             mapViewExpanded = true;
             mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
@@ -353,6 +355,8 @@ public class MitMapFragment extends Fragment implements Animation.AnimationListe
 
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
+
+        updateMITMapView(mitMapView);
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
