@@ -1,16 +1,15 @@
 package edu.mit.mitmobile2.shuttles.adapter;
 
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.List;
 
 import edu.mit.mitmobile2.shuttles.ShuttleStopViewPagerFragment;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
-public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
+public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {
 
     private List<String> stopIds;
     private ShuttleStopViewPagerFragment[] fragments;

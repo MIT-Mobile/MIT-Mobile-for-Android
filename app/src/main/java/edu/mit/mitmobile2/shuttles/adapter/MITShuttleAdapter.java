@@ -28,11 +28,13 @@ public class MITShuttleAdapter extends BaseAdapter {
     private LayoutInflater listContainer;
     private List<MitMiniShuttleRoute> routes = new ArrayList<>();
     private Context context;
+    private ShuttleAdapterCallback callback;
 
-    public MITShuttleAdapter(Context context, List<MitMiniShuttleRoute> routes) {
+    public MITShuttleAdapter(Context context, List<MitMiniShuttleRoute> routes, ShuttleAdapterCallback callback) {
         listContainer = LayoutInflater.from(context);
         this.routes = routes;
         this.context = context;
+        this.callback = callback;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class MITShuttleAdapter extends BaseAdapter {
         if (routes.get(position).isPredictable()) {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.shuttle_big_active);
             viewHolder.shuttleStopView.setVisibility(View.VISIBLE);
-        } else if (routes.get(position).isScheduled()){
+        } else if (routes.get(position).isScheduled()) {
             viewHolder.shuttleRouteImageView.setImageResource(R.drawable.shuttle_big_unknown);
             viewHolder.shuttleStopView.setVisibility(View.GONE);
         } else {
@@ -99,19 +101,19 @@ public class MITShuttleAdapter extends BaseAdapter {
         viewHolder.shuttleRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback) context).shuttleRouteClick(routes.get(position).getId());
+                callback.shuttleRouteClick(routes.get(position).getId());
             }
         });
         viewHolder.shuttleFirstStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback) context).shuttleStopClick(routes.get(position).getId(), routes.get(position).getStops().get(0).getId());
+                callback.shuttleStopClick(routes.get(position).getId(), routes.get(position).getStops().get(0).getId());
             }
         });
         viewHolder.shuttleSecondStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ShuttleAdapterCallback)context).shuttleStopClick(routes.get(position).getId(), routes.get(position).getStops().get(1).getId());
+                callback.shuttleStopClick(routes.get(position).getId(), routes.get(position).getStops().get(1).getId());
             }
         });
 

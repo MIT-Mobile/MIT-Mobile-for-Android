@@ -15,6 +15,8 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -35,6 +37,7 @@ public class MITMapView {
 
     private static int mapBoundsPadding;
 
+    private MapView mapView;
     private GoogleMap mMap;
     private MapFragment mapFragment;
     private MapItem mItem;
@@ -68,6 +71,19 @@ public class MITMapView {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
+    }
+
+    public MITMapView(Context context, MapView mapView, final GoogleMap.OnMapLoadedCallback callback) {
+        this.mContext = context;
+        this.mapView = mapView;
+        mMap = this.mapView.getMap();
+        MapsInitializer.initialize(context);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, MITMapView.INITIAL_ZOOM));
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setOnMapLoadedCallback(callback);
         mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
     }
 
@@ -304,8 +320,8 @@ public class MITMapView {
         this.lastClickedMarker = lastClickedMarker;
     }
 
-    public MapFragment getMapFragment() {
-        return mapFragment;
+    public MapView getGoogleMapView() {
+        return mapView;
     }
 
     public LatLngBounds getDefaultBounds() {

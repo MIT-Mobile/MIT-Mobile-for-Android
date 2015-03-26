@@ -61,7 +61,7 @@
             android:syncable="true" />
 
         <activity
-            android:name=".ModuleSelectorActivity"
+            android:name=".MITModuleActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme">
             <intent-filter android:label="MIT Mobile">
@@ -80,11 +80,6 @@
         <activity
             android:name=".news.NewsActivity"
             android:label="@string/title_activity_news"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
-            android:name=".shuttles.ShuttlesActivity"
-            android:label="@string/title_activity_shuttles"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
@@ -172,12 +167,12 @@
             android:name=".shuttles.ShuttleRouteActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
-            android:parentActivityName=".shuttles.ShuttlesActivity"/>
+            android:parentActivityName=".MITModuleActivity"/>
         <activity
             android:name=".shuttles.ShuttleStopActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
-            android:parentActivityName=".shuttles.ShuttlesActivity"/>
+            android:parentActivityName=".MITModuleActivity"/>
     </application>
 
 </manifest>
