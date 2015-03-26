@@ -28,4 +28,8 @@
     <dimen name="solo_map_fab_margin">10dp</dimen>
     <dimen name="map_bounds_padding">40dp</dimen>
     <dimen name="map_popup_view_padding">2dp</dimen>
+    <dimen name="shuttle_stop_small_margin">4dp</dimen>
+    <dimen name="shuttle_stop_large_margin">24dp</dimen>
+    <dimen name="shuttle_stop_cell_height">40dp</dimen>
+    <dimen name="shuttle_stop_icon_size">24sp</dimen>
 </resources>

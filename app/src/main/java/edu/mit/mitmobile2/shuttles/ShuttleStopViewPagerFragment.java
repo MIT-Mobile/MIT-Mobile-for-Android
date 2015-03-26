@@ -1,9 +1,10 @@
 package edu.mit.mitmobile2.shuttles;
 
+import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
-public class ShuttleStopViewPagerFragment extends Fragment{
+public class ShuttleStopViewPagerFragment extends Fragment {
 
     @InjectView(R.id.stop_prediction_adapter_view)
     AdapterView predictionAdapterView;
@@ -58,6 +59,8 @@ public class ShuttleStopViewPagerFragment extends Fragment{
         cursor.moveToFirst();
         stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
+
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(stop.getTitle());
 
         predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), stop.getPredictions());
         //TODO: Remove and replace with actual intersecting routes passed from other class

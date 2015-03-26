@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shuttles.ShuttleUtils;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
 /**
@@ -61,7 +62,11 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.predictionTextView.setText(predictions.get(position).getSeconds().toString());
+        holder.predictionTextView.setTextColor(context.getResources().getColor(R.color.contents_text));
+        holder.predictionTextView.setText(ShuttleUtils.formatPrediction(predictions.get(position)));
+        if (holder.predictionTextView.getText().toString().equals(ShuttleUtils.NOW)) {
+            holder.predictionTextView.setTextColor(context.getResources().getColor(R.color.mit_tintColor));
+        }
         return view;
     }
 }
