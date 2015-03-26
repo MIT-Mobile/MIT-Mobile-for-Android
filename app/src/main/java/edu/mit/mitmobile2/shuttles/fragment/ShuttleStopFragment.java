@@ -20,6 +20,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shuttles.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
@@ -37,12 +38,15 @@ public class ShuttleStopFragment extends MitMapFragment {
     private String stopId;
     private String uriString;
     private String selectionString;
+    private MapFragmentCallback callback;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         View shuttleStopContent = inflater.inflate(R.layout.shuttle_stop_content, null);
+
+        callback = (MapFragmentCallback) getActivity();
 
         predictionViewPager = (ViewPager) shuttleStopContent.findViewById(R.id.prediction_view_pager);
         transparentView = shuttleStopContent.findViewById(R.id.transparent_map_overlay);
@@ -55,6 +59,8 @@ public class ShuttleStopFragment extends MitMapFragment {
         cursor.moveToFirst();
         route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
+
+        callback.setActionBarTitle(route.getTitle());
 
         stops = route.getStops();
         List<String> stopIds = new ArrayList<String>();

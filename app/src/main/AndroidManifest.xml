@@ -165,13 +165,11 @@
         </activity>
         <activity
             android:name=".shuttles.ShuttleRouteActivity"
-            android:label="@string/title_activity_shuttle_stops"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity"/>
         <activity
             android:name=".shuttles.ShuttleStopActivity"
-            android:label="@string/title_activity_shuttle_stops"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity"/>
