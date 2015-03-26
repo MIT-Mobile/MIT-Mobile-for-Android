@@ -43,7 +43,7 @@ import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.shuttles.ShuttleStopActivity;
 
-public class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
+public abstract class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
     private static final int PREDICTIONS_PERIOD = 15000;
     private static final int PREDICTIONS_TIMER_OFFSET = 10000;
 

@@ -14,9 +14,9 @@ public class ShuttleRouteActivity extends MITActivity implements MapFragmentCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shuttle_route);
+        setContentView(R.layout.activity_with_frame);
 
-        getFragmentManager().beginTransaction().replace(R.id.route_screen_frame, fragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
     }
 
     @Override
