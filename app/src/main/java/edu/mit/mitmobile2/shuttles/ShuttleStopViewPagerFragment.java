@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,8 @@ public class ShuttleStopViewPagerFragment extends Fragment{
         cursor.moveToFirst();
         stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
+
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(stop.getTitle());
 
         predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), stop.getPredictions());
         //TODO: Remove and replace with actual intersecting routes passed from other class

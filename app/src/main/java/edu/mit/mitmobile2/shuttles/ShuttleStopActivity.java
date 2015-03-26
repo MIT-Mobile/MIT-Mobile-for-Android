@@ -52,6 +52,8 @@ public class ShuttleStopActivity extends SoloMapActivity {
         route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
 
+        setTitle(route.getTitle());
+
         stops = route.getStops();
         List<String> stopIds = new ArrayList<String>();
         for (MITShuttleStopWrapper stop : stops) {
