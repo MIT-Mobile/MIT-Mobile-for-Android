@@ -3,8 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
     android:background="@color/medium_grey">
 
     <LinearLayout
@@ -15,21 +13,26 @@
         <edu.mit.mitmobile2.AdapterView
             android:id="@+id/stop_prediction_adapter_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:divider="@color/divider_grey"
+            android:dividerHeight="@dimen/shuttle_listview_divider_height">
 
         </edu.mit.mitmobile2.AdapterView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/shuttle_stop_small_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:text="@string/bell_info"
             android:textColor="@color/color_dark_grey"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/shuttle_stop_large_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:text="@string/intersecting_routes"
             android:textColor="@color/color_dark_grey"/>
 
@@ -37,14 +40,18 @@
             android:id="@+id/intersecting_routes_adapter_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp">
+            android:layout_marginTop="@dimen/shuttle_stop_small_margin"
+            android:divider="@color/divider_grey"
+            android:dividerHeight="@dimen/shuttle_listview_divider_height">
 
         </edu.mit.mitmobile2.AdapterView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/shuttle_stop_small_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:text="@string/other_routes_info"
             android:textColor="@color/color_dark_grey"/>
 
