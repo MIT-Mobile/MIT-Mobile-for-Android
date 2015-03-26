@@ -156,7 +156,9 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 //	     getActionBar().setListNavigationCallbacks(adapter, this);
         }
 
+        //Stand-in code for now
         getFragmentManager().beginTransaction().replace(R.id.content_frame, new MainShuttleFragment()).commit();
+        setTitle("Shuttles");
     }
 
     @Override
@@ -256,15 +258,19 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         Log.d("ZZZ", "URI = " + intent.getData().toString());
         startActivity(intent);*/
 
-        // TDOD: Based on URI, swap in the correct fragment
+        // TODO: Based on URI, swap in the correct fragment
+        // Right now just handling news & shuttles
 
         if (position == 0) {
             NewsFragment newsFragment = new NewsFragment();
             getFragmentManager().beginTransaction().replace(R.id.content_frame, newsFragment).commit();
+
         } else if (position == 1) {
             MainShuttleFragment fragment = new MainShuttleFragment();
             getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
         }
+
+        setTitle(navigationTitles.get(position).getLong_name());
 
 //    	// update the main content by replacing fragments
 //        Fragment fragment = new PlanetFragment();
@@ -477,6 +483,8 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     @Override
     protected void onStart() {
         super.onStart();
+
+        //TODO: Fix this part, it handles external URI calls into the app
 
 /*        Intent intent = getIntent();
         Log.d("ZZZ", "Intent: " + intent.getDataString());
