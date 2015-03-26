@@ -11,7 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -101,6 +103,8 @@ public class ShuttleRouteActivity extends SoloMapActivity {
             options.width(12f);
             getMapView().addPolyline(options);
         }
+
+        refreshMapInfoWindow();
     }
 
     @Override
@@ -125,14 +129,13 @@ public class ShuttleRouteActivity extends SoloMapActivity {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        MITShuttleRoute route = new MITShuttleRoute();
+        //MITShuttleRoute route = new MITShuttleRoute();
         route.buildFromCursor(data, MitMobileApplication.dbAdapter);
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
 
         updateMapItems((ArrayList) route.getVehicles());
-        updateMapItems((ArrayList) route.getStops());
 
         if (swipeRefreshLayout.isRefreshing()) {
             runOnUiThread(new Runnable() {
@@ -142,6 +145,8 @@ public class ShuttleRouteActivity extends SoloMapActivity {
                 }
             });
         }
+
+        refreshMapInfoWindow();
     }
 
     @Override
@@ -171,6 +176,48 @@ public class ShuttleRouteActivity extends SoloMapActivity {
         } else {
             showListView();
         }
+    }
+
+    public void refreshMapInfoWindow() {
+        mapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                if (marker.getTitle() != null) {
+                    View view = getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
+                    TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
+                    TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+                    stopNameTextView.setText(marker.getTitle());
+                    for (MITShuttleStopWrapper stop : route.getStops()) {
+                        if (marker.getSnippet().equals(stop.getId())) {
+                            stopNameTextView.setText(stop.getTitle());
+                            if (route.isPredictable()) {
+                                if (stop.getPredictions().size() > 0) {
+                                    if (stop.getPredictions().get(0).getSeconds() / 60 < 1) {
+                                        stopPredictionView.setText(getString(R.string.arriving_now));
+                                    } else {
+                                        stopPredictionView.setText(getString(R.string.arriving_in) + " " +
+                                                stop.getPredictions().get(0).getSeconds() / 60 + " " +
+                                                getString(R.string.minutes));
+                                    }
+                                }
+                            } else if (route.isScheduled()) {
+                                stopPredictionView.setText(getString(R.string.route_unknown));
+                            } else {
+                                stopPredictionView.setText(getString(R.string.route_not_in_service));
+                            }
+                        }
+                    }
+                    return view;
+                } else {
+                    return null;
+                }
+            }
+        });
     }
 
     /*private void updateVehicles() {

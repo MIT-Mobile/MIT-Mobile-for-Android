@@ -50,4 +50,7 @@
     <string name="bell_info">Tap bell to be notified 5 minutes before arrival.</string>
     <string name="intersecting_routes">INTERSECTING ROUTES</string>
     <string name="other_routes_info">Other routes stopping at or near this stop.</string>
+    <string name="arriving_now">Arriving now</string>
+    <string name="arriving_in">Arriving in</string>
+    <string name="minutes">minutes</string>
 </resources>

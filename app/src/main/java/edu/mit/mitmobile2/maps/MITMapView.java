@@ -109,6 +109,7 @@ public class MITMapView {
                             Marker marker;
                             if (mItem.isVehicle()) {
                                 marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.maps_shuttle_indicator)));
+                                marker.setRotation(getVehicleHeading(marker));
                             } else {
                                 if (!isMapExpanded) {
                                     marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
@@ -161,15 +162,6 @@ public class MITMapView {
         removeDynamicItems();
     }
 
-    public void clearStatic() {
-        for (Marker m : staticMarkers) {
-            m.remove();
-        }
-        staticMarkers.clear();
-
-        removeStaticItems();
-    }
-
     public void updateStaticItems(boolean mapViewExpanded) {
         for (Marker m : staticMarkers) {
             if (mapViewExpanded) {
@@ -184,21 +176,6 @@ public class MITMapView {
         List<Integer> indicesToRemove = new ArrayList<>();
         for (MapItem item : mapItems) {
             if (item.isDynamic()) {
-                indicesToRemove.add(mapItems.indexOf(item));
-            }
-        }
-
-        Collections.reverse(indicesToRemove);
-
-        for (Integer i : indicesToRemove) {
-            mapItems.remove(i.intValue());
-        }
-    }
-
-    public void removeStaticItems() {
-        List<Integer> indicesToRemove = new ArrayList<>();
-        for (MapItem item : mapItems) {
-            if (!item.isDynamic()) {
                 indicesToRemove.add(mapItems.indexOf(item));
             }
         }
@@ -338,6 +315,19 @@ public class MITMapView {
 
     public void setMapViewExpanded(boolean isMapExpanded) {
         this.isMapExpanded = isMapExpanded;
+    }
+
+    public float getVehicleHeading(Marker marker) {
+        float mapHeading = mMap.getCameraPosition().bearing;
+        float vehicleHeading = Float.parseFloat(marker.getSnippet());
+
+        float offsetHeading = mapHeading + vehicleHeading;
+
+        while (offsetHeading > 360.0) {
+            offsetHeading -= 360.0;
+        }
+
+        return offsetHeading;
     }
 }
 
