@@ -36,13 +36,15 @@ public class ShuttleStopViewPagerFragment extends Fragment {
     private ShuttleStopPredictionsAdapter predictionsAdapter;
     private ShuttleStopIntersectingAdapter intersectingAdapter;
 
+    private String currentRouteId;
     private String stopId;
     private MITShuttleStopWrapper stop = new MITShuttleStopWrapper();
-    private List<MITShuttleIntersectingRoute> intersectingRoutes = new ArrayList<MITShuttleIntersectingRoute>();
+    private List<MITShuttleIntersectingRoute> intersectingRoutes;
 
-    public static ShuttleStopViewPagerFragment newInstance(String stopId) {
+    public static ShuttleStopViewPagerFragment newInstance(String currentRouteId, String stopId) {
         ShuttleStopViewPagerFragment fragment = new ShuttleStopViewPagerFragment();
         Bundle args = new Bundle();
+        args.putString(Constants.ROUTE_ID_KEY, currentRouteId);
         args.putString(Constants.STOP_ID_KEY, stopId);
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +55,10 @@ public class ShuttleStopViewPagerFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_stop_viewpager, container, false);
         ButterKnife.inject(this, view);
 
+        currentRouteId = getArguments().getString(Constants.ROUTE_ID_KEY);
         stopId = getArguments().getString(Constants.STOP_ID_KEY);
+
+        intersectingRoutes = new ArrayList<MITShuttleIntersectingRoute>();
 
         String selectionString = Schema.Stop.TABLE_NAME + "." + Schema.Stop.STOP_ID + "=\'" + stopId + "\'";
         Cursor cursor = getActivity().getContentResolver().query(MITShuttlesProvider.SINGLE_STOP_URI, Schema.Stop.ALL_COLUMNS, selectionString, null, null);
@@ -61,7 +66,8 @@ public class ShuttleStopViewPagerFragment extends Fragment {
         stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
 
-        Cursor routesCursor = getActivity().getContentResolver().query(MITShuttlesProvider.INTERSECTING_ROUTES_URI, Schema.Route.ALL_COLUMNS, selectionString, null, null);
+        String routesSelectionString = selectionString + " AND " + Schema.Route.TABLE_NAME + "." + Schema.Route.ROUTE_ID + "!=\'" + currentRouteId + "\'";
+        Cursor routesCursor = getActivity().getContentResolver().query(MITShuttlesProvider.INTERSECTING_ROUTES_URI, Schema.Route.ALL_COLUMNS, routesSelectionString, null, null);
         routesCursor.moveToFirst();
         while (!routesCursor.isAfterLast()) {
             MITShuttleIntersectingRoute route = new MITShuttleIntersectingRoute();

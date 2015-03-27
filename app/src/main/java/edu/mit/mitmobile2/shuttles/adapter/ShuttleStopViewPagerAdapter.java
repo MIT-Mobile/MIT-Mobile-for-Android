@@ -11,11 +11,13 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
 public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {
 
+    private String currentRouteId;
     private List<String> stopIds;
     private ShuttleStopViewPagerFragment[] fragments;
 
-    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, List<String> stopIds) {
+    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, String currentRouteId, List<String> stopIds) {
         super(fragmentManager);
+        this.currentRouteId = currentRouteId;
         this.stopIds = stopIds;
         fragments = new ShuttleStopViewPagerFragment[stopIds.size()];
     }
@@ -23,7 +25,7 @@ public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (fragments[position] == null) {
-            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(stopIds.get(position));
+            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(currentRouteId, stopIds.get(position));
             fragments[position] = fragment;
             return fragment;
         } else {

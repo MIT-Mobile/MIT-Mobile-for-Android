@@ -67,7 +67,7 @@ public class ShuttleStopFragment extends MitMapFragment {
         for (MITShuttleStopWrapper stop : stops) {
             stopIds.add(stop.getId());
         }
-        stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getFragmentManager(), stopIds);
+        stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getFragmentManager(), routeId, stopIds);
 
         predictionViewPager.setAdapter(stopViewPagerAdapter);
         predictionViewPager.setCurrentItem(getStartPosition());
