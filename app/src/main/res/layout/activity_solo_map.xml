@@ -14,33 +14,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:id="@+id/map_list_view_with_footer"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/shuttle_route_refresh_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/shuttle_route_refresh_layout"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/map_list_view_with_footer"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
             <ListView
                 android:id="@+id/map_list_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
                 android:dividerHeight="0dp" />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/map_list_view"
-            android:background="@android:color/white" />
-
-    </LinearLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/map_list_view"
+                android:background="@android:color/white" />
+        </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/list_button"
