@@ -52,7 +52,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     private ListView mapItemsListView;
     private ArrayList mapItems;
-    private MITMapView mitMapView;
+    protected MITMapView mitMapView;
 
     private LinearLayout mapItemsListViewWithFooter;
     private View transparentView;

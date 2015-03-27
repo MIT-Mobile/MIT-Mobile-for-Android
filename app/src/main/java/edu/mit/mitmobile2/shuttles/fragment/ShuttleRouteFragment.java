@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,7 +38,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import timber.log.Timber;
 
-public class ShuttleRouteFragment extends MitMapFragment {
+public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter{
     @InjectView(R.id.route_information_top)
     TextView routeStatusTextView;
 
@@ -109,9 +108,9 @@ public class ShuttleRouteFragment extends MitMapFragment {
                 points.add(point);
             }
             options.addAll(points);
-            options.color(Color.BLUE);
+            options.color(getResources().getColor(R.color.map_path_color));
             options.visible(true);
-            options.width(8f);
+            options.width(12f);
             getMapView().addPolyline(options);
         }
 
@@ -124,6 +123,8 @@ public class ShuttleRouteFragment extends MitMapFragment {
                 startActivity(intent);
             }
         });
+
+        refreshMapInfoWindow();
 
         return view;
     }
@@ -150,7 +151,6 @@ public class ShuttleRouteFragment extends MitMapFragment {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        MITShuttleRoute route = new MITShuttleRoute();
         route.buildFromCursor(data, MitMobileApplication.dbAdapter);
         adapter.clear();
         adapter.addAll(route.getStops());
@@ -166,6 +166,8 @@ public class ShuttleRouteFragment extends MitMapFragment {
                 }
             });
         }
+
+        refreshMapInfoWindow();
     }
 
     @Override
@@ -198,6 +200,48 @@ public class ShuttleRouteFragment extends MitMapFragment {
         Timber.d("Requesting Predictions");
 
         ContentResolver.requestSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, bundle);
+    }
+
+    public void refreshMapInfoWindow() {
+        mitMapView.getMap().setInfoWindowAdapter(this);
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        if (marker.getTitle() != null) {
+            View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
+            TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
+            TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+            stopNameTextView.setText(marker.getTitle());
+            for (MITShuttleStopWrapper stop : route.getStops()) {
+                if (marker.getSnippet().equals(stop.getId())) {
+                    stopNameTextView.setText(stop.getTitle());
+                    if (route.isPredictable()) {
+                        if (stop.getPredictions().size() > 0) {
+                            if (stop.getPredictions().get(0).getSeconds() / 60 < 1) {
+                                stopPredictionView.setText(getString(R.string.arriving_now));
+                            } else {
+                                stopPredictionView.setText(getString(R.string.arriving_in) + " " +
+                                        stop.getPredictions().get(0).getSeconds() / 60 + " " +
+                                        getString(R.string.minutes));
+                            }
+                        }
+                    } else if (route.isScheduled()) {
+                        stopPredictionView.setText(getString(R.string.route_unknown));
+                    } else {
+                        stopPredictionView.setText(getString(R.string.route_not_in_service));
+                    }
+                }
+            }
+            return view;
+        } else {
+            return null;
+        }
     }
 
     /*private void updateVehicles() {

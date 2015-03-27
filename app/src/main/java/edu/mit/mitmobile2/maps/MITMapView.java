@@ -125,6 +125,7 @@ public class MITMapView {
                             Marker marker;
                             if (mItem.isVehicle()) {
                                 marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.maps_shuttle_indicator)));
+                                marker.setRotation(getVehicleHeading(marker));
                             } else {
                                 if (!isMapExpanded) {
                                     marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
@@ -330,6 +331,19 @@ public class MITMapView {
 
     public void setMapViewExpanded(boolean isMapExpanded) {
         this.isMapExpanded = isMapExpanded;
+    }
+
+    public float getVehicleHeading(Marker marker) {
+        float mapHeading = mMap.getCameraPosition().bearing;
+        float vehicleHeading = Float.parseFloat(marker.getSnippet());
+
+        float offsetHeading = mapHeading + vehicleHeading;
+
+        while (offsetHeading > 360.0) {
+            offsetHeading -= 360.0;
+        }
+
+        return offsetHeading;
     }
 }
 
