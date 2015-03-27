@@ -22,7 +22,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -117,33 +116,6 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
 
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
         mapView.getMap().setOnMapLoadedCallback(this);
-
-        mapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                if (marker.getTitle() != null) {
-                    View view = getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
-                    TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
-                    TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
-                    stopNameTextView.setText(marker.getTitle());
-                    if (isRoutePredictable) {
-                        stopPredictionView.setText(marker.getSnippet());
-                    } else if (isRouteScheduled) {
-                        stopPredictionView.setText(getString(R.string.route_unknown));
-                    } else {
-                        stopPredictionView.setText(getString(R.string.route_not_in_service));
-                    }
-                    return view;
-                } else {
-                    return null;
-                }
-            }
-        });
 
         mapView.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -241,6 +213,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mapView.clearDynamic();
         }
+
         mapView.addMapItemList(mapItems, false);
     }
 
@@ -313,7 +286,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
 
-        updateMITMapView(mapView);
+        updateMITMapView();
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
@@ -350,7 +323,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         translateAnimation.setDuration(ANIMATION_LENGTH);
         translateAnimation.setAnimationListener(this);
 
-        updateMITMapView(mapView);
+        updateMITMapView();
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
@@ -482,7 +455,7 @@ public class SoloMapActivity extends MITActivity implements Animation.AnimationL
         }
     }
 
-    public void updateMITMapView(MITMapView mapView) {
+    public void updateMITMapView() {
         mapView.updateStaticItems(mapViewExpanded);
     }
 }

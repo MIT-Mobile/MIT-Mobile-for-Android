@@ -163,6 +163,7 @@ public class MITShuttleVehicle extends MapItem {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(new LatLng(this.lat, this.lon));
         markerOptions.title(null);
+        markerOptions.snippet(Integer.toString(heading));
         markerOptions.flat(true);
         return markerOptions;
     }
