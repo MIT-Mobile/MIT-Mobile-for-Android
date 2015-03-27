@@ -245,7 +245,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildIntersectingRoutesQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id AS r_id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title " +
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title " +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +

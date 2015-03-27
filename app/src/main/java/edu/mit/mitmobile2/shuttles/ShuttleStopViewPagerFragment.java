@@ -21,8 +21,8 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleStopViewPagerFragment extends Fragment {
@@ -38,6 +38,7 @@ public class ShuttleStopViewPagerFragment extends Fragment {
 
     private String stopId;
     private MITShuttleStopWrapper stop = new MITShuttleStopWrapper();
+    private List<MITShuttleIntersectingRoute> intersectingRoutes = new ArrayList<MITShuttleIntersectingRoute>();
 
     public static ShuttleStopViewPagerFragment newInstance(String stopId) {
         ShuttleStopViewPagerFragment fragment = new ShuttleStopViewPagerFragment();
@@ -60,15 +61,20 @@ public class ShuttleStopViewPagerFragment extends Fragment {
         stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
         cursor.close();
 
+        Cursor routesCursor = getActivity().getContentResolver().query(MITShuttlesProvider.INTERSECTING_ROUTES_URI, Schema.Route.ALL_COLUMNS, selectionString, null, null);
+        routesCursor.moveToFirst();
+        while (!routesCursor.isAfterLast()) {
+            MITShuttleIntersectingRoute route = new MITShuttleIntersectingRoute();
+            route.buildFromCursor(routesCursor, MitMobileApplication.dbAdapter);
+            intersectingRoutes.add(route);
+            routesCursor.moveToNext();
+        }
+        cursor.close();
+
         ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(stop.getTitle());
 
         predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), stop.getPredictions());
-        //TODO: Remove and replace with actual intersecting routes passed from other class
-        MITShuttleRoute testRoute = new MITShuttleRoute();
-        testRoute.setTitle("Testing");
-        List<MITShuttleRoute> testRoutes = new ArrayList<>();
-        testRoutes.add(testRoute);
-        intersectingAdapter = new ShuttleStopIntersectingAdapter(getActivity(), testRoutes);
+        intersectingAdapter = new ShuttleStopIntersectingAdapter(getActivity(), intersectingRoutes);
 
         predictionAdapterView.setAdapter(predictionsAdapter);
         intersectingRoutesAdapterView.setAdapter(intersectingAdapter);
