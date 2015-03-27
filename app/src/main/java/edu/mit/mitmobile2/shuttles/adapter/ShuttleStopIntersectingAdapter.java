@@ -65,7 +65,13 @@ public class ShuttleStopIntersectingAdapter extends BaseAdapter {
         }
 
         holder.routeTextView.setText(routes.get(position).getTitle());
-        //TODO: Set route image view based on status
+        if (routes.get(position).isPredictable()) {
+            holder.routeImageView.setImageResource(R.drawable.shuttle_small_active);
+        } else if (routes.get(position).isScheduled()) {
+            holder.routeImageView.setImageResource(R.drawable.shuttle_small_unknown);
+        } else {
+            holder.routeImageView.setImageResource(R.drawable.shuttle_small_inactive);
+        }
         return view;
     }
 }
