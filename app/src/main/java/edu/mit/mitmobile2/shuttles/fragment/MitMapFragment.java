@@ -38,10 +38,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
-import edu.mit.mitmobile2.shuttles.ShuttleStopActivity;
 
 public abstract class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
     private static final int PREDICTIONS_PERIOD = 15000;
@@ -146,14 +144,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
                 } else {
                     return null;
                 }
-            }
-        });
-
-        mitMapView.getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
-                startActivity(intent);
             }
         });
 

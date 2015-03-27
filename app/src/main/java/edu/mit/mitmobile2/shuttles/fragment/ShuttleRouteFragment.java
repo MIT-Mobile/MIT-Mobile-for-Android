@@ -114,6 +114,16 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
             getMapView().addPolyline(options);
         }
 
+        getMapView().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
+                intent.putExtra(Constants.STOP_ID_KEY, marker.getSnippet());
+                intent.putExtra(Constants.ROUTE_ID_KEY, route.getId());
+                startActivity(intent);
+            }
+        });
+
         refreshMapInfoWindow();
 
         return view;

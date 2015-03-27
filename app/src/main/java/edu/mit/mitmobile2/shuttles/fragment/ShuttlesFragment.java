@@ -44,7 +44,7 @@ import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 import timber.log.Timber;
 
-public class MainShuttleFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     int contentLayoutId = R.layout.content_shuttles;
 
