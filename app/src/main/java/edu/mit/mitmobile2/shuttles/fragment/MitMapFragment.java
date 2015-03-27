@@ -20,7 +20,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +37,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.shuttles.ShuttleStopActivity;
@@ -56,7 +54,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     private ArrayList mapItems;
     protected MITMapView mitMapView;
 
-    private LinearLayout mapItemsListViewWithFooter;
     private View transparentView;
     private FrameLayout predictionFragment;
     private View transparentLandscapeView;
@@ -100,7 +97,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         googleMapView.onCreate(savedInstanceState);
 
         mapItemsListView = (ListView) view.findViewById(R.id.map_list_view);
-        mapItemsListViewWithFooter = (LinearLayout) view.findViewById(R.id.map_list_view_with_footer);
         listButton = (FloatingActionButton) view.findViewById(R.id.list_button);
         myLocationButton = (FloatingActionButton) view.findViewById(R.id.my_location_button);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.shuttle_route_refresh_layout);
@@ -216,10 +212,10 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         if (mapViewExpanded) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                mapItemsListViewWithFooter.setVisibility(View.INVISIBLE);
+                swipeRefreshLayout.setVisibility(View.INVISIBLE);
             } else {
                 transparentLandscapeView.setVisibility(View.INVISIBLE);
-                mapItemsListViewWithFooter.setVisibility(View.INVISIBLE);
+                swipeRefreshLayout.setVisibility(View.INVISIBLE);
             }
             listButton.setVisibility(View.VISIBLE);
             myLocationButton.setVisibility(View.VISIBLE);
@@ -267,7 +263,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     protected void addShuttleStopContent(View content) {
         stopMode = true;
         shuttleStopContent.addView(content);
-        mapItemsListViewWithFooter.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.GONE);
         shuttleStopContent.setVisibility(View.VISIBLE);
     }
 
@@ -337,9 +333,9 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
             mitMapView.getMap().getUiSettings().setAllGesturesEnabled(false);
             mitMapView.setToDefaultBounds(false, 0);
             mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
-            mapItemsListViewWithFooter.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
         }
-        mapItemsListViewWithFooter.startAnimation(translateAnimation);
+        swipeRefreshLayout.startAnimation(translateAnimation);
     }
 
     private void toggleMapHorizontal() {
@@ -367,10 +363,10 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
             mitMapView.setToDefaultBounds(false, 0);
             mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
             transparentLandscapeView.setVisibility(View.VISIBLE);
-            mapItemsListViewWithFooter.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
         }
 
-        mapItemsListViewWithFooter.startAnimation(translateAnimation);
+        swipeRefreshLayout.startAnimation(translateAnimation);
     }
 
     private int calculateScrollOffset() {
@@ -403,7 +399,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     public void onAnimationEnd(Animation animation) {
         if (mapViewExpanded) {
             mapItemsListView.setSelection(0);
-            mapItemsListViewWithFooter.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.GONE);
             mitMapView.getMap().getUiSettings().setAllGesturesEnabled(true);
 
             listButton.setVisibility(View.VISIBLE);
