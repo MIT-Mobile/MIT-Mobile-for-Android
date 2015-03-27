@@ -42,8 +42,7 @@ import android.widget.Spinner;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.mit.mitmobile2.news.NewsFragment;
-import edu.mit.mitmobile2.shuttles.fragment.MainShuttleFragment;
+import timber.log.Timber;
 
 public class MITModuleActivity extends MITActivity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
 
@@ -104,17 +103,10 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         // get layout inflater
         this.inflater = getLayoutInflater();
 
-        // inflate content layout
-        /*if (contentLayoutId > 0) {
-            this.contentViewStub = (ViewStub) findViewById(R.id.contentViewStub);
-            this.contentViewStub.setLayoutResource(contentLayoutId);
-            this.contentViewStub.inflate();
-        }
-*/
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        mDrawerList.setSelection(4);
+        mDrawerList.setSelection(1);
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
@@ -142,23 +134,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        if (this.getSpinnerList() != null) {
-            // Create an ArrayAdapter using the string array and a default spinner layout
-//	     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//	             R.array.planets_array, android.R.layout.simple_spinner_item);
-//	     // Specify the layout to use when the list of choices appears
-//	     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//	     // Apply the adapter to the spinner
-//
-//	     //mSpinner.setAdapter(adapter);
-//	     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//	     getActionBar().setListNavigationCallbacks(adapter, this);
-        }
-
-        //Stand-in code for now
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, new MainShuttleFragment()).commit();
-        setTitle("Shuttles");
     }
 
     @Override
@@ -190,7 +165,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         };
 
         searchView.setOnQueryTextListener(queryTextListener);
-
 
         // show or hide the search menu based on the hasSearch property
         MenuItem searchItem = menu.findItem(R.id.search);
@@ -245,46 +219,27 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         // get NavItem from long_name
         mNavItem = MITModuleActivity.navMap.get(long_name);
         String intentString = mNavItem.getIntent();
+        String title = navigationTitles.get(position).getLong_name();
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
-        //Intent intent = new Intent(mContext,c);
-        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mNavItem.getIntent()));
+        swapInFragment(intentString, title);
+    }
 
-        //TODO: Swap fragments in here
-        /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mNavItem.getUrl()));
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        Log.d("ZZZ", "URI = " + intent.getData().toString());
-        startActivity(intent);*/
-
-        // TODO: Based on URI, swap in the correct fragment
-        // Right now just handling news & shuttles
-
-        if (position == 0) {
-            NewsFragment newsFragment = new NewsFragment();
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, newsFragment).commit();
-
-        } else if (position == 1) {
-            MainShuttleFragment fragment = new MainShuttleFragment();
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+    private void swapInFragment(String intentString, String title) {
+        Fragment f = null;
+        try {
+            f = (Fragment) Class.forName(intentString).newInstance();
+        } catch (ClassNotFoundException e) {
+            Timber.e(e, "Swap Fragments");
+        } catch (InstantiationException e) {
+            Timber.e(e, "Swap Fragments");
+        } catch (IllegalAccessException e) {
+            Timber.e(e, "Swap Fragments");
         }
 
-        setTitle(navigationTitles.get(position).getLong_name());
-
-//    	// update the main content by replacing fragments
-//        Fragment fragment = new PlanetFragment();
-//        Bundle args = new Bundle();
-//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//        fragment.setArguments(args);
-//
-//        android.app.FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-//
-//        // update selected item and title, then close the drawer
-//        mDrawerList.setItemChecked(position, true);
-//        setTitle(navigationTitles[position]);
-//        mDrawerLayout.closeDrawer(mDrawerList);
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
+        setTitle(title);
     }
 
     @Override
@@ -415,10 +370,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
                         MITModuleActivity.moduleMap.put(key, long_name);
                         MITModuleActivity.navigationTitles.add(navItem);
 
-                        //TODO: Add the appropriate Fragment
-//                        MITModuleActivity.fragmentMap.put(long_name, new Fragment());
-
-
                     } catch (JSONException e) {
                         Log.d("ZZZ", e.getMessage().toString());
                     }
@@ -437,13 +388,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
     public void setContentLayoutId(int contentLayoutId) {
         this.contentLayoutId = contentLayoutId;
-    }
-
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     public void showProgressBar() {
@@ -486,7 +430,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
         //TODO: Fix this part, it handles external URI calls into the app
 
-/*        Intent intent = getIntent();
+        Intent intent = getIntent();
         Log.d("ZZZ", "Intent: " + intent.getDataString());
         Log.d("ZZZ", "Scheme: " + intent.getScheme());
 
@@ -506,31 +450,13 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
             this.module = DEFAULT_MODULE;
         }
 
-        String long_name = ModuleSelectorActivity.moduleMap.get(this.module);
+        String long_name = MITModuleActivity.moduleMap.get(this.module);
 
         // use the long_name to get the navItem object
-        navItem = ModuleSelectorActivity.navMap.get(long_name);
+        navItem = MITModuleActivity.navMap.get(long_name);
         Log.d("ZZZ", "navItem = " + navItem.toString());
         if (navItem != null) {
-            Class<?> c = null;
-            if (navItem.getIntent() != null) {
-                try {
-                    c = Class.forName(navItem.getIntent());
-                } catch (ClassNotFoundException e) {
-                    Log.d("ZZZ", "CLASS NOT FOUND " + e.getMessage());
-                    e.printStackTrace();
-                }
-                Intent i = new Intent(mContext, c);
-                Bundle extras = new Bundle();
-                extras.putString("long_name", long_name);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                Log.d("ZZZ", "starting activity " + navItem.getLong_name());
-                startActivity(i);
-            }
-        }*/
-
+            swapInFragment(navItem.getIntent(), navItem.getLong_name());
+        }
     }
-
 }
-

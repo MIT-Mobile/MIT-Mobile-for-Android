@@ -15,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
@@ -112,6 +114,16 @@ public class ShuttleRouteFragment extends MitMapFragment {
             options.width(8f);
             getMapView().addPolyline(options);
         }
+
+        getMapView().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
+                intent.putExtra(Constants.STOP_ID_KEY, marker.getSnippet());
+                intent.putExtra(Constants.ROUTE_ID_KEY, route.getId());
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
