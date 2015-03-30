@@ -28,6 +28,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final int PREDICTIONS = 70;
     public static final int LOCATION = 80;
     public static final int SINGLE_STOP = 90;
+    public static final int INTERSECTING_ROUTES = 100;
 
     private static final String AUTHORITY = "edu.mit.mitmobile2.provider";
 
@@ -43,6 +44,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final Uri VEHICLES_URI = Uri.parse(CONTENT_URI.toString() + "/vehicles");
     public static final Uri LOCATION_URI = Uri.parse(CONTENT_URI.toString() + "/location");
     public static final Uri SINGLE_STOP_URI = Uri.parse(CONTENT_URI.toString() + "/single-stop");
+    public static final Uri INTERSECTING_ROUTES_URI = Uri.parse(CONTENT_URI.toString() + "/intersecting-routes");
 
     private static final String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
             "FROM routes " +
@@ -62,6 +64,7 @@ public class MITShuttlesProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/predictions", PREDICTIONS);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/location", LOCATION);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/single-stop", SINGLE_STOP);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/intersecting-routes", INTERSECTING_ROUTES);
     }
 
     @Override
@@ -96,6 +99,9 @@ public class MITShuttlesProvider extends ContentProvider {
                 break;
             case SINGLE_STOP:
                 cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildSingleStopQueryString(selection), null, null);
+                break;
+            case INTERSECTING_ROUTES:
+                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildIntersectingRoutesQueryString(selection), null, null);
                 break;
         }
 
@@ -236,5 +242,14 @@ public class MITShuttlesProvider extends ContentProvider {
         return "SELECT * " +
                 "FROM stops " +
                 "WHERE " + selection;
+    }
+
+    public String buildIntersectingRoutesQueryString(String selection) {
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title " +
+                "FROM routes " +
+                "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
+                "JOIN stops ON route_stops.stop_id = stops.stop_id " +
+                "WHERE " + selection +
+                "ORDER BY routes._id ASC, rs_id ASC";
     }
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;
 
 /**
  * Created by philipcorriveau on 3/24/15.
@@ -19,14 +19,14 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 public class ShuttleStopIntersectingAdapter extends BaseAdapter {
 
     private Context context;
-    private List<MITShuttleRoute> routes;
+    private List<MITShuttleIntersectingRoute> routes;
 
     private class ViewHolder {
         TextView routeTextView;
         ImageView routeImageView;
     }
 
-    public ShuttleStopIntersectingAdapter(Context context, List<MITShuttleRoute> routes) {
+    public ShuttleStopIntersectingAdapter(Context context, List<MITShuttleIntersectingRoute> routes) {
         this.context = context;
         this.routes = routes;
     }
@@ -65,7 +65,13 @@ public class ShuttleStopIntersectingAdapter extends BaseAdapter {
         }
 
         holder.routeTextView.setText(routes.get(position).getTitle());
-        //TODO: Set route image view based on status
+        if (routes.get(position).isPredictable()) {
+            holder.routeImageView.setImageResource(R.drawable.shuttle_small_active);
+        } else if (routes.get(position).isScheduled()) {
+            holder.routeImageView.setImageResource(R.drawable.shuttle_small_unknown);
+        } else {
+            holder.routeImageView.setImageResource(R.drawable.shuttle_small_inactive);
+        }
         return view;
     }
 }
