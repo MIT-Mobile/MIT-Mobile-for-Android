@@ -33,4 +33,9 @@ public class ShuttleStopActivity extends MITActivity implements MapFragmentCallb
     public void setActionBarTitle(String title) {
         setTitle(title);
     }
+
+    @Override
+    public void setActionBarSubtitle(String subtitle) {
+        getSupportActionBar().setSubtitle(subtitle);
+    }
 }

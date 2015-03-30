@@ -71,6 +71,24 @@ public class ShuttleStopFragment extends MitMapFragment {
         stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getFragmentManager(), routeId, stopIds);
 
         predictionViewPager.setAdapter(stopViewPagerAdapter);
+        predictionViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                callback.setActionBarSubtitle(stops.get(position).getTitle());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        int startPosition = getStartPosition();
+        callback.setActionBarSubtitle(stops.get(startPosition).getTitle());
         predictionViewPager.setCurrentItem(getStartPosition());
 
         addTransparentView(transparentView);

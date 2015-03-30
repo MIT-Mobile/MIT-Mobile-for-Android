@@ -33,4 +33,9 @@ public class ShuttleRouteActivity extends MITActivity implements MapFragmentCall
     public void setActionBarTitle(String title) {
         setTitle(title);
     }
+
+    @Override
+    public void setActionBarSubtitle(String subtitle) {
+        getSupportActionBar().setSubtitle(subtitle);
+    }
 }
