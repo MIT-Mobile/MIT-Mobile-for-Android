@@ -46,7 +46,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final Uri SINGLE_STOP_URI = Uri.parse(CONTENT_URI.toString() + "/single-stop");
     public static final Uri INTERSECTING_ROUTES_URI = Uri.parse(CONTENT_URI.toString() + "/intersecting-routes");
 
-    private static final String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+    private static final String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions, stops.timestamp " +
             "FROM routes " +
             "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
             "JOIN stops ON route_stops.stop_id = stops.stop_id " +
@@ -221,7 +221,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions, stops.timestamp " +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +
@@ -230,7 +230,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildStopsQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions, stops.timestamp " +
                 "FROM stops " +
                 "INNER JOIN route_stops ON stops.stop_id = route_stops.stop_id " +
                 "JOIN routes ON route_stops.route_id = routes.route_id " +
@@ -245,7 +245,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildIntersectingRoutesQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title " +
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title, stops.timestamp " +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +

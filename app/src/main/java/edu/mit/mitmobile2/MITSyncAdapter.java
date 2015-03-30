@@ -186,6 +186,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 ContentProviderOperation operation = ContentProviderOperation.newUpdate(Uri.parse(uri))
                         .withValue(Schema.Stop.PREDICTIONS, v.getAsString(Schema.Stop.PREDICTIONS))
+                        .withValue(Schema.Stop.TIMESTAMP, System.currentTimeMillis())
                         .withSelection(selection, null)
                         .build();
 

@@ -39,7 +39,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import timber.log.Timber;
 
-public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter{
+public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter {
     @InjectView(R.id.route_information_top)
     TextView routeStatusTextView;
 
@@ -68,8 +68,12 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
 
         ButterKnife.inject(this, view);
 
-        //TODO: Save routeId in bundle for rotation
-        routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
+        if (savedInstanceState != null && savedInstanceState.getString(Constants.ROUTE_ID_KEY) != null) {
+            routeId = savedInstanceState.getString(Constants.ROUTE_ID_KEY);
+        } else {
+            routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
+        }
+
         adapter = new ShuttleRouteAdapter(getActivity(), R.layout.stop_list_item, new ArrayList<MITShuttleStopWrapper>());
 
         uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeId;
@@ -243,6 +247,24 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         } else {
             return null;
         }
+    }
+
+    @Override
+    protected void queryDatabase() {
+        Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
+        cursor.moveToFirst();
+        route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        adapter.clear();
+        adapter.addAll(route.getStops());
+        adapter.notifyDataSetChanged();
+
+        updateMapItems((ArrayList) route.getVehicles());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Constants.ROUTE_ID_KEY, routeId);
     }
 
     /*private void updateVehicles() {

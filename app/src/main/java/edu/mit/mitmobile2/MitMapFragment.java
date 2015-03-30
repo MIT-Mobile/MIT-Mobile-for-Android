@@ -42,7 +42,7 @@ import edu.mit.mitmobile2.maps.MapItem;
 
 public abstract class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
     private static final int PREDICTIONS_PERIOD = 15000;
-    private static final int PREDICTIONS_TIMER_OFFSET = 10000;
+    private static final int PREDICTIONS_TIMER_OFFSET = 1000;
 
     public static final int NO_TRANSLATION = 0;
     public static final int ANIMATION_LENGTH = 500;
@@ -381,6 +381,10 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     }
 
+    protected void queryDatabase() {
+
+    }
+
     @Override
     public void onAnimationStart(Animation animation) {
         animating = true;
@@ -434,6 +438,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         super.onResume();
         mitMapView.getGoogleMapView().onResume();
         timer = new Timer();
+        queryDatabase();
         startTimerTask();
     }
 
