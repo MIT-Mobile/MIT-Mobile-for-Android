@@ -1,11 +1,10 @@
 package edu.mit.mitmobile2.shuttles;
 
-import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
-
 import android.os.Bundle;
 
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
 
 public class ShuttleRouteActivity extends MITActivity implements MapFragmentCallback {
 
@@ -31,5 +30,10 @@ public class ShuttleRouteActivity extends MITActivity implements MapFragmentCall
     @Override
     public void setActionBarTitle(String title) {
         setTitle(title);
+    }
+
+    @Override
+    public void setActionBarSubtitle(String subtitle) {
+        getSupportActionBar().setSubtitle(subtitle);
     }
 }
