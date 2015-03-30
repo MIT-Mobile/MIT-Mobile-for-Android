@@ -164,12 +164,12 @@
                 android:value="edu.mit.mitmobile2.resources.ResourcesActivity" />
         </activity>
         <activity
-            android:name=".shuttles.ShuttleRouteActivity"
+            android:name=".shuttles.activities.ShuttleRouteActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity"/>
         <activity
-            android:name=".shuttles.ShuttleStopActivity"
+            android:name=".shuttles.activities.ShuttleStopActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity"/>

@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles;
+package edu.mit.mitmobile2.shuttles.callbacks;
 
 public interface ShuttleAdapterCallback {
     public void shuttleRouteClick(String routeId);

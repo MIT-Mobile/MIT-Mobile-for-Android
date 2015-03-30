@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles;
+package edu.mit.mitmobile2.shuttles.utils;
 
 import android.content.ContentValues;
 import android.database.Cursor;

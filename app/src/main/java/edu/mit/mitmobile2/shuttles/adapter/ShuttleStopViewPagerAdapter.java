@@ -6,7 +6,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.List;
 
-import edu.mit.mitmobile2.shuttles.ShuttleStopViewPagerFragment;
+import edu.mit.mitmobile2.shuttles.fragment.ShuttleStopViewPagerFragment;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
 public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {

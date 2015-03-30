@@ -11,7 +11,7 @@ import java.util.List;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
-import edu.mit.mitmobile2.shuttles.ShuttlesDatabaseHelper;
+import edu.mit.mitmobile2.shuttles.utils.ShuttlesDatabaseHelper;
 
 public class MITShuttleVehiclesWrapper extends DatabaseObject {
 

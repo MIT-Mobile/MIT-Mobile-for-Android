@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.ShuttleUtils;
+import edu.mit.mitmobile2.shuttles.utils.ShuttleUtils;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
 /**
