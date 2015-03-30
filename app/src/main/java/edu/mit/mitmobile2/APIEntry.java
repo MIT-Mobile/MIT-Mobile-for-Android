@@ -4,8 +4,9 @@ public class APIEntry {
 
 	private String dev;
 	private String test;
-	private String prod;	
-	
+	private String prod;
+	private String manager;
+
 	public String getBaseUrl(String environment) {
 		if (environment == MITAPIClient.DEV) {
 			return this.getDev();
@@ -41,5 +42,10 @@ public class APIEntry {
 	public void setProd(String prod) {
 		this.prod = prod;
 	}
-
+	public String getManager() {
+		return manager;
+	}
+	public void setManager(String manager) {
+		this.manager = manager;
+	}
 }

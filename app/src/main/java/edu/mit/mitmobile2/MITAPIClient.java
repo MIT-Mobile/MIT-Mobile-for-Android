@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,6 +79,7 @@ public class MITAPIClient {
                         apiEntry.setDev(api.getString("dev"));
                         apiEntry.setTest(api.getString("test"));
                         apiEntry.setProd(api.getString("prod"));
+                        apiEntry.setManager(api.getString("manager"));
                         Log.d("API", "add api entry for " + key);
                         MITAPIClient.api.put(key, apiEntry);
                     } catch (JSONException e) {
@@ -210,20 +212,20 @@ public class MITAPIClient {
     public void get(String api, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) {
         APIEntry apiEntry = MITAPIClient.api.get(api);
         String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
+        String managerName = apiEntry.getManager();
         RetrofitManager.changeEndpoint(apiUrl);
+
         try {
-            RetrofitManager.makeHttpCall(api, path, pathParams, queryParams, callback);
-        } catch (NoSuchFieldException e) {
-            Timber.e(e, "Reflection");
+            Method m = Class.forName(managerName).getDeclaredMethod("makeHttpCall", String.class, String.class, HashMap.class, HashMap.class, Object.class);
+            m.invoke(null, api, path, pathParams, queryParams, callback);
         } catch (NoSuchMethodException e) {
             Timber.e(e, "Reflection");
         } catch (ClassNotFoundException e) {
             Timber.e(e, "Reflection");
-        } catch (IllegalAccessException e) {
-            Timber.e(e, "Reflection");
         } catch (InvocationTargetException e) {
             Timber.e(e, "Reflection");
-            //Something weird came back from http call
+        } catch (IllegalAccessException e) {
+            Timber.e(e, "Reflection");
         }
     }
 
@@ -237,23 +239,23 @@ public class MITAPIClient {
         Timber.d("ApiEntry null? " + (apiEntry == null));
 
         String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
-
+        String managerName = apiEntry.getManager();
         RetrofitManager.changeEndpoint(apiUrl);
+
         Object o = null;
         try {
-            o = RetrofitManager.makeHttpCall(api, path, pathParams, queryParams);
-        } catch (NoSuchFieldException e) {
-            Timber.e(e, "Reflection");
+            Method m = Class.forName(managerName).getDeclaredMethod("makeHttpCall", String.class, String.class, HashMap.class, HashMap.class);
+            o = m.invoke(null, api, path, pathParams, queryParams);
         } catch (NoSuchMethodException e) {
             Timber.e(e, "Reflection");
         } catch (ClassNotFoundException e) {
             Timber.e(e, "Reflection");
-        } catch (IllegalAccessException e) {
-            Timber.e(e, "Reflection");
         } catch (InvocationTargetException e) {
             Timber.e(e, "Reflection");
-            //Something weird came back from http call
+        } catch (IllegalAccessException e) {
+            Timber.e(e, "Reflection");
         }
+
         return o;
     }
 
