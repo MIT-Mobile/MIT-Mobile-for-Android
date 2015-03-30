@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles;
+package edu.mit.mitmobile2.shuttles.fragment;
 
 import android.app.Fragment;
 import android.database.Cursor;
@@ -18,6 +18,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;

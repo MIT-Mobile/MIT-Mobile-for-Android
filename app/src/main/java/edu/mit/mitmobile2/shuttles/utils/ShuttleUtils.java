@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles;
+package edu.mit.mitmobile2.shuttles.utils;
 
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;

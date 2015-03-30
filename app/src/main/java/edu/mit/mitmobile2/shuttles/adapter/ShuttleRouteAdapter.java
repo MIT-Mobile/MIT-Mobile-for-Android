@@ -13,7 +13,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.shuttles.ShuttleUtils;
+import edu.mit.mitmobile2.shuttles.utils.ShuttleUtils;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 
 public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {

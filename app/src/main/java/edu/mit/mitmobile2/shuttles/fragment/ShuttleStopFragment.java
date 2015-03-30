@@ -16,11 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
-import edu.mit.mitmobile2.shuttles.MapFragmentCallback;
+import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;

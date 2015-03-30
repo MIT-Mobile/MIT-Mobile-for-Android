@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.shuttles;
+package edu.mit.mitmobile2.shuttles.activities;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -31,6 +31,9 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shuttles.callbacks.ShuttleAdapterCallback;
+import edu.mit.mitmobile2.shuttles.utils.ShuttlesDatabaseHelper;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 import timber.log.Timber;

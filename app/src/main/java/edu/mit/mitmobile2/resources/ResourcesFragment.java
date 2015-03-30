@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.mit.mitmobile2.shuttles.fragment.MitMapFragment;
+import edu.mit.mitmobile2.MitMapFragment;
 
 public class ResourcesFragment extends MitMapFragment {
 
