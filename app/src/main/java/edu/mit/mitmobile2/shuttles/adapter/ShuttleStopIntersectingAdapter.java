@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shuttles.callbacks.IntersectingAdapterCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;
 
 /**
@@ -20,15 +21,17 @@ public class ShuttleStopIntersectingAdapter extends BaseAdapter {
 
     private Context context;
     private List<MITShuttleIntersectingRoute> routes;
+    private IntersectingAdapterCallback callback;
 
     private class ViewHolder {
         TextView routeTextView;
         ImageView routeImageView;
     }
 
-    public ShuttleStopIntersectingAdapter(Context context, List<MITShuttleIntersectingRoute> routes) {
+    public ShuttleStopIntersectingAdapter(Context context, List<MITShuttleIntersectingRoute> routes, IntersectingAdapterCallback callback) {
         this.context = context;
         this.routes = routes;
+        this.callback = callback;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class ShuttleStopIntersectingAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         final ViewHolder holder;
 
@@ -60,6 +63,14 @@ public class ShuttleStopIntersectingAdapter extends BaseAdapter {
             holder.routeImageView = (ImageView) view.findViewById(R.id.route_image_view);
 
             view.setTag(holder);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String routeId = routes.get(position).getId();
+                    callback.intersectingRouteClick(routeId);
+                }
+            });
         } else {
             holder = (ViewHolder) view.getTag();
         }
@@ -72,6 +83,7 @@ public class ShuttleStopIntersectingAdapter extends BaseAdapter {
         } else {
             holder.routeImageView.setImageResource(R.drawable.shuttle_small_inactive);
         }
+
         return view;
     }
 }

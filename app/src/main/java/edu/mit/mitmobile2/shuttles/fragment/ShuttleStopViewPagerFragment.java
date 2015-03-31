@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.shuttles.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +20,10 @@ import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shuttles.activities.ShuttleRouteActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
+import edu.mit.mitmobile2.shuttles.callbacks.IntersectingAdapterCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
@@ -40,6 +43,16 @@ public class ShuttleStopViewPagerFragment extends Fragment {
     private String stopId;
     private MITShuttleStopWrapper stop = new MITShuttleStopWrapper();
     private List<MITShuttleIntersectingRoute> intersectingRoutes;
+
+    private IntersectingAdapterCallback intersectingAdapterCallback = new IntersectingAdapterCallback() {
+        @Override
+        public void intersectingRouteClick(String routeId) {
+            Intent intent = new Intent(getActivity(), ShuttleRouteActivity.class);
+            intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+        }
+    };
 
     public static ShuttleStopViewPagerFragment newInstance(String currentRouteId, String stopId) {
         ShuttleStopViewPagerFragment fragment = new ShuttleStopViewPagerFragment();
@@ -78,7 +91,7 @@ public class ShuttleStopViewPagerFragment extends Fragment {
         cursor.close();
 
         predictionsAdapter = new ShuttleStopPredictionsAdapter(getActivity(), stop.getPredictions());
-        intersectingAdapter = new ShuttleStopIntersectingAdapter(getActivity(), intersectingRoutes);
+        intersectingAdapter = new ShuttleStopIntersectingAdapter(getActivity(), intersectingRoutes, intersectingAdapterCallback);
 
         predictionAdapterView.setAdapter(predictionsAdapter);
         intersectingRoutesAdapterView.setAdapter(intersectingAdapter);
