@@ -101,6 +101,7 @@ public class Schema {
         public static final String PREDICTIONS_URL = "predictions_url";
         public static final String PREDICTIONS = "predictions";
         public static final String DISTANCE = "distance";
+        public static final String TIMESTAMP = "timestamp";
 
         public static final String CREATE_TABLE_SQL =
                 buildCreateSQL(TABLE_NAME,
@@ -114,11 +115,12 @@ public class Schema {
                                 STOP_NUMBER + " text, " +
                                 DISTANCE + " float, " +
                                 PREDICTIONS + " text, " +
+                                TIMESTAMP + " long not null, " +
                                 PREDICTIONS_URL + " text not null"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, STOP_ID, STOP_URL, ROUTE_ID, ROUTE_URL, STOP_TITLE, STOP_NUMBER, STOP_LAT, STOP_LON, DISTANCE, PREDICTIONS, PREDICTIONS_URL
+                ID_COL, STOP_ID, STOP_URL, ROUTE_ID, ROUTE_URL, STOP_TITLE, STOP_NUMBER, STOP_LAT, STOP_LON, DISTANCE, PREDICTIONS, TIMESTAMP, PREDICTIONS_URL
         };
     }
 

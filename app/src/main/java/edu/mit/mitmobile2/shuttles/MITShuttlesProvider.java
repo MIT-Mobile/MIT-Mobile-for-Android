@@ -13,7 +13,7 @@ import android.net.Uri;
 
 import java.util.ArrayList;
 
-import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.Schema;
 import timber.log.Timber;
 
@@ -46,7 +46,9 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final Uri SINGLE_STOP_URI = Uri.parse(CONTENT_URI.toString() + "/single-stop");
     public static final Uri INTERSECTING_ROUTES_URI = Uri.parse(CONTENT_URI.toString() + "/intersecting-routes");
 
-    private static final String queryString = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+    private static final String DB_SELECT_STRING = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions, stops.timestamp ";
+
+    private static final String queryString = DB_SELECT_STRING +
             "FROM routes " +
             "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
             "JOIN stops ON route_stops.stop_id = stops.stop_id " +
@@ -83,25 +85,25 @@ public class MITShuttlesProvider extends ContentProvider {
 
         switch (uriType) {
             case CHECK_ROUTES:
-                cursor = MitMobileApplication.dbAdapter.db.query(Schema.Route.TABLE_NAME, new String[]{Schema.Route.ID_COL}, selection, null, null, null, null);
+                cursor = DBAdapter.getInstance().db.query(Schema.Route.TABLE_NAME, new String[]{Schema.Route.ID_COL}, selection, null, null, null, null);
                 break;
             case CHECK_STOPS:
-                cursor = MitMobileApplication.dbAdapter.db.query(Schema.Stop.TABLE_NAME, new String[]{Schema.Stop.ID_COL}, selection, null, null, null, null);
+                cursor = DBAdapter.getInstance().db.query(Schema.Stop.TABLE_NAME, new String[]{Schema.Stop.ID_COL}, selection, null, null, null, null);
                 break;
             case ROUTES:
-                cursor = MitMobileApplication.dbAdapter.db.rawQuery(queryString, null, null);
+                cursor = DBAdapter.getInstance().db.rawQuery(queryString, null, null);
                 break;
             case STOPS_ID:
-                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildStopsQueryString(selection), null, null);
+                cursor = DBAdapter.getInstance().db.rawQuery(buildStopsQueryString(selection), null, null);
                 break;
             case ROUTE_ID:
-                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildQueryString(Schema.Route.TABLE_NAME + "." + selection), null, null);
+                cursor = DBAdapter.getInstance().db.rawQuery(buildQueryString(Schema.Route.TABLE_NAME + "." + selection), null, null);
                 break;
             case SINGLE_STOP:
-                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildSingleStopQueryString(selection), null, null);
+                cursor = DBAdapter.getInstance().db.rawQuery(buildSingleStopQueryString(selection), null, null);
                 break;
             case INTERSECTING_ROUTES:
-                cursor = MitMobileApplication.dbAdapter.db.rawQuery(buildIntersectingRoutesQueryString(selection), null, null);
+                cursor = DBAdapter.getInstance().db.rawQuery(buildIntersectingRoutesQueryString(selection), null, null);
                 break;
         }
 
@@ -123,19 +125,19 @@ public class MITShuttlesProvider extends ContentProvider {
 
         switch (uriType) {
             case ROUTES:
-                newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
+                newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
                 if (newID <= 0) {
                     throw new SQLException("Error");
                 }
                 break;
             case STOPS:
-                newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
+                newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
                 if (newID <= 0) {
                     throw new SQLException("Error");
                 }
                 break;
             case LOCATION:
-                newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Location.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Location.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (newID <= 0) {
                     throw new SQLException("Error");
                 }
@@ -156,7 +158,7 @@ public class MITShuttlesProvider extends ContentProvider {
         switch (uriType) {
             case ROUTES:
                 for (ContentValues v : values) {
-                    newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, v, SQLiteDatabase.CONFLICT_FAIL);
+                    newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, v, SQLiteDatabase.CONFLICT_FAIL);
                     Timber.d("Bulk Insert - ID = " + newID);
                     if (newID <= 0) {
                         throw new SQLException("Error");
@@ -165,7 +167,7 @@ public class MITShuttlesProvider extends ContentProvider {
                 break;
             case STOPS:
                 for (ContentValues v : values) {
-                    newID = MitMobileApplication.dbAdapter.db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, v, SQLiteDatabase.CONFLICT_FAIL);
+                    newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, v, SQLiteDatabase.CONFLICT_FAIL);
                     Timber.d("Bulk Insert - ID = " + newID);
                     if (newID <= 0) {
                         throw new SQLException("Error");
@@ -193,16 +195,16 @@ public class MITShuttlesProvider extends ContentProvider {
 
         switch (uriType) {
             case ROUTES:
-                rows = MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
+                rows = DBAdapter.getInstance().db.update(Schema.Route.TABLE_NAME, values, Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
                 break;
             case STOPS:
-                rows = MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
+                rows = DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
                 break;
             case PREDICTIONS:
-                rows = MitMobileApplication.dbAdapter.db.update(Schema.Stop.TABLE_NAME, values, selection, null);
+                rows = DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values, selection, null);
                 break;
             case ROUTE_ID:
-                rows = MitMobileApplication.dbAdapter.db.update(Schema.Route.TABLE_NAME, values, selection, null);
+                rows = DBAdapter.getInstance().db.update(Schema.Route.TABLE_NAME, values, selection, null);
                 break;
         }
 
@@ -221,7 +223,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+        return DB_SELECT_STRING +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +
@@ -230,7 +232,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildStopsQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions " +
+        return DB_SELECT_STRING +
                 "FROM stops " +
                 "INNER JOIN route_stops ON stops.stop_id = route_stops.stop_id " +
                 "JOIN routes ON route_stops.route_id = routes.route_id " +
@@ -245,7 +247,7 @@ public class MITShuttlesProvider extends ContentProvider {
     }
 
     public String buildIntersectingRoutesQueryString(String selection) {
-        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title " +
+        return "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, stops.stop_id, stops.stop_url, stops.stop_title, stops.timestamp " +
                 "FROM routes " +
                 "INNER JOIN route_stops ON routes.route_id = route_stops.route_id " +
                 "JOIN stops ON route_stops.stop_id = stops.stop_id " +

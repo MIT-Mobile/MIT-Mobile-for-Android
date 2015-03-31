@@ -24,7 +24,7 @@ public class MitMobileApplication extends Application {
     // Instance fields
     public static Account mAccount;
 
-    public static DBAdapter dbAdapter;
+    private static DBAdapter dbAdapter;
 
     public static Bus bus;
 

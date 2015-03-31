@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
@@ -39,7 +40,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import timber.log.Timber;
 
-public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter{
+public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter {
     @InjectView(R.id.route_information_top)
     TextView routeStatusTextView;
 
@@ -68,14 +69,18 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
 
         ButterKnife.inject(this, view);
 
-        //TODO: Save routeId in bundle for rotation
-        routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
+        if (savedInstanceState != null && savedInstanceState.getString(Constants.ROUTE_ID_KEY) != null) {
+            routeId = savedInstanceState.getString(Constants.ROUTE_ID_KEY);
+        } else {
+            routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
+        }
+
         adapter = new ShuttleRouteAdapter(getActivity(), R.layout.stop_list_item, new ArrayList<MITShuttleStopWrapper>());
 
         uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeId;
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
-        route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(cursor, DBAdapter.getInstance());
         cursor.close();
 
         callback.setActionBarTitle(route.getTitle());
@@ -155,7 +160,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        route.buildFromCursor(data, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(data, DBAdapter.getInstance());
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
@@ -246,6 +251,24 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         } else {
             return null;
         }
+    }
+
+    @Override
+    protected void queryDatabase() {
+        Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
+        cursor.moveToFirst();
+        route.buildFromCursor(cursor, DBAdapter.getInstance());
+        adapter.clear();
+        adapter.addAll(route.getStops());
+        adapter.notifyDataSetChanged();
+
+        updateMapItems((ArrayList) route.getVehicles());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Constants.ROUTE_ID_KEY, routeId);
     }
 
     /*private void updateVehicles() {

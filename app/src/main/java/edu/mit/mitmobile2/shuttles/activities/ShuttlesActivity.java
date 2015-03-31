@@ -26,6 +26,7 @@ import java.util.TimerTask;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.PreferenceUtils;
@@ -120,7 +121,7 @@ public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapte
                 Timber.d("Routes OK, refreshing predictions");
             }
         } else {
-            MitMobileApplication.dbAdapter.flushStaleData();
+            DBAdapter.getInstance().flushStaleData();
             loadCursor();
             updateAllRoutes();
             immediatelyReloadPredictions = true;

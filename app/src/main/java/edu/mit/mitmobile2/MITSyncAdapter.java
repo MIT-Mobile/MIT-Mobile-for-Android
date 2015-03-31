@@ -186,6 +186,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 ContentProviderOperation operation = ContentProviderOperation.newUpdate(Uri.parse(uri))
                         .withValue(Schema.Stop.PREDICTIONS, v.getAsString(Schema.Stop.PREDICTIONS))
+                        .withValue(Schema.Stop.TIMESTAMP, System.currentTimeMillis())
                         .withSelection(selection, null)
                         .build();
 
@@ -207,7 +208,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         DatabaseObject dbObject = object;
         ContentValues contentValues = new ContentValues();
-        dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
+        dbObject.fillInContentValues(contentValues, DBAdapter.getInstance());
 
         int uriType = getUriType(uri);
 
@@ -235,7 +236,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         DatabaseObject dbObject = object;
         ContentValues contentValues = new ContentValues();
-        dbObject.fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
+        dbObject.fillInContentValues(contentValues, DBAdapter.getInstance());
 
         String selection = getSelectionString(getUriType(uri), contentValues);
 
@@ -250,7 +251,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         for (int i = 0; i < objects.size(); i++) {
             ContentValues contentValues = new ContentValues();
-            objects.get(i).fillInContentValues(contentValues, MitMobileApplication.dbAdapter);
+            objects.get(i).fillInContentValues(contentValues, DBAdapter.getInstance());
             values[i] = contentValues;
         }
         return values;

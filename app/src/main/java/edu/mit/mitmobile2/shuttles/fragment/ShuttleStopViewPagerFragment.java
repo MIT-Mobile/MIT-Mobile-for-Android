@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.AdapterView;
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
@@ -63,7 +63,7 @@ public class ShuttleStopViewPagerFragment extends Fragment {
         String selectionString = Schema.Stop.TABLE_NAME + "." + Schema.Stop.STOP_ID + "=\'" + stopId + "\'";
         Cursor cursor = getActivity().getContentResolver().query(MITShuttlesProvider.SINGLE_STOP_URI, Schema.Stop.ALL_COLUMNS, selectionString, null, null);
         cursor.moveToFirst();
-        stop.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        stop.buildFromCursor(cursor, DBAdapter.getInstance());
         cursor.close();
 
         String routesSelectionString = selectionString + " AND " + Schema.Route.TABLE_NAME + "." + Schema.Route.ROUTE_ID + "!=\'" + currentRouteId + "\'";
@@ -71,7 +71,7 @@ public class ShuttleStopViewPagerFragment extends Fragment {
         routesCursor.moveToFirst();
         while (!routesCursor.isAfterLast()) {
             MITShuttleIntersectingRoute route = new MITShuttleIntersectingRoute();
-            route.buildFromCursor(routesCursor, MitMobileApplication.dbAdapter);
+            route.buildFromCursor(routesCursor, DBAdapter.getInstance());
             intersectingRoutes.add(route);
             routesCursor.moveToNext();
         }

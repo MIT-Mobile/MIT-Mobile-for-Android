@@ -19,7 +19,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final long UPDATE_INTERVAL = 60000;
+    private static final long UPDATE_INTERVAL = 120000;
 
     protected String TAG;
     protected Context mContext;

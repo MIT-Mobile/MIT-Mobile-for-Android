@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.MapItem;
+import timber.log.Timber;
 
 public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
@@ -48,6 +49,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     @Expose
     private String predictionsUrl;
     private float distance;
+    private long timestamp;
 
     public MITShuttleStopWrapper() {
     }
@@ -155,6 +157,14 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         this.distance = distance;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public int getMapItemType() {
         return MARKERTYPE;
@@ -229,6 +239,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         setLon(cursor.getDouble(cursor.getColumnIndex(Schema.Stop.STOP_LON)));
         setPredictionsUrl(cursor.getString(cursor.getColumnIndex(Schema.Stop.PREDICTIONS_URL)));
         setDistance(cursor.getFloat(cursor.getColumnIndex(Schema.Stop.DISTANCE)));
+        setTimestamp(cursor.getLong(cursor.getColumnIndex(Schema.Stop.TIMESTAMP)));
 
         buildSubclassFromCursor(cursor, dbAdapter, "");
     }
@@ -241,7 +252,19 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
             Type nestedListType = new TypeToken<List<MITShuttlePrediction>>() {
             }.getType();
             List<MITShuttlePrediction> predictions = gson.fromJson(segmentString, nestedListType);
-            setPredictions(predictions);
+
+            // check timestamp of closest prediction to see it is outdated
+            if (predictions.size() > 0) {
+                long diff = System.currentTimeMillis() - timestamp;
+//                Timber.d("DIFF: " + diff);
+                if (diff < 60000) {
+                    setPredictions(predictions);
+                } else {
+                    setPredictions(new ArrayList<MITShuttlePrediction>());
+                }
+            } else {
+                setPredictions(new ArrayList<MITShuttlePrediction>());
+            }
         } else {
             setPredictions(new ArrayList<MITShuttlePrediction>());
         }
@@ -249,9 +272,11 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        long timestampVal = 0;
         if (predictions != null) {
             String preds = predictions.toString();
             values.put(Schema.Stop.PREDICTIONS, preds);
+            timestampVal = System.currentTimeMillis();
         }
 
         values.put(Schema.Stop.STOP_ID, this.id);
@@ -263,5 +288,6 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         values.put(Schema.Stop.STOP_LAT, this.lat);
         values.put(Schema.Stop.STOP_LON, this.lon);
         values.put(Schema.Stop.PREDICTIONS_URL, this.predictionsUrl);
+        values.put(Schema.Stop.TIMESTAMP, timestampVal);
     }
 }
