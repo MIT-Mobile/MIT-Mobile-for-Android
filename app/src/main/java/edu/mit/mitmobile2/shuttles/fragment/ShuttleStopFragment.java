@@ -1,6 +1,10 @@
 package edu.mit.mitmobile2.shuttles.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,6 +25,7 @@ import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shuttles.AlarmReceiver;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
@@ -65,7 +70,7 @@ public class ShuttleStopFragment extends MitMapFragment {
         callback.setActionBarTitle(route.getTitle());
 
         stops = route.getStops();
-        List<String> stopIds = new ArrayList<String>();
+        List<String> stopIds = new ArrayList<>();
         for (MITShuttleStopWrapper stop : stops) {
             stopIds.add(stop.getId());
         }
@@ -107,6 +112,18 @@ public class ShuttleStopFragment extends MitMapFragment {
             }
         }
         return 0;
+    }
+
+    private void buildNotification() {
+        // If we keep track of the alarm IDs, we can update
+
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent alarmIntent = new Intent(getActivity(), AlarmReceiver.class);
+        alarmIntent.putExtra(Constants.ROUTE_ID_KEY, routeId);
+        alarmIntent.putExtra(Constants.STOP_ID_KEY, stopId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
     }
 
     @Override

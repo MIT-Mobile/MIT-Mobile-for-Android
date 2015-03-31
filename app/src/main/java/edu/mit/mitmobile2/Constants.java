@@ -8,6 +8,7 @@ public class Constants {
     public static final String PREDICTIONS_TIMESTAMP = "predictionsTimestamp";
     public static final String ROUTE_ID_KEY = "routeId";
     public static final String STOP_ID_KEY = "stopId";
+    public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
