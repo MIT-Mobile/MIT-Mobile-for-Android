@@ -105,7 +105,7 @@ public class DBAdapter {
     private DatabaseHelper helper;
     private static DBAdapter instance = null;
 
-    public static DBAdapter getInstance() {
+    public static synchronized DBAdapter getInstance() {
         return instance;
     }
 

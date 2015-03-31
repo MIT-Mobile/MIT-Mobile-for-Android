@@ -255,9 +255,8 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
 
             // check timestamp of closest prediction to see it is outdated
             if (predictions.size() > 0) {
-                long current = System.currentTimeMillis();
-                long diff = current - timestamp;
-                Timber.d("DIFF: " + diff);
+                long diff = System.currentTimeMillis() - timestamp;
+//                Timber.d("DIFF: " + diff);
                 if (diff < 60000) {
                     setPredictions(predictions);
                 } else {

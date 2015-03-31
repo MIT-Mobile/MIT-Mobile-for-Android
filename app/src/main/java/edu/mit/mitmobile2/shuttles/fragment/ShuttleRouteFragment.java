@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
@@ -79,7 +80,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeId;
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
-        route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(cursor, DBAdapter.getInstance());
         cursor.close();
 
         callback.setActionBarTitle(route.getTitle());
@@ -159,7 +160,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        route.buildFromCursor(data, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(data, DBAdapter.getInstance());
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
@@ -256,7 +257,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     protected void queryDatabase() {
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
-        route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(cursor, DBAdapter.getInstance());
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();

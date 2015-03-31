@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
@@ -58,7 +59,7 @@ public class ShuttleStopFragment extends MitMapFragment {
         selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
         cursor.moveToFirst();
-        route.buildFromCursor(cursor, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(cursor, DBAdapter.getInstance());
         cursor.close();
 
         callback.setActionBarTitle(route.getTitle());
@@ -137,7 +138,7 @@ public class ShuttleStopFragment extends MitMapFragment {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
         MITShuttleRoute route = new MITShuttleRoute();
-        route.buildFromCursor(data, MitMobileApplication.dbAdapter);
+        route.buildFromCursor(data, DBAdapter.getInstance());
         stops = route.getStops();
         int currentStop = predictionViewPager.getCurrentItem();
         stopViewPagerAdapter.updatePredictions(currentStop, stops.get(currentStop).getPredictions());

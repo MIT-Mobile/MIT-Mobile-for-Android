@@ -23,25 +23,24 @@ import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 
 public class ShuttlesDatabaseHelper {
 
-    public static SQLiteDatabase db = MitMobileApplication.dbAdapter.db;
-    public static DBAdapter dbAdapter = MitMobileApplication.dbAdapter;
+    public static SQLiteDatabase db = DBAdapter.getInstance().db;
 
     public static void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId, boolean predictable) {
         List<DatabaseObject> updatedObjects = new ArrayList<>();
-        Set<String> ids = dbAdapter.getAllIds(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, Schema.Stop.STOP_ID);
+        Set<String> ids = DBAdapter.getInstance().getAllIds(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, Schema.Stop.STOP_ID);
 
         checkObjectAndPersist(dbObjects, updatedObjects, ids, Schema.Stop.TABLE_NAME, Schema.Stop.STOP_ID, predictable);
 
         updatedObjects.clear();
 
-        HashMap<String, String> idToDirectionMap = dbAdapter.getIdToDirectionMap(Schema.RouteStops.TABLE_NAME, Schema.RouteStops.ALL_COLUMNS, Schema.RouteStops.ROUTE_ID, Schema.RouteStops.STOP_ID, routeId);
+        HashMap<String, String> idToDirectionMap = DBAdapter.getInstance().getIdToDirectionMap(Schema.RouteStops.TABLE_NAME, Schema.RouteStops.ALL_COLUMNS, Schema.RouteStops.ROUTE_ID, Schema.RouteStops.STOP_ID, routeId);
 
         for (MITShuttleStopWrapper s : dbObjects) {
             RouteStop routeStop = new RouteStop(routeId, s.getId());
 
             if (idToDirectionMap.containsKey(s.getId()) && idToDirectionMap.get(s.getId()).equals(routeId)) {
                 ContentValues values = new ContentValues();
-                routeStop.fillInContentValues(values, dbAdapter);
+                routeStop.fillInContentValues(values, DBAdapter.getInstance());
 
                 db.update(Schema.RouteStops.TABLE_NAME, values, Schema.RouteStops.STOP_ID + " = \'" + s.getId() + "\' AND " + Schema.RouteStops.ROUTE_ID + "=\'" + routeId + "\'", null);
             } else {
@@ -49,14 +48,14 @@ public class ShuttlesDatabaseHelper {
             }
         }
 
-        dbAdapter.batchPersist(updatedObjects, Schema.RouteStops.TABLE_NAME);
+        DBAdapter.getInstance().batchPersist(updatedObjects, Schema.RouteStops.TABLE_NAME);
     }
 
     private static void checkObjectAndPersist(List<MITShuttleStopWrapper> dbObjects, List<DatabaseObject> updatedObjects, Set<String> ids, String tableName, String columnToIndex, boolean predictable) {
         for (MITShuttleStopWrapper s : dbObjects) {
             if (ids.contains(s.getId())) {
                 ContentValues values = new ContentValues();
-                s.fillInContentValues(values, dbAdapter);
+                s.fillInContentValues(values, DBAdapter.getInstance());
 
                 if (predictable) {
                     // Calculate location in here
@@ -87,7 +86,7 @@ public class ShuttlesDatabaseHelper {
             }
         }
 
-        dbAdapter.batchPersist(updatedObjects, tableName);
+        DBAdapter.getInstance().batchPersist(updatedObjects, tableName);
     }
 
     public static List<MITShuttleRoute> getAllRoutes() {
@@ -109,7 +108,7 @@ public class ShuttlesDatabaseHelper {
         try {
             while (cursor.moveToNext()) {
                 MITShuttleRoute route = new MITShuttleRoute();
-                route.buildFromCursor(cursor, dbAdapter);
+                route.buildFromCursor(cursor, DBAdapter.getInstance());
                 routes.add(route);
             }
         } finally {
@@ -121,7 +120,7 @@ public class ShuttlesDatabaseHelper {
         try {
             while (cursor.moveToNext()) {
                 MitMiniShuttleRoute route = new MitMiniShuttleRoute();
-                route.buildFromCursor(cursor, dbAdapter);
+                route.buildFromCursor(cursor, DBAdapter.getInstance());
                 routes.add(route);
             }
         } finally {
@@ -145,7 +144,7 @@ public class ShuttlesDatabaseHelper {
         try {
             cursor.moveToFirst();
             route = new MITShuttleRoute();
-            route.buildFromCursor(cursor, dbAdapter);
+            route.buildFromCursor(cursor, DBAdapter.getInstance());
         } finally {
             cursor.close();
         }
@@ -161,7 +160,7 @@ public class ShuttlesDatabaseHelper {
         try {
             cursor.moveToFirst();
             path = new MITShuttlePath();
-            path.buildFromCursor(cursor, dbAdapter);
+            path.buildFromCursor(cursor, DBAdapter.getInstance());
         } finally {
             cursor.close();
         }
@@ -177,7 +176,7 @@ public class ShuttlesDatabaseHelper {
         try {
             while (cursor.moveToNext()) {
                 MITShuttleVehicle vehicle = new MITShuttleVehicle();
-                vehicle.buildFromCursor(cursor, dbAdapter);
+                vehicle.buildFromCursor(cursor, DBAdapter.getInstance());
                 vehicles.add(vehicle);
             }
         } finally {
@@ -188,27 +187,27 @@ public class ShuttlesDatabaseHelper {
 
     public static void batchPersistVehicles(List<MITShuttleVehicle> dbObjects, String routeId) {
         List<DatabaseObject> updatedObjects = new ArrayList<>();
-        Set<String> ids = dbAdapter.getAllIds(Schema.Vehicle.TABLE_NAME, Schema.Vehicle.ALL_COLUMNS, Schema.Vehicle.VEHICLE_ID);
+        Set<String> ids = DBAdapter.getInstance().getAllIds(Schema.Vehicle.TABLE_NAME, Schema.Vehicle.ALL_COLUMNS, Schema.Vehicle.VEHICLE_ID);
 
         for (MITShuttleVehicle v : dbObjects) {
             v.setRouteId(routeId);
             if (ids.contains(v.getId())) {
                 ContentValues values = new ContentValues();
-                v.fillInContentValues(values, dbAdapter);
-                dbAdapter.db.update(Schema.Vehicle.TABLE_NAME, values,
+                v.fillInContentValues(values, DBAdapter.getInstance());
+                DBAdapter.getInstance().db.update(Schema.Vehicle.TABLE_NAME, values,
                         Schema.Vehicle.VEHICLE_ID + " = \'" + v.getId() + "\'", null);
             } else {
                 updatedObjects.add(v);
             }
         }
 
-        dbAdapter.batchPersist(updatedObjects, Schema.Vehicle.TABLE_NAME);
+        DBAdapter.getInstance().batchPersist(updatedObjects, Schema.Vehicle.TABLE_NAME);
     }
 
     public static void clearAllPredictions() {
         ContentValues values = new ContentValues();
         values.put(Schema.Stop.PREDICTIONS, "[]");
-        dbAdapter.db.update(Schema.Stop.TABLE_NAME, values,
+        DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values,
                 null, null);
     }
 }

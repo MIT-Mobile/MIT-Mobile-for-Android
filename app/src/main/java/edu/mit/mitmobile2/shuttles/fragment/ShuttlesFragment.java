@@ -30,6 +30,7 @@ import java.util.TimerTask;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
@@ -144,7 +145,7 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
                 Timber.d("Routes OK, refreshing predictions");
             }
         } else {
-            MitMobileApplication.dbAdapter.flushStaleData();
+            DBAdapter.getInstance().flushStaleData();
             loadCursor();
             updateAllRoutes();
             immediatelyReloadPredictions = true;
