@@ -153,6 +153,10 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int topRowPosition = (mapItemsListView == null || mapItemsListView.getChildCount() == 0) ?
+                            0 : mapItemsListView.getChildAt(0).getTop();
+                    swipeRefreshLayout.setEnabled((topRowPosition >= 0));
+
                     if (!mapViewExpanded && !animating) {
                         int newPosition = calculateScrollOffset();
 
@@ -174,6 +178,19 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
                 @Override
                 public void onClick(View v) {
                     toggleMapHorizontal();
+                }
+            });
+            mapItemsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int topRowPosition = (mapItemsListView == null || mapItemsListView.getChildCount() == 0) ?
+                            0 : mapItemsListView.getChildAt(0).getTop();
+                    swipeRefreshLayout.setEnabled((topRowPosition >= 0));
                 }
             });
         }

@@ -136,11 +136,14 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
 
     @Override
     protected void listItemClicked(int position) {
-        MITShuttleStopWrapper stop = adapter.getItem(position - 1);
-        Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
-        intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
-        intent.putExtra(Constants.STOP_ID_KEY, stop.getId());
-        startActivity(intent);
+        //Because header is counted in items
+        if (position != 0) {
+            MITShuttleStopWrapper stop = adapter.getItem(position - 1);
+            Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
+            intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
+            intent.putExtra(Constants.STOP_ID_KEY, stop.getId());
+            startActivity(intent);
+        }
     }
 
     @Override
