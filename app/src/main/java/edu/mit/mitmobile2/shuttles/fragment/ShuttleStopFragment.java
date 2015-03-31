@@ -97,6 +97,9 @@ public class ShuttleStopFragment extends MitMapFragment {
 
         updateData();
         getLoaderManager().initLoader(0, null, this);
+
+        drawRoutePath(route);
+
         return view;
     }
 
