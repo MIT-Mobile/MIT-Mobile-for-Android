@@ -48,66 +48,72 @@ public class ResourcesActivity extends MapsActivity {
 
             @Override
             public void handleMessage(Message msg) {
-                try {
                     APIJsonResponse response = (APIJsonResponse) msg.obj;
-                    JSONObject collection = response.jsonArray.getJSONObject(0).getJSONObject("collection");
-                    JSONArray items = collection.getJSONArray("items");
+                    //JSONObject collection = response.jsonArray.getJSONObject(0).getJSONObject("collection");
+                    JSONArray items = response.jsonArray;
 
                     mapItems = new ArrayList<ResourceItem>();
                     String previousBuilding = "";
 
                     if (items.length() > 0) {
                         for (int i = 0; i < items.length(); i++) {
-                            JSONObject item = items.getJSONObject(i);
-                            ResourceItem r = new ResourceItem(mContext, (ViewGroup) findViewById(R.id.map));
-                            r.setNumber(i + 1);
-                            //r.setMarkerText(r.getNumber() + "");
-                            r.setName(item.getString("name"));
-                            r.setRoom(item.getString("room"));
-                            String[] parts = r.getRoom().split("-");
-                            r.setBuilding(parts[0]);
+                            try {
+                                JSONObject item = null;
+                                item = items.getJSONObject(i);
+                                ResourceItem r = new ResourceItem(mContext, (ViewGroup) findViewById(R.id.map));
+                                r.setNumber(i + 1);
+                                //r.setMarkerText(r.getNumber() + "");
+                                r.setName(item.getString("name"));
+                                r.setRoom(item.getString("room"));
+                                String[] parts = r.getRoom().split("-");
+                                r.setBuilding(parts[0]);
 
-                            // add a building header before the first resource in a building
-                            if (!r.getBuilding().equals(previousBuilding)) {
-                                ResourceItem rh = new ResourceHeader();
-                                rh.setBuildingHeader(true);
-                                rh.setMapItemType(0); // not a map item
-                                rh.setBuilding(parts[0]);
-                                mapItems.add(rh);
-                                previousBuilding = r.getBuilding();
-                            }
-
-                            // store the index of the map item in the mapItems list
-                            r.setMapItemIndex(mapItems.size());
-
-                            if (item.has("latitude")) {
-                                r.setLatitude(item.getDouble("latitude"));
-                            }
-                            if (item.has("longitude")) {
-                                r.setLongitude(item.getDouble("longitude"));
-                            }
-                            r.setStatus(item.getString("status"));
-
-                            JSONArray jAttributes = item.getJSONObject("_template").getJSONArray("attributes");
-                            r.setAttributes(new ArrayList());
-                            for (int a = 0; a < jAttributes.length(); a++) {
-                                JSONObject jAttribute = jAttributes.getJSONObject(a);
-                                ResourceAttribute attribute = new ResourceAttribute();
-                                attribute.set_attribute(jAttribute.getString("_id"));
-                                attribute.setLabel(jAttribute.getString("label"));
-                                JSONArray jValue = jAttribute.getJSONArray("value");
-                                attribute.setValue(new ArrayList<String>());
-                                for (int v = 0; v < jValue.length(); v++) {
-                                    attribute.getValue().add(jValue.getString(v));
+                                // add a building header before the first resource in a building
+                                if (!r.getBuilding().equals(previousBuilding)) {
+                                    ResourceItem rh = new ResourceHeader();
+                                    rh.setBuildingHeader(true);
+                                    rh.setMapItemType(0); // not a map item
+                                    rh.setBuilding(parts[0]);
+                                    mapItems.add(rh);
+                                    previousBuilding = r.getBuilding();
                                 }
-                                attribute.setValue_id(jAttribute.getString("value_id"));
-                                r.getAttributes().add(attribute);
+
+                                // store the index of the map item in the mapItems list
+                                r.setMapItemIndex(mapItems.size());
+
+                                if (item.has("latitude")) {
+                                    r.setLatitude(item.getDouble("latitude"));
+                                }
+                                if (item.has("longitude")) {
+                                    r.setLongitude(item.getDouble("longitude"));
+                                }
+                                r.setStatus(item.getString("status"));
+
+                                JSONArray jAttributes = item.getJSONArray("attribute_values");
+                                r.setAttributes(new ArrayList());
+                                for (int a = 0; a < jAttributes.length(); a++) {
+                                    JSONObject jAttribute = jAttributes.getJSONObject(a);
+                                    ResourceAttribute attribute = new ResourceAttribute();
+                                    attribute.set_attribute(jAttribute.getString("_id"));
+                                    attribute.setLabel(jAttribute.getString("label"));
+                                    JSONArray jValue = jAttribute.getJSONArray("value");
+                                    attribute.setValue(new ArrayList<String>());
+                                    for (int v = 0; v < jValue.length(); v++) {
+                                        attribute.getValue().add(jValue.getString(v));
+                                    }
+                                    attribute.setValue_id(jAttribute.getString("value_id"));
+                                    r.getAttributes().add(attribute);
+                                    //                            }
+
+                                    mapItems.add(r);
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
 
-                            mapItems.add(r);
+                            displayMapItems();
                         }
-
-                        displayMapItems();
 
                     } else {
                         Toast.makeText(mContext, "No resources were found for your search criteria", Toast.LENGTH_SHORT).show();
@@ -116,11 +122,6 @@ public class ResourcesActivity extends MapsActivity {
 
                     //findViewById(R.id.resourceInfoText).setVisibility(View.GONE);
                     mapView.show();
-
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
             }
 
         };

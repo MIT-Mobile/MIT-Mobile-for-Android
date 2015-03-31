@@ -174,7 +174,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
             }
 
             if (fit) {
-                this.fitMapItems();
+                //this.fitMapItems();
             }
         }
     }
