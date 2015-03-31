@@ -126,6 +126,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
                 Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
                 intent.putExtra(Constants.STOP_ID_KEY, marker.getSnippet());
                 intent.putExtra(Constants.ROUTE_ID_KEY, route.getId());
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
             }
         });
@@ -143,6 +144,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
             Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
             intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
             intent.putExtra(Constants.STOP_ID_KEY, stop.getId());
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
     }

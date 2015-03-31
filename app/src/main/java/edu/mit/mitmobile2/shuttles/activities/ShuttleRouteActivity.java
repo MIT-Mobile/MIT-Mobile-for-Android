@@ -1,12 +1,12 @@
 package edu.mit.mitmobile2.shuttles.activities;
 
-import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
-import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
-
+import android.content.Intent;
 import android.os.Bundle;
 
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
+import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
 
 public class ShuttleRouteActivity extends MITActivity implements MapFragmentCallback {
 
@@ -17,6 +17,14 @@ public class ShuttleRouteActivity extends MITActivity implements MapFragmentCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_frame);
 
+        getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        fragment = new ShuttleRouteFragment();
         getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
     }
 

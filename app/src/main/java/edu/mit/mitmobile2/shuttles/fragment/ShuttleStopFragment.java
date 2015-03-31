@@ -27,8 +27,8 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.AlarmReceiver;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
-import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
+import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import timber.log.Timber;
@@ -36,7 +36,6 @@ import timber.log.Timber;
 public class ShuttleStopFragment extends MitMapFragment {
 
     ViewPager predictionViewPager;
-    View transparentView;
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
     private MITShuttleRoute route = new MITShuttleRoute();
@@ -56,10 +55,11 @@ public class ShuttleStopFragment extends MitMapFragment {
         callback = (MapFragmentCallback) getActivity();
 
         predictionViewPager = (ViewPager) shuttleStopContent.findViewById(R.id.prediction_view_pager);
-        transparentView = shuttleStopContent.findViewById(R.id.transparent_map_overlay);
+        View transparentView = shuttleStopContent.findViewById(R.id.transparent_map_overlay);
 
         routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         stopId = getActivity().getIntent().getStringExtra(Constants.STOP_ID_KEY);
+
         uriString = MITShuttlesProvider.STOPS_URI + "/" + stopId;
         selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
