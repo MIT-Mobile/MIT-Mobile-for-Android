@@ -44,9 +44,9 @@ public class NavigationArrayAdapter extends ArrayAdapter<NavItem>  {
 			// These TextViews are created in the XML files we defined.
 
 			TextView mTextView  = (TextView) v.findViewById(R.id.navItemText);
-			Log.d("ZZZ","icon = " + i.getMenu_icon());
-			mTextView.setText(i.getLong_name());
-			mTextView.setCompoundDrawablesWithIntrinsicBounds(i.getMenu_icon(), 0, 0, 0);
+			Log.d("ZZZ","icon = " + i.getMenuIcon());
+			mTextView.setText(i.getLongName());
+			mTextView.setCompoundDrawablesWithIntrinsicBounds(i.getMenuIcon(), 0, 0, 0);
 		}
 
 		// the view must be returned to our activity
