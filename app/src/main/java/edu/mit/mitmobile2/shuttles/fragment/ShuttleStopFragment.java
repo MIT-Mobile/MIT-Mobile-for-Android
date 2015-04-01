@@ -58,10 +58,7 @@ public class ShuttleStopFragment extends MitMapFragment {
 
         uriString = MITShuttlesProvider.STOPS_URI + "/" + stopId;
         selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
-        Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
-        cursor.moveToFirst();
-        route.buildFromCursor(cursor, DBAdapter.getInstance());
-        cursor.close();
+        queryDatabase();
 
         callback.setActionBarTitle(route.getTitle());
 
@@ -145,8 +142,21 @@ public class ShuttleStopFragment extends MitMapFragment {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
         route.buildFromCursor(data, DBAdapter.getInstance());
+        data.close();
+
         stops = route.getStops();
         int currentStop = predictionViewPager.getCurrentItem();
         stopViewPagerAdapter.updatePredictions(currentStop, stops.get(currentStop).getPredictions());
+
+        updateMapItems((ArrayList) route.getVehicles(), false);
+    }
+
+    @Override
+    protected void queryDatabase() {
+        Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
+        cursor.moveToFirst();
+        route.buildFromCursor(cursor, DBAdapter.getInstance());
+        cursor.close();
+        updateMapItems((ArrayList) route.getVehicles(), false);
     }
 }
