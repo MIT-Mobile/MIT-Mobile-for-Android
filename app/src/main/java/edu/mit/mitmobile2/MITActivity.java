@@ -2,10 +2,12 @@ package edu.mit.mitmobile2;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -84,5 +86,19 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         cv.put(Schema.Location.LONGITUDE, location.getLongitude());
         cv.put(Schema.Location.ID_COL, 1);
         getContentResolver().insert(MITShuttlesProvider.LOCATION_URI, cv);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent intent = new Intent(this, MITModuleActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

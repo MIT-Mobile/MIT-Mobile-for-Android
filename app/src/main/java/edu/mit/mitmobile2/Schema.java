@@ -155,4 +155,24 @@ public class Schema {
         };
     }
 
+    public static class Alerts extends Table {
+        public static final String TABLE_NAME = "alerts";
+        public static final String ROUTE_ID = "route_id";
+        public static final String STOP_ID = "stop_id";
+        public static final String VEHICLE_ID = "vehicle_id";
+        public static final String TIMESTAMP = "timestamp";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                        ROUTE_ID + " text not null, " +
+                                STOP_ID + " text not null, " +
+                                VEHICLE_ID + " text not null, " +
+                                TIMESTAMP + " integer not null"
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, ROUTE_ID, STOP_ID, VEHICLE_ID, TIMESTAMP
+        };
+    }
+
 }

@@ -42,7 +42,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     @Expose
     private MITShuttlePath path;
     @Expose
-    private List<MITShuttleStopWrapper> stops = new ArrayList<>();
+    private List<MITShuttleStop> stops = new ArrayList<>();
     @Expose
     private List<MITShuttleVehicle> vehicles = new ArrayList<>();
 
@@ -147,11 +147,11 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
     }
 
 
-    public List<MITShuttleStopWrapper> getStops() {
+    public List<MITShuttleStop> getStops() {
         return stops;
     }
 
-    public void setStops(List<MITShuttleStopWrapper> stops) {
+    public void setStops(List<MITShuttleStop> stops) {
         this.stops = stops;
     }
 
@@ -194,7 +194,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         this.predictionsUrl = p.readString();
         this.vehiclesUrl = p.readString();
         this.path = p.readParcelable(MITShuttlePath.class.getClassLoader());
-        p.readTypedList(this.stops, MITShuttleStopWrapper.CREATOR);
+        p.readTypedList(this.stops, MITShuttleStop.CREATOR);
 //        this.stops = p.readArrayList(MITShuttleStopWrapper.class.getClassLoader());
     }
 
@@ -237,7 +237,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         this.stops = new ArrayList<>();
 
         while (cursor.getLong(cursor.getColumnIndex(Schema.Route.ID_COL)) == id) {
-            MITShuttleStopWrapper stopWrapper = new MITShuttleStopWrapper();
+            MITShuttleStop stopWrapper = new MITShuttleStop();
             stopWrapper.buildSubclassFromCursor(cursor, dbAdapter);
             this.stops.add(stopWrapper);
             boolean itemsRemaining = cursor.moveToNext();

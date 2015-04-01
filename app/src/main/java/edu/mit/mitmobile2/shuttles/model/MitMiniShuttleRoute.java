@@ -39,12 +39,12 @@ public class MitMiniShuttleRoute extends MITShuttleRoute {
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter, String prefix) {
         long id = getDatabaseId();
-        List<MITShuttleStopWrapper> stops = new ArrayList<>();
+        List<MITShuttleStop> stops = new ArrayList<>();
 
         int count = 0;
         while (cursor.getLong(cursor.getColumnIndex(Schema.Route.ID_COL)) == id) {
             if (count < 2 && isPredictable()) {
-                MITShuttleStopWrapper stopWrapper = new MITShuttleStopWrapper();
+                MITShuttleStop stopWrapper = new MITShuttleStop();
                 stopWrapper.buildSubclassFromCursor(cursor, dbAdapter);
                 stops.add(stopWrapper);
             }

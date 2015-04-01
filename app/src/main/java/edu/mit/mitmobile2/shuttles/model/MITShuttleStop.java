@@ -20,9 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.MapItem;
-import timber.log.Timber;
 
-public class MITShuttleStopWrapper extends MapItem implements Parcelable {
+public class MITShuttleStop extends MapItem implements Parcelable {
 
     @Expose
     private String id;
@@ -51,7 +50,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     private float distance;
     private long timestamp;
 
-    public MITShuttleStopWrapper() {
+    public MITShuttleStop() {
     }
 
     public String getId() {
@@ -134,16 +133,13 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         return predictions;
     }
 
-
     public void setPredictions(List<MITShuttlePrediction> predictions) {
         this.predictions = predictions;
     }
 
-
     public String getPredictionsUrl() {
         return predictionsUrl;
     }
-
 
     public void setPredictionsUrl(String predictionsUrl) {
         this.predictionsUrl = predictionsUrl;
@@ -199,7 +195,7 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         dest.writeString(this.predictionsUrl);
     }
 
-    private MITShuttleStopWrapper(Parcel p) {
+    private MITShuttleStop(Parcel p) {
         this.id = p.readString();
         this.url = p.readString();
         this.routeId = p.readString();
@@ -212,13 +208,13 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
         this.predictionsUrl = p.readString();
     }
 
-    public static final Parcelable.Creator<MITShuttleStopWrapper> CREATOR = new Parcelable.Creator<MITShuttleStopWrapper>() {
-        public MITShuttleStopWrapper createFromParcel(Parcel source) {
-            return new MITShuttleStopWrapper(source);
+    public static final Parcelable.Creator<MITShuttleStop> CREATOR = new Parcelable.Creator<MITShuttleStop>() {
+        public MITShuttleStop createFromParcel(Parcel source) {
+            return new MITShuttleStop(source);
         }
 
-        public MITShuttleStopWrapper[] newArray(int size) {
-            return new MITShuttleStopWrapper[size];
+        public MITShuttleStop[] newArray(int size) {
+            return new MITShuttleStop[size];
         }
     };
 
@@ -273,7 +269,27 @@ public class MITShuttleStopWrapper extends MapItem implements Parcelable {
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
         long timestampVal = 0;
+
         if (predictions != null) {
+            /*for (MITShuttlePrediction p : predictions) {
+                Cursor cursor = dbAdapter.db.query(Schema.Alerts.TABLE_NAME, Schema.Alerts.ALL_COLUMNS, Schema.Alerts.STOP_ID + "=\'" + this.id + "\' AND " + Schema.Alerts.VEHICLE_ID + "=\'" + p.getVehicleId() + "\'", null, null, null, null);
+                int diff = Integer.MAX_VALUE;
+                long id = -1;
+                ContentValues vals = new ContentValues();
+                if (cursor.moveToFirst()) {
+                    int timestamp = cursor.getInt(cursor.getColumnIndex(Schema.Alerts.TIMESTAMP));
+                    id = cursor.getLong(cursor.getColumnIndex(Schema.Alerts.ID_COL));
+                    diff = Math.abs(p.getTimestamp() - timestamp);
+                    vals.put(Schema.Alerts.TIMESTAMP, p.getTimestamp());
+                }
+
+                cursor.close();
+
+                if (diff < 50) {
+                    dbAdapter.db.update(Schema.Alerts.TABLE_NAME, vals, Schema.Alerts.ID_COL + "=" + id, null);
+                }
+            }*/
+
             String preds = predictions.toString();
             values.put(Schema.Stop.PREDICTIONS, preds);
             timestampVal = System.currentTimeMillis();
