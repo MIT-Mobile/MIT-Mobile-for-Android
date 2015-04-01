@@ -13,6 +13,7 @@ import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -53,7 +54,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     private Tab mTab;
     private CharSequence mDrawerTitle;
     protected CharSequence mTitle;
-    protected String long_name; // may be able to lose this in place of mTitle     
+    protected String longName; // may be able to lose this in place of mTitle
     protected List spinnerList;
     protected int contentLayoutId;
     private ViewStub contentViewStub;
@@ -65,10 +66,13 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     private NavigationArrayAdapter adapter;
 
     private String module; // name of module
-    private static final String DEFAULT_MODULE = "shuttles";
+    private static final String DEFAULT_MODULE = "news";
+    private static final String LAST_MODULE = "module";
     private String[] params;
     private NavItem navItem;
     public Context mContext;
+    private SharedPreferences appModulePref;
+    private String currentModule;
 
     public static List<NavItem> navigationTitles = new ArrayList<>();
     public static Map<String, NavItem> navMap = null;
@@ -214,12 +218,14 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
     private void selectItem(int position) {
         // get long_name from position
-        String long_name = MITModuleActivity.navigationTitles.get(position).getLong_name();
+        String longName = MITModuleActivity.navigationTitles.get(position).getLongName();
+
+        currentModule = longName;
 
         // get NavItem from long_name
-        mNavItem = MITModuleActivity.navMap.get(long_name);
+        mNavItem = MITModuleActivity.navMap.get(longName);
         String intentString = mNavItem.getIntent();
-        String title = navigationTitles.get(position).getLong_name();
+        String title = navigationTitles.get(position).getLongName();
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
@@ -348,26 +354,26 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
                     try {
                         String key = (String) n.next();
                         JSONObject module = navigation.getJSONObject(key);
-                        String long_name = module.getString("long_name");
-                        Log.d("ZZZ", long_name);
-                        keysList.add(long_name);
+                        String longName = module.getString("long_name");
+                        Log.d("ZZZ", longName);
+                        keysList.add(longName);
                         NavItem navItem = new NavItem();
-                        navItem.setLong_name(long_name);
-                        navItem.setShort_name(module.getString("short_name"));
+                        navItem.setLong_name(longName);
+                        navItem.setShortName(module.getString("short_name"));
 
                         // Get Home Icon
                         int resourceId = resources.getIdentifier(module.getString("home_icon"), "drawable", mContext.getPackageName());
-                        navItem.setHome_icon(resourceId);
+                        navItem.setHomeIcon(resourceId);
 
                         // Get Menu Icon
                         resourceId = resources.getIdentifier(module.getString("menu_icon"), "drawable", mContext.getPackageName());
-                        navItem.setMenu_icon(resourceId);
+                        navItem.setMenuIcon(resourceId);
 
                         navItem.setIntent(module.getString("intent"));
                         navItem.setUrl(module.getString("url"));
 
-                        MITModuleActivity.navMap.put(long_name, navItem);
-                        MITModuleActivity.moduleMap.put(key, long_name);
+                        MITModuleActivity.navMap.put(longName, navItem);
+                        MITModuleActivity.moduleMap.put(key, longName);
                         MITModuleActivity.navigationTitles.add(navItem);
 
                     } catch (JSONException e) {
@@ -416,14 +422,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         this.mTitle = mTitle;
     }
 
-    public String getLong_name() {
-        return long_name;
-    }
-
-    public void setLong_name(String long_name) {
-        this.long_name = long_name;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -450,13 +448,28 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
             this.module = DEFAULT_MODULE;
         }
 
-        String long_name = MITModuleActivity.moduleMap.get(this.module);
+        String longName = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getString(LAST_MODULE, null);
 
         // use the long_name to get the navItem object
-        navItem = MITModuleActivity.navMap.get(long_name);
+        if (longName != null) {
+            navItem = MITModuleActivity.navMap.get(longName);
+        } else {
+            navItem = MITModuleActivity.navMap.get(MITModuleActivity.moduleMap.get(this.module));
+        }
+
         Log.d("ZZZ", "navItem = " + navItem.toString());
         if (navItem != null) {
-            swapInFragment(navItem.getIntent(), navItem.getLong_name());
+            swapInFragment(navItem.getIntent(), navItem.getLongName());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (currentModule != null) {
+            SharedPreferences.Editor editor = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit();
+            editor.putString(LAST_MODULE, currentModule);
+            editor.commit();
         }
     }
 }

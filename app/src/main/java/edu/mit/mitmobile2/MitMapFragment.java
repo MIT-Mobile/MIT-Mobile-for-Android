@@ -2,7 +2,6 @@ package edu.mit.mitmobile2;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -31,14 +30,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 
 public abstract class MitMapFragment extends Fragment implements Animation.AnimationListener, LoaderManager.LoaderCallbacks<Cursor>, GoogleMap.OnMapLoadedCallback {
     private static final int PREDICTIONS_PERIOD = 15000;
@@ -248,16 +249,32 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     }
 
-    protected void updateMapItems(ArrayList mapItems) {
+    protected void updateMapItems(ArrayList mapItems, boolean fit) {
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mitMapView.clearDynamic();
         }
-        mitMapView.addMapItemList(mapItems, false);
+        mitMapView.addMapItemList(mapItems, false, fit);
     }
 
     protected void displayMapItems() {
         ArrayAdapter<MapItem> arrayAdapter = this.getMapItemAdapter();
         mapItemsListView.setAdapter(arrayAdapter);
+    }
+
+    public void drawRoutePath(MITShuttleRoute route) {
+        for (List<List<Double>> outerList : route.getPath().getSegments()) {
+            List<LatLng> points = new ArrayList<>();
+            PolylineOptions options = new PolylineOptions();
+            for (List<Double> innerList : outerList) {
+                LatLng point = new LatLng(innerList.get(1), innerList.get(0));
+                points.add(point);
+            }
+            options.addAll(points);
+            options.color(getResources().getColor(R.color.map_path_color));
+            options.visible(true);
+            options.width(12f);
+            getMapView().addPolyline(options);
+        }
     }
 
     protected GoogleMap getMapView() {
