@@ -19,7 +19,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.callbacks.ShuttleAdapterCallback;
 import edu.mit.mitmobile2.shuttles.utils.ShuttleUtils;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 
 
@@ -77,8 +77,8 @@ public class MITShuttleAdapter extends BaseAdapter {
         viewHolder.shuttleRouteTextview.setText(routes.get(position).getTitle());
         if (routes.get(position).isPredictable()) {
             initialViewVisibility(viewHolder, View.VISIBLE);
-            MITShuttleStopWrapper stop1 = routes.get(position).getStops().get(0);
-            MITShuttleStopWrapper stop2 = routes.get(position).getStops().get(1);
+            MITShuttleStop stop1 = routes.get(position).getStops().get(0);
+            MITShuttleStop stop2 = routes.get(position).getStops().get(1);
 
             viewHolder.firstStopTextView.setText(stop1.getTitle());
             viewHolder.secondStopTextView.setText(stop2.getTitle());
@@ -180,8 +180,8 @@ public class MITShuttleAdapter extends BaseAdapter {
         StringBuilder sb = new StringBuilder();
         for (MITShuttleRoute route : routes) {
             if (route.isPredictable() && route.getAgency().equals(agency)) {
-                MITShuttleStopWrapper stop1 = route.getStops().get(0);
-                MITShuttleStopWrapper stop2 = route.getStops().get(1);
+                MITShuttleStop stop1 = route.getStops().get(0);
+                MITShuttleStop stop2 = route.getStops().get(1);
 
                 appendTuples(sb, route, stop1);
                 appendTuples(sb, route, stop2);
@@ -193,7 +193,7 @@ public class MITShuttleAdapter extends BaseAdapter {
         return sb.toString();
     }
 
-    private void appendTuples(StringBuilder sb, MITShuttleRoute route, MITShuttleStopWrapper stop1) {
+    private void appendTuples(StringBuilder sb, MITShuttleRoute route, MITShuttleStop stop1) {
         sb.append(route.getId());
         sb.append(",");
         sb.append(stop1.getId());

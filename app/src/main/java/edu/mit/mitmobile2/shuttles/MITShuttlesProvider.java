@@ -29,6 +29,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final int LOCATION = 80;
     public static final int SINGLE_STOP = 90;
     public static final int INTERSECTING_ROUTES = 100;
+    public static final int ALERTS = 110;
 
     private static final String AUTHORITY = "edu.mit.mitmobile2.provider";
 
@@ -45,6 +46,7 @@ public class MITShuttlesProvider extends ContentProvider {
     public static final Uri LOCATION_URI = Uri.parse(CONTENT_URI.toString() + "/location");
     public static final Uri SINGLE_STOP_URI = Uri.parse(CONTENT_URI.toString() + "/single-stop");
     public static final Uri INTERSECTING_ROUTES_URI = Uri.parse(CONTENT_URI.toString() + "/intersecting-routes");
+    public static final Uri ALERTS_URI = Uri.parse(CONTENT_URI.toString() + "/alerts");
 
     private static final String DB_SELECT_STRING = "SELECT route_stops._id AS rs_id, stops._id AS s_id, routes._id, routes.route_id, routes.route_url, routes.route_title, routes.agency, routes.scheduled, routes.predictable, routes.route_description, routes.predictions_url, routes.vehicles_url, routes.path_id, stops.stop_id, stops.stop_url, stops.stop_title, stops.stop_lat, stops.stop_lon, stops.stop_number, stops.distance, stops.predictions, stops.timestamp ";
 
@@ -67,6 +69,7 @@ public class MITShuttlesProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/location", LOCATION);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/single-stop", SINGLE_STOP);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/intersecting-routes", INTERSECTING_ROUTES);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/alerts", ALERTS);
     }
 
     @Override
@@ -105,6 +108,9 @@ public class MITShuttlesProvider extends ContentProvider {
             case INTERSECTING_ROUTES:
                 cursor = DBAdapter.getInstance().db.rawQuery(buildIntersectingRoutesQueryString(selection), null, null);
                 break;
+            case ALERTS:
+                cursor = DBAdapter.getInstance().db.query(Schema.Alerts.TABLE_NAME, Schema.Alerts.ALL_COLUMNS, selection, null, null, null, null);
+                break;
         }
 
         return cursor;
@@ -126,22 +132,19 @@ public class MITShuttlesProvider extends ContentProvider {
         switch (uriType) {
             case ROUTES:
                 newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Route.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
-                if (newID <= 0) {
-                    throw new SQLException("Error");
-                }
                 break;
             case STOPS:
                 newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Stop.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
-                if (newID <= 0) {
-                    throw new SQLException("Error");
-                }
                 break;
             case LOCATION:
                 newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Location.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-                if (newID <= 0) {
-                    throw new SQLException("Error");
-                }
                 break;
+            case ALERTS:
+                newID = DBAdapter.getInstance().db.insertWithOnConflict(Schema.Alerts.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_FAIL);
+                break;
+        }
+        if (newID <= 0) {
+            throw new SQLException("Error");
         }
         Timber.d("DB id= " + newID);
         return null;
@@ -181,7 +184,19 @@ public class MITShuttlesProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        Timber.d("Delete");
+
+        int uriType = sURIMatcher.match(uri);
+        Timber.d("Uri= " + uriType);
+
+        int rows = 0;
+        switch (uriType) {
+            case ALERTS:
+                rows = DBAdapter.getInstance().db.delete(Schema.Alerts.TABLE_NAME, selection, null);
+                break;
+        }
+
+        return rows;
     }
 
     @Override
@@ -205,6 +220,9 @@ public class MITShuttlesProvider extends ContentProvider {
                 break;
             case ROUTE_ID:
                 rows = DBAdapter.getInstance().db.update(Schema.Route.TABLE_NAME, values, selection, null);
+                break;
+            case ALERTS:
+                rows = DBAdapter.getInstance().db.update(Schema.Alerts.TABLE_NAME, values, selection, null);
                 break;
         }
 

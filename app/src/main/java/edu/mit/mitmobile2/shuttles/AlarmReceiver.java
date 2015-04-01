@@ -13,6 +13,7 @@ import android.os.Vibrator;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -22,6 +23,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String stopId = intent.getStringExtra(Constants.STOP_ID_KEY);
         String routeId = intent.getStringExtra(Constants.ROUTE_ID_KEY);
+        int alarmId = intent.getIntExtra(Constants.ALARM_ID_KEY, -1);
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -33,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, moduleIntent, PendingIntent.FLAG_ONE_SHOT);
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
         wl.acquire(1000);
 
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -52,5 +54,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setContentIntent(pendingIntent);
 
         mNotificationManager.notify(1, mBuilder.build());
+        context.getContentResolver().delete(MITShuttlesProvider.ALERTS_URI, Schema.Alerts.ID_COL + "=" + alarmId, null);
     }
 }

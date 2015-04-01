@@ -14,9 +14,6 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.callbacks.IntersectingAdapterCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;
 
-/**
- * Created by philipcorriveau on 3/24/15.
- */
 public class ShuttleStopIntersectingAdapter extends BaseAdapter {
 
     private Context context;
