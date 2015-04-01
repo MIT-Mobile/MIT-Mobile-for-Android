@@ -18,14 +18,13 @@ import org.json.JSONObject;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
 
 public class ModuleSelectorActivity extends Activity {
 
@@ -38,6 +37,7 @@ public class ModuleSelectorActivity extends Activity {
     public static List<NavItem> navigationTitles = new ArrayList<>();
     public static Map<String, NavItem> navMap = null;
     public static Map<String, String> moduleMap = null;
+    public static Map<String, Fragment> fragmentMap = new HashMap<>();
     private NavItem mNavItem;
 
     @Override
@@ -101,7 +101,7 @@ public class ModuleSelectorActivity extends Activity {
                 extras.putString("long_name", long_name);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                Log.d("ZZZ", "starting activity " + navItem.getLong_name());
+                Log.d("ZZZ", "starting activity " + navItem.getLongName());
                 startActivity(i);
             }
         }
@@ -168,15 +168,15 @@ public class ModuleSelectorActivity extends Activity {
                         keysList.add(long_name);
                         NavItem navItem = new NavItem();
                         navItem.setLong_name(long_name);
-                        navItem.setShort_name(module.getString("short_name"));
+                        navItem.setShortName(module.getString("short_name"));
 
                         // Get Home Icon
                         int resourceId = resources.getIdentifier(module.getString("home_icon"), "drawable", mContext.getPackageName());
-                        navItem.setHome_icon(resourceId);
+                        navItem.setHomeIcon(resourceId);
 
                         // Get Menu Icon
                         resourceId = resources.getIdentifier(module.getString("menu_icon"), "drawable", mContext.getPackageName());
-                        navItem.setMenu_icon(resourceId);
+                        navItem.setMenuIcon(resourceId);
 
                         navItem.setIntent(module.getString("intent"));
                         navItem.setUrl(module.getString("url"));

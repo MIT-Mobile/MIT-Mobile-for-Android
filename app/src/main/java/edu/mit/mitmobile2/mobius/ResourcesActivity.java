@@ -26,10 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.mitmobile2.SoloMapActivity;
 import edu.mit.mitmobile2.maps.MapsActivity;
-
-
 
 public class ResourcesActivity extends MapsActivity {
 

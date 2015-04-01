@@ -1,9 +1,9 @@
 package edu.mit.mitmobile2;
 
 import android.content.Context;
+import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import java.util.Arrays;

@@ -1,8 +1,20 @@
 package edu.mit.mitmobile2;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.app.Fragment;
 import android.app.SearchManager;
+import android.content.ContentResolver;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +30,6 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,7 +43,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
-public abstract class MITModuleActivity extends MITActivity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import timber.log.Timber;
+
+public class MITModuleActivity extends MITActivity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
 
     private static DrawerLayout mDrawerLayout;
     private Spinner mSpinner;
@@ -40,23 +56,53 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
     private ActionBarDrawerToggle mDrawerToggle;
     private Tab mTab;
     private CharSequence mDrawerTitle;
-    protected String long_name; // may be able to lose this in place of mTitle
+    protected CharSequence mTitle;
+    protected String longName; // may be able to lose this in place of mTitle
     protected List spinnerList;
     protected int contentLayoutId;
     private ViewStub contentViewStub;
     private ProgressBar progressBar;
     protected LayoutInflater inflater;
 
-    private NavItem mNavItem;
+    protected Boolean hasSearch = false;
+    protected Handler handler;
     private NavigationArrayAdapter adapter;
+
+    private String module; // name of module
+    private static final String DEFAULT_MODULE = "news";
+    private static final String LAST_MODULE = "module";
+    private String[] params;
+    private NavItem navItem;
+    public Context mContext;
+    private SharedPreferences appModulePref;
+    private String currentModule;
+
+    public static List<NavItem> navigationTitles = new ArrayList<>();
+    public static Map<String, NavItem> navMap = null;
+    public static Map<String, String> moduleMap = null;
+    public static HashMap<String, Fragment> fragmentMap = new HashMap<>();
+
+    private NavItem mNavItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(android.R.style.Theme_Holo_Light);
 
         // Set content view for MIT Module (includes navigation drawer)
         setContentView(R.layout.mit_module_layout);
+
+        mContext = this;
+        setTheme(R.style.Theme_MyTheme);
+        loadNavigation(mContext);
+        MITAPIClient.init(mContext);
+
+        if (MitMobileApplication.mAccount == null) {
+            MitMobileApplication.mAccount = createSyncAccount(this);
+            ContentResolver.setIsSyncable(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, true);
+
+            ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, Bundle.EMPTY, MitMobileApplication.INTERVAL_SECS);
+        }
 
         // get progress bar
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -64,21 +110,14 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         // get layout inflater
         this.inflater = getLayoutInflater();
 
-        // inflate content layout
-        if (contentLayoutId > 0) {
-            this.contentViewStub = (ViewStub) findViewById(R.id.contentViewStub);
-            this.contentViewStub.setLayoutResource(contentLayoutId);
-            this.contentViewStub.inflate();
-        }
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        mDrawerList.setSelection(4);
+        mDrawerList.setSelection(1);
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, ModuleSelectorActivity.navigationTitles);
+        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, MITModuleActivity.navigationTitles);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -102,20 +141,44 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
 
-        if (this.getSpinnerList() != null) {
-            // Create an ArrayAdapter using the string array and a default spinner layout
-//	     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-//	             R.array.planets_array, android.R.layout.simple_spinner_item);
-//	     // Specify the layout to use when the list of choices appears
-//	     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//	     // Apply the adapter to the spinner
-//
-//	     //mSpinner.setAdapter(adapter);
-//	     getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-//	     getActionBar().setListNavigationCallbacks(adapter, this);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.mitmodule, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        if (null != searchView) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
         }
 
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                // this is your adapter that will be filtered
+                return true;
+            }
+
+            public boolean onQueryTextSubmit(String query) {
+                //Here u can get the value "query" which is entered in the search box.
+                Log.d("ZZZ", "search triggered");
+                searchView.clearFocus();
+                return handleSearch(query);
+            }
+        };
+
+        searchView.setOnQueryTextListener(queryTextListener);
+
+        // show or hide the search menu based on the hasSearch property
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null) {
+            searchItem.setVisible(this.hasSearch);
+        }
+        return true;
     }
 
 //    @Override
@@ -157,6 +220,7 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
 //        return true;
 //    }
 //
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -190,24 +254,42 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
 
     private void selectItem(int position) {
         // get long_name from position
-        String long_name = ModuleSelectorActivity.navigationTitles.get(position).getLong_name();
+        String longName = MITModuleActivity.navigationTitles.get(position).getLongName();
+
+        currentModule = longName;
 
         // get NavItem from long_name
-        mNavItem = ModuleSelectorActivity.navMap.get(long_name);
+        mNavItem = MITModuleActivity.navMap.get(longName);
         String intentString = mNavItem.getIntent();
+        String title = navigationTitles.get(position).getLongName();
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
-        //Intent intent = new Intent(mContext,c);
-        //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mNavItem.getIntent()));
+        swapInFragment(intentString, title);
+    }
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mNavItem.getUrl()));
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        Log.d("ZZZ", "URI = " + intent.getData().toString());
-        startActivity(intent);
+    private void swapInFragment(String intentString, String title) {
+        Fragment f = null;
+        try {
+            f = (Fragment) Class.forName(intentString).newInstance();
+        } catch (ClassNotFoundException e) {
+            Timber.e(e, "Swap Fragments");
+        } catch (InstantiationException e) {
+            Timber.e(e, "Swap Fragments");
+        } catch (IllegalAccessException e) {
+            Timber.e(e, "Swap Fragments");
+        }
 
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
+        setTitle(title);
+    }
 
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        if (mTitle != null) {
+            getSupportActionBar().setTitle(mTitle);
+        }
     }
 
     /**
@@ -253,19 +335,101 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         return false;
     }
 
+    public static Account createSyncAccount(Context context) {
+        // Create the account type and default account
+        Account newAccount = new Account(
+                MitMobileApplication.ACCOUNT, MitMobileApplication.ACCOUNT_TYPE);
+        // Get an instance of the Android account manager
+        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+        /*
+         * Add the account and account type, no password or user data
+         * If successful, return the Account object, otherwise report an error.
+         */
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+            /*
+             * If you don't set android:syncable="true" in
+             * in your <provider> element in the manifest,
+             * then call context.setIsSyncable(account, AUTHORITY, 1)
+             * here.
+             */
+        } else {
+            /*
+             * The account exists or some other error occurred. Log this, report it,
+             * or handle it internally.
+             */
+        }
+        return newAccount;
+    }
+
+    private void loadNavigation(Context mContext) {
+        Resources resources = mContext.getResources();
+        JSONObject navigation;
+        if (MITModuleActivity.navMap == null) {
+            MITModuleActivity.navMap = new HashMap<>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
+            MITModuleActivity.moduleMap = new HashMap<>(); // this maps module name to long_name for resolving intents
+
+            String json = null;
+
+            try {
+                InputStream is = getAssets().open("navigation.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                json = new String(buffer, "UTF-8");
+                Log.d("ZZZ", json);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            try {
+                navigation = new JSONObject(json);
+
+                Iterator n = navigation.keys();
+                List<String> keysList = new ArrayList<>();
+                while (n.hasNext()) {
+                    try {
+                        String key = (String) n.next();
+                        JSONObject module = navigation.getJSONObject(key);
+                        String longName = module.getString("long_name");
+                        Log.d("ZZZ", longName);
+                        keysList.add(longName);
+                        NavItem navItem = new NavItem();
+                        navItem.setLong_name(longName);
+                        navItem.setShortName(module.getString("short_name"));
+
+                        // Get Home Icon
+                        int resourceId = resources.getIdentifier(module.getString("home_icon"), "drawable", mContext.getPackageName());
+                        navItem.setHomeIcon(resourceId);
+
+                        // Get Menu Icon
+                        resourceId = resources.getIdentifier(module.getString("menu_icon"), "drawable", mContext.getPackageName());
+                        navItem.setMenuIcon(resourceId);
+
+                        navItem.setIntent(module.getString("intent"));
+                        navItem.setUrl(module.getString("url"));
+
+                        MITModuleActivity.navMap.put(longName, navItem);
+                        MITModuleActivity.moduleMap.put(key, longName);
+                        MITModuleActivity.navigationTitles.add(navItem);
+
+                    } catch (JSONException e) {
+                        Log.d("ZZZ", e.getMessage().toString());
+                    }
+                }
+
+
+            } catch (Exception e) {
+                Log.d("ZZZ", e.getMessage().toString());
+            }
+        }
+    }
+
     public int getContentLayoutId() {
         return contentLayoutId;
     }
 
     public void setContentLayoutId(int contentLayoutId) {
         this.contentLayoutId = contentLayoutId;
-    }
-
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     public void showProgressBar() {
@@ -286,14 +450,62 @@ public abstract class MITModuleActivity extends MITActivity implements ActionBar
         this.spinnerList = spinnerList;
     }
 
-    public String getLong_name() {
-        return long_name;
+    public CharSequence getmTitle() {
+        return mTitle;
     }
 
-    public void setLong_name(String long_name) {
-        this.long_name = long_name;
+    public void setmTitle(CharSequence mTitle) {
+        this.mTitle = mTitle;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        //TODO: Fix this part, it handles external URI calls into the app
+
+        Intent intent = getIntent();
+        Log.d("ZZZ", "Intent: " + intent.getDataString());
+        Log.d("ZZZ", "Scheme: " + intent.getScheme());
+
+        //If the intent has come from a URL
+        //Could swap activities w/fragments, make the call to show fragment in here
+        if (intent.getScheme() != null && intent.getScheme().equals("mitmobile2")) {
+            String intentString = intent.getDataString();
+            String[] data = intentString.split("://");
+            if (data != null && data.length == 2) {
+                params = data[1].split("/");
+                this.module = params[0];
+                Log.d("ZZZ", "module = " + this.module);
+                // Get the long_name of the module
+            }
+        } else {
+            //If it's coming from app startup
+            this.module = DEFAULT_MODULE;
+        }
+
+        String longName = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getString(LAST_MODULE, null);
+
+        // use the long_name to get the navItem object
+        if (longName != null) {
+            navItem = MITModuleActivity.navMap.get(longName);
+        } else {
+            navItem = MITModuleActivity.navMap.get(MITModuleActivity.moduleMap.get(this.module));
+        }
+
+        Log.d("ZZZ", "navItem = " + navItem.toString());
+        if (navItem != null) {
+            swapInFragment(navItem.getIntent(), navItem.getLongName());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (currentModule != null) {
+            SharedPreferences.Editor editor = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit();
+            editor.putString(LAST_MODULE, currentModule);
+            editor.commit();
+        }
+    }
 }
-

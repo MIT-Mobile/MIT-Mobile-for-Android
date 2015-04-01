@@ -1,28 +1,46 @@
 package edu.mit.mitmobile2.shuttles.adapter;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import java.util.List;
 
 import edu.mit.mitmobile2.shuttles.fragment.ShuttleStopViewPagerFragment;
+import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
-public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter{
+public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {
 
-    private int routeNum;
+    private String currentRouteId;
+    private List<String> stopIds;
+    private ShuttleStopViewPagerFragment[] fragments;
 
-    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, int routesNum) {
+    public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, String currentRouteId, List<String> stopIds) {
         super(fragmentManager);
-        this.routeNum = routesNum;
+        this.currentRouteId = currentRouteId;
+        this.stopIds = stopIds;
+        fragments = new ShuttleStopViewPagerFragment[stopIds.size()];
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new ShuttleStopViewPagerFragment();
+        if (fragments[position] == null) {
+            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(currentRouteId, stopIds.get(position));
+            fragments[position] = fragment;
+            return fragment;
+        } else {
+            return fragments[position];
+        }
     }
 
     @Override
     public int getCount() {
-        return routeNum;
+        return stopIds.size();
+    }
+
+    public void updatePredictions(int position, List<MITShuttlePrediction> predictions) {
+        if (fragments[position] != null) {
+            fragments[position].updatePredictions(predictions);
+        }
     }
 }

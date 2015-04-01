@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +26,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final long UPDATE_INTERVAL = 60000;
+    private static final long UPDATE_INTERVAL = 120000;
 
     protected String TAG;
     protected Context mContext;
@@ -133,29 +134,27 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == R.id.action_search) {
-            this.handleSearch(null);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
     // Placeholder handleSearch method
     // Override this method in subclass to define search functionality
     protected boolean handleSearch(String search) {
         return true;
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent intent = new Intent(this, MITModuleActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.action_search:
+                this.handleSearch(null);
+                return true;
+            case R.id.action_settings:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -105,7 +105,7 @@ public class DBAdapter {
     private DatabaseHelper helper;
     private static DBAdapter instance = null;
 
-    public static DBAdapter getInstance() {
+    public static synchronized DBAdapter getInstance() {
         return instance;
     }
 
@@ -180,6 +180,7 @@ public class DBAdapter {
             db.execSQL(Schema.Stop.CREATE_TABLE_SQL);
             db.execSQL(Schema.Path.CREATE_TABLE_SQL);
             db.execSQL(Schema.Location.CREATE_TABLE_SQL);
+            db.execSQL(Schema.Alerts.CREATE_TABLE_SQL);
             Timber.d("Tables created!");
         }
 
@@ -191,6 +192,7 @@ public class DBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Stop.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Path.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Location.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.Alerts.TABLE_NAME);
         }
 
         private static void runMigrations(SQLiteDatabase db, int oldVersion, int newVersion) {

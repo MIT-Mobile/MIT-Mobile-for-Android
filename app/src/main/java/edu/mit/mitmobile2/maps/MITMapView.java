@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.maps;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -14,6 +15,8 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -30,10 +33,11 @@ import java.util.List;
 
 import edu.mit.mitmobile2.R;
 
-public class MITMapView implements GoogleMap.OnMapLoadedCallback {
+public class MITMapView {
 
-    public static final int MAP_BOUNDS_PADDING = 130;
+    private static int mapBoundsPadding;
 
+    private MapView mapView;
     private GoogleMap mMap;
     private MapFragment mapFragment;
     private MapItem mItem;
@@ -42,10 +46,12 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
     private int mapResourceId;
     private Marker lastClickedMarker;
     private LatLngBounds defaultBounds;
+    private boolean isMapExpanded = false;
 
     private ArrayList<MapItem> mapItems = new ArrayList<>();
 
     private List<Marker> dynamicMarkers = new ArrayList<>();
+    private List<Marker> staticMarkers = new ArrayList<>();
     private List<Polyline> dynamicLines = new ArrayList<>();
     private List<Polygon> dynamicPolygons = new ArrayList<>();
 
@@ -65,7 +71,20 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setOnMapLoadedCallback(this);
+        mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
+    }
+
+    public MITMapView(Context context, MapView mapView, final GoogleMap.OnMapLoadedCallback callback) {
+        this.mContext = context;
+        this.mapView = mapView;
+        mMap = this.mapView.getMap();
+        MapsInitializer.initialize(context);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, MITMapView.INITIAL_ZOOM));
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false); // delete default button
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setOnMapLoadedCallback(callback);
+        mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
     }
 
     public void show() {
@@ -103,9 +122,21 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
                                 dynamicMarkers.add(marker);
                             }
                         } else {
-                            Marker marker = mMap.addMarker(mItem.getMarkerOptions());
+                            Marker marker;
+                            if (mItem.isVehicle()) {
+                                marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.maps_shuttle_indicator)));
+                                marker.setRotation(getVehicleHeading(marker));
+                            } else {
+                                if (!isMapExpanded) {
+                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
+                                } else {
+                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin)));
+                                }
+                            }
                             if (mItem.isDynamic()) {
                                 dynamicMarkers.add(marker);
+                            } else {
+                                staticMarkers.add(marker);
                             }
                         }
                         break;
@@ -123,7 +154,6 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
                             dynamicPolygons.add(polygon);
                         }
                         break;
-
                 }
             }
         }
@@ -146,6 +176,16 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         dynamicPolygons.clear();
 
         removeDynamicItems();
+    }
+
+    public void updateStaticItems(boolean mapViewExpanded) {
+        for (Marker m : staticMarkers) {
+            if (mapViewExpanded) {
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops));
+            } else {
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin));
+            }
+        }
     }
 
     public void removeDynamicItems() {
@@ -202,7 +242,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
 
     public void setToDefaultBounds(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), MAP_BOUNDS_PADDING);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), mapBoundsPadding);
         if (animate) {
             mMap.animateCamera(cameraUpdate, animationLength, null);
         } else {
@@ -210,7 +250,7 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         }
     }
 
-    public void adjustCameraToShowInHeader(boolean animate, int animationLength) {
+    public void adjustCameraToShowInHeader(boolean animate, int animationLength, int orientation) {
         Resources resources = mContext.getResources();
         Projection projection = mMap.getProjection();
 
@@ -220,8 +260,16 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
             actionBarHeight = (int) TypedValue.complexToDimension(typedValue.data, resources.getDisplayMetrics());
         }
 
-        int x = resources.getDisplayMetrics().widthPixels / 2;
-        int y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - MAP_BOUNDS_PADDING;
+        int x, y;
+
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            x = resources.getDisplayMetrics().widthPixels / 2;
+            y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - mapBoundsPadding;
+        } else {
+            x = resources.getDisplayMetrics().widthPixels - ((resources.getDisplayMetrics().widthPixels - (int) (resources.getDimension(R.dimen.shuttle_routes_listview_landscape_width))) / 2);
+            y = (resources.getDisplayMetrics().heightPixels / 2) - actionBarHeight;
+        }
+
         Point point = new Point(x, y);
 
         LatLng offsetCenter = projection.fromScreenLocation(point);
@@ -231,16 +279,6 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
             mMap.animateCamera(cameraUpdate, animationLength, null);
         } else {
             mMap.moveCamera(cameraUpdate);
-
-        }
-    }
-
-
-    @Override
-    public void onMapLoaded() {
-        if (defaultBounds != null) {
-            setToDefaultBounds(false, 0);
-            adjustCameraToShowInHeader(false, 0);
         }
     }
 
@@ -283,9 +321,29 @@ public class MITMapView implements GoogleMap.OnMapLoadedCallback {
         this.lastClickedMarker = lastClickedMarker;
     }
 
-    public MapFragment getMapFragment() {
-        return mapFragment;
+    public MapView getGoogleMapView() {
+        return mapView;
     }
 
+    public LatLngBounds getDefaultBounds() {
+        return defaultBounds;
+    }
+
+    public void setMapViewExpanded(boolean isMapExpanded) {
+        this.isMapExpanded = isMapExpanded;
+    }
+
+    public float getVehicleHeading(Marker marker) {
+        float mapHeading = mMap.getCameraPosition().bearing;
+        float vehicleHeading = Float.parseFloat(marker.getSnippet());
+
+        float offsetHeading = mapHeading + vehicleHeading;
+
+        while (offsetHeading > 360.0) {
+            offsetHeading -= 360.0;
+        }
+
+        return offsetHeading;
+    }
 }
 

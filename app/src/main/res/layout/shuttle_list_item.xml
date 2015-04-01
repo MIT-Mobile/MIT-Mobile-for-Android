@@ -31,7 +31,6 @@
         android:id="@+id/shuttle_stop_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/shuttle_home_stop_padding"
         android:orientation="vertical">
         <RelativeLayout
             android:id="@+id/shuttle_route_first_stop"
@@ -41,6 +40,7 @@
             <TextView
                 android:id="@+id/first_stop_textview"
                 style="@style/MITShuttleRoutesStopsContent"
+                android:paddingLeft="@dimen/shuttle_home_stop_padding"
                 />
             <TextView
                 android:id="@+id/first_minute_textview"
@@ -51,6 +51,7 @@
         <View
             android:id="@+id/bottom_view"
             style="@style/MITShuttleRoutesView"
+            android:layout_marginLeft="@dimen/shuttle_home_stop_padding"
             />
 
         <RelativeLayout
@@ -61,6 +62,7 @@
             <TextView
                 android:id="@+id/second_stop_textview"
                 style="@style/MITShuttleRoutesStopsContent"
+                android:paddingLeft="@dimen/shuttle_home_stop_padding"
                 />
             <TextView
                 android:id="@+id/second_minute_textview"
