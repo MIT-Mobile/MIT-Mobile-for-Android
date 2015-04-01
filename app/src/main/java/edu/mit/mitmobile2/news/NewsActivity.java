@@ -12,7 +12,6 @@ public class NewsActivity extends MITModuleActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		this.setmTitle("News");
 		this.setContentLayoutId(R.layout.content_news);
 		super.onCreate(savedInstanceState);
 	}

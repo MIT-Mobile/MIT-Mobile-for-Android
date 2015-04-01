@@ -133,8 +133,8 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".resources.ResourcesActivity"
-            android:label="@string/title_activity_resources"
+            android:name=".mobius.ResourcesActivity"
+            android:label="@string/title_activity_mobius"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme">
             <intent-filter>
@@ -156,12 +156,12 @@
             android:value="AIzaSyA2e9sTg9cL2oKUPbX6KQwOCYirNSJaFmQ" />
 
         <activity
-            android:name=".resources.ResourceViewActivity"
+            android:name=".mobius.ResourceViewActivity"
             android:label="@string/title_activity_resource_view"
             android:theme="@style/Theme.MyTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.mit.mitmobile2.resources.ResourcesActivity" />
+                android:value="edu.mit.mitmobile2.mobius.ResourcesActivity"/>
         </activity>
         <activity
             android:name=".shuttles.activities.ShuttleRouteActivity"

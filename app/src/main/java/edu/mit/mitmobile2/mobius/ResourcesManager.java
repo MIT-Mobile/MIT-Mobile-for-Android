@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

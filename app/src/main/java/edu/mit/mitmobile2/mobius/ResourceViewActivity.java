@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,16 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -23,10 +19,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapsActivity;
 
-public class ResourceViewActivity extends Activity {
+public class ResourceViewActivity extends MITActivity {
 
     private Context mContext;
     private ResourceItem r;
@@ -38,7 +35,6 @@ public class ResourceViewActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_resource_view);
         Intent intent = getIntent();
@@ -107,30 +103,4 @@ public class ResourceViewActivity extends Activity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_resource_view, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
