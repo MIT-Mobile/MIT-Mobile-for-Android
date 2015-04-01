@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shuttles.MitCursorLoader;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
@@ -137,13 +138,12 @@ public class ShuttleStopFragment extends MitMapFragment {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;//new MitCursorLoader(this, Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
+        return new MitCursorLoader(getActivity(), Uri.parse(uriString), Schema.Stop.ALL_COLUMNS, selectionString, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
-        MITShuttleRoute route = new MITShuttleRoute();
         route.buildFromCursor(data, DBAdapter.getInstance());
         stops = route.getStops();
         int currentStop = predictionViewPager.getCurrentItem();
