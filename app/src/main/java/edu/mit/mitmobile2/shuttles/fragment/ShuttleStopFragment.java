@@ -64,6 +64,9 @@ public class ShuttleStopFragment extends MitMapFragment {
 
         callback.setActionBarTitle(route.getTitle());
 
+        updateMapItems((ArrayList) route.getStops(), false);
+        displayMapItems();
+
         stops = route.getStops();
         List<String> stopIds = new ArrayList<String>();
         for (MITShuttleStopWrapper stop : stops) {

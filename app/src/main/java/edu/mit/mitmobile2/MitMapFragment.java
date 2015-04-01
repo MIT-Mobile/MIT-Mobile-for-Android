@@ -249,11 +249,11 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     }
 
-    protected void updateMapItems(ArrayList mapItems) {
+    protected void updateMapItems(ArrayList mapItems, boolean fit) {
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mitMapView.clearDynamic();
         }
-        mitMapView.addMapItemList(mapItems, false);
+        mitMapView.addMapItemList(mapItems, false, fit);
     }
 
     protected void displayMapItems() {

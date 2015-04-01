@@ -82,7 +82,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
 
         callback.setActionBarTitle(route.getTitle());
 
-        updateMapItems((ArrayList) route.getStops());
+        updateMapItems((ArrayList) route.getStops(), true);
         displayMapItems();
 
         isRoutePredictable = route.isPredictable();
@@ -152,7 +152,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
 
-        updateMapItems((ArrayList) route.getVehicles());
+        updateMapItems((ArrayList) route.getVehicles(), true);
 
         if (swipeRefreshLayout.isRefreshing()) {
             getActivity().runOnUiThread(new Runnable() {
@@ -249,7 +249,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
 
-        updateMapItems((ArrayList) route.getVehicles());
+        updateMapItems((ArrayList) route.getVehicles(), true);
     }
 
     @Override
