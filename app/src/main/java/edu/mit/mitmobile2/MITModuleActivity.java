@@ -13,6 +13,7 @@ import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -65,10 +66,13 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     private NavigationArrayAdapter adapter;
 
     private String module; // name of module
-    private static final String DEFAULT_MODULE = "shuttles";
+    private static final String DEFAULT_MODULE = "news";
+    private static final String LAST_MODULE = "module";
     private String[] params;
     private NavItem navItem;
     public Context mContext;
+    private SharedPreferences appModulePref;
+    private String currentModule;
 
     public static List<NavItem> navigationTitles = new ArrayList<>();
     public static Map<String, NavItem> navMap = null;
@@ -215,6 +219,8 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     private void selectItem(int position) {
         // get long_name from position
         String long_name = MITModuleActivity.navigationTitles.get(position).getLong_name();
+
+        currentModule = long_name;
 
         // get NavItem from long_name
         mNavItem = MITModuleActivity.navMap.get(long_name);
@@ -450,13 +456,26 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
             this.module = DEFAULT_MODULE;
         }
 
-        String long_name = MITModuleActivity.moduleMap.get(this.module);
+        String long_name = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getString(LAST_MODULE, null);
 
         // use the long_name to get the navItem object
-        navItem = MITModuleActivity.navMap.get(long_name);
+        if (long_name != null) {
+            navItem = MITModuleActivity.navMap.get(long_name);
+        } else {
+            navItem = MITModuleActivity.navMap.get(MITModuleActivity.moduleMap.get(this.module));
+        }
+
         Log.d("ZZZ", "navItem = " + navItem.toString());
         if (navItem != null) {
             swapInFragment(navItem.getIntent(), navItem.getLong_name());
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit();
+        editor.putString(LAST_MODULE, currentModule);
+        editor.commit();
     }
 }
