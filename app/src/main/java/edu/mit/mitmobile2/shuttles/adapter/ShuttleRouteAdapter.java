@@ -14,13 +14,13 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shuttles.utils.ShuttleUtils;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 
-public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
+public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStop> {
 
     private Context mContext;
 
-    public ShuttleRouteAdapter(Context context, int resource, List<MITShuttleStopWrapper> objects) {
+    public ShuttleRouteAdapter(Context context, int resource, List<MITShuttleStop> objects) {
         super(context, resource, objects);
         mContext = context;
     }
@@ -40,7 +40,7 @@ public class ShuttleRouteAdapter extends ArrayAdapter<MITShuttleStopWrapper> {
         }
 
         // object item based on the position
-        MITShuttleStopWrapper stopWrapper = getItem(position);
+        MITShuttleStop stopWrapper = getItem(position);
 
         if (position == 0) {
             viewHolder.stopView.setVisibility(View.GONE);

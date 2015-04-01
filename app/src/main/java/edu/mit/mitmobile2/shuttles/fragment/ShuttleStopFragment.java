@@ -26,7 +26,7 @@ import edu.mit.mitmobile2.shuttles.MitCursorLoader;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import timber.log.Timber;
 
 public class ShuttleStopFragment extends MitMapFragment {
@@ -35,7 +35,7 @@ public class ShuttleStopFragment extends MitMapFragment {
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
     private MITShuttleRoute route = new MITShuttleRoute();
-    private List<MITShuttleStopWrapper> stops;
+    private List<MITShuttleStop> stops;
     private String routeId;
     private String stopId;
     private String uriString;
@@ -69,8 +69,8 @@ public class ShuttleStopFragment extends MitMapFragment {
         displayMapItems();
 
         stops = route.getStops();
-        List<String> stopIds = new ArrayList<String>();
-        for (MITShuttleStopWrapper stop : stops) {
+        List<String> stopIds = new ArrayList<>();
+        for (MITShuttleStop stop : stops) {
             stopIds.add(stop.getId());
         }
         stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getFragmentManager(), routeId, stopIds);
@@ -108,7 +108,7 @@ public class ShuttleStopFragment extends MitMapFragment {
     }
 
     private int getStartPosition() {
-        for (MITShuttleStopWrapper stop : stops) {
+        for (MITShuttleStop stop : stops) {
             if (stop.getId().equals(stopId)) {
                 return stops.indexOf(stop);
             }

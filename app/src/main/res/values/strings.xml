@@ -53,4 +53,5 @@
     <string name="arriving_now">Arriving now</string>
     <string name="arriving_in">Arriving in</string>
     <string name="minutes">minutes</string>
+    <string name="alarm_set">Alarm Set</string>
 </resources>

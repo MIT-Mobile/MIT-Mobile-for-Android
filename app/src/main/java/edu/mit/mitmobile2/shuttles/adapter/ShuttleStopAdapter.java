@@ -77,7 +77,7 @@ public class ShuttleStopAdapter extends ArrayAdapter<String> {
     }
 
     static class TopViewHolder {
-        @InjectView(R.id.predicion_text_view)
+        @InjectView(R.id.prediction_text_view)
         TextView predictionTextView;
 
         TopViewHolder(View view) {

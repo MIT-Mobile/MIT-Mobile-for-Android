@@ -12,11 +12,11 @@ import java.util.Set;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
-import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shuttles.model.MITAlert;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePath;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleVehicle;
 import edu.mit.mitmobile2.shuttles.model.RouteStop;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
@@ -25,7 +25,7 @@ public class ShuttlesDatabaseHelper {
 
     public static SQLiteDatabase db = DBAdapter.getInstance().db;
 
-    public static void batchPersistStops(List<MITShuttleStopWrapper> dbObjects, String routeId, boolean predictable) {
+    public static void batchPersistStops(List<MITShuttleStop> dbObjects, String routeId, boolean predictable) {
         List<DatabaseObject> updatedObjects = new ArrayList<>();
         Set<String> ids = DBAdapter.getInstance().getAllIds(Schema.Stop.TABLE_NAME, Schema.Stop.ALL_COLUMNS, Schema.Stop.STOP_ID);
 
@@ -35,7 +35,7 @@ public class ShuttlesDatabaseHelper {
 
         HashMap<String, String> idToDirectionMap = DBAdapter.getInstance().getIdToDirectionMap(Schema.RouteStops.TABLE_NAME, Schema.RouteStops.ALL_COLUMNS, Schema.RouteStops.ROUTE_ID, Schema.RouteStops.STOP_ID, routeId);
 
-        for (MITShuttleStopWrapper s : dbObjects) {
+        for (MITShuttleStop s : dbObjects) {
             RouteStop routeStop = new RouteStop(routeId, s.getId());
 
             if (idToDirectionMap.containsKey(s.getId()) && idToDirectionMap.get(s.getId()).equals(routeId)) {
@@ -51,8 +51,8 @@ public class ShuttlesDatabaseHelper {
         DBAdapter.getInstance().batchPersist(updatedObjects, Schema.RouteStops.TABLE_NAME);
     }
 
-    private static void checkObjectAndPersist(List<MITShuttleStopWrapper> dbObjects, List<DatabaseObject> updatedObjects, Set<String> ids, String tableName, String columnToIndex, boolean predictable) {
-        for (MITShuttleStopWrapper s : dbObjects) {
+    private static void checkObjectAndPersist(List<MITShuttleStop> dbObjects, List<DatabaseObject> updatedObjects, Set<String> ids, String tableName, String columnToIndex, boolean predictable) {
+        for (MITShuttleStop s : dbObjects) {
             if (ids.contains(s.getId())) {
                 ContentValues values = new ContentValues();
                 s.fillInContentValues(values, DBAdapter.getInstance());
@@ -209,5 +209,21 @@ public class ShuttlesDatabaseHelper {
         values.put(Schema.Stop.PREDICTIONS, "[]");
         DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values,
                 null, null);
+    }
+
+    public static List<MITAlert> getAlerts(Cursor c) {
+        List<MITAlert> alerts = new ArrayList<>();
+
+        try {
+            while (c.moveToNext()) {
+                MITAlert alert = new MITAlert();
+                alert.buildFromCursor(c, DBAdapter.getInstance());
+                alerts.add(alert);
+            }
+        } finally {
+            c.close();
+        }
+
+        return alerts;
     }
 }
