@@ -15,13 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,10 +29,10 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
-import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.MitCursorLoader;
 import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
+import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
 import timber.log.Timber;
@@ -85,7 +82,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
 
         callback.setActionBarTitle(route.getTitle());
 
-        updateMapItems((ArrayList) route.getStops());
+        updateMapItems((ArrayList) route.getStops(), true);
         displayMapItems();
 
         isRoutePredictable = route.isPredictable();
@@ -106,19 +103,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         updateData();
         getLoaderManager().initLoader(1, null, this);
 
-        for (List<List<Double>> outerList : route.getPath().getSegments()) {
-            List<LatLng> points = new ArrayList<>();
-            PolylineOptions options = new PolylineOptions();
-            for (List<Double> innerList : outerList) {
-                LatLng point = new LatLng(innerList.get(1), innerList.get(0));
-                points.add(point);
-            }
-            options.addAll(points);
-            options.color(getResources().getColor(R.color.map_path_color));
-            options.visible(true);
-            options.width(12f);
-            getMapView().addPolyline(options);
-        }
+        drawRoutePath(route);
 
         getMapView().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -167,7 +152,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
 
-        updateMapItems((ArrayList) route.getVehicles());
+        updateMapItems((ArrayList) route.getVehicles(), true);
 
         if (swipeRefreshLayout.isRefreshing()) {
             getActivity().runOnUiThread(new Runnable() {
@@ -264,7 +249,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
 
-        updateMapItems((ArrayList) route.getVehicles());
+        updateMapItems((ArrayList) route.getVehicles(), true);
     }
 
     @Override
