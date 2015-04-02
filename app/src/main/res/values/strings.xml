@@ -54,4 +54,9 @@
     <string name="arriving_in">Arriving in</string>
     <string name="minutes">minutes</string>
     <string name="alarm_set">Alarm Set</string>
+
+    <string name="alert_descr_1">arriving at</string>
+    <string name="alert_descr_2">in</string>
+    <string name="alert_descr_3">and</string>
+    <string name="alert_descr_4">minutes.</string>
 </resources>

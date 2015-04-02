@@ -10,6 +10,7 @@ public class Constants {
     public static final String STOP_ID_KEY = "stopId";
     public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
     public static final String ALARM_ID_KEY = "alarm";
+    public static final String ALARM_DESCRIPTION = "alarmDescription";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";

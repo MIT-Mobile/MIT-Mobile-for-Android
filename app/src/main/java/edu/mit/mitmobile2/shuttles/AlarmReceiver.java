@@ -8,28 +8,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.PowerManager;
 import android.os.Vibrator;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        String stopId = intent.getStringExtra(Constants.STOP_ID_KEY);
-        String routeId = intent.getStringExtra(Constants.ROUTE_ID_KEY);
         int alarmId = intent.getIntExtra(Constants.ALARM_ID_KEY, -1);
+        String description = intent.getStringExtra(Constants.ALARM_DESCRIPTION);
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent moduleIntent = new Intent(context, ShuttleStopActivity.class);
-        moduleIntent.putExtra(Constants.ROUTE_ID_KEY, routeId);
-        moduleIntent.putExtra(Constants.STOP_ID_KEY, stopId);
+        Intent moduleIntent = new Intent(context, MITModuleActivity.class);
+        moduleIntent.setData(Uri.parse("mitmobile2://shuttles"));
         moduleIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, moduleIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -48,9 +47,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.alert_icon_outline))
                         .setContentTitle("MIT")
                         .setStyle(new Notification.BigTextStyle()
-                                .bigText("MIT"))
+                                .bigText(description))
                         .setLights(Color.argb(255, 226, 70, 47), 1000, 1000)
-                        .setContentText("Shuttle Arriving")
+                        .setContentText(description)
                         .setContentIntent(pendingIntent);
 
         mNotificationManager.notify(1, mBuilder.build());
