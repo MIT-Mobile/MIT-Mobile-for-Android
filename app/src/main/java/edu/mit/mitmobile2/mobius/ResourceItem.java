@@ -1,5 +1,6 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
+import android.content.Context;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
