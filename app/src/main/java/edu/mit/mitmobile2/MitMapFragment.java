@@ -48,6 +48,8 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     public static final int NO_TRANSLATION = 0;
     public static final int ANIMATION_LENGTH = 500;
 
+    public static final int STOP_ZOOM = 17;
+
     private static final String MAP_EXPANDED_KEY = "mapExpanded";
 
     private ListView mapItemsListView;
@@ -67,6 +69,8 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     private boolean stopMode;
     private FrameLayout shuttleStopContent;
+    //Stores the offset done by showing the stop in the header
+    protected double latOffset;
 
     private int originalPosition = -1;
 
@@ -117,6 +121,9 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
         mitMapView.setMapViewExpanded(mapViewExpanded);
+        if (!mapViewExpanded) {
+            getMapView().getUiSettings().setAllGesturesEnabled(false);
+        }
 
         mitMapView.getMap().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
@@ -290,6 +297,15 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         shuttleStopContent.addView(content);
         swipeRefreshLayout.setVisibility(View.GONE);
         shuttleStopContent.setVisibility(View.VISIBLE);
+
+        transparentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!animating) {
+                    toggleMap();
+                }
+            }
+        });
     }
 
     protected void addHeaderView(View headerView) {
@@ -344,12 +360,19 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            if (stopMode) {
+                LatLng target = getMapView().getCameraPosition().target;
+                LatLng offset = new LatLng(target.latitude - latOffset, target.longitude);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(offset);
+                getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
+            } else {
+                mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            }
 
             if (mitMapView.getGoogleMapView().getTranslationY() != 0) {
                 final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mitMapView.getGoogleMapView().getTranslationY(), NO_TRANSLATION);
                 mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
-                //The way translatation animations are setup, this is done to avoid flicker
+                //The way translation animations are setup, this is done to avoid flicker
                 mitMapView.getGoogleMapView().setTranslationY(0);
                 mitMapView.getGoogleMapView().startAnimation(mapTranslateAnimation);
             }
@@ -381,7 +404,14 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            if (stopMode) {
+                LatLng target = getMapView().getCameraPosition().target;
+                LatLng offset = new LatLng(target.latitude - latOffset, target.longitude);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(offset);
+                getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
+            } else {
+                mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            }
             transparentLandscapeView.setVisibility(View.INVISIBLE);
         } else {
             mapViewExpanded = false;

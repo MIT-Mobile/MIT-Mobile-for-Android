@@ -1,8 +1,4 @@
-package edu.mit.mitmobile2.resources;
-
-import android.os.Parcel;
-
-import edu.mit.mitmobile2.maps.MapItem;
+package edu.mit.mitmobile2.mobius;
 
 /**
  * Created by sseligma on 2/11/15.

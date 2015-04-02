@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

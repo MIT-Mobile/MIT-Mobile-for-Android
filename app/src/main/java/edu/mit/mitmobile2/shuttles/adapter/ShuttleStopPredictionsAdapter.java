@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
@@ -22,7 +23,7 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
 
     private Context context;
     private List<MITShuttlePrediction> predictions;
-    private List<MITAlert> alerts;
+    private MITAlert alert;
     private AlertIconCallback callback;
     private int selectedPosition = -1;
 
@@ -32,11 +33,13 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
         TextView alarmSetTextView;
     }
 
-    public ShuttleStopPredictionsAdapter(Context context, List<MITShuttlePrediction> predictions, List<MITAlert> alerts, AlertIconCallback callback) {
+    public ShuttleStopPredictionsAdapter(Context context, List<MITShuttlePrediction> predictions, MITAlert alert, AlertIconCallback callback) {
         this.context = context;
         this.predictions = predictions;
-        this.alerts = alerts;
+        this.alert = alert;
         this.callback = callback;
+
+        getClosestPrediction();
     }
 
     @Override
@@ -91,15 +94,6 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
             setAlarmIconVisibility(holder.alertIcon.isSelected(), holder);
         }
 
-        // Commenting this out for now -- not sure how we can tie a prediction to an alert consistently
-        /*for (MITAlert a : alerts) {
-            if (a.getVehicleId().equals(prediction.getVehicleId()) && Math.abs(a.getTimestamp() - prediction.getTimestamp()) < 100) {
-                holder.alertIcon.setImageResource(R.drawable.alert_icon);
-                holder.alertIcon.setSelected(true);
-                break;
-            }
-        }*/
-
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,7 +101,7 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
                     boolean selected = holder.alertIcon.isSelected();
 
                     setAlarmIconVisibility(selected, holder);
-                    callback.alertIconClicked(position);
+                    callback.alertIconClicked(position, !selected);
 
                     if (!selected) {
                         selectedPosition = position;
@@ -122,12 +116,40 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
 
     private void setAlarmIconVisibility(boolean selected, ViewHolder holder) {
         holder.alertIcon.setImageResource(selected ? R.drawable.alert_icon_outline : R.drawable.alert_icon);
-        holder.alarmSetTextView.setVisibility(holder.alarmSetTextView.getVisibility() == View.VISIBLE ? View.INVISIBLE : View.VISIBLE);
+        holder.alarmSetTextView.setVisibility(selected ? View.INVISIBLE : View.VISIBLE);
         holder.alertIcon.setSelected(!selected);
+        if (selected) {
+            selectedPosition = -1;
+        }
     }
 
     public void updateItems(List<MITShuttlePrediction> predictions) {
         this.predictions = predictions;
         notifyDataSetChanged();
+    }
+
+    public void getClosestPrediction() {
+        if (alert != null) {
+            int[] diffs = new int[predictions.size()];
+            Arrays.fill(diffs, Integer.MAX_VALUE);
+
+            for (int i = 0; i < predictions.size(); i++) {
+                if (alert.getVehicleId().equals(predictions.get(i).getVehicleId()) && predictions.get(i).getSeconds() >= 360) {
+                    diffs[i] = Math.abs(alert.getTimestamp() - predictions.get(i).getTimestamp());
+                }
+            }
+
+            int min = Integer.MAX_VALUE;
+            int index = -1;
+
+            for (int i = 0; i < diffs.length; i++) {
+                if (diffs[i] < min) {
+                    min = diffs[i];
+                    index = i;
+                }
+            }
+
+            selectedPosition = index;
+        }
     }
 }
