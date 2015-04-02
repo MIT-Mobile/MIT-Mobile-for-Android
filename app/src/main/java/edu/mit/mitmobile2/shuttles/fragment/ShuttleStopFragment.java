@@ -35,8 +35,6 @@ import timber.log.Timber;
 
 public class ShuttleStopFragment extends MitMapFragment {
 
-    public static final int STOP_ZOOM = 17;
-
     ViewPager predictionViewPager;
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
@@ -47,9 +45,6 @@ public class ShuttleStopFragment extends MitMapFragment {
     private String uriString;
     private String selectionString;
     private MapFragmentCallback callback;
-
-    //Stores the offset done by showing the stop in the header
-    private double latOffset;
 
     @Nullable
     @Override
@@ -161,7 +156,6 @@ public class ShuttleStopFragment extends MitMapFragment {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
         route.buildFromCursor(data, DBAdapter.getInstance());
-        data.close();
 
         stops = route.getStops();
         int currentStop = predictionViewPager.getCurrentItem();

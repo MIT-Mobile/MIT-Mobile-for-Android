@@ -148,7 +148,6 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         data.moveToFirst();
         route.buildFromCursor(data, DBAdapter.getInstance());
-        data.close();
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
