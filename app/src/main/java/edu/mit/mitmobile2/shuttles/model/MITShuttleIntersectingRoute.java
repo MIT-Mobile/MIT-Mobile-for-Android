@@ -6,13 +6,11 @@ import android.database.Cursor;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.Schema;
 
-/**
- * Created by philipcorriveau on 3/27/15.
- */
+
 public class MITShuttleIntersectingRoute extends MITShuttleRoute {
 
     /**
-     * This model is used for intersecing routes since they require far less data to be loaded
+     * This model is used for intersecting routes since they require far less data to be loaded
      */
 
     public MITShuttleIntersectingRoute() {

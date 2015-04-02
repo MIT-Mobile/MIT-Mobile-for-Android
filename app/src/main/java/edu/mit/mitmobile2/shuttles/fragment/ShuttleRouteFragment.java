@@ -245,6 +245,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
         route.buildFromCursor(cursor, DBAdapter.getInstance());
+        cursor.close();
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
