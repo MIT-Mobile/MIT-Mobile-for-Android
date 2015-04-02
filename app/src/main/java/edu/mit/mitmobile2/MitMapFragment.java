@@ -76,7 +76,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     private FloatingActionButton myLocationButton;
 
     protected boolean isRoutePredictable = false;
-    protected boolean isRouteScheduled =false;
+    protected boolean isRouteScheduled = false;
 
     @Nullable
     @Override
@@ -273,7 +273,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
             options.color(getResources().getColor(R.color.map_path_color));
             options.visible(true);
             options.width(12f);
-            getMapView().addPolyline(options);
+            options.zIndex(100);
         }
     }
 
@@ -456,7 +456,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
 
     @Override
     public void onPause() {
