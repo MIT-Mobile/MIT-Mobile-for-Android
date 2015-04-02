@@ -281,6 +281,8 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
             options.visible(true);
             options.width(12f);
             options.zIndex(100);
+
+            getMapView().addPolyline(options);
         }
     }
 
