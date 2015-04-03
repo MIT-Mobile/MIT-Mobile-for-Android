@@ -89,7 +89,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         if (savedInstanceState != null) {
             mapViewExpanded = savedInstanceState.getBoolean(MAP_EXPANDED_KEY, false);
-
         }
 
         shuttleStopContent = (FrameLayout) view.findViewById(R.id.shuttle_stop_content);
