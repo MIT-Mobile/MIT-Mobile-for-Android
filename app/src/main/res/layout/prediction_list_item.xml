@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="@dimen/shuttle_stop_cell_height"
-    android:background="@color/sbc_layout_view">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/prediction_text_view"
