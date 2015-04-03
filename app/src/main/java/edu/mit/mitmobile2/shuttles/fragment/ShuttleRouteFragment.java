@@ -34,7 +34,7 @@ import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import timber.log.Timber;
 
 public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter {
@@ -72,7 +72,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
             routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         }
 
-        adapter = new ShuttleRouteAdapter(getActivity(), R.layout.stop_list_item, new ArrayList<MITShuttleStopWrapper>());
+        adapter = new ShuttleRouteAdapter(getActivity(), R.layout.stop_list_item, new ArrayList<MITShuttleStop>());
 
         uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeId;
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
@@ -125,7 +125,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     protected void listItemClicked(int position) {
         //Because header is counted in items
         if (position != 0) {
-            MITShuttleStopWrapper stop = adapter.getItem(position - 1);
+            MITShuttleStop stop = adapter.getItem(position - 1);
             Intent intent = new Intent(getActivity(), ShuttleStopActivity.class);
             intent.putExtra(Constants.ROUTE_ID_KEY, routeId);
             intent.putExtra(Constants.STOP_ID_KEY, stop.getId());
@@ -214,7 +214,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
             TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
             TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
             stopNameTextView.setText(marker.getTitle());
-            for (MITShuttleStopWrapper stop : route.getStops()) {
+            for (MITShuttleStop stop : route.getStops()) {
                 if (marker.getSnippet().equals(stop.getId())) {
                     stopNameTextView.setText(stop.getTitle());
                     if (route.isPredictable()) {
@@ -245,6 +245,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
         route.buildFromCursor(cursor, DBAdapter.getInstance());
+        cursor.close();
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();

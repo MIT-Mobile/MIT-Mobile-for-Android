@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.resources;
+package edu.mit.mitmobile2.mobius;
 
 import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.Constants;
@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.mit.mitmobile2.maps.MapsActivity;
-
-
 
 public class ResourcesActivity extends MapsActivity {
 
@@ -181,9 +179,11 @@ public class ResourcesActivity extends MapsActivity {
     @Override
     protected boolean handleSearch(String query) {
         Log.d(TAG, "handleSearch()");
-        Map params = new HashMap<String,String>();
-        params.put("q", query);
-        this.getMapItems(params);
+        if (query != null) {
+            Map params = new HashMap<String, String>();
+            params.put("q", query);
+            this.getMapItems(params);
+        }
         return true;
     }
 

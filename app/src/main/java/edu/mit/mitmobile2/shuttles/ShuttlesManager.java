@@ -9,7 +9,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePredictionWrapper;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleVehiclesWrapper;
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -60,7 +60,7 @@ public class ShuttlesManager extends RetrofitManager {
         void _getroutes_(Callback<MITShuttleRoute> callback);
 
         @GET(Constants.Shuttles.STOP_INFO_PATH)
-        void _getroutes_stops_(Callback<MITShuttleStopWrapper> callback);
+        void _getroutes_stops_(Callback<MITShuttleStop> callback);
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
         void _getpredictions(Callback<List<MITShuttlePredictionWrapper>> callback);
@@ -77,7 +77,7 @@ public class ShuttlesManager extends RetrofitManager {
         MITShuttleRoute _getroutes_();
 
         @GET(Constants.Shuttles.STOP_INFO_PATH)
-        MITShuttleStopWrapper _getroutes_stops_();
+        MITShuttleStop _getroutes_stops_();
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
         List<MITShuttlePredictionWrapper> _getpredictions();

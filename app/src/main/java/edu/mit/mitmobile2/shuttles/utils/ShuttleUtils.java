@@ -1,11 +1,8 @@
 package edu.mit.mitmobile2.shuttles.utils;
 
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleStopWrapper;
+import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 
-/**
- * Created by philipcorriveau on 3/25/15.
- */
 public class ShuttleUtils {
 
     public static final String NO_PREDICTION = "-";
@@ -14,7 +11,7 @@ public class ShuttleUtils {
 
     public static final int SECONDS_PER_MINUTE = 60;
 
-    public static String formatPredictionFromStop(MITShuttleStopWrapper stop) {
+    public static String formatPredictionFromStop(MITShuttleStop stop) {
         if (stop.getPredictions() != null && stop.getPredictions().size() > 0) {
             return formatPrediction(stop.getPredictions().get(0));
         } else {

@@ -10,6 +10,9 @@ public class Constants {
     public static final String PREDICTIONS_TIMESTAMP = "predictionsTimestamp";
     public static final String ROUTE_ID_KEY = "routeId";
     public static final String STOP_ID_KEY = "stopId";
+    public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
+    public static final String ALARM_ID_KEY = "alarm";
+    public static final String ALARM_DESCRIPTION = "alarmDescription";
 
     //tours
     public static final String TOURS = "tours";
