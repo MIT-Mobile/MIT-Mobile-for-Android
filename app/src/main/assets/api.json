@@ -15,5 +15,11 @@
         "test":"http://mobile-test.mit.edu/apis/shuttles/",
         "prod":"http://m.mit.edu/apis/shuttles/",
 	    "manager":"edu.mit.mitmobile2.shuttles.ShuttlesManager"
-	}
+	},
+	"tours":{
+    	    "dev":"http://mobile-dev.mit.edu/apis/tours/",
+            "test":"http://mobile-test.mit.edu/apis/tours/",
+            "prod":"http://m.mit.edu/apis/tours/",
+    	    "manager":"edu.mit.mitmobile2.tour.ToursManager"
+    }
 }

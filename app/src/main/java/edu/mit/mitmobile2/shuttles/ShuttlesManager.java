@@ -54,35 +54,35 @@ public class ShuttlesManager extends RetrofitManager {
         //Async calls for use outside the SyncAdapter
 
         @GET(Constants.Shuttles.ALL_ROUTES_PATH)
-        void getroutes(Callback<List<MITShuttleRoute>> callback);
+        void _getroutes(Callback<List<MITShuttleRoute>> callback);
 
         @GET(Constants.Shuttles.ROUTE_INFO_PATH)
-        void getroutes_(Callback<MITShuttleRoute> callback);
+        void _getroutes_(Callback<MITShuttleRoute> callback);
 
         @GET(Constants.Shuttles.STOP_INFO_PATH)
-        void getroutes_stops_(Callback<MITShuttleStopWrapper> callback);
+        void _getroutes_stops_(Callback<MITShuttleStopWrapper> callback);
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
-        void getpredictions(Callback<List<MITShuttlePredictionWrapper>> callback);
+        void _getpredictions(Callback<List<MITShuttlePredictionWrapper>> callback);
 
         @GET(Constants.Shuttles.VEHICLES_PATH)
-        void getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);
+        void _getvehicles(Callback<List<MITShuttleVehiclesWrapper>> callback);
 
         // Real-time calls for use in the SyncAdapter
 
         @GET(Constants.Shuttles.ALL_ROUTES_PATH)
-        List<MITShuttleRoute> getroutes();
+        List<MITShuttleRoute> _getroutes();
 
         @GET(Constants.Shuttles.ROUTE_INFO_PATH)
-        MITShuttleRoute getroutes_();
+        MITShuttleRoute _getroutes_();
 
         @GET(Constants.Shuttles.STOP_INFO_PATH)
-        MITShuttleStopWrapper getroutes_stops_();
+        MITShuttleStopWrapper _getroutes_stops_();
 
         @GET(Constants.Shuttles.PREDICTIONS_PATH)
-        List<MITShuttlePredictionWrapper> getpredictions();
+        List<MITShuttlePredictionWrapper> _getpredictions();
 
         @GET(Constants.Shuttles.VEHICLES_PATH)
-        List<MITShuttleVehiclesWrapper> getvehicles();
+        List<MITShuttleVehiclesWrapper> _getvehicles();
     }
 }
