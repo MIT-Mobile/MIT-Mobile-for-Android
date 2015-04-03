@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
@@ -29,6 +30,7 @@ import edu.mit.mitmobile2.tour.utils.TourUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import timber.log.Timber;
 
 public class TourFragment extends Fragment {
 
@@ -36,16 +38,6 @@ public class TourFragment extends Fragment {
 
     @InjectView(R.id.self_guided_tour_view)
     RelativeLayout selfGuidedTourView;
-    @InjectView(R.id.send_feedback_view)
-    RelativeLayout sendFeedbackView;
-    @InjectView(R.id.mit_info_center_view)
-    RelativeLayout mitInfoCenterView;
-    @InjectView(R.id.mit_admissions_view)
-    RelativeLayout mitAdmissionsView;
-    @InjectView(R.id.more_guided_tours_text_view)
-    TextView moreGuidedToursTextView;
-    @InjectView(R.id.more_about_mit_text_view)
-    TextView moreAboutMitTextView;
     @InjectView(R.id.self_guided_tour_title)
     TextView selfGuidedTourTitleTextView;
     @InjectView(R.id.stops_info_text_view)
@@ -55,7 +47,32 @@ public class TourFragment extends Fragment {
     @InjectView(R.id.time_info_text_view)
     TextView timeInfoTextView;
 
-    private MITAPIClient mitapiClient;
+    @OnClick(R.id.send_feedback_view)
+    public void sendFeedback() {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject) + " on Android " + Build.VERSION.RELEASE);
+        emailIntent.setType("message/rfc822");
+        startActivity(Intent.createChooser(emailIntent, "Choose an email Client :"));
+    }
+
+    @OnClick(R.id.mit_admissions_view)
+    public void openMitAdmissionsWebsite() {
+        openOutsideWebsite(getResources().getString(R.string.mit_admissions_url));
+    }
+
+    @OnClick(R.id.mit_info_center_view)
+    public void openMitInfoCenterWebsite() {
+        openOutsideWebsite(getResources().getString(R.string.mit_about_guided_tour_url));
+    }
+
+    @OnClick(R.id.more_guided_tours_text_view)
+    public void openMoreGuidedToursWebsite() {
+        openWebsiteDialog();
+    }
+
+
+    private MITAPIClient mitApiClient;
 
     public TourFragment() {
     }
@@ -67,9 +84,9 @@ public class TourFragment extends Fragment {
 
         ButterKnife.inject(this, view);
 
-        mitapiClient = new MITAPIClient(getActivity().getApplicationContext());
+        mitApiClient = new MITAPIClient(getActivity().getApplicationContext());
 
-        mitapiClient.get(Constants.TOURS, Constants.Tours.TOUR_PATH, null, null, new Callback<List<MITTourWrapper>>() {
+        mitApiClient.get(Constants.TOURS, Constants.Tours.TOUR_PATH, null, null, new Callback<List<MITTourWrapper>>() {
             @Override
             public void success(List<MITTourWrapper> mitTourWrappers, Response response) {
                 MITTourWrapper mitTourWrapper = mitTourWrappers.get(0);
@@ -82,34 +99,6 @@ public class TourFragment extends Fragment {
         });
 
         selfGuidedTourView.setBackground(getResources().getDrawable(R.drawable.tours_cover_image));
-
-        moreGuidedToursTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openWebsiteDialog();
-            }
-        });
-
-        sendFeedbackView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendFeedback();
-            }
-        });
-
-        mitInfoCenterView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openOutsideWebsite(getResources().getString(R.string.mit_about_guided_tour_url));
-            }
-        });
-
-        mitAdmissionsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openOutsideWebsite(getResources().getString(R.string.mit_admissions_url));
-            }
-        });
 
         return view;
     }
@@ -147,15 +136,7 @@ public class TourFragment extends Fragment {
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getActivity(), "No application can handle this request. " +
                     "Please install a map app.", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            Timber.e(e, "No map application");
         }
-    }
-
-    public void sendFeedback() {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject) + " on Android " + Build.VERSION.RELEASE);
-        emailIntent.setType("message/rfc822");
-        startActivity(Intent.createChooser(emailIntent, "Choose an email Client :"));
     }
 }
