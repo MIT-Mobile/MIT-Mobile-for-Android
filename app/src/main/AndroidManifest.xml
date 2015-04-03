@@ -102,7 +102,7 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".tour.TourActivity"
+            android:name=".tour.activities.TourActivity"
             android:label="@string/title_activity_tours"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />

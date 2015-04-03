@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.tour;
+package edu.mit.mitmobile2.tour.activities;
 
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
