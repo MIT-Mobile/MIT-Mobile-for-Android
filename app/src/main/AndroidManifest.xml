@@ -150,6 +150,24 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <activity
+            android:name=".mobius.ResourceShopsActivity"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"
+            android:parentActivityName=".MITModuleActivity" />
+
+        <activity
+            android:name=".mobius.ResourceTypesActivity"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"
+            android:parentActivityName=".MITModuleActivity" />
+
+        <activity
+            android:name=".mobius.ResourceListActivity"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"
+            android:parentActivityName=".MITModuleActivity" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

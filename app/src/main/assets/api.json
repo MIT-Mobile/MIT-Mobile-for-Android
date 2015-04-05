@@ -8,8 +8,21 @@
 		"dev":"https://kairos-dev.mit.edu/resource/",
 		"test":"https://kairos-test.mit.edu/resource/",
 		"prod":"http://kairos.mit.edu:3000/resource/",
-	  	"manager":"edu.mit.mitmobile2.resources.ResourcesManager"
+	  	"manager":"edu.mit.mitmobile2.mobius.ResourcesManager"
 	},
+    "resourceroomset":{
+        "dev":"https://kairos-dev.mit.edu/resourceroomset/",
+        "test":"https://kairos-test.mit.edu/resourceroomset/",
+        "prod":"http://kairos.mit.edu:3000/resourceroomset/",
+        "manager":"edu.mit.mitmobile2.mobius.ResourcesManager"
+    },
+   "resourcetype":{
+        "dev":"https://kairos-dev.mit.edu/type/",
+        "test":"https://kairos-test.mit.edu/type/",
+        "prod":"http://kairos.mit.edu:3000/type/",
+        "manager":"edu.mit.mitmobile2.mobius.ResourcesManager"
+    },
+
 	"shuttles":{
 	    "dev":"http://mobile-dev.mit.edu/apis/shuttles/",
         "test":"http://mobile-test.mit.edu/apis/shuttles/",

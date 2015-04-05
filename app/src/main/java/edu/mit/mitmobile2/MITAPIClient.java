@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,12 +75,15 @@ public class MITAPIClient {
                 while (n.hasNext()) {
                     try {
                         String key = (String) n.next();
+                        Log.d("ZZZ","key = " + key);
                         JSONObject api = jObject.getJSONObject(key);
                         APIEntry apiEntry = new APIEntry();
                         apiEntry.setDev(api.getString("dev"));
                         apiEntry.setTest(api.getString("test"));
                         apiEntry.setProd(api.getString("prod"));
-                        apiEntry.setManager(api.getString("manager"));
+                        if (api.getString("manager") != null) {
+                            apiEntry.setManager(api.getString("manager"));
+                        }
                         Log.d("API", "add api entry for " + key);
                         MITAPIClient.api.put(key, apiEntry);
                     } catch (JSONException e) {
@@ -99,12 +103,15 @@ public class MITAPIClient {
     }
 
     public void get(String api, String path, Map<String, String> params, final Handler apiHandler, final int format) {
+        Log.d("ZZZ","api= " + api);
+        Log.d("ZZZ","api= " + api);
         this.client = new AsyncHttpClient();
         client.setEnableRedirects(true);
-
+        Log.d("ZZZ","env = " + MITAPIClient.environment);
         // get the url of the api from the api key and the environment
         APIEntry apiEntry = MITAPIClient.api.get(api);
         String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
+        Log.d("ZZZ","apiUrl = " + apiUrl);
         if (path != null) {
             apiUrl += path;
         }
@@ -122,8 +129,9 @@ public class MITAPIClient {
                 queryString += pairs.getKey() + "=" + pairs.getValue();
             }
             apiUrl += queryString;
-            Log.d("API", "api url = " + apiUrl);
         }
+
+        Log.d("API", "api url = " + apiUrl);
 
         // Client GET
         client.get(apiUrl, new AsyncHttpResponseHandler() {
@@ -136,13 +144,13 @@ public class MITAPIClient {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                JSONObject jObject = new JSONObject();
+                JSONArray jArray = new JSONArray();
                 // called when response HTTP status is "200 OK"
                 Log.d("API", "success");
                 // Code to convert byte arr to str:
                 String res = new String(response);
                 try {
-                    jObject = new JSONObject(res);
+                    jArray = new JSONArray(res);
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -214,6 +222,11 @@ public class MITAPIClient {
         String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
         String managerName = apiEntry.getManager();
         RetrofitManager.changeEndpoint(apiUrl);
+
+        Timber.d("managerName = " + managerName);
+        Timber.d("api = " + api);
+        Timber.d("path = " + path);
+
 
         try {
             Method m = Class.forName(managerName).getDeclaredMethod("makeHttpCall", String.class, String.class, HashMap.class, HashMap.class, Object.class);

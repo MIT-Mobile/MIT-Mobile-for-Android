@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 

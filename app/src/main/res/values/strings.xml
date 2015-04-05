@@ -28,6 +28,9 @@
     <string name="title_activity_view_resource">ViewResourceActivity</string>
     <string name="title_activity_resource_view">ResourceViewActivity</string>
     <string name="title_activity_shuttle_stops">ShuttleStopsActivity</string>
+    <string name="resource_shops">BROWSE SHOPS &amp; LABS</string>
+    <string name="resource_types">BROWSE MACHINE TYPES</string>
+
 
     <!--Shuttle Info -->
     <string name="shuttle_contact_title">CONTACT INFORMATION</string>

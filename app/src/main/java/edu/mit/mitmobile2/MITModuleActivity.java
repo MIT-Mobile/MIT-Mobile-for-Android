@@ -65,7 +65,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     protected LayoutInflater inflater;
 
     protected Boolean hasSearch = false;
-    protected Handler handler;
     private NavigationArrayAdapter adapter;
 
     private String module; // name of module
@@ -269,6 +268,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     }
 
     private void swapInFragment(String intentString, String title) {
+        Log.d("ZZZ","intent string = " + intentString);
         Fragment f = null;
         try {
             f = (Fragment) Class.forName(intentString).newInstance();
