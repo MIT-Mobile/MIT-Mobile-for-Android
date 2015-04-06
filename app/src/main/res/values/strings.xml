@@ -59,7 +59,7 @@
     <string name="alert_descr_2">in</string>
     <string name="alert_descr_3">and</string>
     <string name="alert_descr_4">minutes.</string>
-    <string name="title_activity_tour_self_guided">TourSelfGuidedActivity</string>
+    <string name="title_activity_tour_self_guided">Self-Guided Tour</string>
 
     <!--Tour info -->
     <string name="more_guided_tours">More about guided tours…</string>

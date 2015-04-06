@@ -1,34 +1,14 @@
 package edu.mit.mitmobile2.tour.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MITTour {
-
-    public class MITTourLink {
-        @Expose
-        String name;
-        @Expose
-        String url;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-    }
+public class MITTour implements Parcelable {
 
     @Expose
     private String id;
@@ -53,6 +33,8 @@ public class MITTour {
     @Expose
     private List<MITTourStop> stops;
 
+    public MITTour() {
+    }
 
     public String getId() {
         return id;
@@ -136,4 +118,44 @@ public class MITTour {
     public void setStops(List<MITTourStop> stops) {
         this.stops = stops;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+//        dest.writeString(url);
+        dest.writeString(title);
+        dest.writeString(shortDescription);
+        dest.writeInt(lengthInKm);
+        dest.writeInt(estimatedDurationInMinutes);
+        dest.writeString(descriptionHtml);
+        dest.writeTypedList(stops);
+        dest.writeTypedList(links);
+    }
+
+    private MITTour(Parcel p) {
+        this.id = p.readString();
+//        this.url = p.readString();
+        this.title = p.readString();
+        this.shortDescription = p.readString();
+        this.lengthInKm = p.readInt();
+        this.estimatedDurationInMinutes = p.readInt();
+        this.descriptionHtml = p.readString();
+        p.readTypedList(this.stops, MITTourStop.CREATOR);
+        p.readTypedList(this.links, MITTourLink.CREATOR);
+    }
+
+    public static final Parcelable.Creator<MITTour> CREATOR = new Parcelable.Creator<MITTour>() {
+        public MITTour createFromParcel(Parcel source) {
+            return new MITTour(source);
+        }
+
+        public MITTour[] newArray(int size) {
+            return new MITTour[size];
+        }
+    };
 }

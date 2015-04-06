@@ -1,17 +1,19 @@
 package edu.mit.mitmobile2.tour.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MITTourStop {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.maps.MapItem;
 
-    public class MITStopRepresentation {
-        @SerializedName("representations")
-        @Expose
-        List<MITTourStopImage> images;
-    }
+public class MITTourStop extends MapItem {
 
     @Expose
     private String title;
@@ -97,4 +99,55 @@ public class MITTourStop {
     public void setRepresentations(List<MITStopRepresentation> representations) {
         this.representations = representations;
     }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(bodyHtml);
+        dest.writeString(id);
+        dest.writeString(type);
+        dest.writeDoubleArray(coordinates);
+        dest.writeTypedList(representations);
+        dest.writeParcelable(direction, 0);
+    }
+
+    private MITTourStop(Parcel p) {
+        this.title = p.readString();
+        this.bodyHtml = p.readString();
+        this.id = p.readString();
+        this.type = p.readString();
+        p.readDoubleArray(coordinates);
+        p.readTypedList(this.representations, MITStopRepresentation.CREATOR);
+        this.direction = p.readParcelable(MITTourStopDirection.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MITTourStop> CREATOR = new Parcelable.Creator<MITTourStop>() {
+        public MITTourStop createFromParcel(Parcel source) {
+            return new MITTourStop(source);
+        }
+
+        public MITTourStop[] newArray(int size) {
+            return new MITTourStop[size];
+        }
+    };
 }

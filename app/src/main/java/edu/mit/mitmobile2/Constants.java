@@ -39,5 +39,6 @@ public class Constants {
         public static final String TOUR_STOP_IMAGE_PATH = "/{tour}/images/{id}";
 
         public static final String TOUR_DETAILS_KEY = "tourDetails";
+        public static final String TOUR_KEY = "tour";
     }
 }

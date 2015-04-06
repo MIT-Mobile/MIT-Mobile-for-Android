@@ -25,7 +25,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour_stop_map, null);
 
-        MapView googleMapView = (MapView) view.findViewById(R.id.route_map);
+        MapView googleMapView = (MapView) view.findViewById(R.id.tour_map);
         googleMapView.onCreate(savedInstanceState);
 
         mitMapView = new MITMapView(getActivity(), googleMapView, this);

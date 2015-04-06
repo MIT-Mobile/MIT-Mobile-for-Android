@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -18,15 +19,16 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.activities.TourDetailActivity;
 import edu.mit.mitmobile2.tour.adapters.TourStopAdapter;
+import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class TourStopListFragment extends Fragment {
 
-    StickyListHeadersListView listView;
     TourStopAdapter adapter;
     MITTour tour;
+    TourStopCallback callback;
 
     public TourStopListFragment() {
     }
@@ -36,7 +38,9 @@ public class TourStopListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour_stop_list, null);
 
-        listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_header_list_view);
+        callback = (TourStopCallback) getActivity();
+
+        StickyListHeadersListView listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_header_list_view);
 
         View headerView = View.inflate(getActivity(), R.layout.tour_list_header_top, null);
         headerView.setOnClickListener(new View.OnClickListener() {
@@ -48,8 +52,25 @@ public class TourStopListFragment extends Fragment {
 
         listView.addHeaderView(headerView);
 
-        adapter = new TourStopAdapter(getActivity(), new ArrayList<MITTourStop>());
+        if (savedInstanceState != null && savedInstanceState.containsKey(Constants.Tours.TOUR_KEY)) {
+            tour = savedInstanceState.getParcelable(Constants.Tours.TOUR_KEY);
+            adapter = new TourStopAdapter(getActivity(), tour.getStops());
+        } else {
+            adapter = new TourStopAdapter(getActivity(), new ArrayList<MITTourStop>());
+        }
+
         listView.setAdapter(adapter);
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.list_button);
+        floatingActionButton.setColorNormalResId(R.color.mit_red);
+        floatingActionButton.setColorPressedResId(R.color.mit_red_dark);
+        floatingActionButton.setSize(FloatingActionButton.SIZE_NORMAL);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.switchViews(false);
+            }
+        });
 
         return view;
     }
@@ -62,9 +83,8 @@ public class TourStopListFragment extends Fragment {
 
     @Subscribe
     public void mitTourLoadedEvent(OttoBusEvent.TourInfoLoadedEvent event) {
-        //TODO: Change tour to parcelable so it can be saved in the frag bundle
-        this.tour = event.getTour();
-        adapter.updateItems(event.getTour().getStops());
+        tour = event.getTour();
+        adapter.updateItems(tour.getStops());
     }
 
     @Override
@@ -77,5 +97,11 @@ public class TourStopListFragment extends Fragment {
     public void onPause() {
         MitMobileApplication.bus.unregister(this);
         super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.Tours.TOUR_KEY, tour);
     }
 }

@@ -18,5 +18,5 @@
         android:layout_gravity="center_vertical"
         android:ellipsize="none"
         android:textColor="@color/black"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 </LinearLayout>

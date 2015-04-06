@@ -12,6 +12,7 @@ import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 import edu.mit.mitmobile2.tour.fragment.TourStopMapFragment;
 import edu.mit.mitmobile2.tour.model.MITTour;
@@ -20,7 +21,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import timber.log.Timber;
 
-public class TourSelfGuidedActivity extends MITActivity {
+public class TourSelfGuidedActivity extends MITActivity implements TourStopCallback {
 
     /**
      * The plan:
@@ -87,4 +88,13 @@ public class TourSelfGuidedActivity extends MITActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void switchViews(boolean toList) {
+        if (toList) {
+            getFragmentManager().beginTransaction().replace(R.id.tour_frame, listFragment).commit();
+        } else {
+            getFragmentManager().beginTransaction().replace(R.id.tour_frame, mapFragment).commit();
+
+        }
+    }
 }
