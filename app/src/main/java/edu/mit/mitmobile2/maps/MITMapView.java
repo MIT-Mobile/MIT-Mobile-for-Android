@@ -46,7 +46,7 @@ import timber.log.Timber;
 
 public class MITMapView {
 
-    private static int mapBoundsPadding;
+    public int mapBoundsPadding;
 
     private MapView mapView;
     private GoogleMap mMap;

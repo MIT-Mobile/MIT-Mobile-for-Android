@@ -1,13 +1,17 @@
 package edu.mit.mitmobile2.tour.model;
 
-import android.graphics.Path;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
-public class MITTourStopDirection {
+public class MITTourStopDirection implements Parcelable {
 
     @SerializedName("destination_id")
     @Expose
@@ -19,13 +23,10 @@ public class MITTourStopDirection {
     private String bodyHtml;
     @Expose
     private Integer zoom;
-    @Expose
-    private Double lat;
-    @Expose
-    private Double lon;
 
-    private List<Path> pathList;
-
+    @SerializedName("path")
+    @Expose
+    private List<List<Double>> pathList;
 
     public String getDestinationId() {
         return destinationId;
@@ -59,27 +60,47 @@ public class MITTourStopDirection {
         this.zoom = zoom;
     }
 
-    public Double getLat() {
-        return lat;
-    }
-
-    public void setLat(Double lat) {
-        this.lat = lat;
-    }
-
-    public Double getLon() {
-        return lon;
-    }
-
-    public void setLon(Double lon) {
-        this.lon = lon;
-    }
-
-    public List<Path> getPathList() {
+    public List<List<Double>> getPathList() {
         return pathList;
     }
 
-    public void setPathList(List<Path> pathList) {
+    public void setPathList(List<List<Double>> pathList) {
         this.pathList = pathList;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(destinationId);
+        dest.writeString(title);
+        dest.writeString(bodyHtml);
+        dest.writeInt(zoom);
+        dest.writeString(pathList.toString());
+    }
+
+    private MITTourStopDirection(Parcel p) {
+        destinationId = p.readString();
+        title = p.readString();
+        bodyHtml = p.readString();
+        zoom = p.readInt();
+
+        Gson gson = new Gson();
+        Type nestedListType = new TypeToken<List<List<Double>>>() {
+        }.getType();
+        pathList = gson.fromJson(p.readString(), nestedListType);
+    }
+
+    public static final Parcelable.Creator<MITTourStopDirection> CREATOR = new Parcelable.Creator<MITTourStopDirection>() {
+        public MITTourStopDirection createFromParcel(Parcel source) {
+            return new MITTourStopDirection(source);
+        }
+
+        public MITTourStopDirection[] newArray(int size) {
+            return new MITTourStopDirection[size];
+        }
+    };
 }

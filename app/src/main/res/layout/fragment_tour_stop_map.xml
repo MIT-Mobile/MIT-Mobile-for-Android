@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/tour_map"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/list_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/solo_map_fab_margin"
+        android:layout_marginBottom="@dimen/solo_map_fab_margin" />
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/my_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/list_button"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/solo_map_fab_margin" />
+
+    <include
+        android:id="@+id/restrictions_text_view"
+        layout="@layout/tour_list_header_top"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+</RelativeLayout>

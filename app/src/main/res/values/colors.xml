@@ -61,4 +61,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="stop_dot_color">#FFC1BFBF</color>
     <color name="black_transparent">#78000000</color>
+    <color name="blue">#FF213996</color>
+    <color name="black">#FF000000</color>
 </resources>

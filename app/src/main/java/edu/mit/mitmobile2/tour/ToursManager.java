@@ -8,8 +8,8 @@ import java.util.List;
 import edu.mit.mitmobile2.BuildConfig;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.RetrofitManager;
-import edu.mit.mitmobile2.tour.model.MITTourStopsWrapper;
-import edu.mit.mitmobile2.tour.model.MITTourWrapper;
+import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.model.MITTour;
 import retrofit.Callback;
 import retrofit.http.GET;
 import timber.log.Timber;
@@ -50,10 +50,10 @@ public class ToursManager extends RetrofitManager {
 
     public interface MitTourService {
         @GET(Constants.Tours.TOUR_PATH)
-        void _get(Callback<List<MITTourWrapper>> callback);
+        void _get(Callback<List<MITTour>> callback);
 
         @GET(Constants.Tours.ALL_TOUR_STOPS_PATH)
-        void _get_(Callback<MITTourStopsWrapper> callback);
+        void _get_(Callback<MITTour> callback);
 
         @GET(Constants.Tours.TOUR_STOP_IMAGE_PATH)
         void _get_images_(Callback<String> callback);
