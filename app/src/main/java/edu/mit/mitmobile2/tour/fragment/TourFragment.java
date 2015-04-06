@@ -128,7 +128,7 @@ public class TourFragment extends Fragment {
                 .setPositiveButton(getResources().getString(R.string.open_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        openOutsideWebsite(getResources().getString(R.string.open_in_browser));
+                        openOutsideWebsite(getResources().getString(R.string.mit_about_guided_tour_url));
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
