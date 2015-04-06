@@ -69,7 +69,7 @@
     <string name="open_in_browser">Open in a browser</string>
     <string name="open_button">Open</string>
     <string name="feedback_subject">Feedback for MIT Mobile</string>
-    <string name="feedback_email_address">iphone-app-feedback@mit.edu</string>
+    <string name="feedback_email_address">android-app-feedback@mit.edu</string>
     <string name="mit_about_guided_tour_url">http://web.mit.edu/institute-events/events/</string>
     <string name="mit_admissions_url">http://mitadmissions.org/</string>
     <string name="guided_tour_info">Regularly scheduled student-led campus tours are conducted Monday through Firday at 11 am and at 3 pm, excluding legal US holidays and the winter break period.</string>

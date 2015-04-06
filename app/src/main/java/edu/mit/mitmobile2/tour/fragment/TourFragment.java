@@ -22,9 +22,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import butterknife.OnClick;
+import edu.mit.mitmobile2.BuildConfig;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.tour.ToursManager;
 import edu.mit.mitmobile2.tour.model.MITTourWrapper;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
 import retrofit.Callback;
@@ -51,7 +53,16 @@ public class TourFragment extends Fragment {
     public void sendFeedback() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject) + " on Android " + Build.VERSION.RELEASE);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject)
+                + " "
+                + ToursManager.getAppVersion()
+                + " ("
+                + ToursManager.getBuildDescription()
+                + " ("
+                + ToursManager.getAppVersion()
+                + ")))"
+                + " on Android "
+                + Build.VERSION.RELEASE);
         emailIntent.setType("message/rfc822");
         startActivity(Intent.createChooser(emailIntent, "Choose an email Client :"));
     }
