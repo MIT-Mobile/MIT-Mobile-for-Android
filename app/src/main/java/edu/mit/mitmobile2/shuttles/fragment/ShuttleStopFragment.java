@@ -182,6 +182,19 @@ public class ShuttleStopFragment extends MitMapFragment {
         int realPosition = stopViewPagerAdapter.getRealPosition(currentPosition);
         stopViewPagerAdapter.updatePredictions(realPosition, stops.get(realPosition).getPredictions());
 
+        //Update next and previous stops' predictions as well due to view pager storing adjacent fragments
+        int previousPosition = realPosition - 1;
+        if (previousPosition == -1) {
+            previousPosition = stops.size();
+        }
+        stopViewPagerAdapter.updatePredictions(previousPosition, stops.get(previousPosition).getPredictions());
+
+        int nextPosition = realPosition + 1;
+        if (nextPosition >= stops.size()) {
+            nextPosition = 0;
+        }
+        stopViewPagerAdapter.updatePredictions(nextPosition, stops.get(nextPosition).getPredictions());
+
         updateMapItems((ArrayList) route.getVehicles(), false);
     }
 
