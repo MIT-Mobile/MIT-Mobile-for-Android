@@ -22,11 +22,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import butterknife.OnClick;
-import edu.mit.mitmobile2.BuildConfig;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.tour.ToursManager;
+import edu.mit.mitmobile2.tour.activities.MitIntroActivity;
 import edu.mit.mitmobile2.tour.model.MITTourWrapper;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
 import retrofit.Callback;
@@ -55,11 +54,11 @@ public class TourFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject)
                 + " "
-                + ToursManager.getAppVersion()
+                + TourUtils.getAppVersion()
                 + " ("
-                + ToursManager.getBuildDescription()
+                + TourUtils.getBuildDescription()
                 + " ("
-                + ToursManager.getAppVersion()
+                + TourUtils.getAppVersion()
                 + ")))"
                 + " on Android "
                 + Build.VERSION.RELEASE);
@@ -82,6 +81,11 @@ public class TourFragment extends Fragment {
         openWebsiteDialog();
     }
 
+    @OnClick(R.id.more_about_mit_text_view)
+    public void openMitIntroduction() {
+        Intent intent = new Intent(getActivity(), MitIntroActivity.class);
+        startActivity(intent);
+    }
 
     private MITAPIClient mitApiClient;
 
@@ -138,7 +142,6 @@ public class TourFragment extends Fragment {
                     }
                 })
                 .show();
-
     }
 
     public void openOutsideWebsite(String url) {

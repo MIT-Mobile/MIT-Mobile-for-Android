@@ -22,6 +22,7 @@
     <string name="title_activity_mobius">Mobius</string>
     <string name="title_activity_shuttles">Shuttles</string>
     <string name="title_activity_tours">Tours</string>
+    <string name="title_activity_intro_mit">Introduction to MIT</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>

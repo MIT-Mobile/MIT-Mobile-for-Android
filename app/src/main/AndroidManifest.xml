@@ -177,6 +177,11 @@
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity" />
+        <activity
+            android:name=".tour.activities.MitIntroActivity"
+            android:label="@string/title_activity_intro_mit"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
