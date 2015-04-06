@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,14 @@ public class ShuttleStopViewPagerFragment extends Fragment implements Intersecti
     @InjectView(R.id.stop_prediction_adapter_view)
     AdapterView predictionAdapterView;
 
+    @InjectView(R.id.empty_predictions)
+    TextView emptyPredictions;
+
     @InjectView(R.id.intersecting_routes_adapter_view)
     AdapterView intersectingRoutesAdapterView;
+
+    @InjectView(R.id.empty_intersecting)
+    TextView emptyIntersecting;
 
     private ShuttleStopPredictionsAdapter predictionsAdapter;
     private ShuttleStopIntersectingAdapter intersectingAdapter;
@@ -101,6 +108,9 @@ public class ShuttleStopViewPagerFragment extends Fragment implements Intersecti
 
         predictionAdapterView.setAdapter(predictionsAdapter);
         intersectingRoutesAdapterView.setAdapter(intersectingAdapter);
+
+        predictionAdapterView.setEmptyView(emptyPredictions);
+        intersectingRoutesAdapterView.setEmptyView(emptyIntersecting);
 
         return view;
     }

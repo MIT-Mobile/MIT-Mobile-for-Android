@@ -54,6 +54,8 @@
     <string name="arriving_in">Arriving in</string>
     <string name="minutes">minutes</string>
     <string name="alarm_set">Alarm Set</string>
+    <string name="empty_predictions">No current predictions</string>
+    <string name="empty_intersecting">No intersecting routes</string>
 
     <string name="alert_descr_1">arriving at</string>
     <string name="alert_descr_2">in</string>
@@ -70,7 +72,7 @@
     <string name="open_in_browser">Open in a browser</string>
     <string name="open_button">Open</string>
     <string name="feedback_subject">Feedback for MIT Mobile</string>
-    <string name="feedback_email_address">iphone-app-feedback@mit.edu</string>
+    <string name="feedback_email_address">android-app-feedback@mit.edu</string>
     <string name="mit_about_guided_tour_url">http://web.mit.edu/institute-events/events/</string>
     <string name="mit_admissions_url">http://mitadmissions.org/</string>
     <string name="guided_tour_info">Regularly scheduled student-led campus tours are conducted Monday through Firday at 11 am and at 3 pm, excluding legal US holidays and the winter break period.</string>
@@ -80,4 +82,5 @@
     <string name="restrictions">Videotaping and photography are prohibited inside MIT buildings.</string>
     <string name="title_activity_tour_detail">Tour Details</string>
     <string name="tour_details">Tour Details…</string>
+
 </resources>
