@@ -19,6 +19,19 @@
             android:dividerHeight="@dimen/shuttle_listview_divider_height"/>
 
         <TextView
+            android:id="@+id/empty_predictions"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shuttle_stop_cell_height"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"
+            android:background="@color/white"
+            android:text="@string/empty_predictions"
+            android:textColor="@color/contents_text"
+            android:textSize="@dimen/shuttle_home_content_size"
+            android:visibility="gone"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/shuttle_stop_small_margin"
@@ -41,6 +54,19 @@
             android:layout_marginTop="@dimen/shuttle_stop_small_margin"
             android:divider="@color/divider_grey"
             android:dividerHeight="@dimen/shuttle_listview_divider_height"/>
+
+        <TextView
+            android:id="@+id/empty_intersecting"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shuttle_stop_cell_height"
+            android:layout_marginTop="@dimen/shuttle_stop_small_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:gravity="center_vertical"
+            android:background="@color/white"
+            android:text="@string/empty_intersecting"
+            android:textColor="@color/contents_text"
+            android:textSize="@dimen/shuttle_home_content_size"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"

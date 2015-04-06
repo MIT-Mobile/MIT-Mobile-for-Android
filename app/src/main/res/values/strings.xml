@@ -54,6 +54,8 @@
     <string name="arriving_in">Arriving in</string>
     <string name="minutes">minutes</string>
     <string name="alarm_set">Alarm Set</string>
+    <string name="empty_predictions">No current predictions</string>
+    <string name="empty_intersecting">No intersecting routes</string>
 
     <string name="alert_descr_1">arriving at</string>
     <string name="alert_descr_2">in</string>
@@ -74,4 +76,5 @@
     <string name="mit_admissions_url">http://mitadmissions.org/</string>
     <string name="guided_tour_info">Regularly scheduled student-led campus tours are conducted Monday through Firday at 11 am and at 3 pm, excluding legal US holidays and the winter break period.</string>
     <string name="about_mit_info">The misson of MIT is to advance knowledge and educate students in science, technology, and other areas of scholarship that will best serve the nation and the world in the 21st century.</string>
+
 </resources>
