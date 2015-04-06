@@ -1,11 +1,24 @@
-package edu.mit.mitmobile2.tour;
+package edu.mit.mitmobile2.tour.activities;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MITActivity;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
+import edu.mit.mitmobile2.tour.fragment.TourStopMapFragment;
+import edu.mit.mitmobile2.tour.model.MITTour;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import timber.log.Timber;
 
 public class TourSelfGuidedActivity extends MITActivity {
 
@@ -21,6 +34,8 @@ public class TourSelfGuidedActivity extends MITActivity {
     TourStopMapFragment mapFragment;
     TourStopListFragment listFragment;
 
+    MITTour tour;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +44,25 @@ public class TourSelfGuidedActivity extends MITActivity {
         mapFragment = new TourStopMapFragment();
         listFragment = new TourStopListFragment();
 
-        getFragmentManager().beginTransaction().replace(R.id.tour_frame, mapFragment).commit();
+        MITAPIClient mitApiClient = new MITAPIClient(this);
+
+        HashMap<String, String> pathParams = new HashMap<>();
+        pathParams.put("tour", "self_guided");
+        mitApiClient.get(Constants.TOURS, Constants.Tours.ALL_TOUR_STOPS_PATH, pathParams, null, new Callback<MITTour>() {
+            @Override
+            public void success(MITTour mitTour, Response response) {
+                Timber.d("Success!");
+                tour = mitTour;
+                MitMobileApplication.bus.post(new OttoBusEvent.TourInfoLoadedEvent(tour));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Timber.e(error, "Oh no!");
+            }
+        });
+
+        getFragmentManager().beginTransaction().replace(R.id.tour_frame, listFragment).commit();
     }
 
     @Override

@@ -173,9 +173,15 @@
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".tour.TourSelfGuidedActivity"
+            android:name=".tour.activities.TourSelfGuidedActivity"
             android:label="@string/title_activity_tour_self_guided"
-            android:parentActivityName=".MITModuleActivity" />
-    </application>
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".tour.activities.TourDetailActivity"
+            android:label="@string/title_activity_tour_detail"
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
 
+    </application>
 </manifest>

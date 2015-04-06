@@ -16,6 +16,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/solo_map_fab_margin"
         android:layout_marginBottom="@dimen/solo_map_fab_margin"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
 </RelativeLayout>

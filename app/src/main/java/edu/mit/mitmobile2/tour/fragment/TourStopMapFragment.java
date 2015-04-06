@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.tour;
+package edu.mit.mitmobile2.tour.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -23,13 +23,12 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tour_stop_map, container);
+        View view = inflater.inflate(R.layout.fragment_tour_stop_map, null);
 
         MapView googleMapView = (MapView) view.findViewById(R.id.route_map);
         googleMapView.onCreate(savedInstanceState);
 
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
-
 
         return view;
     }

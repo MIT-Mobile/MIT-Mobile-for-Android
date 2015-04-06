@@ -3,7 +3,32 @@ package edu.mit.mitmobile2.tour.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITTourWrapper {
+import java.util.List;
+
+public class MITTour {
+
+    public class MITTourLink {
+        @Expose
+        String name;
+        @Expose
+        String url;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
 
     @Expose
     private String id;
@@ -20,6 +45,13 @@ public class MITTourWrapper {
     @SerializedName("estimated_duration_in_minutes")
     @Expose
     private Integer estimatedDurationInMinutes;
+    @SerializedName("description_html")
+    @Expose
+    private String descriptionHtml;
+    @Expose
+    private List<MITTourLink> links;
+    @Expose
+    private List<MITTourStop> stops;
 
 
     public String getId() {
@@ -81,4 +113,27 @@ public class MITTourWrapper {
         this.estimatedDurationInMinutes = estimatedDurationInMinutes;
     }
 
+    public String getDescriptionHtml() {
+        return descriptionHtml;
+    }
+
+    public void setDescriptionHtml(String descriptionHtml) {
+        this.descriptionHtml = descriptionHtml;
+    }
+
+    public List<MITTourLink> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<MITTourLink> links) {
+        this.links = links;
+    }
+
+    public List<MITTourStop> getStops() {
+        return stops;
+    }
+
+    public void setStops(List<MITTourStop> stops) {
+        this.stops = stops;
+    }
 }

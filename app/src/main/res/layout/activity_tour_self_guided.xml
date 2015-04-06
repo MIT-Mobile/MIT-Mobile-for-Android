@@ -3,4 +3,4 @@
     android:id="@+id/tour_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mit.mitmobile2.tour.TourSelfGuidedActivity"/>
+    tools:context="edu.mit.mitmobile2.tour.activities.TourSelfGuidedActivity"/>
