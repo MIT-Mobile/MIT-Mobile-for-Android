@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -98,6 +100,33 @@ public class MITTourStop extends MapItem {
 
     public void setRepresentations(List<MITStopRepresentation> representations) {
         this.representations = representations;
+    }
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        options.position(new LatLng(coordinates[1], coordinates[0]));
+        return options;
+    }
+
+    @Override
+    public String getMarkerText() {
+        return super.getMarkerText();
+    }
+
+    @Override
+    public boolean isVehicle() {
+        return false;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
     }
 
     @Override

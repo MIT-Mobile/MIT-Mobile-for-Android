@@ -46,7 +46,7 @@ public class TourStopListFragment extends Fragment {
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTourDetailActivity();
+                callback.showTourDetailActivity(tour.getDescriptionHtml());
             }
         });
 
@@ -54,10 +54,11 @@ public class TourStopListFragment extends Fragment {
 
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.Tours.TOUR_KEY)) {
             tour = savedInstanceState.getParcelable(Constants.Tours.TOUR_KEY);
-            adapter = new TourStopAdapter(getActivity(), tour.getStops());
         } else {
-            adapter = new TourStopAdapter(getActivity(), new ArrayList<MITTourStop>());
+            tour = callback.getTour();
         }
+
+        adapter = new TourStopAdapter(getActivity(), tour.getStops());
 
         listView.setAdapter(adapter);
 
@@ -73,12 +74,6 @@ public class TourStopListFragment extends Fragment {
         });
 
         return view;
-    }
-
-    private void showTourDetailActivity() {
-        Intent intent = new Intent(getActivity(), TourDetailActivity.class);
-        intent.putExtra(Constants.Tours.TOUR_DETAILS_KEY, tour.getDescriptionHtml());
-        startActivity(intent);
     }
 
     @Subscribe

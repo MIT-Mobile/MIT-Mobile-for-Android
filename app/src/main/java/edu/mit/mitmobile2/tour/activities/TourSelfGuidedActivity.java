@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.tour.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,10 +33,10 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
      * Make HTTP calls here in the activity, not in the fragments
      */
 
-    TourStopMapFragment mapFragment;
-    TourStopListFragment listFragment;
+    private TourStopMapFragment mapFragment;
+    private TourStopListFragment listFragment;
 
-    MITTour tour;
+    private MITTour tour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
             }
         });
 
-        getFragmentManager().beginTransaction().replace(R.id.tour_frame, listFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.tour_frame, mapFragment).commit();
     }
 
     @Override
@@ -96,5 +97,17 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
             getFragmentManager().beginTransaction().replace(R.id.tour_frame, mapFragment).commit();
 
         }
+    }
+
+    @Override
+    public MITTour getTour() {
+        return tour;
+    }
+
+    @Override
+    public void showTourDetailActivity(String description) {
+        Intent intent = new Intent(this, TourDetailActivity.class);
+        intent.putExtra(Constants.Tours.TOUR_DETAILS_KEY, description);
+        startActivity(intent);
     }
 }

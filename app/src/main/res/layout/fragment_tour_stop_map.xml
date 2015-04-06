@@ -15,8 +15,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/solo_map_fab_margin"
-        android:layout_marginBottom="@dimen/solo_map_fab_margin"
-        android:visibility="invisible" />
+        android:layout_marginBottom="@dimen/solo_map_fab_margin" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/my_location_button"
@@ -24,7 +23,13 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/list_button"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/solo_map_fab_margin"
-        android:visibility="invisible" />
+        android:layout_marginRight="@dimen/solo_map_fab_margin" />
+
+    <include
+        android:id="@+id/restrictions_text_view"
+        layout="@layout/tour_list_header_top"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
