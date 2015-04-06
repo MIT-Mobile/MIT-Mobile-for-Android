@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.mit.mitmobile2.BuildConfig;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.tour.model.MITTourStopsWrapper;
@@ -56,5 +57,13 @@ public class ToursManager extends RetrofitManager {
 
         @GET(Constants.Tours.TOUR_STOP_IMAGE_PATH)
         void _get_images_(Callback<String> callback);
+    }
+
+    public static String getBuildDescription() {
+        return BuildConfig.buildDescription;
+    }
+
+    public static int getAppVersion() {
+        return BuildConfig.VERSION_CODE;
     }
 }
