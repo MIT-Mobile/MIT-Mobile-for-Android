@@ -50,7 +50,7 @@
 		"short_name":"Tours",
 		"menu_icon":"menu_tour",
 		"home_icon":"home_tour",
-		"intent":"edu.mit.mitmobile2.tour.TourFragment",
+		"intent":"edu.mit.mitmobile2.tour.fragment.TourFragment",
 		"url":"mitmobile2://tour"
 	},
 	

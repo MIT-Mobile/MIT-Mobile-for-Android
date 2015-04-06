@@ -17,6 +17,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!--Shuttle theme. -->
     <style name="MITShuttleRoutesLabel">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -27,7 +28,7 @@
         <item name="android:paddingLeft">@dimen/shuttle_home_route_padding</item>
     </style>
     
-    <style name="MITShuttleRoutesView">
+    <style name="MITView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/shuttle_listview_divider_height</item>
         <item name="android:background">@color/divider_grey</item>
@@ -57,5 +58,24 @@
         <item name="android:textColor">@color/contents_text</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/shuttle_home_content_size</item>
+    </style>
+
+    <!--tour theme. -->
+    <style name="MITTourHomeContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">@dimen/tour_home_content_size</item>
+        <item name="android:textColor">@color/contents_text</item>
+        <item name="android:paddingLeft">@dimen/tour_home_padding</item>
+    </style>
+    <style name="MITTourHomeImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:tint">@color/mit_red</item>
+        <item name="android:paddingRight">@dimen/tour_home_padding</item>
     </style>
 </resources>

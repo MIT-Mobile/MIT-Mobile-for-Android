@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -57,17 +56,16 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     protected MITMapView mitMapView;
 
     private View transparentView;
-    private FrameLayout predictionFragment;
     private View transparentLandscapeView;
 
-    private boolean hasHeader;
+    private boolean hasHeader = false;
     private RelativeLayout routeInfoSegment;
     protected SwipeRefreshLayout swipeRefreshLayout;
 
     protected boolean mapViewExpanded = false;
     private boolean animating = false;
 
-    private boolean stopMode;
+    private boolean stopMode = false;
     private FrameLayout shuttleStopContent;
     //Stores the offset done by showing the stop in the header
     protected double latOffset;
@@ -93,17 +91,36 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         shuttleStopContent = (FrameLayout) view.findViewById(R.id.shuttle_stop_content);
         shuttleStopContent.setVisibility(View.GONE);
-        stopMode = false;
 
-        predictionFragment = (FrameLayout) view.findViewById(R.id.prediction_fragment);
         MapView googleMapView = (MapView) view.findViewById(R.id.route_map);
         googleMapView.onCreate(savedInstanceState);
+        mitMapView = new MITMapView(getActivity(), googleMapView, this);
 
         mapItemsListView = (ListView) view.findViewById(R.id.map_list_view);
         listButton = (FloatingActionButton) view.findViewById(R.id.list_button);
         myLocationButton = (FloatingActionButton) view.findViewById(R.id.my_location_button);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.shuttle_route_refresh_layout);
+        swipeRefreshLayout.setEnabled(false);
+        transparentLandscapeView = view.findViewById(R.id.transparent_map_overlay_landscape);
 
+        setupFabButtons();
+        setupMapView();
+
+        if (mapViewExpanded) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                swipeRefreshLayout.setVisibility(View.INVISIBLE);
+            } else {
+                transparentLandscapeView.setVisibility(View.INVISIBLE);
+                swipeRefreshLayout.setVisibility(View.INVISIBLE);
+            }
+            listButton.setVisibility(View.VISIBLE);
+            myLocationButton.setVisibility(View.VISIBLE);
+        }
+
+        return view;
+    }
+
+    private void setupFabButtons() {
         listButton.setSize(FloatingActionButton.SIZE_NORMAL);
         listButton.setColorNormalResId(R.color.mit_red);
         listButton.setColorPressedResId(R.color.mit_red_dark);
@@ -116,9 +133,24 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         myLocationButton.setIcon(R.drawable.ic_my_location);
         myLocationButton.setStrokeVisible(false);
 
-        swipeRefreshLayout.setEnabled(false);
+        listButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListView();
+            }
+        });
 
-        mitMapView = new MITMapView(getActivity(), googleMapView, this);
+        myLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location myLocation = mitMapView.getMap().getMyLocation();
+                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f);
+                mitMapView.getMap().animateCamera(update, 400, null);
+            }
+        });
+    }
+
+    private void setupMapView() {
         mitMapView.setMapViewExpanded(mapViewExpanded);
         if (!mapViewExpanded) {
             getMapView().getUiSettings().setAllGesturesEnabled(false);
@@ -148,6 +180,35 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
                 } else {
                     return null;
                 }
+            }
+        });
+    }
+
+    //Setup for shuttle route
+    protected void addHeaderView(View headerView) {
+        hasHeader = true;
+        mapItemsListView.addHeaderView(headerView);
+        routeInfoSegment = (RelativeLayout) headerView.findViewById(R.id.route_info_segment);
+        transparentView = headerView.findViewById(R.id.transparent_map_overlay);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            transparentView.setVisibility(View.GONE);
+        } else {
+            transparentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!animating) {
+                        toggleMap();
+                    }
+                }
+            });
+        }
+        swipeRefreshLayout.setEnabled(true);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                updateData();
             }
         });
 
@@ -180,7 +241,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
                 }
             });
         } else {
-            transparentLandscapeView = view.findViewById(R.id.transparent_map_overlay_landscape);
             transparentLandscapeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -202,57 +262,33 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
             });
         }
 
-        mapItemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mapItemsListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(android.widget.AdapterView<?> parent, View view, int position, long id) {
                 listItemClicked(position);
             }
         });
-
-        listButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showListView();
-            }
-        });
-
-        myLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Location myLocation = mitMapView.getMap().getMyLocation();
-                CameraUpdate update = CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 14f);
-                mitMapView.getMap().animateCamera(update, 400, null);
-            }
-        });
-
-        if (mapViewExpanded) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                swipeRefreshLayout.setVisibility(View.INVISIBLE);
-            } else {
-                transparentLandscapeView.setVisibility(View.INVISIBLE);
-                swipeRefreshLayout.setVisibility(View.INVISIBLE);
-            }
-            listButton.setVisibility(View.VISIBLE);
-            myLocationButton.setVisibility(View.VISIBLE);
-        }
-
-        return view;
     }
 
-    public void showListView() {
-        if (!animating) {
-            listButton.setVisibility(View.INVISIBLE);
-            myLocationButton.setVisibility(View.INVISIBLE);
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                toggleMap();
-            } else {
-                toggleMapHorizontal();
+    //Setup for shuttle stop
+    protected void addShuttleStopContent(View content) {
+        stopMode = true;
+        shuttleStopContent.addView(content);
+        swipeRefreshLayout.setVisibility(View.GONE);
+        shuttleStopContent.setVisibility(View.VISIBLE);
+
+        transparentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!animating) {
+                    toggleMap();
+                }
             }
-        }
+        });
     }
 
-    protected void listItemClicked(int position) {
-
+    protected void addTransparentView(View view) {
+        transparentView = view;
     }
 
     protected void updateMapItems(ArrayList mapItems, boolean fit) {
@@ -267,7 +303,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         mapItemsListView.setAdapter(arrayAdapter);
     }
 
-    public void drawRoutePath(MITShuttleRoute route) {
+    protected void drawRoutePath(MITShuttleRoute route) {
         for (List<List<Double>> outerList : route.getPath().getSegments()) {
             List<LatLng> points = new ArrayList<>();
             PolylineOptions options = new PolylineOptions();
@@ -285,60 +321,16 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         }
     }
 
-    protected GoogleMap getMapView() {
-        return mitMapView.getMap();
-    }
-
-    protected ArrayAdapter<MapItem> getMapItemAdapter() {
-        return null;
-    }
-
-    protected void addShuttleStopContent(View content) {
-        stopMode = true;
-        shuttleStopContent.addView(content);
-        swipeRefreshLayout.setVisibility(View.GONE);
-        shuttleStopContent.setVisibility(View.VISIBLE);
-
-        transparentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!animating) {
-                    toggleMap();
-                }
+    public void showListView() {
+        if (!animating) {
+            listButton.setVisibility(View.INVISIBLE);
+            myLocationButton.setVisibility(View.INVISIBLE);
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                toggleMap();
+            } else {
+                toggleMapHorizontal();
             }
-        });
-    }
-
-    protected void addHeaderView(View headerView) {
-        hasHeader = true;
-        mapItemsListView.addHeaderView(headerView);
-        routeInfoSegment = (RelativeLayout) headerView.findViewById(R.id.route_info_segment);
-        transparentView = headerView.findViewById(R.id.transparent_map_overlay);
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            transparentView.setVisibility(View.GONE);
-        } else {
-            transparentView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!animating) {
-                        toggleMap();
-                    }
-                }
-            });
         }
-        swipeRefreshLayout.setEnabled(true);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
-                updateData();
-            }
-        });
-    }
-
-    public void addTransparentView(View view) {
-        transparentView = view;
     }
 
     private void toggleMap() {
@@ -347,7 +339,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         TranslateAnimation translateAnimation;
 
         int currentScrollOffset = calculateScrollOffset();
-
         float bottomY = displayMetrics.heightPixels - currentScrollOffset;
         if (mapViewExpanded) {
             translateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, bottomY, NO_TRANSLATION);
@@ -362,29 +353,34 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         if (!mapViewExpanded) {
             mapViewExpanded = true;
             if (stopMode) {
-                LatLng target = getMapView().getCameraPosition().target;
-                LatLng offset = new LatLng(target.latitude - latOffset, target.longitude);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(offset);
-                getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
+                updateStopModeCamera(mapViewExpanded);
             } else {
                 mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
-            }
-
-            if (mitMapView.getGoogleMapView().getTranslationY() != 0) {
-                final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mitMapView.getGoogleMapView().getTranslationY(), NO_TRANSLATION);
-                mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
-                //The way translation animations are setup, this is done to avoid flicker
-                mitMapView.getGoogleMapView().setTranslationY(0);
-                mitMapView.getGoogleMapView().startAnimation(mapTranslateAnimation);
+                if (mitMapView.getGoogleMapView().getTranslationY() != 0) {
+                    final TranslateAnimation mapTranslateAnimation = new TranslateAnimation(NO_TRANSLATION, NO_TRANSLATION, mitMapView.getGoogleMapView().getTranslationY(), NO_TRANSLATION);
+                    mapTranslateAnimation.setDuration(ANIMATION_LENGTH);
+                    //The way translation animations are setup, this is done to avoid flicker
+                    mitMapView.getGoogleMapView().setTranslationY(0);
+                    mitMapView.getGoogleMapView().startAnimation(mapTranslateAnimation);
+                }
             }
         } else {
             mapViewExpanded = false;
             mitMapView.getMap().getUiSettings().setAllGesturesEnabled(false);
-            mitMapView.setToDefaultBounds(false, 0);
-            mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
+            if (stopMode) {
+                shuttleStopContent.setVisibility(View.VISIBLE);
+                updateStopModeCamera(mapViewExpanded);
+            } else {
+                mitMapView.setToDefaultBounds(false, 0);
+                mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+            }
         }
-        swipeRefreshLayout.startAnimation(translateAnimation);
+        if (stopMode) {
+            shuttleStopContent.startAnimation(translateAnimation);
+        } else {
+            swipeRefreshLayout.startAnimation(translateAnimation);
+        }
     }
 
     private void toggleMapHorizontal() {
@@ -405,14 +401,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            if (stopMode) {
-                LatLng target = getMapView().getCameraPosition().target;
-                LatLng offset = new LatLng(target.latitude - latOffset, target.longitude);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(offset);
-                getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
-            } else {
-                mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
-            }
+            mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
             transparentLandscapeView.setVisibility(View.INVISIBLE);
         } else {
             mapViewExpanded = false;
@@ -425,12 +414,37 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         swipeRefreshLayout.startAnimation(translateAnimation);
     }
 
+    protected void updateStopModeCamera(boolean mapViewExpanded) {
+
+    }
+
     private int calculateScrollOffset() {
         int[] location = new int[2];
         if (hasHeader) {
             routeInfoSegment.getLocationOnScreen(location);
         }
         return location[1];
+    }
+
+    public void updateMITMapView(MITMapView mapView) {
+        mapView.updateStaticItems(mapViewExpanded);
+    }
+
+    protected void listItemClicked(int position) {
+
+    }
+
+    protected GoogleMap getMapView() {
+        return mitMapView.getMap();
+    }
+
+    protected ArrayAdapter<MapItem> getMapItemAdapter() {
+        return null;
+    }
+
+
+    public boolean isMapViewExpanded() {
+        return mapViewExpanded;
     }
 
     private void startTimerTask() {
@@ -458,10 +472,13 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
     @Override
     public void onAnimationEnd(Animation animation) {
         if (mapViewExpanded) {
-            mapItemsListView.setSelection(0);
-            swipeRefreshLayout.setVisibility(View.GONE);
+            if (stopMode) {
+                shuttleStopContent.setVisibility(View.GONE);
+            } else {
+                mapItemsListView.setSelection(0);
+                swipeRefreshLayout.setVisibility(View.GONE);
+            }
             mitMapView.getMap().getUiSettings().setAllGesturesEnabled(true);
-
             listButton.setVisibility(View.VISIBLE);
             myLocationButton.setVisibility(View.VISIBLE);
         }
@@ -534,13 +551,5 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
                 mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
             }
         }
-    }
-
-    public void updateMITMapView(MITMapView mapView) {
-        mapView.updateStaticItems(mapViewExpanded);
-    }
-
-    public boolean isMapViewExpanded() {
-        return mapViewExpanded;
     }
 }

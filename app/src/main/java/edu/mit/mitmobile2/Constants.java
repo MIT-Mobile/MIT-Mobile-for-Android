@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2;
 
 public class Constants {
+
+    //shuttles
     public static final String RESOURCES = "resource";
     public static final String SHUTTLES = "shuttles";
     public static final String SHARED_PREFS_KEY = "mitPrefs";
@@ -11,6 +13,9 @@ public class Constants {
     public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
     public static final String ALARM_ID_KEY = "alarm";
     public static final String ALARM_DESCRIPTION = "alarmDescription";
+
+    //tours
+    public static final String TOURS = "tours";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -28,5 +33,9 @@ public class Constants {
         public static final String QUERIES_KEY = "queryParams";
     }
 
-
+    public static class Tours {
+        public static final String TOUR_PATH = "/";
+        public static final String ALL_TOUR_STOPS_PATH = "/{tour}";
+        public static final String TOUR_STOP_IMAGE_PATH = "/{tour}/images/{id}";
+    }
 }

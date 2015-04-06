@@ -38,6 +38,7 @@ public class ShuttleStopFragment extends MitMapFragment {
     ViewPager predictionViewPager;
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
+    private int currentPosition;
     private MITShuttleRoute route = new MITShuttleRoute();
     private List<MITShuttleStop> stops;
     private String routeId;
@@ -86,6 +87,7 @@ public class ShuttleStopFragment extends MitMapFragment {
 
             @Override
             public void onPageSelected(int position) {
+                currentPosition = position;
                 callback.setActionBarSubtitle(stops.get(position).getTitle());
                 animateToStop(position);
             }
@@ -97,7 +99,8 @@ public class ShuttleStopFragment extends MitMapFragment {
         });
         int startPosition = getStartPosition();
         callback.setActionBarSubtitle(stops.get(startPosition).getTitle());
-        predictionViewPager.setCurrentItem(getStartPosition());
+        predictionViewPager.setCurrentItem(startPosition);
+        currentPosition = startPosition;
 
         addTransparentView(transparentView);
         addShuttleStopContent(shuttleStopContent);
@@ -124,6 +127,20 @@ public class ShuttleStopFragment extends MitMapFragment {
     private void animateToStop(int position) {
         LatLng stopPosition = new LatLng(stops.get(position).getLat() + latOffset, stops.get(position).getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(stopPosition);
+        getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
+    }
+
+    @Override
+    protected void updateStopModeCamera(boolean mapViewExpanded) {
+        LatLng newCenter;
+        CameraUpdate cameraUpdate;
+        if (mapViewExpanded) {
+            newCenter = new LatLng(stops.get(currentPosition).getLat(), stops.get(currentPosition).getLon());
+            cameraUpdate = CameraUpdateFactory.newLatLng(newCenter);
+        } else {
+            newCenter = new LatLng(stops.get(currentPosition).getLat() + latOffset, stops.get(currentPosition).getLon());
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(newCenter, STOP_ZOOM);
+        }
         getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
     }
 

@@ -36,6 +36,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.getbase:floatingactionbutton:1.7.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
-    //compile ('org.restlet.android:org.restlet:2.3.1')
-    //compile ('org.restlet.android:org.restlet.ext.jackson:2.3.1')
+    compile 'com.squareup.picasso:picasso:2.4.0'
 }

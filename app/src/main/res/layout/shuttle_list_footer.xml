@@ -17,7 +17,7 @@
         />
 
     <View
-        style="@style/MITShuttleRoutesView"
+        style="@style/MITView"
         />
 
     <RelativeLayout
@@ -95,7 +95,7 @@
     </RelativeLayout>
 
     <View
-        style="@style/MITShuttleRoutesView"
+        style="@style/MITView"
         />
 
     <TextView
@@ -110,7 +110,7 @@
         />
 
     <View
-        style="@style/MITShuttleRoutesView"
+        style="@style/MITView"
         />
 
     <LinearLayout

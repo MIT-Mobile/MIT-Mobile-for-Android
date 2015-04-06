@@ -85,7 +85,7 @@ public abstract class RetrofitManager {
 
     protected static String buildMethodName(String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) {
         String[] pathSections = path.split("/");
-        String methodName = "get";
+        String methodName = "_get";
 
         paths = pathParams;
         queries = queryParams;
