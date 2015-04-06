@@ -16,17 +16,20 @@ import android.widget.ListAdapter;
 public class AdapterView extends LinearLayout {
 
     private ListAdapter adapter;
+    private View emptyView;
 
     private final DataSetObserver adapterObserver = new DataSetObserver(){
         @Override
         public void onChanged() {
             removeAllViews();
             addViews();
+            updateEmptyStatus();
         }
 
         @Override
         public void onInvalidated() {
             removeAllViews();
+            updateEmptyStatus();
         }
     };
 
@@ -89,6 +92,11 @@ public class AdapterView extends LinearLayout {
         }
     }
 
+    public void setEmptyView(View emptyView) {
+        this.emptyView = emptyView;
+        updateEmptyStatus();
+    }
+
     private void addViews() {
         int rows = adapter.getCount();
         for (int i = 0; i < rows; i++) {
@@ -96,6 +104,23 @@ public class AdapterView extends LinearLayout {
             if (rowView != null) {
                 addView(rowView);
             }
+        }
+    }
+
+    private void updateEmptyStatus() {
+        boolean empty = ((adapter == null) || adapter.isEmpty());
+        if (empty) {
+            if (emptyView != null) {
+                emptyView.setVisibility(VISIBLE);
+                setVisibility(GONE);
+            } else {
+                setVisibility(VISIBLE);
+            }
+        } else {
+            if (emptyView != null) {
+                emptyView.setVisibility(GONE);
+            }
+            setVisibility(VISIBLE);
         }
     }
 }

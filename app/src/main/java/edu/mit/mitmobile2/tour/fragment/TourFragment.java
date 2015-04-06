@@ -26,7 +26,8 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.activities.MitIntroActivity;
-import edu.mit.mitmobile2.tour.model.MITTourWrapper;
+import edu.mit.mitmobile2.tour.activities.TourSelfGuidedActivity;
+import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -87,6 +88,13 @@ public class TourFragment extends Fragment {
         startActivity(intent);
     }
 
+    @OnClick(R.id.tour_info_view)
+    public void openNextActivity() {
+        Intent intent = new Intent(getActivity(), TourSelfGuidedActivity.class);
+        startActivity(intent);
+    }
+
+
     private MITAPIClient mitApiClient;
 
     public TourFragment() {
@@ -101,11 +109,11 @@ public class TourFragment extends Fragment {
 
         mitApiClient = new MITAPIClient(getActivity().getApplicationContext());
 
-        mitApiClient.get(Constants.TOURS, Constants.Tours.TOUR_PATH, null, null, new Callback<List<MITTourWrapper>>() {
+        mitApiClient.get(Constants.TOURS, Constants.Tours.TOUR_PATH, null, null, new Callback<List<MITTour>>() {
             @Override
-            public void success(List<MITTourWrapper> mitTourWrappers, Response response) {
-                MITTourWrapper mitTourWrapper = mitTourWrappers.get(0);
-                setTourInfoView(mitTourWrapper);
+            public void success(List<MITTour> mitTours, Response response) {
+                MITTour mitTour = mitTours.get(0);
+                setTourInfoView(mitTour);
             }
 
             @Override
@@ -118,11 +126,11 @@ public class TourFragment extends Fragment {
         return view;
     }
 
-    public void setTourInfoView(MITTourWrapper mitTourWrapper) {
-        selfGuidedTourTitleTextView.setText(mitTourWrapper.getTitle());
-        stopsInfoTextView.setText(mitTourWrapper.getShortDescription());
-        distanceInfoTextView.setText(TourUtils.formatDistance(mitTourWrapper.getLengthInKm()));
-        timeInfoTextView.setText(TourUtils.formatEstimatedDuration(mitTourWrapper.getEstimatedDurationInMinutes()));
+    public void setTourInfoView(MITTour mitTour) {
+        selfGuidedTourTitleTextView.setText(mitTour.getTitle());
+        stopsInfoTextView.setText(mitTour.getShortDescription());
+        distanceInfoTextView.setText(TourUtils.formatDistance(mitTour.getLengthInKm()));
+        timeInfoTextView.setText(TourUtils.formatEstimatedDuration(mitTour.getEstimatedDurationInMinutes()));
     }
 
     public void openWebsiteDialog() {

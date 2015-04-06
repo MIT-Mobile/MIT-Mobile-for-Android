@@ -33,18 +33,17 @@
         android:label="@string/app_name"
         android:logo="@drawable/mit_logo_for_action_bar"
         android:theme="@style/MITMobile">
-
         <receiver android:name=".shuttles.AlarmReceiver" />
 
         <service android:name=".MITAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-
         <service
             android:name=".MITSyncService"
             android:exported="true"
@@ -52,6 +51,7 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
@@ -60,8 +60,8 @@
         <provider
             android:name=".shuttles.MITShuttlesProvider"
             android:authorities="edu.mit.mitmobile2.provider"
-            android:label="MitProvider"
             android:exported="false"
+            android:label="MitProvider"
             android:syncable="true" />
 
         <activity
@@ -99,11 +99,6 @@
         <activity
             android:name=".people.PeopleActivity"
             android:label="@string/title_activity_people"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
-            android:name=".tour.activities.TourActivity"
-            android:label="@string/title_activity_tours"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
@@ -165,23 +160,33 @@
             android:theme="@style/Theme.MyTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.mit.mitmobile2.mobius.ResourcesActivity"/>
+                android:value="edu.mit.mitmobile2.mobius.ResourcesActivity" />
         </activity>
         <activity
             android:name=".shuttles.activities.ShuttleRouteActivity"
             android:launchMode="standard"
-            android:theme="@style/Theme.MyTheme"
-            android:parentActivityName=".MITModuleActivity" />
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".shuttles.activities.ShuttleStopActivity"
             android:launchMode="standard"
-            android:theme="@style/Theme.MyTheme"
-            android:parentActivityName=".MITModuleActivity" />
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".tour.activities.TourSelfGuidedActivity"
+            android:label="@string/title_activity_tour_self_guided"
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".tour.activities.TourDetailActivity"
+            android:label="@string/title_activity_tour_detail"
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.activities.MitIntroActivity"
             android:label="@string/title_activity_intro_mit"
-            android:launchMode="singleTop"
+            android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme" />
-    </application>
 
+    </application>
 </manifest>
