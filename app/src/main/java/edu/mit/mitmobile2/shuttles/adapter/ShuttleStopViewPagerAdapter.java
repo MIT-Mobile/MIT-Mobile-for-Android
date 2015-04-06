@@ -2,21 +2,21 @@ package edu.mit.mitmobile2.shuttles.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.List;
 
+import edu.mit.mitmobile2.EndlessFragmentStatePagerAdapter;
 import edu.mit.mitmobile2.shuttles.fragment.ShuttleStopViewPagerFragment;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 
-public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {
+public class ShuttleStopViewPagerAdapter extends EndlessFragmentStatePagerAdapter {
 
     private String currentRouteId;
     private List<String> stopIds;
     private ShuttleStopViewPagerFragment[] fragments;
 
     public ShuttleStopViewPagerAdapter(FragmentManager fragmentManager, String currentRouteId, List<String> stopIds) {
-        super(fragmentManager);
+        super(fragmentManager, stopIds.size());
         this.currentRouteId = currentRouteId;
         this.stopIds = stopIds;
         fragments = new ShuttleStopViewPagerFragment[stopIds.size()];
@@ -24,23 +24,20 @@ public class ShuttleStopViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (fragments[position] == null) {
-            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(currentRouteId, stopIds.get(position));
-            fragments[position] = fragment;
+        int realPosition = getRealPosition(position);
+        if (fragments[realPosition] == null) {
+            ShuttleStopViewPagerFragment fragment = ShuttleStopViewPagerFragment.newInstance(currentRouteId, stopIds.get(realPosition));
+            fragments[realPosition] = fragment;
             return fragment;
         } else {
-            return fragments[position];
+            return fragments[realPosition];
         }
     }
 
-    @Override
-    public int getCount() {
-        return stopIds.size();
-    }
-
     public void updatePredictions(int position, List<MITShuttlePrediction> predictions) {
-        if (fragments[position] != null) {
-            fragments[position].updatePredictions(predictions);
+        int realPosition = getRealPosition(position);
+        if (fragments[realPosition] != null) {
+            fragments[realPosition].updatePredictions(predictions);
         }
     }
 }
