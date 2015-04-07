@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.shuttles.fragment;
 
 import android.content.ContentResolver;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -105,7 +106,11 @@ public class ShuttleStopFragment extends MitMapFragment {
         predictionViewPager.setCurrentItem(fakePosition);
         currentPosition = startPosition;
 
-        addTransparentView(transparentView);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            addTransparentView(transparentView);
+        } else {
+            transparentView.setVisibility(View.GONE);
+        }
         addShuttleStopContent(shuttleStopContent);
 
         updateData();
