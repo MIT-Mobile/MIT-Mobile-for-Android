@@ -82,5 +82,6 @@
     <string name="restrictions">Videotaping and photography are prohibited inside MIT buildings.</string>
     <string name="title_activity_tour_detail">Tour Details</string>
     <string name="tour_details">Tour Details…</string>
+    <string name="title_activity_tour_directions">Walking Directions</string>
 
 </resources>

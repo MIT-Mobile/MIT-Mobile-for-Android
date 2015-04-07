@@ -24,7 +24,6 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <!-- android:theme="@android:style/Theme.Holo.Light" -->
     <application
         android:name=".MitMobileApplication"
@@ -182,6 +181,11 @@
             android:label="@string/title_activity_tour_detail"
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme" />
-
+        <activity
+            android:name=".tour.activities.TourDirectionsActivity"
+            android:label="@string/title_activity_tour_directions"
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
+
 </manifest>

@@ -40,5 +40,6 @@ public class Constants {
 
         public static final String TOUR_DETAILS_KEY = "tourDetails";
         public static final String TOUR_KEY = "tour";
+        public static final String DIRECTION_KEY = "direction";
     }
 }
