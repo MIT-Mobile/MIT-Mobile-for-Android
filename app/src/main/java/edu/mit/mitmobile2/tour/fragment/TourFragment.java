@@ -25,9 +25,9 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.tour.activities.MitIntroActivity;
 import edu.mit.mitmobile2.tour.activities.TourSelfGuidedActivity;
 import edu.mit.mitmobile2.tour.model.MITTour;
-import edu.mit.mitmobile2.tour.ToursManager;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -55,11 +55,11 @@ public class TourFragment extends Fragment {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject)
                 + " "
-                + ToursManager.getAppVersion()
+                + TourUtils.getAppVersion()
                 + " ("
-                + ToursManager.getBuildDescription()
+                + TourUtils.getBuildDescription()
                 + " ("
-                + ToursManager.getAppVersion()
+                + TourUtils.getAppVersion()
                 + ")))"
                 + " on Android "
                 + Build.VERSION.RELEASE);
@@ -82,11 +82,18 @@ public class TourFragment extends Fragment {
         openWebsiteDialog();
     }
 
+    @OnClick(R.id.more_about_mit_text_view)
+    public void openMitIntroduction() {
+        Intent intent = new Intent(getActivity(), MitIntroActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.tour_info_view)
     public void openNextActivity() {
         Intent intent = new Intent(getActivity(), TourSelfGuidedActivity.class);
         startActivity(intent);
     }
+
 
     private MITAPIClient mitApiClient;
 
@@ -133,7 +140,7 @@ public class TourFragment extends Fragment {
                 .setPositiveButton(getResources().getString(R.string.open_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        openOutsideWebsite(getResources().getString(R.string.open_in_browser));
+                        openOutsideWebsite(getResources().getString(R.string.mit_about_guided_tour_url));
                     }
                 })
                 .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {

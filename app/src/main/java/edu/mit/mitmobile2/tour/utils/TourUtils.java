@@ -2,6 +2,8 @@ package edu.mit.mitmobile2.tour.utils;
 
 import java.text.DecimalFormat;
 
+import edu.mit.mitmobile2.BuildConfig;
+
 public class TourUtils {
 
     public static String formatEstimatedDuration(int time) {
@@ -16,5 +18,13 @@ public class TourUtils {
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
         return decimalFormat.format(mile) + "miles and (" + distance + "km)";
+    }
+
+    public static String getBuildDescription() {
+        return BuildConfig.buildDescription;
+    }
+
+    public static int getAppVersion() {
+        return BuildConfig.VERSION_CODE;
     }
 }

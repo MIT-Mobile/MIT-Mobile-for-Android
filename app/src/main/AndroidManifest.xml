@@ -186,6 +186,12 @@
             android:label="@string/title_activity_tour_directions"
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".tour.activities.MitIntroActivity"
+            android:label="@string/title_activity_intro_mit"
+            android:parentActivityName=".MITModuleActivity"
+            android:theme="@style/Theme.MyTheme" />
+
     </application>
 
 </manifest>

@@ -21,6 +21,7 @@ import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.EndlessFragmentStatePagerAdapter;
 import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
@@ -87,9 +88,10 @@ public class ShuttleStopFragment extends MitMapFragment {
 
             @Override
             public void onPageSelected(int position) {
-                currentPosition = position;
-                callback.setActionBarSubtitle(stops.get(position).getTitle());
-                animateToStop(position);
+                int realPosition = stopViewPagerAdapter.getRealPosition(position);
+                currentPosition = realPosition;
+                callback.setActionBarSubtitle(stops.get(realPosition).getTitle());
+                animateToStop(realPosition);
             }
 
             @Override
@@ -99,7 +101,8 @@ public class ShuttleStopFragment extends MitMapFragment {
         });
         int startPosition = getStartPosition();
         callback.setActionBarSubtitle(stops.get(startPosition).getTitle());
-        predictionViewPager.setCurrentItem(startPosition);
+        int fakePosition = stops.size() * EndlessFragmentStatePagerAdapter.NUMBER_OF_LOOPS / 2 + startPosition;
+        predictionViewPager.setCurrentItem(fakePosition);
         currentPosition = startPosition;
 
         addTransparentView(transparentView);
@@ -175,8 +178,19 @@ public class ShuttleStopFragment extends MitMapFragment {
         route.buildFromCursor(data, DBAdapter.getInstance());
 
         stops = route.getStops();
-        int currentStop = predictionViewPager.getCurrentItem();
-        stopViewPagerAdapter.updatePredictions(currentStop, stops.get(currentStop).getPredictions());
+        int currentPosition = predictionViewPager.getCurrentItem();
+        int realPosition = stopViewPagerAdapter.getRealPosition(currentPosition);
+        stopViewPagerAdapter.updatePredictions(realPosition, stops.get(realPosition).getPredictions());
+
+        //Update next and previous stops' predictions as well due to view pager storing adjacent fragments
+        int previousPosition = (realPosition - 1) % stops.size();
+        if (previousPosition < 0) {
+            previousPosition += stops.size();
+        }
+        stopViewPagerAdapter.updatePredictions(previousPosition, stops.get(previousPosition).getPredictions());
+
+        int nextPosition = (realPosition + 1) % stops.size();
+        stopViewPagerAdapter.updatePredictions(nextPosition, stops.get(nextPosition).getPredictions());
 
         updateMapItems((ArrayList) route.getVehicles(), false);
     }
