@@ -7,6 +7,7 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,6 +17,16 @@ import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
 
 public class MITTourStop extends MapItem {
+
+    public class InfoWindowSnippet {
+        public String type;
+        public String title;
+
+        public InfoWindowSnippet(String title, String type) {
+            this.title = title;
+            this.type = type;
+        }
+    }
 
     @Expose
     private String title;
@@ -111,12 +122,10 @@ public class MITTourStop extends MapItem {
     public MarkerOptions getMarkerOptions() {
         MarkerOptions options = new MarkerOptions();
         options.position(new LatLng(coordinates[1], coordinates[0]));
+        Gson gson = new Gson();
+        String snippet = gson.toJson(new InfoWindowSnippet(this.title, this.type), InfoWindowSnippet.class);
+        options.snippet(snippet);
         return options;
-    }
-
-    @Override
-    public String getMarkerText() {
-        return super.getMarkerText();
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdate;
@@ -15,7 +16,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 
-public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback {
+public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
 
     private MITMapView mitMapView;
     private MITTour tour;
@@ -53,6 +56,8 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
         mitMapView.setMapViewExpanded(true);
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_quarter_padding);
+        mitMapView.getMap().setInfoWindowAdapter(this);
+        mitMapView.getMap().setOnInfoWindowClickListener(this);
 
         LinearLayout restrictions = (LinearLayout) view.findViewById(R.id.restrictions_text_view);
         restrictions.setAlpha(0.8f);
@@ -179,5 +184,37 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
         super.onSaveInstanceState(outState);
         mitMapView.getGoogleMapView().onSaveInstanceState(outState);
         outState.putParcelable(Constants.Tours.TOUR_KEY, tour);
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        if (marker.getSnippet() != null) {
+            View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
+            TextView topTextView = (TextView) view.findViewById(R.id.top_textview);
+            TextView bottomTextView = (TextView) view.findViewById(R.id.bottom_textview);
+
+            topTextView.setTextSize(12f);
+            bottomTextView.setTextSize(14f);
+
+            Gson gson = new Gson();
+            MITTourStop.InfoWindowSnippet snippet = gson.fromJson(marker.getSnippet(), MITTourStop.InfoWindowSnippet.class);
+
+            topTextView.setText(snippet.type.toUpperCase());
+            bottomTextView.setText(snippet.title);
+
+            return view;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //TODO: Take user to individual stop screen when that is created
     }
 }
