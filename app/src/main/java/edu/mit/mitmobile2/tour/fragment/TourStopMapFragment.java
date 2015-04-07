@@ -34,7 +34,7 @@ import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 
-public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback, GoogleMap.InfoWindowAdapter {
+public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
 
     private MITMapView mitMapView;
     private MITTour tour;
@@ -57,6 +57,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
         mitMapView.setMapViewExpanded(true);
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_quarter_padding);
         mitMapView.getMap().setInfoWindowAdapter(this);
+        mitMapView.getMap().setOnInfoWindowClickListener(this);
 
         LinearLayout restrictions = (LinearLayout) view.findViewById(R.id.restrictions_text_view);
         restrictions.setAlpha(0.8f);
@@ -210,5 +211,10 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //TODO: Take user to individual stop screen when that is created
     }
 }
