@@ -146,7 +146,11 @@ public class ShuttleStopFragment extends MitMapFragment {
             newCenter = new LatLng(stops.get(currentPosition).getLat(), stops.get(currentPosition).getLon());
             cameraUpdate = CameraUpdateFactory.newLatLng(newCenter);
         } else {
-            newCenter = new LatLng(stops.get(currentPosition).getLat() + latOffset, stops.get(currentPosition).getLon());
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                newCenter = new LatLng(stops.get(currentPosition).getLat(), stops.get(currentPosition).getLon() + lonOffset);
+            } else {
+                newCenter = new LatLng(stops.get(currentPosition).getLat() + latOffset, stops.get(currentPosition).getLon());
+            }
             cameraUpdate = CameraUpdateFactory.newLatLngZoom(newCenter, STOP_ZOOM);
         }
         getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
@@ -214,5 +218,6 @@ public class ShuttleStopFragment extends MitMapFragment {
         mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
         LatLng target = mitMapView.getMap().getCameraPosition().target;
         latOffset = target.latitude - stops.get(getStartPosition()).getLat();
+        lonOffset = target.longitude - stops.get(getStartPosition()).getLon();
     }
 }

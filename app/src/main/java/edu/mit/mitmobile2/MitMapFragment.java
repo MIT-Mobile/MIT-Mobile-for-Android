@@ -67,8 +67,9 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     private boolean stopMode = false;
     private FrameLayout shuttleStopContent;
-    //Stores the offset done by showing the stop in the header
+    //Stores the offset done by showing the stop in the header (or left side for landscape)
     protected double latOffset;
+    protected double lonOffset;
 
     private int originalPosition = -1;
 
