@@ -166,8 +166,8 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
             public View getInfoContents(Marker marker) {
                 if (marker.getTitle() != null) {
                     View view = View.inflate(getActivity(), R.layout.mit_map_info_window, null);
-                    TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
-                    TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+                    TextView stopNameTextView = (TextView) view.findViewById(R.id.top_textview);
+                    TextView stopPredictionView = (TextView) view.findViewById(R.id.bottom_textview);
                     stopNameTextView.setText(marker.getTitle());
                     if (isRoutePredictable) {
                         stopPredictionView.setText(marker.getSnippet());

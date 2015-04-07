@@ -211,8 +211,8 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     public View getInfoContents(Marker marker) {
         if (marker.getTitle() != null) {
             View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
-            TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
-            TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+            TextView stopNameTextView = (TextView) view.findViewById(R.id.top_textview);
+            TextView stopPredictionView = (TextView) view.findViewById(R.id.bottom_textview);
             stopNameTextView.setText(marker.getTitle());
             for (MITShuttleStop stop : route.getStops()) {
                 if (marker.getSnippet().equals(stop.getId())) {
