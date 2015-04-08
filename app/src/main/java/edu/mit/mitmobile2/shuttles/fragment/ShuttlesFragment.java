@@ -333,7 +333,7 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getActivity(), "No application can handle this request. " +
                     "Please install a map app.", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            Timber.e(e, "No map application");
         }
     }
 

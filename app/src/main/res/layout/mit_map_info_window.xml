@@ -6,18 +6,17 @@
     android:padding="@dimen/map_popup_view_padding">
 
     <TextView
-        android:id="@+id/stop_name_textview"
+        android:id="@+id/top_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/contents_text"
-        android:textSize="@dimen/shuttle_home_content_size"
-        />
+        android:textSize="@dimen/shuttle_home_content_size" />
 
     <TextView
-        android:id="@+id/stop_prediction_textview"
+        android:id="@+id/bottom_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/contents_text"
         android:textSize="@dimen/shuttle_map_prediction_size"
-        />
+        android:maxWidth="180dp" />
 </LinearLayout>

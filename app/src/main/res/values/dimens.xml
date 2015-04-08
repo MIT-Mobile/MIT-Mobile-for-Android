@@ -13,7 +13,7 @@
     <dimen name="stop_margin">20dp</dimen>
     <dimen name="shuttle_routes_map_header_height">200dp</dimen>
     <dimen name="shuttle_routes_map_header_center_y">100dp</dimen>
-    <dimen name="shuttle_routes_listview_landscape_width">300dp</dimen>
+    <dimen name="shuttle_content_landscape_width">300dp</dimen>
     <dimen name="shuttle_listview_divider_height">1dp</dimen>
     <dimen name="shuttle_home_cell_height">48dp</dimen>
     <dimen name="shuttle_phone_cell_height">72dp</dimen>
@@ -27,9 +27,21 @@
     <dimen name="shuttle_map_prediction_size">12sp</dimen>
     <dimen name="solo_map_fab_margin">10dp</dimen>
     <dimen name="map_bounds_padding">40dp</dimen>
+    <dimen name="map_bounds_quarter_padding">10dp</dimen>
     <dimen name="map_popup_view_padding">2dp</dimen>
     <dimen name="shuttle_stop_small_margin">4dp</dimen>
     <dimen name="shuttle_stop_large_margin">24dp</dimen>
-    <dimen name="shuttle_stop_cell_height">40dp</dimen>
+    <dimen name="shuttle_stop_cell_height">48dp</dimen>
     <dimen name="shuttle_stop_icon_size">24sp</dimen>
+
+    <!--tour-->
+    <dimen name="tour_home_image_height">250dp</dimen>
+    <dimen name="tour_home_content_size">14sp</dimen>
+    <dimen name="tour_home_title_size">16sp</dimen>
+    <dimen name="tour_home_padding">16dp</dimen>
+    <dimen name="tour_home_padding_paragraph">12dp</dimen>
+    <dimen name="tour_home_cell_height">48dp</dimen>
+    <dimen name="tour_home_padding_line">7dp</dimen>
+    <dimen name="tour_stop_image_size">80dp</dimen>
+    <dimen name="tour_circle_size">15dp</dimen>
 </resources>

@@ -25,17 +25,21 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.Tile;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.ui.IconGenerator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.mit.mitmobile2.MapUtils;
 import edu.mit.mitmobile2.R;
 
 public class MITMapView {
 
-    private static int mapBoundsPadding;
+    public int mapBoundsPadding;
 
     private MapView mapView;
     private GoogleMap mMap;
@@ -85,6 +89,20 @@ public class MITMapView {
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMapLoadedCallback(callback);
         mapBoundsPadding = (int) mContext.getResources().getDimension(R.dimen.map_bounds_padding);
+
+        TileProvider provider = new TileProvider() {
+            @Override
+            public Tile getTile(int i, int i1, int i2) {
+                // Use this hacky implementation until 512x512 images are available
+                return MapUtils.getTileFromNextZoomLevel(i, i1, i2);
+            }
+        };
+
+        TileOverlayOptions options = new TileOverlayOptions();
+        options.tileProvider(provider);
+        options.zIndex(14f);
+
+        mMap.addTileOverlay(options);
     }
 
     public void show() {
@@ -112,10 +130,12 @@ public class MITMapView {
 
                     case MapItem.MARKERTYPE:
                         if (mItem.getMarkerText() != null) {
+                            int iconResource = mItem.getIconResource();
                             IconGenerator iconGenerator = new IconGenerator(mContext);
-                            iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
+                            iconGenerator.setBackground(mContext.getResources().getDrawable(iconResource));
+                            iconGenerator.setTextAppearance(mContext, R.style.MITTourStopIcon);
+                            iconGenerator.setContentPadding(25, 20, 25, 25);
 
-                            iconGenerator.setTextAppearance(10); //set font size?
                             Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
                             Marker marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
                             if (mItem.isDynamic()) {
@@ -266,7 +286,7 @@ public class MITMapView {
             x = resources.getDisplayMetrics().widthPixels / 2;
             y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - mapBoundsPadding;
         } else {
-            x = resources.getDisplayMetrics().widthPixels - ((resources.getDisplayMetrics().widthPixels - (int) (resources.getDimension(R.dimen.shuttle_routes_listview_landscape_width))) / 2);
+            x = resources.getDisplayMetrics().widthPixels - ((resources.getDisplayMetrics().widthPixels - (int) (resources.getDimension(R.dimen.shuttle_content_landscape_width))) / 2);
             y = (resources.getDisplayMetrics().heightPixels / 2) - actionBarHeight;
         }
 

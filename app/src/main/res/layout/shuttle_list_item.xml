@@ -24,7 +24,7 @@
 
     <View
         android:id="@+id/top_view"
-        style="@style/MITShuttleRoutesView"
+        style="@style/MITView"
         />
 
     <LinearLayout
@@ -50,7 +50,7 @@
 
         <View
             android:id="@+id/bottom_view"
-            style="@style/MITShuttleRoutesView"
+            style="@style/MITView"
             android:layout_marginLeft="@dimen/shuttle_home_stop_padding"
             />
 

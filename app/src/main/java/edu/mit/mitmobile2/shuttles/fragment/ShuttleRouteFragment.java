@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
-import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
@@ -37,7 +36,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import timber.log.Timber;
 
-public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.InfoWindowAdapter {
+public class ShuttleRouteFragment extends ShuttleMapFragment implements GoogleMap.InfoWindowAdapter {
     @InjectView(R.id.route_information_top)
     TextView routeStatusTextView;
 
@@ -52,17 +51,17 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     private String routeId;
     private String uriString;
 
-    MapFragmentCallback callback;
+    private MapFragmentCallback callback;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        headerLayout = R.layout.stop_list_header;
+
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         callback = (MapFragmentCallback) getActivity();
-
-        View headerView = View.inflate(getActivity(), R.layout.stop_list_header, null);
-        addHeaderView(headerView);
+        setSwipeRefreshEnabled(true);
 
         ButterKnife.inject(this, view);
 
@@ -211,8 +210,8 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
     public View getInfoContents(Marker marker) {
         if (marker.getTitle() != null) {
             View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
-            TextView stopNameTextView = (TextView) view.findViewById(R.id.stop_name_textview);
-            TextView stopPredictionView = (TextView) view.findViewById(R.id.stop_prediction_textview);
+            TextView stopNameTextView = (TextView) view.findViewById(R.id.top_textview);
+            TextView stopPredictionView = (TextView) view.findViewById(R.id.bottom_textview);
             stopNameTextView.setText(marker.getTitle());
             for (MITShuttleStop stop : route.getStops()) {
                 if (marker.getSnippet().equals(stop.getId())) {
@@ -245,6 +244,7 @@ public class ShuttleRouteFragment extends MitMapFragment implements GoogleMap.In
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
         route.buildFromCursor(cursor, DBAdapter.getInstance());
+        cursor.close();
         adapter.clear();
         adapter.addAll(route.getStops());
         adapter.notifyDataSetChanged();
