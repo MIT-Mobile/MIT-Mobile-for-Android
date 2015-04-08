@@ -8,8 +8,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.R;
 
-public abstract class MapItem extends DatabaseObject implements Parcelable{
+public abstract class MapItem extends DatabaseObject implements Parcelable {
 
     public static final int MARKERTYPE = 1;
     public static final int POLYLINETYPE = 2;
@@ -17,9 +18,11 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
 
     public int mapItemType;
     private String markerText;
+
     protected boolean isDynamic = false;
     protected boolean isVehicle = false;
 
+    private int iconResource = R.drawable.usermarker; //default
     public int getMapItemType() {
         return mapItemType;
     }
@@ -43,6 +46,7 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
     public PolylineOptions getPolylineOptions() {
         return null;
     } //polyline
+
     public PolygonOptions getPolygonOptions() {
         return null;
     } //polygon
@@ -62,5 +66,9 @@ public abstract class MapItem extends DatabaseObject implements Parcelable{
 
     public void setVehicle(boolean isVehicle) {
         this.isVehicle = isVehicle;
+    }
+
+    public int getIconResource() {
+        return iconResource;
     }
 }

@@ -14,6 +14,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 
 public class MITTourStop extends MapItem {
@@ -136,6 +137,11 @@ public class MITTourStop extends MapItem {
     @Override
     public boolean isDynamic() {
         return false;
+    }
+
+    @Override
+    public int getIconResource() {
+        return type.toLowerCase().equals("main loop") ? R.drawable.ic_pin_red : R.drawable.ic_pin_blue;
     }
 
     @Override

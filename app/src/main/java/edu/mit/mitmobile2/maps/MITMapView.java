@@ -130,10 +130,12 @@ public class MITMapView {
 
                     case MapItem.MARKERTYPE:
                         if (mItem.getMarkerText() != null) {
+                            int iconResource = mItem.getIconResource();
                             IconGenerator iconGenerator = new IconGenerator(mContext);
-                            iconGenerator.setBackground(mContext.getResources().getDrawable(R.drawable.usermarker));
+                            iconGenerator.setBackground(mContext.getResources().getDrawable(iconResource));
+                            iconGenerator.setTextAppearance(mContext, R.style.MITTourStopIcon);
+                            iconGenerator.setContentPadding(25, 20, 25, 25);
 
-                            iconGenerator.setTextAppearance(10); //set font size?
                             Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
                             Marker marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
                             if (mItem.isDynamic()) {
