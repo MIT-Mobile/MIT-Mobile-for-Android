@@ -66,6 +66,7 @@ public class TourStopListFragment extends Fragment {
         floatingActionButton.setColorNormalResId(R.color.mit_red);
         floatingActionButton.setColorPressedResId(R.color.mit_red_dark);
         floatingActionButton.setSize(FloatingActionButton.SIZE_NORMAL);
+        floatingActionButton.setIcon(R.drawable.ic_map);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
