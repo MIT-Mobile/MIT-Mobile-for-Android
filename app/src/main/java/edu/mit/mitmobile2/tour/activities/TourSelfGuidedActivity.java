@@ -16,7 +16,10 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 import edu.mit.mitmobile2.tour.fragment.TourStopMapFragment;
+import edu.mit.mitmobile2.tour.fragment.TourStopViewPagerFragment;
+import edu.mit.mitmobile2.tour.fragment.TourStopsFragment;
 import edu.mit.mitmobile2.tour.model.MITTour;
+import edu.mit.mitmobile2.tour.model.MITTourStop;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -109,5 +112,34 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
         Intent intent = new Intent(this, TourDetailActivity.class);
         intent.putExtra(Constants.Tours.TOUR_DETAILS_KEY, description);
         startActivity(intent);
+    }
+
+    @Override
+    public void showMainLoopFragment(int currentStopNum) {
+        TourStopsFragment tourStopsFragment = new TourStopsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.TOURS, tour);
+        args.putInt(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        tourStopsFragment.setArguments(args);
+        getFragmentManager().beginTransaction().replace(R.id.tour_frame, tourStopsFragment).commit();
+    }
+
+    @Override
+    public void showSideTripFragment(MITTourStop mitTourStop) {
+        TourStopViewPagerFragment tourStopViewPagerFragment = TourStopViewPagerFragment.newInstance(mitTourStop);
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.TOUR_STOP, mitTourStop);
+        tourStopViewPagerFragment.setArguments(args);
+        getFragmentManager().beginTransaction().replace(R.id.tour_frame, tourStopViewPagerFragment).commit();
+    }
+
+    @Override
+    public void setMainLoopActionBarTitle(int mainLoopStopNum, int mainLoopStopsSize) {
+        setTitle(getResources().getString(R.string.stop_nav_main_loop) + " " + mainLoopStopNum + " of " + mainLoopStopsSize);
+    }
+
+    @Override
+    public void setSideTripActionBarTitle() {
+        setTitle(getResources().getString(R.string.stop_nav_side_trip));
     }
 }

@@ -5,13 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -20,16 +23,20 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
     private Context context;
     private List<MITTourStop> tourStops;
     private String[] headers;
+    private TourStopCallback callback;
+    private boolean isMainLoop;
 
-    public TourStopAdapter(Context context, List<MITTourStop> tourStops) {
+    public TourStopAdapter(Context context, List<MITTourStop> tourStops, TourStopCallback callback) {
         this.context = context;
         this.tourStops = tourStops;
         this.headers = new String[]{context.getString(R.string.main_loop), context.getString(R.string.side_trips)};
+        this.callback = callback;
     }
 
     private class ViewHolder {
         ImageView stopImage;
         TextView stopTitle;
+        LinearLayout stopLayout;
     }
 
     private class HeaderViewHolder {
@@ -53,7 +60,7 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         ViewHolder holder;
 
@@ -63,14 +70,32 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
 
             holder.stopImage = (ImageView) view.findViewById(R.id.stop_image);
             holder.stopTitle = (TextView) view.findViewById(R.id.stop_title);
+            holder.stopLayout = (LinearLayout) view.findViewById(R.id.stop_layout);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        MITTourStop stop = tourStops.get(position);
+        final MITTourStop stop = tourStops.get(position);
         holder.stopTitle.setText((position + 1) + ". " + stop.getTitle());
-        Picasso.with(context).load(stop.getBigImage().getUrl()).fit().centerCrop().into(holder.stopImage);
+        Picasso.with(context).load(stop.getThumbnailImage().getUrl()).fit().centerCrop().into(holder.stopImage);
+
+        if (stop.getType().equals(Constants.MAIN_LOOP)) {
+            isMainLoop = true;
+        } else {
+            isMainLoop = false;
+        }
+
+        holder.stopLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMainLoop) {
+                    callback.showMainLoopFragment(position);
+                } else {
+                    callback.showSideTripFragment(stop);
+                }
+            }
+        });
 
         return view;
     }

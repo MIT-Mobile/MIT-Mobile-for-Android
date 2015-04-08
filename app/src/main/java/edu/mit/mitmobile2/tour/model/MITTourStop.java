@@ -81,11 +81,11 @@ public class MITTourStop extends MapItem {
         this.bodyHtml = bodyHtml;
     }
 
-    public MITTourStopImage getBigImage() {
+    public MITTourStopImage getImage() {
         return representations.get(0).images.get(0);
     }
 
-    public MITTourStopImage getSmallImage() {
+    public MITTourStopImage getThumbnailImage() {
         return representations.get(0).images.get(1);
     }
 

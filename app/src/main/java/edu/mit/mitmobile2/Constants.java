@@ -16,6 +16,10 @@ public class Constants {
 
     //tours
     public static final String TOURS = "tours";
+    public static final String TOUR_STOP = "tourStop";
+    public static final String MAIN_LOOP = "Main Loop";
+    public static final String SIDE_TRIP = "Side Trip";
+    public static final String CURRENT_MAIN_LOOP_STOP = "currentMainLoopStop";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
