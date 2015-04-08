@@ -14,7 +14,7 @@ import edu.mit.mitmobile2.R;
 /**
  * Created by sseligma on 1/23/15.
  */
-public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
+public class ResourceListAdapter extends ArrayAdapter<ResourceItem> {
 
     private static final int TYPE_ONLINE = 0;
     private static final int TYPE_OFFLINE = 1;
@@ -25,7 +25,7 @@ public class ResourceRowAdapter extends ArrayAdapter<ResourceItem> {
     private Context mContext;
     private List<ResourceItem> resourceItems;
 
-    public ResourceRowAdapter(Context context, int layoutResourceId, List<ResourceItem> resourceItems) {
+    public ResourceListAdapter(Context context, int layoutResourceId, List<ResourceItem> resourceItems) {
         super(context, layoutResourceId, resourceItems);
         this.mContext = context;
         this.resourceItems = resourceItems;
