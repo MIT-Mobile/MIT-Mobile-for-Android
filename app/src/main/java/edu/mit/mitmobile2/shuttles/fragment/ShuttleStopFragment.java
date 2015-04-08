@@ -23,7 +23,6 @@ import java.util.List;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.EndlessFragmentStatePagerAdapter;
-import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
@@ -35,7 +34,9 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import timber.log.Timber;
 
-public class ShuttleStopFragment extends MitMapFragment {
+public class ShuttleStopFragment extends ShuttleMapFragment {
+
+    public static final int STOP_ZOOM = 17;
 
     ViewPager predictionViewPager;
 
@@ -49,6 +50,9 @@ public class ShuttleStopFragment extends MitMapFragment {
     private String selectionString;
     private MapFragmentCallback callback;
 
+    private double latOffset;
+    private double lonOffset;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class ShuttleStopFragment extends MitMapFragment {
         View shuttleStopContent = inflater.inflate(R.layout.shuttle_stop_content, null);
 
         callback = (MapFragmentCallback) getActivity();
+        stopMode = true;
 
         predictionViewPager = (ViewPager) shuttleStopContent.findViewById(R.id.prediction_view_pager);
         View transparentView = shuttleStopContent.findViewById(R.id.transparent_map_overlay);
@@ -121,6 +126,31 @@ public class ShuttleStopFragment extends MitMapFragment {
         getMapView().moveCamera(cameraUpdate);
 
         return view;
+    }
+
+    //Setup for shuttle stop
+    private void addShuttleStopContent(View content) {
+        shuttleStopContent.addView(content);
+        swipeRefreshLayout.setVisibility(View.GONE);
+        shuttleStopContent.setVisibility(View.VISIBLE);
+
+        if (transparentView != null) {
+            transparentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!animating) {
+                        toggleMap();
+                    }
+                }
+            });
+        } else {
+            transparentLandscapeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleMapHorizontal();
+                }
+            });
+        }
     }
 
     private int getStartPosition() {

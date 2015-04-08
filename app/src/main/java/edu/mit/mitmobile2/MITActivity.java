@@ -152,8 +152,6 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
             case R.id.action_search:
                 this.handleSearch(null);
                 return true;
-            case R.id.action_settings:
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
