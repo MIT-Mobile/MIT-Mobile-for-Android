@@ -134,6 +134,10 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
                 String stopIdClicked = marker.getSnippet();
                 int newRealPosition = getPositionFromStopId(stopIdClicked);
                 int offset = newRealPosition - currentRealPosition;
+                //This is done due to the way the endless view pager handles fake positions
+                if (offset > (stops.size() / 2)) {
+                    offset -= stops.size();
+                }
                 int newFakePosition = predictionViewPager.getCurrentItem() + offset;
                 predictionViewPager.setCurrentItem(newFakePosition);
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
