@@ -286,7 +286,7 @@ public class MITMapView {
             x = resources.getDisplayMetrics().widthPixels / 2;
             y = resources.getDisplayMetrics().heightPixels - (int) resources.getDimension(R.dimen.shuttle_routes_map_header_center_y) - actionBarHeight - mapBoundsPadding;
         } else {
-            x = resources.getDisplayMetrics().widthPixels - ((resources.getDisplayMetrics().widthPixels - (int) (resources.getDimension(R.dimen.shuttle_routes_listview_landscape_width))) / 2);
+            x = resources.getDisplayMetrics().widthPixels - ((resources.getDisplayMetrics().widthPixels - (int) (resources.getDimension(R.dimen.shuttle_content_landscape_width))) / 2);
             y = (resources.getDisplayMetrics().heightPixels / 2) - actionBarHeight;
         }
 
