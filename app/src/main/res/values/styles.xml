@@ -27,7 +27,7 @@
         <item name="android:textColor">@color/contents_text</item>
         <item name="android:paddingLeft">@dimen/shuttle_home_route_padding</item>
     </style>
-    
+
     <style name="MITView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/shuttle_listview_divider_height</item>
@@ -70,6 +70,7 @@
         <item name="android:textColor">@color/contents_text</item>
         <item name="android:paddingLeft">@dimen/tour_home_padding</item>
     </style>
+
     <style name="MITTourHomeImage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -77,5 +78,15 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:tint">@color/mit_red</item>
         <item name="android:paddingRight">@dimen/tour_home_padding</item>
+    </style>
+
+    <style name="MITTourStopIcon">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
