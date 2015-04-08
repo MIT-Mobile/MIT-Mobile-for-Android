@@ -87,8 +87,7 @@
     <string name="restrictions">Videotaping and photography are prohibited inside MIT buildings.</string>
     <string name="title_activity_tour_detail">Tour Details</string>
     <string name="tour_details">Tour Details…</string>
-    <string name="stop_nav_main_loop">Main Loop</string>
-    <string name="stop_nav_of">of</string>
+    <string name="stop_nav_main_loop">Main Loop %1$s of %2$s</string>
     <string name="stop_nav_side_trip">Side Trip</string>
 
 </resources>
