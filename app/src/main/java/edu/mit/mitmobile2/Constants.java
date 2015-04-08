@@ -42,4 +42,20 @@ public class Constants {
         public static final String TOUR_KEY = "tour";
         public static final String DIRECTION_KEY = "direction";
     }
+
+    public static class Resources {
+        public static final String RESOURCE_PATH = "/resource";
+        public static final String RESOURCE_ROOMSET_PATH = "/resourceroomset";
+//        public static final String STOP_INFO_PATH = "/routes/{route}/stops/{stop}";
+//        public static final String PREDICTIONS_PATH = "/predictions";
+//        public static final String VEHICLES_PATH = "/vehicles";
+//
+//        public static final String MIT_TUPLES_KEY = "mitTuples";
+//        public static final String CR_TUPLES_KEY = "crTuples";
+//        public static final String MODULE_KEY = "module";
+//        public static final String PATH_KEY = "path";
+//        public static final String URI_KEY = "uri";
+//        public static final String PATHS_KEY = "pathParams";
+//        public static final String QUERIES_KEY = "queryParams";
+    }
 }

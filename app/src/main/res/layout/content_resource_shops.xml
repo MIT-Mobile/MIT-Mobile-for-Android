@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    tools:context="edu.mit.mitmobile2.mobius.ResourceShopActivity" >
+
+    <ListView
+        android:id="@+id/resourceShopListView"
+        android:padding="0dip"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="#aaaaaa"
+        android:dividerHeight="1dp"
+        android:scrollbars="none" />
+
+</LinearLayout>
