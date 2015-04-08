@@ -1,0 +1,29 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.mit.mitmobile2.tour.activities.TourDirectionsActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/direction_map"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp" />
+
+        <TextView
+            android:id="@+id/direction_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <WebView
+            android:id="@+id/directions_html_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+    </LinearLayout>
+
+</ScrollView>

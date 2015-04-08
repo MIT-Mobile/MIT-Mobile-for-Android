@@ -58,6 +58,11 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
             public void success(MITTour mitTour, Response response) {
                 Timber.d("Success!");
                 tour = mitTour;
+                for (int i = 0; i < tour.getStops().size(); i++) {
+                    // Spacing helps with centering of text in marker icon
+                    String markerText = (i + 1) < 10 ? "   " + (i + 1) + "   " : "  " + (i + 1) + "  ";
+                    tour.getStops().get(i).setMarkerText(markerText);
+                }
                 MitMobileApplication.bus.post(new OttoBusEvent.TourInfoLoadedEvent(tour));
             }
 

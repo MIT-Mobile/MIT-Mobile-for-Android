@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2;
 
+import android.util.Log;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;

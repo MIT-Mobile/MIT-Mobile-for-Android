@@ -216,5 +216,9 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     @Override
     public void onInfoWindowClick(Marker marker) {
         //TODO: Take user to individual stop screen when that is created
+
+        /*Intent intent = new Intent(getActivity(), TourDirectionsActivity.class);
+        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(8).getDirection());
+        startActivity(intent);*/
     }
 }

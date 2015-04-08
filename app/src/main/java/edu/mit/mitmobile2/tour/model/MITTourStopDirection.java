@@ -75,7 +75,7 @@ public class MITTourStopDirection implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(destinationId);
+        dest.writeString(destinationId);
         dest.writeString(title);
         dest.writeString(bodyHtml);
         dest.writeInt(zoom);
