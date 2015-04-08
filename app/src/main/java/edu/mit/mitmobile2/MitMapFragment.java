@@ -67,8 +67,9 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
     private boolean stopMode = false;
     private FrameLayout shuttleStopContent;
-    //Stores the offset done by showing the stop in the header
+    //Stores the offset done by showing the stop in the header (or left side for landscape)
     protected double latOffset;
+    protected double lonOffset;
 
     private int originalPosition = -1;
 
@@ -277,14 +278,23 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         swipeRefreshLayout.setVisibility(View.GONE);
         shuttleStopContent.setVisibility(View.VISIBLE);
 
-        transparentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!animating) {
-                    toggleMap();
+        if (transparentView != null) {
+            transparentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!animating) {
+                        toggleMap();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            transparentLandscapeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleMapHorizontal();
+                }
+            });
+        }
     }
 
     protected void addTransparentView(View view) {
@@ -401,17 +411,29 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
 
         if (!mapViewExpanded) {
             mapViewExpanded = true;
-            mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
             transparentLandscapeView.setVisibility(View.INVISIBLE);
+            if (stopMode) {
+                updateStopModeCamera(mapViewExpanded);
+            } else {
+                mitMapView.setToDefaultBounds(true, ANIMATION_LENGTH);
+            }
         } else {
             mapViewExpanded = false;
-            mitMapView.setToDefaultBounds(false, 0);
-            mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
             transparentLandscapeView.setVisibility(View.VISIBLE);
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
+            if (stopMode) {
+                shuttleStopContent.setVisibility(View.VISIBLE);
+                updateStopModeCamera(mapViewExpanded);
+            } else {
+                mitMapView.setToDefaultBounds(false, 0);
+                mitMapView.adjustCameraToShowInHeader(true, ANIMATION_LENGTH, getResources().getConfiguration().orientation);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+            }
         }
-
-        swipeRefreshLayout.startAnimation(translateAnimation);
+        if (stopMode) {
+            shuttleStopContent.startAnimation(translateAnimation);
+        } else {
+            swipeRefreshLayout.startAnimation(translateAnimation);
+        }
     }
 
     protected void updateStopModeCamera(boolean mapViewExpanded) {
