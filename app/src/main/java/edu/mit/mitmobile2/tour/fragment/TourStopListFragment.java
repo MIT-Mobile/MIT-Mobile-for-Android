@@ -60,7 +60,7 @@ public class TourStopListFragment extends Fragment implements Animation.Animatio
             tour = callback.getTour();
         }
 
-        adapter = new TourStopAdapter(getActivity(), tour.getStops());
+        adapter = new TourStopAdapter(getActivity(), tour.getStops(), callback);
 
         listView.setAdapter(adapter);
 

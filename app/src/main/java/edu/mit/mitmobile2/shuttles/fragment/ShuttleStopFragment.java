@@ -163,7 +163,12 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
     }
 
     private void animateToStop(int position) {
-        LatLng stopPosition = new LatLng(stops.get(position).getLat() + latOffset, stops.get(position).getLon());
+        LatLng stopPosition;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            stopPosition = new LatLng(stops.get(position).getLat() + latOffset, stops.get(position).getLon());
+        } else {
+            stopPosition = new LatLng(stops.get(position).getLat(), stops.get(position).getLon() + lonOffset);
+        }
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(stopPosition);
         getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
     }

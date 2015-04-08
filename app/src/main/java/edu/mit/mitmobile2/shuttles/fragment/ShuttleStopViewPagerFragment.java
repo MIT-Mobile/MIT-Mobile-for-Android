@@ -69,7 +69,7 @@ public class ShuttleStopViewPagerFragment extends Fragment implements Intersecti
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_stop_viewpager, container, false);
+        final View view = inflater.inflate(R.layout.fragment_shuttle_stop_viewpager, container, false);
         ButterKnife.inject(this, view);
 
         currentRouteId = getArguments().getString(Constants.ROUTE_ID_KEY);
