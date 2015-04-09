@@ -37,6 +37,9 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import timber.log.Timber;
 
 public class ShuttleRouteFragment extends ShuttleMapFragment implements GoogleMap.InfoWindowAdapter {
+
+    public static final String TAG = "SHUTTLE_ROUTE_FRAGMENT_TAG";
+
     @InjectView(R.id.route_information_top)
     TextView routeStatusTextView;
 

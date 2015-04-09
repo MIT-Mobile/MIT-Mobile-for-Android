@@ -2,8 +2,6 @@ package edu.mit.mitmobile2.tour.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.util.HashMap;
 
@@ -74,28 +72,6 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tour_self_guided, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void switchViews(boolean toList) {
         if (toList) {
             getFragmentManager().beginTransaction().replace(R.id.tour_frame, listFragment).commit();
@@ -120,9 +96,9 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
     @Override
     public void showMainLoopFragment(int currentStopNum) {
         Intent intent = new Intent(this, TourStopActivity.class);
-        //intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.MAIN_LOOP);
+        intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.MAIN_LOOP);
         intent.putExtra(Constants.TOURS, tour);
-        //intent.putExtra(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        intent.putExtra(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
         startActivity(intent);
     }
 

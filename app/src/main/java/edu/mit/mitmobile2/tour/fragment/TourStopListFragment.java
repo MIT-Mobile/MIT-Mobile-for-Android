@@ -3,9 +3,12 @@ package edu.mit.mitmobile2.tour.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.squareup.otto.Subscribe;
@@ -19,11 +22,16 @@ import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class TourStopListFragment extends Fragment {
+public class TourStopListFragment extends Fragment implements Animation.AnimationListener {
+
+    private static final int DURATION_OUTGOING = 300;
+    private static final int DURATION_INCOMING = 301;
 
     TourStopAdapter adapter;
     MITTour tour;
     TourSelfGuidedCallback callback;
+
+    private FloatingActionButton floatingActionButton;
 
     public TourStopListFragment() {
     }
@@ -57,18 +65,32 @@ public class TourStopListFragment extends Fragment {
 
         listView.setAdapter(adapter);
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.list_button);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.list_button);
         floatingActionButton.setColorNormalResId(R.color.mit_red);
         floatingActionButton.setColorPressedResId(R.color.mit_red_dark);
         floatingActionButton.setSize(FloatingActionButton.SIZE_NORMAL);
+        floatingActionButton.setIcon(R.drawable.ic_map);
+        floatingActionButton.setVisibility(View.VISIBLE);
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        startAnimation(0, 0, displayMetrics.heightPixels, floatingActionButton.getY(), DURATION_INCOMING);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.switchViews(false);
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                startAnimation(0, 0, 0, displayMetrics.heightPixels, DURATION_OUTGOING);
             }
         });
 
         return view;
+    }
+
+    private void startAnimation(float fromXDelt, float toXDelt, float fromYDelt, float toYDelt, int duration) {
+        TranslateAnimation translateAnimation = new TranslateAnimation(fromXDelt, toXDelt, fromYDelt, toYDelt);
+        translateAnimation.setDuration(duration);
+        translateAnimation.setAnimationListener(TourStopListFragment.this);
+        floatingActionButton.startAnimation(translateAnimation);
     }
 
     @Subscribe
@@ -93,5 +115,29 @@ public class TourStopListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.Tours.TOUR_KEY, tour);
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        int duration = (int) animation.getDuration();
+        switch (duration) {
+            case DURATION_OUTGOING:
+                floatingActionButton.setVisibility(View.INVISIBLE);
+                callback.switchViews(false);
+                break;
+            case DURATION_INCOMING:
+                floatingActionButton.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 }
