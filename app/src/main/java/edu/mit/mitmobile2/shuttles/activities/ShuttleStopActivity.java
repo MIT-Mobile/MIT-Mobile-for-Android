@@ -17,8 +17,12 @@ public class ShuttleStopActivity extends MITActivity implements MapFragmentCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_frame);
 
-        fragment = new ShuttleStopFragment();
-        getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
+        if (savedInstanceState != null) {
+            fragment = (ShuttleStopFragment) getFragmentManager().findFragmentByTag(ShuttleStopFragment.TAG);
+        } else {
+            fragment = new ShuttleStopFragment();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment, ShuttleStopFragment.TAG).commit();
+        }
     }
 
     @Override
