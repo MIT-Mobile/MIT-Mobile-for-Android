@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.tour.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.webkit.WebView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -38,10 +39,12 @@ public class TourDirectionsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tour_directions);
 
         MITTourStopDirection direction = getIntent().getParcelableExtra(Constants.Tours.DIRECTION_KEY);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         String template = readInHtmlTemplate();
         template = template.replace("__TITLE__", direction.getTitle());
         template = template.replace("__BODY__", direction.getBodyHtml());
+        template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
 
         WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
         directionWebView.loadData(template, "text/html", "utf-8");

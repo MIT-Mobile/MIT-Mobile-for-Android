@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.tour.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.tour.activities.TourDirectionsActivity;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -245,9 +247,9 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     public void onInfoWindowClick(Marker marker) {
         //TODO: Take user to individual stop screen when that is created
 
-        /*Intent intent = new Intent(getActivity(), TourDirectionsActivity.class);
-        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(8).getDirection());
-        startActivity(intent);*/
+        Intent intent = new Intent(getActivity(), TourDirectionsActivity.class);
+        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(4).getDirection());
+        startActivity(intent);
     }
 
     @Override

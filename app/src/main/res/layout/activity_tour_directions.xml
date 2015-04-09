@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mit.mitmobile2.tour.activities.TourDirectionsActivity">
+    tools:context="edu.mit.mitmobile2.tour.activities.TourDirectionsActivity"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="fill_parent"
