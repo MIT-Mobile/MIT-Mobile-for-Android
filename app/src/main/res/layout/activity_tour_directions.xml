@@ -14,11 +14,6 @@
             android:layout_width="fill_parent"
             android:layout_height="200dp" />
 
-        <TextView
-            android:id="@+id/direction_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
         <WebView
             android:id="@+id/directions_html_view"
             android:layout_width="fill_parent"
