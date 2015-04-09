@@ -259,17 +259,17 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     public void onAnimationEnd(Animation animation) {
         int duration = (int) animation.getDuration();
         switch (duration) {
-            case 200:
+            case DURATION_INCOMING_LOCATION:
                 myLocationButton.setVisibility(View.VISIBLE);
                 break;
-            case 201:
+            case DURATION_INCOMING_LIST:
                 listButton.setVisibility(View.VISIBLE);
                 break;
-            case 300:
+            case DURATION_OUTGOING_LIST:
                 listButton.setVisibility(View.INVISIBLE);
                 break;
-            case 301:
-                listButton.setVisibility(View.INVISIBLE);
+            case DURATION_OUTGOING_LOCATION:
+                myLocationButton.setVisibility(View.INVISIBLE);
                 callback.switchViews(true);
                 break;
         }
