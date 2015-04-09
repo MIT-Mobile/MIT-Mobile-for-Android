@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.tour.activities;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,6 +17,8 @@ import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MapUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.model.MITTourStopDirection;
+import timber.log.Timber;
 
 public class TourDirectionsActivity extends ActionBarActivity {
 
@@ -37,11 +39,12 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         MITTourStopDirection direction = getIntent().getParcelableExtra(Constants.Tours.DIRECTION_KEY);
 
-        WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
-        directionWebView.loadData(direction.getBodyHtml(), "text/html", "utf-8");
+        String template = readInHtmlTemplate();
+        template = template.replace("__TITLE__", direction.getTitle());
+        template = template.replace("__BODY__", direction.getBodyHtml());
 
-        TextView directionTitle = (TextView) findViewById(R.id.direction_title);
-        directionTitle.setText(direction.getTitle());
+        WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
+        directionWebView.loadData(template, "text/html", "utf-8");
 
         mapView = (MapView) findViewById(R.id.direction_map);
         mapView.onCreate(savedInstanceState);
@@ -64,6 +67,22 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         LatLngBounds bounds = drawRoutePath(direction.getPathList());
         setToDefaultBounds(bounds, false, 0);
+    }
+
+    private String readInHtmlTemplate() {
+        String template = "";
+        try {
+            InputStream is = getAssets().open("tours_directions_template.html");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            template = new String(buffer, "UTF-8");
+
+        } catch (IOException e) {
+            Timber.e(e, "Failed");
+        }
+        return template;
     }
 
     private LatLngBounds drawRoutePath(List<List<Double>> pathList) {
