@@ -2,10 +2,7 @@ package edu.mit.mitmobile2.tour.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import java.text.Format;
 import java.util.HashMap;
 
 import edu.mit.mitmobile2.Constants;
@@ -119,7 +116,7 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
 
     @Override
     public void setMainLoopActionBarTitle(int mainLoopStopNum, int mainLoopStopsSize) {
-        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop, mainLoopStopNum, mainLoopStopsSize)));
+        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop), mainLoopStopNum, mainLoopStopsSize));
     }
 
     @Override

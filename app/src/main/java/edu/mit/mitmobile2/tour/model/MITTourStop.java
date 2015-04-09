@@ -180,8 +180,8 @@ public class MITTourStop extends MapItem {
         this.bodyHtml = p.readString();
         this.id = p.readString();
         this.type = p.readString();
-        p.readDoubleArray(coordinates);
-        p.readTypedList(this.representations, MITStopRepresentation.CREATOR);
+        this.coordinates = p.createDoubleArray();
+        this.representations = p.createTypedArrayList(MITStopRepresentation.CREATOR);
         this.direction = p.readParcelable(MITTourStopDirection.class.getClassLoader());
     }
 

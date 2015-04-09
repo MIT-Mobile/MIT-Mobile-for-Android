@@ -9,6 +9,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
@@ -68,16 +70,13 @@ public class TourDirectionsActivity extends ActionBarActivity {
         LatLngBounds.Builder defaultBounds = new LatLngBounds.Builder();
 
         PolylineOptions options = new PolylineOptions();
+        List<LatLng> points = new ArrayList<>();
 
         for (List<Double> list : pathList) {
             LatLng point = new LatLng(list.get(1), list.get(0));
             options.add(point);
+            points.add(point);
             defaultBounds.include(point);
-
-            // Just first and last marker
-            if (pathList.indexOf(list) == 0 || pathList.indexOf(list) == pathList.size() - 1) {
-                mapView.getMap().addMarker(new MarkerOptions().position(point));
-            }
         }
 
         options.color(getResources().getColor(R.color.map_path_color));
@@ -87,7 +86,53 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         mapView.getMap().addPolyline(options);
 
+        double startRotation = calculateRotation(points.get(0), points.get(1), true);
+        double endRotation = calculateRotation(points.get(points.size() - 1), points.get(points.size() - 2), false);
+
+        // Just first and last marker
+        MarkerOptions startMarkerOpts = new MarkerOptions().position(points.get(0)).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_direction)).flat(false).anchor(0.36f, 0.5f).rotation((float) startRotation);
+        MarkerOptions endMarkerOpts = new MarkerOptions().position(points.get((points.size() - 1))).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_direction_red)).flat(false).anchor(0.64f, 0.5f).rotation((float) endRotation);
+
+        mapView.getMap().addMarker(startMarkerOpts);
+        mapView.getMap().addMarker(endMarkerOpts);
+
         return defaultBounds.build();
+    }
+
+    private double calculateRotation(LatLng p1, LatLng p2, boolean isStart) {
+        double x1 = p1.longitude - p2.longitude;
+        double x = Math.abs(x1);
+        double y1 = p1.latitude - p2.latitude;
+        double y = Math.abs(y1);
+
+        double rads = Math.atan(y / x);
+        double degs = Math.toDegrees(rads);
+
+        int adjustment = 6;
+
+        if (!isStart && x1 < 0 && y1 < 0) {
+            degs = 90 + (90 - degs);
+            degs -= adjustment;
+        } else if (!isStart && x1 > 0 && y1 > 0) {
+            degs = -degs;
+            degs -= adjustment;
+        } else if (!isStart && x1 < 0 && y1 > 0) {
+            degs = -90 - (90 - degs);
+            degs += adjustment;
+        } else {
+            degs += adjustment;
+        }
+
+        if (isStart && x1 > 0 && y1 < 0) {
+            degs = -90 - (90 - degs);
+        } else if (isStart && x1 < 0 && y1 < 0) {
+            degs = -degs;
+        } else if (isStart && x1 > 0 && y1 > 0) {
+            degs = 90 + (90 - degs);
+            degs -= adjustment;
+        }
+
+        return degs;
     }
 
     public void setToDefaultBounds(LatLngBounds bounds, boolean animate, int animationLength) {
