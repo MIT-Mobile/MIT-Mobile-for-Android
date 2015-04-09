@@ -18,7 +18,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.adapters.TourStopAdapter;
-import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -29,7 +29,8 @@ public class TourStopListFragment extends Fragment implements Animation.Animatio
 
     TourStopAdapter adapter;
     MITTour tour;
-    TourStopCallback callback;
+    TourSelfGuidedCallback callback;
+
     private FloatingActionButton floatingActionButton;
 
     public TourStopListFragment() {
@@ -40,7 +41,7 @@ public class TourStopListFragment extends Fragment implements Animation.Animatio
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour_stop_list, null);
 
-        callback = (TourStopCallback) getActivity();
+        callback = (TourSelfGuidedCallback) getActivity();
 
         StickyListHeadersListView listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_header_list_view);
 
