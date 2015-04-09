@@ -14,10 +14,9 @@ import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourUtils;
 
 public class MainLoopAdapter extends RecyclerView.Adapter<MainLoopAdapter.ViewHolder> {
-
-    public static final int NUMBER_OF_TOUR_LOOP = 100;
 
     private List<MITTourStop> tourStops;
     private LayoutInflater listContainer;
@@ -42,7 +41,7 @@ public class MainLoopAdapter extends RecyclerView.Adapter<MainLoopAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return tourStops.size() * NUMBER_OF_TOUR_LOOP;
+        return tourStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP;
     }
 
     @Override

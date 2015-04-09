@@ -10,6 +10,7 @@ import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 
 public class TourUtils {
+    public static final int NUMBER_OF_TOUR_LOOP = 100;
 
     public static String formatEstimatedDuration(int time) {
         int hour = time / 60;
