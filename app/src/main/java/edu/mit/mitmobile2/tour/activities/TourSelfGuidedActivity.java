@@ -119,7 +119,7 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
 
     @Override
     public void setMainLoopActionBarTitle(int mainLoopStopNum, int mainLoopStopsSize) {
-        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop, mainLoopStopNum, mainLoopStopsSize)));
+        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop), mainLoopStopNum, mainLoopStopsSize));
     }
 
     @Override

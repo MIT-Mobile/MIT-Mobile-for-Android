@@ -32,7 +32,6 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_below="@id/map_list_view"
                 android:background="@android:color/white" />
         </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
