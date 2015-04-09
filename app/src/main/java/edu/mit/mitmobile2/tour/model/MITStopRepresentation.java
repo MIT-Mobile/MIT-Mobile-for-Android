@@ -24,7 +24,7 @@ public class MITStopRepresentation implements Parcelable {
     }
 
     private MITStopRepresentation(Parcel p) {
-        p.readTypedList(images, MITTourStopImage.CREATOR);
+        this.images = p.createTypedArrayList(MITTourStopImage.CREATOR);
     }
 
     public static final Parcelable.Creator<MITStopRepresentation> CREATOR = new Parcelable.Creator<MITStopRepresentation>() {

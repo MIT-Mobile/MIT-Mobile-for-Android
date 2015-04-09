@@ -2,10 +2,7 @@ package edu.mit.mitmobile2.tour.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import java.text.Format;
 import java.util.HashMap;
 
 import edu.mit.mitmobile2.Constants;
