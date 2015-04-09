@@ -42,4 +42,5 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.7.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
 }

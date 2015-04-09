@@ -1,8 +1,13 @@
 package edu.mit.mitmobile2.tour.utils;
 
 import java.text.DecimalFormat;
+import java.util.Iterator;
+import java.util.List;
 
 import edu.mit.mitmobile2.BuildConfig;
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.tour.model.MITTour;
+import edu.mit.mitmobile2.tour.model.MITTourStop;
 
 public class TourUtils {
 
@@ -26,5 +31,15 @@ public class TourUtils {
 
     public static int getAppVersion() {
         return BuildConfig.VERSION_CODE;
+    }
+
+    public static List<MITTourStop> getMainLoopStops(List<MITTourStop> tourStops) {
+        Iterator<MITTourStop> iterator = tourStops.iterator();
+        while (iterator.hasNext()) {
+            if (!iterator.next().getType().equals(Constants.MAIN_LOOP)) {
+                iterator.remove();
+            }
+        }
+        return tourStops;
     }
 }

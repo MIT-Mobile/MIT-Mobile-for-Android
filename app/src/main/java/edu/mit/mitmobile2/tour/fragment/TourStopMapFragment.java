@@ -30,7 +30,7 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
-import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 
@@ -38,7 +38,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
 
     private MITMapView mitMapView;
     private MITTour tour;
-    private TourStopCallback callback;
+    private TourSelfGuidedCallback callback;
 
     public TourStopMapFragment() {
     }
@@ -48,7 +48,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour_stop_map, null);
 
-        callback = (TourStopCallback) getActivity();
+        callback = (TourSelfGuidedCallback) getActivity();
 
         MapView googleMapView = (MapView) view.findViewById(R.id.tour_map);
         googleMapView.onCreate(savedInstanceState);

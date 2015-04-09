@@ -7,24 +7,25 @@ import java.util.List;
 
 import edu.mit.mitmobile2.EndlessFragmentStatePagerAdapter;
 import edu.mit.mitmobile2.tour.fragment.TourStopViewPagerFragment;
+import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 
 public class TourStopViewPagerAdapter extends EndlessFragmentStatePagerAdapter {
 
     private TourStopViewPagerFragment[] fragments;
-    private List<MITTourStop> mitTourStops;
+    private MITTour tour;
 
-    public TourStopViewPagerAdapter(FragmentManager fragmentManager, List<MITTourStop> mitTourStops) {
-        super(fragmentManager, mitTourStops.size());
-        fragments = new TourStopViewPagerFragment[mitTourStops.size()];
-        this.mitTourStops = mitTourStops;
+    public TourStopViewPagerAdapter(FragmentManager fragmentManager, MITTour tour) {
+        super(fragmentManager, tour.getStops().size());
+        fragments = new TourStopViewPagerFragment[tour.getStops().size()];
+        this.tour = tour;
     }
 
     @Override
     public Fragment getItem(int position) {
         int realPosition = getRealPosition(position);
         if (fragments[realPosition] == null) {
-            TourStopViewPagerFragment fragment = TourStopViewPagerFragment.newInstance(mitTourStops.get(realPosition));
+            TourStopViewPagerFragment fragment = TourStopViewPagerFragment.newInstance(tour.getStops().get(realPosition), tour);
             fragments[realPosition] = fragment;
             return fragment;
         } else {

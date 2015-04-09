@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.Iterator;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -17,6 +17,7 @@ import edu.mit.mitmobile2.tour.adapters.TourStopViewPagerAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourUtils;
 
 public class TourStopsFragment extends Fragment {
 
@@ -44,15 +45,9 @@ public class TourStopsFragment extends Fragment {
 
         tour = getArguments().getParcelable(Constants.TOURS);
 
-        mainLoopStops = tour.getStops();
-        Iterator<MITTourStop> iterator = mainLoopStops.iterator();
-        while (iterator.hasNext()) {
-            if (!iterator.next().getType().equals(Constants.MAIN_LOOP)) {
-                iterator.remove();
-            }
-        }
+        mainLoopStops =  TourUtils.getMainLoopStops(tour.getStops());
 
-        tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), mainLoopStops);
+        tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), tour);
         tourStopViewpager.setAdapter(tourStopViewPagerAdapter);
         tourStopViewpager.setCurrentItem(getArguments().getInt(Constants.CURRENT_MAIN_LOOP_STOP));
 

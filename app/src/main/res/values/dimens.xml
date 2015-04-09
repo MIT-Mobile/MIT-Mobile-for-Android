@@ -44,4 +44,5 @@
     <dimen name="tour_home_padding_line">7dp</dimen>
     <dimen name="tour_stop_image_size">80dp</dimen>
     <dimen name="tour_circle_size">15dp</dimen>
+    <dimen name="tour_recycler_view_height">180dp</dimen>
 </resources>

@@ -14,7 +14,7 @@ import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -23,10 +23,10 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
     private Context context;
     private List<MITTourStop> tourStops;
     private String[] headers;
-    private TourStopCallback callback;
+    private TourSelfGuidedCallback callback;
     private boolean isMainLoop;
 
-    public TourStopAdapter(Context context, List<MITTourStop> tourStops, TourStopCallback callback) {
+    public TourStopAdapter(Context context, List<MITTourStop> tourStops, TourSelfGuidedCallback callback) {
         this.context = context;
         this.tourStops = tourStops;
         this.headers = new String[]{context.getString(R.string.main_loop), context.getString(R.string.side_trips)};
