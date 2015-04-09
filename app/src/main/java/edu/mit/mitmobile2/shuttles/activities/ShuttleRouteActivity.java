@@ -10,14 +10,19 @@ import edu.mit.mitmobile2.shuttles.fragment.ShuttleRouteFragment;
 
 public class ShuttleRouteActivity extends MITActivity implements MapFragmentCallback {
 
-    ShuttleRouteFragment fragment = new ShuttleRouteFragment();
+    ShuttleRouteFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_frame);
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
+        if (savedInstanceState != null) {
+            fragment = (ShuttleRouteFragment) getFragmentManager().findFragmentByTag(ShuttleRouteFragment.TAG);
+        } else {
+            fragment = new ShuttleRouteFragment();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment, ShuttleRouteFragment.TAG).commit();
+        }
     }
 
     @Override

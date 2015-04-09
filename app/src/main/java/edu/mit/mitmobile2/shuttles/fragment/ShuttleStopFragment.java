@@ -39,6 +39,8 @@ import timber.log.Timber;
 
 public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap.InfoWindowAdapter {
 
+    public static final String TAG = "SHUTTLE_STOP_FRAGMENT_TAG";
+    public static final String CURRENT_STOP_POSITION_KEY = "CURRENT_STOP_POSITION_KEY";
     public static final int STOP_ZOOM = 17;
 
     ViewPager predictionViewPager;
@@ -108,7 +110,12 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
 
             }
         });
-        int startPosition = getPositionFromStopId(initialStopid);
+        int startPosition;
+        if (savedInstanceState != null) {
+            startPosition = savedInstanceState.getInt(CURRENT_STOP_POSITION_KEY);
+        } else {
+            startPosition = getPositionFromStopId(initialStopid);
+        }
         callback.setActionBarSubtitle(stops.get(startPosition).getTitle());
         int fakePosition = stops.size() * EndlessFragmentStatePagerAdapter.NUMBER_OF_LOOPS / 2 + startPosition;
         predictionViewPager.setCurrentItem(fakePosition);
@@ -321,5 +328,11 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_STOP_POSITION_KEY, currentRealPosition);
     }
 }
