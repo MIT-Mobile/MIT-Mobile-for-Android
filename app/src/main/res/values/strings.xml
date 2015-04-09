@@ -90,6 +90,4 @@
     <string name="stop_nav_main_loop">Main Loop %1$s of %2$s</string>
     <string name="stop_nav_side_trip">Side Trip</string>
     <string name="near_here">Near Here</string>
-    <string name="title_activity_tour_individual_stop">TourIndividualStopActivity</string>
-
 </resources>
