@@ -30,6 +30,15 @@ public class TourStopsFragment extends Fragment {
     private int currentPosition;
     private TourStopCallback callback;
 
+    public static TourStopsFragment newInstance(MITTour tour, int currentStopNum) {
+        TourStopsFragment fragment = new TourStopsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.TOURS, tour);
+        args.putInt(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

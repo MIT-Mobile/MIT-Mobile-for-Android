@@ -106,6 +106,7 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
     public void showSideTripFragment(MITTourStop mitTourStop) {
         Intent intent = new Intent(this, TourStopActivity.class);
         intent.putExtra(Constants.TOUR_STOP, mitTourStop);
+        intent.putExtra(Constants.TOURS, tour);
         intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.SIDE_TRIP);
         startActivity(intent);
     }
