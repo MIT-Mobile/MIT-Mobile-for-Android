@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.tour.activities;
 
 import android.os.Bundle;
+
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
@@ -24,15 +25,15 @@ public class TourStopActivity extends MITActivity implements TourStopCallback {
         setContentView(R.layout.activity_tour_stop);
 
         Bundle extras = getIntent().getExtras();
-        tourStopType = extras.getString(Constants.TOUR_STOP_TYPE);
-        tour = extras.getParcelable(Constants.TOURS);
+        tourStopType = extras.getString(Constants.Tours.TOUR_STOP_TYPE);
+        tour = extras.getParcelable(Constants.Tours.TOUR_KEY);
 
-        if (tourStopType.equals(Constants.MAIN_LOOP)) {
-            int currentStopNum = extras.getInt(Constants.CURRENT_MAIN_LOOP_STOP);
+        if (tourStopType.equals(Constants.Tours.MAIN_LOOP)) {
+            int currentStopNum = extras.getInt(Constants.Tours.CURRENT_MAIN_LOOP_STOP);
             tourStopsFragment = TourStopFragment.newInstance(tour, currentStopNum);
             getFragmentManager().beginTransaction().replace(R.id.container, tourStopsFragment).commit();
         } else {
-            tourStop = extras.getParcelable(Constants.TOUR_STOP);
+            tourStop = extras.getParcelable(Constants.Tours.TOUR_STOP);
             tourStopViewPagerFragment = TourStopViewPagerFragment.newInstance(tourStop, tour);
             getFragmentManager().beginTransaction().replace(R.id.container, tourStopViewPagerFragment).commit();
         }
@@ -40,7 +41,7 @@ public class TourStopActivity extends MITActivity implements TourStopCallback {
 
     @Override
     public void setMainLoopActionBarTitle(int mainLoopStopNum, int mainLoopStopsSize) {
-        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop, mainLoopStopNum, mainLoopStopsSize)));
+        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop), mainLoopStopNum, mainLoopStopsSize));
     }
 
     @Override

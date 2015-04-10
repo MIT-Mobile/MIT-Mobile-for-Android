@@ -37,7 +37,7 @@ public class TourUtils {
     public static List<MITTourStop> getMainLoopStops(List<MITTourStop> tourStops) {
         Iterator<MITTourStop> iterator = tourStops.iterator();
         while (iterator.hasNext()) {
-            if (!iterator.next().getType().equals(Constants.MAIN_LOOP)) {
+            if (!iterator.next().getType().equals(Constants.Tours.MAIN_LOOP)) {
                 iterator.remove();
             }
         }

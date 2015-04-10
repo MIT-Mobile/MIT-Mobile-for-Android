@@ -51,7 +51,7 @@ public class TourStopViewPagerFragment extends Fragment {
         TourStopViewPagerFragment fragment = new TourStopViewPagerFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.TOURS, tour);
-        args.putParcelable(Constants.TOUR_STOP, mitTourStop);
+        args.putParcelable(Constants.Tours.TOUR_STOP, mitTourStop);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +65,7 @@ public class TourStopViewPagerFragment extends Fragment {
         callback = (TourStopCallback) getActivity();
 
         tour = getArguments().getParcelable(Constants.TOURS);
-        mitTourStop = getArguments().getParcelable(Constants.TOUR_STOP);
+        mitTourStop = getArguments().getParcelable(Constants.Tours.TOUR_STOP);
 
         mainLoopStops = TourUtils.getMainLoopStops(tour.getStops());
 
@@ -78,7 +78,7 @@ public class TourStopViewPagerFragment extends Fragment {
 
         stopTitleTextView.setText(Html.fromHtml(mitTourStop.getTitle()));
 
-        if (mitTourStop.getType().equals(Constants.SIDE_TRIP)) {
+        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
             callback.setSideTripActionBarTitle();
         }
 
