@@ -56,6 +56,7 @@ public class TourStopViewPagerFragment extends Fragment {
     private NearHereAdapter nearHereAdapter;
     private List<MITTourStop> mainLoopStops;
     private List<MITTourStop> nearHereStops;
+    private int fakePosition;
 
     private LinearLayoutManager mainLooplayoutManager;
     private LinearLayoutManager nearHereLayoutManager;
@@ -102,7 +103,13 @@ public class TourStopViewPagerFragment extends Fragment {
 
         mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
         mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
+
+        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
+            fakePosition = 0;
+        } else {
+            fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
+        }
+
         mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
         mainLoopAdapter = new MainLoopAdapter(getActivity().getApplicationContext(), mainLoopStops);
