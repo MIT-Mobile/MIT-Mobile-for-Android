@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="edu.mit.mitmobile2.tour.fragment.TourStopViewPagerFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants" >
 
     <ScrollView
         android:layout_width="match_parent"
