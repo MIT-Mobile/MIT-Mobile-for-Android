@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.tour.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,6 +34,7 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.tour.activities.TourStopActivity;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -243,11 +245,20 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //TODO: Take user to individual stop screen when that is created
+        Gson gson = new Gson();
 
-        /*Intent intent = new Intent(getActivity(), TourDirectionsActivity.class);
-        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(8).getDirection());
-        startActivity(intent);*/
+        MITTourStop.InfoWindowSnippet snippet = gson.fromJson(marker.getSnippet(), MITTourStop.InfoWindowSnippet.class);
+        String type = snippet.type;
+        int index = snippet.index;
+
+        Intent intent = new Intent(getActivity(), TourStopActivity.class);
+        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
+        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, type);
+        intent.putExtra(Constants.Tours.CURRENT_MAIN_LOOP_STOP, index);
+        if (type.equals(Constants.Tours.SIDE_TRIP)) {
+            intent.putExtra(Constants.Tours.TOUR_STOP, tour.getStops().get(index));
+        }
+        startActivity(intent);
     }
 
     @Override

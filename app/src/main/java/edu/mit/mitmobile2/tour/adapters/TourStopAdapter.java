@@ -80,11 +80,7 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
         holder.stopTitle.setText((position + 1) + ". " + stop.getTitle());
         Picasso.with(context).load(stop.getThumbnailImage().getUrl()).fit().centerCrop().into(holder.stopImage);
 
-        if (stop.getType().equals(Constants.MAIN_LOOP)) {
-            isMainLoop = true;
-        } else {
-            isMainLoop = false;
-        }
+        isMainLoop = stop.getType().equals(Constants.Tours.MAIN_LOOP);
 
         holder.stopLayout.setOnClickListener(new View.OnClickListener() {
             @Override

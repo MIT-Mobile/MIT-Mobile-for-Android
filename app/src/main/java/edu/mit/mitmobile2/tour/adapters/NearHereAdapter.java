@@ -63,6 +63,6 @@ public class NearHereAdapter extends RecyclerView.Adapter<NearHereAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         MITTourStop tourStop = tourStops.get(position);
         Picasso.with(context).load(tourStop.getThumbnailImage().getUrl()).fit().centerCrop().into(viewHolder.stopImageView);
-        viewHolder.stopTitleTextView.setText(tourStop.getNumber() + ". " + tourStop.getTitle());
+        viewHolder.stopTitleTextView.setText(tourStop.getIndex() + ". " + tourStop.getTitle());
     }
 }

@@ -91,4 +91,9 @@
     <string name="stop_nav_side_trip">Side Trip</string>
     <string name="near_here_recycler_view_title">Near Here</string>
     <string name="main_loop_recycler_view_title">Main Loop</string>
+    <string name="near_here">Near Here</string>
+    <string name="side_trip_directions">Step by step directions are not available for side trips</string>
+    <string name="side_trip_directions_1">"Directions from "</string>
+    <string name="side_trip_directions_2">" to "</string>
+
 </resources>

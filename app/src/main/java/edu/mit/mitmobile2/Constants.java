@@ -16,11 +16,6 @@ public class Constants {
 
     //tours
     public static final String TOURS = "tours";
-    public static final String TOUR_STOP = "tourStop";
-    public static final String MAIN_LOOP = "Main Loop";
-    public static final String SIDE_TRIP = "Side Trip";
-    public static final String TOUR_STOP_TYPE = "tourStopType";
-    public static final String CURRENT_MAIN_LOOP_STOP = "currentMainLoopStop";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -46,6 +41,15 @@ public class Constants {
         public static final String TOUR_DETAILS_KEY = "tourDetails";
         public static final String TOUR_KEY = "tour";
         public static final String DIRECTION_KEY = "direction";
+        public static final String TOUR_STOP = "tourStop";
+        public static final String MAIN_LOOP = "Main Loop";
+        public static final String SIDE_TRIP = "Side Trip";
+        public static final String TOUR_STOP_TYPE = "tourStopType";
+        public static final String CURRENT_MAIN_LOOP_STOP = "currentMainLoopStop";
+        public static final String CURRENT_STOP_COORDS = "currentStopCoords";
+        public static final String PREV_STOP_COORDS = "prevStopCoords";
+        public static final String TITLE_KEY = "title";
+        public static final String FIRST_TITLE_KEY = "firstTitle";
     }
 
     public static class Resources {

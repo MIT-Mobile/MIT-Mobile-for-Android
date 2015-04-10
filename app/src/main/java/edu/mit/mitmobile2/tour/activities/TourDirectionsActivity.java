@@ -2,7 +2,10 @@ package edu.mit.mitmobile2.tour.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,13 +41,7 @@ public class TourDirectionsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tour_directions);
 
         MITTourStopDirection direction = getIntent().getParcelableExtra(Constants.Tours.DIRECTION_KEY);
-
-        String template = readInHtmlTemplate();
-        template = template.replace("__TITLE__", direction.getTitle());
-        template = template.replace("__BODY__", direction.getBodyHtml());
-
-        WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
-        directionWebView.loadData(template, "text/html", "utf-8");
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         mapView = (MapView) findViewById(R.id.direction_map);
         mapView.onCreate(savedInstanceState);
@@ -65,8 +62,41 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         mapView.getMap().addTileOverlay(options);
 
-        LatLngBounds bounds = drawRoutePath(direction.getPathList());
-        setToDefaultBounds(bounds, false, 0);
+        TextView sideTripTitle = (TextView) findViewById(R.id.side_trip_title);
+        TextView sideTripContent = (TextView) findViewById(R.id.side_trip_content);
+        WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
+
+        if (direction != null) {
+            sideTripContent.setVisibility(View.GONE);
+            sideTripTitle.setVisibility(View.GONE);
+            directionWebView.setVisibility(View.VISIBLE);
+
+            String template = readInHtmlTemplate();
+            template = template.replace("__TITLE__", direction.getTitle());
+            template = template.replace("__BODY__", direction.getBodyHtml());
+            template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
+
+            directionWebView.loadData(template, "text/html", "utf-8");
+
+            LatLngBounds bounds = drawRoutePath(direction.getPathList());
+            setToDefaultBounds(bounds, false, 0);
+        } else {
+            sideTripContent.setVisibility(View.VISIBLE);
+            sideTripTitle.setVisibility(View.VISIBLE);
+            directionWebView.setVisibility(View.GONE);
+
+            sideTripTitle.setText(getString(R.string.side_trip_directions_1) + getIntent().getStringExtra(Constants.Tours.FIRST_TITLE_KEY) + getString(R.string.side_trip_directions_2) + getIntent().getStringExtra(Constants.Tours.TITLE_KEY));
+
+            double[] currentStopCoords = getIntent().getDoubleArrayExtra(Constants.Tours.CURRENT_STOP_COORDS);
+            double[] prevStopCoords = getIntent().getDoubleArrayExtra(Constants.Tours.PREV_STOP_COORDS);
+
+            List<LatLng> points = new ArrayList<>();
+            points.add(new LatLng(prevStopCoords[1], prevStopCoords[0]));
+            points.add(new LatLng(currentStopCoords[1], currentStopCoords[0]));
+
+            drawMarkers(points);
+            setToDefaultBounds(new LatLngBounds.Builder().include(points.get(0)).include(points.get(1)).build(), false, 0);
+        }
     }
 
     private String readInHtmlTemplate() {
@@ -80,7 +110,7 @@ public class TourDirectionsActivity extends ActionBarActivity {
             template = new String(buffer, "UTF-8");
 
         } catch (IOException e) {
-            Timber.e(e, "Failed");
+            Timber.e(e, "HTML read Failed");
         }
         return template;
     }
@@ -105,6 +135,12 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         mapView.getMap().addPolyline(options);
 
+        drawMarkers(points);
+
+        return defaultBounds.build();
+    }
+
+    private void drawMarkers(List<LatLng> points) {
         double startRotation = calculateRotation(points.get(0), points.get(1), true);
         double endRotation = calculateRotation(points.get(points.size() - 1), points.get(points.size() - 2), false);
 
@@ -114,8 +150,6 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         mapView.getMap().addMarker(startMarkerOpts);
         mapView.getMap().addMarker(endMarkerOpts);
-
-        return defaultBounds.build();
     }
 
     private double calculateRotation(LatLng p1, LatLng p2, boolean isStart) {

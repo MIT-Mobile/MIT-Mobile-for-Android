@@ -96,18 +96,18 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
     @Override
     public void showMainLoopFragment(int currentStopNum) {
         Intent intent = new Intent(this, TourStopActivity.class);
-        intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.MAIN_LOOP);
-        intent.putExtra(Constants.TOURS, tour);
-        intent.putExtra(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, Constants.Tours.MAIN_LOOP);
+        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
+        intent.putExtra(Constants.Tours.CURRENT_MAIN_LOOP_STOP, currentStopNum);
         startActivity(intent);
     }
 
     @Override
     public void showSideTripFragment(MITTourStop mitTourStop) {
         Intent intent = new Intent(this, TourStopActivity.class);
-        intent.putExtra(Constants.TOUR_STOP, mitTourStop);
-        intent.putExtra(Constants.TOURS, tour);
-        intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.SIDE_TRIP);
+        intent.putExtra(Constants.Tours.TOUR_STOP, mitTourStop);
+        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
+        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, Constants.Tours.SIDE_TRIP);
         startActivity(intent);
     }
 }

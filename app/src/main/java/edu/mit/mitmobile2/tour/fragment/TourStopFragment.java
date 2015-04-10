@@ -34,7 +34,7 @@ public class TourStopFragment extends Fragment {
         TourStopFragment fragment = new TourStopFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constants.TOURS, tour);
-        args.putInt(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        args.putInt(Constants.Tours.CURRENT_MAIN_LOOP_STOP, currentStopNum);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +58,7 @@ public class TourStopFragment extends Fragment {
 
         tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), tour, mainLoopStops);
         tourStopViewpager.setAdapter(tourStopViewPagerAdapter);
-        int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + getArguments().getInt(Constants.CURRENT_MAIN_LOOP_STOP);
+        int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + getArguments().getInt(Constants.Tours.CURRENT_MAIN_LOOP_STOP);
         tourStopViewpager.setCurrentItem(fakePosition);
 
         tourStopViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

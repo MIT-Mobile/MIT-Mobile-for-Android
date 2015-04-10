@@ -46,7 +46,7 @@ public class TourUtils {
         List<MITTourStop> mainLoopStops = new ArrayList<>();
 
         for (MITTourStop stop : tourStops) {
-            if (stop.getType().equals(Constants.MAIN_LOOP)) {
+            if (stop.getType().equals(Constants.Tours.MAIN_LOOP)) {
                 mainLoopStops.add(stop);
             }
         }
@@ -111,7 +111,7 @@ public class TourUtils {
 
     public static List<MITTourStop> setStopNumber(List<MITTourStop> tourStops) {
         for (int i = 0; i < tourStops.size(); i++) {
-            tourStops.get(i).setNumber(i + 1);
+            tourStops.get(i).setIndex(i + 1);
         }
         return tourStops;
     }
