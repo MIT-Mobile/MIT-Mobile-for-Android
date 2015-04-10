@@ -102,8 +102,8 @@ public class TourStopViewPagerFragment extends Fragment {
 
         mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
         mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int fakePostion = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
-        mainLooplayoutManager.scrollToPosition(fakePostion);
+        int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
+        mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
         mainLoopAdapter = new MainLoopAdapter(getActivity().getApplicationContext(), mainLoopStops);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
