@@ -51,6 +51,8 @@ public class TourUtils {
             }
         }
 
+        mainLoopStops = setStopNumber(mainLoopStops);
+
         return mainLoopStops;
     }
 
@@ -58,8 +60,15 @@ public class TourUtils {
         List<MITTourStop> nearHereStops = new ArrayList<>();
 
         for (MITTourStop stop : tourStops) {
-            if (!stop.getId().equals(currentTourStop.getId())) {
-                nearHereStops.add(stop);
+            nearHereStops.add(stop);
+        }
+
+        nearHereStops = setStopNumber(nearHereStops);
+
+        Iterator<MITTourStop> iterator = nearHereStops.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getId().equals(currentTourStop.getId())) {
+                iterator.remove();
             }
         }
 
@@ -98,5 +107,12 @@ public class TourUtils {
         }
 
         return new ArrayList<MITTourStop>(sortedStopsHashMap.keySet());
+    }
+
+    public static List<MITTourStop> setStopNumber(List<MITTourStop> tourStops) {
+        for (int i = 0; i < tourStops.size(); i++) {
+            tourStops.get(i).setNumber(i + 1);
+        }
+        return tourStops;
     }
 }

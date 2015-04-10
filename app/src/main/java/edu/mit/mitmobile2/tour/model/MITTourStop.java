@@ -50,6 +50,8 @@ public class MITTourStop extends MapItem {
     @Expose
     MITTourStopDirection direction;
 
+    private int number;
+
     public String getId() {
         return id;
     }
@@ -112,6 +114,14 @@ public class MITTourStop extends MapItem {
 
     public void setRepresentations(List<MITStopRepresentation> representations) {
         this.representations = representations;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     @Override
