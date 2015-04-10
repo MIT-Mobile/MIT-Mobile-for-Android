@@ -3,57 +3,29 @@
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:paddingLeft="28dp"
+    android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+    android:paddingTop="@dimen/abc_button_padding_vertical_material"
+    android:paddingBottom="@dimen/abc_button_padding_vertical_material"
+
     android:background="@android:color/white" >
 
-    <!-- BUILDING HEADER -->
+
+    <!-- RESOURCENAME -->
     <TextView
-        android:id="@+id/row_resource_header"
+        android:id="@+id/resource_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip"
-        android:paddingLeft="20dip"
-        android:paddingRight="20dip"
-        android:visibility="gone"
-        style="@style/ResourceRowHeader"
+        android:paddingBottom="10dp"
+        style="@android:style/TextAppearance.Medium"
     />
 
-    <RelativeLayout
-    android:id="@+id/row_resource"
-    android:paddingTop="10dip"
-    android:paddingBottom="10dip"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    <View
+        android:layout_below="@+id/resource_room_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
-    <!-- NAME -->
-    <TextView
-        android:id="@+id/row_resource_name"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        style="@style/ResourceRowName"
-        />
-
-    <!-- ROOM -->
-    <TextView
-        android:id="@+id/row_resource_room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/row_resource_name"
-        style="@style/ResourceRowRoom"
-        />
-
-    <TextView
-        android:id="@+id/row_resource_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        style="@style/ResourceRowStatus"/>
-
-</RelativeLayout>
 
 </LinearLayout>
 

@@ -5,148 +5,117 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
+import edu.mit.mitmobile2.mobius.model.ResourceRoom;
+import edu.mit.mitmobile2.mobius.model.Roomset;
+import timber.log.Timber;
 
 /**
  * Created by sseligma on 1/23/15.
  */
-public class ResourceListAdapter extends ArrayAdapter<ResourceItem> {
+public class ResourceListAdapter extends ArrayAdapter<Object> {
 
-    private static final int TYPE_ONLINE = 0;
-    private static final int TYPE_OFFLINE = 1;
-    private static final int TYPE_HEADER = 2;
-    private static final int TYPE_MAX_COUNT = 3;
+    private static final int TYPE_RESOURCE_ROOM = 0;
+    private static final int TYPE_RESOURCE_ITEM = 1;
+    private static final int TYPE_MAX_COUNT = 2;
 
 
     private Context mContext;
-    private List<ResourceItem> resourceItems;
+    private List<Object> resourceData;
 
-    public ResourceListAdapter(Context context, int layoutResourceId, List<ResourceItem> resourceItems) {
-        super(context, layoutResourceId, resourceItems);
+    public ResourceListAdapter(Context context, int layoutResourceId, List<Object> resourceData) {
+        super(context, layoutResourceId, resourceData);
         this.mContext = context;
-        this.resourceItems = resourceItems;
+        this.resourceData = resourceData;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
         LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewHolderItem viewHolder = null;
 
-        int type = getItemViewType(position);
+            convertView = mInflater.inflate(R.layout.row_resource_room, parent, false);
+        ResourceRoom resourceRoom = (ResourceRoom)resourceData.get(position);
 
-        if(convertView==null){
-            ResourceItem item = (ResourceItem)getItem(position);
-            // inflate the layout
+                // Map Index
+                TextView mapIndex = (TextView) convertView.findViewById(R.id.map_index);
+
+                // Roomset Name and room
+                TextView  roomsetName = (TextView) convertView.findViewById(R.id.roomset_name);
+
+                // Hours
+                TextView hoursText = (TextView) convertView.findViewById(R.id.roomset_hours);
+
+                // Open / Closed
+                TextView roomsetOpen = (TextView) convertView.findViewById(R.id.roomset_open);
+                TextView roomsetClosed = (TextView) convertView.findViewById(R.id.roomset_closed);
+
+                LinearLayout resourceLayout = (LinearLayout)convertView.findViewById(R.id.resource_layout);
 
 
-            // well set up the ViewHolder
-            viewHolder = new ViewHolderItem();
-            switch (type) {
-                case TYPE_ONLINE:
-                    convertView = mInflater.inflate(R.layout.row_resource, parent, false);
-                    // Name
-                    viewHolder.resourceName = (TextView)convertView.findViewById(R.id.row_resource_name);
+        mapIndex.setText(resourceRoom.getMapItemIndex() + ".");
+        roomsetName.setText(resourceRoom.getRoomset_name() + " (" + resourceRoom.getRoom() + ")");
 
-                    // Room
-                    viewHolder.resourceRoom = (TextView)convertView.findViewById(R.id.row_resource_room);
-
-                    // Status
-                    viewHolder.resourceStatus = (TextView)convertView.findViewById(R.id.row_resource_status);
-                    break;
-                case TYPE_OFFLINE:
-                    convertView = mInflater.inflate(R.layout.row_resource_offline, parent, false);
-                    // Name
-                    viewHolder.resourceName = (TextView)convertView.findViewById(R.id.row_resource_name);
-
-                    // Room
-                    viewHolder.resourceRoom = (TextView)convertView.findViewById(R.id.row_resource_room);
-
-                    // Status
-                    viewHolder.resourceStatus = (TextView)convertView.findViewById(R.id.row_resource_status);
-                    break;
-
-                case TYPE_HEADER:
-                    convertView = mInflater.inflate(R.layout.row_resource_header, parent, false);
-                    // Building Header
-                    viewHolder.resourceHeader = (TextView)convertView.findViewById(R.id.row_resource_header);
-                    break;
+        String hours = "";
+        if (resourceRoom.getHours() != null) {
+            for (int i = 0; i < resourceRoom.getHours().size(); i++) {
+                if (i > 0) {
+                    hours += ",";
+                }
+                hours += resourceRoom.getHours().get(i).getStart_time() + " - " + resourceRoom.getHours().get(i).getEnd_time();
             }
+            hoursText.setText(hours);
+        }
 
-
-            // store the holder with the view.
-            convertView.setTag(viewHolder);
+        if (resourceRoom.isOpen()) {
+            roomsetOpen.setVisibility(View.VISIBLE);
+            roomsetClosed.setVisibility(View.GONE);
         }
         else {
-            // we've just avoided calling findViewById() on resource everytime
-            // just use the viewHolder
-            viewHolder = (ViewHolderItem) convertView.getTag();
+            roomsetOpen.setVisibility(View.GONE);
+            roomsetClosed.setVisibility(View.VISIBLE);
         }
 
-        // object item based on the position
-        ResourceItem item = getItem(position);
 
-        // assign values if the object is not null
-        if(item != null) {
+        if (resourceRoom.getResources() != null) {
+            for (int i = 0; i < resourceRoom.getResources().size(); i++) {
+                LinearLayout resourceRow = (LinearLayout)mInflater.inflate(R.layout.row_resource, parent, false);
 
-            switch (type) {
-                case TYPE_ONLINE:
-                    viewHolder.resourceName.setText(item.getNumber() + ". " + item.getName());
-
-                    // Room
-                    viewHolder.resourceRoom.setText(item.getRoom());
-
-                    // Status
-                    viewHolder.resourceStatus.setText(item.getStatus());
-
-                    break;
-
-                case TYPE_OFFLINE:
-                    viewHolder.resourceName.setText(item.getNumber() + ". " + item.getName());
-
-                    // Room
-                    viewHolder.resourceRoom.setText(item.getRoom());
-
-                    // Status
-                    viewHolder.resourceStatus.setText(item.getStatus());
-
-                    break;
-
-                case TYPE_HEADER:
-                    // Header
-                    viewHolder.resourceHeader.setText("Building " + item.getBuilding());
-                    break;
+                resourceRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Timber.d("clicked");
+                    }
+                });
+                TextView resourceName = (TextView)resourceRow.findViewById(R.id.resource_name);
+                resourceName.setText(resourceRoom.getResources().get(i).getName());
+                resourceLayout.addView(resourceRow);
             }
-
         }
 
         return convertView;
     }
 
-
-    @Override
-    public int getItemViewType(int position) {
-        if (resourceItems.get(position).getBuildingHeader()) {
-            return TYPE_HEADER;
-        }
-        else {
-            return resourceItems.get(position).getStatus().equals(ResourceItem.ONLINE) ? TYPE_ONLINE : TYPE_OFFLINE;
-        }
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return TYPE_MAX_COUNT;
-    }
-
-    static class ViewHolderItem {
-        TextView resourceHeader;
-        TextView resourceName;
+    static class RoomViewHolder {
+        TextView mapIndex;
+        TextView roomsetName;
+        TextView roomName;
         TextView resourceRoom;
         TextView resourceStatus;
+        TextView hours;
+        TextView roomsetOpen;
+        TextView roomsetClosed;
+        LinearLayout resourceLayout;
+    }
+
+    static class ResourceViewHolder {
+        TextView resourceName;
     }
 
 }

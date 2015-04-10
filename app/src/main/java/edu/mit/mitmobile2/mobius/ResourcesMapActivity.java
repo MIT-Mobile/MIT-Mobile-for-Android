@@ -26,6 +26,7 @@ import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapsActivity;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
 
 public class ResourcesMapActivity extends MapsActivity {
 
@@ -134,7 +135,7 @@ public class ResourcesMapActivity extends MapsActivity {
 
     @Override
     protected ArrayAdapter getMapItemAdapter() {
-        return new ResourceRowAdapter(mContext, R.id.row_resource, this.mapItems);
+        return new ResourceListAdapter(mContext, R.id.row_resource, this.mapItems);
     }
 
     @Override

@@ -24,6 +24,7 @@ import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MITApiListView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.mobius.model.QuickSearch;
 import edu.mit.mitmobile2.mobius.model.Roomset;
 import edu.mit.mitmobile2.mobius.model.RoomsetList;
 import timber.log.Timber;
@@ -53,12 +54,12 @@ public class ResourceShopsActivity extends MITActivity   {
                     Timber.d("num roomset = " + response.jsonArray.length());
                     listData  = new RoomsetList(response.jsonArray);
                     Timber.d("listview null =" + (listView == null));
-                    listView.setAdapter(new ArrayAdapter<Roomset>(context,R.layout.row_roomset,listData){
+                    listView.setAdapter(new ArrayAdapter<Roomset>(context,R.layout.row_resource_roomset,listData){
 
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {
                             LayoutInflater inflater = getLayoutInflater();
-                            convertView = inflater.inflate(R.layout.row_roomset, null, false);
+                            convertView = inflater.inflate(R.layout.row_resource_roomset, null, false);
                             TextView tvRoomsetName = (TextView)convertView.findViewById(R.id.roomset_name);
                             Roomset roomset = (Roomset)getItem(position);
                             if (roomset != null) {
@@ -78,8 +79,11 @@ public class ResourceShopsActivity extends MITActivity   {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Roomset roomset = (Roomset)listData.get(position);
                             Intent i = new Intent(context,ResourceListActivity.class);
+                            QuickSearch qs = new QuickSearch();
+                            qs.setType("ROOMSET");
+                            qs.setValue(roomset.get_id());
+                            i.putExtra("quicksearch",qs);
                             startActivity(i);
-                            Timber.d("clicked roomset " + roomset.get_id());
                         }
                     });
                 }

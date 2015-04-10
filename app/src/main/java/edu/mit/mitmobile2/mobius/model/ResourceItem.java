@@ -54,28 +54,12 @@ public class ResourceItem extends MapItem implements Parcelable {
 
 
     public int getMapItemType() {
-        return MapItem.MARKERTYPE;
+        return 0;
     }
 
     @Override
     public MarkerOptions getMarkerOptions() {
-        // sanity check for latitude/longitude
-        // return null if latitude and longitude = 0
-        MarkerOptions m = new MarkerOptions();
-        m.title(this.name);
-        JSONObject data = new JSONObject();
-        try {
-            data.put("mapItemIndex", this.getMapItemIndex());
-            data.put("name", this.getName());
-            data.put("room", this.getRoom());
-            data.put("status", this.getStatus());
-        } catch (JSONException e) {
-            Log.d("ZZZ", e.getMessage());
-        }
-        m.snippet(data.toString());
-        LatLng position = new LatLng(this.latitude, this.longitude);
-        m.position(position);
-        return m;
+        return null;
     } //market
 
 

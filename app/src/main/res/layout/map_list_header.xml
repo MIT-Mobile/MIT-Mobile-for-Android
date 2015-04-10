@@ -1,6 +1,13 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/map_height">
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/transparent_map_overlay"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/shuttle_routes_map_header_height"
+        android:background="@color/transparent" />
+
+</RelativeLayout>

@@ -3,18 +3,19 @@
     android:orientation="vertical"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:background="@android:color/white" >
+    android:background="@color/sbc_header_view"
+    android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
+    android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+    android:paddingTop="@dimen/abc_button_padding_horizontal_material"
+    android:paddingBottom="@dimen/abc_button_padding_horizontal_material" >
 
-    <!-- ROOMSET  -->
+    <!-- RESOURCE TYPE -->
     <TextView
         android:id="@+id/resource_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip"
-        android:paddingLeft="20dip"
-        android:paddingRight="20dip"
-    />
+        style="@android:style/TextAppearance.Medium"
+        />
 
 </LinearLayout>
 

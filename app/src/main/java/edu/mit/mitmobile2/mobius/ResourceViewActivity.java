@@ -1,14 +1,10 @@
 package edu.mit.mitmobile2.mobius;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -22,6 +18,7 @@ import java.util.List;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapsActivity;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
 
 public class ResourceViewActivity extends MITActivity {
 

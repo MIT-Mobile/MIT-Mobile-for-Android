@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
 
 /**
  * Created by sseligma on 2/3/15.
