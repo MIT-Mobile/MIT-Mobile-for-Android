@@ -34,6 +34,7 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
         super(context, layoutResourceId, resourceData);
         this.mContext = context;
         this.resourceData = resourceData;
+
     }
 
 
@@ -79,6 +80,7 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
 
                 v.setTag(resourceHolder);
             }
+
 
         }
         else {

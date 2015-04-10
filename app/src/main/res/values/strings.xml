@@ -90,4 +90,10 @@
     <string name="tour_details">Tour Details…</string>
     <string name="title_activity_tour_directions">Walking Directions</string>
 
+    <string-array name="test">
+        <item>test 1</item>
+        <item>test 2</item>
+        <item>test 3</item>
+    </string-array>
+
 </resources>
