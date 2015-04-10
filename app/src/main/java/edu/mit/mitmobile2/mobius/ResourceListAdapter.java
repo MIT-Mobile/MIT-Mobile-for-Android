@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
@@ -28,93 +30,137 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
 
     private Context mContext;
     private List<Object> resourceData;
-
     public ResourceListAdapter(Context context, int layoutResourceId, List<Object> resourceData) {
         super(context, layoutResourceId, resourceData);
         this.mContext = context;
         this.resourceData = resourceData;
     }
 
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        RoomHolder roomHolder = null;
+        ResourceHolder resourceHolder= null;
 
-        LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = convertView;
+        int type = getItemViewType(position);
 
-            convertView = mInflater.inflate(R.layout.row_resource_room, parent, false);
-        ResourceRoom resourceRoom = (ResourceRoom)resourceData.get(position);
+        if (v == null) {
+            LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            if (type == TYPE_RESOURCE_ROOM) {
+                v = mInflater.inflate(R.layout.row_resource_room, parent, false);
+                // well set up the ViewHolder
+                roomHolder = new RoomHolder();
+                ResourceRoom rr = (ResourceRoom)resourceData.get(position);
 
                 // Map Index
-                TextView mapIndex = (TextView) convertView.findViewById(R.id.map_index);
+                roomHolder.mapIndex = (TextView) v.findViewById(R.id.map_index);
 
                 // Roomset Name and room
-                TextView  roomsetName = (TextView) convertView.findViewById(R.id.roomset_name);
+                roomHolder.roomsetName = (TextView) v.findViewById(R.id.roomset_name);
 
                 // Hours
-                TextView hoursText = (TextView) convertView.findViewById(R.id.roomset_hours);
+                roomHolder.hoursText = (TextView) v.findViewById(R.id.roomset_hours);
 
                 // Open / Closed
-                TextView roomsetOpen = (TextView) convertView.findViewById(R.id.roomset_open);
-                TextView roomsetClosed = (TextView) convertView.findViewById(R.id.roomset_closed);
+                roomHolder.roomsetOpen = (TextView) v.findViewById(R.id.roomset_open);
+                roomHolder.roomsetClosed = (TextView) v.findViewById(R.id.roomset_closed);
 
-                LinearLayout resourceLayout = (LinearLayout)convertView.findViewById(R.id.resource_layout);
-
-
-        mapIndex.setText(resourceRoom.getMapItemIndex() + ".");
-        roomsetName.setText(resourceRoom.getRoomset_name() + " (" + resourceRoom.getRoom() + ")");
-
-        String hours = "";
-        if (resourceRoom.getHours() != null) {
-            for (int i = 0; i < resourceRoom.getHours().size(); i++) {
-                if (i > 0) {
-                    hours += ",";
-                }
-                hours += resourceRoom.getHours().get(i).getStart_time() + " - " + resourceRoom.getHours().get(i).getEnd_time();
+                v.setTag(roomHolder);
             }
-            hoursText.setText(hours);
-        }
+            else {
+                resourceHolder = new ResourceHolder();
 
-        if (resourceRoom.isOpen()) {
-            roomsetOpen.setVisibility(View.VISIBLE);
-            roomsetClosed.setVisibility(View.GONE);
+                v = mInflater.inflate(R.layout.row_resource, parent, false);
+                ResourceItem r = (ResourceItem)resourceData.get(position);
+
+                resourceHolder.resourceName = (TextView)v.findViewById(R.id.resource_name);
+
+                v.setTag(resourceHolder);
+            }
+
         }
         else {
-            roomsetOpen.setVisibility(View.GONE);
-            roomsetClosed.setVisibility(View.VISIBLE);
-        }
-
-
-        if (resourceRoom.getResources() != null) {
-            for (int i = 0; i < resourceRoom.getResources().size(); i++) {
-                LinearLayout resourceRow = (LinearLayout)mInflater.inflate(R.layout.row_resource, parent, false);
-
-                resourceRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Timber.d("clicked");
-                    }
-                });
-                TextView resourceName = (TextView)resourceRow.findViewById(R.id.resource_name);
-                resourceName.setText(resourceRoom.getResources().get(i).getName());
-                resourceLayout.addView(resourceRow);
+            if (type == TYPE_RESOURCE_ROOM) {
+                roomHolder = (RoomHolder) v.getTag();
+            }
+            else {
+                resourceHolder = (ResourceHolder)v.getTag();
             }
         }
 
-        return convertView;
+        // Get item and populate
+        if (type == TYPE_RESOURCE_ROOM) {
+            ResourceRoom rr = (ResourceRoom)resourceData.get(position);
+            // assign values if the object is not null
+            if(rr != null) {
+                // get the TextView from the ViewHolder and then set the text (item name) and tag (item ID) values
+                roomHolder.mapIndex.setText(rr.getMapItemIndex() + ".");
+                roomHolder.roomsetName.setText(rr.getRoom_label());
+
+                String hours = "";
+                if (rr.getHours() != null) {
+                    for (int i = 0; i < rr.getHours().size(); i++) {
+                        if (i > 0) {
+                            hours += ",";
+                        }
+                        hours += rr.getHours().get(i).getStart_time() + " - " + rr.getHours().get(i).getEnd_time();
+                    }
+                    roomHolder.hoursText.setText(hours);
+                }
+
+
+                if (rr.isOpen()) {
+                    roomHolder.roomsetOpen.setVisibility(View.VISIBLE);
+                    roomHolder.roomsetClosed.setVisibility(View.GONE);
+                }
+                else {
+                    roomHolder.roomsetOpen.setVisibility(View.GONE);
+                    roomHolder.roomsetClosed.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+        }
+        else {
+            ResourceItem r  = (ResourceItem)resourceData.get(position);
+            if (r != null) {
+                resourceHolder.resourceName.setText(r.getName());
+            }
+        }
+
+        return v;
     }
 
-    static class RoomViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        int viewType = resourceData.get(position).getClass().getSimpleName().equalsIgnoreCase("ResourceRoom") ? 0 : 1;
+        Timber.d("viewType = " + viewType);
+        return viewType;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    static class RoomHolder {
+        // Map Index
         TextView mapIndex;
-        TextView roomsetName;
-        TextView roomName;
-        TextView resourceRoom;
-        TextView resourceStatus;
-        TextView hours;
+
+        // Roomset Name and room
+        TextView  roomsetName;
+
+        // Hours
+        TextView hoursText;
+
+        // Open / Closed
         TextView roomsetOpen;
         TextView roomsetClosed;
-        LinearLayout resourceLayout;
-    }
 
-    static class ResourceViewHolder {
+    }
+    static class ResourceHolder {
         TextView resourceName;
     }
 

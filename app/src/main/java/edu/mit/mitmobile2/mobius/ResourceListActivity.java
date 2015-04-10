@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -140,22 +141,13 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                     String previousBuilding = "";
 
                     ArrayList mapItems = new ArrayList<MapItem>();
-
-                    HashMap roomMap = new HashMap();
+                    LinkedHashMap<String, ResourceRoom> roomMap = new LinkedHashMap<String, ResourceRoom>();
                     String roomKey = "";
-                    String currentRoomset = "";
-                    String currentRoom = "";
-                    String tmpRoomset;
-                    String tmpRoom;
 
                     // Get today's date to get today's shop hours
                     Clock clock = Clock.systemUTC();
 
                     ZonedDateTime zdt = ZonedDateTime.now(clock);
-
-                    int mapIndex = 0;
-                    Roomset roomset;
-                    ResourceRoom resourceRoom = null;
 
                     if (items.length() > 0) {
 
@@ -164,11 +156,11 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                             Timber.d("ID = " + item.optString("_id"));
 
                             if (item.has("room")) {
-                                roomKey = item.optString("room");
+                                roomKey = item.getString("room");
 
                                 // add the room to the roomMap if it is not defined
                                 if (!roomMap.containsKey(roomKey)) {
-                                    resourceRoom = new ResourceRoom();
+                                    ResourceRoom resourceRoom = new ResourceRoom();
                                     if (item.has("latitude")) {
                                         try {
                                             Double lat = Double.parseDouble(item.getString("latitude"));
@@ -193,10 +185,9 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                     else {
                                         resourceRoom.setLongitude(0);
                                     }
-                                    mapIndex++;
-                                    resourceRoom.setMapItemIndex(mapIndex);
-                                    resourceRoom.setRoom(item.optString("room"));
+                                    resourceRoom.setRoom(item.getString("room"));
                                     resourceRoom.setRoomset_name(item.getJSONObject("roomset").optString("roomset_name"));
+                                    resourceRoom.setRoom_label(resourceRoom.getRoomset_name() + " (" + resourceRoom.getRoom() + ")");
 
                                     resourceRoom.setHours(new ArrayList<RoomsetHours>());
                                     JSONArray hoursArray = item.getJSONArray("hours");
@@ -219,51 +210,67 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                     resourceRoom.setResources(new ArrayList<ResourceItem>());
 
                                     roomMap.put(roomKey,resourceRoom);
+
                                 }
 
-                            }
+                                // resource
+                                ResourceItem r = new ResourceItem();
+                                ResourceRoom rr = roomMap.get(roomKey);
+                                r.setName(item.getString("name") + "");
+                                Timber.d("add new resource " + r.getName());
 
-                            ResourceItem r = new ResourceItem();
-                            r.setName(item.getString("name") + "");
-                            Timber.d("add new resource " + r.getName());
-                            r.setRoom(resourceRoom.getRoom());
-                            r.setLongitude(resourceRoom.getLongitude());
-                            r.setLatitude(resourceRoom.getLatitude());
-                            r.set_category(item.getJSONObject("_category").optString("_id"));
-                            r.setCategory(item.getJSONObject("_category").optString("category"));
-                            r.set_type(item.getJSONObject("_type").optString("_id"));
-                            r.setType(item.getJSONObject("_type").optString("type"));
-                            r.set_template(item.optString("_template"));
+                                r.setRoom(rr.getRoom());
+                                r.setLongitude(rr.getLongitude());
+                                r.setLatitude(rr.getLatitude());
+                                r.set_category(item.getJSONObject("_category").optString("_id"));
+                                r.setCategory(item.getJSONObject("_category").optString("category"));
+                                r.set_type(item.getJSONObject("_type").optString("_id"));
+                                r.setType(item.getJSONObject("_type").optString("type"));
+                                r.set_template(item.optString("_template"));
 
-                            JSONArray jAttributes = item.getJSONArray("attribute_values");
-                            for (int a = 0; a < jAttributes.length(); a++) {
-                                JSONObject jAttribute = jAttributes.getJSONObject(a);
+                                JSONArray jAttributes = item.getJSONArray("attribute_values");
+                                for (int a = 0; a < jAttributes.length(); a++) {
+                                    JSONObject jAttribute = jAttributes.getJSONObject(a);
 
-                                // only add attributes with labels - missing labels should only occur in dev
-                                if (jAttribute.has("label")) {
-                                    ResourceAttribute attribute = new ResourceAttribute();
-                                    attribute.set_attribute(jAttribute.getString("_id"));
-                                    attribute.setLabel(jAttribute.getString("label"));
-                                    JSONArray jValue = jAttribute.getJSONArray("value");
-                                    attribute.setValue(new ArrayList<String>());
-                                    for (int v = 0; v < jValue.length(); v++) {
-                                        attribute.getValue().add(jValue.getString(v));
+                                    // only add attributes with labels - missing labels should only occur in dev
+                                    if (jAttribute.has("label")) {
+                                        ResourceAttribute attribute = new ResourceAttribute();
+                                        attribute.set_attribute(jAttribute.getString("_id"));
+                                        attribute.setLabel(jAttribute.getString("label"));
+                                        JSONArray jValue = jAttribute.getJSONArray("value");
+                                        attribute.setValue(new ArrayList<String>());
+                                        for (int v = 0; v < jValue.length(); v++) {
+                                            attribute.getValue().add(jValue.getString(v));
+                                        }
+                                        attribute.setValue_id(jAttribute.getString("value_id"));
+                                        r.getAttributes().add(attribute);
                                     }
-                                    attribute.setValue_id(jAttribute.getString("value_id"));
-                                    r.getAttributes().add(attribute);
                                 }
+
+                                roomMap.get(r.getRoom()).getResources().add(r);
+
                             }
 
-                            ResourceRoom rm = (ResourceRoom)roomMap.get(roomKey);
-                            rm.getResources().add(r);
                         }
 
-                        // add each room in roomMap to mapItems
+                        // loop through the roomMap and create the mapItems list with rooms and resources
                         Iterator it = roomMap.entrySet().iterator();
+                        int mapIndex = 1;
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
-                            mapItems.add(pair.getValue());
+                            ResourceRoom rr = (ResourceRoom)pair.getValue();
+                            // set the map index of the room
+                            rr.setMapItemIndex(mapIndex);
+
+                            // add the room to mapItems
+                            mapItems.add(rr);
+
+                            // add resources from this room to mapItems
+                            for (int i = 0; i < rr.getResources().size(); i++) {
+                                mapItems.add(rr.getResources().get(i));
+                            }
                             it.remove(); // avoids a ConcurrentModificationException
+                            mapIndex++;
                         }
 
                         fragment.updateAndShowMapItems(mapItems);

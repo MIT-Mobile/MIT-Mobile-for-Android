@@ -26,6 +26,7 @@ public class ResourceRoom  extends MapItem implements android.os.Parcelable {
     private String room;
     private String roomset_id;
     private String roomset_name;
+    private String room_label; // roomset + room
     private double latitude;
     private double longitude;
     private ArrayList<RoomsetHours> hours;
@@ -70,6 +71,14 @@ public class ResourceRoom  extends MapItem implements android.os.Parcelable {
 
     public void setRoomset_name(String roomset_name) {
         this.roomset_name = roomset_name;
+    }
+
+    public String getRoom_label() {
+        return room_label;
+    }
+
+    public void setRoom_label(String room_label) {
+        this.room_label = room_label;
     }
 
     public double getLatitude() {
@@ -171,6 +180,7 @@ public class ResourceRoom  extends MapItem implements android.os.Parcelable {
         dest.writeString(this.room);
         dest.writeString(this.roomset_id);
         dest.writeString(this.roomset_name);
+        dest.writeString(this.room_label);
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeSerializable(this.hours);
@@ -187,6 +197,7 @@ public class ResourceRoom  extends MapItem implements android.os.Parcelable {
         this.room = in.readString();
         this.roomset_id = in.readString();
         this.roomset_name = in.readString();
+        this.room_label = in.readString();
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.hours = (ArrayList<RoomsetHours>) in.readSerializable();
