@@ -118,6 +118,14 @@ public class MITTourStop extends MapItem {
         this.representations = representations;
     }
 
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     @Override
     public int getMapItemType() {
         return MARKERTYPE;
