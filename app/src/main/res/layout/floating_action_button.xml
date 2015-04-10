@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.getbase.floatingactionbutton.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/directions_button"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="@dimen/solo_map_fab_margin"
+    android:layout_marginBottom="@dimen/solo_map_fab_margin" />
