@@ -48,6 +48,8 @@ public class Constants {
         public static final String CURRENT_MAIN_LOOP_STOP = "currentMainLoopStop";
         public static final String CURRENT_STOP_COORDS = "currentStopCoords";
         public static final String PREV_STOP_COORDS = "prevStopCoords";
+        public static final String TITLE_KEY = "title";
+        public static final String FIRST_TITLE_KEY = "firstTitle";
     }
 
     public static class Resources {

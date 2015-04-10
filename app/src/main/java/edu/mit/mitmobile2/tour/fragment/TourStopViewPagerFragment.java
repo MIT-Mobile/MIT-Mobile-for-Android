@@ -111,6 +111,8 @@ public class TourStopViewPagerFragment extends Fragment {
         if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
             intent.putExtra(Constants.Tours.CURRENT_STOP_COORDS, tour.getStops().get(mitTourStop.getIndex()).getCoordinates());
             intent.putExtra(Constants.Tours.PREV_STOP_COORDS, tour.getStops().get(0).getCoordinates());
+            intent.putExtra(Constants.Tours.TITLE_KEY, mitTourStop.getTitle());
+            intent.putExtra(Constants.Tours.FIRST_TITLE_KEY, tour.getStops().get(0).getTitle());
         }
 
         startActivity(intent);

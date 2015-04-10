@@ -3,7 +3,9 @@ package edu.mit.mitmobile2.tour.activities;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -60,18 +62,31 @@ public class TourDirectionsActivity extends ActionBarActivity {
 
         mapView.getMap().addTileOverlay(options);
 
+        TextView sideTripTitle = (TextView) findViewById(R.id.side_trip_title);
+        TextView sideTripContent = (TextView) findViewById(R.id.side_trip_content);
+        WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
+
         if (direction != null) {
+            sideTripContent.setVisibility(View.GONE);
+            sideTripTitle.setVisibility(View.GONE);
+            directionWebView.setVisibility(View.VISIBLE);
+
             String template = readInHtmlTemplate();
             template = template.replace("__TITLE__", direction.getTitle());
             template = template.replace("__BODY__", direction.getBodyHtml());
             template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
 
-            WebView directionWebView = (WebView) findViewById(R.id.directions_html_view);
             directionWebView.loadData(template, "text/html", "utf-8");
 
             LatLngBounds bounds = drawRoutePath(direction.getPathList());
             setToDefaultBounds(bounds, false, 0);
         } else {
+            sideTripContent.setVisibility(View.VISIBLE);
+            sideTripTitle.setVisibility(View.VISIBLE);
+            directionWebView.setVisibility(View.GONE);
+
+            sideTripTitle.setText(getString(R.string.side_trip_directions_1) + getIntent().getStringExtra(Constants.Tours.FIRST_TITLE_KEY) + getString(R.string.side_trip_directions_2) + getIntent().getStringExtra(Constants.Tours.TITLE_KEY));
+
             double[] currentStopCoords = getIntent().getDoubleArrayExtra(Constants.Tours.CURRENT_STOP_COORDS);
             double[] prevStopCoords = getIntent().getDoubleArrayExtra(Constants.Tours.PREV_STOP_COORDS);
 
@@ -95,7 +110,7 @@ public class TourDirectionsActivity extends ActionBarActivity {
             template = new String(buffer, "UTF-8");
 
         } catch (IOException e) {
-            Timber.e(e, "Failed");
+            Timber.e(e, "HTML read Failed");
         }
         return template;
     }
