@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -54,13 +55,20 @@ public class ResourceListFragment extends MitMapFragment implements GoogleMap.In
 
     @Override
     public View getInfoWindow(Marker marker) {
-        return null;
+        LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout v = (LinearLayout)mInflater.inflate(R.layout.resource_room_info_window,null);
+        TextView roomLabel = (TextView)v.findViewById(R.id.room_label);
+        roomLabel.setText(marker.getTitle());
+        TextView resourceList = (TextView)v.findViewById(R.id.room_resource);
+        resourceList.setText(marker.getSnippet());
+        return v;
     }
 
     @Override
     public View getInfoContents(Marker marker) {
         return null;
     }
+
 
     @Override
     protected ArrayAdapter getMapItemAdapter() {

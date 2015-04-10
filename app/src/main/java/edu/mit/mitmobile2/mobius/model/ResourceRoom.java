@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -154,15 +155,36 @@ public class ResourceRoom  extends MapItem implements android.os.Parcelable {
         // sanity check for latitude/longitude
         // return null if latitude and longitude = 0
         MarkerOptions m = new MarkerOptions();
-        m.title(this.room);
-        JSONObject data = new JSONObject();
-        try {
-            data.put("mapItemIndex", this.getMapItemIndex());
-            data.put("room", this.getRoom());
-        } catch (JSONException e) {
-            Log.d("ZZZ", e.getMessage());
+        m.title(this.room_label);
+
+        if (this.resources != null) {
+            String[] resourceList = new String[this.resources.size()];
+
+            for (int i = 0; i < this.resources.size(); i++) {
+                resourceList[i] = this.resources.get(i).getName();
+            }
+
+            int numResources = resourceList.length;
+
+            switch (numResources) {
+                case 0:
+                    m.snippet(""); // should not happen
+                break;
+
+                case 1:
+                    m.snippet(resourceList[0]);
+                break;
+
+                case 2:
+                    m.snippet(resourceList[0] + '\n' + resourceList[1]);
+                break;
+
+                default:
+                    m.snippet(resourceList[0] + '\n' + resourceList[1] + " + " + (numResources - 2) + " more");
+                break;
+            }
         }
-        m.snippet(data.toString());
+
         LatLng position = new LatLng(this.latitude, this.longitude);
         m.position(position);
         return m;
