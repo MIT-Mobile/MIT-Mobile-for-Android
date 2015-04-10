@@ -14,15 +14,13 @@ import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
-import edu.mit.mitmobile2.tour.utils.TourUtils;
 
-public class MainLoopAdapter extends RecyclerView.Adapter<MainLoopAdapter.ViewHolder> {
-
+public class NearHereAdapter extends RecyclerView.Adapter<NearHereAdapter.ViewHolder> {
     private List<MITTourStop> tourStops;
     private LayoutInflater listContainer;
     private Context context;
 
-    public MainLoopAdapter(Context context, List<MITTourStop> tourStops) {
+    public NearHereAdapter(Context context, List<MITTourStop> tourStops) {
         this.tourStops = tourStops;
         this.context = context;
         listContainer = LayoutInflater.from(context);
@@ -41,11 +39,11 @@ public class MainLoopAdapter extends RecyclerView.Adapter<MainLoopAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return tourStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP;
+        return tourStops.size();
     }
 
     @Override
-    public MainLoopAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NearHereAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = listContainer.inflate(R.layout.main_loop_list_row, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -63,8 +61,8 @@ public class MainLoopAdapter extends RecyclerView.Adapter<MainLoopAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        MITTourStop tourStop = tourStops.get(position % tourStops.size());
+        MITTourStop tourStop = tourStops.get(position);
         Picasso.with(context).load(tourStop.getThumbnailImage().getUrl()).fit().centerCrop().into(viewHolder.stopImageView);
-        viewHolder.stopTitleTextView.setText((((position % tourStops.size()) + 1)) + ". " + tourStop.getTitle());
+        viewHolder.stopTitleTextView.setText(tourStop.getTitle());
     }
 }

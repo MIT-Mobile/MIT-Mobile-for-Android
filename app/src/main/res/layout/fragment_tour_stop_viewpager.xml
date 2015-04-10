@@ -47,7 +47,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/main_loop"
+                android:text="@string/main_loop_recycler_view_title"
                 android:textSize="@dimen/tour_home_title_size"
                 android:textColor="@color/black"
                 />
@@ -71,7 +71,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/near_here"
+                android:text="@string/near_here_recycler_view_title"
                 android:textSize="@dimen/tour_home_title_size"
                 android:textColor="@color/black"
                 />
@@ -80,5 +80,11 @@
                 style="@style/MITView"
                 />
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/near_here_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tour_recycler_view_height"
+            />
     </LinearLayout>
 </ScrollView>

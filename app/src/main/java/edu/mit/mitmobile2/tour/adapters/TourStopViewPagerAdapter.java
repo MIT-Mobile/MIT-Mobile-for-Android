@@ -15,9 +15,9 @@ public class TourStopViewPagerAdapter extends EndlessFragmentStatePagerAdapter {
     private TourStopViewPagerFragment[] fragments;
     private MITTour tour;
 
-    public TourStopViewPagerAdapter(FragmentManager fragmentManager, MITTour tour) {
-        super(fragmentManager, tour.getStops().size());
-        fragments = new TourStopViewPagerFragment[tour.getStops().size()];
+    public TourStopViewPagerAdapter(FragmentManager fragmentManager, MITTour tour, List<MITTourStop> mainLoopStops) {
+        super(fragmentManager, mainLoopStops.size());
+        fragments = new TourStopViewPagerFragment[mainLoopStops.size()];
         this.tour = tour;
     }
 

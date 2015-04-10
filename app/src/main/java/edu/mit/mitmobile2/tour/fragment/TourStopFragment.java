@@ -56,7 +56,7 @@ public class TourStopFragment extends Fragment {
 
         mainLoopStops =  TourUtils.getMainLoopStops(tour.getStops());
 
-        tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), tour);
+        tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), tour, mainLoopStops);
         tourStopViewpager.setAdapter(tourStopViewPagerAdapter);
         int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + getArguments().getInt(Constants.CURRENT_MAIN_LOOP_STOP);
         tourStopViewpager.setCurrentItem(fakePosition);

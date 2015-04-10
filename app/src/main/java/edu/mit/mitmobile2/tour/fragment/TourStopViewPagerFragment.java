@@ -22,6 +22,7 @@ import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.adapters.MainLoopAdapter;
+import edu.mit.mitmobile2.tour.adapters.NearHereAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -39,13 +40,19 @@ public class TourStopViewPagerFragment extends Fragment {
     ScrollView tourStopScrollView;
     @InjectView(R.id.main_loop_recycler_view)
     RecyclerView mainLoopRecyclerView;
+    @InjectView(R.id.near_here_recycler_view)
+    RecyclerView nearHereRecyclerView;
 
     private MITTourStop mitTourStop;
     private TourStopCallback callback;
     private MITTour tour;
     private MainLoopAdapter mainLoopAdapter;
+    private NearHereAdapter nearHereAdapter;
     private List<MITTourStop> mainLoopStops;
-    private LinearLayoutManager layoutManager;
+    private List<MITTourStop> nearHereStops;
+
+    private LinearLayoutManager mainLooplayoutManager;
+    private LinearLayoutManager nearHereLayoutManager;
 
     public static TourStopViewPagerFragment newInstance(MITTourStop mitTourStop, MITTour tour) {
         TourStopViewPagerFragment fragment = new TourStopViewPagerFragment();
@@ -67,6 +74,7 @@ public class TourStopViewPagerFragment extends Fragment {
         tour = getArguments().getParcelable(Constants.TOURS);
         mitTourStop = getArguments().getParcelable(Constants.TOUR_STOP);
 
+        nearHereStops = TourUtils.getNearHereStops(tour.getStops(), mitTourStop);
         mainLoopStops = TourUtils.getMainLoopStops(tour.getStops());
 
         tourStopScrollView.scrollTo(0, tourStopScrollView.getTop());
@@ -82,11 +90,17 @@ public class TourStopViewPagerFragment extends Fragment {
             callback.setSideTripActionBarTitle();
         }
 
-        layoutManager = new LinearLayoutManager(this.getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mainLoopRecyclerView.setLayoutManager(layoutManager);
+        mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
+        mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
         mainLoopAdapter = new MainLoopAdapter(getActivity().getApplicationContext(), mainLoopStops);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
+
+        nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
+        nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
+        nearHereAdapter = new NearHereAdapter(getActivity().getApplicationContext(), nearHereStops);
+        nearHereRecyclerView.setAdapter(nearHereAdapter);
 
         return view;
     }

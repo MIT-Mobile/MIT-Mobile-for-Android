@@ -5,13 +5,13 @@
     android:paddingRight="@dimen/tour_home_padding"
     android:orientation="vertical">
     <ImageView
-        android:id="@+id/main_loop_stop_image_view"
+        android:id="@+id/recycler_view_stop_image_view"
         android:layout_width="@dimen/tour_stop_image_size"
         android:layout_height="@dimen/tour_stop_image_size"
         />
 
     <TextView
-        android:id="@+id/main_loop_stop_title_text_view"
+        android:id="@+id/recycler_view_stop_title_text_view"
         android:layout_width="@dimen/tour_stop_image_size"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
