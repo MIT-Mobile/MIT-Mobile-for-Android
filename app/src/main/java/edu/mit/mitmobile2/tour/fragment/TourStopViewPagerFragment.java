@@ -25,8 +25,7 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.activities.TourDirectionsActivity;
-import edu.mit.mitmobile2.tour.adapters.MainLoopAdapter;
-import edu.mit.mitmobile2.tour.adapters.NearHereAdapter;
+import edu.mit.mitmobile2.tour.adapters.TourStopRecyclerViewAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -52,8 +51,8 @@ public class TourStopViewPagerFragment extends Fragment {
     private MITTourStop mitTourStop;
     private TourStopCallback callback;
     private MITTour tour;
-    private MainLoopAdapter mainLoopAdapter;
-    private NearHereAdapter nearHereAdapter;
+    private TourStopRecyclerViewAdapter mainLoopAdapter;
+    private TourStopRecyclerViewAdapter nearLoopAdapter;
     private List<MITTourStop> mainLoopStops;
     private List<MITTourStop> nearHereStops;
     private int fakePosition;
@@ -105,21 +104,21 @@ public class TourStopViewPagerFragment extends Fragment {
         mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
         if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
-            fakePosition = 0;
+            fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2;
         } else {
             fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
         }
 
         mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
-        mainLoopAdapter = new MainLoopAdapter(getActivity().getApplicationContext(), mainLoopStops);
+        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
 
         nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
         nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
-        nearHereAdapter = new NearHereAdapter(getActivity().getApplicationContext(), nearHereStops);
-        nearHereRecyclerView.setAdapter(nearHereAdapter);
+        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops);
+        nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
         return view;
     }
