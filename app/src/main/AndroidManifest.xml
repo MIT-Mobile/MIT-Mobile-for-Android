@@ -213,7 +213,11 @@
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme"
             android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".tour.activities.TourStopActivity"
+            android:parentActivityName=".MITModuleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme"/>
     </application>
 
 </manifest>

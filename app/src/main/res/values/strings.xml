@@ -89,5 +89,5 @@
     <string name="tour_details">Tour Details…</string>
     <string name="stop_nav_main_loop">Main Loop %1$s of %2$s</string>
     <string name="stop_nav_side_trip">Side Trip</string>
-
+    <string name="near_here">Near Here</string>
 </resources>

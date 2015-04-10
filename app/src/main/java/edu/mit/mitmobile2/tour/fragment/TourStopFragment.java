@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.Iterator;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -17,8 +17,9 @@ import edu.mit.mitmobile2.tour.adapters.TourStopViewPagerAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourUtils;
 
-public class TourStopsFragment extends Fragment {
+public class TourStopFragment extends Fragment {
 
     @InjectView(R.id.tour_stop_view_pager)
     ViewPager tourStopViewpager;
@@ -28,6 +29,15 @@ public class TourStopsFragment extends Fragment {
     private MITTour tour;
     private int currentPosition;
     private TourStopCallback callback;
+
+    public static TourStopFragment newInstance(MITTour tour, int currentStopNum) {
+        TourStopFragment fragment = new TourStopFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.TOURS, tour);
+        args.putInt(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,17 +54,12 @@ public class TourStopsFragment extends Fragment {
 
         tour = getArguments().getParcelable(Constants.TOURS);
 
-        mainLoopStops = tour.getStops();
-        Iterator<MITTourStop> iterator = mainLoopStops.iterator();
-        while (iterator.hasNext()) {
-            if (!iterator.next().getType().equals(Constants.MAIN_LOOP)) {
-                iterator.remove();
-            }
-        }
+        mainLoopStops =  TourUtils.getMainLoopStops(tour.getStops());
 
-        tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), mainLoopStops);
+        tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), tour);
         tourStopViewpager.setAdapter(tourStopViewPagerAdapter);
-        tourStopViewpager.setCurrentItem(getArguments().getInt(Constants.CURRENT_MAIN_LOOP_STOP));
+        int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + getArguments().getInt(Constants.CURRENT_MAIN_LOOP_STOP);
+        tourStopViewpager.setCurrentItem(fakePosition);
 
         tourStopViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

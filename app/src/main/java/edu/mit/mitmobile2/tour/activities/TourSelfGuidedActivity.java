@@ -11,11 +11,9 @@ import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 import edu.mit.mitmobile2.tour.fragment.TourStopMapFragment;
-import edu.mit.mitmobile2.tour.fragment.TourStopViewPagerFragment;
-import edu.mit.mitmobile2.tour.fragment.TourStopsFragment;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 import retrofit.Callback;
@@ -23,7 +21,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import timber.log.Timber;
 
-public class TourSelfGuidedActivity extends MITActivity implements TourStopCallback {
+public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuidedCallback {
 
     /**
      * The plan:
@@ -97,30 +95,19 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
 
     @Override
     public void showMainLoopFragment(int currentStopNum) {
-        TourStopsFragment tourStopsFragment = new TourStopsFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(Constants.TOURS, tour);
-        args.putInt(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
-        tourStopsFragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.tour_frame, tourStopsFragment).commit();
+        Intent intent = new Intent(this, TourStopActivity.class);
+        intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.MAIN_LOOP);
+        intent.putExtra(Constants.TOURS, tour);
+        intent.putExtra(Constants.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        startActivity(intent);
     }
 
     @Override
     public void showSideTripFragment(MITTourStop mitTourStop) {
-        TourStopViewPagerFragment tourStopViewPagerFragment = TourStopViewPagerFragment.newInstance(mitTourStop);
-        Bundle args = new Bundle();
-        args.putParcelable(Constants.TOUR_STOP, mitTourStop);
-        tourStopViewPagerFragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.tour_frame, tourStopViewPagerFragment).commit();
-    }
-
-    @Override
-    public void setMainLoopActionBarTitle(int mainLoopStopNum, int mainLoopStopsSize) {
-        setTitle(String.format(getResources().getString(R.string.stop_nav_main_loop), mainLoopStopNum, mainLoopStopsSize));
-    }
-
-    @Override
-    public void setSideTripActionBarTitle() {
-        setTitle(getResources().getString(R.string.stop_nav_side_trip));
+        Intent intent = new Intent(this, TourStopActivity.class);
+        intent.putExtra(Constants.TOUR_STOP, mitTourStop);
+        intent.putExtra(Constants.TOURS, tour);
+        intent.putExtra(Constants.TOUR_STOP_TYPE, Constants.SIDE_TRIP);
+        startActivity(intent);
     }
 }
