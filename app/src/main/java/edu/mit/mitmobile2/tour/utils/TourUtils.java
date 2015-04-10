@@ -111,7 +111,7 @@ public class TourUtils {
 
     public static List<MITTourStop> setStopNumber(List<MITTourStop> tourStops) {
         for (int i = 0; i < tourStops.size(); i++) {
-            tourStops.get(i).setIndex(i + 1);
+            tourStops.get(i).setIndex(i);
         }
         return tourStops;
     }

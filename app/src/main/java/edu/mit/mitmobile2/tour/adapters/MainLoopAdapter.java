@@ -65,6 +65,6 @@ public class MainLoopAdapter extends RecyclerView.Adapter<MainLoopAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         MITTourStop tourStop = tourStops.get(position % tourStops.size());
         Picasso.with(context).load(tourStop.getThumbnailImage().getUrl()).fit().centerCrop().into(viewHolder.stopImageView);
-        viewHolder.stopTitleTextView.setText(tourStop.getIndex() + ". " + tourStop.getTitle());
+        viewHolder.stopTitleTextView.setText((tourStop.getIndex() + 1) + ". " + tourStop.getTitle());
     }
 }
