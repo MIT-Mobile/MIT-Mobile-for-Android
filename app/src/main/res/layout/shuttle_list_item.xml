@@ -13,61 +13,64 @@
 
         <ImageView
             android:id="@+id/shuttle_route_imageview"
-            style="@style/MITShuttleRoutesImage"
-            />
+            style="@style/MITShuttleRoutesImage"/>
+
         <TextView
             android:id="@+id/shuttle_route_textview"
             android:layout_toRightOf="@id/shuttle_route_imageview"
-            style="@style/MITShuttleRoutesLabel"
-            />
+            style="@style/MITShuttleRoutesLabel"/>
+
     </RelativeLayout>
 
     <View
         android:id="@+id/top_view"
-        style="@style/MITView"
-        />
+        style="@style/MITView"/>
 
     <LinearLayout
         android:id="@+id/shuttle_stop_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/shuttle_route_first_stop"
             android:layout_width="match_parent"
             android:layout_height="@dimen/shuttle_home_cell_height"
             android:background="@drawable/shuttle_route_selector">
+
             <TextView
                 android:id="@+id/first_stop_textview"
                 style="@style/MITShuttleRoutesStopsContent"
-                android:paddingLeft="@dimen/shuttle_home_stop_padding"
-                />
+                android:paddingLeft="@dimen/shuttle_home_stop_padding"/>
+
             <TextView
                 android:id="@+id/first_minute_textview"
-                style="@style/MITShuttleRoutesMinutesContent"
-                />
+                style="@style/MITShuttleRoutesMinutesContent"/>
+
         </RelativeLayout>
 
         <View
             android:id="@+id/bottom_view"
             style="@style/MITView"
-            android:layout_marginLeft="@dimen/shuttle_home_stop_padding"
-            />
+            android:layout_marginLeft="@dimen/shuttle_home_stop_padding"/>
 
         <RelativeLayout
             android:id="@+id/shuttle_route_second_stop"
             android:layout_width="match_parent"
             android:layout_height="@dimen/shuttle_home_cell_height"
             android:background="@drawable/shuttle_route_selector">
+
             <TextView
                 android:id="@+id/second_stop_textview"
                 style="@style/MITShuttleRoutesStopsContent"
-                android:paddingLeft="@dimen/shuttle_home_stop_padding"
-                />
+                android:paddingLeft="@dimen/shuttle_home_stop_padding"/>
+
             <TextView
                 android:id="@+id/second_minute_textview"
-                style="@style/MITShuttleRoutesMinutesContent"
-                />
+                style="@style/MITShuttleRoutesMinutesContent"/>
+
         </RelativeLayout>
+
     </LinearLayout>
+
 </LinearLayout>
