@@ -77,6 +77,12 @@
 
                 <View style="@style/MITView" />
             </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/near_here_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tour_recycler_view_height"
+                />
         </LinearLayout>
     </ScrollView>
 
