@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -96,10 +97,6 @@ public class TourStopViewPagerFragment extends Fragment {
 
         stopTitleTextView.setText(Html.fromHtml(mitTourStop.getTitle()));
 
-        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
-            callback.setSideTripActionBarTitle();
-        }
-
         mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
         mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
@@ -107,6 +104,10 @@ public class TourStopViewPagerFragment extends Fragment {
             fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2;
         } else {
             fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
+        }
+
+        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
+            callback.setSideTripActionBarTitle();
         }
 
         mainLooplayoutManager.scrollToPosition(fakePosition);
@@ -119,6 +120,26 @@ public class TourStopViewPagerFragment extends Fragment {
         nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
         nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops);
         nearHereRecyclerView.setAdapter(nearLoopAdapter);
+
+        tourStopScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    int scrollY = tourStopScrollView.getScrollY();
+                    if (scrollY >= stopTitleTextView.getBottom()) {
+                        callback.setDetailActionbarTitle(mitTourStop);
+                    } else {
+                        if (mitTourStop.getType().equals(Constants.Tours.MAIN_LOOP)) {
+                            callback.setMainLoopActionBarTitle((mitTourStop.getIndex() + 1), mainLoopStops.size());
+                        } else {
+                            callback.setSideTripActionBarTitle();
+                        }
+                    }
+
+                }
+                return false;
+            }
+        });
 
         return view;
     }

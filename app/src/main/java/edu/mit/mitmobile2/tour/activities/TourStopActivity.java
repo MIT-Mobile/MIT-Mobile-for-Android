@@ -48,4 +48,9 @@ public class TourStopActivity extends MITActivity implements TourStopCallback {
     public void setSideTripActionBarTitle() {
         setTitle(getResources().getString(R.string.stop_nav_side_trip));
     }
+
+    @Override
+    public void setDetailActionbarTitle(MITTourStop mitTourStop) {
+        setTitle(mitTourStop.getTitle());
+    }
 }
