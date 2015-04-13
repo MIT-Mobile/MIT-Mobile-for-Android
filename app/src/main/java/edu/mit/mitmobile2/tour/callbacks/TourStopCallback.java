@@ -8,6 +8,6 @@ public interface TourStopCallback {
 
     void setSideTripActionBarTitle();
 
-    void setDetailActionbarTitle(MITTourStop mitTourStop);
+    void setTourStopActionbarTitle(MITTourStop mitTourStop);
 }
 

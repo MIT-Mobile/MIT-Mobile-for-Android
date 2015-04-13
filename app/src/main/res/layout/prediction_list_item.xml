@@ -9,7 +9,7 @@
         android:id="@+id/prediction_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/actionbar_back_button_spacing"
         android:layout_centerVertical="true"
         android:textColor="@color/contents_text"
         android:textStyle="bold" />
@@ -18,7 +18,7 @@
         android:id="@+id/alert_icon"
         android:layout_width="@dimen/shuttle_stop_icon_size"
         android:layout_height="@dimen/shuttle_stop_icon_size"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/actionbar_back_button_spacing"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/alert_icon_outline" />

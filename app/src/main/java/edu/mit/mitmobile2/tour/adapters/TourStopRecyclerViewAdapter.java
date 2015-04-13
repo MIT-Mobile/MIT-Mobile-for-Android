@@ -13,19 +13,23 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
 
 public class TourStopRecyclerViewAdapter extends RecyclerView.Adapter<TourStopRecyclerViewAdapter.ViewHolder> {
 
     private List<MITTourStop> tourStops;
-    private LayoutInflater listContainer;
     private Context context;
+    private LayoutInflater listContainer;
+    private TourSelfGuidedCallback callback;
 
-    public TourStopRecyclerViewAdapter(Context context, List<MITTourStop> tourStops) {
+    public TourStopRecyclerViewAdapter(Context context, List<MITTourStop> tourStops, TourSelfGuidedCallback callback) {
         this.tourStops = tourStops;
         this.context = context;
+        this.callback = callback;
         listContainer = LayoutInflater.from(context);
     }
 
@@ -69,5 +73,16 @@ public class TourStopRecyclerViewAdapter extends RecyclerView.Adapter<TourStopRe
         final MITTourStop tourStop = tourStops.get(position % tourStops.size());
         Picasso.with(context).load(tourStop.getThumbnailImage().getUrl()).fit().centerCrop().into(viewHolder.stopImageView);
         viewHolder.stopTitleTextView.setText((tourStop.getIndex() + 1) + ". " + tourStop.getTitle());
+
+        viewHolder.recyclerViewLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tourStop.getType().equals(Constants.Tours.MAIN_LOOP)) {
+                    callback.showMainLoopFragment(tourStop.getIndex());
+                } else {
+                    callback.showSideTripFragment(tourStop);
+                }
+            }
+        });
     }
 }

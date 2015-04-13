@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -26,6 +25,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.activities.TourDirectionsActivity;
 import edu.mit.mitmobile2.tour.adapters.TourStopRecyclerViewAdapter;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -50,8 +50,10 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
     @InjectView(R.id.directions_button)
     FloatingActionButton directionsButton;
 
+    private TourStopCallback tourStopCallback;
+    private TourSelfGuidedCallback tourSelfGuidedCallback;
+
     private MITTourStop mitTourStop;
-    private TourStopCallback callback;
     private MITTour tour;
     private TourStopRecyclerViewAdapter mainLoopAdapter;
     private TourStopRecyclerViewAdapter nearLoopAdapter;
@@ -81,7 +83,8 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         directionsButton.setColorNormalResId(R.color.mit_red);
         directionsButton.setColorPressedResId(R.color.mit_red_dark);
 
-        callback = (TourStopCallback) getActivity();
+        tourStopCallback = (TourStopCallback) getActivity();
+        tourSelfGuidedCallback = (TourSelfGuidedCallback) getActivity();
 
         tour = getArguments().getParcelable(Constants.Tours.TOUR_KEY);
         mitTourStop = getArguments().getParcelable(Constants.Tours.TOUR_STOP);
@@ -99,6 +102,10 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
 
         stopTitleTextView.setText(Html.fromHtml(mitTourStop.getTitle()));
 
+        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
+            tourStopCallback.setSideTripActionBarTitle();
+        }
+
         mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
         mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
@@ -108,19 +115,15 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
             fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
         }
 
-        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
-            callback.setSideTripActionBarTitle();
-        }
-
         mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
-        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops);
+        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops, tourSelfGuidedCallback);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
 
         nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
         nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
-        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops);
+        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops, tourSelfGuidedCallback);
         nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
         return view;
@@ -154,12 +157,12 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
     @Override
     public void onScrollChanged(TourStopScrollView scrollView, int x, int y, int oldx, int oldy) {
         if (y >= stopTitleTextView.getBottom()) {
-            callback.setDetailActionbarTitle(mitTourStop);
+            tourStopCallback.setTourStopActionbarTitle(mitTourStop);
         } else {
             if (mitTourStop.getType().equals(Constants.Tours.MAIN_LOOP)) {
-                callback.setMainLoopActionBarTitle((mitTourStop.getIndex() + 1), mainLoopStops.size());
+                tourStopCallback.setMainLoopActionBarTitle((mitTourStop.getIndex() + 1), mainLoopStops.size());
             } else {
-                callback.setSideTripActionBarTitle();
+                tourStopCallback.setSideTripActionBarTitle();
             }
         }
     }
