@@ -101,7 +101,7 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
         shuttleListView.setAdapter(mitShuttleAdapter);
         initialShuttleView();
 
-        shuttleRefreshLayout.setColorSchemeResources(R.color.mit_grey, R.color.mit_red);
+        shuttleRefreshLayout.setColorSchemeResources(R.color.black, R.color.mit_red);
 
         shuttleRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

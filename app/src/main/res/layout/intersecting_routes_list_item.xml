@@ -8,18 +8,18 @@
         android:id="@+id/route_image_view"
         android:layout_width="@dimen/shuttle_stop_icon_size"
         android:layout_height="@dimen/shuttle_stop_icon_size"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/actionbar_back_button_spacing"
         android:layout_centerVertical="true"
-        android:src="@drawable/shuttle_small_unknown"/>
+        android:src="@drawable/shuttle_small_unknown" />
 
     <TextView
         android:id="@+id/route_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/shuttle_stop_small_margin"
+        android:layout_marginLeft="@dimen/actionbar_back_button_spacing"
         android:layout_toRightOf="@id/route_image_view"
         android:layout_centerVertical="true"
         android:textColor="@color/contents_text"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </RelativeLayout>

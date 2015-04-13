@@ -78,7 +78,7 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         myLocationButton = (FloatingActionButton) view.findViewById(R.id.my_location_button);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.shuttle_route_refresh_layout);
         swipeRefreshLayout.setEnabled(false);
-        swipeRefreshLayout.setColorSchemeResources(R.color.mit_grey, R.color.mit_red);
+        swipeRefreshLayout.setColorSchemeResources(R.color.black, R.color.mit_red);
         transparentLandscapeView = view.findViewById(R.id.transparent_map_overlay_landscape);
 
         setupFabButtons();

@@ -224,7 +224,12 @@ public class MITMapView {
     }
 
     public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear, Boolean fit) {
-        this.mapItems.addAll(mapItems);
+        for (MapItem mapItem : mapItems) {
+            if (!mapItem.isVehicle()) {
+                this.mapItems.add(mapItem);
+            }
+        }
+
         if (clear) {
             mMap.clear();
         }
