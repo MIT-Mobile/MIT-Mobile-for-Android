@@ -43,4 +43,5 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'org.threeten:threetenbp:1.2'
+    compile 'com.koushikdutta.ion:ion:2.+'
 }

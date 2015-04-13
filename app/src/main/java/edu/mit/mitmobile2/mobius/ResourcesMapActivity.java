@@ -26,6 +26,7 @@ import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapsActivity;
+import edu.mit.mitmobile2.mobius.model.ResourceAttribute;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
 
 public class ResourcesMapActivity extends MapsActivity {

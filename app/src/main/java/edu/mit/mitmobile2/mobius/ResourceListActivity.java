@@ -7,24 +7,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.google.android.gms.games.multiplayer.realtime.Room;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.threeten.bp.Clock;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.ZoneOffset;
 import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import edu.mit.mitmobile2.APIJsonResponse;
@@ -32,9 +24,9 @@ import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.mobius.model.QuickSearch;
+import edu.mit.mitmobile2.mobius.model.ResourceAttribute;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import edu.mit.mitmobile2.mobius.model.ResourceRoom;
-import edu.mit.mitmobile2.mobius.model.Roomset;
 import edu.mit.mitmobile2.mobius.model.RoomsetHours;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import timber.log.Timber;
@@ -227,7 +219,23 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                 r.set_type(item.getJSONObject("_type").optString("_id"));
                                 r.setType(item.getJSONObject("_type").optString("type"));
                                 r.set_template(item.optString("_template"));
+                                r.setStatus(item.optString("status"));
 
+                                // Images
+                                if (item.has("_image")) {
+                                    try {
+                                        JSONArray jImages = item.getJSONArray("_image");
+                                        r.setImages(new String[jImages.length()]);
+                                        for (int j = 0; j < jImages.length(); j++) {
+                                            r.getImages()[j] = jImages.getJSONObject(j).optString("small_id");
+                                        }
+                                    }
+                                    catch (org.json.JSONException e) {
+                                        Timber.d(e.getMessage());
+                                    }
+                                }
+
+                                // Attributes
                                 JSONArray jAttributes = item.getJSONArray("attribute_values");
                                 for (int a = 0; a < jAttributes.length(); a++) {
                                     JSONObject jAttribute = jAttributes.getJSONObject(a);

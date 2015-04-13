@@ -157,16 +157,22 @@
             android:parentActivityName=".MITModuleActivity" />
 
         <activity
-            android:name=".mobius.ResourceListActivity"
+            android:name=".mobius.ResourceSearchActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity" />
 
         <activity
+            android:name=".mobius.ResourceListActivity"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"
+            android:parentActivityName=".mobius.ResourcesActivity" />
+
+        <activity
             android:name=".mobius.ResourceViewActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
-            android:parentActivityName=".MITModuleActivity" />
+            android:parentActivityName=".mobius.ResourceListActivity" />
 
     <meta-data
             android:name="com.google.android.gms.version"

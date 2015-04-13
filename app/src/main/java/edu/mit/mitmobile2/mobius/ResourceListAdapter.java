@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -77,6 +78,7 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
                 ResourceItem r = (ResourceItem)resourceData.get(position);
 
                 resourceHolder.resourceName = (TextView)v.findViewById(R.id.resource_name);
+                resourceHolder.resourceStatus = (ImageView)v.findViewById(R.id.resource_offline);
 
                 v.setTag(resourceHolder);
             }
@@ -129,6 +131,13 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
             ResourceItem r  = (ResourceItem)resourceData.get(position);
             if (r != null) {
                 resourceHolder.resourceName.setText(r.getName());
+
+                if (r.getStatus().equalsIgnoreCase("offline")) {
+                    resourceHolder.resourceStatus.setVisibility(View.VISIBLE);
+                }
+                else {
+                    resourceHolder.resourceStatus.setVisibility(View.INVISIBLE);
+                }
             }
         }
 
@@ -164,6 +173,7 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
     }
     static class ResourceHolder {
         TextView resourceName;
+        ImageView resourceStatus;
     }
 
 }

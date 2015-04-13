@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
-import edu.mit.mitmobile2.mobius.ResourceAttribute;
 
 /**
  * Created by sseligma on 4/2/15.

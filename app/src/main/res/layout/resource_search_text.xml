@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- LABEL -->
+    <TextView
+        android:id="@+id/attribute_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ResourceViewAttributeLabel"
+        android:paddingRight="5dip"
+        />
+
+    <!-- VALUE -->
+    <EditText
+        android:id="@+id/attribute_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ResourceViewAttributeValue"
+        android:paddingLeft="5dip"
+        />
+
+</LinearLayout>

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:paddingLeft="28dp"
+    android:paddingLeft="8dp"
     android:paddingRight="@dimen/abc_button_padding_horizontal_material"
     android:paddingTop="@dimen/abc_button_padding_vertical_material"
     android:paddingBottom="@dimen/abc_button_padding_vertical_material"
 
     android:background="@android:color/white" >
+
+    <!-- OFFLINE-->
+    <ImageView
+        android:id="@+id/resource_offline"
+        android:src="@drawable/ic_alert"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        />
 
 
     <!-- RESOURCENAME -->

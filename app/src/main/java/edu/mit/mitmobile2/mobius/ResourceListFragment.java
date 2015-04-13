@@ -30,6 +30,8 @@ import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
+import edu.mit.mitmobile2.mobius.model.ResourceRoom;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
@@ -86,14 +88,20 @@ public class ResourceListFragment extends MitMapFragment implements GoogleMap.In
     @Override
     protected void listItemClicked(int position) {
         // since the listview has a transparent header, the array index is position - 1
+        Intent i = new Intent(context,ResourceViewActivity.class);
         Object o = mapItems.get(position - 1);
         if (o.getClass().getSimpleName().equalsIgnoreCase("ResourceRoom")) {
             Timber.d("detail for multiple resources");
-            Intent i = new Intent(context,ResourceViewActivity.class);
+            // add resources for this room
+            i.putExtra("resources", ((ResourceRoom) o).getResources());
             startActivity(i);
         }
         else {
+            ArrayList<ResourceItem> r = new ArrayList<ResourceItem>();
+            r.add((ResourceItem)o);
             Timber.d("detail for a single resource");
+            i.putExtra("resources", r);
+            startActivity(i);
         }
     }
 }

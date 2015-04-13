@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.mobius;
+package edu.mit.mitmobile2.mobius.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -63,7 +63,7 @@ public class ResourceAttribute implements Parcelable {
         dest.writeString(this.value_id);
     }
 
-    private ResourceAttribute(Parcel in) {
+    public ResourceAttribute(Parcel in) {
         this._attribute = in.readString();
         this.label = in.readString();
         this.value = (ArrayList<String>) in.readSerializable();

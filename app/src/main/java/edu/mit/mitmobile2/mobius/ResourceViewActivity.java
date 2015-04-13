@@ -1,93 +1,66 @@
 package edu.mit.mitmobile2.mobius;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TableLayout;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+
+
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
+import timber.log.Timber;
 
 public class ResourceViewActivity extends MITActivity {
 
     private Context mContext;
     private ResourceItem r;
+    private ArrayList<ResourceItem> resourceList;
     private TableLayout resourceAttributeTable;
     private List resourceAttributeList;
     private ResourceAttributeAdapter resourceAttributeAdapter;
 
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
-    private static final int NUM_PAGES = 5;
-
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
-    private ViewPager mPager;
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
-    private PagerAdapter mPagerAdapter;
-
+    ResourcePageAdapter pageAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
         setContentView(R.layout.activity_screen_slide);
 
-        getSupportActionBar().setTitle("Machine Detail");
+        if (getIntent().hasExtra("resources")) {
+            resourceList = getIntent().getExtras().getParcelableArrayList("resources");
+        }
 
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // When changing pages, reset the action bar actions since they are dependent
-                // on which page is currently active. An alternative approach is to have each
-                // fragment expose actions itself (rather than the activity exposing actions),
-                // but for simplicity, the activity provides the actions in this sample.
-                invalidateOptionsMenu();
-            }
-        });
+        List<Fragment> fragments = getFragments();
+        pageAdapter = new ResourcePageAdapter(getSupportFragmentManager(), fragments);
+        ViewPager pager =
+                (ViewPager)findViewById(R.id.pager);
+        pager.setAdapter(pageAdapter);
     }
 
+    private List<Fragment> getFragments() {
+        List<Fragment> fList = new ArrayList<Fragment>();
 
-
-        private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-            public ScreenSlidePagerAdapter(FragmentManager fm) {
-                super(fm);
-            }
-
-            @Override
-            public Fragment getItem(int position) {
-                return ResourceSlidePageFragment.create(position);
-            }
-
-            @Override
-            public int getCount() {
-                return NUM_PAGES;
+        if (resourceList != null) {
+            Timber.d("sent " + resourceList.size() + " resource items");
+            for (int i = 0; i < resourceList.size(); i++) {
+                fList.add(ResourceViewFragment.newInstance(resourceList.get(i)));
             }
         }
-    }
 
+        return fList;
+    }
+}
 /*
         if(intent.hasExtra("resourceItem")) {
             LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

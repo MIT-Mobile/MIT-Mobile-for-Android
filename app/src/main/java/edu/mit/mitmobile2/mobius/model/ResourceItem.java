@@ -5,20 +5,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
-import edu.mit.mitmobile2.mobius.ResourceAttribute;
 
 /**
  * Created by sseligma on 1/23/15.
@@ -51,6 +45,7 @@ public class ResourceItem extends MapItem implements Parcelable {
     private double longitude;
     private String status;
     private ArrayList<ResourceAttribute> attributes;
+    private String[] images;
 
 
     public int getMapItemType() {
@@ -239,6 +234,14 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.attributes = attributes;
     }
 
+    public String[] getImages() {
+        return images;
+    }
+
+    public void setImages(String[] images) {
+        this.images = images;
+    }
+
     public ResourceItem() {
 
     }
@@ -276,6 +279,7 @@ public class ResourceItem extends MapItem implements Parcelable {
         dest.writeDouble(this.longitude);
         dest.writeString(this.status);
         dest.writeSerializable(this.attributes);
+        dest.writeSerializable(this.images);
         dest.writeInt(this.mapItemType);
         dest.writeByte(isDynamic ? (byte) 1 : (byte) 0);
         dest.writeByte(isVehicle ? (byte) 1 : (byte) 0);
@@ -302,6 +306,7 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.longitude = in.readDouble();
         this.status = in.readString();
         this.attributes = (ArrayList<ResourceAttribute>) in.readSerializable();
+        this.images = (String[] ) in.readSerializable();
         this.mapItemType = in.readInt();
         this.isDynamic = in.readByte() != 0;
         this.isVehicle = in.readByte() != 0;
@@ -318,13 +323,13 @@ public class ResourceItem extends MapItem implements Parcelable {
     };
 
     @Override
-    protected String getTableName() {
-        return null;
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
     }
 
     @Override
-    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-
+    protected String getTableName() {
+        return null;
     }
 
     @Override

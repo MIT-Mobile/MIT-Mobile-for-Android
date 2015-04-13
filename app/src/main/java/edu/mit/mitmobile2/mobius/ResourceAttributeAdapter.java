@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.mobius.model.ResourceAttribute;
 
 /**
  * Created by sseligma on 1/23/15.
