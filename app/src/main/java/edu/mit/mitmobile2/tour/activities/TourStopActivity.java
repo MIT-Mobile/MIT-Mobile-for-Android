@@ -52,6 +52,15 @@ public class TourStopActivity extends MITActivity implements TourStopCallback, T
     }
 
     @Override
+    public void setTourStopActionbarTitle(MITTourStop mitTourStop) {
+        if (mitTourStop.getType().equals(Constants.Tours.MAIN_LOOP)) {
+            setTitle(mitTourStop.getTitle());
+        } else {
+            setTitle(getResources().getString(R.string.stop_nav_side_trip) + " - " + mitTourStop.getTitle());
+        }
+    }
+
+    @Override
     public void showMainLoopFragment(int currentStopNum) {
         Intent intent = new Intent(this, TourStopActivity.class);
         intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, Constants.Tours.MAIN_LOOP);
@@ -84,5 +93,3 @@ public class TourStopActivity extends MITActivity implements TourStopCallback, T
 
     }
 }
-
-
