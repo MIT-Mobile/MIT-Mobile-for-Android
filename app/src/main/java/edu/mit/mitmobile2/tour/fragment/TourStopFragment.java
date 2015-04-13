@@ -22,7 +22,7 @@ import edu.mit.mitmobile2.tour.utils.TourUtils;
 public class TourStopFragment extends Fragment {
 
     @InjectView(R.id.tour_stop_view_pager)
-    ViewPager tourStopViewpager;
+    ViewPager tourStopViewPager;
 
     private TourStopViewPagerAdapter tourStopViewPagerAdapter;
     private List<MITTourStop> mainLoopStops;
@@ -47,7 +47,7 @@ public class TourStopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_tour_stop, container, false);
+        View view = inflater.inflate(R.layout.fragment_tour_stop, container, false);
         ButterKnife.inject(this, view);
 
         callback = (TourStopCallback) getActivity();
@@ -57,15 +57,14 @@ public class TourStopFragment extends Fragment {
         mainLoopStops =  TourUtils.getMainLoopStops(tour.getStops());
 
         tourStopViewPagerAdapter = new TourStopViewPagerAdapter(getFragmentManager(), tour, mainLoopStops);
-        tourStopViewpager.setAdapter(tourStopViewPagerAdapter);
+        tourStopViewPager.setAdapter(tourStopViewPagerAdapter);
         int fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + getArguments().getInt(Constants.Tours.CURRENT_MAIN_LOOP_STOP);
-        tourStopViewpager.setCurrentItem(fakePosition);
+        tourStopViewPager.setCurrentItem(fakePosition);
 
-        tourStopViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        tourStopViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                int realPosition = tourStopViewPagerAdapter.getRealPosition(position);
-                currentPosition = realPosition;
+                currentPosition = tourStopViewPagerAdapter.getRealPosition(position);;
                 int mainLoopStopNum = currentPosition + 1;
                 callback.setMainLoopActionBarTitle(mainLoopStopNum, mainLoopStops.size());
             }

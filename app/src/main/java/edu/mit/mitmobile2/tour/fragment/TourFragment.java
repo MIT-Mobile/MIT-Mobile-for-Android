@@ -52,7 +52,7 @@ public class TourFragment extends Fragment {
     @OnClick(R.id.send_feedback_view)
     public void sendFeedback() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.feedback_email_address)});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject)
                 + " "
                 + TourUtils.getAppVersion()
@@ -121,7 +121,7 @@ public class TourFragment extends Fragment {
             }
         });
 
-        selfGuidedTourView.setBackground(getResources().getDrawable(R.drawable.tours_cover_image));
+        selfGuidedTourView.setBackgroundResource(R.drawable.tours_cover_image);
 
         return view;
     }

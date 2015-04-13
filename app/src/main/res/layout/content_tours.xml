@@ -64,7 +64,8 @@
                 android:src="@drawable/ic_right_arrow"
                 android:layout_alignBottom="@+id/tour_info_view"
                 android:layout_alignTop="@+id/tour_info_view"
-                android:layout_alignRight="@+id/tour_info_view"/>
+                android:layout_marginRight="5dp"
+                android:layout_alignRight="@+id/tour_info_view" />
         </RelativeLayout>
 
         <LinearLayout
@@ -137,10 +138,7 @@
                     android:src="@drawable/email" />
             </RelativeLayout>
 
-            <View
-                style="@style/MITView"
-                android:layout_marginLeft="@dimen/tour_home_padding"
-                android:layout_marginRight="@dimen/tour_home_padding" />
+            <View style="@style/MITView" />
 
             <RelativeLayout
                 android:id="@+id/mit_info_center_view"
@@ -157,10 +155,7 @@
                     android:src="@drawable/open_in_browser" />
             </RelativeLayout>
 
-            <View
-                style="@style/MITView"
-                android:layout_marginLeft="@dimen/tour_home_padding"
-                android:layout_marginRight="@dimen/tour_home_padding" />
+            <View style="@style/MITView" />
 
             <RelativeLayout
                 android:id="@+id/mit_admissions_view"
