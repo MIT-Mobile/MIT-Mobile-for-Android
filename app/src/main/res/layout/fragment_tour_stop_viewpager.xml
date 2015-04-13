@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants" >
 
-    <ScrollView
+    <edu.mit.mitmobile2.tour.utils.TourStopScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/sbc_layout_view"
@@ -85,7 +85,7 @@
                 android:layout_height="@dimen/tour_recycler_view_height"
                 />
         </LinearLayout>
-    </ScrollView>
+    </edu.mit.mitmobile2.tour.utils.TourStopScrollView>
 
     <include
         android:id="@+id/directions_button"

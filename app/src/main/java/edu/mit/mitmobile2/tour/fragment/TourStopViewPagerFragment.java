@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -30,9 +29,11 @@ import edu.mit.mitmobile2.tour.adapters.TourStopRecyclerViewAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourStopScrollView;
+import edu.mit.mitmobile2.tour.utils.TourStopScrollViewListener;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
 
-public class TourStopViewPagerFragment extends Fragment {
+public class TourStopViewPagerFragment extends Fragment implements TourStopScrollViewListener {
 
     @InjectView(R.id.stop_image_view)
     ImageView stopImageView;
@@ -41,7 +42,7 @@ public class TourStopViewPagerFragment extends Fragment {
     @InjectView(R.id.stop_thumbnail_title_text_view)
     TextView stopTitleTextView;
     @InjectView(R.id.tour_stop_scrollview)
-    ScrollView tourStopScrollView;
+    TourStopScrollView tourStopScrollView;
     @InjectView(R.id.main_loop_recycler_view)
     RecyclerView mainLoopRecyclerView;
     @InjectView(R.id.near_here_recycler_view)
@@ -89,6 +90,7 @@ public class TourStopViewPagerFragment extends Fragment {
         mainLoopStops = TourUtils.getMainLoopStops(tour.getStops());
 
         tourStopScrollView.scrollTo(0, tourStopScrollView.getTop());
+        tourStopScrollView.setScrollViewListener(this);
 
         stopImageView.setAdjustViewBounds(true);
         Picasso.with(getActivity().getApplicationContext()).load(mitTourStop.getImage().getUrl()).into(stopImageView);
@@ -121,26 +123,6 @@ public class TourStopViewPagerFragment extends Fragment {
         nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops);
         nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
-        tourStopScrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    int scrollY = tourStopScrollView.getScrollY();
-                    if (scrollY >= stopTitleTextView.getBottom()) {
-                        callback.setDetailActionbarTitle(mitTourStop);
-                    } else {
-                        if (mitTourStop.getType().equals(Constants.Tours.MAIN_LOOP)) {
-                            callback.setMainLoopActionBarTitle((mitTourStop.getIndex() + 1), mainLoopStops.size());
-                        } else {
-                            callback.setSideTripActionBarTitle();
-                        }
-                    }
-
-                }
-                return false;
-            }
-        });
-
         return view;
     }
 
@@ -167,5 +149,18 @@ public class TourStopViewPagerFragment extends Fragment {
         }
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onScrollChanged(TourStopScrollView scrollView, int x, int y, int oldx, int oldy) {
+        if (y >= stopTitleTextView.getBottom()) {
+            callback.setDetailActionbarTitle(mitTourStop);
+        } else {
+            if (mitTourStop.getType().equals(Constants.Tours.MAIN_LOOP)) {
+                callback.setMainLoopActionBarTitle((mitTourStop.getIndex() + 1), mainLoopStops.size());
+            } else {
+                callback.setSideTripActionBarTitle();
+            }
+        }
     }
 }
