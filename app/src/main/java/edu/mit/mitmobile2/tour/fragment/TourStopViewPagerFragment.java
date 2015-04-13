@@ -26,6 +26,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.activities.TourDirectionsActivity;
 import edu.mit.mitmobile2.tour.adapters.TourStopRecyclerViewAdapter;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -48,8 +49,10 @@ public class TourStopViewPagerFragment extends Fragment {
     @InjectView(R.id.directions_button)
     FloatingActionButton directionsButton;
 
+    private TourStopCallback tourStopCallback;
+    private TourSelfGuidedCallback tourSelfGuidedCallback;
+
     private MITTourStop mitTourStop;
-    private TourStopCallback callback;
     private MITTour tour;
     private TourStopRecyclerViewAdapter mainLoopAdapter;
     private TourStopRecyclerViewAdapter nearLoopAdapter;
@@ -79,7 +82,8 @@ public class TourStopViewPagerFragment extends Fragment {
         directionsButton.setColorNormalResId(R.color.mit_red);
         directionsButton.setColorPressedResId(R.color.mit_red_dark);
 
-        callback = (TourStopCallback) getActivity();
+        tourStopCallback = (TourStopCallback) getActivity();
+        tourSelfGuidedCallback = (TourSelfGuidedCallback) getActivity();
 
         tour = getArguments().getParcelable(Constants.Tours.TOUR_KEY);
         mitTourStop = getArguments().getParcelable(Constants.Tours.TOUR_STOP);
@@ -97,7 +101,7 @@ public class TourStopViewPagerFragment extends Fragment {
         stopTitleTextView.setText(Html.fromHtml(mitTourStop.getTitle()));
 
         if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
-            callback.setSideTripActionBarTitle();
+            tourStopCallback.setSideTripActionBarTitle();
         }
 
         mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
@@ -111,13 +115,13 @@ public class TourStopViewPagerFragment extends Fragment {
 
         mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
-        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops);
+        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops, tourSelfGuidedCallback);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
 
         nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
         nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
-        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops);
+        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops, tourSelfGuidedCallback);
         nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
         return view;
