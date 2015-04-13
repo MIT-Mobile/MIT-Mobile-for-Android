@@ -17,9 +17,11 @@
     <dimen name="shuttle_listview_divider_height">1dp</dimen>
     <dimen name="shuttle_home_cell_height">48dp</dimen>
     <dimen name="shuttle_phone_cell_height">72dp</dimen>
-    <dimen name="shuttle_home_route_padding">22dp</dimen>
-    <dimen name="shuttle_home_image_margin">16dp</dimen>
+    <dimen name="shuttle_home_route_padding">20dp</dimen>
+    <dimen name="shuttle_home_image_padding">17dp</dimen>
     <dimen name="shuttle_home_stop_padding">60dp</dimen>
+    <dimen name="shuttle_route_image_padding">10dp</dimen>
+    <dimen name="shuttle_route_stop_padding">42dp</dimen>
     <dimen name="shuttle_route_stop_icon_size">42dp</dimen>
     <dimen name="shuttle_phone_cell_top_padding">12dp</dimen>
     <dimen name="shuttle_phone_number_top_padding">8dp</dimen>
@@ -34,6 +36,7 @@
     <dimen name="shuttle_stop_large_margin">24dp</dimen>
     <dimen name="shuttle_stop_cell_height">48dp</dimen>
     <dimen name="shuttle_stop_icon_size">24sp</dimen>
+    <dimen name="actionbar_back_button_spacing">20dp</dimen>
 
     <!--tour-->
     <dimen name="tour_home_image_height">250dp</dimen>

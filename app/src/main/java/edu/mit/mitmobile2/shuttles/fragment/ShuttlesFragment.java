@@ -12,6 +12,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -100,6 +101,8 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
         shuttleListView.setAdapter(mitShuttleAdapter);
         initialShuttleView();
 
+        shuttleRefreshLayout.setColorSchemeResources(R.color.black, R.color.mit_red);
+
         shuttleRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -111,6 +114,7 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
         });
 
         getLoaderManager().initLoader(0, null, this);
+
 
         return view;
     }
@@ -139,18 +143,32 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
                 loadCursor();
                 Timber.d("Predictions OK");
             } else {
+                showRefreshIndicator();
                 ShuttlesDatabaseHelper.clearAllPredictions();
                 loadCursor();
                 updatePredictions();
                 Timber.d("Routes OK, refreshing predictions");
             }
         } else {
+            showRefreshIndicator();
             DBAdapter.getInstance().flushStaleData();
             loadCursor();
             updateAllRoutes();
             immediatelyReloadPredictions = true;
             Timber.d("Refreshing routes");
         }
+    }
+
+    private void showRefreshIndicator() {
+        Timber.d("Manual refresh");
+
+        // Need to post in delayed Handler - bug in Android support that refreshLayout won't appear if called before onMeasure
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                shuttleRefreshLayout.setRefreshing(true);
+            }
+        }, 500);
     }
 
     private void startTimerTask() {
