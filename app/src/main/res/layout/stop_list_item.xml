@@ -8,6 +8,7 @@
         android:id="@+id/stop_icon"
         android:layout_width="@dimen/shuttle_route_stop_padding"
         android:layout_height="@dimen/shuttle_route_stop_padding"
+
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/shuttle_route_image_padding"
         android:layout_alignParentLeft="true" />

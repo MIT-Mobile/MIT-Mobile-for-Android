@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.activities.TourDirectionsActivity;
-import edu.mit.mitmobile2.tour.adapters.MainLoopAdapter;
+import edu.mit.mitmobile2.tour.adapters.TourStopRecyclerViewAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
@@ -43,15 +43,22 @@ public class TourStopViewPagerFragment extends Fragment {
     ScrollView tourStopScrollView;
     @InjectView(R.id.main_loop_recycler_view)
     RecyclerView mainLoopRecyclerView;
+    @InjectView(R.id.near_here_recycler_view)
+    RecyclerView nearHereRecyclerView;
     @InjectView(R.id.directions_button)
     FloatingActionButton directionsButton;
 
     private MITTourStop mitTourStop;
     private TourStopCallback callback;
     private MITTour tour;
-    private MainLoopAdapter mainLoopAdapter;
+    private TourStopRecyclerViewAdapter mainLoopAdapter;
+    private TourStopRecyclerViewAdapter nearLoopAdapter;
     private List<MITTourStop> mainLoopStops;
-    private LinearLayoutManager layoutManager;
+    private List<MITTourStop> nearHereStops;
+    private int fakePosition;
+
+    private LinearLayoutManager mainLooplayoutManager;
+    private LinearLayoutManager nearHereLayoutManager;
 
     public static TourStopViewPagerFragment newInstance(MITTourStop mitTourStop, MITTour tour) {
         TourStopViewPagerFragment fragment = new TourStopViewPagerFragment();
@@ -77,6 +84,7 @@ public class TourStopViewPagerFragment extends Fragment {
         tour = getArguments().getParcelable(Constants.Tours.TOUR_KEY);
         mitTourStop = getArguments().getParcelable(Constants.Tours.TOUR_STOP);
 
+        nearHereStops = TourUtils.getNearHereStops(tour.getStops(), mitTourStop);
         mainLoopStops = TourUtils.getMainLoopStops(tour.getStops());
 
         tourStopScrollView.scrollTo(0, tourStopScrollView.getTop());
@@ -92,11 +100,25 @@ public class TourStopViewPagerFragment extends Fragment {
             callback.setSideTripActionBarTitle();
         }
 
-        layoutManager = new LinearLayoutManager(this.getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mainLoopRecyclerView.setLayoutManager(layoutManager);
-        mainLoopAdapter = new MainLoopAdapter(getActivity().getApplicationContext(), mainLoopStops);
+        mainLooplayoutManager = new LinearLayoutManager(this.getActivity());
+        mainLooplayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
+            fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2;
+        } else {
+            fakePosition = mainLoopStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP / 2 + mitTourStop.getIndex();
+        }
+
+        mainLooplayoutManager.scrollToPosition(fakePosition);
+        mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
+        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
+
+        nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
+        nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
+        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops);
+        nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
         return view;
     }
@@ -106,10 +128,18 @@ public class TourStopViewPagerFragment extends Fragment {
         //TODO: animate away
 
         Intent intent = new Intent(getActivity(), TourDirectionsActivity.class);
-        intent.putExtra(Constants.Tours.DIRECTION_KEY, mitTourStop.getDirection());
+        int index = mitTourStop.getIndex();
+        int prevIndex;
+        if (index == 0) {
+            prevIndex = mainLoopStops.size() - 1;
+        } else {
+            prevIndex = index - 1;
+        }
+
+        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(prevIndex).getDirection());
 
         if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
-            intent.putExtra(Constants.Tours.CURRENT_STOP_COORDS, tour.getStops().get(mitTourStop.getIndex()).getCoordinates());
+            intent.putExtra(Constants.Tours.CURRENT_STOP_COORDS, tour.getStops().get(index).getCoordinates());
             intent.putExtra(Constants.Tours.PREV_STOP_COORDS, tour.getStops().get(0).getCoordinates());
             intent.putExtra(Constants.Tours.TITLE_KEY, mitTourStop.getTitle());
             intent.putExtra(Constants.Tours.FIRST_TITLE_KEY, tour.getStops().get(0).getTitle());

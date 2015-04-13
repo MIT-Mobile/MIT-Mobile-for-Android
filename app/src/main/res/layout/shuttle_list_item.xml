@@ -14,12 +14,13 @@
         <ImageView
             android:id="@+id/shuttle_route_imageview"
             style="@style/MITShuttleRoutesImage"
-            android:layout_marginLeft="@dimen/shuttle_home_image_padding"/>
+            android:layout_marginLeft="@dimen/shuttle_home_image_padding" />
 
         <TextView
             android:id="@+id/shuttle_route_textview"
             android:layout_toRightOf="@id/shuttle_route_imageview"
             style="@style/MITShuttleRoutesLabel" />
+
     </RelativeLayout>
 
     <View
@@ -46,6 +47,7 @@
             <TextView
                 android:id="@+id/first_minute_textview"
                 style="@style/MITShuttleRoutesMinutesContent" />
+
         </RelativeLayout>
 
         <View
@@ -68,5 +70,7 @@
                 android:id="@+id/second_minute_textview"
                 style="@style/MITShuttleRoutesMinutesContent" />
         </RelativeLayout>
+
     </LinearLayout>
+
 </LinearLayout>
