@@ -137,7 +137,9 @@
                     android:text="@string/send_feedback" />
             </LinearLayout>
 
-            <View style="@style/MITView" />
+            <View
+                style="@style/MITView"
+                android:layout_marginLeft="@dimen/tour_home_padding"/>
 
             <LinearLayout
                 android:id="@+id/mit_info_center_view"
@@ -154,7 +156,9 @@
                     android:text="@string/mit_info_center" />
             </LinearLayout>
 
-            <View style="@style/MITView" />
+            <View
+                style="@style/MITView"
+                android:layout_marginLeft="@dimen/tour_home_padding"/>
 
             <LinearLayout
                 android:id="@+id/mit_admissions_view"
