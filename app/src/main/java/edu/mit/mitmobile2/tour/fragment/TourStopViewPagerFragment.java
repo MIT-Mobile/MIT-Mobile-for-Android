@@ -96,7 +96,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         tourStopScrollView.setScrollViewListener(this);
 
         stopImageView.setAdjustViewBounds(true);
-        Picasso.with(getActivity().getApplicationContext()).load(mitTourStop.getImage().getUrl()).into(stopImageView);
+        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).into(stopImageView);
 
         stopBodyWebView.loadData(mitTourStop.getBodyHtml(), "text/html", "UTF-8");
 
@@ -142,13 +142,13 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
             prevIndex = index - 1;
         }
 
-        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(prevIndex).getDirection());
-
         if (mitTourStop.getType().equals(Constants.Tours.SIDE_TRIP)) {
             intent.putExtra(Constants.Tours.CURRENT_STOP_COORDS, tour.getStops().get(index).getCoordinates());
             intent.putExtra(Constants.Tours.PREV_STOP_COORDS, tour.getStops().get(0).getCoordinates());
             intent.putExtra(Constants.Tours.TITLE_KEY, mitTourStop.getTitle());
             intent.putExtra(Constants.Tours.FIRST_TITLE_KEY, tour.getStops().get(0).getTitle());
+        } else {
+            intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(prevIndex).getDirection());
         }
 
         startActivity(intent);
