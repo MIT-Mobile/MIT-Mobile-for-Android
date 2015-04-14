@@ -83,7 +83,15 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
 
     @Override
     protected boolean handleSearch(String search) {
-        return super.handleSearch(search);
+        if (search != null) {
+            HashMap<String,String> paramsMap = new HashMap();
+            paramsMap.put("q",search);
+            this.getMapItems(paramsMap);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     protected void getMapItems(QuickSearch qs) {
@@ -122,6 +130,10 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
         apiClient.getJson("resource", paramsMap, getHandler());
     }
 
+    protected void getMapItems(HashMap<String,String> paramsMap) {
+        apiClient.getJson("resource", paramsMap, getHandler());
+    }
+
     protected Handler getHandler() {
 
         Handler handler = new Handler() {
@@ -146,7 +158,6 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
 
                         for (int i = 0; i < items.length(); i++) {
                             JSONObject item = items.getJSONObject(i);
-                            Timber.d("ID = " + item.optString("_id"));
 
                             if (item.has("room")) {
                                 roomKey = item.getString("room");
@@ -210,7 +221,6 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                 ResourceItem r = new ResourceItem();
                                 ResourceRoom rr = roomMap.get(roomKey);
                                 r.setName(item.getString("name") + "");
-                                Timber.d("add new resource " + r.getName());
 
                                 r.setRoom(rr.getRoom());
                                 r.setLongitude(rr.getLongitude());
@@ -283,19 +293,6 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
         };
         return handler;
     }
-
-/*
-    @Override
-    protected boolean handleSearch(String query) {
-        Log.d(TAG, "handleSearch()");
-        if (query != null) {
-            Map params = new HashMap<String, String>();
-            params.put("q", query);
-            this.getMapItems(params);
-        }
-        return true;
-    }
-*/
 
 
 }

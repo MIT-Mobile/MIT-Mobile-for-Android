@@ -20,7 +20,7 @@
     <!-- MAP INDEX-->
     <TextView
         android:id="@+id/map_index"
-        android:layout_width="20dp"
+        android:layout_width="25dp"
         android:layout_height="wrap_content"
         style="@android:style/TextAppearance.Medium"
         />
@@ -55,7 +55,8 @@
 
 <LinearLayout
     android:orientation="horizontal"
-    android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
     android:layout_alignParentRight="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
