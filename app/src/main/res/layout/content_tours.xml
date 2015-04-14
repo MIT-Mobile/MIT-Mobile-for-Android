@@ -121,61 +121,60 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
-
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/send_feedback_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
+                android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
+                <ImageView
+                    style="@style/MITTourHomeImage"
+                    android:src="@drawable/email" />
 
                 <TextView
                     style="@style/MITTourHomeContent"
                     android:text="@string/send_feedback" />
-
-                <ImageView
-                    style="@style/MITTourHomeImage"
-                    android:src="@drawable/email" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <View
                 style="@style/MITView"
                 android:layout_marginLeft="@dimen/tour_home_padding"
                 android:layout_marginRight="@dimen/tour_home_padding" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/mit_info_center_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
+                android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
+                <ImageView
+                    style="@style/MITTourHomeImage"
+                    android:src="@drawable/open_in_browser" />
 
                 <TextView
                     style="@style/MITTourHomeContent"
                     android:text="@string/mit_info_center" />
-
-                <ImageView
-                    style="@style/MITTourHomeImage"
-                    android:src="@drawable/open_in_browser" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <View
                 style="@style/MITView"
                 android:layout_marginLeft="@dimen/tour_home_padding"
                 android:layout_marginRight="@dimen/tour_home_padding" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/mit_admissions_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
+                android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
+                <ImageView
+                    style="@style/MITTourHomeImage"
+                    android:src="@drawable/open_in_browser" />
 
                 <TextView
                     style="@style/MITTourHomeContent"
                     android:text="@string/mit_admissions" />
-
-                <ImageView
-                    style="@style/MITTourHomeImage"
-                    android:src="@drawable/open_in_browser" />
-            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <View style="@style/MITView" />
