@@ -14,19 +14,13 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -37,30 +31,23 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.mitmobile2.tour.fragment.TourFragment;
 import timber.log.Timber;
 
-public class MITModuleActivity extends MITActivity implements ActionBar.TabListener, ActionBar.OnNavigationListener {
+public class MITModuleActivity extends MITActivity {
 
     private static DrawerLayout mDrawerLayout;
-    private Spinner mSpinner;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Tab mTab;
-    private CharSequence mDrawerTitle;
     protected CharSequence mTitle;
-    protected String longName; // may be able to lose this in place of mTitle
-    protected List spinnerList;
     protected int contentLayoutId;
-    private ViewStub contentViewStub;
     private ProgressBar progressBar;
     protected LayoutInflater inflater;
 
@@ -73,13 +60,11 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     private String[] params;
     private NavItem navItem;
     public Context mContext;
-    private SharedPreferences appModulePref;
     private String currentModule;
 
     public static List<NavItem> navigationTitles = new ArrayList<>();
     public static Map<String, NavItem> navMap = null;
     public static Map<String, String> moduleMap = null;
-    public static HashMap<String, Fragment> fragmentMap = new HashMap<>();
 
     private NavItem mNavItem;
 
@@ -164,7 +149,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
             public boolean onQueryTextSubmit(String query) {
                 //Here u can get the value "query" which is entered in the search box.
-                Log.d("ZZZ", "search triggered");
+                Timber.d("Search triggered");
                 searchView.clearFocus();
                 return handleSearch(query);
             }
@@ -268,7 +253,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
     }
 
     private void swapInFragment(String intentString, String title) {
-        Log.d("ZZZ","intent string = " + intentString);
+        Log.d("ZZZ", "intent string = " + intentString);
         Fragment f = null;
         try {
             f = (Fragment) Class.forName(intentString).newInstance();
@@ -282,6 +267,12 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
         setTitle(title);
+
+        if (f instanceof TourFragment) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }
     }
 
     @Override
@@ -309,30 +300,6 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onTabSelected(Tab arg0, FragmentTransaction arg1) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(int arg0, long arg1) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     public static Account createSyncAccount(Context context) {
@@ -377,7 +344,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
                 is.read(buffer);
                 is.close();
                 json = new String(buffer, "UTF-8");
-                Log.d("ZZZ", json);
+                Timber.d(json);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -391,7 +358,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
                         String key = (String) n.next();
                         JSONObject module = navigation.getJSONObject(key);
                         String longName = module.getString("long_name");
-                        Log.d("ZZZ", longName);
+                        Timber.d(longName);
                         keysList.add(longName);
                         NavItem navItem = new NavItem();
                         navItem.setLong_name(longName);
@@ -413,13 +380,13 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
                         MITModuleActivity.navigationTitles.add(navItem);
 
                     } catch (JSONException e) {
-                        Log.d("ZZZ", e.getMessage().toString());
+                        Timber.e(e, "Load Navigation");
                     }
                 }
 
 
             } catch (Exception e) {
-                Log.d("ZZZ", e.getMessage().toString());
+                Timber.e(e, "Load Navigation");
             }
         }
     }
@@ -434,20 +401,10 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
 
     public void showProgressBar() {
         this.progressBar.setVisibility(View.VISIBLE);
-        this.contentViewStub.setVisibility(View.GONE);
     }
 
     public void hideProgressBar() {
         this.progressBar.setVisibility(View.GONE);
-        this.contentViewStub.setVisibility(View.VISIBLE);
-    }
-
-    public List getSpinnerList() {
-        return spinnerList;
-    }
-
-    public void setSpinnerList(List spinnerList) {
-        this.spinnerList = spinnerList;
     }
 
     public CharSequence getmTitle() {
@@ -465,8 +422,8 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         //TODO: Fix this part, it handles external URI calls into the app
 
         Intent intent = getIntent();
-        Log.d("ZZZ", "Intent: " + intent.getDataString());
-        Log.d("ZZZ", "Scheme: " + intent.getScheme());
+        Timber.d("Intent: " + intent.getDataString());
+        Timber.d("Scheme: " + intent.getScheme());
 
         //If the intent has come from a URL
         //Could swap activities w/fragments, make the call to show fragment in here
@@ -476,7 +433,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
             if (data != null && data.length == 2) {
                 params = data[1].split("/");
                 this.module = params[0];
-                Log.d("ZZZ", "module = " + this.module);
+                Timber.d("module = " + this.module);
                 // Get the long_name of the module
             }
         } else {
@@ -493,7 +450,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
             navItem = MITModuleActivity.navMap.get(MITModuleActivity.moduleMap.get(this.module));
         }
 
-        Log.d("ZZZ", "navItem = " + navItem.toString());
+        Timber.d("navItem = " + navItem.toString());
         if (navItem != null) {
             swapInFragment(navItem.getIntent(), navItem.getLongName());
         }
@@ -505,7 +462,7 @@ public class MITModuleActivity extends MITActivity implements ActionBar.TabListe
         if (currentModule != null) {
             SharedPreferences.Editor editor = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit();
             editor.putString(LAST_MODULE, currentModule);
-            editor.commit();
+            editor.apply();
         }
     }
 }
