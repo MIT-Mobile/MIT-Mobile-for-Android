@@ -117,13 +117,13 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
 
         mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
-        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops, tourSelfGuidedCallback, true);
+        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops, mitTourStop.getId(), true, tourSelfGuidedCallback);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
 
         nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
         nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
-        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops, tourSelfGuidedCallback, false);
+        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops, mitTourStop.getId(), false, tourSelfGuidedCallback);
         nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
         return view;
