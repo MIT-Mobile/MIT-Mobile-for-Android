@@ -49,4 +49,6 @@
     <dimen name="tour_stop_image_size">80dp</dimen>
     <dimen name="tour_circle_size">15dp</dimen>
     <dimen name="tour_recycler_view_height">180dp</dimen>
+    <dimen name="tour_info_content_margin">34dp</dimen>
+    <dimen name="tour_stop_recyclerview_padding">8dp</dimen>
 </resources>

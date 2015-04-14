@@ -63,7 +63,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/main_loop_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/tour_recycler_view_height" />
+                android:layout_height="@dimen/tour_recycler_view_height"
+                android:paddingLeft="@dimen/tour_home_padding"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -85,6 +86,7 @@
                 android:id="@+id/near_here_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_recycler_view_height"
+                android:paddingLeft="@dimen/tour_home_padding"
                 />
         </LinearLayout>
     </edu.mit.mitmobile2.tour.utils.TourStopScrollView>
