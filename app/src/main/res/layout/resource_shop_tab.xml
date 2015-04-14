@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/resource_view_room_label"
+            style="@style/ResourceViewLocationLabel"
+            android:text="LOCATION"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dip"/>
+
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/color_dark_grey" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/resource_view_room"
+                style="@style/ResourceViewRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"/>
+
+            <ImageView
+                android:src="@drawable/menu_maps"
+                android:id="@+id/resource_view_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+        <!-- HARD CODED HOURS -->
+        <TextView
+            android:id="@+id/resource_view_hours_label"
+            style="@style/ResourceViewLocationLabel"
+            android:text="HOURS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dip"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="@color/color_dark_grey" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- DAY/HOURS Layout -->
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="0dip"
+                >
+
+                <!-- M - F -->
+                <TextView
+                    android:text="Monday - Friday"
+                    android:layout_width="0dip"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    style="@style/ResourceViewAttributeLabel"
+                    android:paddingRight="5dip"
+                    />
+
+                <!-- 9 -5  -->
+                <TextView
+                    android:text="9am - 5pm"
+                    android:layout_width="0dip"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    style="@style/ResourceViewAttributeValue"
+                    android:paddingLeft="5dip"
+                    />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="0dip"
+                >
+
+                <!-- S -->
+                <TextView
+                    android:text="Saturday"
+                    android:layout_width="0dip"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    style="@style/ResourceViewAttributeLabel"
+                    android:paddingRight="5dip"
+                    />
+
+                <!-- 12 - 5  -->
+                <TextView
+                    android:text="12pm - 5pm"
+                    android:layout_width="0dip"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    style="@style/ResourceViewAttributeValue"
+                    android:paddingLeft="5dip"
+                    />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="0dip"
+                >
+
+                <!-- SU -->
+                <TextView
+                    android:text="Sunday"
+                    android:layout_width="0dip"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    style="@style/ResourceViewAttributeLabel"
+                    android:paddingRight="5dip"
+                    />
+
+                <!-- closed  -->
+                <TextView
+                    android:text="closed"
+                    android:layout_width="0dip"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    style="@style/ResourceViewAttributeValue"
+                    android:paddingLeft="5dip"
+                    />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>

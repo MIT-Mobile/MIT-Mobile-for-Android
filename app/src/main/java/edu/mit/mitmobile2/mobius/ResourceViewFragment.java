@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,7 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
 
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
@@ -54,70 +58,92 @@ public class ResourceViewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-
-        ResourceItem resourceItem = getArguments().getParcelable("resource");
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        TabHost tabHost;
+        final ResourceItem resourceItem = getArguments().getParcelable("resource");
         Timber.d("room = " + resourceItem.getName());
         Timber.d(getArguments().toString());
         Timber.d("resourc is null = " + (resourceItem == null));
         View v = inflater.inflate(R.layout.fragment_resource_view, container, false);
+
+        tabHost = (TabHost) v.findViewById(android.R.id.tabhost);
+
+        // setup must be called if not a TabActivity
+        tabHost.setup();
 
         // Resource Image
         String imgUrl = "https://kairos.mit.edu/image/";
 
         if (MITAPIClient.environment.equalsIgnoreCase("dev")) {
             imgUrl = "https://kairos-dev.mit.edu/image/";
-        }
-        else if (MITAPIClient.environment.equalsIgnoreCase("test")) {
+        } else if (MITAPIClient.environment.equalsIgnoreCase("test")) {
             imgUrl = "https://kairos-test.mit.edu/image/";
         }
 
         if (resourceItem.getImages() != null) {
             imgUrl += resourceItem.getImages()[0] + "?size=large";
             Timber.d("image url = " + imgUrl);
-            ImageView resourceImage = (ImageView)v.findViewById(R.id.resource_image);
-            Ion.with(resourceImage).placeholder(R.drawable.ic_launcher).error(R.drawable.ic_alert).load(imgUrl);
+            ImageView resourceImage = (ImageView) v.findViewById(R.id.resource_image);
+            Ion.with(resourceImage).load(imgUrl);
         }
 
         // Resource Name
-        TextView resourceName = (TextView)v.findViewById(R.id.resource_view_name);
+        TextView resourceName = (TextView) v.findViewById(R.id.resource_view_name);
         resourceName.setText(resourceItem.getName());
 
-        // Resource Attributes
-        TableLayout resourceAttributeTable = (TableLayout)v.findViewById(R.id.resource_view_attribute_table);
+        // add shop info tab
+        tabHost.addTab(tabHost.newTabSpec("Shop").setIndicator("Shop").setContent(new TabHost.TabContentFactory() {
+            public View createTabContent(String arg0) {
+                LinearLayout tab1 = (LinearLayout) inflater.inflate(R.layout.resource_shop_tab, null);
+                return tab1;
+            }
+        }));
 
-        // add attributes to the attribute view
-        if (resourceItem.getAttributes() != null) {
-            for (int i = 0; i < resourceItem.getAttributes().size(); i++) {
-                ResourceAttribute a = resourceItem.getAttributes().get(i);
-                Timber.d("attribute " + i + " = " + a.get_id());
+        // add machine specs tab
+        tabHost.addTab(tabHost.newTabSpec("Specs").setIndicator("Specs").setContent(new TabHost.TabContentFactory() {
+            public View createTabContent(String arg0) {
+                LinearLayout tab2 = (LinearLayout) inflater.inflate(R.layout.resource_specs_tab, null);
 
-                TableRow tr = (TableRow) inflater.inflate(R.layout.row_label_value, null);
+                // Resource Attributes
+                TableLayout resourceAttributeTable = (TableLayout) tab2.findViewById(R.id.resource_view_attribute_table);
 
-                //Label
-                TextView label = (TextView) tr.findViewById(R.id.row_label);
-                label.setText(a.getLabel());
+                // add attributes to the attribute view
+                if (resourceItem.getAttributes() != null) {
+                    for (int i = 0; i < resourceItem.getAttributes().size(); i++) {
+                        ResourceAttribute a = resourceItem.getAttributes().get(i);
+                        Timber.d("attribute " + i + " = " + a.get_id());
 
-                //Value
-                TextView value = (TextView) tr.findViewById(R.id.row_value);
-                String valueString = "";
-                if (a.getValue() != null) {
-                    for (int j = 0; j < a.getValue().length; j++) {
-                        String s = (String) a.getValue()[j];
-                        if (!s.trim().equals("")) {
-                            valueString += s + "\n";
+                        TableRow tr = (TableRow) inflater.inflate(R.layout.row_label_value, null);
+
+                        //Label
+                        TextView label = (TextView) tr.findViewById(R.id.row_label);
+                        label.setText(a.getLabel());
+
+                        //Value
+                        TextView value = (TextView) tr.findViewById(R.id.row_value);
+                        String valueString = "";
+                        if (a.getValue() != null) {
+                            for (int j = 0; j < a.getValue().length; j++) {
+                                String s = (String) a.getValue()[j];
+                                if (!s.trim().equals("")) {
+                                    valueString += s + "\n";
+                                }
+                            }
+                        }
+
+                        value.setText(valueString);
+
+                        // only add the attribute if the value is not empty
+                        if (!valueString.isEmpty()) {
+                            resourceAttributeTable.addView(tr);
                         }
                     }
                 }
 
-                value.setText(valueString);
-
-                // only add the attribute if the value is not empty
-                if (!valueString.isEmpty()) {
-                    resourceAttributeTable.addView(tr);
-                }
+                return tab2;
             }
-        }
+        }));
+
         return v;
     }
 }
