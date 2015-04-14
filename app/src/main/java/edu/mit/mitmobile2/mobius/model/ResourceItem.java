@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
+import timber.log.Timber;
 
 /**
  * Created by sseligma on 1/23/15.
@@ -252,6 +253,23 @@ public class ResourceItem extends MapItem implements Parcelable {
     }
 
 
+
+   @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -278,8 +296,8 @@ public class ResourceItem extends MapItem implements Parcelable {
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeString(this.status);
-        dest.writeSerializable(this.attributes);
-        dest.writeSerializable(this.images);
+        dest.writeTypedList(this.attributes);
+        dest.writeStringArray(this.images);
         dest.writeInt(this.mapItemType);
         dest.writeByte(isDynamic ? (byte) 1 : (byte) 0);
         dest.writeByte(isVehicle ? (byte) 1 : (byte) 0);
@@ -305,8 +323,9 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.status = in.readString();
-        this.attributes = (ArrayList<ResourceAttribute>) in.readSerializable();
-        this.images = (String[] ) in.readSerializable();
+        this.attributes = new ArrayList<ResourceAttribute>();
+        in.readTypedList(attributes,ResourceAttribute.CREATOR);
+        this.images = in.createStringArray();
         this.mapItemType = in.readInt();
         this.isDynamic = in.readByte() != 0;
         this.isVehicle = in.readByte() != 0;
@@ -321,19 +340,5 @@ public class ResourceItem extends MapItem implements Parcelable {
             return new ResourceItem[size];
         }
     };
-
-    @Override
-    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-
-    }
-
-    @Override
-    protected String getTableName() {
-        return null;
-    }
-
-    @Override
-    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-
-    }
 }
+

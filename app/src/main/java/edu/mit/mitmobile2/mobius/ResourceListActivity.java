@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -221,13 +222,21 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                 r.set_template(item.optString("_template"));
                                 r.setStatus(item.optString("status"));
 
+                                // Attributes
+                                r.setAttributes(new ArrayList<ResourceAttribute>());
+                                JSONArray jAttributes = item.getJSONArray("attribute_values");
+                                for (int a = 0; a < jAttributes.length(); a++) {
+                                    r.getAttributes().add(new ResourceAttribute(jAttributes.getJSONObject(a)));
+                                }
+
                                 // Images
-                                if (item.has("_image")) {
+                                if (item.has("_image") && !item.isNull("_image")) {
                                     try {
                                         JSONArray jImages = item.getJSONArray("_image");
                                         r.setImages(new String[jImages.length()]);
                                         for (int j = 0; j < jImages.length(); j++) {
-                                            r.getImages()[j] = jImages.getJSONObject(j).optString("small_id");
+                                            JSONObject metadata = jImages.getJSONObject(j).getJSONObject("metadata");
+                                            r.getImages()[j] = metadata.getString("raw_id");
                                         }
                                     }
                                     catch (org.json.JSONException e) {
@@ -235,25 +244,6 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                     }
                                 }
 
-                                // Attributes
-                                JSONArray jAttributes = item.getJSONArray("attribute_values");
-                                for (int a = 0; a < jAttributes.length(); a++) {
-                                    JSONObject jAttribute = jAttributes.getJSONObject(a);
-
-                                    // only add attributes with labels - missing labels should only occur in dev
-                                    if (jAttribute.has("label")) {
-                                        ResourceAttribute attribute = new ResourceAttribute();
-                                        attribute.set_attribute(jAttribute.getString("_id"));
-                                        attribute.setLabel(jAttribute.getString("label"));
-                                        JSONArray jValue = jAttribute.getJSONArray("value");
-                                        attribute.setValue(new ArrayList<String>());
-                                        for (int v = 0; v < jValue.length(); v++) {
-                                            attribute.getValue().add(jValue.getString(v));
-                                        }
-                                        attribute.setValue_id(jAttribute.getString("value_id"));
-                                        r.getAttributes().add(attribute);
-                                    }
-                                }
 
                                 roomMap.get(r.getRoom()).getResources().add(r);
 
@@ -293,5 +283,19 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
         };
         return handler;
     }
+
+/*
+    @Override
+    protected boolean handleSearch(String query) {
+        Log.d(TAG, "handleSearch()");
+        if (query != null) {
+            Map params = new HashMap<String, String>();
+            params.put("q", query);
+            this.getMapItems(params);
+        }
+        return true;
+    }
+*/
+
 
 }
