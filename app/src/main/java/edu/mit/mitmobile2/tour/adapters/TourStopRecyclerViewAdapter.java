@@ -25,11 +25,13 @@ public class TourStopRecyclerViewAdapter extends RecyclerView.Adapter<TourStopRe
     private Context context;
     private LayoutInflater listContainer;
     private TourSelfGuidedCallback callback;
+    private boolean isMainLoop;
 
-    public TourStopRecyclerViewAdapter(Context context, List<MITTourStop> tourStops, TourSelfGuidedCallback callback) {
+    public TourStopRecyclerViewAdapter(Context context, List<MITTourStop> tourStops, TourSelfGuidedCallback callback, boolean isMainLoop) {
         this.tourStops = tourStops;
         this.context = context;
         this.callback = callback;
+        this.isMainLoop = isMainLoop;
         listContainer = LayoutInflater.from(context);
     }
 
@@ -48,7 +50,11 @@ public class TourStopRecyclerViewAdapter extends RecyclerView.Adapter<TourStopRe
 
     @Override
     public int getItemCount() {
-        return tourStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP;
+        if (isMainLoop) {
+            return tourStops.size() * TourUtils.NUMBER_OF_TOUR_LOOP;
+        } else {
+            return tourStops.size();
+        }
     }
 
     @Override
