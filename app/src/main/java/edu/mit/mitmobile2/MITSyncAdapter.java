@@ -181,7 +181,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         List<ContentProviderOperation> operations = new ArrayList<>();
 
         for (ContentValues v : values) {
-            if (v.get(Schema.Route.PREDICTABLE) == true) {
+            if (v.getAsBoolean(Schema.Route.PREDICTABLE)) {
                 String selection = getSelectionString(getUriType(uri), v);
 
                 ContentProviderOperation operation = ContentProviderOperation.newUpdate(Uri.parse(uri))
