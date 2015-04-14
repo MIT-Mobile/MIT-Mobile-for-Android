@@ -26,14 +26,14 @@ public class TourStopRecyclerViewAdapter extends RecyclerView.Adapter<TourStopRe
     private LayoutInflater listContainer;
     private TourSelfGuidedCallback callback;
     private boolean isMainLoopRecyclerView;
-    private MITTourStop currentStop;
+    private String currentStopId;
 
-    public TourStopRecyclerViewAdapter(Context context, List<MITTourStop> tourStops, MITTourStop currentStop, boolean isMainLoopRecyclerView, TourSelfGuidedCallback callback) {
+    public TourStopRecyclerViewAdapter(Context context, List<MITTourStop> tourStops, String currentStopId, boolean isMainLoopRecyclerView, TourSelfGuidedCallback callback) {
         this.tourStops = tourStops;
         this.context = context;
         this.callback = callback;
         this.isMainLoopRecyclerView = isMainLoopRecyclerView;
-        this.currentStop = currentStop;
+        this.currentStopId = currentStopId;
         listContainer = LayoutInflater.from(context);
     }
 
@@ -93,7 +93,7 @@ public class TourStopRecyclerViewAdapter extends RecyclerView.Adapter<TourStopRe
             }
         });
 
-        if (tourStop.getId().equals(currentStop.getId())) {
+        if (tourStop.getId().equals(currentStopId)) {
             viewHolder.recyclerViewLayout.setBackgroundColor(context.getResources().getColor(R.color.divider_grey));
         } else {
             viewHolder.recyclerViewLayout.setBackgroundColor(context.getResources().getColor(R.color.white));
