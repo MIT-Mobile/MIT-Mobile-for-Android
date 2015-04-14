@@ -92,4 +92,9 @@ public class TourStopActivity extends MITActivity implements TourStopCallback, T
     public void showTourDetailActivity(String description) {
 
     }
+
+    @Override
+    public double getDistance(MITTourStop mitTourStop) {
+        return 0;
+    }
 }

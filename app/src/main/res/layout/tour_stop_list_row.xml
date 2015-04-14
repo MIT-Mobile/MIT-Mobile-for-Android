@@ -12,12 +12,24 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="10dp" />
 
-    <TextView
-        android:id="@+id/stop_title"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:ellipsize="none"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/stop_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:textColor="@color/black"
+            android:textSize="@dimen/tour_home_title_size" />
+
+        <TextView
+            android:id="@+id/stop_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+    </LinearLayout>
 </LinearLayout>

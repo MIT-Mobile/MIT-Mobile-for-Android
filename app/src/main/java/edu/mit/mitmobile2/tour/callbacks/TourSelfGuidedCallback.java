@@ -11,4 +11,6 @@ public interface TourSelfGuidedCallback {
     void showMainLoopFragment(int currentStopNum);
 
     void showSideTripFragment(MITTourStop mitTourStop);
+
+    double getDistance(MITTourStop mitTourStop);
 }

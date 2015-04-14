@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.tour.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 
 import java.util.HashMap;
@@ -109,5 +110,17 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
         intent.putExtra(Constants.Tours.TOUR_KEY, tour);
         intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, Constants.Tours.SIDE_TRIP);
         startActivity(intent);
+    }
+
+    @Override
+    public double getDistance(MITTourStop mitTourStop) {
+        double distance = 0;
+        Location stopLocation = new Location("stopLocation");
+        stopLocation.setLongitude(mitTourStop.getCoordinates()[0]);
+        stopLocation.setLatitude(mitTourStop.getCoordinates()[1]);
+        if (location != null) {
+            distance = stopLocation.distanceTo(location);
+        }
+        return distance;
     }
 }

@@ -19,6 +19,8 @@ import edu.mit.mitmobile2.tour.model.MITTourStop;
 
 public class TourUtils {
     public static final int NUMBER_OF_TOUR_LOOP = 100;
+    public static final double SMOOTS_PER_METER = 0.587613116;
+    public static final double MILES_PER_METER = 0.000621371;
 
     public static String formatEstimatedDuration(int time) {
         int hour = time / 60;
@@ -114,5 +116,17 @@ public class TourUtils {
             tourStops.get(i).setIndex(i);
         }
         return tourStops;
+    }
+
+    public static String formatDistanceBySmoots(Double distance) {
+        double smoots = distance * SMOOTS_PER_METER;
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return decimalFormat.format(smoots) + " Smoots";
+    }
+
+    public static String formatDistanceByMiles(Double distance) {
+        double miles = distance * MILES_PER_METER;
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        return decimalFormat.format(miles) + " miles";
     }
 }
