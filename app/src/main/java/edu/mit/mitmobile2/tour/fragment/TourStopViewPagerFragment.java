@@ -97,7 +97,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         tourStopScrollView.setScrollViewListener(this);
 
         stopImageView.setAdjustViewBounds(true);
-        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).into(stopImageView);
+        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).placeholder(R.drawable.grey_rect).into(stopImageView);
 
         stopBodyWebView.loadData(mitTourStop.getBodyHtml(), "text/html", "UTF-8");
 
