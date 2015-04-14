@@ -86,7 +86,7 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
 
         Integer seconds = prediction.getSeconds();
         holder.alertIcon.setVisibility(seconds >= ALERT_MIN_THRESHOLD ? View.VISIBLE : View.INVISIBLE);
-        holder.alertIcon.setImageResource(R.drawable.alert_icon_outline);
+        holder.alertIcon.setImageResource(R.drawable.alarm_icon);
 
         holder.alarmSetTextView.setVisibility(View.INVISIBLE);
 
@@ -115,7 +115,7 @@ public class ShuttleStopPredictionsAdapter extends BaseAdapter {
     }
 
     private void setAlarmIconVisibility(boolean selected, ViewHolder holder) {
-        holder.alertIcon.setImageResource(selected ? R.drawable.alert_icon_outline : R.drawable.alert_icon);
+        holder.alertIcon.setImageResource(selected ? R.drawable.alarm_icon : R.drawable.alarm_checked_icon);
         holder.alarmSetTextView.setVisibility(selected ? View.INVISIBLE : View.VISIBLE);
         holder.alertIcon.setSelected(!selected);
         if (selected) {

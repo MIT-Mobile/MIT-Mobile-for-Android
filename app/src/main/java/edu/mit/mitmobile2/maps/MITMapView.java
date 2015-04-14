@@ -150,7 +150,7 @@ public class MITMapView {
                                 if (!isMapExpanded) {
                                     marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
                                 } else {
-                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin)));
+                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin)));
                                 }
                             }
                             if (mItem.isDynamic()) {
@@ -203,7 +203,7 @@ public class MITMapView {
             if (mapViewExpanded) {
                 m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops));
             } else {
-                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin));
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin));
             }
         }
     }

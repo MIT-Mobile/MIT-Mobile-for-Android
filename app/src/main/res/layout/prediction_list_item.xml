@@ -21,7 +21,7 @@
         android:layout_marginRight="@dimen/actionbar_back_button_spacing"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/alert_icon_outline" />
+        android:src="@drawable/alarm_icon" />
 
     <TextView
         android:id="@+id/alarm_set"
