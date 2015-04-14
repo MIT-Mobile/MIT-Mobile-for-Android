@@ -82,6 +82,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         directionsButton.setSize(FloatingActionButton.SIZE_NORMAL);
         directionsButton.setColorNormalResId(R.color.mit_red);
         directionsButton.setColorPressedResId(R.color.mit_red_dark);
+        directionsButton.setIcon(R.drawable.ic_directions);
 
         tourStopCallback = (TourStopCallback) getActivity();
         tourSelfGuidedCallback = (TourSelfGuidedCallback) getActivity();
