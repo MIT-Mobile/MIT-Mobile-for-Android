@@ -41,14 +41,15 @@
     <!--tour-->
     <dimen name="tour_home_image_height">250dp</dimen>
     <dimen name="tour_home_content_size">14sp</dimen>
-    <dimen name="tour_home_title_size">20sp</dimen>
+    <dimen name="tour_home_title_size">16sp</dimen>
+    <dimen name="tour_recyclerview_text_size">12sp</dimen>
     <dimen name="tour_home_padding">16dp</dimen>
     <dimen name="tour_home_padding_paragraph">12dp</dimen>
     <dimen name="tour_home_cell_height">48dp</dimen>
     <dimen name="tour_home_padding_line">7dp</dimen>
     <dimen name="tour_stop_image_size">80dp</dimen>
     <dimen name="tour_circle_size">15dp</dimen>
-    <dimen name="tour_recycler_view_height">180dp</dimen>
+    <dimen name="tour_recycler_view_height">190dp</dimen>
     <dimen name="tour_info_content_margin">34dp</dimen>
     <dimen name="tour_stop_recyclerview_padding">8dp</dimen>
 </resources>

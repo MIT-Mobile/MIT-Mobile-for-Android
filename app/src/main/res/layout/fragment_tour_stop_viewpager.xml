@@ -23,8 +23,10 @@
 
                 <ImageView
                     android:id='@+id/stop_image_view'
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="190dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"/>
 
                 <TextView
                     android:paddingTop="@dimen/tour_home_padding"
@@ -40,14 +42,13 @@
                 <WebView
                     android:id="@+id/stop_body_web_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black" />
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/tour_home_padding"
+                android:padding="@dimen/tour_stop_recyclerview_padding"
                 android:orientation="vertical">
 
                 <TextView
@@ -64,12 +65,12 @@
                 android:id="@+id/main_loop_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_recycler_view_height"
-                android:paddingLeft="@dimen/tour_home_padding"/>
+                android:paddingLeft="@dimen/tour_stop_recyclerview_padding"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/tour_home_padding"
+                android:padding="@dimen/tour_stop_recyclerview_padding"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,7 +87,7 @@
                 android:id="@+id/near_here_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_recycler_view_height"
-                android:paddingLeft="@dimen/tour_home_padding"
+                android:paddingLeft="@dimen/tour_stop_recyclerview_padding"
                 />
         </LinearLayout>
     </edu.mit.mitmobile2.tour.utils.TourStopScrollView>
