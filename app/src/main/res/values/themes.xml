@@ -26,6 +26,10 @@
         <item name="android:background">@drawable/actionbar_background</item>
     </style>
 
+    <style name="ActionBarTabStyle" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@color/mit_red</item>
+    </style>
+
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
@@ -83,6 +87,7 @@
 
     <style name="ResourceViewAttributeValue">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">#000000</item>
     </style>
 
     <!-- END RESOURCE VIEW STYLES -->
@@ -326,5 +331,7 @@
     <color name="moduleHomeUnderlineColor">#993333</color>
     <color name="homeButtonBackgroundColor">#993333</color>
     <color name="tabUnderlineColor">#993333</color>
+
+
 
 </resources>

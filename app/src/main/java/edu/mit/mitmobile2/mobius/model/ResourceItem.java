@@ -26,6 +26,7 @@ public class ResourceItem extends MapItem implements Parcelable {
     private Context mContext;
     private ViewGroup parent;
 
+    private String _id;
     private int number; // Number to display on lists and maps
     private int index;
     private int mapItemIndex; // index in the mapItems array
@@ -45,6 +46,7 @@ public class ResourceItem extends MapItem implements Parcelable {
     private double latitude;
     private double longitude;
     private String status;
+    private ArrayList<RoomsetHours> hours;
     private ArrayList<ResourceAttribute> attributes;
     private String[] images;
 
@@ -73,6 +75,14 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     public void setParent(ViewGroup parent) {
         this.parent = parent;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public int getNumber() {
@@ -227,6 +237,14 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.status = status;
     }
 
+    public ArrayList<RoomsetHours> getHours() {
+        return hours;
+    }
+
+    public void setHours(ArrayList<RoomsetHours> hours) {
+        this.hours = hours;
+    }
+
     public ArrayList<ResourceAttribute> getAttributes() {
         return attributes;
     }
@@ -243,9 +261,6 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.images = images;
     }
 
-    public ResourceItem() {
-
-    }
 
     public ResourceItem(Context mContext, ViewGroup parent) {
         this.mContext = mContext;
@@ -269,6 +284,9 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     }
 
+    public ResourceItem(){
+
+    }
 
     @Override
     public int describeContents() {
@@ -277,6 +295,7 @@ public class ResourceItem extends MapItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this._id);
         dest.writeInt(this.number);
         dest.writeInt(this.index);
         dest.writeInt(this.mapItemIndex);
@@ -296,6 +315,7 @@ public class ResourceItem extends MapItem implements Parcelable {
         dest.writeDouble(this.latitude);
         dest.writeDouble(this.longitude);
         dest.writeString(this.status);
+        dest.writeTypedList(this.hours);
         dest.writeTypedList(this.attributes);
         dest.writeStringArray(this.images);
         dest.writeInt(this.mapItemType);
@@ -304,6 +324,7 @@ public class ResourceItem extends MapItem implements Parcelable {
     }
 
     private ResourceItem(Parcel in) {
+        this._id = in.readString();
         this.number = in.readInt();
         this.index = in.readInt();
         this.mapItemIndex = in.readInt();
@@ -323,6 +344,8 @@ public class ResourceItem extends MapItem implements Parcelable {
         this.latitude = in.readDouble();
         this.longitude = in.readDouble();
         this.status = in.readString();
+        this.hours = new ArrayList<RoomsetHours>();
+        in.readTypedList(hours,RoomsetHours.CREATOR);
         this.attributes = new ArrayList<ResourceAttribute>();
         in.readTypedList(attributes,ResourceAttribute.CREATOR);
         this.images = in.createStringArray();

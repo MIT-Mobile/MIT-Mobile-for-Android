@@ -172,7 +172,14 @@
             android:name=".mobius.ResourceViewActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
-            android:parentActivityName=".mobius.ResourceListActivity" />
+            android:parentActivityName=".mobius.ResourceListActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mobius.ResourceListActivity" />
+        </activity>
+
 
     <meta-data
             android:name="com.google.android.gms.version"

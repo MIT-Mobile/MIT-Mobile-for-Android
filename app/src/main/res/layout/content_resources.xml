@@ -19,6 +19,7 @@
         android:text="@string/resource_types" />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/btnResourceSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

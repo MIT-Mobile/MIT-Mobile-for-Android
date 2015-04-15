@@ -6,24 +6,33 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.threeten.bp.Clock;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.mobius.model.DisplayHours;
 import edu.mit.mitmobile2.mobius.model.QuickSearch;
 import edu.mit.mitmobile2.mobius.model.ResourceAttribute;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
@@ -36,6 +45,8 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
 
     ResourceListFragment fragment = new ResourceListFragment();
     private Context context;
+    HashMap<String,ArrayList<RoomsetHours>> hoursMap = new HashMap<>();
+    LinkedHashMap<String, ResourceRoom> roomMap = new LinkedHashMap<String, ResourceRoom>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,11 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
             QuickSearch qs = (QuickSearch) intent.getExtras().getParcelable("quicksearch");
             getMapItems(qs);
         }
+        else if (intent.hasExtra("params")) {
+            String params  = intent.getExtras().getString("params");
+            getMapItems(params);
+        }
+
     }
 
     @Override
@@ -146,13 +162,15 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                     String previousBuilding = "";
 
                     ArrayList mapItems = new ArrayList<MapItem>();
-                    LinkedHashMap<String, ResourceRoom> roomMap = new LinkedHashMap<String, ResourceRoom>();
+
+
                     String roomKey = "";
 
                     // Get today's date to get today's shop hours
                     Clock clock = Clock.systemUTC();
 
                     ZonedDateTime zdt = ZonedDateTime.now(clock);
+
 
                     if (items.length() > 0) {
 
@@ -190,38 +208,28 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
                                         resourceRoom.setLongitude(0);
                                     }
                                     resourceRoom.setRoom(item.getString("room"));
+                                    resourceRoom.setRoomset_id(item.getJSONObject("roomset").optString("_id"));
                                     resourceRoom.setRoomset_name(item.getJSONObject("roomset").optString("roomset_name"));
-                                    resourceRoom.setRoom_label(resourceRoom.getRoomset_name() + " (" + resourceRoom.getRoom() + ")");
 
-                                    resourceRoom.setHours(new ArrayList<RoomsetHours>());
-                                    JSONArray hoursArray = item.getJSONArray("hours");
-                                    for (int h = 0; h < hoursArray.length(); h++) {
-                                        JSONObject hoursEntry = hoursArray.getJSONObject(h);
-
-                                        //"start_date":"2015-04-09T13:00:00.000Z"
-                                        // Get the date from the first 10 characters to see if the hours are for today
-                                        String start_date = hoursEntry.getString("start_date");
-                                        String end_date = hoursEntry.getString("end_date");
-                                        if (zdt.toString().substring(0, 10).equalsIgnoreCase(start_date.toString().substring(0, 10))) {
-                                            RoomsetHours roomsetHours = new RoomsetHours(hoursEntry.getString("start_time"),hoursEntry.getString("end_time"));
-                                            resourceRoom.getHours().add(roomsetHours);
-                                        }
-                                        if (start_date.compareTo(zdt.toString()) <= 0 && zdt.toString().compareTo(end_date) <= 0) {
-                                            resourceRoom.setOpen(true);
-                                        }
-                                    }
+                                    resourceRoom.setRoom_label(resourceRoom.getRoomsetShortName() + " (" + resourceRoom.getRoom() + ")");
 
                                     resourceRoom.setResources(new ArrayList<ResourceItem>());
 
                                     roomMap.put(roomKey,resourceRoom);
+
+                                    // call getRoomsetHours after we add the resourceRoom to the room map so we can set the open/closed value
+                                    JSONArray hoursArray = item.getJSONArray("hours");
+                                    getRoomsetHours(resourceRoom,hoursArray);
+
 
                                 }
 
                                 // resource
                                 ResourceItem r = new ResourceItem();
                                 ResourceRoom rr = roomMap.get(roomKey);
+                                r.set_id(item.getString("_id"));
                                 r.setName(item.getString("name") + "");
-
+                                r.setRoomset_name(rr.getRoomsetShortName());
                                 r.setRoom(rr.getRoom());
                                 r.setLongitude(rr.getLongitude());
                                 r.setLatitude(rr.getLatitude());
@@ -275,6 +283,7 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
 
                             // add resources from this room to mapItems
                             for (int i = 0; i < rr.getResources().size(); i++) {
+                                rr.getResources().get(i).setHours(rr.getHours());
                                 mapItems.add(rr.getResources().get(i));
                             }
                             it.remove(); // avoids a ConcurrentModificationException
@@ -294,5 +303,57 @@ public class ResourceListActivity extends MITActivity implements MapFragmentCall
         return handler;
     }
 
+    private void getRoomsetHours(ResourceRoom resourceRoom,JSONArray hoursArray) {
 
+        // get roomset id from roomKey
+        String roomset = resourceRoom.getRoomset_id();
+
+        if (hoursMap.containsKey(roomset)) {
+            ArrayList<RoomsetHours> rh = hoursMap.get(roomset);
+            roomMap.get(resourceRoom.getRoom()).setHours(rh);
+        }
+        else {
+            ArrayList<RoomsetHours> hours = new ArrayList<RoomsetHours>();
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat dayFormat = new SimpleDateFormat("E");
+            SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
+            Date now = new Date();
+
+            df.setTimeZone(TimeZone.getTimeZone("Z"));
+
+            if (hoursArray != null) {
+                for (int i = 0; i < hoursArray.length(); i++) {
+                    try {
+                        JSONObject hoursEntry = hoursArray.getJSONObject(i);
+                        String start_date = hoursEntry.getString("start_date").substring(0, 19);
+                        String end_date = hoursEntry.getString("end_date").substring(0, 19);
+                        try {
+                            Date sdate = df.parse(start_date);
+                            Date edate = df.parse(end_date);
+                            RoomsetHours roomsetHours = new RoomsetHours(dayFormat.format(sdate),timeFormat.format(sdate),timeFormat.format(edate));
+                            if (sdate.toString().compareTo(now.toString())  <= 0 && now.toString().compareTo(edate.toString()) <= 0) {
+                                roomsetHours.setStatus(RoomsetHours.OPEN);
+                                roomMap.get(resourceRoom.getRoom()).setOpen(true);
+                            }
+                            else {
+                                roomsetHours.setStatus(RoomsetHours.CLOSED);
+                            }
+
+                            Timber.d(roomsetHours.getDay() + " " + roomsetHours.getStart_time() + " - " + roomsetHours.getEnd_time());
+                            hours.add(roomsetHours);
+                        } catch (ParseException p) {
+                            Timber.d(p.getMessage());
+                        }
+                    } catch (JSONException e) {
+                        Timber.d(e.getMessage());
+                    }
+                }
+            }
+
+            hoursMap.put(roomset,hours);
+            roomMap.get(resourceRoom.getRoom()).setHours(hours);
+
+        }
+    }
 }

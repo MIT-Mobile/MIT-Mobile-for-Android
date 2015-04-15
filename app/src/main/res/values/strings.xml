@@ -34,7 +34,8 @@
     <string name="advanced_search">ADVANCED SEARCH</string>
     <string name="roomset_open">Open</string>
     <string name="roomset_closed">Closed</string>
-
+    <string name="resource_online">Online</string>
+    <string name="resource_offline">Offline</string>
 
     <!--Shuttle Info -->
     <string name="shuttle_contact_title">CONTACT INFORMATION</string>

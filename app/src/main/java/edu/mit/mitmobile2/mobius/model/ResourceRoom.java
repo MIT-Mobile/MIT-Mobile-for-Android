@@ -239,4 +239,15 @@ public class ResourceRoom  extends MapItem implements android.os.Parcelable {
             return new ResourceRoom[size];
         }
     };
+
+    public String getRoomsetShortName() {
+        // for space purposes, truncate the roomset name by grabbing text before any parenthesis
+        // there should be a short version of the field on the server that the mobile device can use
+        String rn = this.getRoomset_name();
+        int pIndex = rn.indexOf("(");
+        if (pIndex > -1 && rn.length() > 20) {
+            rn = rn.substring(0,pIndex);
+        }
+        return rn;
+    }
 }

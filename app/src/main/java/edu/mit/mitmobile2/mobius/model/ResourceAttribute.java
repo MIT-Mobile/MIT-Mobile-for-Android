@@ -76,7 +76,6 @@ public class ResourceAttribute implements Parcelable {
                 JSONObject jAttribute = jsonObject.getJSONObject("_attribute");
                 this.set_attribute(jAttribute.getString("_id"));
                 this.setLabel(jAttribute.getString("label"));
-                Timber.d("new attribute + " + this.getLabel());
             }
 
             // Values

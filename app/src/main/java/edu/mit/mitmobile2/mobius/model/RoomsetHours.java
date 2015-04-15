@@ -5,25 +5,43 @@ import android.os.Parcelable;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by sseligma on 4/7/15.
  */
 public class RoomsetHours implements Parcelable {
+    public static String OPEN = "Open";
+    public static String CLOSED = "Closed";
+    public static final String[] DAY_ARRAY = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
+
     String roomset_id;
+    String day;
     String start_time;
     String end_time;
     String status; // open or closed
 
-    public RoomsetHours(String start, String end) {
+    public RoomsetHours(String day, String start, String end) {
+        this.day = day;
         this.start_time = start;
         this.end_time = end;
     }
+
     public String getRoomset_id() {
         return roomset_id;
     }
 
     public void setRoomset_id(String roomset_id) {
         this.roomset_id = roomset_id;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 
     public String getStart_time() {
@@ -59,16 +77,15 @@ public class RoomsetHours implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.roomset_id);
+        dest.writeString(this.day);
         dest.writeString(this.start_time);
         dest.writeString(this.end_time);
         dest.writeString(this.status);
     }
 
-    public RoomsetHours() {
-    }
-
     private RoomsetHours(Parcel in) {
         this.roomset_id = in.readString();
+        this.day = in.readString();
         this.start_time = in.readString();
         this.end_time = in.readString();
         this.status = in.readString();
@@ -83,4 +100,5 @@ public class RoomsetHours implements Parcelable {
             return new RoomsetHours[size];
         }
     };
+
 }

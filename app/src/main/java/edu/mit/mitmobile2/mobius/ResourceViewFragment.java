@@ -14,6 +14,7 @@ package edu.mit.mitmobile2.mobius;/*
  * limitations under the License.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,10 +36,18 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.mobius.model.ResourceAttribute;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
+import edu.mit.mitmobile2.mobius.model.RoomsetHours;
 import timber.log.Timber;
 
 /**
@@ -91,10 +100,89 @@ public class ResourceViewFragment extends Fragment {
         TextView resourceName = (TextView) v.findViewById(R.id.resource_view_name);
         resourceName.setText(resourceItem.getName());
 
+        // Resource Status
+        TextView resource_online = (TextView)v.findViewById(R.id.resource_online);
+        TextView resource_offline = (TextView)v.findViewById(R.id.resource_offline);
+
+        if (resourceItem.getStatus().equalsIgnoreCase(ResourceItem.ONLINE)) {
+            resource_online.setVisibility(View.VISIBLE);
+            resource_offline.setVisibility(View.GONE);
+        }
+        else {
+            resource_online.setVisibility(View.GONE);
+            resource_offline.setVisibility(View.VISIBLE);
+        }
         // add shop info tab
         tabHost.addTab(tabHost.newTabSpec("Shop").setIndicator("Shop").setContent(new TabHost.TabContentFactory() {
             public View createTabContent(String arg0) {
                 LinearLayout tab1 = (LinearLayout) inflater.inflate(R.layout.resource_shop_tab, null);
+
+                // Resource Hours
+                TableLayout resourceHours = (TableLayout)tab1.findViewById(R.id.resource_hours);
+                // loop through the roomset hours and combine repeating hours where possible
+
+                HashMap<String, String> hoursMap = new HashMap<String, String>();
+                if (resourceItem.getHours() != null) {
+                    String h;
+                    Timber.d("num hours = " + resourceItem.getHours().size());
+                    for (int i = 0; i < resourceItem.getHours().size(); i++) {
+                        RoomsetHours rh = resourceItem.getHours().get(i);
+                        Timber.d("hours = " + rh.getDay() + " " + rh.getStart_time() + " " + rh.getEnd_time());
+
+                        if (hoursMap.containsKey(rh.getDay())) {
+                            h = hoursMap.get(rh.getDay()) + '\n' + rh.getStart_time() + " - " + rh.getEnd_time();
+                            hoursMap.put(rh.getDay(),h);
+                        }
+                        else {
+                            hoursMap.put(rh.getDay(), rh.getStart_time() + " - " + rh.getEnd_time());
+                        }
+                    }
+
+                    for (int d = 0; d < RoomsetHours.DAY_ARRAY.length; d++) {
+                        if (hoursMap.containsKey(RoomsetHours.DAY_ARRAY[d])) {
+                            // check for consecutive hours
+                            TableRow tr = (TableRow) inflater.inflate(R.layout.row_label_value, null);
+
+                            //Label
+                            TextView label = (TextView) tr.findViewById(R.id.row_label);
+                            label.setText(RoomsetHours.DAY_ARRAY[d]);
+
+                            //Value
+                            TextView value = (TextView) tr.findViewById(R.id.row_value);
+                            value.setText(hoursMap.get(RoomsetHours.DAY_ARRAY[d]));
+
+                            resourceHours.addView(tr);
+                        }
+                    }
+                }
+
+                // Resource Roomset
+                TextView resourceRoomset = (TextView) tab1.findViewById(R.id.resource_roomset);
+                resourceRoomset.setText(resourceItem.getRoomset_name());
+
+                // Resource Room
+                TextView resourceRoom = (TextView) tab1.findViewById(R.id.resource_room);
+                resourceRoom.setText(resourceItem.getRoom());
+
+                //View Map
+                ImageView resourceViewMap = (ImageView)tab1.findViewById(R.id.resource_view_map);
+                resourceViewMap.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            JSONObject params = new JSONObject("{'where':[]}");
+                                JSONObject criteria = new JSONObject();
+                                criteria.put("field", "_id");
+                                criteria.put("value",resourceItem.get_id());
+                                params.getJSONArray("where").put(criteria);
+                                Intent i = new Intent(getActivity(),ResourceListActivity.class);
+                                i.putExtra("params",params.toString());
+                                startActivity(i);
+                        } catch (JSONException e) {
+                            Timber.d(e.getMessage());
+                        }
+                   }
+                });
                 return tab1;
             }
         }));

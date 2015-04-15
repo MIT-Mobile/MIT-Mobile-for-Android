@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
@@ -31,11 +33,15 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
 
     private Context mContext;
     private List<Object> resourceData;
+    private String day;
+
     public ResourceListAdapter(Context context, int layoutResourceId, List<Object> resourceData) {
         super(context, layoutResourceId, resourceData);
         this.mContext = context;
         this.resourceData = resourceData;
-
+        SimpleDateFormat dayFormat = new SimpleDateFormat("E");
+        Date now = new Date();
+        day = dayFormat.format(now);
     }
 
 
@@ -106,10 +112,12 @@ public class ResourceListAdapter extends ArrayAdapter<Object> {
                 String hours = "";
                 if (rr.getHours() != null) {
                     for (int i = 0; i < rr.getHours().size(); i++) {
-                        if (i > 0) {
-                            hours += ",";
+                        if (rr.getHours().get(i).getDay().equalsIgnoreCase(day)) {
+                            if (i > 0) {
+                                hours += ",";
+                            }
+                            hours += rr.getHours().get(i).getStart_time() + " - " + rr.getHours().get(i).getEnd_time();
                         }
-                        hours += rr.getHours().get(i).getStart_time() + " - " + rr.getHours().get(i).getEnd_time();
                     }
                     roomHolder.hoursText.setText(hours);
                 }
