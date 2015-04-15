@@ -16,6 +16,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourUtils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAdapter {
@@ -36,6 +37,7 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
     private class ViewHolder {
         ImageView stopImage;
         TextView stopTitle;
+        TextView stopDistance;
         LinearLayout stopLayout;
     }
 
@@ -70,6 +72,7 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
 
             holder.stopImage = (ImageView) view.findViewById(R.id.stop_image);
             holder.stopTitle = (TextView) view.findViewById(R.id.stop_title);
+            holder.stopDistance = (TextView) view.findViewById(R.id.stop_distance);
             holder.stopLayout = (LinearLayout) view.findViewById(R.id.stop_layout);
             view.setTag(holder);
         } else {
@@ -79,6 +82,14 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
         final MITTourStop stop = tourStops.get(position);
         holder.stopTitle.setText((position + 1) + ". " + stop.getTitle());
         Picasso.with(context).load(stop.getThumbnailImage().getUrl()).fit().centerCrop().into(holder.stopImage);
+
+        float distance = callback.getDistance(stop);
+        if (distance == 0) {
+            holder.stopDistance.setVisibility(View.GONE);
+        } else {
+            holder.stopDistance.setVisibility(View.VISIBLE);
+            holder.stopDistance.setText(TourUtils.formatStopDistance(distance));
+        }
 
         isMainLoop = stop.getType().equals(Constants.Tours.MAIN_LOOP);
 

@@ -19,6 +19,8 @@ import edu.mit.mitmobile2.tour.model.MITTourStop;
 
 public class TourUtils {
     public static final int NUMBER_OF_TOUR_LOOP = 100;
+    public static final float METERS_TO_MILES = 0.000621371f;
+    public static final float METERS_TO_SMOOTS = 0.587613116f;
 
     public static String formatEstimatedDuration(int time) {
         int hour = time / 60;
@@ -106,7 +108,7 @@ public class TourUtils {
             sortedStopsHashMap.put(entry.getKey(), entry.getValue());
         }
 
-        return new ArrayList<>(sortedStopsHashMap.keySet());
+        return new ArrayList<MITTourStop>(sortedStopsHashMap.keySet());
     }
 
     public static List<MITTourStop> setStopNumber(List<MITTourStop> tourStops) {
@@ -114,5 +116,12 @@ public class TourUtils {
             tourStops.get(i).setIndex(i);
         }
         return tourStops;
+    }
+
+    public static String formatStopDistance(float distance) {
+        int distanceSmoots = (int) (distance * TourUtils.METERS_TO_SMOOTS);
+        float distanceMiles = distance * TourUtils.METERS_TO_MILES;
+        String milesString = String.valueOf(distanceMiles).substring(0, 3);
+        return milesString + " miles (" + distanceSmoots + " smoots) ";
     }
 }
