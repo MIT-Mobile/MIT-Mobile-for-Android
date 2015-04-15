@@ -82,6 +82,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         directionsButton.setSize(FloatingActionButton.SIZE_NORMAL);
         directionsButton.setColorNormalResId(R.color.mit_red);
         directionsButton.setColorPressedResId(R.color.mit_red_dark);
+        directionsButton.setIcon(R.drawable.ic_directions);
 
         tourStopCallback = (TourStopCallback) getActivity();
         tourSelfGuidedCallback = (TourSelfGuidedCallback) getActivity();
@@ -96,7 +97,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         tourStopScrollView.setScrollViewListener(this);
 
         stopImageView.setAdjustViewBounds(true);
-        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).into(stopImageView);
+        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).placeholder(R.drawable.grey_rect).into(stopImageView);
 
         stopBodyWebView.loadData(mitTourStop.getBodyHtml(), "text/html", "UTF-8");
 

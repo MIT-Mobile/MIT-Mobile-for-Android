@@ -249,7 +249,14 @@ public class MITModuleActivity extends MITActivity {
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
-        swapInFragment(intentString, title);
+        if (!fragmentAlreadyExists(intentString)) {
+            swapInFragment(intentString, title);
+        }
+    }
+
+    private boolean fragmentAlreadyExists(String intentString) {
+        Fragment currentFragment = getFragmentManager().findFragmentByTag(intentString);
+        return currentFragment != null && currentFragment.isVisible();
     }
 
     private void swapInFragment(String intentString, String title) {
@@ -265,7 +272,7 @@ public class MITModuleActivity extends MITActivity {
             Timber.e(e, "Swap Fragments");
         }
 
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, f).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, f, intentString).commit();
         setTitle(title);
 
         if (f instanceof TourFragment) {
@@ -451,8 +458,10 @@ public class MITModuleActivity extends MITActivity {
         }
 
         Timber.d("navItem = " + navItem.toString());
-        if (navItem != null) {
-            swapInFragment(navItem.getIntent(), navItem.getLongName());
+
+        String intentString = navItem.getIntent();
+        if (navItem != null && !fragmentAlreadyExists(intentString)) {
+            swapInFragment(intentString, navItem.getLongName());
         }
     }
 

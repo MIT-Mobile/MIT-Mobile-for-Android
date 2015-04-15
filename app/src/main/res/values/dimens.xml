@@ -41,7 +41,7 @@
     <!--tour-->
     <dimen name="tour_home_image_height">250dp</dimen>
     <dimen name="tour_home_content_size">14sp</dimen>
-    <dimen name="tour_home_title_size">16sp</dimen>
+    <dimen name="tour_home_title_size">20sp</dimen>
     <dimen name="tour_home_padding">16dp</dimen>
     <dimen name="tour_home_padding_paragraph">12dp</dimen>
     <dimen name="tour_home_cell_height">48dp</dimen>

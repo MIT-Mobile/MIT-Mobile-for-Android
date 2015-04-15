@@ -50,6 +50,7 @@
     <color name="mit_tintColor">#a31f34</color>
     <color name="silver">#C8C8C8</color>
     <color name="medium_grey">#ffcacaca</color>
+    <color name="medium_grey_2">#ffdddddd</color>
     <color name="medium_light_grey">#ffececec</color>
     
     <color name="mit_red">#FFA31F34</color>
@@ -57,6 +58,7 @@
     <color name="light_grey">#F8F8F8</color>
     <color name="divider_grey">#1E000000</color>
     <color name="mit_grey">#8A8B8C</color>
+    <color name="mit_grey_2">#ff707172</color>
     <color name="map_path_color">#33a3ff</color>
     <color name="white">#FFFFFFFF</color>
     <color name="stop_dot_color">#FFC1BFBF</color>

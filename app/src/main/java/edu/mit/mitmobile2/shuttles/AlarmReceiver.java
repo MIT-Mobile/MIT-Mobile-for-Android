@@ -42,9 +42,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Notification.Builder mBuilder =
                 new Notification.Builder(context)
-                        .setSmallIcon(R.drawable.alert_icon)
+                        .setSmallIcon(R.drawable.alarm_icon)
                         .setAutoCancel(true)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.alert_icon_outline))
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.alarm_checked_icon))
                         .setContentTitle("MIT")
                         .setStyle(new Notification.BigTextStyle()
                                 .bigText(description))

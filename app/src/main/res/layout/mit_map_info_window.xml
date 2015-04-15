@@ -19,4 +19,12 @@
         android:textColor="@color/contents_text"
         android:textSize="@dimen/shuttle_map_prediction_size"
         android:maxWidth="180dp" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/shuttle_map_prediction_size"
+        android:textColor="@color/mit_grey_2"
+        android:visibility="gone"/>
 </LinearLayout>
