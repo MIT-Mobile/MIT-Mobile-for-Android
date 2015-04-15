@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -26,7 +27,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final long UPDATE_INTERVAL = 10000;
+    private static final long UPDATE_INTERVAL = 60000;
 
     protected String TAG;
     protected Context mContext;
@@ -51,7 +52,6 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
 
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -70,9 +70,13 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(
+        FusedLocationProviderApi fusedLocationApi = LocationServices.FusedLocationApi;
+        fusedLocationApi.requestLocationUpdates(
                 googleApiClient, locationRequest, this
         );
+        Location lastLocation = fusedLocationApi.getLastLocation(googleApiClient);
+        setLocation(lastLocation);
+
     }
 
     @Override
@@ -87,6 +91,10 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
 
     @Override
     public void onLocationChanged(Location location) {
+        setLocation(location);
+    }
+
+    private void setLocation(Location location) {
         this.location = location;
         ContentValues cv = new ContentValues();
         cv.put(Schema.Location.LATITUDE, location.getLatitude());
@@ -94,6 +102,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         cv.put(Schema.Location.ID_COL, 1);
         getContentResolver().insert(MITShuttlesProvider.LOCATION_URI, cv);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

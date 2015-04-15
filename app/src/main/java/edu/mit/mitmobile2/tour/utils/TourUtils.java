@@ -120,7 +120,7 @@ public class TourUtils {
 
     public static String formatDistanceBySmoots(Double distance) {
         double smoots = distance * SMOOTS_PER_METER;
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        DecimalFormat decimalFormat = new DecimalFormat("0");
         return decimalFormat.format(smoots) + " Smoots";
     }
 

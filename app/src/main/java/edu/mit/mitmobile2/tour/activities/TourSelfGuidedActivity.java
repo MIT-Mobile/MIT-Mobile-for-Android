@@ -123,4 +123,9 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
         }
         return distance;
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        super.onLocationChanged(location);
+    }
 }
