@@ -26,12 +26,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.APIJsonResponse;
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMapFragment;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import edu.mit.mitmobile2.mobius.model.ResourceRoom;
+import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
@@ -53,17 +55,37 @@ public class ResourceListFragment extends MitMapFragment implements GoogleMap.In
         //View resourceListContent = inflater.inflate(R.layout.content_resource_list, null);
         //addHeaderView(resourceListContent);
         this.context = getActivity();
+
+        getMapView().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent i = new Intent(context,ResourceViewActivity.class);
+                for (int m = 0; m < mapItems.size(); m++) {
+                    Object o = mapItems.get(m);
+                    if (o.getClass().getSimpleName().equalsIgnoreCase("ResourceRoom")) {
+                        ResourceRoom rr = (ResourceRoom)o;
+                        if (((ResourceRoom) o).getRoom_label().equalsIgnoreCase(marker.getTitle())) {
+                            i.putExtra("resources", rr.getResources());
+                            startActivity(i);
+                        }
+                    }
+                }
+            }
+        });
+
         return view;
+
     }
 
     @Override
-    public View getInfoWindow(Marker marker) {
+    public View getInfoWindow(final Marker marker) {
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout v = (LinearLayout)mInflater.inflate(R.layout.resource_room_info_window, null);
         TextView roomLabel = (TextView)v.findViewById(R.id.room_label);
         roomLabel.setText(marker.getTitle());
         TextView resourceList = (TextView)v.findViewById(R.id.room_resource);
         resourceList.setText(marker.getSnippet());
+
         return v;
     }
 
