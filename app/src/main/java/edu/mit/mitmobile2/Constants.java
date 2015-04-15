@@ -5,6 +5,7 @@ public class Constants {
     //shuttles
     public static final String RESOURCES = "resource";
     public static final String SHUTTLES = "shuttles";
+    public static final String NEWS = "news";
     public static final String SHARED_PREFS_KEY = "mitPrefs";
     public static final String ROUTES_TIMESTAMP = "routesTimestamp";
     public static final String PREDICTIONS_TIMESTAMP = "predictionsTimestamp";
@@ -50,6 +51,14 @@ public class Constants {
         public static final String PREV_STOP_COORDS = "prevStopCoords";
         public static final String TITLE_KEY = "title";
         public static final String FIRST_TITLE_KEY = "firstTitle";
+    }
+
+    public static class News {
+        public static final String STORIES_PATH = "/stories";
+        public static final String STORIES_BY_ID_PATH = "/stories/{id}";
+        public static final String CATEGORIES_PATH = "/categories";
+
+
     }
 
     public static class Resources {

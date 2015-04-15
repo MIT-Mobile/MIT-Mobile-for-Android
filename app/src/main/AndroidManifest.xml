@@ -81,11 +81,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".news.NewsActivity"
-            android:label="@string/title_activity_news"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
             android:name=".maps.MapsActivity"
             android:label="@string/title_activity_maps"
             android:launchMode="singleTop"
