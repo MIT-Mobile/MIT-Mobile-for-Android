@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
 
 /**
  * Created by sseligma on 2/3/15.
@@ -36,7 +37,7 @@ public class ResourceItemInfoWindow implements GoogleMap.InfoWindowAdapter {
         String snippet = marker.getSnippet();
         try {
             JSONObject data = new JSONObject(snippet);
-            layoutId = R.layout.resource_info_window;
+            layoutId = R.layout.resource_room_info_window;
             view = (LinearLayout)mInflater.inflate(layoutId,null);
 
             // Name
@@ -55,10 +56,6 @@ public class ResourceItemInfoWindow implements GoogleMap.InfoWindowAdapter {
                 resourceStatus.setTextColor(Color.RED);
             }
 
-            //MapItemIndex
-            TextView mapItemIndex = (TextView)view.findViewById(R.id.mapItemIndex);
-            String index = data.getString("mapItemIndex");
-            mapItemIndex.setText(index);
 
         }
             catch (JSONException e) {

@@ -9,13 +9,12 @@
     android:paddingTop="@dimen/abc_button_padding_horizontal_material"
     android:paddingBottom="@dimen/abc_button_padding_horizontal_material" >
 
-    <!-- RESOURCE TYPE -->
+    <!-- RESOURCE ROOMSET -->
     <TextView
-        android:id="@+id/resource_type"
+        android:id="@+id/roomset_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@android:style/TextAppearance.Medium"
         />
 
 </LinearLayout>
-

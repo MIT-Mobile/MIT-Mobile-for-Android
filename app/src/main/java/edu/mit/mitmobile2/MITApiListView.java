@@ -1,17 +1,13 @@
 package edu.mit.mitmobile2;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Handler;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.List;
 import java.util.Map;
 
-import edu.mit.mitmobile2.mobius.ResourceItem;
 import timber.log.Timber;
 
 /**

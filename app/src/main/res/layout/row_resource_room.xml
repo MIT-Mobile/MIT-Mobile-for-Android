@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:paddingLeft="@dimen/abc_button_padding_horizontal_material"
+    android:paddingRight="@dimen/abc_button_padding_horizontal_material"
+    android:paddingTop="@dimen/abc_button_padding_horizontal_material"
+    android:paddingBottom="@dimen/abc_button_padding_horizontal_material"
+
+    android:background="@android:color/white" >
+
+<LinearLayout
+    android:id="@+id/resource_room_layout"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true">
+
+    <!-- MAP INDEX-->
+    <TextView
+        android:id="@+id/map_index"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        style="@android:style/TextAppearance.Medium"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <!-- ROOMSET -->
+    <TextView
+        android:id="@+id/roomset_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@android:style/TextAppearance.Medium"
+        />
+
+        <!-- ROOMSET HOURS-->
+        <TextView
+            android:id="@+id/roomset_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            style="@android:style/TextAppearance.Small"
+            />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+<LinearLayout
+    android:orientation="horizontal"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:layout_alignParentRight="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <!-- Open -->
+    <TextView
+        android:id="@+id/roomset_open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/roomset_open"
+        android:textColor="@color/mit_open_green_color"
+        android:visibility="gone"/>
+
+    <!-- Closed -->
+    <TextView
+        android:id="@+id/roomset_closed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/roomset_closed"
+        android:textColor="@color/mit_closed_red_color"
+        android:visibility="gone"/>
+
+</LinearLayout>
+
+    <View
+        android:id="@+id/resource_room_divider"
+        android:layout_below="@+id/resource_room_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:id="@+id/resource_layout"
+        android:layout_below="@+id/resource_room_layout"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
+

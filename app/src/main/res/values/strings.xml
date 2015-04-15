@@ -32,7 +32,11 @@
     <string name="title_activity_shuttle_stops">ShuttleStopsActivity</string>
     <string name="resource_shops">BROWSE SHOPS &amp; LABS</string>
     <string name="resource_types">BROWSE MACHINE TYPES</string>
-
+    <string name="advanced_search">ADVANCED SEARCH</string>
+    <string name="roomset_open">Open</string>
+    <string name="roomset_closed">Closed</string>
+    <string name="resource_online">Online</string>
+    <string name="resource_offline">Offline</string>
 
     <!--Shuttle Info -->
     <string name="shuttle_contact_title">CONTACT INFORMATION</string>
@@ -95,5 +99,11 @@
     <string name="side_trip_directions">Step by step directions are not available for side trips</string>
     <string name="side_trip_directions_1">"Directions from "</string>
     <string name="side_trip_directions_2">" to "</string>
+
+    <string-array name="test">
+        <item>test 1</item>
+        <item>test 2</item>
+        <item>test 3</item>
+    </string-array>
 
 </resources>

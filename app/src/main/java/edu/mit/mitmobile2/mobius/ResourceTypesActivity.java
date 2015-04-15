@@ -24,6 +24,7 @@ import edu.mit.mitmobile2.APIJsonResponse;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MITApiListView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.mobius.model.QuickSearch;
 import edu.mit.mitmobile2.mobius.model.ResourceType;
 import edu.mit.mitmobile2.mobius.model.ResourceTypeList;
 import edu.mit.mitmobile2.mobius.model.Roomset;
@@ -73,6 +74,10 @@ public class ResourceTypesActivity extends MITActivity   {
                             ResourceType resourceType = (ResourceType) listData.get(position);
                             Timber.d("clicked type " + resourceType.get_id());
                             Intent i = new Intent(context,ResourceListActivity.class);
+                            QuickSearch qs = new QuickSearch();
+                            qs.setType("TYPE");
+                            qs.setValue(resourceType.get_id());
+                            i.putExtra("quicksearch",qs);
                             startActivity(i);
                         }
                     });

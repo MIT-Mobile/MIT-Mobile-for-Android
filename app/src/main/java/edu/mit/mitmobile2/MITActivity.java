@@ -22,6 +22,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import timber.log.Timber;
 
 public class MITActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -79,12 +80,12 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has ben suspend");
+        Timber.d(TAG, "GoogleApiClient connection has been suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i(TAG, "GoogleApiClient connection has failed");
+        Timber.d(TAG, "GoogleApiClient connection has failed");
     }
 
     @Override

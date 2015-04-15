@@ -22,6 +22,7 @@ public class ResourcesFragment extends Fragment {
     int contentLayoutId = R.layout.content_resources;
     Button btnResourceShop;
     Button btnResourceType;
+    Button btnResourceSearch;
 
 
     @Nullable
@@ -45,6 +46,16 @@ public class ResourcesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), ResourceTypesActivity.class);
+                startActivity(i);
+            }
+        });
+
+        btnResourceSearch = (Button)view.findViewById(R.id.btnResourceSearch);
+
+        btnResourceSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getActivity(), ResourceSearchActivity.class);
                 startActivity(i);
             }
         });

@@ -17,9 +17,15 @@
         "manager":"edu.mit.mitmobile2.mobius.ResourcesManager"
     },
    "resourcetype":{
-        "dev":"https://kairos-dev.mit.edu/type/",
-        "test":"https://kairos-test.mit.edu/type/",
-        "prod":"http://kairos.mit.edu:3000/type/",
+        "dev":"https://kairos-dev.mit.edu/resourcetype/",
+        "test":"https://kairos-test.mit.edu/resourcetype/",
+        "prod":"http://kairos.mit.edu:3000/resourcetype/",
+        "manager":"edu.mit.mitmobile2.mobius.ResourcesManager"
+    },
+   "attribute":{
+        "dev":"https://kairos-dev.mit.edu/attribute/",
+        "test":"https://kairos-test.mit.edu/attribute/",
+        "prod":"http://kairos.mit.edu:3000/attribute/",
         "manager":"edu.mit.mitmobile2.mobius.ResourcesManager"
     },
 

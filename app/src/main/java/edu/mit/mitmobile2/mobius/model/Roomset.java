@@ -1,15 +1,23 @@
 package edu.mit.mitmobile2.mobius.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.maps.MapItem;
 
 /**
  * Created by sseligma on 4/2/15.
  */
-public class Roomset implements Parcelable {
-
+public class Roomset extends MapItem implements Parcelable {
 
     String _id;
     String _dlc;
@@ -19,23 +27,7 @@ public class Roomset implements Parcelable {
     String pi_kerberos;
     String ehs_rep_name;
     String ehs_rep_kerberos;
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this._id);
-        dest.writeString(this._dlc);
-        dest.writeString(this.roomset_code);
-        dest.writeString(this.roomset_name);
-        dest.writeString(this.pi_name);
-        dest.writeString(this.pi_kerberos);
-        dest.writeString(this.ehs_rep_name);
-        dest.writeString(this.ehs_rep_kerberos);
-    }
+    ArrayList<RoomsetHours> hours;
 
     public Roomset() {
     }
@@ -50,27 +42,6 @@ public class Roomset implements Parcelable {
         this.ehs_rep_name = data.optString("ehs_rep_name","");
         this.ehs_rep_kerberos = data.optString("ehs_rep_kerberos","");
     }
-
-    private Roomset(Parcel in) {
-        this._id = in.readString();
-        this._dlc = in.readString();
-        this.roomset_code = in.readString();
-        this.roomset_name = in.readString();
-        this.pi_name = in.readString();
-        this.pi_kerberos = in.readString();
-        this.ehs_rep_name = in.readString();
-        this.ehs_rep_kerberos = in.readString();
-    }
-
-    public static final Creator<Roomset> CREATOR = new Creator<Roomset>() {
-        public Roomset createFromParcel(Parcel source) {
-            return new Roomset(source);
-        }
-
-        public Roomset[] newArray(int size) {
-            return new Roomset[size];
-        }
-    };
 
 
     public String get_id() {
@@ -137,4 +108,78 @@ public class Roomset implements Parcelable {
         this.ehs_rep_kerberos = ehs_rep_kerberos;
     }
 
+
+    public ArrayList<RoomsetHours> getHours() {
+        return hours;
+    }
+
+    public void setHours(ArrayList<RoomsetHours> hours) {
+        this.hours = hours;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this._id);
+        dest.writeString(this._dlc);
+        dest.writeString(this.roomset_code);
+        dest.writeString(this.roomset_name);
+        dest.writeString(this.pi_name);
+        dest.writeString(this.pi_kerberos);
+        dest.writeString(this.ehs_rep_name);
+        dest.writeString(this.ehs_rep_kerberos);
+        dest.writeSerializable(this.hours);
+    }
+
+    private Roomset(Parcel in) {
+        this._id = in.readString();
+        this._dlc = in.readString();
+        this.roomset_code = in.readString();
+        this.roomset_name = in.readString();
+        this.pi_name = in.readString();
+        this.pi_kerberos = in.readString();
+        this.ehs_rep_name = in.readString();
+        this.ehs_rep_kerberos = in.readString();
+        this.hours = (ArrayList<RoomsetHours>) in.readSerializable();
+    }
+
+    public static final Creator<Roomset> CREATOR = new Creator<Roomset>() {
+        public Roomset createFromParcel(Parcel source) {
+            return new Roomset(source);
+        }
+
+        public Roomset[] newArray(int size) {
+            return new Roomset[size];
+        }
+    };
+
+    @Override
+    public int getMapItemType() {
+        return 0;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        return null;
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

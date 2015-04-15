@@ -2,8 +2,11 @@ package edu.mit.mitmobile2;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,7 +65,6 @@ public class MITAPIClient {
                 is.read(buffer);
                 is.close();
                 json = new String(buffer, "UTF-8");
-                Log.d("API", json);
             } catch (IOException ex) {
                 Timber.e(ex, "Failed");
             }
@@ -75,7 +77,6 @@ public class MITAPIClient {
                 while (n.hasNext()) {
                     try {
                         String key = (String) n.next();
-                        Log.d("ZZZ","key = " + key);
                         JSONObject api = jObject.getJSONObject(key);
                         APIEntry apiEntry = new APIEntry();
                         apiEntry.setDev(api.getString("dev"));
@@ -84,14 +85,13 @@ public class MITAPIClient {
                         if (api.getString("manager") != null) {
                             apiEntry.setManager(api.getString("manager"));
                         }
-                        Log.d("API", "add api entry for " + key);
                         MITAPIClient.api.put(key, apiEntry);
                     } catch (JSONException e) {
                         Timber.d(e, "API");
                     }
                 }
             } catch (Exception e) {
-                Timber.d(e, "API");
+                Timber.d(e.getMessage());
             }
 
 
@@ -103,20 +103,20 @@ public class MITAPIClient {
     }
 
     public void get(String api, String path, Map<String, String> params, final Handler apiHandler, final int format) {
-        Log.d("ZZZ","api= " + api);
-        Log.d("ZZZ","api= " + api);
+        Timber.d("format = " + format);
         this.client = new AsyncHttpClient();
         client.setEnableRedirects(true);
         Log.d("ZZZ","env = " + MITAPIClient.environment);
         // get the url of the api from the api key and the environment
         APIEntry apiEntry = MITAPIClient.api.get(api);
         String apiUrl = apiEntry.getBaseUrl(MITAPIClient.environment);
-        Log.d("ZZZ","apiUrl = " + apiUrl);
+        Timber.d("apiUrl = " + apiUrl);
         if (path != null) {
             apiUrl += path;
         }
 
         if (params != null) {
+            Timber.d("params not null");
             String queryString = "";
             Iterator it = params.entrySet().iterator();
             while (it.hasNext()) {
@@ -126,7 +126,13 @@ public class MITAPIClient {
                 } else {
                     queryString += "&";
                 }
-                queryString += pairs.getKey() + "=" + pairs.getValue();
+
+                try {
+                    String value = URLEncoder.encode(pairs.getValue().toString(), "UTF-8");
+                    queryString += pairs.getKey() + "=" + value;
+                } catch (UnsupportedEncodingException e) {
+                    Timber.d("invalid query param:" + e.getMessage());
+                }
             }
             apiUrl += queryString;
         }
@@ -186,6 +192,11 @@ public class MITAPIClient {
 
     public void getJson(String api, String path, Map<String, String> params, final Handler apiHandler) {
         get(api, path, params, apiHandler, FORMAT_JSON);
+    }
+
+    public void getJson(String api, Map<String, String> params, final Handler apiHandler) {
+        Timber.d("resource params = " + params);
+        get(api, null, params, apiHandler, FORMAT_JSON);
     }
 
     private Object buildResponse(int statusCode, Header[] headers, byte[] response, int format) {

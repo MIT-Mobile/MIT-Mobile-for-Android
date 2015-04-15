@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+        <!-- HOURS -->
+        <TextView
+            android:id="@+id/resource_view_hours_label"
+            android:text="Hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ResourceViewAttributeLabel"
+            android:paddingTop="20dip"/>
+
+        <TableLayout
+            android:id="@+id/resource_hours"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:paddingLeft="3dip"
+            android:paddingRight="3dip"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="10dp"
+            android:stretchColumns="0" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/dividerColor" />
+
+    <TextView
+        android:id="@+id/resource_view_room_label"
+        style="@style/ResourceViewAttributeLabel"
+        android:text="Location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <TextView
+                android:id="@+id/resource_roomset"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/resource_room"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:src="@drawable/ic_location"
+            android:id="@+id/resource_view_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

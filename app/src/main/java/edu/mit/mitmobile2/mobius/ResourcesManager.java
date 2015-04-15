@@ -9,7 +9,7 @@ import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.RetrofitManager;
-import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
+import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import retrofit.Callback;
 import retrofit.http.GET;
 import timber.log.Timber;

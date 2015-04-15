@@ -157,12 +157,31 @@
             android:parentActivityName=".MITModuleActivity" />
 
         <activity
-            android:name=".mobius.ResourceListActivity"
+            android:name=".mobius.ResourceSearchActivity"
             android:launchMode="standard"
             android:theme="@style/Theme.MyTheme"
             android:parentActivityName=".MITModuleActivity" />
 
-        <meta-data
+        <activity
+            android:name=".mobius.ResourceListActivity"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"
+            android:parentActivityName=".mobius.ResourcesActivity" />
+
+        <activity
+            android:name=".mobius.ResourceViewActivity"
+            android:launchMode="standard"
+            android:theme="@style/Theme.MyTheme"
+            android:parentActivityName=".mobius.ResourceListActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mobius.ResourceListActivity" />
+        </activity>
+
+
+    <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
@@ -171,14 +190,6 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyA2e9sTg9cL2oKUPbX6KQwOCYirNSJaFmQ" />
 
-        <activity
-            android:name=".mobius.ResourceViewActivity"
-            android:label="@string/title_activity_resource_view"
-            android:theme="@style/Theme.MyTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.mit.mitmobile2.mobius.ResourcesActivity" />
-        </activity>
         <activity
             android:name=".shuttles.activities.ShuttleRouteActivity"
             android:launchMode="standard"
