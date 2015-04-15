@@ -48,7 +48,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/tour_home_padding"
+                android:padding="@dimen/tour_stop_recyclerview_padding"
                 android:orientation="vertical">
 
                 <TextView
@@ -65,12 +65,12 @@
                 android:id="@+id/main_loop_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_recycler_view_height"
-                android:paddingLeft="@dimen/tour_home_padding"/>
+                android:paddingLeft="@dimen/tour_stop_recyclerview_padding"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/tour_home_padding"
+                android:padding="@dimen/tour_stop_recyclerview_padding"
                 android:orientation="vertical">
 
                 <TextView
@@ -87,7 +87,7 @@
                 android:id="@+id/near_here_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_recycler_view_height"
-                android:paddingLeft="@dimen/tour_home_padding"
+                android:paddingLeft="@dimen/tour_stop_recyclerview_padding"
                 />
         </LinearLayout>
     </edu.mit.mitmobile2.tour.utils.TourStopScrollView>
