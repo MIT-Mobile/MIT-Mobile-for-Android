@@ -94,7 +94,7 @@ public class TourStopActivity extends MITActivity implements TourStopCallback, T
     }
 
     @Override
-    public double getDistance(MITTourStop mitTourStop) {
+    public float getDistance(MITTourStop mitTourStop) {
         return 0;
     }
 }

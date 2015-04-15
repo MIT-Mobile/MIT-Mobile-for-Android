@@ -113,8 +113,8 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
     }
 
     @Override
-    public double getDistance(MITTourStop mitTourStop) {
-        double distance = 0;
+    public float getDistance(MITTourStop mitTourStop) {
+        float distance = 0;
         Location stopLocation = new Location("stopLocation");
         stopLocation.setLongitude(mitTourStop.getCoordinates()[0]);
         stopLocation.setLatitude(mitTourStop.getCoordinates()[1]);
@@ -122,10 +122,5 @@ public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuide
             distance = stopLocation.distanceTo(location);
         }
         return distance;
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        super.onLocationChanged(location);
     }
 }

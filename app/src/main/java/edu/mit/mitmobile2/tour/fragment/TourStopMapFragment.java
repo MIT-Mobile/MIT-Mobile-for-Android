@@ -38,6 +38,7 @@ import edu.mit.mitmobile2.tour.activities.TourStopActivity;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourUtils;
 
 public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback,
         GoogleMap.InfoWindowAdapter,
@@ -48,9 +49,6 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     private static final int DURATION_INCOMING_LIST = 201;
     private static final int DURATION_OUTGOING_LIST = 300;
     private static final int DURATION_OUTGOING_LOCATION = 301;
-
-    private static final float METERS_TO_MILES = 0.000621371f;
-    private static final float METERS_TO_SMOOTS = 0.587613116f;
 
     private MITMapView mitMapView;
     private MITTour tour;
@@ -249,12 +247,8 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
             Location myLocation = mitMapView.getMap().getMyLocation();
 
             float distance = myLocation.distanceTo(markerLocation);
-            float distanceMiles = distance * METERS_TO_MILES;
-            int distanceSmoots = (int) (distance * METERS_TO_SMOOTS);
-
-            String milesString = String.valueOf(distanceMiles).substring(0, 3);
-
-            distanceView.setText(milesString + " miles (" + distanceSmoots + " smoots) ");
+            distanceView.setText(TourUtils.formatDistanceByMiles(distance) + " miles ("
+                    + TourUtils.formatDistanceBySmoots(distance) + " smoots) ");
 
             return view;
         } else {

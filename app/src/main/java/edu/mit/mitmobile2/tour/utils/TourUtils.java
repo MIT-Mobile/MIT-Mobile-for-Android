@@ -19,8 +19,8 @@ import edu.mit.mitmobile2.tour.model.MITTourStop;
 
 public class TourUtils {
     public static final int NUMBER_OF_TOUR_LOOP = 100;
-    public static final double SMOOTS_PER_METER = 0.587613116;
-    public static final double MILES_PER_METER = 0.000621371;
+    public static final float METERS_TO_MILES = 0.000621371f;
+    public static final float METERS_TO_SMOOTS = 0.587613116f;
 
     public static String formatEstimatedDuration(int time) {
         int hour = time / 60;
@@ -108,7 +108,7 @@ public class TourUtils {
             sortedStopsHashMap.put(entry.getKey(), entry.getValue());
         }
 
-        return new ArrayList<>(sortedStopsHashMap.keySet());
+        return new ArrayList<MITTourStop>(sortedStopsHashMap.keySet());
     }
 
     public static List<MITTourStop> setStopNumber(List<MITTourStop> tourStops) {
@@ -118,15 +118,14 @@ public class TourUtils {
         return tourStops;
     }
 
-    public static String formatDistanceBySmoots(Double distance) {
-        double smoots = distance * SMOOTS_PER_METER;
-        DecimalFormat decimalFormat = new DecimalFormat("0");
-        return decimalFormat.format(smoots) + " Smoots";
+    public static int formatDistanceBySmoots(float distance) {
+        int smoots = (int) (distance * TourUtils.METERS_TO_SMOOTS);
+        return smoots;
     }
 
-    public static String formatDistanceByMiles(Double distance) {
-        double miles = distance * MILES_PER_METER;
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
-        return decimalFormat.format(miles) + " miles";
+    public static String formatDistanceByMiles(float distance) {
+        float distanceMiles = distance * TourUtils.METERS_TO_MILES;
+        String milesString = String.valueOf(distanceMiles).substring(0, 3);
+        return milesString;
     }
 }

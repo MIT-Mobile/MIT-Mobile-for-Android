@@ -83,12 +83,13 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
         holder.stopTitle.setText((position + 1) + ". " + stop.getTitle());
         Picasso.with(context).load(stop.getThumbnailImage().getUrl()).fit().centerCrop().into(holder.stopImage);
 
-        double distance = callback.getDistance(stop);
+        float distance = callback.getDistance(stop);
         if (distance == 0) {
             holder.stopDistance.setVisibility(View.GONE);
         } else {
             holder.stopDistance.setVisibility(View.VISIBLE);
-            holder.stopDistance.setText(TourUtils.formatDistanceByMiles(distance) + " (" + TourUtils.formatDistanceBySmoots(distance) + ")");
+            holder.stopDistance.setText(TourUtils.formatDistanceByMiles(distance) + " miles ("
+                    + TourUtils.formatDistanceBySmoots(distance) + " smoots) ");
         }
 
         isMainLoop = stop.getType().equals(Constants.Tours.MAIN_LOOP);
