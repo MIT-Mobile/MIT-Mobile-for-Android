@@ -52,6 +52,14 @@ public class Constants {
         public static final String FIRST_TITLE_KEY = "firstTitle";
     }
 
+    public static class News {
+        public static final String STORIES_PATH = "/stories";
+        public static final String STORIES_BY_ID_PATH = "/stories/{id}";
+        public static final String CATEGORIES_PATH = "/categories";
+
+
+    }
+
     public static class Resources {
         public static final String RESOURCE_PATH = "/resource";
         public static final String RESOURCE_ROOMSET_PATH = "/resourceroomset";
