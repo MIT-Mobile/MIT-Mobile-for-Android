@@ -26,14 +26,14 @@ public class TourUtils {
         int hour = time / 60;
         int minute = time % 60;
 
-        return hour + " hour " + minute + " minutes";
+        return hour + " hour and " + minute + " minutes";
     }
 
     public static String formatDistance(int distance) {
         double mile = (distance / 1.609344);
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
 
-        return decimalFormat.format(mile) + "miles and (" + distance + "km)";
+        return decimalFormat.format(mile) + " miles (" + distance + " km)";
     }
 
     public static String getBuildDescription() {
@@ -108,7 +108,7 @@ public class TourUtils {
             sortedStopsHashMap.put(entry.getKey(), entry.getValue());
         }
 
-        return new ArrayList<MITTourStop>(sortedStopsHashMap.keySet());
+        return new ArrayList<>(sortedStopsHashMap.keySet());
     }
 
     public static List<MITTourStop> setStopNumber(List<MITTourStop> tourStops) {

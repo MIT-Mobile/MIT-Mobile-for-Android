@@ -82,6 +82,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         directionsButton.setSize(FloatingActionButton.SIZE_NORMAL);
         directionsButton.setColorNormalResId(R.color.mit_red);
         directionsButton.setColorPressedResId(R.color.mit_red_dark);
+        directionsButton.setIcon(R.drawable.ic_directions);
 
         tourStopCallback = (TourStopCallback) getActivity();
         tourSelfGuidedCallback = (TourSelfGuidedCallback) getActivity();
@@ -96,7 +97,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         tourStopScrollView.setScrollViewListener(this);
 
         stopImageView.setAdjustViewBounds(true);
-        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).into(stopImageView);
+        Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).placeholder(R.drawable.grey_rect).into(stopImageView);
 
         stopBodyWebView.loadData(mitTourStop.getBodyHtml(), "text/html", "UTF-8");
 
@@ -117,13 +118,13 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
 
         mainLooplayoutManager.scrollToPosition(fakePosition);
         mainLoopRecyclerView.setLayoutManager(mainLooplayoutManager);
-        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops, tourSelfGuidedCallback, true);
+        mainLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), mainLoopStops, mitTourStop.getId(), true, tourSelfGuidedCallback);
         mainLoopRecyclerView.setAdapter(mainLoopAdapter);
 
         nearHereLayoutManager = new LinearLayoutManager(this.getActivity());
         nearHereLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         nearHereRecyclerView.setLayoutManager(nearHereLayoutManager);
-        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops, tourSelfGuidedCallback, false);
+        nearLoopAdapter = new TourStopRecyclerViewAdapter(getActivity().getApplicationContext(), nearHereStops, mitTourStop.getId(), false, tourSelfGuidedCallback);
         nearHereRecyclerView.setAdapter(nearLoopAdapter);
 
         return view;

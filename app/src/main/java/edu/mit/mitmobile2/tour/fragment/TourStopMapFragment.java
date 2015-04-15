@@ -49,6 +49,9 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     private static final int DURATION_OUTGOING_LIST = 300;
     private static final int DURATION_OUTGOING_LOCATION = 301;
 
+    private static final float METERS_TO_MILES = 0.000621371f;
+    private static final float METERS_TO_SMOOTS = 0.587613116f;
+
     private MITMapView mitMapView;
     private MITTour tour;
     private TourSelfGuidedCallback callback;
@@ -227,6 +230,8 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
             View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
             TextView topTextView = (TextView) view.findViewById(R.id.top_textview);
             TextView bottomTextView = (TextView) view.findViewById(R.id.bottom_textview);
+            TextView distanceView = (TextView) view.findViewById(R.id.distance);
+            distanceView.setVisibility(View.VISIBLE);
 
             topTextView.setTextSize(12f);
             bottomTextView.setTextSize(14f);
@@ -236,6 +241,20 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
 
             topTextView.setText(snippet.type.toUpperCase());
             bottomTextView.setText(snippet.title);
+
+            Location markerLocation = new Location("us");
+            markerLocation.setLatitude(marker.getPosition().latitude);
+            markerLocation.setLongitude(marker.getPosition().longitude);
+
+            Location myLocation = mitMapView.getMap().getMyLocation();
+
+            float distance = myLocation.distanceTo(markerLocation);
+            float distanceMiles = distance * METERS_TO_MILES;
+            int distanceSmoots = (int) (distance * METERS_TO_SMOOTS);
+
+            String milesString = String.valueOf(distanceMiles).substring(0, 3);
+
+            distanceView.setText(milesString + " miles (" + distanceSmoots + " smoots) ");
 
             return view;
         } else {
