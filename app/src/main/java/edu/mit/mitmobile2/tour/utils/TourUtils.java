@@ -118,14 +118,10 @@ public class TourUtils {
         return tourStops;
     }
 
-    public static int formatDistanceBySmoots(float distance) {
-        int smoots = (int) (distance * TourUtils.METERS_TO_SMOOTS);
-        return smoots;
-    }
-
-    public static String formatDistanceByMiles(float distance) {
+    public static String formatStopDistance(float distance) {
+        int distanceSmoots = (int) (distance * TourUtils.METERS_TO_SMOOTS);
         float distanceMiles = distance * TourUtils.METERS_TO_MILES;
         String milesString = String.valueOf(distanceMiles).substring(0, 3);
-        return milesString;
+        return distanceSmoots + " miles (" + milesString + " smoots) ";
     }
 }

@@ -247,8 +247,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
             Location myLocation = mitMapView.getMap().getMyLocation();
 
             float distance = myLocation.distanceTo(markerLocation);
-            distanceView.setText(TourUtils.formatDistanceByMiles(distance) + " miles ("
-                    + TourUtils.formatDistanceBySmoots(distance) + " smoots) ");
+            distanceView.setText(TourUtils.formatStopDistance(distance));
 
             return view;
         } else {

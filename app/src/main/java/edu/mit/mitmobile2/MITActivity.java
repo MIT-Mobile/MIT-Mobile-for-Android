@@ -49,7 +49,6 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
     }
 
     @Override
@@ -76,7 +75,6 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         );
         Location lastLocation = fusedLocationApi.getLastLocation(googleApiClient);
         setLocation(lastLocation);
-
     }
 
     @Override

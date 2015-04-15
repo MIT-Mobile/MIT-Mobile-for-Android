@@ -88,8 +88,7 @@ public class TourStopAdapter extends BaseAdapter implements StickyListHeadersAda
             holder.stopDistance.setVisibility(View.GONE);
         } else {
             holder.stopDistance.setVisibility(View.VISIBLE);
-            holder.stopDistance.setText(TourUtils.formatDistanceByMiles(distance) + " miles ("
-                    + TourUtils.formatDistanceBySmoots(distance) + " smoots) ");
+            holder.stopDistance.setText(TourUtils.formatStopDistance(distance));
         }
 
         isMainLoop = stop.getType().equals(Constants.Tours.MAIN_LOOP);
