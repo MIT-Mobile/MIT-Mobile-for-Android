@@ -88,6 +88,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
         for (MITShuttleStop stop : stops) {
             stopIds.add(stop.getId());
         }
+
         stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getFragmentManager(), routeId, stopIds);
 
         predictionViewPager.setAdapter(stopViewPagerAdapter);
@@ -110,13 +111,11 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
 
             }
         });
-        int startPosition;
-        if (savedInstanceState != null) {
-            startPosition = savedInstanceState.getInt(CURRENT_STOP_POSITION_KEY);
-        } else {
-            startPosition = getPositionFromStopId(initialStopid);
-        }
+
+        int startPosition = savedInstanceState != null ? savedInstanceState.getInt(CURRENT_STOP_POSITION_KEY) : getPositionFromStopId(initialStopid);
+
         callback.setActionBarSubtitle(stops.get(startPosition).getTitle());
+
         int fakePosition = stops.size() * EndlessFragmentStatePagerAdapter.NUMBER_OF_LOOPS / 2 + startPosition;
         predictionViewPager.setCurrentItem(fakePosition);
         currentRealPosition = startPosition;
@@ -126,6 +125,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
         } else {
             transparentView.setVisibility(View.GONE);
         }
+
         addShuttleStopContent(shuttleStopContent);
 
         updateData();
@@ -155,6 +155,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
 
         return view;
     }
+
     //Setup for shuttle stop
     private void addShuttleStopContent(View content) {
         shuttleStopContent.addView(content);

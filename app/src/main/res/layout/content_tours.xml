@@ -11,7 +11,8 @@
             android:id="@+id/self_guided_tour_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tour_home_image_height"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/tours_button_selector">
 
             <LinearLayout
                 android:id="@+id/tour_info_view"
@@ -122,12 +123,14 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
+
             <LinearLayout
                 android:id="@+id/send_feedback_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
                 android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
+
                 <ImageView
                     style="@style/MITTourHomeImage"
                     android:src="@drawable/email" />
@@ -139,7 +142,7 @@
 
             <View
                 style="@style/MITView"
-                android:layout_marginLeft="@dimen/tour_home_padding"/>
+                android:layout_marginLeft="@dimen/tour_home_padding" />
 
             <LinearLayout
                 android:id="@+id/mit_info_center_view"
@@ -147,6 +150,7 @@
                 android:layout_height="@dimen/tour_home_cell_height"
                 android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
+
                 <ImageView
                     style="@style/MITTourHomeImage"
                     android:src="@drawable/open_in_browser" />
@@ -158,7 +162,7 @@
 
             <View
                 style="@style/MITView"
-                android:layout_marginLeft="@dimen/tour_home_padding"/>
+                android:layout_marginLeft="@dimen/tour_home_padding" />
 
             <LinearLayout
                 android:id="@+id/mit_admissions_view"
@@ -166,6 +170,7 @@
                 android:layout_height="@dimen/tour_home_cell_height"
                 android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
+
                 <ImageView
                     style="@style/MITTourHomeImage"
                     android:src="@drawable/open_in_browser" />
