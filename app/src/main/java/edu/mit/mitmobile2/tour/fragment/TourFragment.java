@@ -38,8 +38,6 @@ public class TourFragment extends Fragment {
 
     int contentLayoutId = R.layout.content_tours;
 
-    @InjectView(R.id.self_guided_tour_view)
-    RelativeLayout selfGuidedTourView;
     @InjectView(R.id.self_guided_tour_title)
     TextView selfGuidedTourTitleTextView;
     @InjectView(R.id.stops_info_text_view)
@@ -90,12 +88,11 @@ public class TourFragment extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.tour_info_view)
+    @OnClick(R.id.self_guided_tour_view)
     public void openNextActivity() {
         Intent intent = new Intent(getActivity(), TourSelfGuidedActivity.class);
         startActivity(intent);
     }
-
 
     private MITAPIClient mitApiClient;
 
@@ -127,8 +124,6 @@ public class TourFragment extends Fragment {
                 }
             });
         }
-
-        selfGuidedTourView.setBackgroundResource(R.drawable.tours_cover_image);
 
         return view;
     }
