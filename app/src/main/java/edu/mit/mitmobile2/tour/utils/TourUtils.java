@@ -122,6 +122,6 @@ public class TourUtils {
         int distanceSmoots = (int) (distance * TourUtils.METERS_TO_SMOOTS);
         float distanceMiles = distance * TourUtils.METERS_TO_MILES;
         String milesString = String.valueOf(distanceMiles).substring(0, 3);
-        return distanceSmoots + " miles (" + milesString + " smoots) ";
+        return milesString + " miles (" + distanceSmoots + " smoots) ";
     }
 }
