@@ -144,4 +144,20 @@ public class MITNewsStory {
         this.galleryImages = galleryImages;
     }
 
+    public String getOriginalCoverImageUrl() {
+        return getUrl(0);
+    }
+
+    public String getSmallCoverImageUrl() {
+        return getUrl(1);
+    }
+
+    public String getFullCoverImageUrl() {
+        return getUrl(2);
+    }
+
+    private String getUrl(int index) {
+        return coverImage.getRepresentations().get(index).getUrl();
+    }
+
 }

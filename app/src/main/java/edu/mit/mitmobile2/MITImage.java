@@ -1,11 +1,11 @@
-package edu.mit.mitmobile2.tour.model;
+package edu.mit.mitmobile2;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-public class MITTourStopImage implements Parcelable {
+public class MITImage implements Parcelable {
     @Expose
     private String url;
     @Expose
@@ -49,19 +49,19 @@ public class MITTourStopImage implements Parcelable {
         dest.writeInt(height);
     }
 
-    private MITTourStopImage(Parcel p) {
+    private MITImage(Parcel p) {
         url = p.readString();
         width = p.readInt();
         height = p.readInt();
     }
 
-    public static final Parcelable.Creator<MITTourStopImage> CREATOR = new Parcelable.Creator<MITTourStopImage>() {
-        public MITTourStopImage createFromParcel(Parcel source) {
-            return new MITTourStopImage(source);
+    public static final Parcelable.Creator<MITImage> CREATOR = new Parcelable.Creator<MITImage>() {
+        public MITImage createFromParcel(Parcel source) {
+            return new MITImage(source);
         }
 
-        public MITTourStopImage[] newArray(int size) {
-            return new MITTourStopImage[size];
+        public MITImage[] newArray(int size) {
+            return new MITImage[size];
         }
     };
 }

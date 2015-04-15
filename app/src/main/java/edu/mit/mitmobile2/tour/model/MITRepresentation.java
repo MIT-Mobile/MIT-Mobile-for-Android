@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2;
+package edu.mit.mitmobile2.tour.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,18 +8,18 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import edu.mit.mitmobile2.tour.model.MITTourStopImage;
+import edu.mit.mitmobile2.MITImage;
 
 public class MITRepresentation implements Parcelable {
     @SerializedName("representations")
     @Expose
-    private List<MITTourStopImage> images;
+    private List<MITImage> images;
 
-    public List<MITTourStopImage> getImages() {
+    public List<MITImage> getImages() {
         return images;
     }
 
-    public void setImages(List<MITTourStopImage> images) {
+    public void setImages(List<MITImage> images) {
         this.images = images;
     }
 
@@ -34,7 +34,7 @@ public class MITRepresentation implements Parcelable {
     }
 
     private MITRepresentation(Parcel p) {
-        this.images = p.createTypedArrayList(MITTourStopImage.CREATOR);
+        this.images = p.createTypedArrayList(MITImage.CREATOR);
     }
 
     public static final Parcelable.Creator<MITRepresentation> CREATOR = new Parcelable.Creator<MITRepresentation>() {

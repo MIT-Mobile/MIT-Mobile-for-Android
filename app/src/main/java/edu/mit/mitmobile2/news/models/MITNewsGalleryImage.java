@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import edu.mit.mitmobile2.MITRepresentation;
+import edu.mit.mitmobile2.tour.model.MITRepresentation;
 
 public class MITNewsGalleryImage {
 

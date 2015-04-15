@@ -5,6 +5,7 @@ public class Constants {
     //shuttles
     public static final String RESOURCES = "resource";
     public static final String SHUTTLES = "shuttles";
+    public static final String NEWS = "news";
     public static final String SHARED_PREFS_KEY = "mitPrefs";
     public static final String ROUTES_TIMESTAMP = "routesTimestamp";
     public static final String PREDICTIONS_TIMESTAMP = "predictionsTimestamp";

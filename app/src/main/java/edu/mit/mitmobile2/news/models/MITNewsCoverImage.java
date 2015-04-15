@@ -5,18 +5,18 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-import edu.mit.mitmobile2.MITRepresentation;
+import edu.mit.mitmobile2.MITImage;
 
 public class MITNewsCoverImage {
 
     @Expose
-    private List<MITRepresentation> representations = new ArrayList<>();
+    private List<MITImage> representations = new ArrayList<>();
 
-    public List<MITRepresentation> getRepresentations() {
+    public List<MITImage> getRepresentations() {
         return representations;
     }
 
-    public void setRepresentations(List<MITRepresentation> representations) {
+    public void setRepresentations(List<MITImage> representations) {
         this.representations = representations;
     }
 

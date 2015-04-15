@@ -14,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import edu.mit.mitmobile2.DBAdapter;
-import edu.mit.mitmobile2.MITRepresentation;
+import edu.mit.mitmobile2.MITImage;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 
@@ -87,11 +87,11 @@ public class MITTourStop extends MapItem {
         this.bodyHtml = bodyHtml;
     }
 
-    public MITTourStopImage getImage() {
+    public MITImage getImage() {
         return representations.get(0).getImages().get(0);
     }
 
-    public MITTourStopImage getThumbnailImage() {
+    public MITImage getThumbnailImage() {
         return representations.get(0).getImages().get(1);
     }
 
