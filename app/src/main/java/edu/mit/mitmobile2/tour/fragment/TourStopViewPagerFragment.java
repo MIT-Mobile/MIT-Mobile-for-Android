@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -32,6 +35,7 @@ import edu.mit.mitmobile2.tour.model.MITTourStop;
 import edu.mit.mitmobile2.tour.utils.TourStopScrollView;
 import edu.mit.mitmobile2.tour.utils.TourStopScrollViewListener;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
+import timber.log.Timber;
 
 public class TourStopViewPagerFragment extends Fragment implements TourStopScrollViewListener {
 
@@ -79,6 +83,8 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         final View view = inflater.inflate(R.layout.fragment_tour_stop_viewpager, container, false);
         ButterKnife.inject(this, view);
 
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
         directionsButton.setSize(FloatingActionButton.SIZE_NORMAL);
         directionsButton.setColorNormalResId(R.color.mit_red);
         directionsButton.setColorPressedResId(R.color.mit_red_dark);
@@ -96,10 +102,14 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         tourStopScrollView.scrollTo(0, tourStopScrollView.getTop());
         tourStopScrollView.setScrollViewListener(this);
 
-        stopImageView.setAdjustViewBounds(true);
+        //stopImageView.setAdjustViewBounds(true);
         Picasso.with(getActivity()).load(mitTourStop.getImage().getUrl()).placeholder(R.drawable.grey_rect).into(stopImageView);
 
-        stopBodyWebView.loadData(mitTourStop.getBodyHtml(), "text/html", "UTF-8");
+        String template = readInHtmlTemplate();
+        template = template.replace("__BODY__", mitTourStop.getBodyHtml());
+        template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
+
+        stopBodyWebView.loadData(template, "text/html", "UTF-8");
 
         stopTitleTextView.setText(Html.fromHtml(mitTourStop.getTitle()));
 
@@ -166,5 +176,21 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
                 tourStopCallback.setSideTripActionBarTitle();
             }
         }
+    }
+
+    private String readInHtmlTemplate() {
+        String template = "";
+        try {
+            InputStream is = getActivity().getAssets().open("tours_tour_detail_template.html");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            template = new String(buffer, "UTF-8");
+
+        } catch (IOException e) {
+            Timber.e(e, "HTML read Failed");
+        }
+        return template;
     }
 }

@@ -18,5 +18,6 @@
         android:layout_width="@dimen/tour_stop_image_size"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
+        android:textSize="@dimen/tour_recyclerview_text_size"
         />
 </LinearLayout>

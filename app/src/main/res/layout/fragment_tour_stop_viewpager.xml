@@ -23,8 +23,10 @@
 
                 <ImageView
                     android:id='@+id/stop_image_view'
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="190dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"/>
 
                 <TextView
                     android:paddingTop="@dimen/tour_home_padding"
@@ -40,8 +42,7 @@
                 <WebView
                     android:id="@+id/stop_body_web_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black" />
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
             <LinearLayout
