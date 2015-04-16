@@ -60,8 +60,6 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             }
         });
 
-        setRetainInstance(true);
-
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.News.STORIES_KEY) && savedInstanceState.containsKey(Constants.News.CATEGORIES_KEY)) {
             //noinspection unchecked
             stories = groupStories((List) savedInstanceState.getParcelableArrayList(Constants.News.STORIES_KEY));
@@ -69,6 +67,7 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             categories = (List) savedInstanceState.getParcelableArrayList(Constants.News.CATEGORIES_KEY);
             adapter = new MITNewsStoryAdapter(getActivity(), stories, this);
             adapter.setHeaders(categories);
+            listView.setAdapter(adapter);
         } else {
             adapter = new MITNewsStoryAdapter(getActivity(), new ArrayList<MITNewsStory>(), this);
 

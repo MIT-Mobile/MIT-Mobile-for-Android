@@ -125,6 +125,8 @@ public class MITModuleActivity extends MITActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        checkForIncomingIntent(savedInstanceState);
     }
 
 /*
@@ -424,12 +426,7 @@ public class MITModuleActivity extends MITActivity {
         this.mTitle = mTitle;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        //TODO: Fix this part, it handles external URI calls into the app
-
+    private void checkForIncomingIntent(Bundle savedInstanceState) {
         Intent intent = getIntent();
         Timber.d("Intent: " + intent.getDataString());
         Timber.d("Scheme: " + intent.getScheme());
@@ -462,7 +459,7 @@ public class MITModuleActivity extends MITActivity {
         Timber.d("navItem = " + navItem.toString());
 
         String intentString = navItem.getIntent();
-        if (navItem != null && !fragmentAlreadyExists(intentString)) {
+        if (navItem != null && !fragmentAlreadyExists(intentString) && savedInstanceState == null) {
             swapInFragment(intentString, navItem.getLongName());
         }
     }
