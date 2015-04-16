@@ -52,10 +52,4 @@
     <dimen name="tour_recycler_view_height">190dp</dimen>
     <dimen name="tour_info_content_margin">34dp</dimen>
     <dimen name="tour_stop_recyclerview_padding">8dp</dimen>
-
-    <!--news-->
-    <dimen name="news_story_padding">8dp</dimen>
-    <dimen name="news_story_section_padding">4dp</dimen>
-    <dimen name="news_story_title_textsize">18sp</dimen>
-    <dimen name="news_story_dek_textsize">16sp</dimen>
 </resources>

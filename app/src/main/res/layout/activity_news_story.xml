@@ -18,52 +18,10 @@
             android:adjustViewBounds="true"
             android:scaleType="fitXY" />
 
-        <TextView
-            android:id="@+id/story_title_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/news_story_section_padding"
-            android:paddingBottom="@dimen/news_story_section_padding"
-            android:paddingLeft="@dimen/news_story_padding"
-            android:paddingRight="@dimen/news_story_padding"
-            android:textSize="@dimen/news_story_title_textsize"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/story_author_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/news_story_padding"
-            android:paddingRight="@dimen/news_story_padding" />
-
-        <TextView
-            android:id="@+id/story_published_time_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/news_story_padding"
-            android:paddingRight="@dimen/news_story_padding"
-            android:paddingBottom="@dimen/news_story_section_padding" />
-
-        <View
-            style="@style/MITView"
-            android:background="@color/mit_red"
-            android:layout_marginLeft="@dimen/news_story_padding"
-            android:layout_marginRight="@dimen/news_story_padding" />
-
-        <TextView
-            android:id="@+id/story_dek_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/news_story_padding"
-            android:paddingRight="@dimen/news_story_padding"
-            android:paddingTop="@dimen/news_story_section_padding"
-            android:paddingBottom="@dimen/news_story_section_padding"
-            android:textSize="@dimen/news_story_dek_textsize" />
-
         <WebView
-            android:id="@+id/story_body_web_view"
+            android:id="@+id/story_web_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
 </ScrollView>
