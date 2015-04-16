@@ -48,34 +48,29 @@ public class NewsStoryActivity extends MITActivity {
         } else {
             template = template.replace("__TITLE__", "");
         }
-
         if (story.getAuthor() != null) {
             template = template.replace("__AUTHOR__", story.getAuthor());
         } else {
             template = template.replace("__AUTHOR__", "");
         }
-
         if (story.getPublishedAt() != null) {
             template = template.replace("__DATE__", NewsUtils.formatNewsPublishedTime(story.getPublishedAt()));
         } else {
             template = template.replace("__DATE__", "");
         }
-
         if (story.getDek() != null) {
             template = template.replace("__DEK__", story.getDek());
         } else {
             template = template.replace("__DEK__", "");
         }
-
         if (story.getBodyHtml() != null) {
             template = template.replace("__BODY__", story.getBodyHtml());
         } else {
             template = template.replace("__BODY__", "");
         }
-
         template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
 
-        storyWebView.loadData(template, "text/html", "UTF-8");
+        storyWebView.loadData(template, "text/html;charset=utf-8", "UTF-8");
     }
 
     private String readInHtmlTemplate() {

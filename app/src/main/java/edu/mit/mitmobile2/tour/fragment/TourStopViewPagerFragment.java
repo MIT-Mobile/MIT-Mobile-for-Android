@@ -109,7 +109,7 @@ public class TourStopViewPagerFragment extends Fragment implements TourStopScrol
         template = template.replace("__BODY__", mitTourStop.getBodyHtml());
         template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
 
-        stopBodyWebView.loadData(template, "text/html", "UTF-8");
+        stopBodyWebView.loadData(template, "text/html;charset=utf-8", "UTF-8");
 
         stopTitleTextView.setText(Html.fromHtml(mitTourStop.getTitle()));
 

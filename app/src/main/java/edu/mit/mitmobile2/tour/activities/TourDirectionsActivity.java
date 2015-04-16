@@ -76,7 +76,7 @@ public class TourDirectionsActivity extends ActionBarActivity {
             template = template.replace("__BODY__", direction.getBodyHtml());
             template = template.replace("__WIDTH__", String.valueOf(displayMetrics.widthPixels));
 
-            directionWebView.loadData(template, "text/html", "utf-8");
+            directionWebView.loadData(template, "text/html;charset=utf-8", "utf-8");
 
             LatLngBounds bounds = drawRoutePath(direction.getPathList());
             setToDefaultBounds(bounds, false, 0);
