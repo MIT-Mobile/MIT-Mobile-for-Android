@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingTop="5dp"
-    android:paddingBottom="10dp">
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/news_article_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/news_article_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/news_article_image"
-        android:layout_toRightOf="@+id/news_article_image"
-        android:layout_marginLeft="5dp"
-        android:textStyle="bold"
-        android:textSize="16sp" />
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp">
 
-    <TextView
-        android:id="@+id/news_article_lede"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_below="@+id/news_article_title"
-        android:layout_alignLeft="@+id/news_article_title" />
+        <TextView
+            android:id="@+id/news_article_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/news_article_lede"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:paddingBottom="10dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

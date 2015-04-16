@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.news.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -11,7 +12,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.NewsFragmentCallback;
+import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -21,6 +25,9 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         ImageView storyImage;
         TextView storyTitle;
         TextView storyLede;
+
+        ImageView mediaImage;
+        TextView storySnippet;
     }
 
     private class HeaderViewHolder {
@@ -30,11 +37,13 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
 
     private Context context;
     private List<MITNewsStory> stories;
-    private String[] headers = new String[]{"Header 1", "Header 2"};
+    private NewsFragmentCallback callback;
+    private String[] headers;
 
-    public MITNewsStoryAdapter(Context context, List<MITNewsStory> stories) {
+    public MITNewsStoryAdapter(Context context, List<MITNewsStory> stories, NewsFragmentCallback callback) {
         this.context = context;
         this.stories = stories;
+        this.callback = callback;
     }
 
     @Override
@@ -53,27 +62,61 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
     }
 
     @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (stories.get(position).getCategory().getId().equals(Constants.News.IN_THE_MEDIA)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         ViewHolder holder;
 
+        final MITNewsStory story = (MITNewsStory) getItem(position);
+
         if (convertView == null) {
-            view = View.inflate(context, R.layout.news_list_row, null);
             holder = new ViewHolder();
 
-            holder.storyImage = (ImageView) view.findViewById(R.id.news_article_image);
-            holder.storyTitle = (TextView) view.findViewById(R.id.news_article_title);
-            holder.storyLede = (TextView) view.findViewById(R.id.news_article_lede);
+            if (getItemViewType(position) == 0) {
+                view = View.inflate(context, R.layout.news_list_row, null);
+
+                holder.storyImage = (ImageView) view.findViewById(R.id.news_article_image);
+                holder.storyTitle = (TextView) view.findViewById(R.id.news_article_title);
+                holder.storyLede = (TextView) view.findViewById(R.id.news_article_lede);
+            } else {
+                view = View.inflate(context, R.layout.news_list_row_media, null);
+
+                holder.mediaImage = (ImageView) view.findViewById(R.id.media_image);
+                holder.storySnippet = (TextView) view.findViewById(R.id.news_snippet);
+            }
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        MITNewsStory story = (MITNewsStory) getItem(position);
+        if (getItemViewType(position) == 0) {
+            Picasso.with(context).load(story.getSmallCoverImageUrl()).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+            holder.storyTitle.setText(story.getTitle());
+            holder.storyLede.setText(story.getDek());
+        } else {
+            Picasso.with(context).load(story.getOriginalCoverImageUrl()).placeholder(R.drawable.grey_rect).into(holder.mediaImage);
+            holder.storySnippet.setText(Html.fromHtml(story.getDek()));
+        }
 
-        Picasso.with(context).load(story.getSmallCoverImageUrl()).into(holder.storyImage);
-        holder.storyTitle.setText(story.getTitle());
-        holder.storyLede.setText(story.getDek());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.itemClicked(story);
+            }
+        });
 
         return view;
     }
@@ -106,12 +149,24 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
 
     @Override
     public long getHeaderId(int i) {
-        //TODO: Get correct header
-        return i < 4 ? 0 : 1;
+        if (i < 5) {
+            return 0;
+        } else if (i < 10) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 
     public void updateItems(List<MITNewsStory> stories) {
         this.stories = stories;
         notifyDataSetChanged();
+    }
+
+    public void setHeaders(List<MITNewsCategory> categories) {
+        this.headers = new String[categories.size()];
+        for (int i = 0; i < categories.size(); i++) {
+            this.headers[i] = categories.get(i).getName();
+        }
     }
 }
