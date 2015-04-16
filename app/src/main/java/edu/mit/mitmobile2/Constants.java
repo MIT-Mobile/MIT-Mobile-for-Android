@@ -14,10 +14,10 @@ public class Constants {
     public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
     public static final String ALARM_ID_KEY = "alarm";
     public static final String ALARM_DESCRIPTION = "alarmDescription";
-
-    //tours
+    
+    /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
-    public static final String PEOPLE_DIRECTORY = "people"; /* We sue this to bind the *Managers to the MITAPIClient */
+    public static final String PEOPLE_DIRECTORY = "people";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
