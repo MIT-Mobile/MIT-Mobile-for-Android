@@ -99,6 +99,15 @@
     <string name="side_trip_directions">Step by step directions are not available for side trips</string>
     <string name="side_trip_directions_1">"Directions from "</string>
     <string name="side_trip_directions_2">" to "</string>
+    <!--People Search/Directory-->
+    <string name="people_search_hint">MIT People Directory</string>
+    <string name="people_default_sample_search_examples">Sample searches:\nName: \'william barton rogers\', \'rogers\' \nEmail: \'wbrogers\', \'wbrogers@mit.edu\' \nPhone: \'6172531000\', \'31000\'</string>
+    <string name="people_default_directory_assistance_button_title">Direcotry Assistance</string>
+    <string name="people_default_emergency_contacts_button_title">Emergency Contacts</string>
+    
+    <!--Emergency Contacts Listing (Shared by Emergency Module and People Module)-->
+    <string name="title_activity_emergency_contacts">Emergency Contacts</string>
+    <string name="people_tel_directory_assistance">6172531000</string>
 
     <string-array name="test">
         <item>test 1</item>

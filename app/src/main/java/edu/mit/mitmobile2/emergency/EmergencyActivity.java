@@ -1,20 +1,16 @@
 package edu.mit.mitmobile2.emergency;
 
+import android.os.Bundle;
+
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class EmergencyActivity extends MITModuleActivity {
-
-	int contentLayoutId = R.layout.content_emergency;
-
+	private static final int CONTENT_LAYOUT_ID = R.layout.content_emergency;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		this.setContentLayoutId(R.layout.content_emergency);
+		this.setContentLayoutId(CONTENT_LAYOUT_ID);
 		super.onCreate(savedInstanceState);
 	}
 

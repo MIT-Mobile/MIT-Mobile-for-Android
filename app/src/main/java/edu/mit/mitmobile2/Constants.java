@@ -17,6 +17,7 @@ public class Constants {
 
     //tours
     public static final String TOURS = "tours";
+    public static final String PEOPLE_DIRECTORY = "people"; /* We sue this to bind the *Managers to the MITAPIClient */
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -59,6 +60,11 @@ public class Constants {
         public static final String CATEGORIES_PATH = "/categories";
 
 
+    }
+
+    public static final class People { /* Much of this is found in the api.json asset. */
+        public static final String PEOPLE_PATH = "/";
+        public static final String PERSON_PATH = "/{person}";
     }
 
     public static class Resources {

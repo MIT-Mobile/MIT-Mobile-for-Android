@@ -2,14 +2,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.mit.mitmobile2.people.PeopleActivity" >
+    tools:context="edu.mit.mitmobile2.people.activity.PeopleActivity"
+    tools:ignore="Orientation">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_activity_people" />
+    <!-- We ignore orientation tool warnings because we will programmatically decide what is visible and
+         what isn't via our PeopleFragment.setMode(...) method -->
+
+    <LinearLayout
+            android:id="@+id/default_layout"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="visible">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/people_default_sample_search_examples"
+                android:lines="4"
+                android:maxLines="4"
+                android:layout_marginBottom="35dp"/>
+        <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/people_default_directory_assistance_button_title"
+                android:id="@+id/directory_assistance"/>
+        <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/people_default_emergency_contacts_button_title"
+                android:id="@+id/emergency_contacts"/>
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/search_list"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+    </ListView>
 </LinearLayout>
