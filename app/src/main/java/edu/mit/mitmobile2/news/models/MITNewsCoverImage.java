@@ -23,10 +23,6 @@ public class MITNewsCoverImage implements Parcelable {
         this.representations = representations;
     }
 
-    private MITNewsCoverImage(Parcel p) {
-        this.representations = (List<MITImage>) p.readArrayList(MITImage.class.getClassLoader());
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -34,7 +30,11 @@ public class MITNewsCoverImage implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(this.representations);
+        dest.writeTypedList(this.representations);
+    }
+
+    private MITNewsCoverImage(Parcel p) {
+        this.representations = p.createTypedArrayList(MITImage.CREATOR);
     }
 
     public static final Parcelable.Creator<MITNewsCoverImage> CREATOR = new Parcelable.Creator<MITNewsCoverImage>() {

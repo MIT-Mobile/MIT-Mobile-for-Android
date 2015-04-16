@@ -58,8 +58,13 @@ public class Constants {
         public static final String STORIES_BY_ID_PATH = "/stories/{id}";
         public static final String CATEGORIES_PATH = "/categories";
 
+        public static final String MIT_NEWS = "mit_news";
+        public static final String AROUND_CAMPUS = "around_campus";
+        public static final String IN_THE_MEDIA = "in_the_media";
+        public static final String STORIES_KEY = "stories";
+        public static final String CATEGORIES_KEY = "categories";
         public static final String STORY = "story";
-     }
+    }
 
     public static class Resources {
         public static final String RESOURCE_PATH = "/resource";

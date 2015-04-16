@@ -43,10 +43,6 @@ public class MITNewsStory implements Parcelable {
     @Expose
     private List<MITNewsGalleryImage> galleryImages = new ArrayList<>();
 
-    public MITNewsStory() {
-
-    }
-
     public String getId() {
         return id;
     }
@@ -174,23 +170,35 @@ public class MITNewsStory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(author);
-        dest.writeString(dek);
-        dest.writeString(publishedAt);
-        dest.writeString(bodyHtml);
-        dest.writeParcelable(coverImage, 0);
+        dest.writeString(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.sourceUrl);
+        dest.writeString(this.title);
+        dest.writeString(this.publishedAt);
+        dest.writeString(this.author);
+        dest.writeString(this.dek);
+        dest.writeInt(this.featured ? 1 : 0);
+        dest.writeParcelable(this.category, 0);
+        dest.writeString(this.type);
+        dest.writeString(this.bodyHtml);
+        dest.writeParcelable(this.coverImage, 0);
+        dest.writeTypedList(this.galleryImages);
     }
 
     private MITNewsStory(Parcel p) {
         this.id = p.readString();
+        this.url = p.readString();
+        this.sourceUrl = p.readString();
         this.title = p.readString();
+        this.publishedAt = p.readString();
         this.author = p.readString();
         this.dek = p.readString();
-        this.publishedAt = p.readString();
+        this.featured = p.readInt() == 1;
+        this.category = p.readParcelable(MITNewsCategory.class.getClassLoader());
+        this.type = p.readString();
         this.bodyHtml = p.readString();
-        this.coverImage = p.readParcelable(MITNewsCoverImage.class.getClassLoader());
+        this.coverImage = p.readParcelable(MITNewsCategory.class.getClassLoader());
+        this.galleryImages = p.createTypedArrayList(MITNewsGalleryImage.CREATOR);
     }
 
     public static final Parcelable.Creator<MITNewsStory> CREATOR = new Parcelable.Creator<MITNewsStory>() {
