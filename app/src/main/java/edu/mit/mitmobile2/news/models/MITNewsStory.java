@@ -1,12 +1,15 @@
 package edu.mit.mitmobile2.news.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITNewsStory {
+public class MITNewsStory implements Parcelable {
 
     @Expose
     private String id;
@@ -39,6 +42,10 @@ public class MITNewsStory {
     @SerializedName("gallery_images")
     @Expose
     private List<MITNewsGalleryImage> galleryImages = new ArrayList<>();
+
+    public MITNewsStory() {
+
+    }
 
     public String getId() {
         return id;
@@ -160,4 +167,39 @@ public class MITNewsStory {
         return coverImage.getRepresentations().get(index).getUrl();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(dek);
+        dest.writeString(publishedAt);
+        dest.writeString(bodyHtml);
+        dest.writeParcelable(coverImage, 0);
+    }
+
+    private MITNewsStory(Parcel p) {
+        this.id = p.readString();
+        this.title = p.readString();
+        this.author = p.readString();
+        this.dek = p.readString();
+        this.publishedAt = p.readString();
+        this.bodyHtml = p.readString();
+        this.coverImage = p.readParcelable(MITNewsCoverImage.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MITNewsStory> CREATOR = new Parcelable.Creator<MITNewsStory>() {
+        public MITNewsStory createFromParcel(Parcel source) {
+            return new MITNewsStory(source);
+        }
+
+        public MITNewsStory[] newArray(int size) {
+            return new MITNewsStory[size];
+        }
+    };
 }

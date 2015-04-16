@@ -58,8 +58,8 @@ public class Constants {
         public static final String STORIES_BY_ID_PATH = "/stories/{id}";
         public static final String CATEGORIES_PATH = "/categories";
 
-
-    }
+        public static final String STORY = "story";
+     }
 
     public static class Resources {
         public static final String RESOURCE_PATH = "/resource";

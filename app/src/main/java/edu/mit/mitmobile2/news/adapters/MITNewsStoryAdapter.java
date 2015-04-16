@@ -1,17 +1,21 @@
 package edu.mit.mitmobile2.news.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.activities.NewsStoryActivity;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -21,6 +25,7 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         ImageView storyImage;
         TextView storyTitle;
         TextView storyLede;
+        RelativeLayout storyLayout;
     }
 
     private class HeaderViewHolder {
@@ -64,16 +69,26 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
             holder.storyImage = (ImageView) view.findViewById(R.id.news_article_image);
             holder.storyTitle = (TextView) view.findViewById(R.id.news_article_title);
             holder.storyLede = (TextView) view.findViewById(R.id.news_article_lede);
+            holder.storyLayout = (RelativeLayout) view.findViewById(R.id.news_layout);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        MITNewsStory story = (MITNewsStory) getItem(position);
+        final MITNewsStory story = (MITNewsStory) getItem(position);
 
         Picasso.with(context).load(story.getSmallCoverImageUrl()).into(holder.storyImage);
         holder.storyTitle.setText(story.getTitle());
         holder.storyLede.setText(story.getDek());
+
+        holder.storyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, NewsStoryActivity.class);
+                intent.putExtra(Constants.News.STORY, story);
+                context.startActivity(intent);
+            }
+        });
 
         return view;
     }
