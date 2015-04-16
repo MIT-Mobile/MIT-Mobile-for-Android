@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mit.mitmobile2.tour.activities.TourDirectionsActivity">
+    tools:context="edu.mit.mitmobile2.tour.activities.TourDirectionsActivity"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -15,14 +16,26 @@
             android:layout_height="200dp" />
 
         <TextView
-            android:id="@+id/direction_title"
+            android:id="@+id/side_trip_title"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/side_trip_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/side_trip_directions"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <WebView
             android:id="@+id/directions_html_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

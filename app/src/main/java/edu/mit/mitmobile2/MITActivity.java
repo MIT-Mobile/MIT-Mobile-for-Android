@@ -16,17 +16,19 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import timber.log.Timber;
 
 public class MITActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private static final long UPDATE_INTERVAL = 120000;
+    private static final long UPDATE_INTERVAL = 60000;
 
     protected String TAG;
     protected Context mContext;
@@ -48,9 +50,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
     }
-
 
     @Override
     protected void onStart() {
@@ -70,23 +70,30 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(
+        FusedLocationProviderApi fusedLocationApi = LocationServices.FusedLocationApi;
+        fusedLocationApi.requestLocationUpdates(
                 googleApiClient, locationRequest, this
         );
+        Location lastLocation = fusedLocationApi.getLastLocation(googleApiClient);
+        setLocation(lastLocation);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i(TAG, "GoogleApiClient connection has ben suspend");
+        Timber.d(TAG, "GoogleApiClient connection has been suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i(TAG, "GoogleApiClient connection has failed");
+        Timber.d(TAG, "GoogleApiClient connection has failed");
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        setLocation(location);
+    }
+
+    private void setLocation(Location location) {
         this.location = location;
         ContentValues cv = new ContentValues();
         cv.put(Schema.Location.LATITUDE, location.getLatitude());
@@ -94,6 +101,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         cv.put(Schema.Location.ID_COL, 1);
         getContentResolver().insert(MITShuttlesProvider.LOCATION_URI, cv);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

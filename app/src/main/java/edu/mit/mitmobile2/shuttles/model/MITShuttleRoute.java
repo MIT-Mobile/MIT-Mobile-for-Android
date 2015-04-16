@@ -194,8 +194,7 @@ public class MITShuttleRoute extends DatabaseObject implements Parcelable {
         this.predictionsUrl = p.readString();
         this.vehiclesUrl = p.readString();
         this.path = p.readParcelable(MITShuttlePath.class.getClassLoader());
-        p.readTypedList(this.stops, MITShuttleStop.CREATOR);
-//        this.stops = p.readArrayList(MITShuttleStopWrapper.class.getClassLoader());
+        this.stops  = p.createTypedArrayList(MITShuttleStop.CREATOR);
     }
 
     public static final Parcelable.Creator<MITShuttleRoute> CREATOR = new Parcelable.Creator<MITShuttleRoute>() {

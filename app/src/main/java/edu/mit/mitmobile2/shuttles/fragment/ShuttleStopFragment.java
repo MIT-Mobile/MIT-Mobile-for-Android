@@ -11,10 +11,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,18 +37,20 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import timber.log.Timber;
 
-public class ShuttleStopFragment extends ShuttleMapFragment {
+public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap.InfoWindowAdapter {
 
+    public static final String TAG = "SHUTTLE_STOP_FRAGMENT_TAG";
+    public static final String CURRENT_STOP_POSITION_KEY = "CURRENT_STOP_POSITION_KEY";
     public static final int STOP_ZOOM = 17;
 
     ViewPager predictionViewPager;
 
     private ShuttleStopViewPagerAdapter stopViewPagerAdapter;
-    private int currentPosition;
+    private int currentRealPosition;
     private MITShuttleRoute route = new MITShuttleRoute();
     private List<MITShuttleStop> stops;
     private String routeId;
-    private String stopId;
+    private String initialStopid;
     private String uriString;
     private String selectionString;
     private MapFragmentCallback callback;
@@ -66,9 +71,9 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
         View transparentView = shuttleStopContent.findViewById(R.id.transparent_map_overlay);
 
         routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
-        stopId = getActivity().getIntent().getStringExtra(Constants.STOP_ID_KEY);
+        initialStopid = getActivity().getIntent().getStringExtra(Constants.STOP_ID_KEY);
 
-        uriString = MITShuttlesProvider.STOPS_URI + "/" + stopId;
+        uriString = MITShuttlesProvider.STOPS_URI + "/" + initialStopid;
         selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
         queryDatabase();
 
@@ -83,6 +88,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
         for (MITShuttleStop stop : stops) {
             stopIds.add(stop.getId());
         }
+
         stopViewPagerAdapter = new ShuttleStopViewPagerAdapter(getFragmentManager(), routeId, stopIds);
 
         predictionViewPager.setAdapter(stopViewPagerAdapter);
@@ -95,7 +101,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
             @Override
             public void onPageSelected(int position) {
                 int realPosition = stopViewPagerAdapter.getRealPosition(position);
-                currentPosition = realPosition;
+                currentRealPosition = realPosition;
                 callback.setActionBarSubtitle(stops.get(realPosition).getTitle());
                 animateToStop(realPosition);
             }
@@ -105,17 +111,21 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
 
             }
         });
-        int startPosition = getStartPosition();
+
+        int startPosition = savedInstanceState != null ? savedInstanceState.getInt(CURRENT_STOP_POSITION_KEY) : getPositionFromStopId(initialStopid);
+
         callback.setActionBarSubtitle(stops.get(startPosition).getTitle());
+
         int fakePosition = stops.size() * EndlessFragmentStatePagerAdapter.NUMBER_OF_LOOPS / 2 + startPosition;
         predictionViewPager.setCurrentItem(fakePosition);
-        currentPosition = startPosition;
+        currentRealPosition = startPosition;
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             addTransparentView(transparentView);
         } else {
             transparentView.setVisibility(View.GONE);
         }
+
         addShuttleStopContent(shuttleStopContent);
 
         updateData();
@@ -124,6 +134,24 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
         LatLng stopPosition = new LatLng(stops.get(startPosition).getLat(), stops.get(startPosition).getLon());
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(stopPosition, STOP_ZOOM);
         getMapView().moveCamera(cameraUpdate);
+
+        getMapView().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                String stopIdClicked = marker.getSnippet();
+                int newRealPosition = getPositionFromStopId(stopIdClicked);
+                int offset = newRealPosition - currentRealPosition;
+                //This is done due to the way the endless view pager handles fake positions
+                if (offset > (stops.size() / 2)) {
+                    offset -= stops.size();
+                }
+                int newFakePosition = predictionViewPager.getCurrentItem() + offset;
+                predictionViewPager.setCurrentItem(newFakePosition);
+                showListView();
+            }
+        });
+
+        refreshMapInfoWindow();
 
         return view;
     }
@@ -153,9 +181,9 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
         }
     }
 
-    private int getStartPosition() {
+    private int getPositionFromStopId(String currentStopId) {
         for (MITShuttleStop stop : stops) {
-            if (stop.getId().equals(stopId)) {
+            if (stop.getId().equals(currentStopId)) {
                 return stops.indexOf(stop);
             }
         }
@@ -173,18 +201,22 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
         getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
     }
 
+    public void refreshMapInfoWindow() {
+        mitMapView.getMap().setInfoWindowAdapter(this);
+    }
+
     @Override
     protected void updateStopModeCamera(boolean mapViewExpanded) {
         LatLng newCenter;
         CameraUpdate cameraUpdate;
         if (mapViewExpanded) {
-            newCenter = new LatLng(stops.get(currentPosition).getLat(), stops.get(currentPosition).getLon());
+            newCenter = new LatLng(stops.get(currentRealPosition).getLat(), stops.get(currentRealPosition).getLon());
             cameraUpdate = CameraUpdateFactory.newLatLng(newCenter);
         } else {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                newCenter = new LatLng(stops.get(currentPosition).getLat(), stops.get(currentPosition).getLon() + lonOffset);
+                newCenter = new LatLng(stops.get(currentRealPosition).getLat(), stops.get(currentRealPosition).getLon() + lonOffset);
             } else {
-                newCenter = new LatLng(stops.get(currentPosition).getLat() + latOffset, stops.get(currentPosition).getLon());
+                newCenter = new LatLng(stops.get(currentRealPosition).getLat() + latOffset, stops.get(currentRealPosition).getLon());
             }
             cameraUpdate = CameraUpdateFactory.newLatLngZoom(newCenter, STOP_ZOOM);
         }
@@ -237,6 +269,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
         stopViewPagerAdapter.updatePredictions(nextPosition, stops.get(nextPosition).getPredictions());
 
         updateMapItems((ArrayList) route.getVehicles(), false);
+        refreshMapInfoWindow();
     }
 
     @Override
@@ -252,7 +285,51 @@ public class ShuttleStopFragment extends ShuttleMapFragment {
     public void onMapLoaded() {
         mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
         LatLng target = mitMapView.getMap().getCameraPosition().target;
-        latOffset = target.latitude - stops.get(getStartPosition()).getLat();
-        lonOffset = target.longitude - stops.get(getStartPosition()).getLon();
+        latOffset = target.latitude - stops.get(getPositionFromStopId(initialStopid)).getLat();
+        lonOffset = target.longitude - stops.get(getPositionFromStopId(initialStopid)).getLon();
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        if (marker.getTitle() != null) {
+            View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
+            TextView stopNameTextView = (TextView) view.findViewById(R.id.top_textview);
+            TextView stopPredictionView = (TextView) view.findViewById(R.id.bottom_textview);
+            stopNameTextView.setText(marker.getTitle());
+            for (MITShuttleStop stop : route.getStops()) {
+                if (marker.getSnippet().equals(stop.getId())) {
+                    stopNameTextView.setText(stop.getTitle());
+                    if (route.isPredictable()) {
+                        if (stop.getPredictions().size() > 0) {
+                            if (stop.getPredictions().get(0).getSeconds() / 60 < 1) {
+                                stopPredictionView.setText(getString(R.string.arriving_now));
+                            } else {
+                                stopPredictionView.setText(getString(R.string.arriving_in) + " " +
+                                        stop.getPredictions().get(0).getSeconds() / 60 + " " +
+                                        getString(R.string.minutes));
+                            }
+                        }
+                    } else if (route.isScheduled()) {
+                        stopPredictionView.setText(getString(R.string.route_unknown));
+                    } else {
+                        stopPredictionView.setText(getString(R.string.route_not_in_service));
+                    }
+                }
+            }
+            return view;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_STOP_POSITION_KEY, currentRealPosition);
     }
 }

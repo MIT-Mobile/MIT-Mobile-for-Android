@@ -42,6 +42,7 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.7.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'org.threeten:threetenbp:1.2'
     compile 'com.koushikdutta.ion:ion:2.+'
 }

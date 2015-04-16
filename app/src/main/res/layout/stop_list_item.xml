@@ -6,18 +6,20 @@
 
     <ImageView
         android:id="@+id/stop_icon"
-        android:layout_width="@dimen/shuttle_home_stop_padding"
-        android:layout_height="@dimen/shuttle_home_stop_padding"
+        android:layout_width="@dimen/shuttle_route_stop_padding"
+        android:layout_height="@dimen/shuttle_route_stop_padding"
+
         android:layout_centerVertical="true"
-        android:paddingLeft="5dp"
-        android:layout_alignParentLeft="true"/>
+        android:layout_marginLeft="@dimen/shuttle_route_image_padding"
+        android:layout_alignParentLeft="true" />
 
     <RelativeLayout
+        android:id="@+id/stop_name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/stop_icon"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="13dp"
+        android:layout_marginLeft="@dimen/shuttle_route_image_padding"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
@@ -34,6 +36,6 @@
         android:id="@+id/stop_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="55dp"
+        android:layout_alignLeft="@+id/stop_name_layout"
         style="@style/MITView" />
 </RelativeLayout>

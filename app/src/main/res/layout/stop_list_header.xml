@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/transparent_map_overlay"
         android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:background="@color/sbc_layout_view">
 
         <ImageView
@@ -24,28 +25,34 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="13dp" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/actionbar_back_button_spacing" />
 
-        <TextView
-            android:id="@+id/route_information_top"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/shuttle_imageview"
-            android:layout_marginLeft="@dimen/stop_margin"
-            android:textColor="@color/contents_text"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:text="In service" />
+            android:layout_alignTop="@+id/shuttle_imageview">
 
-        <TextView
-            android:id="@+id/route_information_bottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/stop_margin"
-            android:textSize="14sp"
-            android:text="Runs weekdays"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/route_information_top"
-            android:layout_alignLeft="@+id/route_information_top" />
+            <TextView
+                android:id="@+id/route_information_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/stop_margin"
+                android:textColor="@color/contents_text"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/route_information_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/route_information_top"
+                android:layout_alignLeft="@+id/route_information_top" />
+        </RelativeLayout>
+
     </RelativeLayout>
 </RelativeLayout>

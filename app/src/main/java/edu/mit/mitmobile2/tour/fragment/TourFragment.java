@@ -38,8 +38,6 @@ public class TourFragment extends Fragment {
 
     int contentLayoutId = R.layout.content_tours;
 
-    @InjectView(R.id.self_guided_tour_view)
-    RelativeLayout selfGuidedTourView;
     @InjectView(R.id.self_guided_tour_title)
     TextView selfGuidedTourTitleTextView;
     @InjectView(R.id.stops_info_text_view)
@@ -49,10 +47,12 @@ public class TourFragment extends Fragment {
     @InjectView(R.id.time_info_text_view)
     TextView timeInfoTextView;
 
+    private MITTour mitTour;
+
     @OnClick(R.id.send_feedback_view)
     public void sendFeedback() {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {getResources().getString(R.string.feedback_email_address)});
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{getResources().getString(R.string.feedback_email_address)});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.feedback_subject)
                 + " "
                 + TourUtils.getAppVersion()
@@ -88,12 +88,11 @@ public class TourFragment extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.tour_info_view)
+    @OnClick(R.id.self_guided_tour_view)
     public void openNextActivity() {
         Intent intent = new Intent(getActivity(), TourSelfGuidedActivity.class);
         startActivity(intent);
     }
-
 
     private MITAPIClient mitApiClient;
 
@@ -107,21 +106,24 @@ public class TourFragment extends Fragment {
 
         ButterKnife.inject(this, view);
 
-        mitApiClient = new MITAPIClient(getActivity().getApplicationContext());
+        mitApiClient = new MITAPIClient(getActivity());
 
-        mitApiClient.get(Constants.TOURS, Constants.Tours.TOUR_PATH, null, null, new Callback<List<MITTour>>() {
-            @Override
-            public void success(List<MITTour> mitTours, Response response) {
-                MITTour mitTour = mitTours.get(0);
-                setTourInfoView(mitTour);
-            }
+        if (savedInstanceState != null && savedInstanceState.containsKey(Constants.Tours.TOUR_KEY)) {
+            mitTour = savedInstanceState.getParcelable(Constants.Tours.TOUR_KEY);
+            setTourInfoView(mitTour);
+        } else {
+            mitApiClient.get(Constants.TOURS, Constants.Tours.TOUR_PATH, null, null, new Callback<List<MITTour>>() {
+                @Override
+                public void success(List<MITTour> mitTours, Response response) {
+                    mitTour = mitTours.get(0);
+                    setTourInfoView(mitTour);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-            }
-        });
-
-        selfGuidedTourView.setBackground(getResources().getDrawable(R.drawable.tours_cover_image));
+                @Override
+                public void failure(RetrofitError error) {
+                }
+            });
+        }
 
         return view;
     }
@@ -160,5 +162,11 @@ public class TourFragment extends Fragment {
                     "Please install a map app.", Toast.LENGTH_SHORT).show();
             Timber.e(e, "No map application");
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.Tours.TOUR_KEY, mitTour);
     }
 }

@@ -1,9 +1,8 @@
 package edu.mit.mitmobile2.tour.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import java.util.HashMap;
 
@@ -13,16 +12,17 @@ import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 import edu.mit.mitmobile2.tour.fragment.TourStopMapFragment;
 import edu.mit.mitmobile2.tour.model.MITTour;
+import edu.mit.mitmobile2.tour.model.MITTourStop;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import timber.log.Timber;
 
-public class TourSelfGuidedActivity extends MITActivity implements TourStopCallback {
+public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuidedCallback {
 
     /**
      * The plan:
@@ -73,28 +73,6 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tour_self_guided, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void switchViews(boolean toList) {
         if (toList) {
             getFragmentManager().beginTransaction().replace(R.id.tour_frame, listFragment).commit();
@@ -114,5 +92,35 @@ public class TourSelfGuidedActivity extends MITActivity implements TourStopCallb
         Intent intent = new Intent(this, TourDetailActivity.class);
         intent.putExtra(Constants.Tours.TOUR_DETAILS_KEY, description);
         startActivity(intent);
+    }
+
+    @Override
+    public void showMainLoopFragment(int currentStopNum) {
+        Intent intent = new Intent(this, TourStopActivity.class);
+        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, Constants.Tours.MAIN_LOOP);
+        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
+        intent.putExtra(Constants.Tours.CURRENT_MAIN_LOOP_STOP, currentStopNum);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showSideTripFragment(MITTourStop mitTourStop) {
+        Intent intent = new Intent(this, TourStopActivity.class);
+        intent.putExtra(Constants.Tours.TOUR_STOP, mitTourStop);
+        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
+        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, Constants.Tours.SIDE_TRIP);
+        startActivity(intent);
+    }
+
+    @Override
+    public float getDistance(MITTourStop mitTourStop) {
+        float distance = 0;
+        Location stopLocation = new Location("stopLocation");
+        stopLocation.setLongitude(mitTourStop.getCoordinates()[0]);
+        stopLocation.setLatitude(mitTourStop.getCoordinates()[1]);
+        if (location != null) {
+            distance = stopLocation.distanceTo(location);
+        }
+        return distance;
     }
 }

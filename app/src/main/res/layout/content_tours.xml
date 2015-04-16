@@ -6,11 +6,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/self_guided_tour_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tour_home_image_height"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/tours_button_selector">
+
             <LinearLayout
                 android:id="@+id/tour_info_view"
                 android:layout_width="match_parent"
@@ -18,6 +21,7 @@
                 android:orientation="vertical"
                 android:layout_alignParentBottom="true"
                 android:background="@color/black_transparent">
+
                 <TextView
                     android:id="@+id/self_guided_tour_title"
                     android:layout_width="match_parent"
@@ -27,8 +31,7 @@
                     android:paddingLeft="@dimen/tour_home_padding"
                     android:textColor="@color/white"
                     android:textSize="@dimen/tour_home_title_size"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/stops_info_text_view"
@@ -36,8 +39,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/tour_home_padding"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/tour_home_content_size"
-                    />
+                    android:textSize="@dimen/tour_home_content_size" />
 
                 <TextView
                     android:id="@+id/distance_info_text_view"
@@ -45,8 +47,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/tour_home_padding"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/tour_home_content_size"
-                    />
+                    android:textSize="@dimen/tour_home_content_size" />
 
                 <TextView
                     android:id="@+id/time_info_text_view"
@@ -55,9 +56,17 @@
                     android:paddingBottom="@dimen/tour_home_padding"
                     android:paddingLeft="@dimen/tour_home_padding"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/tour_home_content_size"
-                    />
+                    android:textSize="@dimen/tour_home_content_size" />
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_right_arrow"
+                android:layout_alignBottom="@+id/tour_info_view"
+                android:layout_alignTop="@+id/tour_info_view"
+                android:layout_marginRight="5dp"
+                android:layout_alignRight="@+id/tour_info_view" />
         </RelativeLayout>
 
         <LinearLayout
@@ -66,13 +75,13 @@
             android:padding="@dimen/tour_home_padding"
             android:orientation="vertical"
             android:background="@color/white">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/guided_tour_info"
                 android:textSize="@dimen/tour_home_content_size"
-                android:textColor="@color/contents_text"
-                />
+                android:textColor="@color/contents_text" />
 
             <TextView
                 android:id="@+id/more_guided_tours_text_view"
@@ -82,16 +91,14 @@
                 android:paddingBottom="@dimen/tour_home_padding"
                 android:text="@string/more_guided_tours"
                 android:textSize="@dimen/tour_home_content_size"
-                android:textColor="@color/mit_red"
-                />
+                android:textColor="@color/mit_red" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_mit_info"
                 android:textSize="@dimen/tour_home_content_size"
-                android:textColor="@color/contents_text"
-                />
+                android:textColor="@color/contents_text" />
 
             <TextView
                 android:id="@+id/more_about_mit_text_view"
@@ -100,88 +107,81 @@
                 android:paddingTop="@dimen/tour_home_padding_paragraph"
                 android:text="@string/more_about_mit"
                 android:textSize="@dimen/tour_home_content_size"
-                android:textColor="@color/mit_red"
-                />
+                android:textColor="@color/mit_red" />
         </LinearLayout>
 
-        <View
-            style="@style/MITView" />
+        <View style="@style/MITView" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/tour_home_padding" />
 
-        <View
-            style="@style/MITView" />
+        <View style="@style/MITView" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
-            <RelativeLayout
+
+            <LinearLayout
                 android:id="@+id/send_feedback_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
+                android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
-                <TextView
-                    style="@style/MITTourHomeContent"
-                    android:text="@string/send_feedback"
-                    />
 
                 <ImageView
                     style="@style/MITTourHomeImage"
-                    android:src="@drawable/email"
-                    />
-            </RelativeLayout>
+                    android:src="@drawable/email" />
+
+                <TextView
+                    style="@style/MITTourHomeContent"
+                    android:text="@string/send_feedback" />
+            </LinearLayout>
 
             <View
                 style="@style/MITView"
-                android:layout_marginLeft="@dimen/tour_home_padding"
-                android:layout_marginRight="@dimen/tour_home_padding"
-                />
+                android:layout_marginLeft="@dimen/tour_home_padding" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/mit_info_center_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
+                android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
-                <TextView
-                    style="@style/MITTourHomeContent"
-                    android:text="@string/mit_info_center"
-                    />
 
                 <ImageView
                     style="@style/MITTourHomeImage"
-                    android:src="@drawable/open_in_browser"
-                    />
-            </RelativeLayout>
+                    android:src="@drawable/open_in_browser" />
+
+                <TextView
+                    style="@style/MITTourHomeContent"
+                    android:text="@string/mit_info_center" />
+            </LinearLayout>
 
             <View
                 style="@style/MITView"
-                android:layout_marginLeft="@dimen/tour_home_padding"
-                android:layout_marginRight="@dimen/tour_home_padding"
-                />
+                android:layout_marginLeft="@dimen/tour_home_padding" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/mit_admissions_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
+                android:orientation="horizontal"
                 android:background="@drawable/shuttle_route_selector">
-                <TextView
-                    style="@style/MITTourHomeContent"
-                    android:text="@string/mit_admissions"
-                    />
 
                 <ImageView
                     style="@style/MITTourHomeImage"
-                    android:src="@drawable/open_in_browser"
-                    />
-            </RelativeLayout>
+                    android:src="@drawable/open_in_browser" />
+
+                <TextView
+                    style="@style/MITTourHomeContent"
+                    android:text="@string/mit_admissions" />
+            </LinearLayout>
         </LinearLayout>
 
-        <View
-            style="@style/MITView" />
+        <View style="@style/MITView" />
 
         <LinearLayout
             android:layout_width="match_parent"

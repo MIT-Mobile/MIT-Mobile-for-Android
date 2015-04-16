@@ -81,11 +81,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".news.NewsActivity"
-            android:label="@string/title_activity_news"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
             android:name=".maps.MapsActivity"
             android:label="@string/title_activity_maps"
             android:launchMode="singleTop"
@@ -205,26 +200,30 @@
             android:label="@string/title_activity_tour_self_guided"
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".tour.activities.TourDetailActivity"
             android:label="@string/title_activity_tour_detail"
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".tour.activities.TourDirectionsActivity"
             android:label="@string/title_activity_tour_directions"
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".tour.activities.MitIntroActivity"
             android:label="@string/title_activity_intro_mit"
             android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tour.activities.TourStopActivity"
+            android:parentActivityName=".MITModuleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

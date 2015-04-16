@@ -5,6 +5,7 @@ public class Constants {
     //shuttles
     public static final String RESOURCES = "resource";
     public static final String SHUTTLES = "shuttles";
+    public static final String NEWS = "news";
     public static final String SHARED_PREFS_KEY = "mitPrefs";
     public static final String ROUTES_TIMESTAMP = "routesTimestamp";
     public static final String PREDICTIONS_TIMESTAMP = "predictionsTimestamp";
@@ -41,6 +42,27 @@ public class Constants {
         public static final String TOUR_DETAILS_KEY = "tourDetails";
         public static final String TOUR_KEY = "tour";
         public static final String DIRECTION_KEY = "direction";
+        public static final String TOUR_STOP = "tourStop";
+        public static final String MAIN_LOOP = "Main Loop";
+        public static final String SIDE_TRIP = "Side Trip";
+        public static final String TOUR_STOP_TYPE = "tourStopType";
+        public static final String CURRENT_MAIN_LOOP_STOP = "currentMainLoopStop";
+        public static final String CURRENT_STOP_COORDS = "currentStopCoords";
+        public static final String PREV_STOP_COORDS = "prevStopCoords";
+        public static final String TITLE_KEY = "title";
+        public static final String FIRST_TITLE_KEY = "firstTitle";
+    }
+
+    public static class News {
+        public static final String STORIES_PATH = "/stories";
+        public static final String STORIES_BY_ID_PATH = "/stories/{id}";
+        public static final String CATEGORIES_PATH = "/categories";
+
+        public static final String MIT_NEWS = "mit_news";
+        public static final String AROUND_CAMPUS = "around_campus";
+        public static final String IN_THE_MEDIA = "in_the_media";
+        public static final String STORIES_KEY = "stories";
+        public static final String CATEGORIES_KEY = "categories";
     }
 
     public static class Resources {

@@ -23,6 +23,7 @@
     <string name="title_activity_shuttles">Shuttles</string>
     <string name="title_activity_tours">Tours</string>
     <string name="title_activity_intro_mit">Introduction to MIT</string>
+    <string name="title_activity_tour_directions">Walking Directions</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -90,7 +91,14 @@
     <string name="restrictions">Videotaping and photography are prohibited inside MIT buildings.</string>
     <string name="title_activity_tour_detail">Tour Details</string>
     <string name="tour_details">Tour Details…</string>
-    <string name="title_activity_tour_directions">Walking Directions</string>
+    <string name="stop_nav_main_loop">Main Loop %1$s of %2$s</string>
+    <string name="stop_nav_side_trip">Side Trip</string>
+    <string name="near_here_recycler_view_title">Near Here</string>
+    <string name="main_loop_recycler_view_title">Main Loop</string>
+    <string name="near_here">Near Here</string>
+    <string name="side_trip_directions">Step by step directions are not available for side trips</string>
+    <string name="side_trip_directions_1">"Directions from "</string>
+    <string name="side_trip_directions_2">" to "</string>
 
     <string-array name="test">
         <item>test 1</item>
@@ -98,4 +106,5 @@
         <item>test 3</item>
     </string-array>
 
+    <string name="open_in_browser_q">Open in Browser?</string>
 </resources>

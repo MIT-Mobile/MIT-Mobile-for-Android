@@ -145,8 +145,8 @@ public class MITTour implements Parcelable {
         this.lengthInKm = p.readInt();
         this.estimatedDurationInMinutes = p.readInt();
         this.descriptionHtml = p.readString();
-        p.readTypedList(this.stops, MITTourStop.CREATOR);
-        p.readTypedList(this.links, MITTourLink.CREATOR);
+        this.stops = p.createTypedArrayList(MITTourStop.CREATOR);
+        this.links = p.createTypedArrayList(MITTourLink.CREATOR);
     }
 
     public static final Parcelable.Creator<MITTour> CREATOR = new Parcelable.Creator<MITTour>() {

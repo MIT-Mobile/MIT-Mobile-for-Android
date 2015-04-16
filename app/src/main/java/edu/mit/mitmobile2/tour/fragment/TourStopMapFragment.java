@@ -1,12 +1,16 @@
 package edu.mit.mitmobile2.tour.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -30,15 +34,28 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
-import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
+import edu.mit.mitmobile2.tour.activities.TourStopActivity;
+import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
+import edu.mit.mitmobile2.tour.utils.TourUtils;
 
-public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
+public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoadedCallback,
+        GoogleMap.InfoWindowAdapter,
+        GoogleMap.OnInfoWindowClickListener,
+        Animation.AnimationListener {
+
+    private static final int DURATION_INCOMING_LOCATION = 200;
+    private static final int DURATION_INCOMING_LIST = 201;
+    private static final int DURATION_OUTGOING_LIST = 300;
+    private static final int DURATION_OUTGOING_LOCATION = 301;
 
     private MITMapView mitMapView;
     private MITTour tour;
-    private TourStopCallback callback;
+    private TourSelfGuidedCallback callback;
+
+    private FloatingActionButton myLocationButton;
+    private FloatingActionButton listButton;
 
     public TourStopMapFragment() {
     }
@@ -48,7 +65,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour_stop_map, null);
 
-        callback = (TourStopCallback) getActivity();
+        callback = (TourSelfGuidedCallback) getActivity();
 
         MapView googleMapView = (MapView) view.findViewById(R.id.tour_map);
         googleMapView.onCreate(savedInstanceState);
@@ -86,8 +103,16 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
         return view;
     }
 
+    private void startAnimation(FloatingActionButton button, float fromXDelt, float toXDelt, float fromYDelt, float toYDelt, int duration, int offset) {
+        TranslateAnimation translateAnimation = new TranslateAnimation(fromXDelt, toXDelt, fromYDelt, toYDelt);
+        translateAnimation.setDuration(duration);
+        translateAnimation.setAnimationListener(TourStopMapFragment.this);
+        translateAnimation.setStartOffset(offset);
+        button.startAnimation(translateAnimation);
+    }
+
     private void setupFABs(View view) {
-        FloatingActionButton myLocationButton = (FloatingActionButton) view.findViewById(R.id.my_location_button);
+        myLocationButton = (FloatingActionButton) view.findViewById(R.id.my_location_button);
         myLocationButton.setColorNormalResId(R.color.white);
         myLocationButton.setColorPressedResId(R.color.medium_grey);
         myLocationButton.setSize(FloatingActionButton.SIZE_NORMAL);
@@ -101,7 +126,7 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
             }
         });
 
-        FloatingActionButton listButton = (FloatingActionButton) view.findViewById(R.id.list_button);
+        listButton = (FloatingActionButton) view.findViewById(R.id.list_button);
         listButton.setColorPressedResId(R.color.mit_red_dark);
         listButton.setColorNormalResId(R.color.mit_red);
         listButton.setSize(FloatingActionButton.SIZE_NORMAL);
@@ -109,9 +134,15 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.switchViews(true);
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                startAnimation(listButton, 0, 0, 0, displayMetrics.heightPixels, DURATION_OUTGOING_LIST, 0);
+                startAnimation(myLocationButton, 0, 0, 0, displayMetrics.heightPixels, DURATION_OUTGOING_LOCATION, 100);
             }
         });
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        startAnimation(myLocationButton, 0, 0, displayMetrics.heightPixels, myLocationButton.getY(), DURATION_INCOMING_LOCATION, 0);
+        startAnimation(listButton, 0, 0, displayMetrics.heightPixels, listButton.getY(), DURATION_INCOMING_LIST, 100);
     }
 
     private void drawRoutePath() {
@@ -197,6 +228,8 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
             View view = getActivity().getLayoutInflater().inflate(R.layout.mit_map_info_window, null);
             TextView topTextView = (TextView) view.findViewById(R.id.top_textview);
             TextView bottomTextView = (TextView) view.findViewById(R.id.bottom_textview);
+            TextView distanceView = (TextView) view.findViewById(R.id.distance);
+            distanceView.setVisibility(View.VISIBLE);
 
             topTextView.setTextSize(12f);
             bottomTextView.setTextSize(14f);
@@ -207,6 +240,15 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
             topTextView.setText(snippet.type.toUpperCase());
             bottomTextView.setText(snippet.title);
 
+            Location markerLocation = new Location("us");
+            markerLocation.setLatitude(marker.getPosition().latitude);
+            markerLocation.setLongitude(marker.getPosition().longitude);
+
+            Location myLocation = mitMapView.getMap().getMyLocation();
+
+            float distance = myLocation.distanceTo(markerLocation);
+            distanceView.setText(TourUtils.formatStopDistance(distance));
+
             return view;
         } else {
             return null;
@@ -215,10 +257,49 @@ public class TourStopMapFragment extends Fragment implements GoogleMap.OnMapLoad
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //TODO: Take user to individual stop screen when that is created
+        Gson gson = new Gson();
 
-        /*Intent intent = new Intent(getActivity(), TourDirectionsActivity.class);
-        intent.putExtra(Constants.Tours.DIRECTION_KEY, tour.getStops().get(8).getDirection());
-        startActivity(intent);*/
+        MITTourStop.InfoWindowSnippet snippet = gson.fromJson(marker.getSnippet(), MITTourStop.InfoWindowSnippet.class);
+        String type = snippet.type;
+        int index = snippet.index;
+
+        Intent intent = new Intent(getActivity(), TourStopActivity.class);
+        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
+        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, type);
+        intent.putExtra(Constants.Tours.CURRENT_MAIN_LOOP_STOP, index);
+        if (type.equals(Constants.Tours.SIDE_TRIP)) {
+            intent.putExtra(Constants.Tours.TOUR_STOP, tour.getStops().get(index));
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        int duration = (int) animation.getDuration();
+        switch (duration) {
+            case DURATION_INCOMING_LOCATION:
+                myLocationButton.setVisibility(View.VISIBLE);
+                break;
+            case DURATION_INCOMING_LIST:
+                listButton.setVisibility(View.VISIBLE);
+                break;
+            case DURATION_OUTGOING_LIST:
+                listButton.setVisibility(View.INVISIBLE);
+                break;
+            case DURATION_OUTGOING_LOCATION:
+                myLocationButton.setVisibility(View.INVISIBLE);
+                callback.switchViews(true);
+                break;
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 }

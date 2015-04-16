@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/stop_layout">
 
     <ImageView
         android:id="@+id/stop_image"
@@ -11,12 +12,24 @@
         android:layout_gravity="center_vertical"
         android:layout_margin="10dp" />
 
-    <TextView
-        android:id="@+id/stop_title"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:ellipsize="none"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/stop_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="none"
+            android:textColor="@color/black"
+            android:textSize="@dimen/tour_home_title_size" />
+
+        <TextView
+            android:id="@+id/stop_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+    </LinearLayout>
 </LinearLayout>

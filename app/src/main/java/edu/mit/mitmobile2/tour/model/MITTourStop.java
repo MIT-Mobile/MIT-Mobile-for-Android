@@ -14,6 +14,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.MITImage;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 
@@ -22,10 +23,12 @@ public class MITTourStop extends MapItem {
     public class InfoWindowSnippet {
         public String type;
         public String title;
+        public int index;
 
-        public InfoWindowSnippet(String title, String type) {
+        public InfoWindowSnippet(String title, String type, int index) {
             this.title = title;
             this.type = type;
+            this.index = index;
         }
     }
 
@@ -44,11 +47,13 @@ public class MITTourStop extends MapItem {
 
     @SerializedName("images")
     @Expose
-    private List<MITStopRepresentation> representations;
+    private List<MITRepresentation> representations;
 
     @SerializedName("directions_to_next_stop")
     @Expose
     MITTourStopDirection direction;
+
+    private int index;
 
     public String getId() {
         return id;
@@ -82,12 +87,12 @@ public class MITTourStop extends MapItem {
         this.bodyHtml = bodyHtml;
     }
 
-    public MITTourStopImage getBigImage() {
-        return representations.get(0).images.get(0);
+    public MITImage getImage() {
+        return representations.get(0).getImages().get(0);
     }
 
-    public MITTourStopImage getSmallImage() {
-        return representations.get(0).images.get(1);
+    public MITImage getThumbnailImage() {
+        return representations.get(0).getImages().get(1);
     }
 
     public double[] getCoordinates() {
@@ -106,12 +111,20 @@ public class MITTourStop extends MapItem {
         this.direction = direction;
     }
 
-    public List<MITStopRepresentation> getRepresentations() {
+    public List<MITRepresentation> getRepresentations() {
         return representations;
     }
 
-    public void setRepresentations(List<MITStopRepresentation> representations) {
+    public void setRepresentations(List<MITRepresentation> representations) {
         this.representations = representations;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     @Override
@@ -124,7 +137,7 @@ public class MITTourStop extends MapItem {
         MarkerOptions options = new MarkerOptions();
         options.position(new LatLng(coordinates[1], coordinates[0]));
         Gson gson = new Gson();
-        String snippet = gson.toJson(new InfoWindowSnippet(this.title, this.type), InfoWindowSnippet.class);
+        String snippet = gson.toJson(new InfoWindowSnippet(this.title, this.type, this.index), InfoWindowSnippet.class);
         options.snippet(snippet);
         return options;
     }
@@ -160,6 +173,12 @@ public class MITTourStop extends MapItem {
     }
 
     @Override
+    public void setMarkerText(String markerText) {
+        super.setMarkerText(markerText);
+        index = Integer.parseInt(markerText.trim()) - 1;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -170,6 +189,7 @@ public class MITTourStop extends MapItem {
         dest.writeString(bodyHtml);
         dest.writeString(id);
         dest.writeString(type);
+        dest.writeInt(index);
         dest.writeDoubleArray(coordinates);
         dest.writeTypedList(representations);
         dest.writeParcelable(direction, 0);
@@ -180,8 +200,9 @@ public class MITTourStop extends MapItem {
         this.bodyHtml = p.readString();
         this.id = p.readString();
         this.type = p.readString();
-        p.readDoubleArray(coordinates);
-        p.readTypedList(this.representations, MITStopRepresentation.CREATOR);
+        this.index = p.readInt();
+        this.coordinates = p.createDoubleArray();
+        this.representations = p.createTypedArrayList(MITRepresentation.CREATOR);
         this.direction = p.readParcelable(MITTourStopDirection.class.getClassLoader());
     }
 

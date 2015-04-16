@@ -150,7 +150,7 @@ public class MITMapView {
                                 if (!isMapExpanded) {
                                     marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops)));
                                 } else {
-                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin)));
+                                    marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin)));
                                 }
                             }
                             if (mItem.isDynamic()) {
@@ -203,7 +203,7 @@ public class MITMapView {
             if (mapViewExpanded) {
                 m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_stops));
             } else {
-                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin));
+                m.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin));
             }
         }
     }
@@ -224,7 +224,12 @@ public class MITMapView {
     }
 
     public void addMapItemList(ArrayList<MapItem> mapItems, Boolean clear, Boolean fit) {
-        this.mapItems.addAll(mapItems);
+        for (MapItem mapItem : mapItems) {
+            if (!mapItem.isVehicle()) {
+                this.mapItems.add(mapItem);
+            }
+        }
+
         if (clear) {
             mMap.clear();
         }
