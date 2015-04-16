@@ -1,6 +1,10 @@
 package edu.mit.mitmobile2.news;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -173,12 +177,32 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         return groupedStories;
     }
 
+    public void openWebsiteDialog(final String url) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getResources().getString(R.string.open_in_browser_q))
+                .setMessage(url)
+                .setPositiveButton(getResources().getString(R.string.open_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
+
     @Override
-    public void itemClicked(String categoryId) {
-        if (categoryId.equals(Constants.News.IN_THE_MEDIA)) {
-            //TODO: Show alert dialog
+    public void itemClicked(MITNewsStory story) {
+        if (story.getCategory().getId().equals(Constants.News.IN_THE_MEDIA)) {
+            openWebsiteDialog(story.getSourceUrl());
         } else {
-            // TODO: Go to next screen
+            // TODO: Go to next screen, passing the Story object in as an extra
+
         }
     }
 

@@ -106,4 +106,5 @@
         <item>test 3</item>
     </string-array>
 
+    <string name="open_in_browser_q">Open in Browser?</string>
 </resources>

@@ -114,7 +114,7 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.itemClicked(story.getCategory().getId());
+                callback.itemClicked(story);
             }
         });
 
