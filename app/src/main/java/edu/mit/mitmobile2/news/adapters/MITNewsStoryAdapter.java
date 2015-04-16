@@ -14,6 +14,7 @@ import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.NewsFragmentCallback;
 import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -36,11 +37,13 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
 
     private Context context;
     private List<MITNewsStory> stories;
+    private NewsFragmentCallback callback;
     private String[] headers;
 
-    public MITNewsStoryAdapter(Context context, List<MITNewsStory> stories) {
+    public MITNewsStoryAdapter(Context context, List<MITNewsStory> stories, NewsFragmentCallback callback) {
         this.context = context;
         this.stories = stories;
+        this.callback = callback;
     }
 
     @Override
@@ -77,7 +80,7 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         View view = convertView;
         ViewHolder holder;
 
-        MITNewsStory story = (MITNewsStory) getItem(position);
+        final MITNewsStory story = (MITNewsStory) getItem(position);
 
         if (convertView == null) {
             holder = new ViewHolder();
@@ -107,6 +110,13 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
             Picasso.with(context).load(story.getOriginalCoverImageUrl()).placeholder(R.drawable.grey_rect).into(holder.mediaImage);
             holder.storySnippet.setText(Html.fromHtml(story.getDek()));
         }
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.itemClicked(story.getCategory().getId());
+            }
+        });
 
         return view;
     }

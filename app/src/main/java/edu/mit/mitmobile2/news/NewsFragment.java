@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.news;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -27,13 +28,14 @@ import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import timber.log.Timber;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements NewsFragmentCallback {
 
     private SwipeRefreshLayout refreshLayout;
     private StickyListHeadersListView listView;
     private MITNewsStoryAdapter adapter;
 
     private List<MITNewsStory> stories;
+    private List<MITNewsCategory> categories;
 
     public NewsFragment() {
     }
@@ -45,17 +47,6 @@ public class NewsFragment extends Fragment {
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_refreshlayout);
         listView = (StickyListHeadersListView) view.findViewById(R.id.news_listview);
-
-        adapter = new MITNewsStoryAdapter(getActivity(), new ArrayList<MITNewsStory>());
-
-        listView.setAdapter(adapter);
-        listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
-            @Override
-            public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
-
-            }
-        });
-
         final MITAPIClient mitApiClient = new MITAPIClient(getActivity());
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -65,16 +56,37 @@ public class NewsFragment extends Fragment {
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        }, 500);
+        setRetainInstance(true);
 
-        getCategories(mitApiClient);
-        getNewStories(mitApiClient);
+        if (savedInstanceState != null && savedInstanceState.containsKey(Constants.News.STORIES_KEY) && savedInstanceState.containsKey(Constants.News.CATEGORIES_KEY)) {
+            //noinspection unchecked
+            stories = groupStories((List) savedInstanceState.getParcelableArrayList(Constants.News.STORIES_KEY));
+            //noinspection unchecked
+            categories = (List) savedInstanceState.getParcelableArrayList(Constants.News.CATEGORIES_KEY);
+            adapter = new MITNewsStoryAdapter(getActivity(), stories, this);
+            adapter.setHeaders(categories);
+        } else {
+            adapter = new MITNewsStoryAdapter(getActivity(), new ArrayList<MITNewsStory>(), this);
 
+            listView.setAdapter(adapter);
+            listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
+                @Override
+                public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
+
+                }
+            });
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            }, 500);
+
+            getCategories(mitApiClient);
+            getNewStories(mitApiClient);
+
+        }
         return view;
     }
 
@@ -82,6 +94,7 @@ public class NewsFragment extends Fragment {
         mitApiClient.get(Constants.NEWS, Constants.News.CATEGORIES_PATH, null, null, new Callback<List<MITNewsCategory>>() {
             @Override
             public void success(List<MITNewsCategory> mitNewsCategories, Response response) {
+                NewsFragment.this.categories = mitNewsCategories;
                 adapter.setHeaders(mitNewsCategories);
             }
 
@@ -158,5 +171,21 @@ public class NewsFragment extends Fragment {
         groupedStories.addAll(mediaNews);
         groupedStories.addAll(campusNews);
         return groupedStories;
+    }
+
+    @Override
+    public void itemClicked(String categoryId) {
+        if (categoryId.equals(Constants.News.IN_THE_MEDIA)) {
+            //TODO: Show alert dialog
+        } else {
+            // TODO: Go to next screen
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(Constants.News.STORIES_KEY, (ArrayList<? extends Parcelable>) this.stories);
+        outState.putParcelableArrayList(Constants.News.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) categories);
     }
 }

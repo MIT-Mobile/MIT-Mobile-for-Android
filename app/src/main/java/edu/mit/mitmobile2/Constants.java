@@ -61,6 +61,8 @@ public class Constants {
         public static final String MIT_NEWS = "mit_news";
         public static final String AROUND_CAMPUS = "around_campus";
         public static final String IN_THE_MEDIA = "in_the_media";
+        public static final String STORIES_KEY = "stories";
+        public static final String CATEGORIES_KEY = "categories";
     }
 
     public static class Resources {
