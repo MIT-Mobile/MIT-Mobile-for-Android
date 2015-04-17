@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITActivity;
+import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import edu.mit.mitmobile2.news.utils.NewsUtils;
@@ -107,6 +108,15 @@ public class NewsStoryActivity extends MITActivity {
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, story.getType() + ":" + story.getTitle());
                 shareIntent.putExtra(Intent.EXTRA_TEXT, story.getTitle() + "  " + story.getSourceUrl());
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_via)));
+                break;
+            case android.R.id.home:
+                Intent backHomeIntent = new Intent(this, MITModuleActivity.class);
+                backHomeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(backHomeIntent);
+                finish();
+                break;
+            default:
+                break;
         }
         return true;
     }
