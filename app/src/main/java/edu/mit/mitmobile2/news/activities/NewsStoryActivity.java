@@ -1,10 +1,12 @@
 package edu.mit.mitmobile2.news.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.ImageView;
-
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -88,5 +90,24 @@ public class NewsStoryActivity extends MITActivity {
             Timber.e(e, "HTML read Failed");
         }
         return template;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_news_story, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, story.getType() + ":" + story.getTitle());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, story.getTitle() + "  " + story.getSourceUrl());
+                startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_via)));
+        }
+        return true;
     }
 }
