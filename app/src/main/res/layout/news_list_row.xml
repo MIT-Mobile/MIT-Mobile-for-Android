@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingTop="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@drawable/shuttle_route_selector">
 
     <ImageView
         android:id="@+id/news_article_image"

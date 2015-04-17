@@ -67,17 +67,8 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             categories = (List) savedInstanceState.getParcelableArrayList(Constants.News.CATEGORIES_KEY);
             adapter = new MITNewsStoryAdapter(getActivity(), stories, this);
             adapter.setHeaders(categories);
-            listView.setAdapter(adapter);
         } else {
             adapter = new MITNewsStoryAdapter(getActivity(), new ArrayList<MITNewsStory>(), this);
-
-            listView.setAdapter(adapter);
-            listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
-                @Override
-                public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
-
-                }
-            });
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -90,6 +81,15 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             getNewStories(mitApiClient);
 
         }
+
+        listView.setAdapter(adapter);
+        listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
+            @Override
+            public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
+                // TODO: Go to category screen
+            }
+        });
+
         return view;
     }
 
