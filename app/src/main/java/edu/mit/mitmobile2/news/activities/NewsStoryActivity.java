@@ -38,7 +38,7 @@ public class NewsStoryActivity extends MITActivity {
 
         story = getIntent().getParcelableExtra(Constants.News.STORY);
 
-        Picasso.with(this).load(story.getCoverImage().getRepresentations().get(0).getUrl())
+        Picasso.with(this).load(story.getOriginalCoverImageUrl())
                 .placeholder(R.drawable.grey_rect).into(storyImageView);
 
         String template = readInHtmlTemplate();
