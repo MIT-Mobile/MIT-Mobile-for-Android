@@ -41,6 +41,8 @@ public class NewsStoryActivity extends MITActivity {
         Picasso.with(this).load(story.getOriginalCoverImageUrl())
                 .placeholder(R.drawable.grey_rect).into(storyImageView);
 
+        storyWebView.getSettings().setJavaScriptEnabled(true);
+
         String template = readInHtmlTemplate();
 
         if (story.getTitle() != null) {
