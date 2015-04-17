@@ -63,6 +63,7 @@ public class Constants {
         public static final String IN_THE_MEDIA = "in_the_media";
         public static final String STORIES_KEY = "stories";
         public static final String CATEGORIES_KEY = "categories";
+        public static final String STORY = "story";
     }
 
     public static class Resources {
