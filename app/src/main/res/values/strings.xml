@@ -106,5 +106,6 @@
     </string-array>
 
     <string name="open_in_browser_q">Open in Browser?</string>
+    <string name="share_via">Share via</string>
 
 </resources>
