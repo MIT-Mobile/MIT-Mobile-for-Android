@@ -23,6 +23,7 @@ import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.activities.NewsStoryActivity;
 import edu.mit.mitmobile2.news.adapters.MITNewsStoryAdapter;
 import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
@@ -200,8 +201,9 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         if (story.getCategory().getId().equals(Constants.News.IN_THE_MEDIA)) {
             openWebsiteDialog(story.getSourceUrl());
         } else {
-            // TODO: Go to next screen, passing the Story object in as an extra
-
+            Intent intent = new Intent(this.getActivity(), NewsStoryActivity.class);
+            intent.putExtra(Constants.News.STORY, story);
+            this.startActivity(intent);
         }
     }
 

@@ -78,7 +78,6 @@
     <string name="send_feedback">Send Feedback</string>
     <string name="mit_info_center">MIT Information Center</string>
     <string name="mit_admissions">MIT Admissions</string>
-    <string name="open_in_browser">Open in a browser</string>
     <string name="open_button">Open</string>
     <string name="feedback_subject">Feedback for MIT Mobile</string>
     <string name="feedback_email_address">android-app-feedback@mit.edu</string>
@@ -107,4 +106,5 @@
     </string-array>
 
     <string name="open_in_browser_q">Open in Browser?</string>
+
 </resources>

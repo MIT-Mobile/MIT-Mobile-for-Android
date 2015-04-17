@@ -137,7 +137,7 @@ public class TourFragment extends Fragment {
 
     public void openWebsiteDialog() {
         new AlertDialog.Builder(getActivity())
-                .setTitle(getResources().getString(R.string.open_in_browser))
+                .setTitle(getResources().getString(R.string.open_in_browser_q))
                 .setMessage(getResources().getString(R.string.mit_about_guided_tour_url))
                 .setPositiveButton(getResources().getString(R.string.open_button), new DialogInterface.OnClickListener() {
                     @Override
