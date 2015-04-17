@@ -61,8 +61,6 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             }
         });
 
-        setRetainInstance(true);
-
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.News.STORIES_KEY) && savedInstanceState.containsKey(Constants.News.CATEGORIES_KEY)) {
             //noinspection unchecked
             stories = groupStories((List) savedInstanceState.getParcelableArrayList(Constants.News.STORIES_KEY));
@@ -72,14 +70,6 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             adapter.setHeaders(categories);
         } else {
             adapter = new MITNewsStoryAdapter(getActivity(), new ArrayList<MITNewsStory>(), this);
-
-            listView.setAdapter(adapter);
-            listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
-                @Override
-                public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
-
-                }
-            });
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -92,6 +82,15 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             getNewStories(mitApiClient);
 
         }
+
+        listView.setAdapter(adapter);
+        listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
+            @Override
+            public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
+                // TODO: Go to category screen
+            }
+        });
+
         return view;
     }
 
