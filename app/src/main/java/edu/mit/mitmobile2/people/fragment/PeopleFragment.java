@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -19,13 +23,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import butterknife.InjectView;
-import butterknife.OnClick;
 import butterknife.OnItemClick;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.PeopleDirectoryManagerCall;
@@ -40,34 +43,26 @@ import timber.log.Timber;
 
 import static butterknife.ButterKnife.inject;
 
-/* The following notes were found in PeopleDetailsViewController.m within - (void) mapPersonAttributes in the iOS
- * project; at revision @6795143 and are duplicated here as they seem to apply to us.
- *
- * key : display name : accessory icon
- * -----------------------------------
- * email     : email : email
- *
- * phone     : phone : phone
- * fax       : fax   : phone
- * homephone : home  : phone
- *
- * office            : office  : map
- * street/city/state : address : map
- *
- * website   : website : external
- */
+
 
 public class PeopleFragment extends Fragment {
+    private static final int DIRECTORY_ASSISTANCE_TAG = 1504201452;
+    private static final int EMERGENCY_CONTACTS_TAG = 1504201453;
+
     private Mode mode;
 
     private PeopleDirectoryManagerCall requestRunning;
 
     @InjectView(R.id.example_search)
     protected TextView exampleSearches;
-    @InjectView(R.id.directory_assistance_button)
-    protected Button directuryAssistance;
-    @InjectView(R.id.emergency_contacts_button)
-    protected Button emergencyContacts;
+
+    @InjectView(R.id.quick_dial_list)
+    protected ListView quickDialList;
+//
+//    @InjectView(R.id.directory_assistance_button)
+//    protected Button directoryAssistance;
+//    @InjectView(R.id.emergency_contacts_button)
+//    protected Button emergencyContacts;
 
     @InjectView(R.id.search_list)
     protected ListView searchList;
@@ -82,6 +77,7 @@ public class PeopleFragment extends Fragment {
 
     private MITPeopleDirectoryPersonAdapter favoritePersonsAdapter;
     private MITPeopleDirectoryPersonAdapter searchListAdapter;
+    private MITPeopleDirectoryPersonAdapter quickDialAdapter;
 
     public PeopleFragment() {
     }
@@ -100,14 +96,24 @@ public class PeopleFragment extends Fragment {
 
         inject(this, subjectView);
 
+        this.quickDialAdapter = new MITPeopleDirectoryPersonAdapter(quickDialItems(subjectView.getContext()));
         this.searchListAdapter = new MITPeopleDirectoryPersonAdapter();
         this.favoritePersonsAdapter = new MITPeopleDirectoryPersonAdapter();
+        this.favoritePersonsAdapter.setForceShortMode(true);
 
         this.exampleSearches.setText(Html.fromHtml(getString(R.string.people_default_sample_search_examples)));
 
+        quickDialList.setAdapter(quickDialAdapter);
         searchList.setAdapter(searchListAdapter);
         favoritesList.setAdapter(favoritePersonsAdapter);
 
+    }
+
+    private ArrayList<MITPerson> quickDialItems(Context ctx) {
+        ArrayList<MITPerson> quickDialList = new ArrayList<>(2);
+        quickDialList.add(new SpecialPerson("Directory Assistance", "617.253.1000", DIRECTORY_ASSISTANCE_TAG));
+        quickDialList.add(new SpecialPerson("Emergency Contacts", EMERGENCY_CONTACTS_TAG));
+        return quickDialList;
     }
 
     private void reloadFavorites() {
@@ -187,12 +193,26 @@ public class PeopleFragment extends Fragment {
         this.startActivity(intent);
     }
 
-    @OnClick(R.id.directory_assistance_button)
+    @OnItemClick(R.id.quick_dial_list)
+    protected void onQuickDialItemClicked(AdapterView<?> parent, View view, int position, long id) {
+        SpecialPerson sp = (SpecialPerson) quickDialAdapter.getItem(position);
+
+        switch (sp.getTag()) {
+            case DIRECTORY_ASSISTANCE_TAG:
+                callDirectoryAssistance(view);
+                break;
+            case EMERGENCY_CONTACTS_TAG:
+                showEmergencyContacts(view);
+                break;
+        }
+    }
+
+//    @OnClick(R.id.directory_assistance_button)
     protected void callDirectoryAssistance(View sender) {
         startActivity(SharedActivityManager.createTelephoneCallIntent(getActivity(), R.string.people_tel_directory_assistance));
     }
-
-    @OnClick(R.id.emergency_contacts_button)
+//
+//    @OnClick(R.id.emergency_contacts_button)
     protected void showEmergencyContacts(View sender) {
         startActivity(SharedActivityManager.createEmergencyContactsIntent(getActivity()));
     }
@@ -220,6 +240,7 @@ public class PeopleFragment extends Fragment {
         return true;
     }
 
+
     public enum Mode {
         NO_SEARCH(false),
         LIST_BLANK(true),
@@ -238,6 +259,79 @@ public class PeopleFragment extends Fragment {
 
         public static Mode getDefault() {
             return NO_SEARCH;
+        }
+    }
+
+
+    public static class SpecialPerson extends MITPerson {
+        private int tag;
+
+        public SpecialPerson(String name, int tag) {
+            this.setName(name);
+            this.setTitle(MITPeopleDirectoryPersonAdapter.FORCE_SHORT_MODE);
+            this.tag = tag;
+        }
+
+        public SpecialPerson(String name, String subtitle, int tag) {
+            this(name, tag);
+            this.setTitle(subtitle);
+        }
+
+        @Override
+        public int getFavoriteIndex() {
+            return -1;
+        }
+
+        @Override
+        public void setFavoriteIndex(int favoriteIndex) {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        @Override
+        public boolean isFavorite() {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        @Override
+        public void setFavorite(boolean favorite) {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        @Override
+        protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        @Override
+        public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        protected SpecialPerson(Parcel in) {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        @Override
+        public int describeContents() {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+        }
+
+        public int getTag() {
+            return tag;
+        }
+
+        @Override
+        public String toString() {
+            return "SpecialPerson{" +
+                    "tag=" + tag +
+                    "name=" + this.getName() +
+                    "title=" + this.getTitle() +
+                    '}';
         }
     }
 }
