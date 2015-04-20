@@ -62,4 +62,5 @@
     <dimen name="people_row_icon_margin_start">20dp</dimen>
     <dimen name="people_row_icon_margin_end">14dp</dimen>
     <dimen name="people_row_text_layout_margin_start">16dp</dimen>
+    <dimen name="people_normal_margin_start">16dp</dimen>
 </resources>

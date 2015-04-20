@@ -24,8 +24,10 @@
                 android:maxLines="4"
                 android:layout_marginBottom="28dp"
                 android:layout_marginTop="28dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="@dimen/people_normal_margin_start"
+                android:layout_marginStart="@dimen/people_normal_margin_start"
+                android:layout_marginRight="@dimen/people_normal_margin_start"
+                android:layout_marginEnd="@dimen/people_normal_margin_start"
                 style="@style/MITPeopleDirectory.SampleSearches.Text"
                 />
 
@@ -33,20 +35,6 @@
                 android:id="@+id/quick_dial_list"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"/>
-
-        <!--<Button-->
-                <!--style="?android:attr/buttonStyleSmall"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/people_default_directory_assistance_button_title"-->
-                <!--android:id="@+id/directory_assistance_button"/>-->
-
-        <!--<Button-->
-                <!--style="?android:attr/buttonStyleSmall"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/people_default_emergency_contacts_button_title"-->
-                <!--android:id="@+id/emergency_contacts_button"/>-->
 
         <LinearLayout
                 android:id="@+id/favorites_layout"
@@ -56,6 +44,12 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="@dimen/people_normal_margin_start"
+                    android:layout_marginStart="@dimen/people_normal_margin_start"
+                    android:textColor="@color/mit_red"
+                    android:textAllCaps="true"
                     android:text="@string/people_default_favorites_list_title"/>
 
             <ListView
