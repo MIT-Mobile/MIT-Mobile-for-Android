@@ -3,9 +3,23 @@ package edu.mit.mitmobile2.people.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
-public class MITPerson {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.Schema.Person;
+
+import static edu.mit.mitmobile2.DatabaseObject.SchemaTable;
+import static edu.mit.mitmobile2.Schema.Person.IS_FAVORITE;
+import static edu.mit.mitmobile2.Schema.Person.TABLE_NAME;
+
+@SchemaTable(edu.mit.mitmobile2.Schema.Person.class)
+public class MITPerson extends DatabaseObject implements Parcelable {
+    @NonAtomicExclude
     private String uid;
     private String affiliation;
     private String city;
@@ -22,10 +36,16 @@ public class MITPerson {
     private String surname;
     private String title;
     private String url;
-    private ArrayList<String>  website;
+    private ArrayList<String> website;
     private Calendar lastUpCalendar;
+
+    @NonAtomicExclude
     private boolean favorite;
+
     private int favoriteIndex;
+
+    public MITPerson() {
+    }
 
     public int getFavoriteIndex() {
         return favoriteIndex;
@@ -35,6 +55,7 @@ public class MITPerson {
         this.favoriteIndex = favoriteIndex;
     }
 
+    @FieldName(IS_FAVORITE)
     public boolean isFavorite() {
         return favorite;
     }
@@ -194,4 +215,188 @@ public class MITPerson {
 
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "MITPerson{" +
+                "uid='" + uid + '\'' +
+                ", affiliation='" + affiliation + '\'' +
+                ", city='" + city + '\'' +
+                ", dept='" + dept + '\'' +
+                ", email=" + email +
+                ", fax=" + fax +
+                ", givenname='" + givenname + '\'' +
+                ", name='" + name + '\'' +
+                ", office=" + office +
+                ", phone=" + phone +
+                ", home=" + home +
+                ", state='" + state + '\'' +
+                ", street='" + street + '\'' +
+                ", surname='" + surname + '\'' +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", website=" + website +
+                ", lastUpCalendar=" + lastUpCalendar +
+                ", favorite=" + favorite +
+                ", favoriteIndex=" + favoriteIndex +
+                '}';
+    }
+
+    /* DatabaseObject */
+    @Override
+    protected String getTableName() {
+        return TABLE_NAME;
+    }
+
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+//        this.uid =  getDatabaseId();
+////        long id = getDatabaseId();
+////        this.stops = new ArrayList<>();
+////
+////        while (cursor.getLong(cursor.getColumnIndex(Schema.Route.ID_COL)) == id) {
+////            MITShuttleStop stopWrapper = new MITShuttleStop();
+////            stopWrapper.buildSubclassFromCursor(cursor, dbAdapter);
+////            this.stops.add(stopWrapper);
+////            boolean itemsRemaining = cursor.moveToNext();
+////            if (!itemsRemaining) {
+////                break;
+////            }
+////        }
+////        // Move back 1 since we looked ahead to the next ID
+////        cursor.moveToPrevious();
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        values.put(Person.PERSON_ID, this.uid);
+        values.put(IS_FAVORITE, this.isFavorite());
+        values.put(Person.EXTENDED_DATA, NONATOMIC_ENCODER.toJson(this));
+    }
+
+    /* PArcelable */
+    protected MITPerson(Parcel in) {
+        uid = in.readString();
+        affiliation = in.readString();
+        city = in.readString();
+        dept = in.readString();
+        if (in.readByte() == 0x01) {
+            email = new ArrayList<String>();
+            in.readList(email, String.class.getClassLoader());
+        } else {
+            email = null;
+        }
+        if (in.readByte() == 0x01) {
+            fax = new ArrayList<String>();
+            in.readList(fax, String.class.getClassLoader());
+        } else {
+            fax = null;
+        }
+        givenname = in.readString();
+        name = in.readString();
+        if (in.readByte() == 0x01) {
+            office = new ArrayList<String>();
+            in.readList(office, String.class.getClassLoader());
+        } else {
+            office = null;
+        }
+        if (in.readByte() == 0x01) {
+            phone = new ArrayList<String>();
+            in.readList(phone, String.class.getClassLoader());
+        } else {
+            phone = null;
+        }
+        if (in.readByte() == 0x01) {
+            home = new ArrayList<String>();
+            in.readList(home, String.class.getClassLoader());
+        } else {
+            home = null;
+        }
+        state = in.readString();
+        street = in.readString();
+        surname = in.readString();
+        title = in.readString();
+        url = in.readString();
+        if (in.readByte() == 0x01) {
+            website = new ArrayList<String>();
+            in.readList(website, String.class.getClassLoader());
+        } else {
+            website = null;
+        }
+        lastUpCalendar = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        favorite = in.readByte() != 0x00;
+        favoriteIndex = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uid);
+        dest.writeString(affiliation);
+        dest.writeString(city);
+        dest.writeString(dept);
+        if (email == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(email);
+        }
+        if (fax == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(fax);
+        }
+        dest.writeString(givenname);
+        dest.writeString(name);
+        if (office == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(office);
+        }
+        if (phone == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(phone);
+        }
+        if (home == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(home);
+        }
+        dest.writeString(state);
+        dest.writeString(street);
+        dest.writeString(surname);
+        dest.writeString(title);
+        dest.writeString(url);
+        if (website == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(website);
+        }
+        dest.writeValue(lastUpCalendar);
+        dest.writeByte((byte) (favorite ? 0x01 : 0x00));
+        dest.writeInt(favoriteIndex);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<MITPerson> CREATOR = new Parcelable.Creator<MITPerson>() {
+        @Override
+        public MITPerson createFromParcel(Parcel in) {
+            return new MITPerson(in);
+        }
+
+        @Override
+        public MITPerson[] newArray(int size) {
+            return new MITPerson[size];
+        }
+    };
+
 }

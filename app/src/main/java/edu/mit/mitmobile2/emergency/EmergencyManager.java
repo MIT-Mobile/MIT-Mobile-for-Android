@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.people;
+package edu.mit.mitmobile2.emergency;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,32 +7,22 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
-import android.database.Cursor;
 
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
-import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.people.model.MITPerson;
+import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.GET;
 import timber.log.Timber;
 
-import static edu.mit.mitmobile2.DatabaseObject.createListFromCursor;
-import static edu.mit.mitmobile2.DatabaseObject.getSchemaFieldForMethod;
-import static edu.mit.mitmobile2.DatabaseObject.getSchemaTableForClass;
-import static edu.mit.mitmobile2.DatabaseObject.getSchemaTableNameForClass;
-import static edu.mit.mitmobile2.Schema.Table.getTableColumns;
-import static edu.mit.mitmobile2.Schema.Table.getTableName;
-
 /**
- * Created by grmartin on 4/16/15.
+ * Created by grmartin on 4/17/15.
  */
-public class PeopleDirectoryManager extends RetrofitManager {
-    private static final MitPersonDirectoryService MIT_PEOPLE_DIR_SERVICE = MIT_REST_ADAPTER.create(MitPersonDirectoryService.class);
+public class EmergencyManager extends RetrofitManager {
+    private static final MitEmergencyService MIT_EMERGENCY_SERVICE = MIT_REST_ADAPTER.create(MitEmergencyService.class);
 
     @SuppressWarnings("unused")
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) throws NoSuchFieldException,
@@ -45,8 +35,8 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
         Timber.d("Method name= " + methodName);
 
-        Method m = MIT_PEOPLE_DIR_SERVICE.getClass().getDeclaredMethod(methodName, Callback.class);
-        m.invoke(MIT_PEOPLE_DIR_SERVICE, callback);
+        Method m = MIT_EMERGENCY_SERVICE.getClass().getDeclaredMethod(methodName, Callback.class);
+        m.invoke(MIT_EMERGENCY_SERVICE, callback);
     }
 
     @SuppressWarnings("unused")
@@ -60,56 +50,26 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
         Timber.d("Method name= " + methodName);
 
-        Method m = MIT_PEOPLE_DIR_SERVICE.getClass().getDeclaredMethod(methodName);
-        return m.invoke(MIT_PEOPLE_DIR_SERVICE);
+        Method m = MIT_EMERGENCY_SERVICE.getClass().getDeclaredMethod(methodName);
+        return m.invoke(MIT_EMERGENCY_SERVICE);
     }
 
-    public static PeopleDirectoryManagerCall searchPeople(Activity activity, String query, Callback<List<MITPerson>> people) {
-        PeopleDirectoryManagerCallWrapper<?> returnValue = new PeopleDirectoryManagerCallWrapper<>(new MITAPIClient(activity), people);
+    public static EmergencyManagerCall getContacts(Activity activity, Callback<List<MITEmergencyInfoContact>> people) {
+        EmergencyManagerCallWrapper<?> returnValue = new EmergencyManagerCallWrapper<>(new MITAPIClient(activity), people);
 
-        final HashMap<String, String> params = new HashMap<>(1);
-        params.put("q", query);
-        returnValue.getClient().get(Constants.PEOPLE_DIRECTORY, Constants.People.PEOPLE_PATH, null, params, returnValue);
+        returnValue.getClient().get(Constants.EMERGENCY, Constants.Emergency.CONTACTS_PATH, null, null, returnValue);
 
         return returnValue;
     }
 
-
-    public static Integer getPersistantFavoritesCount() {
-        return DBAdapter.getInstance().simpleCount(
-            getSchemaTableNameForClass(MITPerson.class),
-            getSchemaFieldForMethod(MITPerson.class, "isFavorite"),
-            true);
+    public interface MitEmergencyService {
+        @GET(Constants.Emergency.ANNOUNCEMENT_PATH)
+        void _get_announcement(Callback<List<UNIMPLEMENTED>> callback);
+        @GET(Constants.Emergency.CONTACTS_PATH)
+        void _get_contacts(Callback<List<MITEmergencyInfoContact>> callback);
     }
 
-    public static List<MITPerson>  getPersistantFavoritesList() {
-        List<MITPerson>  returnList = null;
-        final DBAdapter db = DBAdapter.getInstance();
-
-        Class<? extends Schema.Table> table = getSchemaTableForClass(MITPerson.class);
-
-        Cursor cur = db.simpleConditionedSelect(
-            getTableName(table),
-            getTableColumns(table),
-            getSchemaFieldForMethod(MITPerson.class, "isFavorite"),
-            true
-        );
-
-        returnList = createListFromCursor(MITPerson.class, cur, db);
-
-        cur.close();
-
-        return returnList;
-    }
-
-    public interface MitPersonDirectoryService {
-        @GET(Constants.People.PEOPLE_PATH)
-        void _get(Callback<List<MITPerson>> callback);
-        @GET(Constants.People.PERSON_PATH)
-        void _getapisperson(Callback<List<MITPerson>> callback);
-    }
-
-    public static class PeopleDirectoryManagerCallWrapper<T> implements PeopleDirectoryManagerCall, Callback<T> {
+    public static class EmergencyManagerCallWrapper<T> implements EmergencyManagerCall, Callback<T> {
         private static int CALL_IDENTIFIER = 0;
 
         private final int callId;
@@ -118,7 +78,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
         private final Callback<T> callback;
         private final MITAPIClient client;
 
-        public PeopleDirectoryManagerCallWrapper(MITAPIClient client, Callback<T> callback) {
+        public EmergencyManagerCallWrapper(MITAPIClient client, Callback<T> callback) {
             this.callId = ++CALL_IDENTIFIER;
             this.completed = new AtomicBoolean(false);
             this.errored = new AtomicBoolean(false);
@@ -166,7 +126,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
         @Override
         public String toString() {
-            return "PeopleDirectoryManagerCallWrapper{" +
+            return "EmergencyManagerCallWrapper{" +
                     "callId=" + callId +
                     ", completed=" + completed +
                     ", errored=" + errored +
@@ -176,9 +136,23 @@ public class PeopleDirectoryManager extends RetrofitManager {
         }
     }
 
-    public interface PeopleDirectoryManagerCall {
+    public interface EmergencyManagerCall {
         int getCallId();
         boolean isComplete();
         boolean hadError();
+    }
+
+    /**
+     * This class is provided as a blank placeholder for stubbed methods, will throw upon .ctor
+     */
+    static class UNIMPLEMENTED {
+        static {
+            new UNIMPLEMENTED();
+        }
+
+        public UNIMPLEMENTED() {
+            throw new RuntimeException("The caller of this class is meant only as a stub and is not yet implemented," +
+                    " please implement it and once complete remove this class.", new RuntimeException("xyzzy-java-ex:unimplemented:" + getClass().getCanonicalName()));
+        }
     }
 }

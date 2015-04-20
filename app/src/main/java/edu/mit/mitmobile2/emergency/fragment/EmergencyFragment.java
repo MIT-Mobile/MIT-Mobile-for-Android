@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.emergency;
+package edu.mit.mitmobile2.emergency.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ public class EmergencyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_emergency, null);
+        View view = inflater.inflate(R.layout.fragment_emergency, null);
         return view;
     }
 

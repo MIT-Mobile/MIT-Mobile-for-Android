@@ -59,7 +59,7 @@
 		"short_name":"Emergency",
 		"menu_icon":"menu_emergency",
 		"home_icon":"home_emergency",
-		"intent":"edu.mit.mitmobile2.emergency.EmergencyFragment",
+		"intent":"edu.mit.mitmobile2.emergency.fragment.EmergencyFragment",
 		"url":"mitmobile2://emergency"
 	},
 	

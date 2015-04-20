@@ -14,25 +14,49 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:visibility="visible">
+
         <TextView
+                android:id="@+id/example_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/people_default_sample_search_examples"
                 android:lines="4"
                 android:maxLines="4"
-                android:layout_marginBottom="35dp"/>
+                android:layout_marginBottom="28dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
+
         <Button
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/people_default_directory_assistance_button_title"
-                android:id="@+id/directory_assistance"/>
+                android:id="@+id/directory_assistance_button"/>
+
         <Button
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/people_default_emergency_contacts_button_title"
-                android:id="@+id/emergency_contacts"/>
+                android:id="@+id/emergency_contacts_button"/>
+
+        <LinearLayout
+                android:id="@+id/favorites_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/people_default_favorites_list_title"/>
+
+            <ListView
+                    android:id="@+id/favorites_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <ListView

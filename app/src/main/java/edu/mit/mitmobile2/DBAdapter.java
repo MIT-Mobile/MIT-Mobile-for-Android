@@ -1,13 +1,5 @@
 package edu.mit.mitmobile2;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,6 +7,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import timber.log.Timber;
 
@@ -173,7 +173,6 @@ public class DBAdapter {
          * @param db our database
          */
         private static void createTables(SQLiteDatabase db) {
-            //TODO: add here
             db.execSQL(Schema.Vehicle.CREATE_TABLE_SQL);
             db.execSQL(Schema.Route.CREATE_TABLE_SQL);
             db.execSQL(Schema.RouteStops.CREATE_TABLE_SQL);
@@ -181,11 +180,16 @@ public class DBAdapter {
             db.execSQL(Schema.Path.CREATE_TABLE_SQL);
             db.execSQL(Schema.Location.CREATE_TABLE_SQL);
             db.execSQL(Schema.Alerts.CREATE_TABLE_SQL);
+            db.execSQL(Schema.Person.CREATE_TABLE_SQL);
+
+            db.execSQL(Schema.Person.CREATE_INDICIES_SQL);
+
             Timber.d("Tables created!");
         }
 
         private static void dropTables(SQLiteDatabase db) {
-            //TODO: add here
+            dropIndicies(db, Schema.Person.INDICIES);
+
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Vehicle.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Route.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.RouteStops.TABLE_NAME);
@@ -193,6 +197,13 @@ public class DBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Path.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Location.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Alerts.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.Person.TABLE_NAME);
+        }
+
+        private static void dropIndicies(SQLiteDatabase db, String[] indicies) {
+            for (String index : indicies) {
+                db.execSQL("DROP INDEX IF EXISTS [%s]");
+            }
         }
 
         private static void runMigrations(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -289,6 +300,21 @@ public class DBAdapter {
 
     }
 
+    public Integer simpleCount(String tableName, String whereCol, boolean condition) {
+        Integer retVal = null;
+
+        Cursor cur = db.rawQuery("SELECT count(*) FROM ["+tableName+"] WHERE ? = " + (condition ? "1" : "0"), new String[]{whereCol});
+        if (cur.moveToFirst()) {
+            retVal = cur.getInt(0);
+        }
+        cur.close();
+        return retVal;
+    }
+
+    public Cursor simpleConditionedSelect(String tableName, String[] cols, String whereCol, boolean condition) {
+        return db.query(true, tableName, cols, " ? = " + (condition ? "true" : "false"), new String[]{whereCol}, null, null, null, null);
+    }
+
     public boolean exists(String tableName, String[] columns) {
         Cursor cursor = db.query(tableName, columns, null, null, null, null, null);
 
@@ -302,6 +328,7 @@ public class DBAdapter {
             cursor.close();
         }
 
+        // ??? WTF DOES THIS DO?
         return count >= 13;
     }
 

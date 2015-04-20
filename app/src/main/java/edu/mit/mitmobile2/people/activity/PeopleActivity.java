@@ -10,7 +10,7 @@ public class PeopleActivity extends MITModuleActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setContentLayoutId(R.layout.content_people);
+		this.setContentLayoutId(R.layout.fragment_people);
 	}
 }
 

@@ -1,17 +1,86 @@
 package edu.mit.mitmobile2;
 
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
+/*
+    Static class representation of the local Database Schema.
+
+    All tables are defined as subclasses of Table.
+    Tables are created in DBAdapter.
+ */
+@SuppressWarnings("TryWithIdenticalCatches")
 public class Schema {
 
-    static class Table {
+    public static final class Index {
+        public final String name;
+        public final String[] statements;
+
+        public Index(String name, String... statements) {
+            this.name = name;
+            this.statements = statements;
+        }
+
+        public static Index of(String name, String... statements) {
+            return new Index(name, statements);
+        }
+
+        public String processStatement() {
+            final int count = statements.length;
+            String[] outputSet = new String[count];
+
+            for (int i = 0; count>i ; i++) {
+                final String stmt  = this.statements[i];
+                if (stmt.contains(" ")) {
+                    outputSet[i] = stmt;
+                } else {
+                    outputSet[i] = "["+stmt+"]";
+                }
+            }
+
+            return TextUtils.join(",", outputSet);
+        }
+    }
+
+    public static class Table {
         public static final String ID_COL = "_id";
         protected static final String CREATE_TERMINATOR = ");";
 
-        static String buildCreateSQL(String tableName, String createText) {
+        protected static String buildCreateSQL(String tableName, String createText) {
             return "create table " + tableName + " (" +
                     ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     createText +
                     CREATE_TERMINATOR;
         }
+
+        protected static String createIndicies(String tableName, Index... indicies) {
+            StringBuilder builder = new StringBuilder();
+            for (Index idx : indicies) {
+                builder.append(String.format("CREATE INDEX IF NOT EXISTS [%s] ON [%s] (%s);", idx.name, tableName, idx.processStatement()));
+            }
+            return builder.toString();
+        }
+
+        public static <T extends Table> String getTableName(@NonNull Class<T> table) {
+            try {
+                return (String) table.getField("TABLE_NAME").get(table);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static <T extends Table> String[] getTableColumns(Class<T> table) {
+            try {
+                return (String[]) table.getField("ALL_COLUMNS").get(null);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     public static class Vehicle extends Table {
@@ -175,4 +244,32 @@ public class Schema {
         };
     }
 
+    public static final class Person extends Table {
+        public static final String TABLE_NAME = "person";
+        public static final String PERSON_ID = "person_id";
+        public static final String IS_FAVORITE = "is_favorite";
+        public static final String EXTENDED_DATA = "nonatomicdata";
+
+        public static final String IDX_FAVORITES = "IDX_"+TABLE_NAME+"_IS_FAVORITE";
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, PERSON_ID, IS_FAVORITE, EXTENDED_DATA
+        };
+
+        public static final String[] INDICIES = new String[]{
+                IDX_FAVORITES
+        };
+
+        public static final String CREATE_INDICIES_SQL = createIndicies(
+                TABLE_NAME,
+                Index.of(IDX_FAVORITES, IS_FAVORITE)
+        );
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                               PERSON_ID + " text not null, " +
+                               IS_FAVORITE + " text not null, " +
+                               EXTENDED_DATA + " text not null "
+                );
+    }
 }

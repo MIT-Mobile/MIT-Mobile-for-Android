@@ -97,7 +97,7 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".emergency.EmergencyActivity"
+            android:name=".emergency.activity.EmergencyActivity"
             android:label="@string/title_activity_emergency"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
@@ -222,10 +222,14 @@
         <activity
             android:name=".emergency.activity.EmergencyContactsActivity"
             android:label="@string/title_activity_emergency_contacts"
-            android:parentActivityName=".people.activity.PeopleActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".people.activity.PeopleActivity" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme"  >
+        </activity>
+        <activity
+            android:name=".people.activity.PersonDetailActivity"
+            android:label="@string/title_activity_person_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" >
         </activity>
     </application>
 

@@ -1,13 +1,16 @@
 package edu.mit.mitmobile2.people.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.PeopleDirectoryManagerCall;
+import edu.mit.mitmobile2.people.activity.PersonDetailActivity;
 import edu.mit.mitmobile2.people.adapter.MITPeopleDirectoryPersonAdapter;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.shared.SharedActivityManager;
@@ -29,6 +37,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import timber.log.Timber;
+
+import static butterknife.ButterKnife.inject;
 
 /* The following notes were found in PeopleDetailsViewController.m within - (void) mapPersonAttributes in the iOS
  * project; at revision @6795143 and are duplicated here as they seem to apply to us.
@@ -52,34 +62,57 @@ public class PeopleFragment extends Fragment {
 
     private PeopleDirectoryManagerCall requestRunning;
 
-    private ListView searchList;
-    private ViewGroup defaultLayout;
-    private MITPeopleDirectoryPersonAdapter adapter;
+    @InjectView(R.id.example_search)
+    protected TextView exampleSearches;
+    @InjectView(R.id.directory_assistance_button)
+    protected Button directuryAssistance;
+    @InjectView(R.id.emergency_contacts_button)
+    protected Button emergencyContacts;
+
+    @InjectView(R.id.search_list)
+    protected ListView searchList;
+
+    @InjectView(R.id.default_layout)
+    protected ViewGroup defaultLayout;
+
+    @InjectView(R.id.favorites_list)
+    protected ListView favoritesList;
+    @InjectView(R.id.favorites_layout)
+    protected ViewGroup favoritesLayout;
+
+    private MITPeopleDirectoryPersonAdapter favoritePersonsAdapter;
+    private MITPeopleDirectoryPersonAdapter searchListAdapter;
 
     public PeopleFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.fragment_people, null);
 
-        View view = inflater.inflate(R.layout.content_people, null);
-        this.searchList = (ListView) view.findViewById(R.id.search_list);
-        this.defaultLayout = (ViewGroup) view.findViewById(R.id.default_layout);
-
-        this.searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onSearchItemClicked(parent, view, position, id);
-            }
-        });
-
-        this.adapter = new MITPeopleDirectoryPersonAdapter();
-
-        searchList.setAdapter(adapter);
+        initializeComponents(view);
 
         return view;
     }
 
+    private void initializeComponents(View subjectView) {
+        this.setHasOptionsMenu(true);
+
+        inject(this, subjectView);
+
+        this.searchListAdapter = new MITPeopleDirectoryPersonAdapter();
+        this.favoritePersonsAdapter = new MITPeopleDirectoryPersonAdapter();
+
+        this.exampleSearches.setText(Html.fromHtml(getString(R.string.people_default_sample_search_examples)));
+
+        searchList.setAdapter(searchListAdapter);
+        favoritesList.setAdapter(favoritePersonsAdapter);
+
+    }
+
+    private void reloadFavorites() {
+
+    }
 
     @Override
     public void onStart() {
@@ -87,6 +120,16 @@ public class PeopleFragment extends Fragment {
 
         if (mode == null)
             this.setMode(Mode.getDefault());
+
+        updateFavoritesListVisibility();
+    }
+
+    private void updateFavoritesListVisibility() {
+        boolean hasItems = PeopleDirectoryManager.getPersistantFavoritesCount() > 0;
+
+        favoritesLayout.setVisibility(hasItems ? View.VISIBLE : View.GONE);
+
+        favoritePersonsAdapter.updateItems(hasItems ? PeopleDirectoryManager.getPersistantFavoritesList() : new ArrayList<MITPerson>());
     }
 
     @Override
@@ -132,15 +175,25 @@ public class PeopleFragment extends Fragment {
         this.defaultLayout.setVisibility(mode.isListViewVisible() ? View.GONE : View.VISIBLE);
     }
 
-    private void onSearchItemClicked(AdapterView<?> parent, View view, int position, long id) {
+    @OnItemClick(R.id.favorites_list)
+    protected void onFavoritesItemClicked(AdapterView<?> parent, View view, int position, long id) {
 
     }
 
-    private void callDirectoryAssistance(View sender, Object handler) {
+    @OnItemClick(R.id.search_list)
+    protected void onSearchItemClicked(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), PersonDetailActivity.class);
+        intent.putExtra(PersonDetailActivity.PERSON_KEY, (MITPerson)searchListAdapter.getItem(position));
+        this.startActivity(intent);
+    }
+
+    @OnClick(R.id.directory_assistance_button)
+    protected void callDirectoryAssistance(View sender) {
         startActivity(SharedActivityManager.createTelephoneCallIntent(getActivity(), R.string.people_tel_directory_assistance));
     }
 
-    private void showEmergencyContacts(View sender, Object handler) {
+    @OnClick(R.id.emergency_contacts_button)
+    protected void showEmergencyContacts(View sender) {
         startActivity(SharedActivityManager.createEmergencyContactsIntent(getActivity()));
     }
 
@@ -155,7 +208,7 @@ public class PeopleFragment extends Fragment {
         this.requestRunning = PeopleDirectoryManager.searchPeople(getActivity(), searchText, new Callback<List<MITPerson>>() {
             @Override public void success(List<MITPerson> list, Response response) {
                 Timber.d("Success!");
-                adapter.updateItems(list);
+                searchListAdapter.updateItems(list);
             }
 
             @Override public void failure(RetrofitError error) {
