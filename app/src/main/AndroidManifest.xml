@@ -231,6 +231,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" >
         </activity>
+        <activity
+            android:name=".news.activities.NewsStoryActivity"
+            android:parentActivityName=".MITModuleActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

@@ -1,12 +1,15 @@
 package edu.mit.mitmobile2.news.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITNewsStory {
+public class MITNewsStory implements Parcelable {
 
     @Expose
     private String id;
@@ -160,4 +163,51 @@ public class MITNewsStory {
         return coverImage.getRepresentations().get(index).getUrl();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.sourceUrl);
+        dest.writeString(this.title);
+        dest.writeString(this.publishedAt);
+        dest.writeString(this.author);
+        dest.writeString(this.dek);
+        dest.writeInt(this.featured ? 1 : 0);
+        dest.writeParcelable(this.category, 0);
+        dest.writeString(this.type);
+        dest.writeString(this.bodyHtml);
+        dest.writeParcelable(this.coverImage, 0);
+        dest.writeTypedList(this.galleryImages);
+    }
+
+    private MITNewsStory(Parcel p) {
+        this.id = p.readString();
+        this.url = p.readString();
+        this.sourceUrl = p.readString();
+        this.title = p.readString();
+        this.publishedAt = p.readString();
+        this.author = p.readString();
+        this.dek = p.readString();
+        this.featured = p.readInt() == 1;
+        this.category = p.readParcelable(MITNewsCategory.class.getClassLoader());
+        this.type = p.readString();
+        this.bodyHtml = p.readString();
+        this.coverImage = p.readParcelable(MITNewsCategory.class.getClassLoader());
+        this.galleryImages = p.createTypedArrayList(MITNewsGalleryImage.CREATOR);
+    }
+
+    public static final Parcelable.Creator<MITNewsStory> CREATOR = new Parcelable.Creator<MITNewsStory>() {
+        public MITNewsStory createFromParcel(Parcel source) {
+            return new MITNewsStory(source);
+        }
+
+        public MITNewsStory[] newArray(int size) {
+            return new MITNewsStory[size];
+        }
+    };
 }
