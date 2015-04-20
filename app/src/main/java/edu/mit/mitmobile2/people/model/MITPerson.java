@@ -1,13 +1,16 @@
 package edu.mit.mitmobile2.people.model;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
@@ -18,7 +21,7 @@ import static edu.mit.mitmobile2.Schema.Person.IS_FAVORITE;
 import static edu.mit.mitmobile2.Schema.Person.TABLE_NAME;
 
 @SchemaTable(edu.mit.mitmobile2.Schema.Person.class)
-public class MITPerson extends DatabaseObject implements Parcelable {
+public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDirectoryPersonAdaptablePerson {
     @NonAtomicExclude
     private String uid;
     private String affiliation;
@@ -211,6 +214,31 @@ public class MITPerson extends DatabaseObject implements Parcelable {
     public String getFormattedAddress() {
         if (!TextUtils.isEmpty(this.street) && !TextUtils.isEmpty(this.city) && !TextUtils.isEmpty(this.state)) {
             return String.format("%s\n%s, %s", this.street, this.city, this.state);
+        }
+
+        return null;
+    }
+
+    public String valueForIndexPath(MITPersonIndexPath index) {
+        if (index != null && index.getAttributeType() != null && index.getIndex() != MITPersonIndexPath.NO_INDEX) {
+            Object o = null;
+            try {
+                o = index.getAttributeType().invokeGetterOn(this);
+            } catch (NoSuchMethodException e) {
+                Log.e(this.getClass().getSimpleName(), "Method Exception => " +this, e);
+            } catch (InvocationTargetException e) {
+                Log.e(this.getClass().getSimpleName(), "Target Exception => " +this, e);
+            } catch (IllegalAccessException e) {
+                Log.e(this.getClass().getSimpleName(), "Access Exception => " +this, e);
+            }
+
+            if (o != null) {
+                if (o instanceof String) {
+                    if (index.getIndex() == 0) return (String) o;
+                } else if (o instanceof List){
+                    return (String) ((List<?>)o).get(index.getIndex());
+                }
+            }
         }
 
         return null;

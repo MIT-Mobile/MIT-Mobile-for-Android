@@ -14,26 +14,31 @@ import android.widget.TextView;
 
 import edu.mit.mitmobile2.DrawableUtils;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.people.PeopleDirectoryManager;
+import edu.mit.mitmobile2.people.PeopleDirectoryManager.DirectoryDisplayProperty;
+import edu.mit.mitmobile2.people.model.MITPeopleDirectoryPersonAdaptable;
+import edu.mit.mitmobile2.people.model.MITPeopleDirectoryPersonAdaptableSurrogate;
 import edu.mit.mitmobile2.people.model.MITPerson;
+
 
 public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
     public static final String FORCE_SHORT_MODE = "FORCE_SHORT_MODE_201504201433";
 
-    private List<MITPerson> people;
+    private List<MITPeopleDirectoryPersonAdaptable> people;
 
     private boolean forceShortMode;
 
     public MITPeopleDirectoryPersonAdapter() {
-        this(new ArrayList<MITPerson>());
+        this.people = (new ArrayList<MITPeopleDirectoryPersonAdaptable>(0));
     }
 
-    public MITPeopleDirectoryPersonAdapter(ArrayList<MITPerson> people) {
-        this.people = people;
+    public MITPeopleDirectoryPersonAdapter(ArrayList<? extends MITPeopleDirectoryPersonAdaptable> people) {
+        this.people = (new ArrayList<MITPeopleDirectoryPersonAdaptable>(people.size()));
+        this.people.addAll(people);
     }
 
-    public void updateItems(List<MITPerson> list) {
-        this.people = list;
+    public void updateItems(List<? extends MITPeopleDirectoryPersonAdaptable> list) {
+        this.people.clear();
+        this.people.addAll(list);
         notifyDataSetChanged();
     }
 
@@ -68,10 +73,21 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
 
         if (item instanceof MITPerson) {
             MITPerson personInfo = (MITPerson) item;
-            PeopleDirectoryManager.DirectoryDisplayProperty displayProp = PeopleDirectoryManager.DirectoryDisplayProperty.getPrimaryDisplayPropertyFor(personInfo);
+            DirectoryDisplayProperty displayProp = DirectoryDisplayProperty.getPrimaryDisplayPropertyFor(personInfo);
 
             title = personInfo.getName();
             subtitle = personInfo.getTitle();
+
+            if (!forceShortMode && !FORCE_SHORT_MODE.equals(subtitle) && displayProp != null) {
+                useShortLayout = false;
+                iconId = displayProp.getIconId();
+            }
+        } else if (item instanceof MITPeopleDirectoryPersonAdaptableSurrogate) {
+            MITPeopleDirectoryPersonAdaptableSurrogate surrog = (MITPeopleDirectoryPersonAdaptableSurrogate) item;
+            title = surrog.getName();
+            subtitle = surrog.getValue();
+
+            DirectoryDisplayProperty displayProp = DirectoryDisplayProperty.byKeyAttribute(surrog.getAttributeType());
 
             if (!forceShortMode && !FORCE_SHORT_MODE.equals(subtitle) && displayProp != null) {
                 useShortLayout = false;

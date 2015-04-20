@@ -16,8 +16,10 @@ public class PersonDetailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_person_detail);
         if (savedInstanceState == null) {
+            PersonDetailFragment pdf = new PersonDetailFragment();
+            pdf.setArguments(getIntent().getExtras());
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PersonDetailFragment())
+                    .add(R.id.container, pdf)
                     .commit();
         }
     }

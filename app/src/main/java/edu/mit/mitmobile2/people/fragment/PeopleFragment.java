@@ -207,12 +207,10 @@ public class PeopleFragment extends Fragment {
         }
     }
 
-//    @OnClick(R.id.directory_assistance_button)
     protected void callDirectoryAssistance(View sender) {
         startActivity(SharedActivityManager.createTelephoneCallIntent(getActivity(), R.string.people_tel_directory_assistance));
     }
-//
-//    @OnClick(R.id.emergency_contacts_button)
+
     protected void showEmergencyContacts(View sender) {
         startActivity(SharedActivityManager.createEmergencyContactsIntent(getActivity()));
     }

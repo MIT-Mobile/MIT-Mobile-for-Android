@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NONE OF THESE ITEMS SHOULD BE LOCALIZED AND DISPLAY IN THE UI CONSTITUTES A PROGRAMMING ERROR -->
+
+    <!-- template/programatic comparison -->
+    <string name="EMPTY"></string>
+
+    <!-- template stuff ... replace programatically -->
+    <string name="number_placeholder">##</string>
+    <string name="number_placeholder_nth">##-th</string>
+
+    <string name="time_placeholder_sec">##s</string>
+    <string name="time_placeholder_hm">##:##</string>
+    <string name="time_placeholder_hms">##:##:##</string>
+
+    <string name="date_placeholder_international_short">## MON 20##</string>
+    <string name="date_placeholder_international_long">DAY ## MONTH 20##</string>
+    <string name="date_placeholder_american_short">MON ##, 20##</string>
+    <string name="date_placeholder_american_long">DAY, MONTH ## 20##</string>
+
+    <string name="datetime_placeholder_international_short">## MON 20## ##:##</string>
+    <string name="datetime_placeholder_international_long">DAY ## MONTH 20## ##:##:##</string>
+    <string name="datetime_placeholder_american_short">MON ##, 20## #:##MR</string>
+    <string name="datetime_placeholder_american_long">DAY, MONTH ## 20## #:#:##MR</string>
+
+    <!-- Lorem stuff ... replace programatically -->
+    <string name="one_line_text_placeholder_long">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit…</string>
+
+    <string name="one_line_text_placeholder_short">Lorem ipsum dolor sit amet.</string>
+
+
+    <string name="one_line_text_placeholder_long1">@string/one_line_text_placeholder_long</string>
+    <string name="one_line_text_placeholder_long2">Curabitur elementum purus sit amet ornare convallis. Suspendisse massa tellus, mattis vel laoreet id.</string>
+    <string name="one_line_text_placeholder_long3">Aenean dignissim sit amet eros non tincidunt. Maecenas lacinia tempor sodales. Ut sollicitudin, diam.</string>
+
+    <string name="one_line_text_placeholder_short1">@string/one_line_text_placeholder_short</string>
+    <string name="one_line_text_placeholder_short2">Neque porro quisquam est qui.</string>
+    <string name="one_line_text_placeholder_short3">Aenean vel tincidunt sapien. Interdum et malesuada.</string>
+
+    <array name="one_line_text_placeholder_short">
+        <item>@string/one_line_text_placeholder_short1</item>
+        <item>@string/one_line_text_placeholder_short2</item>
+        <item>@string/one_line_text_placeholder_short3</item>
+    </array>
+
+    <plurals name="one_line_text_placeholder_short">
+        <item quantity="zero">Lorem ipsum est non.</item>
+        <item quantity="one">Lorem ipsum dolor %1$s amet.</item>
+        <item quantity="other">Lorem ipsum dolor %1$s ameti.</item>
+    </plurals>
+
+    <array name="one_line_text_placeholder_long">
+        <item>@string/one_line_text_placeholder_long1</item>
+        <item>@string/one_line_text_placeholder_long2</item>
+        <item>@string/one_line_text_placeholder_long3</item>
+    </array>
+
+    <plurals name="one_line_text_placeholder_long">
+        <item quantity="zero">Neque porro quisquam est qui dolorem ipsum quia dolor est non, consectetur, adipisci velit.</item>
+        <item quantity="one">Neque porro quisquam est qui dolorem ipsum quia dolor sit %1$s amet, consectetur, adipisci velit.</item>
+        <item quantity="other">Neque porro quisquam est qui dolorem ipsum quia dolor sit %1$s ameti, consectetur, adipisci veliti.</item>
+    </plurals>
+</resources>

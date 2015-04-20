@@ -118,5 +118,9 @@
 
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
+    <string name="fragment_people_person_detail_contact_management_create_new">Create New Contact</string>
+    <string name="fragment_people_person_detail_contact_management_add_existing">Add To Existing Contact</string>
+    <string name="fragment_people_person_detail_contact_management_add_favorites">Add to Favorites</string>
+    <string name="fragment_people_person_detail_contact_management_remove_favorites">Remove from Favorites</string>
 
 </resources>
