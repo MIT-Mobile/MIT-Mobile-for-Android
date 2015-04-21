@@ -37,6 +37,7 @@ public class NewsStoryActivity extends MITActivity {
         setContentView(R.layout.activity_news_story);
         ButterKnife.inject(this);
 
+        setTitle("");
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         story = getIntent().getParcelableExtra(Constants.News.STORY);
