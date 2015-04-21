@@ -183,7 +183,9 @@ public class PeopleFragment extends Fragment {
 
     @OnItemClick(R.id.favorites_list)
     protected void onFavoritesItemClicked(AdapterView<?> parent, View view, int position, long id) {
-
+        Intent intent = new Intent(getActivity(), PersonDetailActivity.class);
+        intent.putExtra(PersonDetailActivity.PERSON_KEY, (MITPerson)favoritePersonsAdapter.getItem(position));
+        this.startActivity(intent);
     }
 
     @OnItemClick(R.id.search_list)
