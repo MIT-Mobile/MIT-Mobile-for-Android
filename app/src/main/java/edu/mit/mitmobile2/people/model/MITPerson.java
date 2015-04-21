@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.people.model;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -12,6 +13,8 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.Schema.Person;
@@ -23,6 +26,7 @@ import static edu.mit.mitmobile2.Schema.Person.TABLE_NAME;
 @SchemaTable(edu.mit.mitmobile2.Schema.Person.class)
 public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDirectoryPersonAdaptablePerson {
     @NonAtomicExclude
+    @com.google.gson.annotations.SerializedName("id")
     private String uid;
     private String affiliation;
     private String city;
@@ -211,6 +215,9 @@ public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDi
         this.uid = uid;
     }
 
+    public String getAddress() {
+        return getFormattedAddress();
+    }
     public String getFormattedAddress() {
         if (!TextUtils.isEmpty(this.street) && !TextUtils.isEmpty(this.city) && !TextUtils.isEmpty(this.state)) {
             return String.format("%s\n%s, %s", this.street, this.city, this.state);
@@ -277,27 +284,23 @@ public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDi
     }
 
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-//        this.uid =  getDatabaseId();
-////        long id = getDatabaseId();
-////        this.stops = new ArrayList<>();
-////
-////        while (cursor.getLong(cursor.getColumnIndex(Schema.Route.ID_COL)) == id) {
-////            MITShuttleStop stopWrapper = new MITShuttleStop();
-////            stopWrapper.buildSubclassFromCursor(cursor, dbAdapter);
-////            this.stops.add(stopWrapper);
-////            boolean itemsRemaining = cursor.moveToNext();
-////            if (!itemsRemaining) {
-////                break;
-////            }
-////        }
-////        // Move back 1 since we looked ahead to the next ID
-////        cursor.moveToPrevious();
+        this.setFavorite(cursor.getInt(cursor.getColumnIndex(Person.IS_FAVORITE)) == 0x01);
+        this.setUid(cursor.getString(cursor.getColumnIndex(Person.PERSON_ID)));
+
+        String json = cursor.getString(cursor.getColumnIndex(Person.EXTENDED_DATA));
+
+        new GsonBuilder().registerTypeAdapter(this.getClass(), new InstanceCreator<MITPerson>() {
+            @Override
+            public MITPerson createInstance(Type t) {
+                return MITPerson.this;
+            }
+        }).create().fromJson(json, this.getClass());
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
         values.put(Person.PERSON_ID, this.uid);
-        values.put(IS_FAVORITE, this.isFavorite());
+        values.put(Person.IS_FAVORITE, (int) (this.isFavorite() ? 0x01 : 0x00));
         values.put(Person.EXTENDED_DATA, NONATOMIC_ENCODER.toJson(this));
     }
 

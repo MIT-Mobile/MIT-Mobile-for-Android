@@ -224,6 +224,15 @@ public class DBAdapter {
         obj.setPersistenceHandler(new DynamicPersistenceHandler(this, obj));
     }
 
+    public boolean hasBeenAcquired(DatabaseObject obj) {
+        return obj.hasPersistenceHandler();
+    }
+
+    public void acquireIfNeeded(DatabaseObject obj) {
+        if (!hasBeenAcquired(obj))
+            acquire(obj);
+    }
+
     private long insertOrUpdate(DatabaseObject dbObject, ContentValues values) {
         String tableName = dbObject.getTableName();
         long databaseId = dbObject.getDatabaseId();
@@ -303,16 +312,17 @@ public class DBAdapter {
     public Integer simpleCount(String tableName, String whereCol, boolean condition) {
         Integer retVal = null;
 
-        Cursor cur = db.rawQuery("SELECT count(*) FROM ["+tableName+"] WHERE ? = " + (condition ? "1" : "0"), new String[]{whereCol});
+        Cursor cur = db.rawQuery("SELECT count(*) FROM ["+tableName+"] WHERE ["+whereCol+"] = " + (condition ? 1 : 0), null);
         if (cur.moveToFirst()) {
             retVal = cur.getInt(0);
         }
         cur.close();
+
         return retVal;
     }
 
     public Cursor simpleConditionedSelect(String tableName, String[] cols, String whereCol, boolean condition) {
-        return db.query(true, tableName, cols, " ? = " + (condition ? "true" : "false"), new String[]{whereCol}, null, null, null, null);
+        return db.query(true, tableName, cols, "["+whereCol+"] = " + (condition ? 1 : 0), null, null, null, null, null);
     }
 
     public boolean exists(String tableName, String[] columns) {

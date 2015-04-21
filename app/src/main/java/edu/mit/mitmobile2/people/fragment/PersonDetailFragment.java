@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.activity.PersonDetailActivity;
 import edu.mit.mitmobile2.people.adapter.MITPeopleDirectoryPersonAdapter;
 import edu.mit.mitmobile2.people.model.MITContactInformation;
@@ -48,6 +51,7 @@ public class PersonDetailFragment extends Fragment {
     protected MITSimpleTaggedActionAdapter contactManagementListAdapter;
     @InjectView(R.id.contact_management_actions_list)
     protected ListView contactManagementList;
+    private DataSetObserver contactInformationListAdapterObserver;
 
     public PersonDetailFragment() {
     }
@@ -79,6 +83,20 @@ public class PersonDetailFragment extends Fragment {
         if (person == null) {
             throw new IllegalArgumentException("You must supply a person (MITPerson model) for the fragment to bind to.");
         }
+
+        String title = person.getName();
+
+        if (TextUtils.isEmpty(title)) {
+            title = person.getTitle();
+
+            if (TextUtils.isEmpty(title)) {
+                title = person.getDept();
+            }
+        }
+
+        if (!TextUtils.isEmpty(title))
+            if (getActivity() != null && getActivity().getActionBar() != null)
+                this.getActivity().getActionBar().setTitle(title);
 
         this.personSummary.setText(person.getAffiliation());
 
@@ -139,14 +157,46 @@ public class PersonDetailFragment extends Fragment {
 
         switch (item.getTag()) {
             case ADD_TO_EXISTING_TAG:
+
                 break;
             case CREATE_NEW_CONTACT_TAG:
+//                addContact();
                 break;
             case ADD_TO_FAVORITES_TAG:
+                this.person.setFavorite(true);
+                PeopleDirectoryManager.addUpdate(this.person);
+                reloadContactManagementOptions();
                 break;
             case REMOVE_FROM_FAVORITES_TAG:
+                this.person.setFavorite(false);
+                PeopleDirectoryManager.addUpdate(this.person);
+                reloadContactManagementOptions();
                 break;
         }
     }
 
+//    private void addContact() {
+//        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+//
+//        ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+//                .withValue(Data.RAW_CONTACT_ID, getPersonId())
+//                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+//                .withValue(Phone.NUMBER, "1-800-GOOG-411")
+//                .withValue(Phone.TYPE, Phone.TYPE_CUSTOM)
+//                .withValue(Phone.LABEL, "free directory assistance")
+//                .build());
+//
+//
+//        try {
+//            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        } catch (OperationApplicationException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public Object getPersonId() {
+//        return personId;
+//    }
 }

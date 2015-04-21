@@ -268,7 +268,7 @@ public class Schema {
         public static final String CREATE_TABLE_SQL =
                 buildCreateSQL(TABLE_NAME,
                                PERSON_ID + " text not null, " +
-                               IS_FAVORITE + " text not null, " +
+                               IS_FAVORITE + " integer not null default 0, " +
                                EXTENDED_DATA + " text not null "
                 );
     }

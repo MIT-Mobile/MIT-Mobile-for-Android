@@ -71,6 +71,8 @@ public class MITSimpleTaggedActionAdapter extends BaseAdapter {
             this.rowContainer = (LinearLayout) coOpt.findViewById(R.id.row_container);
             this.title = (TextView) coOpt.findViewById(R.id.title);
 
+            this.rowContainer.setMinimumHeight((int) rowContainer.getContext().getResources().getDimension(R.dimen.shared_row_simple_tagged_action_height));
+
             this.bind(coOpt);
         }
 

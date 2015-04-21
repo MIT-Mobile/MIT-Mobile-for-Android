@@ -65,7 +65,27 @@ public abstract class DatabaseObject extends Observable implements Observer {
      * @see NonAtomicExclude
      */
     public static final class NonAtomicExclusionStrategy implements ExclusionStrategy {
+        final String[] PROTECTED_PACKAGE_PREFIXES = {
+            "android"
+        };
+
+        final Class[] PROTECTED_CLASSES = {
+            java.util.Observable.class,
+            java.util.EventListener.class
+        };
+
         @Override public boolean shouldSkipField(final FieldAttributes fld) {
+
+            final String pkg = fld.getDeclaringClass().getPackage().getName();
+
+            for (String pkgPrefix : PROTECTED_PACKAGE_PREFIXES) {
+                if (pkg.startsWith(pkgPrefix)) return true;
+            }
+
+            for (Class<?> klass : PROTECTED_CLASSES) {
+                if (fld.getDeclaringClass().equals(klass)) return true;
+            }
+
             return fld.getAnnotation(NonAtomicExclude.class) != null;
         }
 
@@ -83,8 +103,11 @@ public abstract class DatabaseObject extends Observable implements Observer {
 
     public static final long INVALID_ID = Long.MIN_VALUE;
 
+    @NonAtomicExclude
     private long databaseId = INVALID_ID;
+    @NonAtomicExclude
     private boolean isDirty = false;
+    @NonAtomicExclude
     private PersistenceHandler persistenceHandler;
 
     public DatabaseObject() {
