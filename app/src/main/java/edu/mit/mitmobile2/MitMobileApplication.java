@@ -39,7 +39,7 @@ public class MitMobileApplication extends Application {
         bus = new Bus();
         listener = new GlobalOttoListener();
 
-        SharedActivityManager.setContext(this);
+        SharedIntentManager.setContext(this);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
