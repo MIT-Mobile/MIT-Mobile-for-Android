@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -42,8 +44,17 @@ public class NewsStoryActivity extends MITActivity {
 
         story = getIntent().getParcelableExtra(Constants.News.STORY);
 
-        Picasso.with(this).load(story.getOriginalCoverImageUrl())
-                .placeholder(R.drawable.grey_rect).into(storyImageView);
+        try {
+            String originalCoverImageUrl = story.getOriginalCoverImageUrl();
+            storyImageView.setVisibility(View.VISIBLE);
+            Picasso.with(this).load(originalCoverImageUrl)
+                    .placeholder(R.drawable.grey_rect).fit().centerInside().into(storyImageView);
+        } catch (NullPointerException e) {
+            Timber.e(e, "Failed");
+            Picasso.with(this).load(R.drawable.grey_rect)
+                    .placeholder(R.drawable.grey_rect).into(storyImageView);
+            storyImageView.setVisibility(View.GONE);
+        }
 
         storyWebView.getSettings().setJavaScriptEnabled(true);
 

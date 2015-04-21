@@ -23,10 +23,12 @@ import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.activities.NewsCategoryActivity;
 import edu.mit.mitmobile2.news.activities.NewsStoryActivity;
 import edu.mit.mitmobile2.news.adapters.MITNewsStoryAdapter;
 import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
+import edu.mit.mitmobile2.news.utils.NewsUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -87,7 +89,11 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         listView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view, int i, long l, boolean b) {
-                // TODO: Go to category screen
+                String headerId = adapter.getHeader((int) l);
+                Intent intent = new Intent(getActivity(), NewsCategoryActivity.class);
+                List<MITNewsStory> storiesByCategory = adapter.getStoriesByCategory(headerId);
+                intent.putParcelableArrayListExtra(Constants.News.STORIES_KEY, (ArrayList<MITNewsStory>) storiesByCategory);
+                startActivity(intent);
             }
         });
 
@@ -172,34 +178,16 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
 
         List<MITNewsStory> groupedStories = new ArrayList<>();
         groupedStories.addAll(mitNews);
-        groupedStories.addAll(mediaNews);
         groupedStories.addAll(campusNews);
-        return groupedStories;
-    }
+        groupedStories.addAll(mediaNews);
 
-    public void openWebsiteDialog(final String url) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getResources().getString(R.string.open_in_browser_q))
-                .setMessage(url)
-                .setPositiveButton(getResources().getString(R.string.open_button), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .show();
+        return groupedStories;
     }
 
     @Override
     public void itemClicked(MITNewsStory story) {
         if (story.getCategory().getId().equals(Constants.News.IN_THE_MEDIA)) {
-            openWebsiteDialog(story.getSourceUrl());
+            NewsUtils.openWebsiteDialog(getActivity(), story.getSourceUrl());
         } else {
             Intent intent = new Intent(this.getActivity(), NewsStoryActivity.class);
             intent.putExtra(Constants.News.STORY, story);

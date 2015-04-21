@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="20sp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:paddingRight="5dp"/>
 
         <TextView
             android:id="@+id/news_article_lede"
