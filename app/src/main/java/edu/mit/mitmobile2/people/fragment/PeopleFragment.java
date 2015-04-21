@@ -43,8 +43,6 @@ import timber.log.Timber;
 
 import static butterknife.ButterKnife.inject;
 
-
-
 public class PeopleFragment extends Fragment {
     private static final int DIRECTORY_ASSISTANCE_TAG = 1504201452;
     private static final int EMERGENCY_CONTACTS_TAG = 1504201453;
@@ -58,12 +56,6 @@ public class PeopleFragment extends Fragment {
 
     @InjectView(R.id.quick_dial_list)
     protected ListView quickDialList;
-//
-//    @InjectView(R.id.directory_assistance_button)
-//    protected Button directoryAssistance;
-//    @InjectView(R.id.emergency_contacts_button)
-//    protected Button emergencyContacts;
-
     @InjectView(R.id.search_list)
     protected ListView searchList;
 
@@ -241,10 +233,17 @@ public class PeopleFragment extends Fragment {
     }
 
 
+    /**
+     * Current view mode of this fragment.
+     */
     public enum Mode {
+        /** This is the parimary or default screen that is shown with our quick dial and favorites */
         NO_SEARCH(false),
+        /** We are showing a list, but it is "blank" as no search has been performed. */
         LIST_BLANK(true),
+        /** We are showing a list, but it is "blank" as no data was found. (NYI?) */
         LIST_NODATA(true),
+        /** We are showing a list, with valid data. */
         LIST_DATA(true);
 
         private final boolean listViewVisible;
@@ -263,7 +262,13 @@ public class PeopleFragment extends Fragment {
     }
 
 
+    /**
+     * A custom instance of the MITPerson class that should not be persisted to a databae, it is only used for the
+     * "Quick Dial" entires on this screen.
+     * @author grmartin
+     */
     public static class SpecialPerson extends MITPerson {
+        private static String IAE_MSG = "This wrapper around the MITPerson Class cannot handle the method being called.";
         private int tag;
 
         public SpecialPerson(String name, int tag) {
@@ -284,41 +289,41 @@ public class PeopleFragment extends Fragment {
 
         @Override
         public void setFavoriteIndex(int favoriteIndex) {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError();
         }
 
         @Override
         public boolean isFavorite() {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         @Override
         public void setFavorite(boolean favorite) {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         @Override
         protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         @Override
         public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         protected SpecialPerson(Parcel in) {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         @Override
         public int describeContents() {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            throw new IllegalAccessError("This wrapper around the MITPerson Class cannot handle the method being called.");
+            throw new IllegalAccessError(IAE_MSG);
         }
 
         public int getTag() {

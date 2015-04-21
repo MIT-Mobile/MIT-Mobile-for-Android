@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -51,7 +50,6 @@ public class PersonDetailFragment extends Fragment {
     protected MITSimpleTaggedActionAdapter contactManagementListAdapter;
     @InjectView(R.id.contact_management_actions_list)
     protected ListView contactManagementList;
-    private DataSetObserver contactInformationListAdapterObserver;
 
     public PersonDetailFragment() {
     }
@@ -84,6 +82,7 @@ public class PersonDetailFragment extends Fragment {
             throw new IllegalArgumentException("You must supply a person (MITPerson model) for the fragment to bind to.");
         }
 
+        // This might be best to abstract out a bit, but for now... ...
         String title = person.getName();
 
         if (TextUtils.isEmpty(title)) {
@@ -95,8 +94,8 @@ public class PersonDetailFragment extends Fragment {
         }
 
         if (!TextUtils.isEmpty(title))
-            if (getActivity() != null && getActivity().getActionBar() != null)
-                this.getActivity().getActionBar().setTitle(title);
+            if (getActivity() != null)
+                this.getActivity().setTitle(title);
 
         this.personSummary.setText(person.getAffiliation());
 
@@ -118,7 +117,7 @@ public class PersonDetailFragment extends Fragment {
     private void initializeComponents(View rootView) {
         inject(this, rootView);
 
-        this.personSummary.setText("Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Curabitur blandit tempus porttitor.");
+        this.personSummary.setText(R.string.one_line_text_placeholder_long);
 
         this.contactInformationListAdapter = new MITPeopleDirectoryPersonAdapter();
         this.contactInformationList.setAdapter(contactInformationListAdapter);
