@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.mit.mitmobile2" >
+    package="edu.mit.mitmobile2">
 
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
@@ -32,10 +32,10 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/mit_logo_for_action_bar"
-        android:theme="@style/MITMobile" >
+        android:theme="@style/MITMobile">
         <receiver android:name=".shuttles.AlarmReceiver" />
 
-        <service android:name=".MITAuthenticatorService" >
+        <service android:name=".MITAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -47,7 +47,7 @@
         <service
             android:name=".MITSyncService"
             android:exported="true"
-            android:process=":sync" >
+            android:process=":sync">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -67,13 +67,13 @@
         <activity
             android:name=".MITModuleActivity"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" >
-            <intent-filter android:label="MIT Mobile" >
+            android:theme="@style/Theme.MyTheme">
+            <intent-filter android:label="MIT Mobile">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:label="moduleSelector" >
+            <intent-filter android:label="moduleSelector">
                 <data android:scheme="mitmobile2" />
 
                 <action android:name="android.intent.action.VIEW" />
@@ -130,7 +130,7 @@
             android:name=".mobius.ResourcesActivity"
             android:label="@string/title_activity_mobius"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" >
+            android:theme="@style/Theme.MyTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -163,7 +163,7 @@
             android:name=".mobius.ResourceViewActivity"
             android:launchMode="standard"
             android:parentActivityName=".mobius.ResourceListActivity"
-            android:theme="@style/Theme.MyTheme" >
+            android:theme="@style/Theme.MyTheme">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -223,6 +223,11 @@
             android:name=".news.activities.NewsStoryActivity"
             android:parentActivityName=".MITModuleActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".news.activities.NewsCategoryActivity"
+            android:label="@string/title_activity_news_category"
+            android:parentActivityName=".MITModuleActivity"
             android:theme="@style/Theme.MyTheme" />
     </application>
 

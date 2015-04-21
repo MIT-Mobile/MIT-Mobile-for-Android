@@ -10,17 +10,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.NewsFragmentCallback;
-import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class MITNewsCategoryAdapter extends BaseAdapter {
 
     private class ViewHolder {
         ImageView storyImage;
@@ -31,21 +28,14 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         TextView storySnippet;
     }
 
-    private class HeaderViewHolder {
-        ImageView indicatorIcon;
-        TextView headerText;
-    }
-
     private Context context;
     private List<MITNewsStory> stories;
     private NewsFragmentCallback callback;
-    private String[] headers;
-    private String[] headerIds;
 
-    public MITNewsStoryAdapter(Context context, List<MITNewsStory> stories, NewsFragmentCallback callback) {
+    public MITNewsCategoryAdapter(Context context, List<MITNewsStory> stories, NewsFragmentCallback callback) {
+        this.callback = callback;
         this.context = context;
         this.stories = stories;
-        this.callback = callback;
     }
 
     @Override
@@ -105,7 +95,13 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         }
 
         if (getItemViewType(position) == 0) {
-            Picasso.with(context).load(story.getSmallCoverImageUrl()).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+            try {
+                String smallCoverImageUrl = story.getSmallCoverImageUrl();
+                Picasso.with(context).load(smallCoverImageUrl).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+            } catch (NullPointerException e) {
+                Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+            }
+
             holder.storyTitle.setText(story.getTitle());
             holder.storyLede.setText(story.getDek());
         } else {
@@ -123,81 +119,17 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         return view;
     }
 
-    @Override
-    public View getHeaderView(int i, View view, ViewGroup viewGroup) {
-        HeaderViewHolder holder;
-
-        if (view == null) {
-            view = View.inflate(context, R.layout.news_header_view, null);
-            holder = new HeaderViewHolder();
-
-            holder.indicatorIcon = (ImageView) view.findViewById(R.id.header_indicator);
-            holder.headerText = (TextView) view.findViewById(R.id.news_header_title);
-            view.setTag(holder);
-        } else {
-            holder = (HeaderViewHolder) view.getTag();
-        }
-
-        MITNewsStory story = (MITNewsStory) getItem(i);
-        story.getCategory().getName();
-
-        long headerId = getHeaderId(i);
-
-        holder.headerText.setText(headers[((int) headerId)]);
-        holder.indicatorIcon.setImageResource(R.drawable.ic_right_arrow);
-
-        return view;
-    }
-
-    @Override
-    public long getHeaderId(int i) {
-        if (i < 5) {
-            return 0;
-        } else if (i < 10) {
-            return 1;
-        } else {
-            return 2;
-        }
-    }
-
     public void updateItems(List<MITNewsStory> stories) {
         this.stories = stories;
         notifyDataSetChanged();
     }
 
-    public void setHeaders(List<MITNewsCategory> categories) {
-        this.headers = new String[categories.size()];
-        this.headerIds = new String[categories.size()];
-        for (int i = 0; i < categories.size(); i++) {
-            this.headers[i] = categories.get(i).getName();
-            this.headerIds[i] = categories.get(i).getId();
-        }
+    public void addItems(List<MITNewsStory> stories) {
+        this.stories.addAll(stories);
+        notifyDataSetChanged();
     }
 
-    public String getHeader(int i) {
-        return headerIds[i];
+    public List<MITNewsStory> getStories() {
+        return stories;
     }
-
-    public List<MITNewsStory> getStoriesByCategory(String categoryId) {
-        List<MITNewsStory> storyList = new ArrayList<>();
-        for (MITNewsStory story : stories) {
-            if (story.getCategory().getId().equals(categoryId)) {
-                storyList.add(story);
-            }
-        }
-
-        return storyList;
-
-        /*switch (categoryId) {
-            case Constants.News.MIT_NEWS:
-                return stories.subList(0, 5);
-            case Constants.News.AROUND_CAMPUS:
-                return stories.subList(5, 10);
-            case Constants.News.IN_THE_MEDIA:
-                return stories.subList(10, 15);
-            default:
-                return null;
-        }*/
-    }
-
 }
