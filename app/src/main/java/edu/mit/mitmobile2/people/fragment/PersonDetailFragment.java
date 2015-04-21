@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import a_vcard.android.util.Log;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 import edu.mit.mitmobile2.R;

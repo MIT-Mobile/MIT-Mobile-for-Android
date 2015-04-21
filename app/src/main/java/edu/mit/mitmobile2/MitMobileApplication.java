@@ -7,8 +7,7 @@ import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import edu.mit.mitmobile2.shared.SharedActivityManager;
+import edu.mit.mitmobile2.shared.SharedIntentManager;
 import timber.log.Timber;
 
 public class MitMobileApplication extends Application {
