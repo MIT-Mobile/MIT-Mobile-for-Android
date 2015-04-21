@@ -80,7 +80,7 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
 
             if (!forceShortMode && !FORCE_SHORT_MODE.equals(subtitle) && displayProp != null) {
                 useShortLayout = false;
-                iconId = displayProp.getIconId();
+                iconId = displayProp.getActionIcon().getIconId();
             }
         } else if (item instanceof MITPeopleDirectoryPersonAdaptableSurrogate) {
             MITPeopleDirectoryPersonAdaptableSurrogate surrog = (MITPeopleDirectoryPersonAdaptableSurrogate) item;
@@ -91,7 +91,7 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
 
             if (!forceShortMode && !FORCE_SHORT_MODE.equals(subtitle) && displayProp != null) {
                 useShortLayout = false;
-                iconId = displayProp.getIconId();
+                iconId = displayProp.getActionIcon().getIconId();
             }
         }
 

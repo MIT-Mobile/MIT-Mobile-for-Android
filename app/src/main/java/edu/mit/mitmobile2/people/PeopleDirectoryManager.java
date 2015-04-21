@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import edu.mit.mitmobile2.Constants;
@@ -19,6 +21,7 @@ import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.people.model.MITPersonAttribute;
+import edu.mit.mitmobile2.shared.SharedActivityManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,11 +41,11 @@ import static edu.mit.mitmobile2.Schema.Table.getTableName;
 public class PeopleDirectoryManager extends RetrofitManager {
     private static final MitPersonDirectoryService MIT_PEOPLE_DIR_SERVICE = MIT_REST_ADAPTER.create(MitPersonDirectoryService.class);
 
-    // TODO: GRM: LOOK UP
-    private static final int PHONE_ICON = R.drawable.phone;
-    private static final int EMAIL_ICON = R.drawable.email;
-    private static final int MAP_ICON = R.drawable.phone;
-    private static final int EXTERNAL_ICON = R.drawable.phone;
+    public static final int PHONE_ICON = R.drawable.phone;
+    public static final int EMAIL_ICON = R.drawable.email;
+    // TODO: GRM: These are likely wrong... Talk to Linh.
+    public static final int MAP_ICON = R.drawable.ic_map;
+    public static final int EXTERNAL_ICON = R.drawable.alert_icon_outline;
 
     @SuppressWarnings("unused")
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) throws NoSuchFieldException,
@@ -137,6 +140,44 @@ public class PeopleDirectoryManager extends RetrofitManager {
         void _getapisperson(Callback<List<MITPerson>> callback);
     }
 
+    public enum ActionIcon {
+        EMAIL(EMAIL_ICON),
+        PHONE(PHONE_ICON),
+        MAP(MAP_ICON),
+        EXTERNAL(EXTERNAL_ICON);
+
+        private final int iconId;
+
+        ActionIcon(int iconId) {
+            this.iconId = iconId;
+        }
+
+        public int getIconId() {
+            return iconId;
+        }
+
+        @NonNull
+        public Intent generateIntent(@NonNull final String value) {
+            Intent intent;
+            switch (this) {
+                case EMAIL:    return SharedActivityManager.createSendEmailIntent(value);
+                case PHONE:    return SharedActivityManager.createTelephoneCallIntent(value);
+                case MAP:      return SharedActivityManager.createMapIntent(value);
+                case EXTERNAL:
+                default: /* Fall-through intentional, worst case, lets just google it... */
+                    return SharedActivityManager.createBrowserIntent(value);
+            }
+
+
+        }
+
+        @NonNull
+        public static Intent generateIntent(ActionIcon icon, @NonNull final String value) {
+            if (icon == null) icon = EXTERNAL;
+            return icon.generateIntent(value);
+        }
+    }
+
     /**
      * Directory item display enum.
      *
@@ -169,19 +210,19 @@ public class PeopleDirectoryManager extends RetrofitManager {
      * </p>
      */
     public enum DirectoryDisplayProperty {
-        EMAIL(      EMAIL_ICON, MITPersonAttribute.EMAIL     ),
-        PHONE(      PHONE_ICON, MITPersonAttribute.PHONE     ),
-        FAX(        PHONE_ICON, MITPersonAttribute.FAX       ),
-        HOMEPHONE(  PHONE_ICON, MITPersonAttribute.HOMEPHONE ),
-        OFFICE(       MAP_ICON, MITPersonAttribute.OFFICE    ),
-        ADDRESS(      MAP_ICON, MITPersonAttribute.ADDRESS   ),
-        WEBSITE( EXTERNAL_ICON, MITPersonAttribute.WEBSITE   );
+        EMAIL(      ActionIcon.EMAIL,    MITPersonAttribute.EMAIL     ),
+        PHONE(      ActionIcon.PHONE,    MITPersonAttribute.PHONE     ),
+        FAX(        ActionIcon.PHONE,    MITPersonAttribute.FAX       ),
+        HOMEPHONE(  ActionIcon.PHONE,    MITPersonAttribute.HOMEPHONE ),
+        OFFICE(     ActionIcon.MAP,      MITPersonAttribute.OFFICE    ),
+        ADDRESS(    ActionIcon.MAP,      MITPersonAttribute.ADDRESS   ),
+        WEBSITE(    ActionIcon.EXTERNAL, MITPersonAttribute.WEBSITE   );
 
-        private final int iconId;
+        private final ActionIcon actionIcon;
         private final MITPersonAttribute type;
 
-        DirectoryDisplayProperty(int iconId, MITPersonAttribute type) {
-            this.iconId = iconId;
+        DirectoryDisplayProperty(ActionIcon actionIcon, MITPersonAttribute type) {
+            this.actionIcon = actionIcon;
             this.type = type;
         }
 
@@ -226,9 +267,10 @@ public class PeopleDirectoryManager extends RetrofitManager {
             return type;
         }
 
-        public int getIconId() {
-            return iconId;
+        public ActionIcon getActionIcon() {
+            return actionIcon;
         }
+
     }
 
     public static class PeopleDirectoryManagerCallWrapper<T> implements PeopleDirectoryManagerCall, Callback<T> {
