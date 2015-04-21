@@ -222,7 +222,6 @@
         <activity
             android:name=".news.activities.NewsStoryActivity"
             android:parentActivityName=".MITModuleActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".news.activities.NewsCategoryActivity"

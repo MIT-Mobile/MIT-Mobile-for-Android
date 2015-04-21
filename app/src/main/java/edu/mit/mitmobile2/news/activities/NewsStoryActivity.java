@@ -48,7 +48,7 @@ public class NewsStoryActivity extends MITActivity {
             String originalCoverImageUrl = story.getOriginalCoverImageUrl();
             storyImageView.setVisibility(View.VISIBLE);
             Picasso.with(this).load(originalCoverImageUrl)
-                    .placeholder(R.drawable.grey_rect).into(storyImageView);
+                    .placeholder(R.drawable.grey_rect).fit().centerInside().into(storyImageView);
         } catch (NullPointerException e) {
             Timber.e(e, "Failed");
             Picasso.with(this).load(R.drawable.grey_rect)
