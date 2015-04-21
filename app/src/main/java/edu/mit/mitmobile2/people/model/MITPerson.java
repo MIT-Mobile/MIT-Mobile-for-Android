@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
+import com.google.gson.annotations.SerializedName;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.Schema.Person;
@@ -26,7 +27,7 @@ import static edu.mit.mitmobile2.Schema.Person.TABLE_NAME;
 @SchemaTable(edu.mit.mitmobile2.Schema.Person.class)
 public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDirectoryPersonAdaptablePerson {
     @NonAtomicExclude
-    @com.google.gson.annotations.SerializedName("id")
+    @SerializedName("id")
     private String uid;
     private String affiliation;
     private String city;
@@ -207,6 +208,7 @@ public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDi
         this.affiliation = affiliation;
     }
 
+    @FieldName(Person.PERSON_ID)
     public String getUid() {
         return uid;
     }

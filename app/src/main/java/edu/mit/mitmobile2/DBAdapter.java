@@ -5,12 +5,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -21,6 +23,89 @@ import timber.log.Timber;
 public class DBAdapter {
     private interface Migration {
         void apply(SQLiteDatabase db);
+    }
+
+    @SuppressWarnings("PointlessBitwiseExpression")
+    public static class Conditional {
+        public static int COLUMN_IS_RAW = 1 << 0;
+        public static int VALUE_IS_RAW =  1 << 1;
+
+        public final String column;
+        public final Object value;
+        public final int isRaw;
+
+        public Conditional(String column, Object value, int isRaw) {
+            this.column = column;
+            this.value = value;
+            this.isRaw = isRaw;
+        }
+
+        public Conditional(String column, Object value) {
+            this(column, value, 0);
+        }
+
+        public Conditional(String column) {
+            this(column, true);
+        }
+
+        public boolean isColumnRaw() {
+            return (isRaw & COLUMN_IS_RAW) == COLUMN_IS_RAW;
+        }
+
+        public boolean isValueRaw() {
+            return (isRaw & VALUE_IS_RAW) == VALUE_IS_RAW;
+        }
+
+        public static Conditional[] many(Conditional... conditionals) {
+            return conditionals;
+        }
+    }
+
+    public static class ConditionalResult {
+        public final String conditional;
+        public final String[] boundValues;
+
+        public ConditionalResult(String conditional, String... boundValues) {
+            this.conditional = conditional;
+            this.boundValues = boundValues;
+        }
+    }
+
+    public static String escapeIdentifier(String identifier) {
+        StringBuilder sb = new StringBuilder((identifier.length()*2)+2);
+        sb.append('"');
+        if (identifier.indexOf('"') != -1) {
+            int length = identifier.length();
+            for (int i = 0; i < length; i++) {
+                char c = identifier.charAt(i);
+                if (c != '"') {
+                    sb.append(c);
+                }
+            }
+        } else
+            sb.append(identifier);
+        sb.append('"');
+        return sb.toString();
+    }
+
+    public static String escapeValue(String value) {
+        return DatabaseUtils.sqlEscapeString(value);
+    }
+
+    public static boolean isNumeric(Object object) {
+        return  object instanceof Integer   ||
+                object instanceof Boolean   ||
+                object instanceof Long      ||
+                object instanceof Float     ||
+                object instanceof Double    ||
+                object instanceof Short     ||
+                object instanceof Byte      ||
+                object instanceof Character;
+    }
+    public static boolean isFloatingPoint(Object object) {
+        return object instanceof Float     ||
+               object instanceof Double;
+
     }
 
     private class DynamicPersistenceHandler extends DatabaseObject.PersistenceHandler<Object, Object> {
@@ -310,9 +395,15 @@ public class DBAdapter {
     }
 
     public Integer simpleCount(String tableName, String whereCol, boolean condition) {
+        return rowCount(tableName, new Conditional(whereCol, condition));
+    }
+
+    public Integer rowCount(String tableName, Conditional... conditionals) {
         Integer retVal = null;
 
-        Cursor cur = db.rawQuery("SELECT count(*) FROM ["+tableName+"] WHERE ["+whereCol+"] = " + (condition ? 1 : 0), null);
+        ConditionalResult conditional = generateConditionalClause(conditionals);
+
+        Cursor cur = db.rawQuery("SELECT count(*) FROM "+escapeIdentifier(tableName)+" WHERE " + conditional.conditional, conditional.boundValues);
         if (cur.moveToFirst()) {
             retVal = cur.getInt(0);
         }
@@ -321,8 +412,45 @@ public class DBAdapter {
         return retVal;
     }
 
+    private ConditionalResult generateConditionalClause(Conditional... conditionals) {
+        StringBuilder builder = new StringBuilder();
+        List<String> vals = new LinkedList<String>();
+
+        boolean first = true;
+        for (Conditional cnd : conditionals) {
+            if (first) first = false;
+            else builder.append(" AND ");
+
+            builder.append( cnd.isColumnRaw() ? cnd.column : escapeIdentifier(cnd.column) );
+            builder.append(" ");
+
+            if (cnd.isValueRaw()) {
+                builder.append(cnd.value);
+            } else {
+                builder.append("= ");
+
+                if (isNumeric(cnd.value)) {
+                    if (isFloatingPoint(cnd.value)) {
+                        builder.append(Double.toString((double)cnd.value));
+                    } else {
+                        if (cnd.value instanceof Boolean) {
+                            builder.append(((boolean)cnd.value) ? 0x01 : 0x00);
+                        } else {
+                            builder.append(Long.toString((long) cnd.value));
+                        }
+                    }
+                } else {
+                    builder.append("?");
+                    vals.add(String.valueOf(cnd.value));
+                }
+            }
+        }
+
+        return new ConditionalResult(builder.toString(), vals.toArray(new String[vals.size()]));
+    }
+
     public Cursor simpleConditionedSelect(String tableName, String[] cols, String whereCol, boolean condition) {
-        return db.query(true, tableName, cols, "["+whereCol+"] = " + (condition ? 1 : 0), null, null, null, null, null);
+        return db.query(true, tableName, cols, escapeIdentifier(whereCol)+" = " + (condition ? 0x01 : 0x00), null, null, null, null, null);
     }
 
     public boolean exists(String tableName, String[] columns) {

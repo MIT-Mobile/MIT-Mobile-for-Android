@@ -100,6 +100,11 @@ public class PersonDetailFragment extends Fragment {
 
         this.personSummary.setText(person.getAffiliation());
 
+        /* Lets make sure this bit is up to date. */
+        if (!this.person.isFavorite() && PeopleDirectoryManager.isOnFavoritesList(this.person.getUid())) {
+            this.person.setFavorite(true);
+        }
+
         reloadContactList();
         reloadContactManagementOptions();
     }

@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.people;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -13,13 +12,13 @@ import android.support.annotation.Nullable;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DBAdapter.Conditional;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.people.model.MITPersonAttribute;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -91,6 +90,14 @@ public class PeopleDirectoryManager extends RetrofitManager {
             getSchemaTableNameForClass(MITPerson.class),
             getSchemaFieldForMethod(MITPerson.class, "isFavorite"),
             true);
+    }
+
+    public static boolean isOnFavoritesList(String uid) {
+        return DBAdapter.getInstance().rowCount(
+            getSchemaTableNameForClass(MITPerson.class),
+            new Conditional(getSchemaFieldForMethod(MITPerson.class, "isFavorite"), true),
+            new Conditional(getSchemaFieldForMethod(MITPerson.class, "getUid"), uid)
+        ) == 1;
     }
 
     public static List<MITPerson>  getPersistantFavoritesList() {
