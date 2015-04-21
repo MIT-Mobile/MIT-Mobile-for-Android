@@ -41,11 +41,10 @@ import static edu.mit.mitmobile2.Schema.Table.getTableName;
 public class PeopleDirectoryManager extends RetrofitManager {
     private static final MitPersonDirectoryService MIT_PEOPLE_DIR_SERVICE = MIT_REST_ADAPTER.create(MitPersonDirectoryService.class);
 
-    public static final int PHONE_ICON = R.drawable.phone;
-    public static final int EMAIL_ICON = R.drawable.email;
-    // TODO: GRM: These are likely wrong... Talk to Linh.
-    public static final int MAP_ICON = R.drawable.ic_map;
-    public static final int EXTERNAL_ICON = R.drawable.alert_icon_outline;
+    private static final int PHONE_ICON = R.drawable.phone;
+    private static final int EMAIL_ICON = R.drawable.email;
+    private static final int MAP_ICON = R.drawable.ic_map_pin;
+    private static final int EXTERNAL_ICON = R.drawable.ic_open_in_browser.png;
 
     @SuppressWarnings("unused")
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) throws NoSuchFieldException,
