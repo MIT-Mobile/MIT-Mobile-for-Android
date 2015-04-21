@@ -2,6 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_share"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/share_icon_tinted"
         app:showAsAction="always"/>
 </menu>
