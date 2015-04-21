@@ -2,10 +2,10 @@ package edu.mit.mitmobile2.people.activity;
 
 import android.os.Bundle;
 
-import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 
-public class PeopleActivity extends MITModuleActivity {
+public class PeopleActivity extends MITMainActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -1,6 +1,6 @@
 package edu.mit.mitmobile2.maps;
 
-import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 
 import android.app.SearchManager;
@@ -26,7 +26,7 @@ import com.google.android.gms.maps.CameraUpdate;
         import com.google.android.gms.maps.model.LatLngBounds;
         import com.google.android.gms.maps.model.Marker;
 
-public class  MapsActivity extends MITModuleActivity {
+public class  MapsActivity extends MITMainActivity {
 
     protected MITMapView mapView;
     public static String MAP_ITEMS = "MAP_ITEMS";
