@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.news.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,13 +14,16 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MITModuleActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.news.models.MITNewsGalleryImage;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import edu.mit.mitmobile2.news.utils.NewsUtils;
 import timber.log.Timber;
@@ -103,6 +107,15 @@ public class NewsStoryActivity extends MITActivity {
             Timber.e(e, "HTML read Failed");
         }
         return template;
+    }
+
+    @OnClick(R.id.story_image_view)
+    void goToImageGallery() {
+        Intent intent = new Intent(this, NewsImageGalleryActivity.class);
+        intent.putParcelableArrayListExtra(Constants.News.IMAGES_KEY, (ArrayList<MITNewsGalleryImage>) story.getGalleryImages());
+        intent.putExtra(Constants.News.TITLE_KEY, story.getTitle());
+        intent.putExtra(Constants.News.URL_KEY, story.getSourceUrl());
+        startActivity(intent);
     }
 
     @Override
