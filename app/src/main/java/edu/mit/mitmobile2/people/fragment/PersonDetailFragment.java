@@ -7,9 +7,17 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
+import android.provider.ContactsContract.CommonDataKinds.Website;
+import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Data;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +27,7 @@ import android.widget.TextView;
 
 import butterknife.InjectView;
 import butterknife.OnItemClick;
+import edu.mit.mitmobile2.BuildConfig;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.DirectoryDisplayProperty;
@@ -29,9 +38,22 @@ import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.people.model.MITPersonAttribute;
 import edu.mit.mitmobile2.people.model.MITPersonIndexPath;
 import edu.mit.mitmobile2.shared.adapter.MITSimpleTaggedActionAdapter;
+import edu.mit.mitmobile2.shared.android.BundleUtils;
+import edu.mit.mitmobile2.shared.android.ContentValuesUtils;
+import edu.mit.mitmobile2.shared.android.ContentValuesWrapperSet;
+import edu.mit.mitmobile2.shared.android.IntentValueSet;
+import edu.mit.mitmobile2.shared.android.ParcelableUtils;
+import edu.mit.mitmobile2.shared.android.ValueSetUtils;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Log;
 import edu.mit.mitmobile2.shared.model.MITSimpleTaggedActionItem;
 
 import static butterknife.ButterKnife.inject;
+import static edu.mit.mitmobile2.shared.android.ValueSetUtils.addFieldIfValid;
+import static edu.mit.mitmobile2.shared.functional.CommonTests.IS_STRING_EMPTY_TEST;
+import static edu.mit.mitmobile2.shared.functional.CommonTests.IS_VALID_EMAIL_STRING_TEST;
+import static edu.mit.mitmobile2.shared.functional.CommonTests.IS_VALID_URL_STRING_TEST;
+import static edu.mit.mitmobile2.shared.functional.InvertTest.invert;
 
 /**
  * Created by grmartin on 4/17/15.
@@ -59,12 +81,21 @@ public class PersonDetailFragment extends Fragment {
     @InjectView(R.id.contact_management_actions_list)
     protected ListView contactManagementList;
 
+    private String resolvedContactTitle;
+
     public PersonDetailFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (BuildConfig.DEBUG) {
+            LoggingManager.enableKey(TAG);
+            LoggingManager.enableKey(BundleUtils.LOGGER_KEY);
+            LoggingManager.enableKey(ContentValuesUtils.LOGGER_KEY);
+            LoggingManager.enableKey(ValueSetUtils.LOGGER_KEY);
+        }
 
         View rootView = inflater.inflate(R.layout.fragment_people_person_detail, container, false);
 
@@ -102,8 +133,10 @@ public class PersonDetailFragment extends Fragment {
         }
 
         if (!TextUtils.isEmpty(title))
-            if (getActivity() != null)
+            if (getActivity() != null) {
+                this.resolvedContactTitle = title;
                 this.getActivity().setTitle(title);
+            }
 
         this.personSummary.setText(person.getAffiliation());
 
@@ -155,6 +188,8 @@ public class PersonDetailFragment extends Fragment {
     }
 
     private List<MITContactInformation> generateContactListDisplayInformation() {
+        MITPerson person = ParcelableUtils.copyParcelable(this.person);
+
         List<MITContactInformation> list = new LinkedList<>();
 
         for (MITPersonAttribute attr : MITPersonAttribute.getAttributesOn(this.person)) {
@@ -206,15 +241,19 @@ public class PersonDetailFragment extends Fragment {
     protected void onManagementActionItemClicked(AdapterView<?> parent, View view, int position, long id) {
         MITSimpleTaggedActionItem item = (MITSimpleTaggedActionItem) this.contactManagementListAdapter.getItem(position);
 
-        // TODO: IMPLEMENT
-
         switch (item.getTag()) {
-            case ADD_TO_EXISTING_TAG:
-
-                break;
-            case CREATE_NEW_CONTACT_TAG:
-//                addContact();
-                break;
+            case ADD_TO_EXISTING_TAG: {
+                IntentValueSet intent = new IntentValueSet(Intent.ACTION_EDIT);
+                intent.setType(Contacts.CONTENT_TYPE);
+                addContactInformation(intent);
+                startActivity(intent);
+            }    break;
+            case CREATE_NEW_CONTACT_TAG: {
+                IntentValueSet intent = new IntentValueSet(Intent.ACTION_INSERT);
+                intent.setType(Contacts.CONTENT_TYPE);
+                addContactInformation(intent);
+                startActivity(intent);
+            }    break;
             case ADD_TO_FAVORITES_TAG:
                 this.person.setFavorite(true);
                 PeopleDirectoryManager.addUpdate(this.person);
@@ -228,28 +267,73 @@ public class PersonDetailFragment extends Fragment {
         }
     }
 
-//    private void addContact() {
-//        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-//
-//        ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-//                .withValue(Data.RAW_CONTACT_ID, getPersonId())
-//                .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-//                .withValue(Phone.NUMBER, "1-800-GOOG-411")
-//                .withValue(Phone.TYPE, Phone.TYPE_CUSTOM)
-//                .withValue(Phone.LABEL, "free directory assistance")
-//                .build());
-//
-//
-//        try {
-//            getActivity().getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        } catch (OperationApplicationException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public Object getPersonId() {
-//        return personId;
-//    }
+
+    private void addContactInformation(IntentValueSet intent) {
+        List<ContentValuesWrapperSet> data = new LinkedList<ContentValuesWrapperSet>();
+
+        for (MITContactInformation conInfo : generateContactListDisplayInformation()) {
+            ContentValuesWrapperSet set = new ContentValuesWrapperSet();
+
+            switch (conInfo.getAttributeType()) {
+                case EMAIL:
+                    set.put(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE);
+                    set.put(Email.TYPE, Email.TYPE_WORK);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, IS_VALID_EMAIL_STRING_TEST, Email.ADDRESS, conInfo.getValue()));
+                    break;
+                case PHONE:
+                    set.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+                    set.put(Phone.TYPE, Phone.TYPE_OTHER);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, invert(IS_STRING_EMPTY_TEST), Phone.NUMBER, conInfo.getValue()));
+                    break;
+                case FAX:
+                    set.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+                    set.put(Email.TYPE, Phone.TYPE_FAX_WORK);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, invert(IS_STRING_EMPTY_TEST), Phone.NUMBER, conInfo.getValue()));
+                    break;
+                case HOMEPHONE:
+                    set.put(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE);
+                    set.put(Phone.TYPE, Phone.TYPE_HOME);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, invert(IS_STRING_EMPTY_TEST), Phone.NUMBER, conInfo.getValue()));
+                    break;
+                case OFFICE:
+                    set.put(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE);
+                    set.put(StructuredPostal.TYPE, StructuredPostal.TYPE_WORK);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, invert(IS_STRING_EMPTY_TEST), StructuredPostal.FORMATTED_ADDRESS, conInfo.getValue()));
+                    break;
+                case ADDRESS:
+                    set.put(Data.MIMETYPE, StructuredPostal.CONTENT_ITEM_TYPE);
+                    set.put(StructuredPostal.TYPE, StructuredPostal.TYPE_HOME);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, invert(IS_STRING_EMPTY_TEST), StructuredPostal.FORMATTED_ADDRESS, conInfo.getValue()));
+                    break;
+                case WEBSITE:
+                    set.put(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE);
+                    set.shouldDestroyIfFails(addFieldIfValid(set, IS_VALID_URL_STRING_TEST, Website.URL, conInfo.getValue()));
+                    break;
+            }
+
+            if (!set.isDestroyed()) {
+                data.add(set);
+            } else {
+                Log.d(TAG, "addContactInformation(...) Invalidated & Destoryed => "+set);
+            }
+        }
+
+        addFieldIfValid(intent, invert(IS_STRING_EMPTY_TEST), ContactsContract.Intents.Insert.NAME, person.getName(), this.resolvedContactTitle);
+        addFieldIfValid(intent, invert(IS_STRING_EMPTY_TEST), ContactsContract.Intents.Insert.NOTES, person.getAffiliation());
+
+        ArrayList<ContentValues> out = new ArrayList<ContentValues>();
+
+        for (ContentValuesWrapperSet wrapper : data) {
+            out.add(wrapper.returnDestroyContentValues());
+        }
+
+        if (BuildConfig.DEBUG) assert data.size() == out.size();
+
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, person.getName());
+
+        if (out.size() > 0) {
+            intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, out);
+        }
+
+    }
 }
