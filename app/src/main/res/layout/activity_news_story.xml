@@ -14,9 +14,8 @@
         <ImageView
             android:id="@+id/story_image_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY" />
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal" />
 
         <WebView
             android:id="@+id/story_web_view"
