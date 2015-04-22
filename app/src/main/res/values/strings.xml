@@ -124,4 +124,6 @@
     <string name="share_via">Share via</string>
 
     <string name="title_activity_news_category">NewsCategoryActivity</string>
+    <string name="fragment_people_person_detail_contact_management_add_or_edit_existing">Add or Edit Existing Contact
+    </string>
 </resources>

@@ -8,14 +8,12 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
-import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -37,6 +35,7 @@ import edu.mit.mitmobile2.people.model.MITContactInformation;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.people.model.MITPersonAttribute;
 import edu.mit.mitmobile2.people.model.MITPersonIndexPath;
+import edu.mit.mitmobile2.shared.SharedIntentManager;
 import edu.mit.mitmobile2.shared.adapter.MITSimpleTaggedActionAdapter;
 import edu.mit.mitmobile2.shared.android.BundleUtils;
 import edu.mit.mitmobile2.shared.android.ContentValuesUtils;
@@ -66,6 +65,7 @@ public class PersonDetailFragment extends Fragment {
     private static final int ADD_TO_EXISTING_TAG = 1504201618;
     private static final int ADD_TO_FAVORITES_TAG = 1504201619;
     private static final int REMOVE_FROM_FAVORITES_TAG = 1504201620;
+    private static final int ADD_TO_EXISTING_OR_INSERT_NEW_TAG = 1504221011;
 
     private MITPerson person;
 
@@ -171,8 +171,26 @@ public class PersonDetailFragment extends Fragment {
     private void reloadContactManagementOptions() {
         List<MITSimpleTaggedActionItem> actionItems = new ArrayList<>(4);
 
-        actionItems.add(new MITSimpleTaggedActionItem(getString(R.string.fragment_people_person_detail_contact_management_create_new), CREATE_NEW_CONTACT_TAG));
-        actionItems.add(new MITSimpleTaggedActionItem(getString(R.string.fragment_people_person_detail_contact_management_add_existing), ADD_TO_EXISTING_TAG));
+        boolean supportsCreate = SharedIntentManager.supportsInsertBulkContact();
+        boolean supportsEdit = SharedIntentManager.supportsEditBulkContact();
+        boolean supportsCreateAndEdit = SharedIntentManager.supportsInsertEditBulkContact();
+        //noinspection UnnecessaryLocalVariable This may seem redundant but its for legibility.
+        boolean enableEdit = supportsEdit;
+        boolean enableCreate = supportsCreate;
+        boolean enableCreateAndEdit = supportsCreateAndEdit;
+
+        if (enableCreate && enableEdit) {
+            enableCreateAndEdit = false;
+        } else if (enableCreate && enableCreateAndEdit) {
+             enableCreate = false;
+        }
+
+        if (enableCreate)
+            actionItems.add(new MITSimpleTaggedActionItem(getString(R.string.fragment_people_person_detail_contact_management_create_new), CREATE_NEW_CONTACT_TAG));
+        if (enableEdit)
+            actionItems.add(new MITSimpleTaggedActionItem(getString(R.string.fragment_people_person_detail_contact_management_add_existing), ADD_TO_EXISTING_TAG));
+        if (enableCreateAndEdit)
+            actionItems.add(new MITSimpleTaggedActionItem(getString(R.string.fragment_people_person_detail_contact_management_add_or_edit_existing), ADD_TO_EXISTING_OR_INSERT_NEW_TAG));
 
         if (person.isFavorite()) {
             actionItems.add(new MITSimpleTaggedActionItem(getString(R.string.fragment_people_person_detail_contact_management_remove_favorites), REMOVE_FROM_FAVORITES_TAG));
@@ -243,14 +261,17 @@ public class PersonDetailFragment extends Fragment {
 
         switch (item.getTag()) {
             case ADD_TO_EXISTING_TAG: {
-                IntentValueSet intent = new IntentValueSet(Intent.ACTION_EDIT);
-                intent.setType(Contacts.CONTENT_TYPE);
+                IntentValueSet intent = SharedIntentManager.createEditContactIntent();
                 addContactInformation(intent);
                 startActivity(intent);
             }    break;
             case CREATE_NEW_CONTACT_TAG: {
-                IntentValueSet intent = new IntentValueSet(Intent.ACTION_INSERT);
-                intent.setType(Contacts.CONTENT_TYPE);
+                IntentValueSet intent = SharedIntentManager.createInsertContactIntent();
+                addContactInformation(intent);
+                startActivity(intent);
+            }    break;
+            case ADD_TO_EXISTING_OR_INSERT_NEW_TAG: {
+                IntentValueSet intent = SharedIntentManager.createInsertEditContactIntent();
                 addContactInformation(intent);
                 startActivity(intent);
             }    break;
