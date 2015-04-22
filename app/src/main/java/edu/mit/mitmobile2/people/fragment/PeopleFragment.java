@@ -133,7 +133,7 @@ public class PeopleFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_people, menu);
+        inflater.inflate(R.menu.menu_search, menu);
 
         MenuItem menuItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
