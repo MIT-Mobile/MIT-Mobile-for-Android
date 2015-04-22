@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,6 @@ import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.SearchFragment;
 import edu.mit.mitmobile2.news.activities.NewsCategoryActivity;
 import edu.mit.mitmobile2.news.activities.NewsStoryActivity;
 import edu.mit.mitmobile2.news.adapters.MITNewsStoryAdapter;
@@ -42,12 +41,17 @@ import timber.log.Timber;
 
 public class NewsFragment extends Fragment implements NewsFragmentCallback {
 
+    private MITAPIClient apiClient;
+
     private SwipeRefreshLayout refreshLayout;
     private StickyListHeadersListView listView;
+    private ListView searchListView;
+
     private MITNewsStoryAdapter adapter;
-    private FrameLayout frameLayout;
+    private MITNewsStoryAdapter searchAdapter;
 
     private List<MITNewsStory> stories;
+    private List<MITNewsStory> searchStories;
     private List<MITNewsCategory> categories;
 
     public NewsFragment() {
@@ -59,10 +63,11 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         View view = inflater.inflate(R.layout.content_news, null);
 
         this.setHasOptionsMenu(true);
+        apiClient = new MITAPIClient(getActivity());
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_refreshlayout);
         listView = (StickyListHeadersListView) view.findViewById(R.id.news_listview);
-        frameLayout = (FrameLayout) view.findViewById(R.id.container);
+        searchListView = (ListView) view.findViewById(R.id.search_listview);
 
         final MITAPIClient mitApiClient = new MITAPIClient(getActivity());
 
@@ -72,6 +77,10 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
                 getNewStories(mitApiClient);
             }
         });
+
+        searchStories = new ArrayList<>();
+        searchAdapter = new MITNewsStoryAdapter(getActivity(), searchStories, this);
+        searchListView.setAdapter(searchAdapter);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.News.STORIES_KEY) && savedInstanceState.containsKey(Constants.News.CATEGORIES_KEY)) {
             //noinspection unchecked
@@ -226,20 +235,50 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 refreshLayout.setVisibility(View.GONE);
-                frameLayout.setVisibility(View.VISIBLE);
-
-                SearchFragment searchFragment = new SearchFragment();
-                getFragmentManager().beginTransaction().replace(R.id.container, searchFragment).commit();
-
+                searchListView.setVisibility(View.VISIBLE);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 refreshLayout.setVisibility(View.VISIBLE);
-                frameLayout.setVisibility(View.GONE);
+                searchListView.setVisibility(View.GONE);
+                searchListView.setAdapter(null);
+                searchStories.clear();
                 return true;
             }
         });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return performSearch(s);
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+    }
+
+    private boolean performSearch(String searchText) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("q", searchText);
+        params.put("limit", Integer.toString(10));
+
+        apiClient.get(Constants.NEWS, Constants.News.STORIES_PATH, null, params, new Callback<List<MITNewsStory>>() {
+            @Override
+            public void success(List<MITNewsStory> mitNewsStories, Response response) {
+                searchStories = mitNewsStories;
+                searchAdapter.updateItems(mitNewsStories);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+        return true;
     }
 }
