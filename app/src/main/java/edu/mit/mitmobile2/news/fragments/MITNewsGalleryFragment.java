@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.squareup.picasso.Picasso;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.models.MITNewsGalleryImage;
 
@@ -36,6 +38,14 @@ public class MITNewsGalleryFragment extends Fragment {
 
         ImageView imageView = (ImageView) view.findViewById(R.id.gallery_image_view);
         Picasso.with(getActivity()).load(galleryImage.getRepresentations().get(0).getUrl()).fit().centerInside().into(imageView);
+
+        RelativeLayout rootView = (RelativeLayout) view.findViewById(R.id.gallery_image_root_layout);
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MitMobileApplication.bus.post(new OttoBusEvent.ToggleDescriptionEvent());
+            }
+        });
 
         return view;
     }

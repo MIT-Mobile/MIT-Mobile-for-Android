@@ -6,13 +6,21 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.adapters.MITNewsGalleryPagerAdapter;
 import edu.mit.mitmobile2.news.models.MITNewsGalleryImage;
@@ -28,10 +36,14 @@ public class NewsImageGalleryActivity extends ActionBarActivity {
     @InjectView(R.id.credits)
     TextView credits;
 
+    @InjectView(R.id.gallery_text_container)
+    LinearLayout textContainer;
+
     private String title;
     private String url;
     private List<MITNewsGalleryImage> images;
     private int currentPosition;
+    private boolean visible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,30 @@ public class NewsImageGalleryActivity extends ActionBarActivity {
         });
     }
 
+    @OnClick(R.id.gallery_image_root_layout)
+    void containerCLicked() {
+        startAnimation();
+    }
+
+    @Subscribe
+    public void descriptionToggled(OttoBusEvent.ToggleDescriptionEvent event) {
+        startAnimation();
+    }
+
+    private void startAnimation() {
+        if (visible) {
+            // fade out
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+            textContainer.startAnimation(animation);
+            visible = false;
+        } else {
+            // fade in
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+            textContainer.startAnimation(animation);
+            visible = true;
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -95,4 +131,17 @@ public class NewsImageGalleryActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onPause() {
+        MitMobileApplication.bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MitMobileApplication.bus.register(this);
+    }
+
 }

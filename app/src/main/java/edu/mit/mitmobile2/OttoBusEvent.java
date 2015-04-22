@@ -28,4 +28,9 @@ public class OttoBusEvent {
             return tour;
         }
     }
+
+    public static class ToggleDescriptionEvent {
+        public ToggleDescriptionEvent() {
+        }
+    }
 }
