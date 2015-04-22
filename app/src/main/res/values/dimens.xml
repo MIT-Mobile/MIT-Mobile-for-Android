@@ -49,6 +49,15 @@
     <dimen name="people_row_text_layout_margin_start">16dp</dimen>
     <dimen name="people_normal_margin_start">16dp</dimen>
 
+
+    <!--emergency-->
+    <dimen name="emergency_contact_row_icon_height">22dp</dimen>
+    <dimen name="emergency_contact_row_icon_width">@dimen/emergency_contact_row_icon_height</dimen>
+    <dimen name="emergency_contact_row_icon_margin_top_bottom">25dp</dimen>
+    <dimen name="emergency_contact_row_icon_margin_start">20dp</dimen>
+    <dimen name="emergency_contact_row_icon_margin_end">14dp</dimen>
+    <dimen name="emergency_contact_row_text_layout_margin_start">16dp</dimen>
+
     <!--Shared-->
     <dimen name="shared_row_simple_tagged_action_height">48dp</dimen>
     <dimen name="shared_row_simple_tagged_action_text_margin_start">16dp</dimen>
