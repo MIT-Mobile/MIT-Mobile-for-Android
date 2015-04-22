@@ -41,7 +41,7 @@
 		"short_name":"Directory",
 		"menu_icon":"menu_directory",
 		"home_icon":"home_people",
-		"intent":"edu.mit.mitmobile2.people.PeopleFragment",
+		"intent":"edu.mit.mitmobile2.people.fragment.PeopleFragment",
 		"url":"mitmobile2://people"
 	},
 
@@ -59,7 +59,7 @@
 		"short_name":"Emergency",
 		"menu_icon":"menu_emergency",
 		"home_icon":"home_emergency",
-		"intent":"edu.mit.mitmobile2.emergency.EmergencyFragment",
+		"intent":"edu.mit.mitmobile2.emergency.fragment.EmergencyFragment",
 		"url":"mitmobile2://emergency"
 	},
 	

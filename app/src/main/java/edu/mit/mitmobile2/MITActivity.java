@@ -152,7 +152,7 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent intent = new Intent(this, MITModuleActivity.class);
+                Intent intent = new Intent(this, MITMainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

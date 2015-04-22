@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
+import edu.mit.mitmobile2.shared.SharedIntentManager;
 import timber.log.Timber;
 
 public class MitMobileApplication extends Application {
@@ -37,6 +37,8 @@ public class MitMobileApplication extends Application {
         dbAdapter = new DBAdapter(this);
         bus = new Bus();
         listener = new GlobalOttoListener();
+
+        SharedIntentManager.setContext(this);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

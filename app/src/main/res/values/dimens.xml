@@ -38,6 +38,21 @@
     <dimen name="shuttle_stop_icon_size">24sp</dimen>
     <dimen name="actionbar_back_button_spacing">20dp</dimen>
 
+    <!--people-->
+    <dimen name="people_row_height_tall">72dp</dimen>
+    <dimen name="people_row_height_short">48dp</dimen>
+    <dimen name="people_row_icon_height">22dp</dimen>
+    <dimen name="people_row_icon_width">@dimen/people_row_icon_height</dimen>
+    <dimen name="people_row_icon_margin_top_bottom">25dp</dimen>
+    <dimen name="people_row_icon_margin_start">20dp</dimen>
+    <dimen name="people_row_icon_margin_end">14dp</dimen>
+    <dimen name="people_row_text_layout_margin_start">16dp</dimen>
+    <dimen name="people_normal_margin_start">16dp</dimen>
+
+    <!--Shared-->
+    <dimen name="shared_row_simple_tagged_action_height">48dp</dimen>
+    <dimen name="shared_row_simple_tagged_action_text_margin_start">16dp</dimen>
+
     <!--tour-->
     <dimen name="tour_home_image_height">250dp</dimen>
     <dimen name="tour_home_content_size">14sp</dimen>

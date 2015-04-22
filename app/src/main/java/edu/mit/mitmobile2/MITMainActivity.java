@@ -11,14 +11,11 @@ import java.util.Map;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Fragment;
-import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 
 import android.content.Context;
@@ -28,7 +25,6 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,7 +37,7 @@ import org.json.JSONObject;
 import edu.mit.mitmobile2.tour.fragment.TourFragment;
 import timber.log.Timber;
 
-public class MITModuleActivity extends MITActivity {
+public class MITMainActivity extends MITActivity {
 
     private static DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -73,7 +69,7 @@ public class MITModuleActivity extends MITActivity {
         super.onCreate(savedInstanceState);
 
         // Set content view for MIT Module (includes navigation drawer)
-        setContentView(R.layout.mit_module_layout);
+        setContentView(R.layout.activity_main);
 
         mContext = this;
         setTheme(R.style.Theme_MyTheme);
@@ -101,7 +97,7 @@ public class MITModuleActivity extends MITActivity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, MITModuleActivity.navigationTitles);
+        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, MITMainActivity.navigationTitles);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -242,12 +238,12 @@ public class MITModuleActivity extends MITActivity {
 
     private void selectItem(int position) {
         // get long_name from position
-        String longName = MITModuleActivity.navigationTitles.get(position).getLongName();
+        String longName = MITMainActivity.navigationTitles.get(position).getLongName();
 
         currentModule = longName;
 
         // get NavItem from long_name
-        mNavItem = MITModuleActivity.navMap.get(longName);
+        mNavItem = MITMainActivity.navMap.get(longName);
         String intentString = mNavItem.getIntent();
         String title = navigationTitles.get(position).getLongName();
 
@@ -342,9 +338,9 @@ public class MITModuleActivity extends MITActivity {
     private void loadNavigation(Context mContext) {
         Resources resources = mContext.getResources();
         JSONObject navigation;
-        if (MITModuleActivity.navMap == null) {
-            MITModuleActivity.navMap = new HashMap<>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
-            MITModuleActivity.moduleMap = new HashMap<>(); // this maps module name to long_name for resolving intents
+        if (MITMainActivity.navMap == null) {
+            MITMainActivity.navMap = new HashMap<>(); // this maps long_name to navItem, since the long_name is stored in the nav drawer
+            MITMainActivity.moduleMap = new HashMap<>(); // this maps module name to long_name for resolving intents
 
             String json = null;
 
@@ -386,9 +382,9 @@ public class MITModuleActivity extends MITActivity {
                         navItem.setIntent(module.getString("intent"));
                         navItem.setUrl(module.getString("url"));
 
-                        MITModuleActivity.navMap.put(longName, navItem);
-                        MITModuleActivity.moduleMap.put(key, longName);
-                        MITModuleActivity.navigationTitles.add(navItem);
+                        MITMainActivity.navMap.put(longName, navItem);
+                        MITMainActivity.moduleMap.put(key, longName);
+                        MITMainActivity.navigationTitles.add(navItem);
 
                     } catch (JSONException e) {
                         Timber.e(e, "Load Navigation");
@@ -451,9 +447,9 @@ public class MITModuleActivity extends MITActivity {
 
         // use the long_name to get the navItem object
         if (longName != null) {
-            navItem = MITModuleActivity.navMap.get(longName);
+            navItem = MITMainActivity.navMap.get(longName);
         } else {
-            navItem = MITModuleActivity.navMap.get(MITModuleActivity.moduleMap.get(this.module));
+            navItem = MITMainActivity.navMap.get(MITMainActivity.moduleMap.get(this.module));
         }
 
         Timber.d("navItem = " + navItem.toString());

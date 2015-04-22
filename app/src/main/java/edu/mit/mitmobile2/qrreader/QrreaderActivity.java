@@ -1,13 +1,11 @@
 package edu.mit.mitmobile2.qrreader;
 
-import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-public class QrreaderActivity extends MITModuleActivity {
+import android.os.Bundle;
+
+public class QrreaderActivity extends MITMainActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

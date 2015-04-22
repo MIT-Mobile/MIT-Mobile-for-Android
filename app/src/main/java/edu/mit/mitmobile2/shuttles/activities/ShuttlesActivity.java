@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
-import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
@@ -39,7 +39,7 @@ import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
 import timber.log.Timber;
 
-public class ShuttlesActivity extends MITModuleActivity implements ShuttleAdapterCallback, LoaderManager.LoaderCallbacks<Cursor> {
+public class ShuttlesActivity extends MITMainActivity implements ShuttleAdapterCallback, LoaderManager.LoaderCallbacks<Cursor> {
 
     int contentLayoutId = R.layout.content_shuttles;
 
