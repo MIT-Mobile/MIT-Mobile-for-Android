@@ -162,6 +162,18 @@ public class PeopleFragment extends Fragment {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.home) {
+            if (this.mode != Mode.NO_SEARCH) {
+                this.setMode(Mode.NO_SEARCH);
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public Mode getMode() {
         return this.mode;
     }
