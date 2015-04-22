@@ -94,16 +94,6 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".people.activity.PeopleActivity"
-            android:label="@string/title_activity_people"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
-            android:name=".emergency.activity.EmergencyActivity"
-            android:label="@string/title_activity_emergency"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
             android:name=".libraries.LibrariesActivity"
             android:label="@string/title_activity_libraries"
             android:launchMode="singleTop"
