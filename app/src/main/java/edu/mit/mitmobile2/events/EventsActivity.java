@@ -1,13 +1,11 @@
 package edu.mit.mitmobile2.events;
 
-import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
-public class EventsActivity extends MITModuleActivity {
+import android.os.Bundle;
+
+public class EventsActivity extends MITMainActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
@@ -65,7 +67,7 @@
             android:syncable="true" />
 
         <activity
-            android:name=".MITModuleActivity"
+            android:name=".MITMainActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme">
             <intent-filter android:label="MIT Mobile">
@@ -89,16 +91,6 @@
         <activity
             android:name=".events.EventsActivity"
             android:label="@string/title_activity_events"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
-            android:name=".people.PeopleActivity"
-            android:label="@string/title_activity_people"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
-            android:name=".emergency.EmergencyActivity"
-            android:label="@string/title_activity_emergency"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
@@ -142,17 +134,17 @@
         <activity
             android:name=".mobius.ResourceShopsActivity"
             android:launchMode="standard"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".mobius.ResourceTypesActivity"
             android:launchMode="standard"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".mobius.ResourceSearchActivity"
             android:launchMode="standard"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".mobius.ResourceListActivity"
@@ -183,55 +175,67 @@
         <activity
             android:name=".shuttles.activities.ShuttleRouteActivity"
             android:launchMode="standard"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".shuttles.activities.ShuttleStopActivity"
             android:launchMode="standard"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.activities.TourSelfGuidedActivity"
             android:label="@string/title_activity_tour_self_guided"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.activities.TourDetailActivity"
             android:label="@string/title_activity_tour_detail"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.activities.TourDirectionsActivity"
             android:label="@string/title_activity_tour_directions"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.activities.MitIntroActivity"
             android:label="@string/title_activity_intro_mit"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".tour.activities.TourStopActivity"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MyTheme" />
         <activity
+            android:name=".emergency.activity.EmergencyContactsActivity"
+            android:label="@string/title_activity_emergency_contacts"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme"  >
+        </activity>
+        <activity
+            android:name=".people.activity.PersonDetailActivity"
+            android:label="@string/title_activity_person_detail"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme" >
+        </activity>
+        <activity
             android:name=".news.activities.NewsStoryActivity"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".news.activities.NewsCategoryActivity"
             android:label="@string/title_activity_news_category"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".news.activities.NewsImageGalleryActivity"
             android:label="@string/title_activity_news_image_gallery"
-            android:parentActivityName=".MITModuleActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
     </application>
 

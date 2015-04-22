@@ -14,9 +14,11 @@ public class Constants {
     public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
     public static final String ALARM_ID_KEY = "alarm";
     public static final String ALARM_DESCRIPTION = "alarmDescription";
-
-    //tours
+    
+    /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
+    public static final String PEOPLE_DIRECTORY = "people";
+    public static final String EMERGENCY = "emergency";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -57,7 +59,6 @@ public class Constants {
         public static final String STORIES_PATH = "/stories";
         public static final String STORIES_BY_ID_PATH = "/stories/{id}";
         public static final String CATEGORIES_PATH = "/categories";
-
         public static final String MIT_NEWS = "mit_news";
         public static final String AROUND_CAMPUS = "around_campus";
         public static final String IN_THE_MEDIA = "in_the_media";
@@ -67,6 +68,16 @@ public class Constants {
         public static final String IMAGES_KEY = "images";
         public static final String TITLE_KEY = "title";
         public static final String URL_KEY = "url";
+    }
+
+    public static final class People { /* Much of this context is found in the api.json asset. */
+        public static final String PEOPLE_PATH = "/";
+        public static final String PERSON_PATH = "/{person}";
+    }
+
+    public class Emergency {
+        public static final String ANNOUNCEMENT_PATH = "/announcement"; /* Not yet implemented, stubbed only */
+        public static final String CONTACTS_PATH = "/contacts";
     }
 
     public static class Resources {

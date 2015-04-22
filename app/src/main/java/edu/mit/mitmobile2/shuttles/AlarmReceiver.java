@@ -13,7 +13,7 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.MITModuleActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 
@@ -27,7 +27,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent moduleIntent = new Intent(context, MITModuleActivity.class);
+        Intent moduleIntent = new Intent(context, MITMainActivity.class);
         moduleIntent.setData(Uri.parse("mitmobile2://shuttles"));
         moduleIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

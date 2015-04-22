@@ -98,16 +98,32 @@
     <string name="side_trip_directions">Step by step directions are not available for side trips</string>
     <string name="side_trip_directions_1">"Directions from "</string>
     <string name="side_trip_directions_2">" to "</string>
+    <!--People Search/Directory-->
+    <string name="people_search_hint">MIT People Directory</string>
+    <string name="people_default_sample_search_examples"><![CDATA[<b>Sample searches:</b><br />Name: \'william barton rogers\', \'rogers\'<br />Email: \'wbrogers\', \'wbrogers@mit.edu\'<br />Phone: \'6172531000\', \'31000\']]></string>
+    <string name="people_default_directory_assistance_button_title">Directory Assistance</string>
+    <string name="people_default_emergency_contacts_button_title">Emergency Contacts</string>
+    <string name="fragment_people_person_detail_contact_management_create_new">Create New Contact</string>
+    <string name="fragment_people_person_detail_contact_management_add_existing">Add To Existing Contact</string>
+    <string name="fragment_people_person_detail_contact_management_add_favorites">Add to Favorites</string>
+    <string name="fragment_people_person_detail_contact_management_remove_favorites">Remove from Favorites</string>
+
+    <!--Emergency Contacts Listing (Shared by Emergency Module and People Module)-->
+    <string name="title_activity_emergency_contacts">Emergency Contacts</string>
+    <string name="people_tel_directory_assistance">6172531000</string>
 
     <string-array name="test">
         <item>test 1</item>
         <item>test 2</item>
         <item>test 3</item>
     </string-array>
+    <string name="title_activity_person_detail">PersonDetailActivity</string>
+    <string name="people_default_favorites_list_title">FAVORITES</string>
 
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
     <string name="title_activity_news_category">NewsCategoryActivity</string>
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
-
+    <string name="fragment_people_person_detail_contact_management_add_or_edit_existing">Add or Edit Existing Contact
+    </string>
 </resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_people_row_icon_content_description">Method of contact icon</string>
+    <string name="accessibility_people_row_icon_content_description_specific">Method of contact icon for %s</string>
+</resources>
