@@ -27,8 +27,8 @@ android {
 
 dependencies {
     compile 'com.google.android.gms:play-services:7.0.0'
-    compile 'com.android.support:support-v4:22.0.0'
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:support-v4:22.1.0'
+    compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:support-v13:22.0.0'
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'com.google.maps.android:android-maps-utils:0.3+'
