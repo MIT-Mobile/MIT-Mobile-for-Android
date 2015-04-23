@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
     private SwipeRefreshLayout refreshLayout;
     private StickyListHeadersListView listView;
     private ListView searchListView;
+    private TextView noResultsTextView;
 
     private MITNewsStoryAdapter adapter;
     private MITNewsStoryAdapter searchAdapter;
@@ -68,6 +70,7 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_refreshlayout);
         listView = (StickyListHeadersListView) view.findViewById(R.id.news_listview);
         searchListView = (ListView) view.findViewById(R.id.search_listview);
+        noResultsTextView = (TextView) view.findViewById(R.id.no_results_textview);
 
         final MITAPIClient mitApiClient = new MITAPIClient(getActivity());
 
@@ -235,15 +238,14 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 refreshLayout.setVisibility(View.GONE);
-                searchListView.setVisibility(View.VISIBLE);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 refreshLayout.setVisibility(View.VISIBLE);
+                noResultsTextView.setVisibility(View.GONE);
                 searchListView.setVisibility(View.GONE);
-                searchListView.setAdapter(null);
                 searchStories.clear();
                 return true;
             }
@@ -262,7 +264,7 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         });
     }
 
-    private boolean performSearch(String searchText) {
+    private boolean performSearch(final String searchText) {
         HashMap<String, String> params = new HashMap<>();
         params.put("q", searchText);
         params.put("limit", Integer.toString(10));
@@ -270,8 +272,15 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         apiClient.get(Constants.NEWS, Constants.News.STORIES_PATH, null, params, new Callback<List<MITNewsStory>>() {
             @Override
             public void success(List<MITNewsStory> mitNewsStories, Response response) {
-                searchStories = mitNewsStories;
-                searchAdapter.updateItems(mitNewsStories);
+                if (mitNewsStories.size() > 0) {
+                    searchListView.setVisibility(View.VISIBLE);
+                    noResultsTextView.setVisibility(View.GONE);
+                    searchStories = mitNewsStories;
+                    searchAdapter.updateItems(searchStories);
+                } else {
+                    searchListView.setVisibility(View.GONE);
+                    noResultsTextView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
