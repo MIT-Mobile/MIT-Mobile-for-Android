@@ -36,10 +36,10 @@ import edu.mit.mitmobile2.people.activity.PersonDetailActivity;
 import edu.mit.mitmobile2.people.adapter.MITPeopleDirectoryPersonAdapter;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.shared.SharedActivityManager;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 import static butterknife.ButterKnife.inject;
 
@@ -132,34 +132,55 @@ public class PeopleFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+
         inflater.inflate(R.menu.menu_search, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
 
         MenuItem menuItem = menu.findItem(R.id.search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String s) {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
                 return performSearch(searchView, this, s);
             }
 
-            @Override public boolean onQueryTextChange(String s) { return false; }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override public boolean onMenuItemActionExpand(MenuItem item) { return true; }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                if (mode != Mode.NO_SEARCH) {
+                    setMode(Mode.NO_SEARCH);
+                }
+                return true;
+            }
         });
 
         searchView.setQueryHint(getString(R.string.people_search_hint));
 
-        View searchPlate = searchView.findViewById(searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null));
+        View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
+        View bar = searchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
 
-        if (searchPlate != null) {
-            int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
 
-            TextView searchText = (TextView) searchPlate.findViewById(searchTextId);
+        //noinspection ConstantConditions IntelliJ/AndroidStudio incorrectly thinks this can never be null.
+        assert searchPlate != null;
 
-            if (searchText != null) {
-                searchText.setTextColor(Color.WHITE);
-                searchText.setHintTextColor(Color.WHITE);
-            }
-        }
+        TextView searchText = (TextView) searchPlate.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+        assert searchText != null;
+
+        searchText.setTextColor(Color.WHITE);
+        searchText.setHintTextColor(Color.WHITE);
     }
 
     @Override
@@ -352,5 +373,3 @@ public class PeopleFragment extends Fragment {
         }
     }
 }
-
-
