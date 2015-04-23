@@ -19,7 +19,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import edu.mit.mitmobile2.mobius.model.ResourceRoom;
 import edu.mit.mitmobile2.mobius.model.Roomset;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 /**
  * Created by sseligma on 1/23/15.

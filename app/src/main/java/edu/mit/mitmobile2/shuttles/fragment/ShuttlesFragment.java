@@ -44,7 +44,7 @@ import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 import edu.mit.mitmobile2.shuttles.utils.ShuttlesDatabaseHelper;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

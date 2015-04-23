@@ -29,7 +29,7 @@ import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.mobius.model.Attribute;
 import edu.mit.mitmobile2.mobius.model.ValuesetValue;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ResourceSearchActivity extends MITActivity   {
 

@@ -8,7 +8,7 @@ import android.widget.ListView;
 import java.util.List;
 import java.util.Map;
 
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 /**
  * Created by sseligma on 4/4/15.

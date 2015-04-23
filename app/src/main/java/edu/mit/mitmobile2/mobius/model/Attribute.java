@@ -3,7 +3,7 @@ package edu.mit.mitmobile2.mobius.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 /**
  * Created by sseligma on 4/13/15.

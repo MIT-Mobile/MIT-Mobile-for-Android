@@ -29,7 +29,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MapUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.model.MITTourStopDirection;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class TourDirectionsActivity extends ActionBarActivity {
 

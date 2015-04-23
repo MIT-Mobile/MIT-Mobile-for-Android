@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import edu.mit.mitmobile2.R;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class NewsUtils {
     public static String formatNewsPublishedTime(String publishedTime) {
