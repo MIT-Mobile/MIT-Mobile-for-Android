@@ -28,9 +28,9 @@ public class MITNewsCategoryAdapter extends BaseAdapter {
         TextView storySnippet;
     }
 
-    private Context context;
-    private List<MITNewsStory> stories;
-    private NewsFragmentCallback callback;
+    protected Context context;
+    protected List<MITNewsStory> stories;
+    protected NewsFragmentCallback callback;
 
     public MITNewsCategoryAdapter(Context context, List<MITNewsStory> stories, NewsFragmentCallback callback) {
         this.callback = callback;
