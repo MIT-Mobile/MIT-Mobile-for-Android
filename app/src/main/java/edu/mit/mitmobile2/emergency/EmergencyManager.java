@@ -64,9 +64,9 @@ public class EmergencyManager extends RetrofitManager {
 
     public interface MitEmergencyService {
         @GET(Constants.Emergency.ANNOUNCEMENT_PATH)
-        void _get_announcement(Callback<List<UNIMPLEMENTED>> callback);
+        void _getannouncement(Callback<List<UNIMPLEMENTED>> callback);
         @GET(Constants.Emergency.CONTACTS_PATH)
-        void _get_contacts(Callback<List<MITEmergencyInfoContact>> callback);
+        void _getcontacts(Callback<List<MITEmergencyInfoContact>> callback);
     }
 
     public static class EmergencyManagerCallWrapper<T> implements EmergencyManagerCall, Callback<T> {

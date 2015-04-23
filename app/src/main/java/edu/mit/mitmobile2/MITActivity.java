@@ -3,7 +3,6 @@ package edu.mit.mitmobile2;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +19,7 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
+import edu.mit.mitmobile2.shared.SharedActivityManager;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
 import timber.log.Timber;
 
@@ -152,10 +151,8 @@ public class MITActivity extends ActionBarActivity implements GoogleApiClient.Co
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent intent = new Intent(this, MITMainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                this.startActivity(SharedActivityManager.createHomeJumpActivity(this));
+                this.finish();
                 return true;
             case R.id.action_search:
                 this.handleSearch(null);

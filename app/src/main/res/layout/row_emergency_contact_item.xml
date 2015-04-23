@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:id="@+id/row_container">
+
+    <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/emergency_contact_row_icon_width"
+            android:layout_height="@dimen/emergency_contact_row_icon_height"
+            android:layout_marginBottom="@dimen/emergency_contact_row_icon_margin_top_bottom"
+            android:layout_marginTop="@dimen/emergency_contact_row_icon_margin_top_bottom"
+            android:layout_marginStart="@dimen/emergency_contact_row_icon_margin_start"
+            android:layout_marginLeft="@dimen/emergency_contact_row_icon_margin_start"
+            android:layout_marginEnd="@dimen/emergency_contact_row_icon_margin_end"
+            android:layout_marginRight="@dimen/emergency_contact_row_icon_margin_end"
+            android:contentDescription="@string/accessibility_emergency_contact_row_icon_content_description"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/emergency_contact_row_text_layout_margin_start"
+            android:layout_marginLeft="@dimen/emergency_contact_row_text_layout_margin_start"
+            android:layout_gravity="center_vertical">
+
+        <TextView android:id="@+id/title"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="bottom"
+                  android:layout_gravity="bottom"
+                  style="@style/MITEmergency.ContactList.Row.Title"
+                />
+
+        <TextView android:id="@+id/subtitle"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="top"
+                  android:layout_gravity="top"
+                  style="@style/MITEmergency.ContactList.Row.Subtitle"/>
+    </LinearLayout>
+
+</LinearLayout>
