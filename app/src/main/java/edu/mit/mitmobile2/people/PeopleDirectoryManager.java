@@ -26,7 +26,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.GET;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 import static edu.mit.mitmobile2.DatabaseObject.createListFromCursor;
 import static edu.mit.mitmobile2.DatabaseObject.getSchemaFieldForMethod;

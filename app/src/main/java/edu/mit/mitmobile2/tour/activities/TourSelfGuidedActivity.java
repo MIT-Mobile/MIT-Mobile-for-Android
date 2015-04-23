@@ -20,7 +20,7 @@ import edu.mit.mitmobile2.tour.model.MITTourStop;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuidedCallback {
 

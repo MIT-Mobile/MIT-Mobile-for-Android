@@ -16,7 +16,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.GET;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 /**
  * Created by grmartin on 4/17/15.
@@ -64,9 +64,9 @@ public class EmergencyManager extends RetrofitManager {
 
     public interface MitEmergencyService {
         @GET(Constants.Emergency.ANNOUNCEMENT_PATH)
-        void _get_announcement(Callback<List<UNIMPLEMENTED>> callback);
+        void _getannouncement(Callback<List<UNIMPLEMENTED>> callback);
         @GET(Constants.Emergency.CONTACTS_PATH)
-        void _get_contacts(Callback<List<MITEmergencyInfoContact>> callback);
+        void _getcontacts(Callback<List<MITEmergencyInfoContact>> callback);
     }
 
     public static class EmergencyManagerCallWrapper<T> implements EmergencyManagerCall, Callback<T> {

@@ -35,7 +35,7 @@ import edu.mit.mitmobile2.tour.model.MITTourStop;
 import edu.mit.mitmobile2.tour.utils.TourStopScrollView;
 import edu.mit.mitmobile2.tour.utils.TourStopScrollViewListener;
 import edu.mit.mitmobile2.tour.utils.TourUtils;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class TourStopViewPagerFragment extends Fragment implements TourStopScrollViewListener {
 

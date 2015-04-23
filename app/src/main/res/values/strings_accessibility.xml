@@ -2,4 +2,6 @@
 <resources>
     <string name="accessibility_people_row_icon_content_description">Method of contact icon</string>
     <string name="accessibility_people_row_icon_content_description_specific">Method of contact icon for %s</string>
+
+    <string name="accessibility_emergency_contact_row_icon_content_description">Method of contact icon for Telephone</string>
 </resources>

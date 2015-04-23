@@ -108,24 +108,25 @@
     <string name="fragment_people_person_detail_contact_management_add_existing">Add To Existing Contact</string>
     <string name="fragment_people_person_detail_contact_management_add_favorites">Add to Favorites</string>
     <string name="fragment_people_person_detail_contact_management_remove_favorites">Remove from Favorites</string>
-    
-    <!--Emergency Contacts Listing (Shared by Emergency Module and People Module)-->
-    <string name="title_activity_emergency_contacts">Emergency Contacts</string>
+    <string name="fragment_people_person_detail_contact_management_add_or_edit_existing">Add or Edit Existing Contact</string>
+    <string name="title_activity_person_detail">PersonDetailActivity</string>
     <string name="people_tel_directory_assistance">6172531000</string>
+    <string name="people_default_favorites_list_title">FAVORITES</string>
+
+    <!--Emergency Contacts Listing (Shared by Emergency Module and People Module)-->
+    <string name="title_activity_emergency_contacts">All Emergency Contacts</string>
 
     <string-array name="test">
         <item>test 1</item>
         <item>test 2</item>
         <item>test 3</item>
     </string-array>
-    <string name="title_activity_person_detail">PersonDetailActivity</string>
-    <string name="people_default_favorites_list_title">FAVORITES</string>
 
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
     <string name="no_results">No Results</string>
 
     <string name="title_activity_news_category">NewsCategoryActivity</string>
-    <string name="fragment_people_person_detail_contact_management_add_or_edit_existing">Add or Edit Existing Contact
-    </string>
+    <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
+
 </resources>

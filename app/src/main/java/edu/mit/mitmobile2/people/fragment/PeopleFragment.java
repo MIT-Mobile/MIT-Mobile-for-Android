@@ -39,7 +39,7 @@ import edu.mit.mitmobile2.shared.SharedActivityManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 import static butterknife.ButterKnife.inject;
 

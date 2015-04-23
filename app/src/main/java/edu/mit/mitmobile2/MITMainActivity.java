@@ -35,7 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.tour.fragment.TourFragment;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class MITMainActivity extends MITActivity {
 

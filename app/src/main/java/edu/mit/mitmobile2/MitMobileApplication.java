@@ -8,7 +8,10 @@ import android.widget.Toast;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import edu.mit.mitmobile2.shared.SharedIntentManager;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
+import edu.mit.mitmobile2.shared.runtime.DroidUtils;
+import edu.mit.mitmobile2.shared.runtime.RuntimeUtils;
 
 public class MitMobileApplication extends Application {
 
@@ -34,17 +37,18 @@ public class MitMobileApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        RuntimeUtils.addToRuntimePackages(DroidUtils.STANDARD_ANDROID_OS_PACKAGES);
+
         dbAdapter = new DBAdapter(this);
         bus = new Bus();
         listener = new GlobalOttoListener();
 
         SharedIntentManager.setContext(this);
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
+        LoggingManager.setGlobalMinimumLogLevel(BuildConfig.DEBUG ? LoggingManager.VERBOSE : LoggingManager.ERROR);
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     private class GlobalOttoListener {
         public GlobalOttoListener() {
             bus.register(this);

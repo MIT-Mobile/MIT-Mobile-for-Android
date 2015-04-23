@@ -35,7 +35,7 @@ import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap.InfoWindowAdapter {
 

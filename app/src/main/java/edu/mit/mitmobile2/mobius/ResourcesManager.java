@@ -12,7 +12,7 @@ import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import retrofit.Callback;
 import retrofit.http.GET;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ResourcesManager extends RetrofitManager {
 

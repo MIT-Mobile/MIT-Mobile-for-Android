@@ -48,7 +48,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.mobius.model.ResourceAttribute;
 import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import edu.mit.mitmobile2.mobius.model.RoomsetHours;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
