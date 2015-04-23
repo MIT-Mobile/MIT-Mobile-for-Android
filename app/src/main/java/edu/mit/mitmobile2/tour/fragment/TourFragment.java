@@ -32,7 +32,7 @@ import edu.mit.mitmobile2.tour.utils.TourUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class TourFragment extends Fragment {
 

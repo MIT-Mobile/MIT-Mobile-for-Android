@@ -35,7 +35,7 @@ import edu.mit.mitmobile2.mobius.model.ResourceRoom;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 /**
  * Created by sseligma on 4/5/15.

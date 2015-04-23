@@ -37,7 +37,7 @@ import edu.mit.mitmobile2.shuttles.callbacks.ShuttleAdapterCallback;
 import edu.mit.mitmobile2.shuttles.utils.ShuttlesDatabaseHelper;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
 import edu.mit.mitmobile2.shuttles.model.MitMiniShuttleRoute;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ShuttlesActivity extends MITMainActivity implements ShuttleAdapterCallback, LoaderManager.LoaderCallbacks<Cursor> {
 

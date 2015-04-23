@@ -27,7 +27,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.mobius.model.QuickSearch;
 import edu.mit.mitmobile2.mobius.model.Roomset;
 import edu.mit.mitmobile2.mobius.model.RoomsetList;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ResourceShopsActivity extends MITActivity   {
 

@@ -8,7 +8,7 @@ import java.util.Map;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public abstract class RetrofitManager {
 

@@ -34,7 +34,7 @@ import edu.mit.mitmobile2.shuttles.model.MITAlert;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleIntersectingRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePrediction;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ShuttleStopViewPagerFragment extends Fragment implements IntersectingAdapterCallback, AlertIconCallback {
 

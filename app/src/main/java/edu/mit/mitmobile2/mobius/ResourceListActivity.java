@@ -39,7 +39,7 @@ import edu.mit.mitmobile2.mobius.model.ResourceItem;
 import edu.mit.mitmobile2.mobius.model.ResourceRoom;
 import edu.mit.mitmobile2.mobius.model.RoomsetHours;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ResourceListActivity extends MITActivity implements MapFragmentCallback {
 

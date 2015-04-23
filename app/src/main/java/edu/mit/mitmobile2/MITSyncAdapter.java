@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
