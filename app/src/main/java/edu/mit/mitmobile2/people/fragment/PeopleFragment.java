@@ -134,7 +134,7 @@ public class PeopleFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
 
-        inflater.inflate(R.menu.menu_people, menu);
+        inflater.inflate(R.menu.menu_search, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
 
@@ -373,5 +373,3 @@ public class PeopleFragment extends Fragment {
         }
     }
 }
-
-

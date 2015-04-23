@@ -98,6 +98,7 @@
     <string name="side_trip_directions">Step by step directions are not available for side trips</string>
     <string name="side_trip_directions_1">"Directions from "</string>
     <string name="side_trip_directions_2">" to "</string>
+
     <!--People Search/Directory-->
     <string name="people_search_hint">MIT People Directory</string>
     <string name="people_default_sample_search_examples"><![CDATA[<b>Sample searches:</b><br />Name: \'william barton rogers\', \'rogers\'<br />Email: \'wbrogers\', \'wbrogers@mit.edu\'<br />Phone: \'6172531000\', \'31000\']]></string>
@@ -123,6 +124,8 @@
 
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
+    <string name="no_results">No Results</string>
+
     <string name="title_activity_news_category">NewsCategoryActivity</string>
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
 
