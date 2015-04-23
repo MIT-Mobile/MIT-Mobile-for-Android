@@ -125,4 +125,5 @@
     <string name="share_via">Share via</string>
     <string name="title_activity_news_category">NewsCategoryActivity</string>
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
+
 </resources>
