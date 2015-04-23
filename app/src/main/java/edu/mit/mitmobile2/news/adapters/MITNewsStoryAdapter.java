@@ -200,4 +200,9 @@ public class MITNewsStoryAdapter extends BaseAdapter implements StickyListHeader
         }*/
     }
 
+    public void addItems(List<MITNewsStory> stories) {
+        this.stories.addAll(stories);
+        notifyDataSetChanged();
+    }
+
 }

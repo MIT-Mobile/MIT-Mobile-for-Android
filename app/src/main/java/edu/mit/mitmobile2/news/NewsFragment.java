@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,11 +41,15 @@ import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
-public class NewsFragment extends Fragment implements NewsFragmentCallback {
+public class NewsFragment extends Fragment implements AbsListView.OnScrollListener, NewsFragmentCallback {
+
+    private static final int PAGINATION_THRESHOLD = 5;
+    private static final int STORIES_PAGE_SIZE = 20;
 
     private MITAPIClient apiClient;
 
     private SwipeRefreshLayout refreshLayout;
+    private SwipeRefreshLayout searchLayout;
     private StickyListHeadersListView listView;
     private ListView searchListView;
     private TextView noResultsTextView;
@@ -56,6 +61,12 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
     private List<MITNewsStory> searchStories;
     private List<MITNewsCategory> categories;
 
+    private int maxItemsSeen;
+    private int prevFirstVisibleItem = -1;
+    private boolean endOfList = false;
+    private int lastPageStart;
+    private String searchText;
+
     public NewsFragment() {
     }
 
@@ -65,14 +76,15 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         View view = inflater.inflate(R.layout.content_news, null);
 
         this.setHasOptionsMenu(true);
-        apiClient = new MITAPIClient(getActivity());
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_refreshlayout);
+        searchLayout = (SwipeRefreshLayout) view.findViewById(R.id.search_refreshlayout);
         listView = (StickyListHeadersListView) view.findViewById(R.id.news_listview);
         searchListView = (ListView) view.findViewById(R.id.search_listview);
         noResultsTextView = (TextView) view.findViewById(R.id.no_results_textview);
 
         final MITAPIClient mitApiClient = new MITAPIClient(getActivity());
+        apiClient = new MITAPIClient(getActivity());
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -84,6 +96,7 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         searchStories = new ArrayList<>();
         searchAdapter = new MITNewsStoryAdapter(getActivity(), searchStories, this);
         searchListView.setAdapter(searchAdapter);
+        searchListView.setOnScrollListener(this);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(Constants.News.STORIES_KEY) && savedInstanceState.containsKey(Constants.News.CATEGORIES_KEY)) {
             //noinspection unchecked
@@ -138,6 +151,7 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
     }
 
     private void getNewStories(final MITAPIClient mitApiClient) {
+
         mitApiClient.get(Constants.NEWS, Constants.News.STORIES_PATH, null, null, new Callback<List<MITNewsStory>>() {
             @Override
             public void success(List<MITNewsStory> stories, Response response) {
@@ -169,6 +183,49 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
             @Override
             public void failure(RetrofitError error) {
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+    }
+
+    private void getSearchResult(String searchText, final int offset, final boolean clearPrevious) {
+        if (clearPrevious) {
+            lastPageStart = 0;
+            maxItemsSeen = 0;
+            prevFirstVisibleItem = -1;
+        } else {
+            lastPageStart = offset;
+            Timber.d("OFFSET: " + offset + " LIMIT: " + STORIES_PAGE_SIZE);
+        }
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("q", searchText);
+        params.put("limit", String.valueOf(STORIES_PAGE_SIZE));
+        params.put("offset", String.valueOf(offset));
+
+        apiClient.get(Constants.NEWS, Constants.News.STORIES_PATH, null, params, new Callback<List<MITNewsStory>>() {
+            @Override
+            public void success(List<MITNewsStory> mitNewsStories, Response response) {
+                Timber.d("Success!");
+                searchLayout.setRefreshing(false);
+                if (mitNewsStories.size() > 0) {
+                    searchLayout.setVisibility(View.VISIBLE);
+                    noResultsTextView.setVisibility(View.GONE);
+                    searchStories = mitNewsStories;
+                    if (clearPrevious) {
+                        searchAdapter.updateItems(searchStories);
+                    } else {
+                        searchAdapter.addItems(searchStories);
+                    }
+                } else {
+                    searchLayout.setVisibility(View.GONE);
+                    noResultsTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+                searchLayout.setRefreshing(false);
             }
         });
     }
@@ -237,24 +294,37 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                refreshLayout.setRefreshing(false);
                 refreshLayout.setVisibility(View.GONE);
+
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 refreshLayout.setVisibility(View.VISIBLE);
+                searchLayout.setRefreshing(false);
+                searchLayout.setVisibility(View.GONE);
                 noResultsTextView.setVisibility(View.GONE);
-                searchListView.setVisibility(View.GONE);
+                searchLayout.setVisibility(View.GONE);
                 searchStories.clear();
+
                 return true;
             }
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                return performSearch(s);
+            public boolean onQueryTextSubmit(final String s) {
+                searchText = s;
+                getSearchResult(s, lastPageStart, true);
+                searchLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getSearchResult(s, lastPageStart, true);
+                    }
+                });
+                return true;
             }
 
             @Override
@@ -264,30 +334,29 @@ public class NewsFragment extends Fragment implements NewsFragmentCallback {
         });
     }
 
-    private boolean performSearch(final String searchText) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("q", searchText);
-        params.put("limit", Integer.toString(10));
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        apiClient.get(Constants.NEWS, Constants.News.STORIES_PATH, null, params, new Callback<List<MITNewsStory>>() {
-            @Override
-            public void success(List<MITNewsStory> mitNewsStories, Response response) {
-                if (mitNewsStories.size() > 0) {
-                    searchListView.setVisibility(View.VISIBLE);
-                    noResultsTextView.setVisibility(View.GONE);
-                    searchStories = mitNewsStories;
-                    searchAdapter.updateItems(searchStories);
-                } else {
-                    searchListView.setVisibility(View.GONE);
-                    noResultsTextView.setVisibility(View.VISIBLE);
-                }
-            }
+    }
 
-            @Override
-            public void failure(RetrofitError error) {
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int newMax = firstVisibleItem + visibleItemCount - 1;
+        if (newMax > maxItemsSeen) {
+            maxItemsSeen = newMax;
+        }
+        if (firstVisibleItem <= prevFirstVisibleItem || endOfList) {
+            return;
+        }
 
-            }
-        });
-        return true;
+        prevFirstVisibleItem = firstVisibleItem;
+        if ((totalItemCount > 1)
+                && (firstVisibleItem + visibleItemCount >= totalItemCount - PAGINATION_THRESHOLD)
+                && (!refreshLayout.isRefreshing())) {
+            Timber.d("Pagination update" + totalItemCount);
+            searchLayout.setRefreshing(true);
+
+            getSearchResult(searchText, lastPageStart + STORIES_PAGE_SIZE, false);
+        }
     }
 }

@@ -16,10 +16,15 @@
             android:layout_height="fill_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <ListView
-        android:id="@+id/search_listview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/search_refreshlayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <ListView
+            android:id="@+id/search_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/no_results_textview"
