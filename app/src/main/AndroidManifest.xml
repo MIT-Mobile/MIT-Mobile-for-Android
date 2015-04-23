@@ -232,6 +232,11 @@
             android:label="@string/title_activity_news_category"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".news.activities.NewsImageGalleryActivity"
+            android:label="@string/title_activity_news_image_gallery"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

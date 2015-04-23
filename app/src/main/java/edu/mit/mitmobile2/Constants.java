@@ -65,6 +65,9 @@ public class Constants {
         public static final String STORIES_KEY = "stories";
         public static final String CATEGORIES_KEY = "categories";
         public static final String STORY = "story";
+        public static final String IMAGES_KEY = "images";
+        public static final String TITLE_KEY = "title";
+        public static final String URL_KEY = "url";
     }
 
     public static final class People { /* Much of this context is found in the api.json asset. */
