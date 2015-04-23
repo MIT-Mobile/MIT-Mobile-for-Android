@@ -89,9 +89,4 @@ public class MITNewsStoryAdapter extends MITNewsCategoryAdapter implements Stick
 
         return storyList;
     }
-
-    public void addItems(List<MITNewsStory> stories) {
-        this.stories.addAll(stories);
-        notifyDataSetChanged();
-    }
 }

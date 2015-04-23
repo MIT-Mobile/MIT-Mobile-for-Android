@@ -307,6 +307,7 @@ public class NewsFragment extends Fragment implements AbsListView.OnScrollListen
                 searchLayout.setVisibility(View.GONE);
                 noResultsTextView.setVisibility(View.GONE);
                 searchLayout.setVisibility(View.GONE);
+                searchListView.smoothScrollToPosition(0);
                 searchStories.clear();
 
                 return true;
