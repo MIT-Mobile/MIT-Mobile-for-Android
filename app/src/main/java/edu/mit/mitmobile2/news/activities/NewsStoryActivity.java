@@ -22,7 +22,7 @@ import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import edu.mit.mitmobile2.news.utils.NewsUtils;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class NewsStoryActivity extends MITActivity {
 

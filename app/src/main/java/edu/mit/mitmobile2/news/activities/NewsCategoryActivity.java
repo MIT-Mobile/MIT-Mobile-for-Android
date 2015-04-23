@@ -25,7 +25,7 @@ import edu.mit.mitmobile2.news.utils.NewsUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class NewsCategoryActivity extends ActionBarActivity implements AbsListView.OnScrollListener, NewsFragmentCallback {
 

@@ -13,7 +13,7 @@ import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleVehiclesWrapper;
 import retrofit.Callback;
 import retrofit.http.GET;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ShuttlesManager extends RetrofitManager {
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.Schema;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class MITShuttlesProvider extends ContentProvider {
 

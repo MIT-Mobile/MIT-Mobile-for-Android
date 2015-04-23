@@ -11,7 +11,7 @@ import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import retrofit.Callback;
 import retrofit.http.GET;
-import timber.log.Timber;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class NewsManager extends RetrofitManager {
 
