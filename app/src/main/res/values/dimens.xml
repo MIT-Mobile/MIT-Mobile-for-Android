@@ -76,4 +76,7 @@
     <dimen name="tour_recycler_view_height">190dp</dimen>
     <dimen name="tour_info_content_margin">34dp</dimen>
     <dimen name="tour_stop_recyclerview_padding">8dp</dimen>
+
+    <!--events-->
+    <dimen name="events_calendar_size">30dp</dimen>
 </resources>
