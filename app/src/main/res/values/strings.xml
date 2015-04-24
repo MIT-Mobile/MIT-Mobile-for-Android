@@ -24,6 +24,8 @@
     <string name="title_activity_tours">Tours</string>
     <string name="title_activity_intro_mit">Introduction to MIT</string>
     <string name="title_activity_tour_directions">Walking Directions</string>
+    <string name="title_activity_news_category">NewsCategoryActivity</string>
+    <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -123,7 +125,6 @@
 
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
-    <string name="title_activity_news_category">NewsCategoryActivity</string>
-    <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
+    <string name="no_results">No Results</string>
 
 </resources>
