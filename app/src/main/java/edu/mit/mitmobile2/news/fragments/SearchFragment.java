@@ -76,13 +76,13 @@ public class SearchFragment extends Fragment implements NewsFragmentCallback {
 
         recentSearches = new ArrayList<>();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-
         Set<String> set = sharedPreferences.getStringSet(NEWS_SEARCH_HISTORY, null);
         if (set != null) {
             recentSearches.addAll(set);
-            mitSearchAdapter = new MITSearchAdapter(getActivity().getApplicationContext(), recentSearches, this);
-            recentSearchListView.setAdapter(mitSearchAdapter);
         }
+
+        mitSearchAdapter = new MITSearchAdapter(getActivity().getApplicationContext(), recentSearches, this);
+        recentSearchListView.setAdapter(mitSearchAdapter);
 
         return view;
     }
