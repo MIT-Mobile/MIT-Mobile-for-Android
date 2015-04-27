@@ -6,7 +6,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
-public class NewsCategoryActivity extends ActionBarActivity implements AbsListView.OnScrollListener, NewsFragmentCallback {
+public class NewsCategoryActivity extends ActionBarActivity implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, NewsFragmentCallback {
 
     private static final int STORIES_PAGE_SIZE = 20;
     private static final int PAGINATION_THRESHOLD = 5;
@@ -63,6 +65,7 @@ public class NewsCategoryActivity extends ActionBarActivity implements AbsListVi
         adapter = new MITNewsCategoryAdapter(this, stories, this);
         storiesListView.setOnScrollListener(this);
         storiesListView.setAdapter(adapter);
+        storiesListView.setOnItemClickListener(this);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -174,6 +177,18 @@ public class NewsCategoryActivity extends ActionBarActivity implements AbsListVi
         } else {
             Intent intent = new Intent(this, NewsStoryActivity.class);
             intent.putExtra(Constants.News.STORY, story);
+            this.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MITNewsStory selectedStory = stories.get(position);
+        if (selectedStory.getCategory().getId().equals(Constants.News.IN_THE_MEDIA)) {
+            NewsUtils.openWebsiteDialog(this, selectedStory.getSourceUrl());
+        } else {
+            Intent intent = new Intent(this, NewsStoryActivity.class);
+            intent.putExtra(Constants.News.STORY, selectedStory);
             this.startActivity(intent);
         }
     }
