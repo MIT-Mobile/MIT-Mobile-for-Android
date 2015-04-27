@@ -64,9 +64,14 @@ public class PeopleDirectoryManager extends RetrofitManager {
     public static PeopleDirectoryManagerCall searchPeople(Activity activity, String query, Callback<List<MITPerson>> people) {
         PeopleDirectoryManagerCallWrapper<?> returnValue = new PeopleDirectoryManagerCallWrapper<>(new MITAPIClient(activity), people);
 
-        final HashMap<String, String> params = new HashMap<>(1);
-        params.put("q", query);
-        returnValue.getClient().get(Constants.PEOPLE_DIRECTORY, Constants.People.PEOPLE_PATH, null, params, returnValue);
+        returnValue.getClient().get(
+            Constants.PEOPLE_DIRECTORY,
+            Constants.People.PEOPLE_PATH,
+            null,
+            new FluentParamMap()
+                .add("q", query)
+                .object(),
+            returnValue);
 
         return returnValue;
     }
