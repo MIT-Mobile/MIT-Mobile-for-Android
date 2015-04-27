@@ -89,7 +89,7 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".events.EventsActivity"
+            android:name=".events.activity.EventsActivity"
             android:label="@string/title_activity_events"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />

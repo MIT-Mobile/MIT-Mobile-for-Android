@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.content.Context;
 import android.os.Handler;
@@ -24,6 +25,9 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MITAPIClient {
 
@@ -280,4 +284,76 @@ public class MITAPIClient {
         return o;
     }
 
+    public static class ApiCallWrapper<T> implements ApiCall, Callback<T> {
+        private static int CALL_IDENTIFIER = 0;
+
+        private final int callId;
+        private final AtomicBoolean completed;
+        private final AtomicBoolean errored;
+        private final Callback<T> callback;
+        private final MITAPIClient client;
+
+        public ApiCallWrapper(MITAPIClient client, Callback<T> callback) {
+            this.callId = ++CALL_IDENTIFIER;
+            this.completed = new AtomicBoolean(false);
+            this.errored = new AtomicBoolean(false);
+            this.client = client;
+            this.callback = callback != null ? callback : new Callback<T>() {
+                @Override public void success(T t, Response response) { }
+                @Override public void failure(RetrofitError error) { }
+            };
+        }
+
+        @Override
+        public int getCallId() {
+            return this.callId;
+        }
+
+        @Override
+        public boolean isComplete() {
+            return completed.get();
+        }
+
+        @Override
+        public boolean hadError() {
+            return errored.get();
+        }
+
+        @Override
+        public void success(T t, Response response) {
+            completed.set(true);
+            errored.set(false);
+
+            this.callback.success(t, response);
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            completed.set(true);
+            errored.set(true);
+
+            this.callback.failure(error);
+        }
+
+        public MITAPIClient getClient() {
+            return client;
+        }
+
+        @Override
+        public String toString() {
+            return "EventManagerCallWrapper{" +
+                "callId=" + callId +
+                ", completed=" + completed +
+                ", errored=" + errored +
+                ", callback=" + callback +
+                ", client=" + client +
+                '}';
+        }
+    }
+
+    public interface ApiCall {
+        int getCallId();
+        boolean isComplete();
+        boolean hadError();
+    }
 }

@@ -32,7 +32,7 @@
 		"short_name":"Events",
 		"menu_icon":"menu_events",
 		"home_icon":"home_events",
-		"intent":"edu.mit.mitmobile2.events.EventsFragment",
+		"intent":"edu.mit.mitmobile2.events.fragment.EventsFragment",
 		"url":"mitmobile2://events"
 	},
 	

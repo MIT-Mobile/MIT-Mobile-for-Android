@@ -19,6 +19,7 @@ public class Constants {
     public static final String TOURS = "tours";
     public static final String PEOPLE_DIRECTORY = "people";
     public static final String EMERGENCY = "emergency";
+    public static final String EVENTS = "events";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -78,6 +79,13 @@ public class Constants {
     public class Emergency {
         public static final String ANNOUNCEMENT_PATH = "/announcement"; /* Not yet implemented, stubbed only */
         public static final String CONTACTS_PATH = "/contacts";
+    }
+
+    public class Events {
+        public static final String CALENDARS_PATH = "/";
+        public static final String CALENDAR_PATH = "/{calendar}";
+        public static final String CALENDAR_EVENTS_PATH = "/{calendar}/events";
+        public static final String CALENDAR_EVENT_PATH = "/{calendar}/events/{event}";
     }
 
     public static class Resources {

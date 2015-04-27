@@ -1,14 +1,14 @@
 package edu.mit.mitmobile2;
 
-import android.util.Log;
-
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public abstract class RetrofitManager {
 
@@ -85,7 +85,50 @@ public abstract class RetrofitManager {
         }
     }
 
-    protected static String buildMethodName(String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) {
+    /**
+     * Similar to {@see buildMethodName} this method returns the Service Interface method handling the requested
+     * call via direct Annotation matching.
+     *
+     * If this call falls to find an expected method (this should -never- happen) we fallback to the old logic.
+     * @param klass The class provided as the Interface handler.
+     * @param path The path constant of the method we are looking for.
+     * @param pathParams ??? This appears to be unused but we take it as input since the older call does.
+     * @param queryParams ??? This appears to be unused but we take it as input since the older call does.
+     * @param parameterTypes Expected parameter types to match against the method we are looking for.
+     * @return A method if found for the specified web API call path.
+     */
+    protected static Method findMethodViaDirectReflection(Class<?> klass, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Class<?>... parameterTypes) {
+        assert klass != null;
+        assert path != null;
+
+        /* In theory only -we- should fall back to the old form of method handling, deprecating old interface. */
+        String fallbackMethodName = buildMethodName__archaic__(path, pathParams, queryParams);
+        Method fallbackMethod = null;
+
+        for (Method method : klass.getMethods()) {
+            if (!Arrays.equals(method.getParameterTypes(), parameterTypes)) continue;
+
+            retrofit.http.GET annotationG    = method.getAnnotation(retrofit.http.GET.class);
+            retrofit.http.POST annotationPo  = method.getAnnotation(retrofit.http.POST.class);
+            retrofit.http.PUT annotationPu   = method.getAnnotation(retrofit.http.PUT.class);
+            retrofit.http.PATCH annotationPa = method.getAnnotation(retrofit.http.PATCH.class);
+            retrofit.http.HEAD annotationH   = method.getAnnotation(retrofit.http.HEAD.class);
+            retrofit.http.DELETE annotationD = method.getAnnotation(retrofit.http.DELETE.class);
+
+            if (annotationG  != null && annotationG.value().equals(path))  return method;
+            if (annotationPo != null && annotationPo.value().equals(path)) return method;
+            if (annotationPu != null && annotationPu.value().equals(path)) return method;
+            if (annotationPa != null && annotationPa.value().equals(path)) return method;
+            if (annotationH  != null && annotationH.value().equals(path))  return method;
+            if (annotationD  != null && annotationD.value().equals(path))  return method;
+
+            if (method.getName().equals(fallbackMethodName)) fallbackMethod = method;
+        }
+
+        return fallbackMethod;
+    }
+
+    private static String buildMethodName__archaic__(String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) {
         String[] pathSections = path.split("/");
         String methodName = "_get";
 
@@ -102,6 +145,11 @@ public abstract class RetrofitManager {
         }
 
         return methodName;
+    }
+
+    @Deprecated
+    protected static String buildMethodName(String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) {
+        return buildMethodName__archaic__(path, pathParams, queryParams);
     }
 
 }
