@@ -3,11 +3,14 @@ package edu.mit.mitmobile2.events.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by grmartin on 4/27/15.
  */
 public class MITCalendarLocation implements Parcelable {
-    protected String locationDescription;
+    protected String description;
+    @SerializedName("room_number")
     protected String roomNumber;
     protected Object coordinates;
 
@@ -32,12 +35,12 @@ public class MITCalendarLocation implements Parcelable {
         this.roomNumber = roomNumber;
     }
 
-    public String getLocationDescription() {
-        return locationDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLocationDescription(String locationDescription) {
-        this.locationDescription = locationDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 //    public HashSet<MITCalendarEvent> getEvents() {
@@ -49,7 +52,7 @@ public class MITCalendarLocation implements Parcelable {
 //    }
 
     protected MITCalendarLocation(Parcel in) {
-        locationDescription = in.readString();
+        description = in.readString();
         roomNumber = in.readString();
         coordinates = (Object) in.readValue(Object.class.getClassLoader());
     }
@@ -61,7 +64,7 @@ public class MITCalendarLocation implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(locationDescription);
+        dest.writeString(description);
         dest.writeString(roomNumber);
         dest.writeValue(coordinates);
     }

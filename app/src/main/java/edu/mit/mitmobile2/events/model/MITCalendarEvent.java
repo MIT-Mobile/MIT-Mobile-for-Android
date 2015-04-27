@@ -7,32 +7,47 @@ import java.util.HashSet;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by grmartin on 4/27/15.
  */
 public class MITCalendarEvent implements Parcelable {
+    @SerializedName("id")
     protected String identifier;
     protected String url;
+    @SerializedName("start_at")
     protected Date startAt;
+    @SerializedName("end_at")
     protected Date endAt;
     protected String title;
+    @SerializedName("description_html")
     protected String htmlDescription;
     protected String tickets;
     protected String cost;
+    @SerializedName("open_to")
     protected String openTo;
+    @SerializedName("owner_id")
     protected String ownerID;
     protected String lecturer;
     protected boolean cancelled;
+    @SerializedName("type_code")
     protected String typeCode;
+    @SerializedName("status_code")
     protected String statusCode;
+    @SerializedName("created_by")
     protected String createdBy;
+    @SerializedName("created_at")
     protected Date createdAt;
+    @SerializedName("modified_by")
     protected String modifiedBy;
+    @SerializedName("modified_at")
     protected Date modifiedAt;
     protected MITCalendarLocation location;
     protected ArrayList<MITCalendar> categories;
-    protected HashSet<MITCalendarContact> sponsors;
+    protected HashSet<MITCalendarSponsor> sponsors;
     protected MITCalendarContact contact;
+    @SerializedName("series_info")
     protected MITCalendarSeriesInfo seriesInfo;
 
     public MITCalendarEvent(){
@@ -200,11 +215,11 @@ public class MITCalendarEvent implements Parcelable {
         this.categories = categories;
     }
 
-    public HashSet<MITCalendarContact> getSponsors() {
+    public HashSet<MITCalendarSponsor> getSponsors() {
         return sponsors;
     }
 
-    public void setSponsors(HashSet<MITCalendarContact> sponsors) {
+    public void setSponsors(HashSet<MITCalendarSponsor> sponsors) {
         this.sponsors = sponsors;
     }
 

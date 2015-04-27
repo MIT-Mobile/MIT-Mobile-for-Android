@@ -6,13 +6,17 @@ import java.util.HashSet;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by grmartin on 4/27/15.
  */
 public class MITCalendar implements Parcelable {
     protected String eventsUrl;
+    @SerializedName("id")
     protected String identifier;
     protected String name;
+    @SerializedName("short_name")
     protected String shortName;
     protected String url;
     protected ArrayList<MITCalendar> categories;

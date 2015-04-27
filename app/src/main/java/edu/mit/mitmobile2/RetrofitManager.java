@@ -5,12 +5,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.mit.mitmobile2.shared.collection.FluentMap;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
 public abstract class RetrofitManager {
+    public static final class FluentParamMap extends FluentMap<String, String> {}
+
 
     private static class MitEndpoint implements Endpoint {
 

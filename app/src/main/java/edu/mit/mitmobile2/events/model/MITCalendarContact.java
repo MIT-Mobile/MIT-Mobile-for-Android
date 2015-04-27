@@ -3,6 +3,8 @@ package edu.mit.mitmobile2.events.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by grmartin on 4/27/15.
  */
@@ -11,6 +13,7 @@ public class MITCalendarContact implements Parcelable {
     protected String location;
     protected String name;
     protected String phone;
+    @SerializedName("website_url")
     protected String websiteURL;
     // I have a feeling this might create a cyclic reference situation, commenting out for now.
     // HashSet<MITCalendarEvent> events;
