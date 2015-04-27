@@ -40,12 +40,34 @@ public static final String TAG = "EventsFragment";
             @Override
             public void success(List<MITCalendar> mitCalendars, Response response) {
                 LoggingManager.Log.d(TAG, "MITCalendar => "+mitCalendars+ " => "+response);
+                LoggingManager.Log.d(TAG, "MITCalendar => "+mitCalendars+ " => "+response);
+
+                gotCalendars(mitCalendars);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                LoggingManager.Log.d(TAG, "ERROR => "+error);
+            }
+        });
+    }
+
+    private void gotCalendars(List<MITCalendar> mitCalendars) {
+
+        MITCalendar lastOne = mitCalendars.get(mitCalendars.size() - 1);
+
+        EventManager.getCalendarDetail(getActivity(), lastOne, new Callback<MITCalendar>() {
+            @Override
+            public void success(MITCalendar mitCalendar, Response response) {
+                LoggingManager.Log.d(TAG, "MITCalendar => "+mitCalendar+ " => "+response);
+                LoggingManager.Log.d(TAG, "MITCalendar => "+mitCalendar+ " => "+response);
 
             }
 
             @Override
             public void failure(RetrofitError error) {
                 LoggingManager.Log.d(TAG, "ERROR => "+error);
+
             }
         });
     }

@@ -7,7 +7,8 @@ import android.os.Parcelable;
  * Created by grmartin on 4/27/15.
  */
 public class MITCalendarSeriesInfo implements Parcelable {
-    protected String seriesDescription;
+
+    protected String description;
     protected String title;
 
     // I have a feeling this might create a cyclic reference situation, commenting out for now.
@@ -15,12 +16,12 @@ public class MITCalendarSeriesInfo implements Parcelable {
 
     public MITCalendarSeriesInfo() {}
 
-    public String getSeriesDescription() {
-        return seriesDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSeriesDescription(String seriesDescription) {
-        this.seriesDescription = seriesDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTitle() {
@@ -42,13 +43,13 @@ public class MITCalendarSeriesInfo implements Parcelable {
     @Override
     public String toString() {
         return "MITCalendarSeriesInfo{" +
-            "seriesDescription='" + seriesDescription + '\'' +
+            "description='" + description + '\'' +
             ", title='" + title + '\'' +
             '}';
     }
 
     protected MITCalendarSeriesInfo(Parcel in) {
-        seriesDescription = in.readString();
+        description = in.readString();
         title = in.readString();
     }
 
@@ -59,7 +60,7 @@ public class MITCalendarSeriesInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(seriesDescription);
+        dest.writeString(description);
         dest.writeString(title);
     }
 
