@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.events;
+package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;

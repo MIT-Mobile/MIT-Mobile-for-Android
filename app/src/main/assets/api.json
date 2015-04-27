@@ -52,5 +52,11 @@
     "test": "http://mobile-test.mit.edu/apis/news/",
     "prod": "http://m.mit.edu/apis/news/",
     "manager": "edu.mit.mitmobile2.news.NewsManager"
+  },
+  "events": {
+    "dev": "http://mobile-dev.mit.edu/apis/calendars/",
+    "test": "http://mobile-test.mit.edu/apis/calendars/",
+    "prod": "http://m.mit.edu/apis/calendars/",
+    "manager": "edu.mit.mitmobile2.events.EventManager"
   }
 }
