@@ -47,7 +47,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
         throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        Method m = findMethodViaDirectReflection(MIT_PEOPLE_DIR_SERVICE.getClass(), path, pathParams, queryParams, Callback.class);
+        Method m = findMethodViaDirectReflection(MitPersonDirectoryService.class, path, pathParams, queryParams, Callback.class);
         Timber.d("Method = " + m);
         m.invoke(MIT_PEOPLE_DIR_SERVICE, callback);
     }
@@ -56,7 +56,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
     public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams)
         throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        Method m = findMethodViaDirectReflection(MIT_PEOPLE_DIR_SERVICE.getClass(), path, pathParams, queryParams);
+        Method m = findMethodViaDirectReflection(MitPersonDirectoryService.class, path, pathParams, queryParams);
         Timber.d("Method = " + m);
         return m.invoke(MIT_PEOPLE_DIR_SERVICE);
     }

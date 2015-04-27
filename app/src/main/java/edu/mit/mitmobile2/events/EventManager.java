@@ -22,7 +22,7 @@ public class EventManager extends RetrofitManager {
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
         throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        Method m = findMethodViaDirectReflection(SERVICE_INTERFACE.getClass(), path, pathParams, queryParams, Callback.class);
+        Method m = findMethodViaDirectReflection(ApiService.class, path, pathParams, queryParams, Callback.class);
         Timber.d("Method = " + m);
         m.invoke(SERVICE_INTERFACE, callback);
     }
@@ -31,7 +31,7 @@ public class EventManager extends RetrofitManager {
     public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams)
         throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        Method m = findMethodViaDirectReflection(SERVICE_INTERFACE.getClass(), path, pathParams, queryParams);
+        Method m = findMethodViaDirectReflection(ApiService.class, path, pathParams, queryParams);
         Timber.d("Method = " + m);
         return m.invoke(SERVICE_INTERFACE);
     }
