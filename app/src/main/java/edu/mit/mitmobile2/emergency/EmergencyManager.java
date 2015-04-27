@@ -22,32 +22,20 @@ public class EmergencyManager extends RetrofitManager {
     private static final MitEmergencyService MIT_EMERGENCY_SERVICE = MIT_REST_ADAPTER.create(MitEmergencyService.class);
 
     @SuppressWarnings("unused")
-    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback) throws NoSuchFieldException,
-            NoSuchMethodException,
-            ClassNotFoundException,
-            IllegalAccessException,
-            InvocationTargetException {
+    public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
+        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        String methodName = buildMethodName(path, pathParams, queryParams);
-
-        Timber.d("Method name= " + methodName);
-
-        Method m = MIT_EMERGENCY_SERVICE.getClass().getDeclaredMethod(methodName, Callback.class);
+        Method m = findMethodViaDirectReflection(MIT_EMERGENCY_SERVICE.getClass(), path, pathParams, queryParams, Callback.class);
+        Timber.d("Method = " + m);
         m.invoke(MIT_EMERGENCY_SERVICE, callback);
     }
 
     @SuppressWarnings("unused")
-    public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams) throws NoSuchFieldException,
-            NoSuchMethodException,
-            ClassNotFoundException,
-            IllegalAccessException,
-            InvocationTargetException {
+    public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams)
+        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        String methodName = buildMethodName(path, pathParams, queryParams);
-
-        Timber.d("Method name= " + methodName);
-
-        Method m = MIT_EMERGENCY_SERVICE.getClass().getDeclaredMethod(methodName);
+        Method m = findMethodViaDirectReflection(MIT_EMERGENCY_SERVICE.getClass(), path, pathParams, queryParams);
+        Timber.d("Method = " + m);
         return m.invoke(MIT_EMERGENCY_SERVICE);
     }
 
