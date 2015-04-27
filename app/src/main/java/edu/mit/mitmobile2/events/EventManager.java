@@ -11,6 +11,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.events.model.MITCalendar;
+import edu.mit.mitmobile2.events.model.MITCalendarEvent;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -37,6 +38,38 @@ public class EventManager extends RetrofitManager {
         Method m = findMethodViaDirectReflection(ApiService.class, path, pathParams, queryParams);
         Timber.d("Method = " + m);
         return m.invoke(SERVICE_INTERFACE);
+    }
+
+
+    public static ServiceCall getCalendarEvents(Activity activity, MITCalendar cal, Callback<List<MITCalendarEvent>> events) {
+        ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), events);
+
+        returnValue.getClient().get(
+            Constants.EVENTS,
+            Constants.Events.CALENDAR_EVENTS_PATH,
+            new FluentParamMap()
+                .add("calendar", cal.getIdentifier())
+                .object(),
+            null,
+            returnValue);
+
+        return returnValue;
+    }
+
+    public static ServiceCall getCalendarEventDetail(Activity activity, MITCalendar cal, MITCalendarEvent evt, Callback<MITCalendarEvent> eventHandler) {
+        ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), eventHandler);
+
+        returnValue.getClient().get(
+            Constants.EVENTS,
+            Constants.Events.CALENDAR_EVENT_PATH,
+            new FluentParamMap()
+                .add("calendar", cal.getIdentifier())
+                .add("event", evt.getIdentifier())
+                .object(),
+            null,
+            returnValue);
+
+        return returnValue;
     }
 
     public static ServiceCall getCalendars(Activity activity, Callback<List<MITCalendar>> calendars) {
@@ -69,9 +102,9 @@ public class EventManager extends RetrofitManager {
         @GET(Constants.Events.CALENDAR_PATH)
         void _get_a(Callback<MITCalendar> callback);
         @GET(Constants.Events.CALENDAR_EVENTS_PATH)
-        void _get_calendar_events(Callback<List<UNIMPLEMENTED_GET_EVENTS>> callback);
+        void _get_calendar_events(Callback<List<MITCalendarEvent>> callback);
         @GET(Constants.Events.CALENDAR_EVENT_PATH)
-        void _get_calendar_event(Callback<List<UNIMPLEMENTED_GET_EVENT_DETAIL>> callback);
+        void _get_calendar_event(Callback<MITCalendarEvent> callback);
     }
 
     public static class ServiceCallWrapper<T>  extends MITAPIClient.ApiCallWrapper<T> implements ServiceCall, Callback<T> {
@@ -81,32 +114,4 @@ public class EventManager extends RetrofitManager {
     }
 
     public interface ServiceCall extends MITAPIClient.ApiCall {}
-
-    /**
-     * This class is provided as a blank placeholder for stubbed methods, will throw upon .ctor
-     */
-    static class UNIMPLEMENTED_GET_EVENT_DETAIL {
-        static {
-            new UNIMPLEMENTED_GET_EVENT_DETAIL();
-        }
-
-        public UNIMPLEMENTED_GET_EVENT_DETAIL() {
-            throw new RuntimeException("The caller of this class is meant only as a stub and is not yet implemented," +
-                " please implement it and once complete remove this class.", new RuntimeException("java-exception:unimplemented:" + getClass().getCanonicalName()));
-        }
-    }
-
-    /**
-     * This class is provided as a blank placeholder for stubbed methods, will throw upon .ctor
-     */
-    static class UNIMPLEMENTED_GET_EVENTS {
-        static {
-            new UNIMPLEMENTED_GET_EVENTS();
-        }
-
-        public UNIMPLEMENTED_GET_EVENTS() {
-            throw new RuntimeException("The caller of this class is meant only as a stub and is not yet implemented," +
-                " please implement it and once complete remove this class.", new RuntimeException("java-exception:unimplemented:" + getClass().getCanonicalName()));
-        }
-    }
 }
