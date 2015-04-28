@@ -41,7 +41,7 @@
     <!--people-->
     <dimen name="people_row_height_tall">72dp</dimen>
     <dimen name="people_row_height_short">48dp</dimen>
-    <dimen name="people_row_icon_height">22dp</dimen>
+    <dimen name="people_row_icon_height">24dp</dimen>
     <dimen name="people_row_icon_width">@dimen/people_row_icon_height</dimen>
     <dimen name="people_row_icon_margin_top_bottom">25dp</dimen>
     <dimen name="people_row_icon_margin_start">20dp</dimen>
