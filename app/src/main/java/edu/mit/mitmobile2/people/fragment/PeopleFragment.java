@@ -51,9 +51,6 @@ public class PeopleFragment extends Fragment {
 
     private PeopleDirectoryManagerCall requestRunning;
 
-    @InjectView(R.id.example_search)
-    protected TextView exampleSearches;
-
     @InjectView(R.id.quick_dial_list)
     protected ListView quickDialList;
     @InjectView(R.id.search_list)
@@ -92,8 +89,6 @@ public class PeopleFragment extends Fragment {
         this.searchListAdapter = new MITPeopleDirectoryPersonAdapter();
         this.favoritePersonsAdapter = new MITPeopleDirectoryPersonAdapter();
         this.favoritePersonsAdapter.setForceShortMode(true);
-
-        this.exampleSearches.setText(Html.fromHtml(getString(R.string.people_default_sample_search_examples)));
 
         quickDialList.setAdapter(quickDialAdapter);
         searchList.setAdapter(searchListAdapter);

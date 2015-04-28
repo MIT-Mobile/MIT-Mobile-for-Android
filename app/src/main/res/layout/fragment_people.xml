@@ -9,63 +9,70 @@
          what isn't via our PeopleFragment.setMode(...) method -->
 
     <LinearLayout
-            android:id="@+id/default_layout"
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="visible">
+        android:id="@+id/default_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <TextView
-                android:id="@+id/example_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/people_default_sample_search_examples"
-                android:lines="4"
-                android:maxLines="4"
-                android:layout_marginBottom="28dp"
-                android:layout_marginTop="28dp"
-                android:layout_marginLeft="@dimen/people_normal_margin_start"
-                android:layout_marginStart="@dimen/people_normal_margin_start"
-                android:layout_marginRight="@dimen/people_normal_margin_start"
-                android:layout_marginEnd="@dimen/people_normal_margin_start"
-                style="@style/MITPeopleDirectory.SampleSearches.Text"
-                />
+            style="@style/MITPeopleDirectory.SampleSearches.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/people_normal_margin_start"
+            android:layout_marginLeft="@dimen/people_normal_margin_start"
+            android:layout_marginRight="@dimen/people_normal_margin_start"
+            android:layout_marginStart="@dimen/people_normal_margin_start"
+            android:layout_marginTop="28dp"
+            android:singleLine="true"
+            android:text="@string/people_default_sample_search_title"
+            android:textColor="@color/mit_grey" />
+
+        <TextView
+            style="@style/MITPeopleDirectory.SampleSearches.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:layout_marginEnd="@dimen/people_normal_margin_start"
+            android:layout_marginLeft="@dimen/people_normal_margin_start"
+            android:layout_marginRight="@dimen/people_normal_margin_start"
+            android:layout_marginStart="@dimen/people_normal_margin_start"
+            android:text="@string/people_default_sample_search_examples"
+            android:textColor="@color/mit_grey" />
 
         <ListView
-                android:id="@+id/quick_dial_list"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/quick_dial_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
-                android:id="@+id/favorites_layout"
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+            android:id="@+id/favorites_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginLeft="@dimen/people_normal_margin_start"
-                    android:layout_marginStart="@dimen/people_normal_margin_start"
-                    android:textColor="@color/mit_red"
-                    android:textAllCaps="true"
-                    android:text="@string/people_default_favorites_list_title"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_marginLeft="@dimen/people_normal_margin_start"
+                android:layout_marginStart="@dimen/people_normal_margin_start"
+                android:layout_marginTop="7dp"
+                android:text="@string/people_default_favorites_list_title"
+                android:textAllCaps="true"
+                android:textColor="@color/mit_red" />
 
             <ListView
-                    android:id="@+id/favorites_list"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"/>
+                android:id="@+id/favorites_list"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
 
     </LinearLayout>
 
     <ListView
-            android:id="@+id/search_list"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-    </ListView>
+        android:id="@+id/search_list"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </LinearLayout>
