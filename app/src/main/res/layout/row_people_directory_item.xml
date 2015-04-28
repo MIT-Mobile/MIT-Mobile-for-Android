@@ -5,7 +5,7 @@
               android:layout_height="@dimen/people_row_height_tall"
               android:background="@color/white"
               android:id="@+id/row_container">
-    
+
     <ImageView
             android:id="@+id/icon"
             android:layout_width="@dimen/people_row_icon_width"
