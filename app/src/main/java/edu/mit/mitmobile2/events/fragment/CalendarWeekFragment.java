@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.events.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,13 +23,15 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.events.EventsFragment;
+import edu.mit.mitmobile2.events.UpdateableFragment;
 
-public class CalendarWeekFragment extends Fragment {
+public class CalendarWeekFragment extends Fragment implements UpdateableFragment {
 
     private static final String CALENDAR = "calendar";
     private static final String DIFFERENCE = "diff";
     private static final String POSITION = "position";
+    private static final String SELECTED_DATE = "selectedDate";
+    public static final String DATE_FORMAT = "MMMM d, yyyy";
 
     private List<Date> dates = new ArrayList<>();
 
@@ -55,12 +58,13 @@ public class CalendarWeekFragment extends Fragment {
 
         ButterKnife.inject(this, view);
 
-        Calendar calendar = (Calendar) getArguments().getSerializable(CALENDAR);
+        Calendar calendar = new GregorianCalendar();
+        Calendar startPoint = (Calendar) getArguments().getSerializable(CALENDAR);
         int diff = getArguments().getInt(DIFFERENCE);
         int position = getArguments().getInt(POSITION);
 
         // Can either be positive or negative here
-        calendar.setTimeInMillis(System.currentTimeMillis() + (diff * EventsFragment.WEEK_OFFSET));
+        calendar.setTimeInMillis(startPoint.getTimeInMillis() + (diff * EventsFragment.WEEK_OFFSET));
 
         for (int i = 0; i < views.size(); i++) {
             LinearLayout layout = views.get(i);
@@ -75,22 +79,7 @@ public class CalendarWeekFragment extends Fragment {
             String s = (String) DateFormat.format("d", calendar.getTime());
             date.setText(s);
 
-            Calendar c = new GregorianCalendar();
-            c.setTimeInMillis(System.currentTimeMillis());
-
-            if (i == position && dayIsToday(calendar, c)) {
-                date.setBackgroundResource(R.drawable.red_circle_small);
-                date.setTextColor(getResources().getColor(R.color.white));
-            } else if (i == position) {
-                date.setTextColor(getResources().getColor(R.color.white));
-                date.setBackgroundResource(R.drawable.black_circle);
-            } else if (dayIsToday(calendar, c)) {
-                date.setBackgroundResource(R.drawable.white_circle);
-                date.setTextColor(getResources().getColor(R.color.mit_red));
-            } else {
-                date.setBackgroundResource(R.drawable.white_circle);
-                date.setTextColor(getResources().getColor(R.color.black));
-            }
+            setUIForDate(calendar, position, i, date);
         }
 
         return view;
@@ -105,12 +94,12 @@ public class CalendarWeekFragment extends Fragment {
     void dateClicked(LinearLayout layout) {
         int position = views.indexOf(layout);
         Date d = dates.get(position);
-        String formatted = (String) DateFormat.format("MMMM dd, yyyy", d);
+        String formatted = (String) DateFormat.format(DATE_FORMAT, d);
 
         Calendar c = new GregorianCalendar();
         c.setTimeInMillis(System.currentTimeMillis());
 
-        String todayFormatted = (String) DateFormat.format("MMMM dd, yyyy", c.getTime());
+        String todayFormatted = (String) DateFormat.format(DATE_FORMAT, c.getTime());
 
         for (int i = 0; i < views.size(); i++) {
             resetSelection(todayFormatted, i);
@@ -134,7 +123,7 @@ public class CalendarWeekFragment extends Fragment {
 
     private void resetSelection(String todayFormatted, int i) {
         TextView date = (TextView) views.get(i).findViewById(R.id.calendar_date);
-        if (!todayFormatted.equals(DateFormat.format("MMMM dd, yyyy", dates.get(i).getTime()))) {
+        if (!todayFormatted.equals(DateFormat.format(DATE_FORMAT, dates.get(i).getTime()))) {
             date.setTextColor(getResources().getColor(R.color.black));
             date.setBackgroundResource(R.drawable.white_circle);
         } else {
@@ -143,20 +132,29 @@ public class CalendarWeekFragment extends Fragment {
         }
     }
 
-    public void setNewPositionSelected(int position) {
+    @Override
+    public void update(final int position) {
         getArguments().putInt(POSITION, position);
+        if (getActivity() != null) {
+            updateUI(position);
+        }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (views != null) {
+            updateUI(getArguments().getInt(POSITION));
+        }
+    }
 
-        //TODO: Need to get previous and next fragments to redraw date views
-/*Calendar calendar = (Calendar) getArguments().getSerializable(CALENDAR);
+    private void updateUI(int position) {
+        Calendar calendar = new GregorianCalendar(); //(Calendar) getArguments().getSerializable(CALENDAR);
         int diff = getArguments().getInt(DIFFERENCE);
 
         // Can either be positive or negative here
-        calendar.setTimeInMillis(System.currentTimeMillis() + (diff * EventsFragment.WEEK_OFFSET));
+        Calendar startPoint = (Calendar) getArguments().getSerializable(CALENDAR);
+        calendar.setTimeInMillis(startPoint.getTimeInMillis() + (diff * EventsFragment.WEEK_OFFSET));
 
         for (int i = 0; i < views.size(); i++) {
             LinearLayout layout = views.get(i);
@@ -167,26 +165,39 @@ public class CalendarWeekFragment extends Fragment {
             day.setText(getResources().getStringArray(R.array.days)[i]);
 
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek() + i);
-            dates.add(calendar.getTime());
             String s = (String) DateFormat.format("d", calendar.getTime());
             date.setText(s);
 
-            Calendar c = new GregorianCalendar();
-            c.setTimeInMillis(System.currentTimeMillis());
+            setUIForDate(calendar, position, i, date);
+        }
+    }
 
-            if (i == position && dayIsToday(calendar, c)) {
-                date.setBackgroundResource(R.drawable.red_circle_small);
-                date.setTextColor(getResources().getColor(R.color.white));
-            } else if (i == position) {
-                date.setTextColor(getResources().getColor(R.color.white));
-                date.setBackgroundResource(R.drawable.black_circle);
-            } else if (dayIsToday(calendar, c)) {
-                date.setBackgroundResource(R.drawable.white_circle);
-                date.setTextColor(getResources().getColor(R.color.mit_red));
-            } else {
-                date.setBackgroundResource(R.drawable.white_circle);
-                date.setTextColor(getResources().getColor(R.color.black));
-            }
-        }*/
+    public String getDate() {
+        Calendar c = (Calendar) getArguments().getSerializable(SELECTED_DATE);
+        Calendar date = new GregorianCalendar();
+        date.setTimeInMillis(c.getTimeInMillis());
+        date.set(Calendar.DAY_OF_WEEK, date.getFirstDayOfWeek() + getArguments().getInt(POSITION));
+        return (String) DateFormat.format(DATE_FORMAT, date.getTime());
+    }
+
+    private void setUIForDate(Calendar calendar, int position, int i, TextView date) {
+        Calendar c = new GregorianCalendar();
+        c.setTimeInMillis(System.currentTimeMillis());
+
+        if (i == position && dayIsToday(calendar, c)) {
+            date.setBackgroundResource(R.drawable.red_circle_small);
+            date.setTextColor(getResources().getColor(R.color.white));
+            getArguments().putSerializable(SELECTED_DATE, calendar);
+        } else if (i == position) {
+            date.setTextColor(getResources().getColor(R.color.white));
+            date.setBackgroundResource(R.drawable.black_circle);
+            getArguments().putSerializable(SELECTED_DATE, calendar);
+        } else if (dayIsToday(calendar, c)) {
+            date.setBackgroundResource(R.drawable.white_circle);
+            date.setTextColor(getResources().getColor(R.color.mit_red));
+        } else {
+            date.setBackgroundResource(R.drawable.white_circle);
+            date.setTextColor(getResources().getColor(R.color.black));
+        }
     }
 }

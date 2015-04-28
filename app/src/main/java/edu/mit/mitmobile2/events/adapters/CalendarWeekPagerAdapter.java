@@ -3,14 +3,13 @@ package edu.mit.mitmobile2.events.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
 import java.util.Calendar;
 
+import edu.mit.mitmobile2.events.UpdateableFragment;
 import edu.mit.mitmobile2.events.fragment.CalendarWeekFragment;
 
 public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
-
 
     public static final int SIZE = 2000;
 
@@ -33,7 +32,9 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
             fragments[position] = fragment;
             return fragment;
         } else {
-            return fragments[position];
+            CalendarWeekFragment fragment = fragments[position];
+            fragment.update(positionInWeek);
+            return fragment;
         }
     }
 
@@ -43,23 +44,33 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
+    public int getItemPosition(Object object) {
+        if (object instanceof UpdateableFragment) {
+            ((UpdateableFragment) object).update(positionInWeek);
+        }
+
+        return super.getItemPosition(object);
+    }
+
+    public void update(int positionInWeek) {
+        this.positionInWeek = positionInWeek;
+        notifyDataSetChanged();
+    }
+
+    public Calendar getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(Calendar startPoint) {
+        this.startPoint = startPoint;
     }
 
     public void setFragmentPosition(int fragmentPosition) {
         this.fragmentPosition = fragmentPosition;
     }
 
-    public void setPositionInWeek(int positionInWeek) {
-        this.positionInWeek = positionInWeek;
-        CalendarWeekFragment fragmentBefore = fragments[fragmentPosition - 1];
-        if (fragmentBefore != null) {
-            fragmentBefore.setNewPositionSelected(positionInWeek);
-        }
-        CalendarWeekFragment fragmentAfter = fragments[fragmentPosition + 1];
-        if (fragmentAfter != null) {
-            fragmentAfter.setNewPositionSelected(positionInWeek);
-        }
+    public String getDate() {
+        CalendarWeekFragment centerFragment = fragments[fragmentPosition];
+        return centerFragment.getDate();
     }
 }
