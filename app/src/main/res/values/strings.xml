@@ -24,6 +24,8 @@
     <string name="title_activity_tours">Tours</string>
     <string name="title_activity_intro_mit">Introduction to MIT</string>
     <string name="title_activity_tour_directions">Walking Directions</string>
+    <string name="title_activity_news_category">NewsCategoryActivity</string>
+    <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -100,7 +102,8 @@
     <string name="side_trip_directions_2">" to "</string>
     <!--People Search/Directory-->
     <string name="people_search_hint">MIT People Directory</string>
-    <string name="people_default_sample_search_examples"><![CDATA[<b>Sample searches:</b><br />Name: \'william barton rogers\', \'rogers\'<br />Email: \'wbrogers\', \'wbrogers@mit.edu\'<br />Phone: \'6172531000\', \'31000\']]></string>
+    <string name="people_default_sample_search_title">Sample searches:</string>
+    <string name="people_default_sample_search_examples">Name: \'william barton rogers\', \'rogers\'\nEmail: \'wbrogers\', \'wbrogers@mit.edu\'\nPhone: \'6172531000\', \'31000\'</string>
     <string name="people_default_directory_assistance_button_title">Directory Assistance</string>
     <string name="people_default_emergency_contacts_button_title">Emergency Contacts</string>
     <string name="fragment_people_person_detail_contact_management_create_new">Create New Contact</string>
@@ -133,7 +136,6 @@
 
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
-    <string name="title_activity_news_category">NewsCategoryActivity</string>
-    <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
+    <string name="no_results">No Results</string>
 
 </resources>

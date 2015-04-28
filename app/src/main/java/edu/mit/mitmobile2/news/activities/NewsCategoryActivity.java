@@ -6,7 +6,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.NewsFragmentCallback;
 import edu.mit.mitmobile2.news.adapters.MITNewsCategoryAdapter;
+import edu.mit.mitmobile2.news.fragments.SearchFragment;
 import edu.mit.mitmobile2.news.models.MITNewsStory;
 import edu.mit.mitmobile2.news.utils.NewsUtils;
 import retrofit.Callback;
@@ -41,6 +44,7 @@ public class NewsCategoryActivity extends ActionBarActivity implements AbsListVi
     private boolean endOfList = false;
     private MITAPIClient apiClient;
     private List<MITNewsStory> stories;
+    private boolean isFromSearchResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +56,16 @@ public class NewsCategoryActivity extends ActionBarActivity implements AbsListVi
             stories = savedInstanceState.getParcelableArrayList(Constants.News.STORIES_KEY);
         } else {
             stories = getIntent().getParcelableArrayListExtra(Constants.News.STORIES_KEY);
+            isFromSearchResult = getIntent().getBooleanExtra(SearchFragment.SEARCH_RESULT, false);
         }
         apiClient = new MITAPIClient(this);
 
-        getSupportActionBar().setTitle(stories.get(0).getCategory().getName());
+        if (!isFromSearchResult) {
+            getSupportActionBar().setTitle(stories.get(0).getCategory().getName());
+        } else {
+            getSupportActionBar().setTitle("");
+        }
+
 
         ListView storiesListView = (ListView) findViewById(R.id.news_stories_list);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
@@ -94,9 +104,15 @@ public class NewsCategoryActivity extends ActionBarActivity implements AbsListVi
         }
 
         HashMap<String, String> queryParams = new HashMap<>();
-        queryParams.put("category", categoryId);
-        queryParams.put("limit", String.valueOf(limit));
-        queryParams.put("offset", String.valueOf(offset));
+        if (isFromSearchResult) {
+            queryParams.put("q", getIntent().getStringExtra(SearchFragment.SEARCH_QUERY));
+            queryParams.put("limit", String.valueOf(limit));
+            queryParams.put("offset", String.valueOf(offset));
+        } else {
+            queryParams.put("category", categoryId);
+            queryParams.put("limit", String.valueOf(limit));
+            queryParams.put("offset", String.valueOf(offset));
+        }
 
         mitApiClient.get(Constants.NEWS, Constants.News.STORIES_PATH, null, queryParams, new Callback<List<MITNewsStory>>() {
             @Override
@@ -176,5 +192,10 @@ public class NewsCategoryActivity extends ActionBarActivity implements AbsListVi
             intent.putExtra(Constants.News.STORY, story);
             this.startActivity(intent);
         }
+    }
+
+    @Override
+    public void itemSearch(String searchText) {
+
     }
 }

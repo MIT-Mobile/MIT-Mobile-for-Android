@@ -19,6 +19,11 @@ import edu.mit.mitmobile2.news.models.MITNewsStory;
 
 public class MITNewsCategoryAdapter extends BaseAdapter {
 
+    private static final int VIEW_TYPE_GENERAL = 0;
+    private static final int VIEW_TYPE_IN_THE_MEDIA = 1;
+
+    private static final int VIEW_TYPES_COUNT = 2;
+
     private class ViewHolder {
         ImageView storyImage;
         TextView storyTitle;
@@ -55,64 +60,75 @@ public class MITNewsCategoryAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return VIEW_TYPES_COUNT;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (stories.get(position).getCategory().getId().equals(Constants.News.IN_THE_MEDIA)) {
-            return 1;
+            return VIEW_TYPE_IN_THE_MEDIA;
         } else {
-            return 0;
+            return VIEW_TYPE_GENERAL;
         }
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        ViewHolder holder;
+        ViewHolder holder = new ViewHolder();
 
         final MITNewsStory story = (MITNewsStory) getItem(position);
+        int itemViewType = getItemViewType(position);
 
-        if (convertView == null) {
-            holder = new ViewHolder();
+        switch (itemViewType) {
+            case VIEW_TYPE_GENERAL: {
+                if (convertView == null) {
+                    view = View.inflate(context, R.layout.news_list_row, null);
 
-            if (getItemViewType(position) == 0) {
-                view = View.inflate(context, R.layout.news_list_row, null);
+                    holder.storyImage = (ImageView) view.findViewById(R.id.news_article_image);
+                    holder.storyTitle = (TextView) view.findViewById(R.id.news_article_title);
+                    holder.storyLede = (TextView) view.findViewById(R.id.news_article_lede);
 
-                holder.storyImage = (ImageView) view.findViewById(R.id.news_article_image);
-                holder.storyTitle = (TextView) view.findViewById(R.id.news_article_title);
-                holder.storyLede = (TextView) view.findViewById(R.id.news_article_lede);
-            } else {
-                view = View.inflate(context, R.layout.news_list_row_media, null);
+                    view.setTag(holder);
+                } else {
+                    holder = (ViewHolder) view.getTag();
+                }
 
-                holder.mediaImage = (ImageView) view.findViewById(R.id.media_image);
-                holder.storySnippet = (TextView) view.findViewById(R.id.news_snippet);
+                try {
+                    String smallCoverImageUrl = story.getSmallCoverImageUrl();
+                    Picasso.with(context).load(smallCoverImageUrl).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+                } catch (NullPointerException e) {
+                    Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+                }
+
+                holder.storyTitle.setText(story.getTitle());
+                holder.storyLede.setText(story.getDek());
             }
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
+            break;
+            case VIEW_TYPE_IN_THE_MEDIA: {
+                if (convertView == null) {
+                    view = View.inflate(context, R.layout.news_list_row_media, null);
 
-        if (getItemViewType(position) == 0) {
-            try {
-                String smallCoverImageUrl = story.getSmallCoverImageUrl();
-                Picasso.with(context).load(smallCoverImageUrl).placeholder(R.drawable.grey_rect).into(holder.storyImage);
-            } catch (NullPointerException e) {
-                Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.storyImage);
+                    holder.mediaImage = (ImageView) view.findViewById(R.id.media_image);
+                    holder.storySnippet = (TextView) view.findViewById(R.id.news_snippet);
+
+                    view.setTag(holder);
+                } else {
+                    holder = (ViewHolder) view.getTag();
+                }
+
+                Picasso.with(context).load(story.getOriginalCoverImageUrl()).placeholder(R.drawable.grey_rect).into(holder.mediaImage);
+                holder.storySnippet.setText(Html.fromHtml(story.getDek()));
             }
-
-            holder.storyTitle.setText(story.getTitle());
-            holder.storyLede.setText(story.getDek());
-        } else {
-            Picasso.with(context).load(story.getOriginalCoverImageUrl()).placeholder(R.drawable.grey_rect).into(holder.mediaImage);
-            holder.storySnippet.setText(Html.fromHtml(story.getDek()));
+            break;
         }
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.itemClicked(story);
+                if (callback != null) {
+                    callback.itemClicked(story);
+                }
             }
         });
 

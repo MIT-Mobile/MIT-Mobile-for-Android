@@ -79,4 +79,9 @@
 
     <!--events-->
     <dimen name="events_calendar_size">30dp</dimen>
+
+    <!--news-->
+    <dimen name="news_header_padding">14dp</dimen>
+    <dimen name="news_cell_padding">14dp</dimen>
+>>>>>>> intrepid
 </resources>
