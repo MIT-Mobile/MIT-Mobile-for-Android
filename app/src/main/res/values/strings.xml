@@ -138,4 +138,7 @@
     <string name="share_via">Share via</string>
     <string name="no_results">No Results</string>
 
+    <string name="today">TODAY</string>
+    <string name="calendars">CALENDARS</string>
+
 </resources>

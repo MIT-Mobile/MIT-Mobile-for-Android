@@ -79,7 +79,7 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        dateTextView.setText(DateFormat.format("MMMM d, yyyy", Calendar.getInstance().getTime()));
+        dateTextView.setText(DateFormat.format("EEEE, MMMM d, yyyy", Calendar.getInstance().getTime()));
 
         calendarDayViewPager = (ViewPager) view.findViewById(R.id.events_viewpager);
         dayPagerAdapter = new CalendarDayPagerAdapter(getFragmentManager());

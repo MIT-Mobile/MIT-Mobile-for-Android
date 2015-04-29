@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
     android:paddingTop="10dp">
 
     <TextView
@@ -14,7 +13,8 @@
         android:layout_marginBottom="5dp"
         android:gravity="center_horizontal"
         android:textAllCaps="true"
-        android:textSize="12sp" />
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/calendar_date"
@@ -23,6 +23,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/calendar_date_other_selector"
         android:gravity="center"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

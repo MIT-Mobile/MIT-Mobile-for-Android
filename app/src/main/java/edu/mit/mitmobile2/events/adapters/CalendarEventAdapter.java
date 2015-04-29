@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.events.adapters;
 
 import android.content.Context;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -65,9 +66,10 @@ public class CalendarEventAdapter extends BaseAdapter {
 
         MITCalendarLocation location = event.getLocation();
         if (location != null) {
-            holder.eventLocation.setText(location.getDescription());
+            holder.eventLocation.setText(location.getRoomNumber());
         }
-        holder.eventTime.setText(event.getStartAt());
+
+        holder.eventTime.setText(DateFormat.format("h:mm a", event.getStartDate()) + " - " + DateFormat.format("h:mm a", event.getEndDate()));
 
         return view;
 
