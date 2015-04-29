@@ -13,6 +13,7 @@
         android:id="@+id/event_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -20,12 +21,16 @@
         android:id="@+id/event_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="true" />
+        android:textAllCaps="true"
+        android:textColor="@color/mit_grey"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/event_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="true" />
+        android:textAllCaps="true"
+        android:textColor="@color/mit_grey"
+        android:textStyle="bold" />
 
 </LinearLayout>
