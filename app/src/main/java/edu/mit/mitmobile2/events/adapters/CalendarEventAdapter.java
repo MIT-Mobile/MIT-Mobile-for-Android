@@ -10,6 +10,7 @@ import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
+import edu.mit.mitmobile2.events.model.MITCalendarLocation;
 
 public class CalendarEventAdapter extends BaseAdapter {
 
@@ -61,10 +62,19 @@ public class CalendarEventAdapter extends BaseAdapter {
 
         MITCalendarEvent event = (MITCalendarEvent) getItem(position);
         holder.eventTitle.setText(event.getTitle());
-        holder.eventLocation.setText(event.getLocation().getDescription());
-        holder.eventTime.setText(event.getStartAt().toString());
+
+        MITCalendarLocation location = event.getLocation();
+        if (location != null) {
+            holder.eventLocation.setText(location.getDescription());
+        }
+        holder.eventTime.setText(event.getStartAt());
 
         return view;
 
+    }
+
+    public void updateEvents(List<MITCalendarEvent> events) {
+        this.events = events;
+        notifyDataSetChanged();
     }
 }

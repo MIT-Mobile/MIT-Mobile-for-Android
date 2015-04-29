@@ -16,15 +16,12 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Callback;
 import retrofit.http.GET;
 
-/**
- * Created by grmartin on 4/27/15.
- */
 public class EventManager extends RetrofitManager {
     private static final ApiService SERVICE_INTERFACE = MIT_REST_ADAPTER.create(ApiService.class);
 
     @SuppressWarnings("unused")
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
-        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
         Method m = findMethodViaDirectReflection(ApiService.class, path, pathParams, queryParams, Callback.class);
         Timber.d("Method = " + m);
@@ -33,7 +30,7 @@ public class EventManager extends RetrofitManager {
 
     @SuppressWarnings("unused")
     public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams)
-        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
         Method m = findMethodViaDirectReflection(ApiService.class, path, pathParams, queryParams);
         Timber.d("Method = " + m);
@@ -45,13 +42,13 @@ public class EventManager extends RetrofitManager {
         ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), events);
 
         returnValue.getClient().get(
-            Constants.EVENTS,
-            Constants.Events.CALENDAR_EVENTS_PATH,
-            new FluentParamMap()
-                .add("calendar", cal.getIdentifier())
-                .object(),
-            null,
-            returnValue);
+                Constants.EVENTS,
+                Constants.Events.CALENDAR_EVENTS_PATH,
+                new FluentParamMap()
+                        .add("calendar", cal.getIdentifier())
+                        .object(),
+                null,
+                returnValue);
 
         return returnValue;
     }
@@ -60,14 +57,14 @@ public class EventManager extends RetrofitManager {
         ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), eventHandler);
 
         returnValue.getClient().get(
-            Constants.EVENTS,
-            Constants.Events.CALENDAR_EVENT_PATH,
-            new FluentParamMap()
-                .add("calendar", cal.getIdentifier())
-                .add("event", evt.getIdentifier())
-                .object(),
-            null,
-            returnValue);
+                Constants.EVENTS,
+                Constants.Events.CALENDAR_EVENT_PATH,
+                new FluentParamMap()
+                        .add("calendar", cal.getIdentifier())
+                        .add("event", evt.getIdentifier())
+                        .object(),
+                null,
+                returnValue);
 
         return returnValue;
     }
@@ -84,13 +81,13 @@ public class EventManager extends RetrofitManager {
         ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), calendar);
 
         returnValue.getClient().get(
-            Constants.EVENTS,
-            Constants.Events.CALENDAR_PATH,
-            new FluentParamMap()
-                .add("calendar", cal.getIdentifier())
-                .object(),
-            null,
-            returnValue);
+                Constants.EVENTS,
+                Constants.Events.CALENDAR_PATH,
+                new FluentParamMap()
+                        .add("calendar", cal.getIdentifier())
+                        .object(),
+                null,
+                returnValue);
 
         return returnValue;
     }
@@ -99,19 +96,23 @@ public class EventManager extends RetrofitManager {
     public interface ApiService {
         @GET(Constants.Events.CALENDARS_PATH)
         void _get_all(Callback<List<MITCalendar>> callback);
+
         @GET(Constants.Events.CALENDAR_PATH)
         void _get_a(Callback<MITCalendar> callback);
+
         @GET(Constants.Events.CALENDAR_EVENTS_PATH)
         void _get_calendar_events(Callback<List<MITCalendarEvent>> callback);
+
         @GET(Constants.Events.CALENDAR_EVENT_PATH)
         void _get_calendar_event(Callback<MITCalendarEvent> callback);
     }
 
-    public static class ServiceCallWrapper<T>  extends MITAPIClient.ApiCallWrapper<T> implements ServiceCall, Callback<T> {
+    public static class ServiceCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements ServiceCall, Callback<T> {
         public ServiceCallWrapper(MITAPIClient client, Callback<T> callback) {
             super(client, callback);
         }
     }
 
-    public interface ServiceCall extends MITAPIClient.ApiCall {}
+    public interface ServiceCall extends MITAPIClient.ApiCall {
+    }
 }

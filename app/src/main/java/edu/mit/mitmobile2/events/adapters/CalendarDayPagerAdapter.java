@@ -11,16 +11,19 @@ public class CalendarDayPagerAdapter extends FragmentStatePagerAdapter {
     public static final int SIZE = 2000;
 
     private CalendarDayFragment[] fragments = new CalendarDayFragment[SIZE];
+    private CalendarWeekPagerAdapter weekPagerAdapterReference;
+    private int lastSeenPosition;
 
     public CalendarDayPagerAdapter(FragmentManager fm) {
         super(fm);
+        lastSeenPosition = SIZE / 2;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (fragments[position] == null) {
             int diff = position - (SIZE / 2); // positive or negative
-            CalendarDayFragment fragment = CalendarDayFragment.newInstance();
+            CalendarDayFragment fragment = CalendarDayFragment.newInstance(weekPagerAdapterReference.getStartPoint(), diff);
             fragments[position] = fragment;
             return fragment;
         } else {
@@ -31,5 +34,17 @@ public class CalendarDayPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return SIZE;
+    }
+
+    public void setWeekPagerAdapterReference(CalendarWeekPagerAdapter weekPagerAdapterReference) {
+        this.weekPagerAdapterReference = weekPagerAdapterReference;
+    }
+
+    public int getLastSeenPosition() {
+        return lastSeenPosition;
+    }
+
+    public void setLastSeenPosition(int lastSeenPosition) {
+        this.lastSeenPosition = lastSeenPosition;
     }
 }

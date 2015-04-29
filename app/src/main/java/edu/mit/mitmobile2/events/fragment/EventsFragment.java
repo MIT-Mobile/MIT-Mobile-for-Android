@@ -23,9 +23,15 @@ import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
 public class EventsFragment extends Fragment {
 
     public static final long WEEK_OFFSET = 604800000;
+    public static final long DAY_OFFSET = 86400000;
+
     private TextView dateTextView;
     private CalendarWeekPagerAdapter weekPagerAdapter;
     private CalendarDayPagerAdapter dayPagerAdapter;
+    private ViewPager calendarDayViewPager;
+
+    private boolean triggeredFromTopViewPager = false;
+    private boolean triggeredFromBottomViewPager = false;
 
     public EventsFragment() {
     }
@@ -50,33 +56,63 @@ public class EventsFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                weekPagerAdapter.setFragmentPosition(position);
-                String date = weekPagerAdapter.getDate();
-                dateTextView.setText(date);
+                if (!triggeredFromBottomViewPager) {
+                    int dayOffset = weekPagerAdapter.setFragmentPosition(position);
+                    if (dayOffset != 0) {
+                        int newDayPosition = dayPagerAdapter.getLastSeenPosition() + (dayOffset * 7);
+                        triggeredFromTopViewPager = true;
+                        dayPagerAdapter.setLastSeenPosition(newDayPosition);
+                        calendarDayViewPager.setCurrentItem(newDayPosition);
+                    }
+                    String date = weekPagerAdapter.getDate();
+                    dateTextView.setText(date);
+                } else {
+                    triggeredFromBottomViewPager = false;
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                if (state == ViewPager.SCROLL_STATE_DRAGGING && triggeredFromBottomViewPager) {
+                    triggeredFromBottomViewPager = false;
+                }
             }
         });
 
         dateTextView.setText(DateFormat.format("MMMM d, yyyy", Calendar.getInstance().getTime()));
 
-        ViewPager calendarDayViewPager = (ViewPager) view.findViewById(R.id.events_viewpager);
+        calendarDayViewPager = (ViewPager) view.findViewById(R.id.events_viewpager);
         dayPagerAdapter = new CalendarDayPagerAdapter(getFragmentManager());
         calendarDayViewPager.setAdapter(dayPagerAdapter);
-        calendarDayViewPager.setCurrentItem(CalendarDayPagerAdapter.SIZE / 2);
+
+        int position = CalendarDayPagerAdapter.SIZE / 2;
+        calendarDayViewPager.setCurrentItem(position);
+        weekPagerAdapter.setFragmentPosition(position);
+
+        dayPagerAdapter.setWeekPagerAdapterReference(weekPagerAdapter);
 
         calendarDayViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //TODO: Update the top ViewPager to show the new selected date
+
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                if (!triggeredFromTopViewPager) {
+                    int weekPagerIncrementAmount = weekPagerAdapter.updateIncremental(position - dayPagerAdapter.getLastSeenPosition());
+                    dayPagerAdapter.setLastSeenPosition(position);
+                    int newPosition = weekPagerAdapter.getFragmentPosition() + weekPagerIncrementAmount;
+                    if (newPosition != 0) {
+                        triggeredFromBottomViewPager = true;
+                        calendarWeekViewPager.setCurrentItem(newPosition);
+                        weekPagerAdapter.setFragmentPosition(newPosition);
+                    }
+                    String date = weekPagerAdapter.getDate();
+                    dateTextView.setText(date);
+                } else {
+                    triggeredFromTopViewPager = false;
+                }
             }
 
             @Override
@@ -92,7 +128,14 @@ public class EventsFragment extends Fragment {
     public void dateHasChanged(OttoBusEvent.ChangeDateTextEvent event) {
         String date = event.getDateText();
         dateTextView.setText(date);
-        weekPagerAdapter.update(event.getPosition());
+
+        int dayOffset = weekPagerAdapter.update(event.getPosition());
+        if (dayOffset != 0) {
+            triggeredFromTopViewPager = true;
+            int newDayPosition = dayPagerAdapter.getLastSeenPosition() + dayOffset;
+            dayPagerAdapter.setLastSeenPosition(newDayPosition);
+            calendarDayViewPager.setCurrentItem(newDayPosition);
+        }
     }
 
     @Override
