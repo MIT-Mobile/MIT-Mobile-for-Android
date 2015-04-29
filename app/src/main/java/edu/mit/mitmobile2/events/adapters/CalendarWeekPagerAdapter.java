@@ -52,9 +52,26 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
         return super.getItemPosition(object);
     }
 
-    public void update(int positionInWeek) {
+    public int update(int positionInWeek) {
+        int diff = positionInWeek - this.positionInWeek;
         this.positionInWeek = positionInWeek;
         notifyDataSetChanged();
+        return diff;
+    }
+
+    public int updateIncremental(int change) {
+        int newPosition = this.positionInWeek + change;
+
+        if (newPosition == -1) {
+            update(6);
+            return -1;
+        } else if (newPosition == 7) {
+            update(0);
+            return 1;
+        } else {
+            update(newPosition);
+            return 0;
+        }
     }
 
     public Calendar getStartPoint() {
@@ -65,8 +82,14 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
         this.startPoint = startPoint;
     }
 
-    public void setFragmentPosition(int fragmentPosition) {
+    public int setFragmentPosition(int fragmentPosition) {
+        int diff = fragmentPosition - this.fragmentPosition;
         this.fragmentPosition = fragmentPosition;
+        return diff;
+    }
+
+    public int getFragmentPosition() {
+        return fragmentPosition;
     }
 
     public String getDate() {

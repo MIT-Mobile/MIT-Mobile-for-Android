@@ -34,6 +34,7 @@ import android.widget.ProgressBar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.mit.mitmobile2.events.fragment.EventsFragment;
 import edu.mit.mitmobile2.tour.fragment.TourFragment;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
@@ -275,7 +276,7 @@ public class MITMainActivity extends MITActivity {
         getFragmentManager().beginTransaction().replace(R.id.content_frame, f, intentString).commit();
         setTitle(title);
 
-        if (f instanceof TourFragment) {
+        if (f instanceof TourFragment || f instanceof EventsFragment) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);

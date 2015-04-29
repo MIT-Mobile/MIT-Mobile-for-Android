@@ -17,9 +17,11 @@ public class MITCalendarEvent implements Parcelable {
     protected String identifier;
     protected String url;
     @SerializedName("start_at")
-    protected Date startAt;
+    protected String startAt;
+    protected Date startDate;
     @SerializedName("end_at")
-    protected Date endAt;
+    protected String endAt;
+    protected Date endDate;
     protected String title;
     @SerializedName("description_html")
     protected String htmlDescription;
@@ -71,20 +73,20 @@ public class MITCalendarEvent implements Parcelable {
         this.url = url;
     }
 
-    public Date getStartAt() {
-        return startAt;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStartAt(Date startAt) {
-        this.startAt = startAt;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Date getEndAt() {
-        return endAt;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndAt(Date endAt) {
-        this.endAt = endAt;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getTitle() {
@@ -239,13 +241,29 @@ public class MITCalendarEvent implements Parcelable {
         this.seriesInfo = seriesInfo;
     }
 
+    public String getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(String endAt) {
+        this.endAt = endAt;
+    }
+
+    public String getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(String startAt) {
+        this.startAt = startAt;
+    }
+
     @Override
     public String toString() {
         return "MITCalendarEvent{" +
             "identifier='" + identifier + '\'' +
             ", url='" + url + '\'' +
-            ", startAt=" + startAt +
-            ", endAt=" + endAt +
+            ", startDate=" + startDate +
+            ", endDate=" + endDate +
             ", title='" + title + '\'' +
             ", htmlDescription='" + htmlDescription + '\'' +
             ", tickets='" + tickets + '\'' +
@@ -272,9 +290,9 @@ public class MITCalendarEvent implements Parcelable {
         identifier = in.readString();
         url = in.readString();
         long tmpStartAt = in.readLong();
-        startAt = tmpStartAt != -1 ? new Date(tmpStartAt) : null;
+        startDate = tmpStartAt != -1 ? new Date(tmpStartAt) : null;
         long tmpEndAt = in.readLong();
-        endAt = tmpEndAt != -1 ? new Date(tmpEndAt) : null;
+        endDate = tmpEndAt != -1 ? new Date(tmpEndAt) : null;
         title = in.readString();
         htmlDescription = in.readString();
         tickets = in.readString();
@@ -293,7 +311,7 @@ public class MITCalendarEvent implements Parcelable {
         modifiedAt = tmpModifiedAt != -1 ? new Date(tmpModifiedAt) : null;
         location = (MITCalendarLocation) in.readValue(MITCalendarLocation.class.getClassLoader());
         if (in.readByte() == 0x01) {
-            categories = new ArrayList<MITCalendar>();
+            categories = new ArrayList<>();
             in.readList(categories, MITCalendar.class.getClassLoader());
         } else {
             categories = null;
@@ -312,8 +330,8 @@ public class MITCalendarEvent implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(identifier);
         dest.writeString(url);
-        dest.writeLong(startAt != null ? startAt.getTime() : -1L);
-        dest.writeLong(endAt != null ? endAt.getTime() : -1L);
+        dest.writeLong(startDate != null ? startDate.getTime() : -1L);
+        dest.writeLong(endDate != null ? endDate.getTime() : -1L);
         dest.writeString(title);
         dest.writeString(htmlDescription);
         dest.writeString(tickets);
