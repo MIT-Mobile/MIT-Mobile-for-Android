@@ -12,6 +12,7 @@
     <string name="title_activity_dining">Dining</string>
     <string name="title_activity_emergency">Emergency Info</string>
     <string name="title_activity_events">Events</string>
+    <string name="title_activity_events_calendars">Calendars</string>
     <string name="title_activity_facilities">Facilities</string>
     <string name="title_activity_libraries">Libraries</string>
     <string name="title_activity_links">Links</string>
@@ -127,5 +128,10 @@
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
     <string name="no_results">No Results</string>
+
+    <string name="calendar_header_registrar">REGISTRAR CALENDAR</string>
+    <string name="calendar_header_events">EVENTS CALENDARS</string>
+    <string name="calendar_all_events">All Events</string>
+    <string name="calendar_action_menu_done">DONE</string>
 
 </resources>

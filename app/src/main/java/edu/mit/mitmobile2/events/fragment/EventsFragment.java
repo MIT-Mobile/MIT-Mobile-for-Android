@@ -2,16 +2,26 @@ package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.events.EventManager;
+import edu.mit.mitmobile2.events.activities.CalendarsActivity;
+import edu.mit.mitmobile2.events.model.MITCalendar;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class EventsFragment extends Fragment {
-public static final String TAG = "EventsFragment";
+    public static final String TAG = "EventsFragment";
 
 
     public EventsFragment() {
@@ -25,20 +35,18 @@ public static final String TAG = "EventsFragment";
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Intent intent = new Intent(getActivity(), CalendarsActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
-//        EventManager.ServiceCall call = EventManager.getCalendars(getActivity(), new Callback<List<MITCalendar>>() {
-//            @Override
-//            public void success(List<MITCalendar> mitCalendars, Response response) {
-//                LoggingManager.Log.d(TAG, "MITCalendar => "+mitCalendars+ " => "+response);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                LoggingManager.Log.d(TAG, "ERROR => "+error);
-//            }
-//        });
+
     }
 
     @Override

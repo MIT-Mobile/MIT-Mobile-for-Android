@@ -86,6 +86,8 @@ public class Constants {
         public static final String CALENDAR_PATH = "/{calendar}";
         public static final String CALENDAR_EVENTS_PATH = "/{calendar}/events";
         public static final String CALENDAR_EVENT_PATH = "/{calendar}/events/{event}";
+
+        public static final String CALENDARS = "calendars";
     }
 
     public static class Resources {

@@ -1,13 +1,13 @@
 package edu.mit.mitmobile2.events.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Created by grmartin on 4/27/15.
@@ -50,7 +50,7 @@ public class MITCalendarEvent implements Parcelable {
     @SerializedName("series_info")
     protected MITCalendarSeriesInfo seriesInfo;
 
-    public MITCalendarEvent(){
+    public MITCalendarEvent() {
         this.categories = new ArrayList<>();
         this.sponsors = new HashSet<>();
     }
@@ -242,30 +242,30 @@ public class MITCalendarEvent implements Parcelable {
     @Override
     public String toString() {
         return "MITCalendarEvent{" +
-            "identifier='" + identifier + '\'' +
-            ", url='" + url + '\'' +
-            ", startAt=" + startAt +
-            ", endAt=" + endAt +
-            ", title='" + title + '\'' +
-            ", htmlDescription='" + htmlDescription + '\'' +
-            ", tickets='" + tickets + '\'' +
-            ", cost='" + cost + '\'' +
-            ", openTo='" + openTo + '\'' +
-            ", ownerID='" + ownerID + '\'' +
-            ", lecturer='" + lecturer + '\'' +
-            ", cancelled=" + cancelled +
-            ", typeCode='" + typeCode + '\'' +
-            ", statusCode='" + statusCode + '\'' +
-            ", createdBy='" + createdBy + '\'' +
-            ", createdAt=" + createdAt +
-            ", modifiedBy='" + modifiedBy + '\'' +
-            ", modifiedAt=" + modifiedAt +
-            ", location=" + location +
-            ", categories=" + categories +
-            ", sponsors=" + sponsors +
-            ", contact=" + contact +
-            ", seriesInfo=" + seriesInfo +
-            '}';
+                "identifier='" + identifier + '\'' +
+                ", url='" + url + '\'' +
+                ", startAt=" + startAt +
+                ", endAt=" + endAt +
+                ", title='" + title + '\'' +
+                ", htmlDescription='" + htmlDescription + '\'' +
+                ", tickets='" + tickets + '\'' +
+                ", cost='" + cost + '\'' +
+                ", openTo='" + openTo + '\'' +
+                ", ownerID='" + ownerID + '\'' +
+                ", lecturer='" + lecturer + '\'' +
+                ", cancelled=" + cancelled +
+                ", typeCode='" + typeCode + '\'' +
+                ", statusCode='" + statusCode + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdAt=" + createdAt +
+                ", modifiedBy='" + modifiedBy + '\'' +
+                ", modifiedAt=" + modifiedAt +
+                ", location=" + location +
+                ", categories=" + categories +
+                ", sponsors=" + sponsors +
+                ", contact=" + contact +
+                ", seriesInfo=" + seriesInfo +
+                '}';
     }
 
     protected MITCalendarEvent(Parcel in) {
