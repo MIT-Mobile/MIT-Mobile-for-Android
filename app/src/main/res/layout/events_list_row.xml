@@ -2,8 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/shuttle_route_selector"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:paddingBottom="10dp"
+    android:paddingLeft="@dimen/shuttle_home_image_padding"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
 
     <TextView
         android:id="@+id/event_title"

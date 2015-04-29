@@ -31,7 +31,8 @@ public class CalendarWeekFragment extends Fragment implements UpdateableFragment
     private static final String DIFFERENCE = "diff";
     private static final String POSITION = "position";
     private static final String SELECTED_DATE = "selectedDate";
-    public static final String DATE_FORMAT = "MMMM d, yyyy";
+
+    public static final String DATE_FORMAT = "EEEE, MMMM d, yyyy";
 
     private List<Date> dates = new ArrayList<>();
 
@@ -195,6 +196,9 @@ public class CalendarWeekFragment extends Fragment implements UpdateableFragment
         } else if (dayIsToday(calendar, c)) {
             date.setBackgroundResource(R.drawable.white_circle);
             date.setTextColor(getResources().getColor(R.color.mit_red));
+        } else if (i == 0 || i == 6) {
+            date.setBackgroundResource(R.drawable.white_circle);
+            date.setTextColor(getResources().getColor(R.color.mit_grey));
         } else {
             date.setBackgroundResource(R.drawable.white_circle);
             date.setTextColor(getResources().getColor(R.color.black));
