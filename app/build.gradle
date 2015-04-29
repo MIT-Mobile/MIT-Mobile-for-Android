@@ -45,4 +45,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'org.threeten:threetenbp:1.2'
     compile 'com.koushikdutta.ion:ion:2.+'
+    compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
 }
