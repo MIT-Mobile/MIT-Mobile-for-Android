@@ -33,30 +33,22 @@
 
         <TextView
             android:id="@+id/today_button"
+            style="@style/MITEventsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/divider"
-            android:background="@color/white"
-            android:paddingBottom="@dimen/events_main_screen_horiz_padding"
             android:paddingLeft="@dimen/shuttle_home_image_padding"
-            android:paddingTop="@dimen/events_main_screen_horiz_padding"
-            android:text="@string/today"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/today" />
 
         <TextView
             android:id="@+id/calendars_button"
+            style="@style/MITEventsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/today_button"
-            android:background="@color/white"
-            android:paddingBottom="@dimen/events_main_screen_horiz_padding"
             android:paddingRight="@dimen/shuttle_home_image_padding"
-            android:paddingTop="@dimen/events_main_screen_horiz_padding"
-            android:text="@string/calendars"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/calendars" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/calendar_viewpager"
