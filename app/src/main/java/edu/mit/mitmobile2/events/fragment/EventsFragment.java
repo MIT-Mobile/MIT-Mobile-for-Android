@@ -22,6 +22,8 @@ import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
 
 public class EventsFragment extends Fragment {
 
+    public static final String TAG = "EventsFragment";
+
     public static final long WEEK_OFFSET = 604800000;
     public static final long DAY_OFFSET = 86400000;
 

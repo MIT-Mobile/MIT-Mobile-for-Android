@@ -1,5 +1,10 @@
 package edu.mit.mitmobile2.events.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,12 +12,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.annotations.SerializedName;
-
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
+
+/**
+ * Created by grmartin on 4/27/15.
+ */
 
 public class MITCalendarEvent implements Parcelable {
     @SerializedName("id")
