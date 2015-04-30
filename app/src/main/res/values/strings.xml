@@ -125,6 +125,16 @@
         <item>test 3</item>
     </string-array>
 
+    <string-array name="days">
+        <item>S</item>
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+    </string-array>
+
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
     <string name="no_results">No Results</string>
@@ -133,5 +143,8 @@
     <string name="calendar_header_events">EVENTS CALENDARS</string>
     <string name="calendar_all_events">All Events</string>
     <string name="calendar_action_menu_done">DONE</string>
+
+    <string name="today">TODAY</string>
+    <string name="calendars">CALENDARS</string>
 
 </resources>

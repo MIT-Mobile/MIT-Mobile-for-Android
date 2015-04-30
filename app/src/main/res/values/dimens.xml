@@ -41,7 +41,7 @@
     <!--people-->
     <dimen name="people_row_height_tall">72dp</dimen>
     <dimen name="people_row_height_short">48dp</dimen>
-    <dimen name="people_row_icon_height">22dp</dimen>
+    <dimen name="people_row_icon_height">24dp</dimen>
     <dimen name="people_row_icon_width">@dimen/people_row_icon_height</dimen>
     <dimen name="people_row_icon_margin_top_bottom">25dp</dimen>
     <dimen name="people_row_icon_margin_start">20dp</dimen>
@@ -81,4 +81,12 @@
     <dimen name="calendar_row_padding">14dp</dimen>
     <dimen name="calendar_row_child_padding">48dp</dimen>
 
+    <!--events-->
+    <dimen name="events_calendar_size">30dp</dimen>
+
+    <!--news-->
+    <dimen name="news_header_padding">14dp</dimen>
+    <dimen name="news_cell_padding">14dp</dimen>
+
+    <dimen name="events_main_screen_horiz_padding">10dp</dimen>
 </resources>

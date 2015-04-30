@@ -33,4 +33,22 @@ public class OttoBusEvent {
         public ToggleDescriptionEvent() {
         }
     }
+
+    public static class ChangeDateTextEvent {
+        String dateText;
+        int position;
+
+        public ChangeDateTextEvent(String dateText, int position) {
+            this.dateText = dateText;
+            this.position = position;
+        }
+
+        public String getDateText() {
+            return dateText;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+    }
 }

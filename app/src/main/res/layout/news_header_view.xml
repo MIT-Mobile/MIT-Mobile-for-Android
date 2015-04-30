@@ -1,31 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:alpha="0.95"
     android:background="@color/white"
-    android:alpha="0.9">
-
-    <TextView
-        android:id="@+id/news_header_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_alignParentLeft="true"
-        android:padding="10dp" />
-
-    <ImageView
-        android:id="@+id/header_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/news_header_title" />
+    android:orientation="horizontal">
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/divider_grey"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentTop="true"
+        android:background="@color/divider_grey" />
+
+    <TextView
+        android:id="@+id/news_header_title"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/header_indicator"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/news_header_padding"
+        android:textColor="@color/mit_red" />
+
+    <ImageView
+        android:id="@+id/header_indicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/news_header_padding"
+        android:background="@color/bg_arrow"
+        android:scaleType="center"
+        android:src="@drawable/ic_right_arrow" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_grey" />
 </RelativeLayout>
