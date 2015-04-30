@@ -78,14 +78,14 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
         return startPoint;
     }
 
-    public void setStartPoint(Calendar startPoint) {
-        this.startPoint = startPoint;
-    }
-
     public int setFragmentPosition(int fragmentPosition) {
         int diff = fragmentPosition - this.fragmentPosition;
         this.fragmentPosition = fragmentPosition;
         return diff;
+    }
+
+    public int getCurrentPositionInWeek() {
+        return positionInWeek;
     }
 
     public int getFragmentPosition() {
@@ -94,10 +94,22 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
 
     public String getDate() {
         CalendarWeekFragment centerFragment = fragments[fragmentPosition];
-        return centerFragment.getDate();
+        if (centerFragment != null) {
+            return centerFragment.getDate();
+        } else {
+            return null;
+        }
     }
 
     public int getStartPointOffsetInWeek() {
         return this.startPoint.get(Calendar.DAY_OF_WEEK) - 1;
+    }
+
+    public boolean isCenteredAroundToday() {
+        return fieldIsEqual(startPoint, Calendar.getInstance(), Calendar.YEAR) && fieldIsEqual(startPoint, Calendar.getInstance(), Calendar.MONTH) && fieldIsEqual(startPoint, Calendar.getInstance(), Calendar.DAY_OF_MONTH);
+    }
+
+    private boolean fieldIsEqual(Calendar c1, Calendar c2, int field) {
+        return c1.get(field) == c2.get(field);
     }
 }

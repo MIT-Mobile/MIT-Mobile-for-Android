@@ -18,6 +18,13 @@
         <!-- The rest of your attributes -->
         <item name="colorAccent">@color/mit_app_color</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:dialogTheme">@style/DialogTheme</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/mit_red</item>
+        <item name="colorPrimaryDark">@color/mit_red_dark</item>
+        <item name="colorAccent">@color/mit_red</item>
     </style>
 
 
@@ -331,7 +338,6 @@
     <color name="moduleHomeUnderlineColor">#993333</color>
     <color name="homeButtonBackgroundColor">#993333</color>
     <color name="tabUnderlineColor">#993333</color>
-
 
 
 </resources>
