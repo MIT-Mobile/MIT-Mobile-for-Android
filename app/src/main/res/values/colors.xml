@@ -66,6 +66,8 @@
     <color name="blue">#FF213996</color>
     <color name="black">#FF000000</color>
 
+    <color name="row_indicator_grey">#979797</color>
+
     <color name="arrow_ltgray">#D8D8D8</color>
     <color name="bg_arrow">#19F1F1F1</color>
 </resources>

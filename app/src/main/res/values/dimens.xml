@@ -77,6 +77,10 @@
     <dimen name="tour_info_content_margin">34dp</dimen>
     <dimen name="tour_stop_recyclerview_padding">8dp</dimen>
 
+    <!--calendar-->
+    <dimen name="calendar_row_padding">14dp</dimen>
+    <dimen name="calendar_row_child_padding">48dp</dimen>
+
     <!--events-->
     <dimen name="events_calendar_size">30dp</dimen>
 
