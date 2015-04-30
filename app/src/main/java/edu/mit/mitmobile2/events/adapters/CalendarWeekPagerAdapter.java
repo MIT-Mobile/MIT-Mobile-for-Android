@@ -96,4 +96,8 @@ public class CalendarWeekPagerAdapter extends FragmentStatePagerAdapter {
         CalendarWeekFragment centerFragment = fragments[fragmentPosition];
         return centerFragment.getDate();
     }
+
+    public int getStartPointOffsetInWeek() {
+        return this.startPoint.get(Calendar.DAY_OF_WEEK) - 1;
+    }
 }

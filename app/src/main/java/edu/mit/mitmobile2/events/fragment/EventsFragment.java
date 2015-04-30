@@ -121,6 +121,24 @@ public class EventsFragment extends Fragment {
             }
         });
 
+        TextView todayButton = (TextView) view.findViewById(R.id.today_button);
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                triggeredFromBottomViewPager = true;
+                triggeredFromTopViewPager = true;
+                int newPositionWeek = CalendarWeekPagerAdapter.SIZE / 2;
+                calendarWeekViewPager.setCurrentItem(newPositionWeek);
+                weekPagerAdapter.update(weekPagerAdapter.getStartPointOffsetInWeek());
+                weekPagerAdapter.setFragmentPosition(newPositionWeek);
+
+                int newPositionDay = CalendarDayPagerAdapter.SIZE / 2;
+                dayPagerAdapter.setLastSeenPosition(newPositionDay);
+                calendarDayViewPager.setCurrentItem(newPositionDay);
+                dateTextView.setText(weekPagerAdapter.getDate());
+            }
+        });
+
         return view;
     }
 
