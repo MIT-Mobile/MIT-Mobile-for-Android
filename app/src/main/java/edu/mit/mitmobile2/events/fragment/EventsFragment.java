@@ -1,6 +1,5 @@
 package edu.mit.mitmobile2.events.fragment;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Intent;
@@ -9,6 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -52,6 +54,8 @@ public class EventsFragment extends Fragment {
         View view = inflater.inflate(R.layout.content_events, null);
 
         dateTextView = (TextView) view.findViewById(R.id.date_text);
+
+        this.setHasOptionsMenu(true);
 
         calendarWeekViewPager = (ViewPager) view.findViewById(R.id.calendar_viewpager);
         buildCalendarWeekPager(Calendar.getInstance(Locale.US));
@@ -98,7 +102,6 @@ public class EventsFragment extends Fragment {
         return view;
     }
 
-    //TODO: Add button to action bar, connect this method to onClick listener
     private void goToDate() {
         Calendar today = Calendar.getInstance(Locale.US);
         DatePickerDialog dialog = new DatePickerDialog(getActivity(), R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
@@ -206,6 +209,23 @@ public class EventsFragment extends Fragment {
             dayPagerAdapter.setLastSeenPosition(newDayPosition);
             calendarDayViewPager.setCurrentItem(newDayPosition);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_fragment_events, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.go_to_date:
+                goToDate();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
