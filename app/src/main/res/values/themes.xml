@@ -18,15 +18,18 @@
         <!-- The rest of your attributes -->
         <item name="colorAccent">@color/mit_app_color</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="android:dialogTheme">@style/DialogTheme</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
-        <item name="colorPrimary">@color/mit_red</item>
         <item name="colorPrimaryDark">@color/mit_red_dark</item>
         <item name="colorAccent">@color/mit_red</item>
-    </style>
+        <item name="colorPrimary">@color/mit_red</item>
+        <item name="android:textColorPrimary">@color/white</item>
 
+        <!--This is the one that changes the calendar text color-->
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorLink">@color/white</item>
+    </style>
 
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="Widget.AppCompat.ActionBar.Solid">

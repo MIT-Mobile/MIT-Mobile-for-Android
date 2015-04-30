@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.events.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -21,10 +22,13 @@ import java.util.Locale;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.events.activities.CalendarsActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarDayPagerAdapter;
 import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
 
 public class EventsFragment extends Fragment {
+
+    public static final String TAG = "EventsFragment";
 
     public static final long WEEK_OFFSET = 604800000;
     public static final long DAY_OFFSET = 86400000;
@@ -86,23 +90,29 @@ public class EventsFragment extends Fragment {
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar today = Calendar.getInstance(Locale.US);
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_DARK, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar newDate = Calendar.getInstance(Locale.US);
-                        newDate.set(year, monthOfYear, dayOfMonth);
-                        buildCalendarWeekPager(newDate);
-                        buildCalendarDayPager();
-                        dateTextView.setText(DateFormat.format("EEEE, MMMM d, yyyy", newDate.getTime()));
-                    }
-                }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
-                dialog.setInverseBackgroundForced(true);
-                dialog.show();
+                Intent intent = new Intent(getActivity(), CalendarsActivity.class);
+                startActivity(intent);
             }
         });
 
         return view;
+    }
+
+    //TODO: Add button to action bar, connect this method to onClick listener
+    private void goToDate() {
+        Calendar today = Calendar.getInstance(Locale.US);
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance(Locale.US);
+                newDate.set(year, monthOfYear, dayOfMonth);
+                buildCalendarWeekPager(newDate);
+                buildCalendarDayPager();
+                dateTextView.setText(DateFormat.format("EEEE, MMMM d, yyyy", newDate.getTime()));
+            }
+        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
+        dialog.setInverseBackgroundForced(true);
+        dialog.show();
     }
 
     private void buildCalendarDayPager() {
