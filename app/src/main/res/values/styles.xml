@@ -93,21 +93,22 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="MITShared.SimpleTaggedAction" parent="MITShared"/>
-    <style name="MITShared.SimpleTaggedAction.Row" parent="MITShared.SimpleTaggedAction"/>
+    <style name="MITShared.SimpleTaggedAction" parent="MITShared" />
+
+    <style name="MITShared.SimpleTaggedAction.Row" parent="MITShared.SimpleTaggedAction" />
 
     <style name="MITShared.SimpleTaggedAction.Row.Title" parent="MITShared.SimpleTaggedAction.Row">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/mit_red</item>
     </style>
 
-    <style name="MITPeopleDirectory" parent="MITShared"/>
+    <style name="MITPeopleDirectory" parent="MITShared" />
 
     <style name="MITPeopleDirectory.SampleSearches.Text" parent="MITPeopleDirectory">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="MITPeopleDirectory.Row" parent="MITPeopleDirectory"/>
+    <style name="MITPeopleDirectory.Row" parent="MITPeopleDirectory" />
 
     <style name="MITPeopleDirectory.Row.Subtitle" parent="MITPeopleDirectory.Row">
         <item name="android:textColor">@color/mit_grey</item>
@@ -118,10 +119,11 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="MITEmergency" parent="MITShared"/>
+    <style name="MITEmergency" parent="MITShared" />
 
-    <style name="MITEmergency.ContactList" parent="MITEmergency"/>
-    <style name="MITEmergency.ContactList.Row" parent="MITEmergency.ContactList"/>
+    <style name="MITEmergency.ContactList" parent="MITEmergency" />
+
+    <style name="MITEmergency.ContactList.Row" parent="MITEmergency.ContactList" />
 
     <style name="MITEmergency.ContactList.Row.Subtitle" parent="MITEmergency.ContactList.Row">
         <item name="android:textColor">@color/mit_grey</item>
@@ -130,6 +132,15 @@
     <style name="MITEmergency.ContactList.Row.Title" parent="MITEmergency.ContactList.Row.Subtitle">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="MITEventsButton">
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingBottom">@dimen/events_main_screen_horiz_padding</item>
+        <item name="android:paddingTop">@dimen/events_main_screen_horiz_padding</item>
+        <item name="android:textColor">@color/events_text_selector</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>
