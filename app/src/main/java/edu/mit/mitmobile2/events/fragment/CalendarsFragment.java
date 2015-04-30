@@ -85,6 +85,7 @@ public class CalendarsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_done: {
                 // TODO: save selected one here
+                getActivity().finish();
             }
         }
 

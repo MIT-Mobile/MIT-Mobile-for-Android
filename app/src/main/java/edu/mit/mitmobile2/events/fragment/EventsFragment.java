@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -17,15 +18,19 @@ import java.util.Calendar;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.events.activities.CalendarsActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarDayPagerAdapter;
 import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
 
-public class EventsFragment extends Fragment {
+public class EventsFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "EventsFragment";
 
     public static final long WEEK_OFFSET = 604800000;
     public static final long DAY_OFFSET = 86400000;
+
+    private TextView todayTextView;
+    private TextView calendarTextView;
 
     private TextView dateTextView;
     private CalendarWeekPagerAdapter weekPagerAdapter;
@@ -43,7 +48,12 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_events, null);
 
+        todayTextView = (TextView) view.findViewById(R.id.today_button);
+        calendarTextView = (TextView) view.findViewById(R.id.calendars_button);
         dateTextView = (TextView) view.findViewById(R.id.date_text);
+
+        todayTextView.setOnClickListener(this);
+        calendarTextView.setOnClickListener(this);
 
         final ViewPager calendarWeekViewPager = (ViewPager) view.findViewById(R.id.calendar_viewpager);
         weekPagerAdapter = new CalendarWeekPagerAdapter(getFragmentManager(), Calendar.getInstance());
@@ -150,5 +160,20 @@ public class EventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MitMobileApplication.bus.register(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.calendars_button: {
+                Intent intent = new Intent(getActivity(), CalendarsActivity.class);
+                startActivity(intent);
+            }
+            break;
+            case R.id.today_button: {
+                // TODO: add action
+            }
+            break;
+        }
     }
 }
