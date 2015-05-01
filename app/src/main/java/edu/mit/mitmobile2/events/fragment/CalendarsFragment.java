@@ -1,9 +1,10 @@
 package edu.mit.mitmobile2.events.fragment;
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,15 @@ import static butterknife.ButterKnife.inject;
  */
 public class CalendarsFragment extends Fragment {
 
+    public interface OnCalendarsFragmentInteractionListener {
+        void onDone();
+        void onAcademicCalendarSelected(MITCalendar calendar);
+        void onHolidaysCalendarSelected(MITCalendar calendar);
+    }
+
+    private static final String ID_CALENDAR_ACADEMIC = "academic_calendar";
+    private static final String ID_CALENDAR_HOLIDAYS = "academic_holidays";
+
     @InjectView(R.id.event_calendars_list)
     ExpandableListView calendarsListView;
 
@@ -39,9 +49,22 @@ public class CalendarsFragment extends Fragment {
     private CalendarsAdapter adapter;
     private ExpandableListViewClickListener expandableListViewClickListener;
 
+    private OnCalendarsFragmentInteractionListener interactionListener;
+
     public static CalendarsFragment newInstance() {
         CalendarsFragment fragment = new CalendarsFragment();
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof OnCalendarsFragmentInteractionListener) {
+            interactionListener = (OnCalendarsFragmentInteractionListener) activity;
+        } else {
+            throw new ClassCastException("Activity " + activity.getClass().toString() + " should implement " + OnCalendarsFragmentInteractionListener.class.toString());
+        }
     }
 
     @Nullable
@@ -69,6 +92,8 @@ public class CalendarsFragment extends Fragment {
         expandableListViewClickListener = new ExpandableListViewClickListener();
 
         calendarsListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         calendarsListView.setOnGroupClickListener(expandableListViewClickListener);
         calendarsListView.setOnChildClickListener(expandableListViewClickListener);
     }
@@ -78,6 +103,8 @@ public class CalendarsFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.menu_calendars, menu);
         super.onCreateOptionsMenu(menu, inflater);
+
+        getActivity().setTitle(R.string.title_activity_events_calendars);
     }
 
     @Override
@@ -85,7 +112,7 @@ public class CalendarsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_done: {
                 // TODO: save selected one here
-                getActivity().finish();
+                interactionListener.onDone();
             }
         }
 
@@ -96,6 +123,12 @@ public class CalendarsFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(Constants.Events.CALENDARS, (ArrayList<? extends Parcelable>) mitCalendars);
+    }
+
+    @Override
+    public void onDetach() {
+        interactionListener = null;
+        super.onDetach();
     }
 
     private void getCalendars() {
@@ -138,6 +171,12 @@ public class CalendarsFragment extends Fragment {
             if (adapter.isCheckable(groupPosition)) {
                 MITCalendar checkedCalendar = adapter.getGroup(groupPosition);
                 adapter.setCheckedCalendar(checkedCalendar);
+
+                if (checkedCalendar.getIdentifier().equals(ID_CALENDAR_ACADEMIC)) {
+                    interactionListener.onAcademicCalendarSelected(checkedCalendar);
+                } else if (checkedCalendar.getIdentifier().equals(ID_CALENDAR_HOLIDAYS)) {
+                    interactionListener.onHolidaysCalendarSelected(checkedCalendar);
+                }
             }
             return false;
         }

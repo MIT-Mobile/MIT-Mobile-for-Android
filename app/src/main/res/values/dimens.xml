@@ -89,4 +89,8 @@
     <dimen name="news_cell_padding">14dp</dimen>
 
     <dimen name="events_main_screen_horiz_padding">10dp</dimen>
+
+    <!--events-->
+    <dimen name="events_header_padding">14dp</dimen>
+    <dimen name="events_cell_padding">14dp</dimen>
 </resources>
