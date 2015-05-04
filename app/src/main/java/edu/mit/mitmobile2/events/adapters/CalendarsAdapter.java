@@ -11,7 +11,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.mit.mitmobile2.DrawableUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.model.MITCalendar;
 

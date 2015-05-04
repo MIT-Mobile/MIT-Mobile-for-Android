@@ -388,9 +388,9 @@ public class MITCalendarEvent implements Parcelable {
     };
 
     private Date buildDateFromString(String stringToParse) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         try {
-            return format.parse(stringToParse.substring(0, stringToParse.length() - 5));
+            return format.parse(stringToParse);
         } catch (ParseException e) {
             LoggingManager.Timber.e(e, "Failed");
             return new Date();
