@@ -27,6 +27,7 @@
     <string name="title_activity_tour_directions">Walking Directions</string>
     <string name="title_activity_news_category">NewsCategoryActivity</string>
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
+    <string name="title_activity_events_detail">Event Details</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -119,6 +120,17 @@
     <!--Emergency Contacts Listing (Shared by Emergency Module and People Module)-->
     <string name="title_activity_emergency_contacts">All Emergency Contacts</string>
 
+    <!--Events-->
+    <string name="speaker">speaker</string>
+    <string name="time">time</string>
+    <string name="location">location</string>
+    <string name="phone">phone</string>
+    <string name="website">website</string>
+    <string name="open_to">open to</string>
+    <string name="sponsor">sponsor</string>
+    <string name="cost">cost</string>
+    <string name="series_info">This event is part of a series</string>
+    <string name="for_more_info">for more information, contact</string>
     <string-array name="test">
         <item>test 1</item>
         <item>test 2</item>
@@ -138,6 +150,7 @@
     <string name="open_in_browser_q">Open in Browser?</string>
     <string name="share_via">Share via</string>
     <string name="no_results">No Results</string>
+    <string name="title_activity_events_details">EventsDetailsActivity</string>
 
     <string name="calendar_header_registrar">REGISTRAR CALENDAR</string>
     <string name="calendar_header_events">EVENTS CALENDARS</string>

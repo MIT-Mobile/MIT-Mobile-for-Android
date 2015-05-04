@@ -21,7 +21,7 @@
         android:id="@+id/park_office"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shuttle_phone_cell_height"
-        android:background="@drawable/shuttle_route_selector">
+        android:background="@drawable/mit_selector">
 
         <ImageView
             android:id="@+id/parkingoffice_imageview"
@@ -59,7 +59,7 @@
         android:id="@+id/saferide"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shuttle_phone_cell_height"
-        android:background="@drawable/shuttle_route_selector">
+        android:background="@drawable/mit_selector">
 
         <ImageView
             android:id="@+id/saferide_imageview"
@@ -111,7 +111,7 @@
         android:id="@+id/real_time_bus_arrivals"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shuttle_home_cell_height"
-        android:background="@drawable/shuttle_route_selector"
+        android:background="@drawable/mit_selector"
         android:orientation="horizontal">
 
         <ImageView
@@ -133,7 +133,7 @@
         android:id="@+id/real_time_train_arrivals"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shuttle_home_cell_height"
-        android:background="@drawable/shuttle_route_selector"
+        android:background="@drawable/mit_selector"
         android:orientation="horizontal">
 
         <ImageView
@@ -154,7 +154,7 @@
         android:id="@+id/google_transit"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shuttle_home_cell_height"
-        android:background="@drawable/shuttle_route_selector"
+        android:background="@drawable/mit_selector"
         android:orientation="horizontal">
 
         <ImageView

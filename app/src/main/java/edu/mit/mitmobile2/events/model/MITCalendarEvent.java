@@ -46,11 +46,13 @@ public class MITCalendarEvent implements Parcelable {
     @SerializedName("created_by")
     protected String createdBy;
     @SerializedName("created_at")
-    protected Date createdAt;
+    protected String createdAt;
+    protected Date createdDate;
     @SerializedName("modified_by")
     protected String modifiedBy;
     @SerializedName("modified_at")
-    protected Date modifiedAt;
+    protected String modifiedAt;
+    protected Date modifiedDate;
     protected MITCalendarLocation location;
     protected ArrayList<MITCalendar> categories;
     protected HashSet<MITCalendarSponsor> sponsors;
@@ -189,12 +191,15 @@ public class MITCalendarEvent implements Parcelable {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getCreatedDate() {
+        if (createdDate == null) {
+            createdDate = buildDateFromString(createdAt);
+        }
+        return createdDate;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getModifiedBy() {
@@ -205,12 +210,15 @@ public class MITCalendarEvent implements Parcelable {
         this.modifiedBy = modifiedBy;
     }
 
-    public Date getModifiedAt() {
-        return modifiedAt;
+    public Date getModifiedDate() {
+        if (modifiedDate == null) {
+            modifiedDate = buildDateFromString(modifiedAt);
+        }
+        return modifiedDate;
     }
 
-    public void setModifiedAt(Date modifiedAt) {
-        this.modifiedAt = modifiedAt;
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public MITCalendarLocation getLocation() {
@@ -269,6 +277,22 @@ public class MITCalendarEvent implements Parcelable {
         this.startAt = startAt;
     }
 
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setModifiedAt(String modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public String getModifiedAt() {
+        return modifiedAt;
+    }
+
     @Override
     public String toString() {
         return "MITCalendarEvent{" +
@@ -319,10 +343,10 @@ public class MITCalendarEvent implements Parcelable {
         statusCode = in.readString();
         createdBy = in.readString();
         long tmpCreatedAt = in.readLong();
-        createdAt = tmpCreatedAt != -1 ? new Date(tmpCreatedAt) : null;
+        createdDate = tmpCreatedAt != -1 ? new Date(tmpCreatedAt) : null;
         modifiedBy = in.readString();
         long tmpModifiedAt = in.readLong();
-        modifiedAt = tmpModifiedAt != -1 ? new Date(tmpModifiedAt) : null;
+        modifiedDate = tmpModifiedAt != -1 ? new Date(tmpModifiedAt) : null;
         location = (MITCalendarLocation) in.readValue(MITCalendarLocation.class.getClassLoader());
         if (in.readByte() == 0x01) {
             categories = new ArrayList<>();
@@ -359,9 +383,9 @@ public class MITCalendarEvent implements Parcelable {
         dest.writeString(typeCode);
         dest.writeString(statusCode);
         dest.writeString(createdBy);
-        dest.writeLong(createdAt != null ? createdAt.getTime() : -1L);
+        dest.writeLong(createdAt != null ? createdDate.getTime() : -1L);
         dest.writeString(modifiedBy);
-        dest.writeLong(modifiedAt != null ? modifiedAt.getTime() : -1L);
+        dest.writeLong(modifiedAt != null ? modifiedDate.getTime() : -1L);
         dest.writeValue(location);
         if (categories == null) {
             dest.writeByte((byte) (0x00));
