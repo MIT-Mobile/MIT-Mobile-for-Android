@@ -5,11 +5,13 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.events.callback.CalendarDayCallback;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
 import edu.mit.mitmobile2.events.model.MITCalendarLocation;
 
@@ -19,14 +21,17 @@ public class CalendarEventAdapter extends BaseAdapter {
         TextView eventTitle;
         TextView eventLocation;
         TextView eventTime;
+        LinearLayout eventLayout;
     }
 
     private List<MITCalendarEvent> events;
     private Context context;
+    private CalendarDayCallback callback;
 
-    public CalendarEventAdapter(Context context, List<MITCalendarEvent> events) {
+    public CalendarEventAdapter(Context context, List<MITCalendarEvent> events, CalendarDayCallback callback) {
         this.context = context;
         this.events = events;
+        this.callback = callback;
     }
 
     @Override
@@ -55,13 +60,14 @@ public class CalendarEventAdapter extends BaseAdapter {
             holder.eventLocation = (TextView) view.findViewById(R.id.event_location);
             holder.eventTitle = (TextView) view.findViewById(R.id.event_title);
             holder.eventTime = (TextView) view.findViewById(R.id.event_time);
+            holder.eventLayout = (LinearLayout) view.findViewById(R.id.event_layout);
 
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        MITCalendarEvent event = (MITCalendarEvent) getItem(position);
+        final MITCalendarEvent event = (MITCalendarEvent) getItem(position);
         holder.eventTitle.setText(event.getTitle());
 
         MITCalendarLocation location = event.getLocation();
@@ -70,6 +76,13 @@ public class CalendarEventAdapter extends BaseAdapter {
         }
 
         holder.eventTime.setText(DateFormat.format("h:mm a", event.getStartDate()) + " - " + DateFormat.format("h:mm a", event.getEndDate()));
+
+        holder.eventLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.CaldendarDayDetail(event);
+            }
+        });
 
         return view;
 

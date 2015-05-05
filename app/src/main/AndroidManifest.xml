@@ -26,6 +26,8 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <!-- android:theme="@android:style/Theme.Holo.Light" -->
     <application
@@ -235,6 +237,11 @@
             android:name=".events.activities.CalendarsActivity"
             android:label="@string/title_activity_events_calendars"
             android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+
+        <activity
+            android:name=".events.activities.EventsDetailActivity"
+            android:label="@string/title_activity_events_detail"
             android:theme="@style/Theme.MyTheme" />
     </application>
 

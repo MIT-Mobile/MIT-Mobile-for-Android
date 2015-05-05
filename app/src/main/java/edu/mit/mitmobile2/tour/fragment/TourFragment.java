@@ -159,8 +159,8 @@ public class TourFragment extends Fragment {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getActivity(), "No application can handle this request. " +
-                    "Please install a map app.", Toast.LENGTH_SHORT).show();
-            Timber.e(e, "No map application");
+                    "Please install an app.", Toast.LENGTH_SHORT).show();
+            Timber.e(e, "No application");
         }
     }
 
