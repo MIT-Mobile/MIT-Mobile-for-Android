@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,12 @@ public class CalendarDayFragment extends Fragment {
 
     private static final String DATE = "date";
 
+    private SwipeRefreshLayout refreshLayout;
+    private ListView listView;
+
+    private String dateString;
+    private CalendarEventAdapter adapter;
+
     public CalendarDayFragment() {
     }
 
@@ -54,23 +61,36 @@ public class CalendarDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_day, null);
 
-        ListView listView = (ListView) view.findViewById(R.id.daily_events_list);
+        listView = (ListView) view.findViewById(R.id.daily_events_list);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.devents_refresh_layout);
 
-        String dateString = getArguments().getString(DATE);
+        dateString = getArguments().getString(DATE);
 
-        final CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), new ArrayList<MITCalendarEvent>());
+        adapter = new CalendarEventAdapter(getActivity(), new ArrayList<MITCalendarEvent>());
         listView.setAdapter(adapter);
 
+        queryEvents(dateString, dateString, null);
+
+        return view;
+    }
+
+    public void queryEvents(String query) {
+        queryEvents(dateString, dateString, query);
+    }
+
+    public void queryEvents(String startDate, String endDate, String query) {
         MITAPIClient mitApiClient = new MITAPIClient(getActivity());
 
         HashMap<String, String> pathParams = new HashMap<>();
         pathParams.put("calendar", "events_calendar");
 
         HashMap<String, String> queryParams = new HashMap<>();
-        queryParams.put("start", dateString);
-        queryParams.put("end", dateString);
+        queryParams.put("start", startDate);
+        queryParams.put("end", endDate);
+        if (!TextUtils.isEmpty(query)) {
+            queryParams.put("q", query);
+        }
 
-        final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.devents_refresh_layout);
         refreshLayout.setEnabled(false);
 
         // Needs to be posted delayed because of bug in SwipeRefreshLayout
@@ -95,8 +115,6 @@ public class CalendarDayFragment extends Fragment {
                 refreshLayout.setRefreshing(false);
             }
         });
-
-        return view;
     }
 
 }

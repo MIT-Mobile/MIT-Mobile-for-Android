@@ -20,7 +20,7 @@ public class CalendarDayPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public CalendarDayFragment getItem(int position) {
         if (fragments[position] == null) {
             int diff = position - (SIZE / 2); // positive or negative
             CalendarDayFragment fragment = CalendarDayFragment.newInstance(weekPagerAdapterReference.getStartPoint(), diff);

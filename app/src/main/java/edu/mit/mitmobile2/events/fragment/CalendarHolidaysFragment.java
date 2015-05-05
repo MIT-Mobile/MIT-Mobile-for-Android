@@ -16,6 +16,8 @@ import java.util.List;
 
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.EventManager;
 import edu.mit.mitmobile2.events.adapters.CalendarHolidaysAdapter;
@@ -110,7 +112,7 @@ public class CalendarHolidaysFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
     }

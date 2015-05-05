@@ -66,6 +66,10 @@
             android:label="MitProvider"
             android:syncable="true" />
 
+        <provider
+            android:name=".events.provider.SearchEventsSuggestionProvider"
+            android:authorities="edu.mit.mitmobile2.events.provider.SearchEventsSuggestionProvider" />
+
         <activity
             android:name=".MITMainActivity"
             android:launchMode="singleTop"

@@ -2,17 +2,25 @@ package edu.mit.mitmobile2.events.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -28,7 +36,7 @@ import edu.mit.mitmobile2.events.activities.CalendarsActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarDayPagerAdapter;
 import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
 
-public class EventsFragment extends Fragment {
+public class EventsFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     public static final String TAG = "EventsFragment";
 
@@ -44,6 +52,7 @@ public class EventsFragment extends Fragment {
     private boolean triggeredFromTopViewPager = false;
     private boolean triggeredFromBottomViewPager = false;
 
+    private String previousSearchString;
 
     public EventsFragment() {
     }
@@ -215,6 +224,15 @@ public class EventsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_fragment_events, menu);
+
+        // Associate searchable configuration with the SearchView
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+//        SearchableInfo searchableInfo = searchManager.getSearchableInfo(getActivity().getComponentName());
+
+        final MenuItem menuItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchView.setOnQueryTextListener(this);
     }
 
     @Override
@@ -238,5 +256,20 @@ public class EventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MitMobileApplication.bus.register(this);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        dayPagerAdapter.getItem(calendarDayViewPager.getCurrentItem()).queryEvents(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (!TextUtils.isEmpty(previousSearchString) && TextUtils.isEmpty(newText)) {
+            dayPagerAdapter.getItem(calendarDayViewPager.getCurrentItem()).queryEvents("");
+        }
+        previousSearchString = newText;
+        return true;
     }
 }
