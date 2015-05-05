@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_events_header_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:background="@color/light_grey"
+    android:paddingBottom="@dimen/events_search_header_padding_top_bottom"
+    android:paddingLeft="@dimen/events_search_header_padding_left"
+    android:paddingTop="@dimen/events_search_header_padding_top_bottom"
+    android:textColor="@color/mit_red" />

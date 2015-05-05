@@ -21,7 +21,7 @@ public class CalendarEventAdapter extends BaseAdapter {
         TextView eventTime;
     }
 
-    private List<MITCalendarEvent> events;
+    protected List<MITCalendarEvent> events;
     private Context context;
 
     public CalendarEventAdapter(Context context, List<MITCalendarEvent> events) {

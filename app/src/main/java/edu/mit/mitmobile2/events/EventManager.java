@@ -1,11 +1,11 @@
 package edu.mit.mitmobile2.events;
 
+import android.app.Activity;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
-
-import android.app.Activity;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
@@ -37,6 +37,23 @@ public class EventManager extends RetrofitManager {
         return m.invoke(SERVICE_INTERFACE);
     }
 
+    public static ServiceCall getCalendarEvents(Activity activity, MITCalendar cal, MITCalendar category, String query, Callback<List<MITCalendarEvent>> events) {
+        ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), events);
+
+        returnValue.getClient().get(
+                Constants.EVENTS,
+                Constants.Events.CALENDAR_EVENTS_PATH,
+                new FluentParamMap()
+                        .add("calendar", cal.getIdentifier())
+                        .object(),
+                new FluentParamMap()
+                        .add("category", category.getIdentifier())
+                        .add("q", query != null ? query : "")
+                        .object(),
+                returnValue);
+
+        return returnValue;
+    }
 
     public static ServiceCall getCalendarEvents(Activity activity, MITCalendar cal, Callback<List<MITCalendarEvent>> events) {
         ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), events);

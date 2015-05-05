@@ -12,6 +12,11 @@ import com.google.gson.annotations.SerializedName;
  * Created by grmartin on 4/27/15.
  */
 public class MITCalendar implements Parcelable {
+
+    public static final String EVENTS_CALENDAR_ID = "events_calendar";
+    public static final String ACADEMIC_CALENDAR_ID = "academic_calendar";
+    public static final String ACADEMIC_HOLIDAYS_CALENDAR_ID = "academic_holidays";
+
     protected String eventsUrl;
     @SerializedName("id")
     protected String identifier;

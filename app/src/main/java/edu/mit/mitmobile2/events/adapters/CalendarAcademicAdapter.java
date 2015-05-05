@@ -49,7 +49,6 @@ public class CalendarAcademicAdapter extends BaseAdapter implements StickyListHe
 
     @Override
     public long getHeaderId(int i) {
-        Log.d("test", "position = " + i + "id = " + getItem(i).getStartDate().getTime());
         return getItem(i).getStartDate().getTime();
     }
 
