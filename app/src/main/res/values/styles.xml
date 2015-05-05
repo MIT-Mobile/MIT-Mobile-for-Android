@@ -106,8 +106,8 @@
     </style>
 
     <style name="MITEventsImageIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">@dimen/event_detail_image_padding</item>
         <item name="android:layout_centerVertical">true</item>
