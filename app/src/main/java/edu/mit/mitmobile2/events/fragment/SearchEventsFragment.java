@@ -24,6 +24,7 @@ import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.EventManager;
@@ -62,21 +63,29 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
     private List<MITCalendarEvent> mitCalendarEvents;
     private CalendarSearchEventAdapter eventsAdapter;
 
-    private MITCalendar allEventsCategory;
     private MITCalendar filterCategory;
 
     public SearchEventsFragment() {
         // Required empty public constructor
     }
 
-    public static SearchEventsFragment newInstance() {
+    public static SearchEventsFragment newInstance(MITCalendar filterCategory) {
         SearchEventsFragment fragment = new SearchEventsFragment();
+
+        Bundle extras = new Bundle();
+        extras.putParcelable(Constants.Events.CALENDAR, filterCategory);
+        fragment.setArguments(extras);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null && getArguments().containsKey(Constants.Events.CALENDAR)) {
+            filterCategory = getArguments().getParcelable(Constants.Events.CALENDAR);
+        }
     }
 
     @Override
@@ -94,14 +103,6 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
         if (set != null) {
             recentSearches.addAll(set);
         }
-
-        // TODO: set as parameters
-        allEventsCategory = new MITCalendar();
-        allEventsCategory.setIdentifier("19");
-
-        filterCategory = new MITCalendar();
-        filterCategory.setIdentifier("8");
-        filterCategory.setName("Cinema");
 
         searchAdapter = new SearchRecentAdapter(getActivity().getApplicationContext(), recentSearches, filterCategory, this);
         recentSearchListView.setAdapter(searchAdapter);
@@ -147,7 +148,11 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                eventsListView.setVisibility(hasFocus ? View.GONE : View.VISIBLE);
+                noResultsTextView.setVisibility(View.GONE);
+                if (hasFocus) {
+                    recentSearchListView.setVisibility(View.VISIBLE);
+                    eventsListView.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -192,7 +197,7 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
 
     @Override
     public void onClearFilter(MITCalendar filterCategory) {
-        filterCategory = null;
+        this.filterCategory = null;
         searchAdapter.setFilterCalendar(null);
     }
 
@@ -200,18 +205,22 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
         MITCalendar eventCalendar = new MITCalendar();
         eventCalendar.setIdentifier(MITCalendar.EVENTS_CALENDAR_ID);
 
-        MITCalendar category = (filterCategory == null) ? allEventsCategory : filterCategory;
-
-        EventManager.getCalendarEvents(getActivity(), eventCalendar, category, searchText, new Callback<List<MITCalendarEvent>>() {
+        EventManager.getCalendarEvents(getActivity(), eventCalendar, filterCategory, searchText, new Callback<List<MITCalendarEvent>>() {
             @Override
             public void success(List<MITCalendarEvent> mitCalendarEvents, Response response) {
-                if (mitCalendarEvents != null) {
-                    SearchEventsFragment.this.mitCalendarEvents.clear();
+                SearchEventsFragment.this.mitCalendarEvents.clear();
+                if (mitCalendarEvents != null && mitCalendarEvents.size() > 0) {
                     SearchEventsFragment.this.mitCalendarEvents.addAll(mitCalendarEvents);
+
+                    eventsListView.setVisibility(View.VISIBLE);
+                    eventsAdapter.notifyDataSetChanged();
+                } else {
+                    recentSearchListView.setVisibility(View.GONE);
+                    noResultsTextView.setVisibility(View.VISIBLE);
+                    eventsListView.setVisibility(View.GONE);
                 }
 
-                eventsListView.setVisibility(View.VISIBLE);
-                eventsAdapter.notifyDataSetChanged();
+
             }
 
             @Override

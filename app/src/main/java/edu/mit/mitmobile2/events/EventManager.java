@@ -40,16 +40,21 @@ public class EventManager extends RetrofitManager {
     public static ServiceCall getCalendarEvents(Activity activity, MITCalendar cal, MITCalendar category, String query, Callback<List<MITCalendarEvent>> events) {
         ServiceCallWrapper<?> returnValue = new ServiceCallWrapper<>(new MITAPIClient(activity), events);
 
+        FluentParamMap queryParams = new FluentParamMap();
+        if (category != null) {
+            queryParams.add("category", category.getIdentifier());
+        }
+        if (query != null) {
+            queryParams.add("q", query);
+        }
+
         returnValue.getClient().get(
                 Constants.EVENTS,
                 Constants.Events.CALENDAR_EVENTS_PATH,
                 new FluentParamMap()
                         .add("calendar", cal.getIdentifier())
                         .object(),
-                new FluentParamMap()
-                        .add("category", category.getIdentifier())
-                        .add("q", query != null ? query : "")
-                        .object(),
+                queryParams.object(),
                 returnValue);
 
         return returnValue;

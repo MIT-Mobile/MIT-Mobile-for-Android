@@ -1,9 +1,10 @@
 package edu.mit.mitmobile2.events.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.fragment.CalendarAcademicFragment;
 import edu.mit.mitmobile2.events.fragment.CalendarHolidaysFragment;
@@ -14,6 +15,8 @@ import edu.mit.mitmobile2.events.model.MITCalendar;
  * Created by serg on 4/28/15.
  */
 public class CalendarsActivity extends AppCompatActivity implements CalendarsFragment.OnCalendarsFragmentInteractionListener {
+
+    public static final int REQUEST_CODE_SELECT_EVENTS_CATEGORY = 423;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +31,10 @@ public class CalendarsActivity extends AppCompatActivity implements CalendarsFra
     }
 
     @Override
-    public void onDone() {
+    public void onDone(MITCalendar selectedCalendar) {
+        Intent result = new Intent();
+        result.putExtra(Constants.Events.CALENDAR, selectedCalendar);
+        setResult(RESULT_OK, result);
         finish();
     }
 

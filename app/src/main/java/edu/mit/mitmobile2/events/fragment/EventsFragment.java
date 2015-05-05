@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.events.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Intent;
@@ -24,12 +25,14 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Locale;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.activities.CalendarsActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarDayPagerAdapter;
 import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
+import edu.mit.mitmobile2.events.model.MITCalendar;
 import edu.mit.mitmobile2.news.fragments.SearchFragment;
 
 public class EventsFragment extends Fragment {
@@ -48,6 +51,7 @@ public class EventsFragment extends Fragment {
     private boolean triggeredFromTopViewPager = false;
     private boolean triggeredFromBottomViewPager = false;
 
+    private MITCalendar filterCategory;
 
     public EventsFragment() {
     }
@@ -99,11 +103,23 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CalendarsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, CalendarsActivity.REQUEST_CODE_SELECT_EVENTS_CATEGORY);
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CalendarsActivity.REQUEST_CODE_SELECT_EVENTS_CATEGORY: {
+                if (resultCode == Activity.RESULT_OK && data.hasExtra(Constants.Events.CALENDAR)) {
+                    filterCategory = data.getParcelableExtra(Constants.Events.CALENDAR);
+                }
+            }
+        }
     }
 
     private void goToDate() {
@@ -226,9 +242,10 @@ public class EventsFragment extends Fragment {
         searchView.setQueryHint(getString(R.string.search_hint));
 
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                SearchEventsFragment searchFragment = SearchEventsFragment.newInstance();
+                SearchEventsFragment searchFragment = SearchEventsFragment.newInstance(filterCategory);
                 getFragmentManager().beginTransaction().replace(R.id.content_frame, searchFragment).commit();
                 return false;
             }

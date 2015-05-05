@@ -184,7 +184,10 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
         for (MITCalendar calendar : mitCalendars) {
             if (calendar.getCategories() != null && calendar.getCategories().size() > 0) {
                 if (mitCalendarsEvents.size() == 0) {
-                    calendar.setName(context.getString(R.string.calendar_all_events));
+                    MITCalendar allEventsCategory = new MITCalendar();
+                    allEventsCategory.setIdentifier(calendar.getIdentifier());
+                    allEventsCategory.setName(context.getString(R.string.calendar_all_events));
+                    mitCalendarsEvents.add(allEventsCategory);
                 }
                 mitCalendarsEvents.addAll(calendar.getCategories());
             } else {
