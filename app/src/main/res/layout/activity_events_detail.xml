@@ -112,7 +112,7 @@
 
             <ImageView
                 style="@style/MITEventsImageIcon"
-                android:src="@drawable/maps_shuttle_indicator" />
+                android:src="@drawable/ic_pin" />
         </RelativeLayout>
 
         <RelativeLayout

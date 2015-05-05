@@ -172,9 +172,9 @@ public class CalendarsFragment extends Fragment {
                 MITCalendar checkedCalendar = adapter.getGroup(groupPosition);
                 adapter.setCheckedCalendar(checkedCalendar);
 
-                if (checkedCalendar.getIdentifier().equals(ID_CALENDAR_ACADEMIC)) {
+                if ((checkedCalendar != null) && (checkedCalendar.getIdentifier().equals(ID_CALENDAR_ACADEMIC))) {
                     interactionListener.onAcademicCalendarSelected(checkedCalendar);
-                } else if (checkedCalendar.getIdentifier().equals(ID_CALENDAR_HOLIDAYS)) {
+                } else if ((checkedCalendar != null) && (checkedCalendar.getIdentifier().equals(ID_CALENDAR_HOLIDAYS))) {
                     interactionListener.onHolidaysCalendarSelected(checkedCalendar);
                 }
             }
