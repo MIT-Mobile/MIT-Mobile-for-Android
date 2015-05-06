@@ -1,11 +1,14 @@
 package edu.mit.mitmobile2.events.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -21,12 +25,15 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Locale;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.activities.CalendarsActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarDayPagerAdapter;
 import edu.mit.mitmobile2.events.adapters.CalendarWeekPagerAdapter;
+import edu.mit.mitmobile2.events.model.MITCalendar;
+import edu.mit.mitmobile2.news.fragments.SearchFragment;
 
 public class EventsFragment extends Fragment {
 
@@ -44,6 +51,7 @@ public class EventsFragment extends Fragment {
     private boolean triggeredFromTopViewPager = false;
     private boolean triggeredFromBottomViewPager = false;
 
+    private MITCalendar filterCategory;
 
     public EventsFragment() {
     }
@@ -95,11 +103,23 @@ public class EventsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CalendarsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, CalendarsActivity.REQUEST_CODE_SELECT_EVENTS_CATEGORY);
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CalendarsActivity.REQUEST_CODE_SELECT_EVENTS_CATEGORY: {
+                if (resultCode == Activity.RESULT_OK && data.hasExtra(Constants.Events.CALENDAR)) {
+                    filterCategory = data.getParcelableExtra(Constants.Events.CALENDAR);
+                }
+            }
+        }
     }
 
     private void goToDate() {
@@ -215,6 +235,26 @@ public class EventsFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_fragment_events, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchView.setQueryHint(getString(R.string.search_hint));
+
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                SearchEventsFragment searchFragment = SearchEventsFragment.newInstance(filterCategory);
+                getFragmentManager().beginTransaction().replace(R.id.content_frame, searchFragment).commit();
+                return false;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                return false;
+            }
+        });
     }
 
     @Override

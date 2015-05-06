@@ -34,8 +34,10 @@ import static butterknife.ButterKnife.inject;
 public class CalendarsFragment extends Fragment {
 
     public interface OnCalendarsFragmentInteractionListener {
-        void onDone();
+        void onDone(MITCalendar selectedCalendar);
+
         void onAcademicCalendarSelected(MITCalendar calendar);
+
         void onHolidaysCalendarSelected(MITCalendar calendar);
     }
 
@@ -48,6 +50,8 @@ public class CalendarsFragment extends Fragment {
     private List<MITCalendar> mitCalendars;
     private CalendarsAdapter adapter;
     private ExpandableListViewClickListener expandableListViewClickListener;
+
+    private MITCalendar selectedEventCategory;
 
     private OnCalendarsFragmentInteractionListener interactionListener;
 
@@ -111,8 +115,7 @@ public class CalendarsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done: {
-                // TODO: save selected one here
-                interactionListener.onDone();
+                interactionListener.onDone(selectedEventCategory);
             }
         }
 
@@ -160,8 +163,8 @@ public class CalendarsFragment extends Fragment {
         @Override
         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
             if (adapter.isCheckable(groupPosition, childPosition)) {
-                MITCalendar checkedCalendar = adapter.getChild(groupPosition, childPosition);
-                adapter.setCheckedCalendar(checkedCalendar);
+                selectedEventCategory = adapter.getChild(groupPosition, childPosition);
+                adapter.setCheckedCalendar(selectedEventCategory);
             }
             return false;
         }
@@ -169,13 +172,13 @@ public class CalendarsFragment extends Fragment {
         @Override
         public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
             if (adapter.isCheckable(groupPosition)) {
-                MITCalendar checkedCalendar = adapter.getGroup(groupPosition);
-                adapter.setCheckedCalendar(checkedCalendar);
+                selectedEventCategory = adapter.getGroup(groupPosition);
+                adapter.setCheckedCalendar(selectedEventCategory);
 
-                if ((checkedCalendar != null) && (checkedCalendar.getIdentifier().equals(ID_CALENDAR_ACADEMIC))) {
-                    interactionListener.onAcademicCalendarSelected(checkedCalendar);
-                } else if ((checkedCalendar != null) && (checkedCalendar.getIdentifier().equals(ID_CALENDAR_HOLIDAYS))) {
-                    interactionListener.onHolidaysCalendarSelected(checkedCalendar);
+                if (selectedEventCategory.getIdentifier().equals(ID_CALENDAR_ACADEMIC)) {
+                    interactionListener.onAcademicCalendarSelected(selectedEventCategory);
+                } else if (selectedEventCategory.getIdentifier().equals(ID_CALENDAR_HOLIDAYS)) {
+                    interactionListener.onHolidaysCalendarSelected(selectedEventCategory);
                 }
             }
             return false;

@@ -101,4 +101,13 @@
     <!--events-->
     <dimen name="events_header_padding">14dp</dimen>
     <dimen name="events_cell_padding">14dp</dimen>
+
+    <!--events search-->
+    <dimen name="events_search_header_padding_left">14dp</dimen>
+    <dimen name="events_search_header_padding_top_bottom">8dp</dimen>
+
+    <dimen name="events_search_hint_padding_left">14dp</dimen>
+    <dimen name="events_search_hint_padding_top_bottom">6dp</dimen>
+
+    <dimen name="events_search_cell_padding">14dp</dimen>
 </resources>

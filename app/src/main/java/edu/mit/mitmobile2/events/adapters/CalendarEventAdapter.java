@@ -24,7 +24,7 @@ public class CalendarEventAdapter extends BaseAdapter {
         LinearLayout eventLayout;
     }
 
-    private List<MITCalendarEvent> events;
+    protected List<MITCalendarEvent> events;
     private Context context;
     private CalendarDayCallback callback;
 
@@ -80,7 +80,9 @@ public class CalendarEventAdapter extends BaseAdapter {
         holder.eventLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.CaldendarDayDetail(event);
+                if (callback != null) {
+                    callback.CaldendarDayDetail(event);
+                }
             }
         });
 
