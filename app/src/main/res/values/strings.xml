@@ -160,8 +160,8 @@
     <string name="today">TODAY</string>
     <string name="calendars">CALENDARS</string>
 
-    <string name="event_search_hint_template" formatted="false">"%s"</string>
-    <string name="event_search_hint_with_category_template" formatted="false">"%s" in %s</string>
+    <string name="event_search_hint_template" formatted="false">\"%s\"</string>
+    <string name="event_search_hint_with_category_template" formatted="false">\"%s\" in %s</string>
     <string name="event_filter_header">FILTERS</string>
     <string name="event_filter_clear">Clear</string>
     <string name="event_recent_header">RECENTS</string>

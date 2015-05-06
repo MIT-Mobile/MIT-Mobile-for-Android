@@ -80,7 +80,9 @@ public class CalendarEventAdapter extends BaseAdapter {
         holder.eventLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.CaldendarDayDetail(event);
+                if (callback != null) {
+                    callback.CaldendarDayDetail(event);
+                }
             }
         });
 

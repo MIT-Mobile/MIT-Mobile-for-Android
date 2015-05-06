@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.events.callback.CalendarDayCallback;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
 import edu.mit.mitmobile2.events.model.MITCalendarLocation;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -21,8 +22,10 @@ public class CalendarSearchEventAdapter extends CalendarEventAdapter implements 
 
     private SimpleDateFormat dateFormat;
 
-    public CalendarSearchEventAdapter(Context context, List<MITCalendarEvent> events) {
-        super(context, events, null);
+
+
+    public CalendarSearchEventAdapter(Context context, List<MITCalendarEvent> events, CalendarDayCallback callback) {
+        super(context, events, callback);
         dateFormat = new SimpleDateFormat(DATE_HEADER_FORMAT);
     }
 

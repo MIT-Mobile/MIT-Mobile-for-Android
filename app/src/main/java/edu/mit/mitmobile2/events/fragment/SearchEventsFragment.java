@@ -33,6 +33,7 @@ import edu.mit.mitmobile2.events.EventManager;
 import edu.mit.mitmobile2.events.activities.EventsDetailActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarSearchEventAdapter;
 import edu.mit.mitmobile2.events.adapters.SearchRecentAdapter;
+import edu.mit.mitmobile2.events.callback.CalendarDayCallback;
 import edu.mit.mitmobile2.events.model.MITCalendar;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
 import retrofit.Callback;
@@ -115,17 +116,15 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
         recentSearchListView.setAdapter(searchAdapter);
 
         mitCalendarEvents = new ArrayList<>();
-        eventsAdapter = new CalendarSearchEventAdapter(getActivity().getApplicationContext(), mitCalendarEvents);
-        eventsListView.setAdapter(eventsAdapter);
-        eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        eventsAdapter = new CalendarSearchEventAdapter(getActivity().getApplicationContext(), mitCalendarEvents, new CalendarDayCallback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MITCalendarEvent selectedEvent = (MITCalendarEvent) eventsAdapter.getItem(position);
+            public void CaldendarDayDetail(MITCalendarEvent calendarEvent) {
                 Intent intent = new Intent(getActivity(), EventsDetailActivity.class);
-                intent.putExtra(Constants.Events.CALENDAR_EVENT, selectedEvent);
+                intent.putExtra(Constants.Events.CALENDAR_EVENT, calendarEvent);
                 startActivity(intent);
             }
         });
+        eventsListView.setAdapter(eventsAdapter);
 
         return view;
     }
