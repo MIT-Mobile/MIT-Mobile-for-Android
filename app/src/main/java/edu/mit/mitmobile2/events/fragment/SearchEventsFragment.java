@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,6 +47,12 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
 
     @InjectView(R.id.events_listview)
     StickyListHeadersListView eventsListView;
+
+    @InjectView(R.id.events_search_hint_textview)
+    TextView searchHintTextView;
+
+    @InjectView(R.id.events_container)
+    LinearLayout eventsContent;
 
     @InjectView(R.id.no_results_textview)
     TextView noResultsTextView;
@@ -151,7 +158,7 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
                 noResultsTextView.setVisibility(View.GONE);
                 if (hasFocus) {
                     recentSearchListView.setVisibility(View.VISIBLE);
-                    eventsListView.setVisibility(View.GONE);
+                    eventsContent.setVisibility(View.GONE);
                 }
             }
         });
@@ -212,15 +219,21 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
                 if (mitCalendarEvents != null && mitCalendarEvents.size() > 0) {
                     SearchEventsFragment.this.mitCalendarEvents.addAll(mitCalendarEvents);
 
-                    eventsListView.setVisibility(View.VISIBLE);
+                    eventsContent.setVisibility(View.VISIBLE);
                     eventsAdapter.notifyDataSetChanged();
+
+                    String searchHint;
+                    if (filterCategory != null) {
+                        searchHint = getString(R.string.event_search_hint_with_category_template, searchText, filterCategory.getName());
+                    } else {
+                        searchHint = getString(R.string.event_search_hint_template, searchText);
+                    }
+                    searchHintTextView.setText(searchHint);
                 } else {
                     recentSearchListView.setVisibility(View.GONE);
                     noResultsTextView.setVisibility(View.VISIBLE);
-                    eventsListView.setVisibility(View.GONE);
+                    eventsContent.setVisibility(View.GONE);
                 }
-
-
             }
 
             @Override

@@ -20,10 +20,27 @@
         android:text="@string/no_results"
         android:visibility="gone" />
 
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/events_listview"
+    <LinearLayout
+        android:id="@+id/events_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/events_search_hint_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/search_events_hint_bg"
+            android:paddingBottom="@dimen/events_search_hint_padding_top_bottom"
+            android:paddingLeft="@dimen/events_search_hint_padding_left"
+            android:paddingTop="@dimen/events_search_hint_padding_top_bottom"
+            android:textColor="@color/search_events_hint_text" />
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/events_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+    </LinearLayout>
 </FrameLayout>

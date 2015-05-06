@@ -70,4 +70,7 @@
 
     <color name="arrow_ltgray">#D8D8D8</color>
     <color name="bg_arrow">#19F1F1F1</color>
+
+    <color name="search_events_hint_bg">#EEEEEE</color>
+    <color name="search_events_hint_text">#898C8D</color>
 </resources>
