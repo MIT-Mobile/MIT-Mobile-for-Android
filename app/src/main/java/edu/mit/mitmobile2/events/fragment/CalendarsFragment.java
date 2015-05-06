@@ -35,7 +35,9 @@ public class CalendarsFragment extends Fragment {
 
     public interface OnCalendarsFragmentInteractionListener {
         void onDone(MITCalendar selectedCalendar);
+
         void onAcademicCalendarSelected(MITCalendar calendar);
+
         void onHolidaysCalendarSelected(MITCalendar calendar);
     }
 

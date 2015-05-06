@@ -82,7 +82,15 @@
     <dimen name="calendar_row_child_padding">48dp</dimen>
 
     <!--events-->
+    <dimen name="event_detail_padding">16dp</dimen>
+    <dimen name="event_detail_image_padding">19dp</dimen>
+    <dimen name="event_detail_padding_horizontal">8dp</dimen>
+    <dimen name="event_detail_content_padding_top">5dp</dimen>
+    <dimen name="event_detail_content_padding_bottom">16dp</dimen>
+    <dimen name="event_content_width">300dp</dimen>
+    <dimen name="event_detail_title_text_size">20sp</dimen>
     <dimen name="events_calendar_size">30dp</dimen>
+    <dimen name="events_detail_text_size">14sp</dimen>
 
     <!--news-->
     <dimen name="news_header_padding">14dp</dimen>

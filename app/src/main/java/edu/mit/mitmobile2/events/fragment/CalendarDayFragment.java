@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -22,16 +23,19 @@ import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.events.activities.EventsDetailActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarEventAdapter;
+import edu.mit.mitmobile2.events.callback.CalendarDayCallback;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CalendarDayFragment extends Fragment {
+public class CalendarDayFragment extends Fragment implements CalendarDayCallback {
 
     private static final String DATE = "date";
+    private CalendarDayCallback callback;
 
     public CalendarDayFragment() {
     }
@@ -54,11 +58,13 @@ public class CalendarDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_day, null);
 
+        callback = (CalendarDayCallback) this;
+
         ListView listView = (ListView) view.findViewById(R.id.daily_events_list);
 
         String dateString = getArguments().getString(DATE);
 
-        final CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), new ArrayList<MITCalendarEvent>());
+        final CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), new ArrayList<MITCalendarEvent>(), callback);
         listView.setAdapter(adapter);
 
         MITAPIClient mitApiClient = new MITAPIClient(getActivity());
@@ -99,4 +105,10 @@ public class CalendarDayFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void CaldendarDayDetail(MITCalendarEvent calendarEvent) {
+        Intent intent = new Intent(this.getActivity(), EventsDetailActivity.class);
+        intent.putExtra(Constants.Events.CALENDAR_EVENT, calendarEvent);
+        startActivity(intent);
+    }
 }

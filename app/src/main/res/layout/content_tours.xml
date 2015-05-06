@@ -129,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
                 android:orientation="horizontal"
-                android:background="@drawable/shuttle_route_selector">
+                android:background="@drawable/mit_selector">
 
                 <ImageView
                     style="@style/MITTourHomeImage"
@@ -149,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
                 android:orientation="horizontal"
-                android:background="@drawable/shuttle_route_selector">
+                android:background="@drawable/mit_selector">
 
                 <ImageView
                     style="@style/MITTourHomeImage"
@@ -169,7 +169,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/tour_home_cell_height"
                 android:orientation="horizontal"
-                android:background="@drawable/shuttle_route_selector">
+                android:background="@drawable/mit_selector">
 
                 <ImageView
                     style="@style/MITTourHomeImage"

@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,12 +30,11 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.EventManager;
-import edu.mit.mitmobile2.events.adapters.CalendarEventAdapter;
+import edu.mit.mitmobile2.events.activities.EventsDetailActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarSearchEventAdapter;
 import edu.mit.mitmobile2.events.adapters.SearchRecentAdapter;
 import edu.mit.mitmobile2.events.model.MITCalendar;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
-import edu.mit.mitmobile2.news.models.MITNewsCategory;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -120,7 +120,10 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
         eventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: navigate to event details
+                MITCalendarEvent selectedEvent = (MITCalendarEvent) eventsAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), EventsDetailActivity.class);
+                intent.putExtra(Constants.Events.CALENDAR_EVENT, selectedEvent);
+                startActivity(intent);
             }
         });
 

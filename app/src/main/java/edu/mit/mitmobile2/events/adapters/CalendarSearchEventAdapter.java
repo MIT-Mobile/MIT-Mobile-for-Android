@@ -22,7 +22,7 @@ public class CalendarSearchEventAdapter extends CalendarEventAdapter implements 
     private SimpleDateFormat dateFormat;
 
     public CalendarSearchEventAdapter(Context context, List<MITCalendarEvent> events) {
-        super(context, events);
+        super(context, events, null);
         dateFormat = new SimpleDateFormat(DATE_HEADER_FORMAT);
     }
 

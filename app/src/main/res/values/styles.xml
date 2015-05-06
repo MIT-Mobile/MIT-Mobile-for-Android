@@ -87,6 +87,32 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!--Events theme. -->
+    <style name="MITEventsTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/mit_red</item>
+        <item name="android:layout_marginTop">@dimen/event_detail_content_padding_bottom</item>
+        <item name="android:textSize">@dimen/events_detail_text_size</item>
+    </style>
+
+    <style name="MITEventsContent">
+        <item name="android:layout_width">@dimen/event_content_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/event_detail_content_padding_top</item>
+        <item name="android:layout_marginBottom">@dimen/event_detail_content_padding_bottom</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/events_detail_text_size</item>
+    </style>
+
+    <style name="MITEventsImageIcon">
+        <item name="android:layout_width">25dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">@dimen/event_detail_image_padding</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
     <style name="MITShared">
         <item name="android:fontFamily">Roboto</item>
         <item name="android:textStyle">normal</item>

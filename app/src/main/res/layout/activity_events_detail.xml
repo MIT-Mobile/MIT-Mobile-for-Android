@@ -1,0 +1,297 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="edu.mit.mitmobile2.events.activities.EventsDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/event_detail_padding"
+            android:layout_marginTop="@dimen/event_detail_padding"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/title_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/event_detail_image_padding"
+                android:textSize="@dimen/event_detail_title_text_size"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/seriesDescription_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/event_detail_content_padding_top"
+                android:text="@string/series_info"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/speaker_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/event_detail_padding"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                style="@style/MITEventsTitle"
+                android:text="@string/speaker" />
+
+            <TextView
+                android:id="@+id/speaker_text_view"
+                style="@style/MITEventsContent"
+                />
+
+            <View
+                style="@style/MITView" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mit_selector"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/event_detail_padding">
+                <TextView
+                    style="@style/MITEventsTitle"
+                    android:text="@string/time"
+                    />
+
+                <TextView
+                    android:id="@+id/time_text_view"
+                    style="@style/MITEventsContent"
+                    />
+
+                <View
+                    style="@style/MITView" />
+            </LinearLayout>
+
+            <ImageView
+                style="@style/MITEventsImageIcon"
+                android:src="@drawable/ic_calendar"
+                android:tint="@color/mit_red" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/location_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mit_selector"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/event_detail_padding"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/MITEventsTitle"
+                    android:text="@string/location"
+                    />
+
+                <TextView
+                    android:id="@+id/location_text_view"
+                    style="@style/MITEventsContent"
+                    />
+
+                <View
+                    style="@style/MITView" />
+            </LinearLayout>
+
+            <ImageView
+                style="@style/MITEventsImageIcon"
+                android:src="@drawable/ic_pin" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/phone_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mit_selector"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/event_detail_padding"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/MITEventsTitle"
+                    android:text="@string/phone"
+                    />
+
+                <TextView
+                    android:id="@+id/phone_text_view"
+                    style="@style/MITEventsContent"
+                    />
+
+                <View
+                    style="@style/MITView" />
+            </LinearLayout>
+
+            <ImageView
+                style="@style/MITEventsImageIcon"
+                android:src="@drawable/phone"
+                android:tint="@color/mit_red" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/webview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/event_detail_padding"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <WebView
+                android:id="@+id/description_web_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/event_detail_padding"
+                android:layout_marginBottom="@dimen/event_detail_padding"
+                android:layout_marginRight="@dimen/event_detail_image_padding"
+                />
+
+            <View
+                style="@style/MITView"
+                />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/website_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mit_selector"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/event_detail_padding"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/MITEventsTitle"
+                    android:text="@string/website"
+                    />
+
+                <TextView
+                    android:id="@+id/website_text_view"
+                    style="@style/MITEventsContent"
+                    />
+
+                <View
+                    style="@style/MITView" />
+            </LinearLayout>
+
+            <ImageView
+                style="@style/MITEventsImageIcon"
+                android:src="@drawable/open_in_browser"
+                android:tint="@color/mit_red" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/opento_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mit_selector"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                style="@style/MITEventsTitle"
+                android:text="@string/open_to"
+                android:layout_marginLeft="@dimen/event_detail_padding"
+                />
+
+            <TextView
+                android:id="@+id/opento_text_view"
+                style="@style/MITEventsContent"
+                android:layout_marginLeft="@dimen/event_detail_padding"
+                />
+
+            <View
+                style="@style/MITView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cost_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/event_detail_padding"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                style="@style/MITEventsTitle"
+                android:text="@string/cost"
+                />
+
+            <TextView
+                android:id="@+id/cost_text_view"
+                style="@style/MITEventsContent"
+                />
+
+            <View
+                style="@style/MITView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sponsor_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/event_detail_padding"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                style="@style/MITEventsTitle"
+                android:text="@string/sponsor"
+                />
+
+            <TextView
+                android:id="@+id/sponsor_text_view"
+                style="@style/MITEventsContent"
+                />
+
+            <View
+                style="@style/MITView" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/formoreinfo_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mit_selector"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/event_detail_padding"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/MITEventsTitle"
+                    android:text="@string/for_more_info"
+                    />
+
+                <TextView
+                    android:id="@+id/formoreinfo_text_view"
+                    style="@style/MITEventsContent"
+                    />
+
+                <View
+                    style="@style/MITView" />
+            </LinearLayout>
+
+            <ImageView
+                style="@style/MITEventsImageIcon"
+                android:src="@drawable/email"
+                android:tint="@color/mit_red" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
