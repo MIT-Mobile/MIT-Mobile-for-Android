@@ -12,23 +12,27 @@
     <FrameLayout
         android:id="@+id/shuttle_stop_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/shuttle_route_refresh_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:id="@+id/map_list_view_with_footer"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
+
             <ListView
                 android:id="@+id/map_list_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:divider="@null"
                 android:dividerHeight="0dp" />
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -42,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/solo_map_fab_margin"
         android:layout_marginBottom="@dimen/solo_map_fab_margin"
+        android:layout_marginRight="@dimen/solo_map_fab_margin"
         android:visibility="invisible" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton

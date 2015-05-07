@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +30,13 @@ import edu.mit.mitmobile2.EndlessFragmentStatePagerAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
 import edu.mit.mitmobile2.shuttles.MitCursorLoader;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
-import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap.InfoWindowAdapter {
 
@@ -153,6 +154,10 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
 
         refreshMapInfoWindow();
 
+        if (isMapViewExpanded()) {
+            this.shuttleStopContent.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 
@@ -218,8 +223,12 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
             } else {
                 newCenter = new LatLng(stops.get(currentRealPosition).getLat() + latOffset, stops.get(currentRealPosition).getLon());
             }
+
             cameraUpdate = CameraUpdateFactory.newLatLngZoom(newCenter, STOP_ZOOM);
         }
+
+        Log.d("centering", "updateStopModeCamera mapViewExpanded = " + mapViewExpanded + " newCenter = " + newCenter.toString());
+        getMapView().stopAnimation();
         getMapView().animateCamera(cameraUpdate, ANIMATION_LENGTH, null);
     }
 
@@ -283,10 +292,15 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
 
     @Override
     public void onMapLoaded() {
-        mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
+        if (!mapViewExpanded) {
+            mitMapView.adjustCameraToShowInHeader(false, 0, getActivity().getResources().getConfiguration().orientation);
+        }
+
         LatLng target = mitMapView.getMap().getCameraPosition().target;
         latOffset = target.latitude - stops.get(getPositionFromStopId(initialStopid)).getLat();
         lonOffset = target.longitude - stops.get(getPositionFromStopId(initialStopid)).getLon();
+
+        Log.d("tratata", "target.longitude = " + target.longitude + " initialStopid = " + initialStopid + " lon = " + stops.get(getPositionFromStopId(initialStopid)).getLon());
     }
 
     @Override
