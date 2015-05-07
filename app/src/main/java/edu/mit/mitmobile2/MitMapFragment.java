@@ -67,7 +67,6 @@ public abstract class MitMapFragment extends Fragment implements Animation.Anima
         }
 
         shuttleStopContent = (FrameLayout) view.findViewById(R.id.shuttle_stop_content);
-        shuttleStopContent.setVisibility(View.GONE);
 
         MapView googleMapView = (MapView) view.findViewById(R.id.route_map);
         googleMapView.onCreate(savedInstanceState);
