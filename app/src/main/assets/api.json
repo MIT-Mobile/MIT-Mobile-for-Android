@@ -53,6 +53,12 @@
     "prod": "http://m.mit.edu/apis/news/",
     "manager": "edu.mit.mitmobile2.news.NewsManager"
   },
+  "dining": {
+    "dev": "http://mobile-dev.mit.edu/apis/dining/",
+    "test": "http://mobile-test.mit.edu/apis/dining/",
+    "prod": "http://m.mit.edu/apis/dining/",
+    "manager": "edu.mit.mitmobile2.dining.DiningManager"
+  },
   "events": {
     "dev": "http://mobile-dev.mit.edu/apis/calendars/",
     "test": "http://mobile-test.mit.edu/apis/calendars/",

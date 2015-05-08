@@ -20,6 +20,7 @@ public class Constants {
     public static final String PEOPLE_DIRECTORY = "people";
     public static final String EMERGENCY = "emergency";
     public static final String EVENTS = "events";
+    public static final String DINING = "dining";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -106,5 +107,9 @@ public class Constants {
 //        public static final String URI_KEY = "uri";
 //        public static final String PATHS_KEY = "pathParams";
 //        public static final String QUERIES_KEY = "queryParams";
+    }
+
+    public class Dining {
+        public static final String DINING_PATH = "/";
     }
 }
