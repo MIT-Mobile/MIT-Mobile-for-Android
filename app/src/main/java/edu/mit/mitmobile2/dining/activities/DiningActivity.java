@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.dining;
+package edu.mit.mitmobile2.dining.activities;
 
 import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
