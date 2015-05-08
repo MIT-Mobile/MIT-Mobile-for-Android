@@ -4,20 +4,20 @@ import java.util.HashSet;
 
 
 public class MITDiningRetailVenue {
-	Number cuisine;
-	String descriptionHTML;
-	boolean favorite;
-	String homepageURL;
-	String iconURL;
-	String identifier;
-	String menuHTML;
-	String menuURL;
-	String name;
-	Number payment;
-	String shortName;
-	HashSet<MITDiningRetailDay> hours;
-	MITDiningLocation location;
-	MITDiningVenues venues;
+    protected Number cuisine;
+    protected String descriptionHTML;
+    protected boolean favorite;
+    protected String homepageURL;
+    protected String iconURL;
+    protected String identifier;
+    protected String menuHTML;
+    protected String menuURL;
+    protected String name;
+    protected Number payment;
+    protected String shortName;
+    protected HashSet<MITDiningRetailDay> hours;
+    protected MITDiningLocation location;
+    protected MITDiningVenues venues;
 
 	public Number getCuisine() {
 		return cuisine;

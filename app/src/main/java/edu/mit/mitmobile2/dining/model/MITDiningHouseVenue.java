@@ -4,14 +4,14 @@ import java.util.HashSet;
 
 
 public class MITDiningHouseVenue {
-	String iconURL;
-	String identifier;
-	String name;
-	Number payment;
-	String shortName;
-	MITDiningLocation location;
-	HashSet<MITDiningHouseDay> mealsByDay;
-	MITDiningVenues venues;
+    protected String iconURL;
+    protected String identifier;
+    protected String name;
+    protected Number payment;
+    protected String shortName;
+    protected MITDiningLocation location;
+    protected HashSet<MITDiningHouseDay> mealsByDay;
+    protected MITDiningVenues venues;
 
 	public String getIconURL() {
 		return iconURL;

@@ -4,10 +4,10 @@ import java.util.HashSet;
 
 
 public class MITDiningHouseDay {
-	String dateString;
-	String message;
-	MITDiningHouseVenue houseVenue;
-	HashSet<MITDiningMeal> meals;
+    protected String dateString;
+    protected String message;
+    protected MITDiningHouseVenue houseVenue;
+    protected HashSet<MITDiningMeal> meals;
 
 	public String getDateString() {
 		return dateString;

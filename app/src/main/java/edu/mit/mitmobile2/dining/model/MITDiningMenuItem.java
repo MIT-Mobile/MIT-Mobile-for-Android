@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 
 public class MITDiningMenuItem {
-	Number dietaryFlags;
-	String itemDescription;
-	String name;
-	String station;
-	ArrayList<MITDiningMeal> meal;
+    protected Number dietaryFlags;
+    protected String itemDescription;
+    protected String name;
+    protected String station;
+    protected ArrayList<MITDiningMeal> meal;
 
 	public Number getDietaryFlags() {
 		return dietaryFlags;

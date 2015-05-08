@@ -4,9 +4,9 @@ import java.util.HashSet;
 
 
 public class MITDiningVenues {
-	MITDiningDining dining;
-	HashSet<MITDiningHouseVenue> house;
-	HashSet<MITDiningRetailVenue> retail;
+    protected MITDiningDining dining;
+    protected HashSet<MITDiningHouseVenue> house;
+    protected HashSet<MITDiningRetailVenue> retail;
 
 	public MITDiningDining getDining() {
 		return dining;

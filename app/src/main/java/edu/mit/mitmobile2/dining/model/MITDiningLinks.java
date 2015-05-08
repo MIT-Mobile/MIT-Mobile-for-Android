@@ -1,9 +1,9 @@
 package edu.mit.mitmobile2.dining.model;
 
 public class MITDiningLinks {
-	String name;
-	String url;
-	MITDiningDining dining;
+    protected String name;
+    protected String url;
+    protected MITDiningDining dining;
 
 	public String getName() {
 		return name;

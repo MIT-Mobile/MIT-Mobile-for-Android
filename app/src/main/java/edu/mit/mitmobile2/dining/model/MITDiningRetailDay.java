@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 
 public class MITDiningRetailDay {
-	String dateString;
-	String endTimeString;
-	String message;
-	String startTimeString;
-	ArrayList<MITDiningRetailVenue> retailHours;
+    protected String dateString;
+    protected String endTimeString;
+    protected String message;
+    protected String startTimeString;
+    protected ArrayList<MITDiningRetailVenue> retailHours;
 
 	public String getDateString() {
 		return dateString;

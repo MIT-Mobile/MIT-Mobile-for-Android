@@ -4,12 +4,12 @@ import java.util.HashSet;
 
 
 public class MITDiningMeal {
-	String endTimeString;
-	String message;
-	String name;
-	String startTimeString;
-	MITDiningHouseDay houseDay;
-	HashSet<MITDiningMenuItem> items;
+    protected String endTimeString;
+    protected String message;
+    protected String name;
+    protected String startTimeString;
+    protected MITDiningHouseDay houseDay;
+    protected HashSet<MITDiningMenuItem> items;
 
 	public String getEndTimeString() {
 		return endTimeString;

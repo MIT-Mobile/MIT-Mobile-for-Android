@@ -4,11 +4,11 @@ import java.util.HashSet;
 
 
 public class MITDiningDining {
-	String announcementsHTML;
-	String url;
-	HashSet<MITDiningLinks> links;
-	MITDiningVenues venues;
-    
+    protected String announcementsHTML;
+    protected String url;
+    protected HashSet<MITDiningLinks> links;
+	protected MITDiningVenues venues;
+
 	public String getAnnouncementsHTML() {
 		return announcementsHTML;
 	}
