@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 
 public class MITDiningMenuItem {
-    protected Number dietaryFlags;
+    protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
     protected String itemDescription;
     protected String name;
     protected String station;
     protected ArrayList<MITDiningMeal> meal;
 
-	public Number getDietaryFlags() {
+	public Object getDietaryFlags() {
 		return dietaryFlags;
 	}
 

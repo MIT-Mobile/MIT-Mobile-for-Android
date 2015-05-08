@@ -7,7 +7,7 @@ public class MITDiningHouseVenue {
     protected String iconURL;
     protected String identifier;
     protected String name;
-    protected Number payment;
+    protected Object payment; /* The ObjC Folks dont know what this is it seems */
     protected String shortName;
     protected MITDiningLocation location;
     protected HashSet<MITDiningHouseDay> mealsByDay;
@@ -25,7 +25,7 @@ public class MITDiningHouseVenue {
 		return name;
 	}
 
-	public Number getPayment() {
+	public Object getPayment() {
 		return payment;
 	}
 

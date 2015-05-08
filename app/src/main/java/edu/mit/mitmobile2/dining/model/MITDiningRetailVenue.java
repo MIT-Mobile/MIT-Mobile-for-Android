@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 
 public class MITDiningRetailVenue {
-    protected Number cuisine;
+    protected Object cuisine;  /* The ObjC Folks dont know what this is it seems */
     protected String descriptionHTML;
     protected boolean favorite;
     protected String homepageURL;
@@ -13,13 +13,13 @@ public class MITDiningRetailVenue {
     protected String menuHTML;
     protected String menuURL;
     protected String name;
-    protected Number payment;
+    protected Object payment;  /* The ObjC Folks dont know what this is it seems */
     protected String shortName;
     protected HashSet<MITDiningRetailDay> hours;
     protected MITDiningLocation location;
     protected MITDiningVenues venues;
 
-	public Number getCuisine() {
+	public Object getCuisine() {
 		return cuisine;
 	}
 
@@ -55,7 +55,7 @@ public class MITDiningRetailVenue {
 		return name;
 	}
 
-	public Number getPayment() {
+	public Object getPayment() {
 		return payment;
 	}
 
