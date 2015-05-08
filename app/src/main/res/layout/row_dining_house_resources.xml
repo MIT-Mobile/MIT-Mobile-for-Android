@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dining_house_venues_cell_image_padding"
+        android:layout_weight="5"
+        android:src="@drawable/ic_open_in_browser"
+        android:tint="@color/mit_red" />
+
+    <TextView
+        android:id="@+id/row_resources_tv_title"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dining_house_venues_cell_image_padding"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/black" />
+
+</LinearLayout>

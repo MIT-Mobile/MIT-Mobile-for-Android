@@ -73,4 +73,7 @@
 
     <color name="search_events_hint_bg">#EEEEEE</color>
     <color name="search_events_hint_text">#898C8D</color>
+
+    <color name="lt_yellow">#FFFDCD</color>
+
 </resources>

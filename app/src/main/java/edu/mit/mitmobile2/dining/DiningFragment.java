@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
@@ -13,10 +16,13 @@ import android.widget.TabWidget;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.DiningPagerAdapter;
-import edu.mit.mitmobile2.dining.fragments.HouseDiningFragment;
-import edu.mit.mitmobile2.dining.fragments.RetailFragment;
 
 public class DiningFragment extends Fragment implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
+
+    private static final String TAG_TABHOST_HOUSE_DINING = "tag_house_dining";
+    private static final String TAG_TABHOST_RETAIL = "tag_retail";
+
+    private static final String KEY_STATE_SELECTED_TAB = "state_selected_tab";
 
     private TabHost tabHost;
     private TabWidget tabWidget;
@@ -37,6 +43,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_dining, null);
+        setHasOptionsMenu(true);
 
         tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
         tabWidget = (TabWidget) view.findViewById(android.R.id.tabs);
@@ -47,12 +54,44 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
         initTabHost();
         initViewPager();
 
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_STATE_SELECTED_TAB)) {
+                tabHost.setCurrentTabByTag(savedInstanceState.getString(KEY_STATE_SELECTED_TAB));
+            }
+        }
+
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_dining, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+        getActivity().setTitle(R.string.title_activity_dining);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_list_map_toggle: {
+                // TODO: toggle list/map here
+            }
+            break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(KEY_STATE_SELECTED_TAB, tabHost.getCurrentTabTag());
+        super.onSaveInstanceState(outState);
     }
 
     /* ViewPager.OnPageChangeListener */
@@ -91,38 +130,15 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     private void initTabHost() {
         tabHost.setup();
 
-        TabInfo tabInfo = null;
-        addTab(tabHost, tabHost.newTabSpec("Tab1").setIndicator("Tab 1"), (new TabInfo("Tab1", HouseDiningFragment.class, null)));
-        addTab(tabHost, tabHost.newTabSpec("Tab2").setIndicator("Tab 2"), (new TabInfo("Tab2", RetailFragment.class, null)));
-
-//        TabHost.TabSpec houseDiningTab = tabHost.newTabSpec("");
-//        houseDiningTab.setIndicator("houseDiningTab");
-//        tabHost.addTab(houseDiningTab);
-//
-//        TabHost.TabSpec retailTab = tabHost.newTabSpec("");
-//        retailTab.setIndicator("retailTab");
-//        tabHost.addTab(retailTab);
+        addTab(tabHost, tabHost.newTabSpec(TAG_TABHOST_HOUSE_DINING).setIndicator(getString(R.string.dining_tab_house_dining)));
+        addTab(tabHost, tabHost.newTabSpec(TAG_TABHOST_RETAIL).setIndicator(getString(R.string.dining_tab_retail)));
 
         tabHost.setOnTabChangedListener(this);
     }
 
-    private void addTab(TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
+    private void addTab(TabHost tabHost, TabHost.TabSpec tabSpec) {
         tabSpec.setContent(new TabFactory(getActivity()));
         tabHost.addTab(tabSpec);
-    }
-
-
-    private class TabInfo {
-        private String tag;
-        private Class<?> clss;
-        private Bundle args;
-        private Fragment fragment;
-
-        TabInfo(String tag, Class<?> clazz, Bundle args) {
-            this.tag = tag;
-            this.clss = clazz;
-            this.args = args;
-        }
     }
 
     class TabFactory implements TabHost.TabContentFactory {

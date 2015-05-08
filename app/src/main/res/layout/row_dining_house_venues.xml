@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <edu.mit.mitmobile2.dining.views.SquareImageView
+        android:id="@+id/row_venues_iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dining_house_venues_cell_image_padding"
+        android:layout_weight="5"
+        android:background="@color/light_grey"
+        android:src="@drawable/title_bar_logo_button" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="@dimen/dining_house_venues_cell_padding"
+        android:layout_marginTop="@dimen/dining_house_venues_cell_padding"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/row_venues_tv_title"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/row_venues_tv_status"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/row_venues_tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/row_venues_tv_title"
+            android:layout_toLeftOf="@id/row_venues_tv_status"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/mit_grey" />
+
+        <TextView
+            android:id="@+id/row_venues_tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingLeft="@dimen/dining_house_venues_cell_padding"
+            android:paddingRight="@dimen/dining_house_venues_cell_padding" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

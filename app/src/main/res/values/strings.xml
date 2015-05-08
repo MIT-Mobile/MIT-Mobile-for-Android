@@ -166,4 +166,12 @@
     <string name="event_filter_clear">Clear</string>
     <string name="event_recent_header">RECENTS</string>
 
+    <!--Dining-->
+    <string name="dining_tab_house_dining">HOUSE DINING</string>
+    <string name="dining_tab_retail">RETAIL</string>
+
+    <string name="dining_house_section_announcements">ANNOUNCEMENTS</string>
+    <string name="dining_house_section_venues">VENUES</string>
+    <string name="dining_house_section_resources">RESOURCES</string>
+
 </resources>
