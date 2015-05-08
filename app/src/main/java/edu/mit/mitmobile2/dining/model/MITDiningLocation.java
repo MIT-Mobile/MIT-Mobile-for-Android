@@ -1,13 +1,18 @@
 package edu.mit.mitmobile2.dining.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class MITDiningLocation {
     protected String city;
     protected String latitude;
+    @SerializedName("description")
     protected String locationDescription;
     protected String longitude;
+    @SerializedName("mit_room_number")
     protected String mitRoomNumber;
     protected String state;
     protected String street;
+    @SerializedName("zip_code")
     protected String zipCode;
     protected MITDiningHouseVenue houseVenue;
     protected MITDiningRetailVenue retailVenue;

@@ -2,8 +2,11 @@ package edu.mit.mitmobile2.dining.model;
 
 import java.util.HashSet;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class MITDiningDining {
+    @SerializedName("announcements_html")
     protected String announcementsHTML;
     protected String url;
     protected HashSet<MITDiningLinks> links;

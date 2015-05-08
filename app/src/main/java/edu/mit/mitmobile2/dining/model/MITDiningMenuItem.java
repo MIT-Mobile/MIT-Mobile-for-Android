@@ -2,10 +2,15 @@ package edu.mit.mitmobile2.dining.model;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class MITDiningMenuItem {
+    @SerializedName("dietary_flags")
     protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
+    @SerializedName("description")
     protected String itemDescription;
+    @SerializedName("station")
     protected String name;
     protected String station;
     protected ArrayList<MITDiningMeal> meal;
