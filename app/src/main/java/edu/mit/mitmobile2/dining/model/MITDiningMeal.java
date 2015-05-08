@@ -2,11 +2,15 @@ package edu.mit.mitmobile2.dining.model;
 
 import java.util.HashSet;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class MITDiningMeal {
+    @SerializedName("end_time")
     protected String endTimeString;
     protected String message;
     protected String name;
+    @SerializedName("start_time")
     protected String startTimeString;
     protected MITDiningHouseDay houseDay;
     protected HashSet<MITDiningMenuItem> items;

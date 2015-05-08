@@ -2,18 +2,27 @@ package edu.mit.mitmobile2.dining.model;
 
 import java.util.HashSet;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class MITDiningRetailVenue {
     protected Object cuisine;  /* The ObjC Folks dont know what this is it seems */
+    @SerializedName("description_html")
     protected String descriptionHTML;
     protected boolean favorite;
+    @SerializedName("homepage_url")
     protected String homepageURL;
+    @SerializedName("icon_url")
     protected String iconURL;
+    @SerializedName("id")
     protected String identifier;
+    @SerializedName("menu_html")
     protected String menuHTML;
+    @SerializedName("menu_url")
     protected String menuURL;
     protected String name;
     protected Object payment;  /* The ObjC Folks dont know what this is it seems */
+    @SerializedName("short_name")
     protected String shortName;
     protected HashSet<MITDiningRetailDay> hours;
     protected MITDiningLocation location;

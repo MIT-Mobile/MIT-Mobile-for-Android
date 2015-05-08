@@ -2,8 +2,11 @@ package edu.mit.mitmobile2.dining.model;
 
 import java.util.HashSet;
 
+import com.google.gson.annotations.SerializedName;
+
 
 public class MITDiningHouseDay {
+    @SerializedName("date")
     protected String dateString;
     protected String message;
     protected MITDiningHouseVenue houseVenue;
