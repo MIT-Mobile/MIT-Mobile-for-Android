@@ -1,20 +1,25 @@
 package edu.mit.mitmobile2.people.fragment;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.text.Html;
+import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +34,7 @@ import android.widget.TextView;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.MITSearchAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.PeopleDirectoryManagerCall;
@@ -46,6 +52,7 @@ import static butterknife.ButterKnife.inject;
 public class PeopleFragment extends Fragment {
     private static final int DIRECTORY_ASSISTANCE_TAG = 1504201452;
     private static final int EMERGENCY_CONTACTS_TAG = 1504201453;
+    private static final String PEOPLE_DIRECTORY_SEARCH_HISTORY = "peopleSearchHistory";
 
     private Mode mode;
 
@@ -55,6 +62,8 @@ public class PeopleFragment extends Fragment {
     protected ListView quickDialList;
     @InjectView(R.id.search_list)
     protected ListView searchList;
+    @InjectView(R.id.recent_search_list)
+    protected ListView recentSearchListView;
 
     @InjectView(R.id.default_layout)
     protected ViewGroup defaultLayout;
@@ -67,6 +76,9 @@ public class PeopleFragment extends Fragment {
     private MITPeopleDirectoryPersonAdapter favoritePersonsAdapter;
     private MITPeopleDirectoryPersonAdapter searchListAdapter;
     private MITPeopleDirectoryPersonAdapter quickDialAdapter;
+    private LinkedHashSet<String> recentSearches;
+    private SharedPreferences sharedPreferences;
+    private MITSearchAdapter<String> searchRecommendationsAdapter;
 
     public PeopleFragment() {
     }
@@ -94,6 +106,23 @@ public class PeopleFragment extends Fragment {
         searchList.setAdapter(searchListAdapter);
         favoritesList.setAdapter(favoritePersonsAdapter);
 
+        recentSearches = new LinkedHashSet<>();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        Set<String> set = sharedPreferences.getStringSet(PEOPLE_DIRECTORY_SEARCH_HISTORY, null);
+
+        if (set != null) {
+            recentSearches.addAll(set);
+        }
+
+        this.searchRecommendationsAdapter = new MITSearchAdapter<>(getActivity(), recentSearches, new MITSearchAdapter.FragmentCallback<String>() {
+            @Override public void itemClicked(String story) { /* No-Op */ }
+
+            @Override public void itemSearch(String searchText) {
+                performSearch(recentSearchListView, new Pair<>(searchRecommendationsAdapter,this), searchText);
+            }
+        });
+
+        this.recentSearchListView.setAdapter(this.searchRecommendationsAdapter);
     }
 
     private ArrayList<MITPerson> quickDialItems(Context ctx) {
@@ -144,7 +173,7 @@ public class PeopleFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                return searchTextChanged(searchView, this, s);
             }
         });
 
@@ -166,7 +195,6 @@ public class PeopleFragment extends Fragment {
         View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
         View bar = searchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
 
-
         //noinspection ConstantConditions IntelliJ/AndroidStudio incorrectly thinks this can never be null.
         assert searchPlate != null;
 
@@ -184,7 +212,6 @@ public class PeopleFragment extends Fragment {
             if (this.mode != Mode.NO_SEARCH) {
                 this.setMode(Mode.NO_SEARCH);
             }
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -195,7 +222,11 @@ public class PeopleFragment extends Fragment {
     }
 
     public void setMode(@NonNull Mode mode) {
+        if (this.mode == mode) return;
+
         this.mode = mode;
+
+        recentSearchListView.setVisibility(View.GONE);
 
         this.searchList.setVisibility(mode.isListViewVisible() ? View.VISIBLE : View.GONE);
         this.defaultLayout.setVisibility(mode.isListViewVisible() ? View.GONE : View.VISIBLE);
@@ -204,7 +235,7 @@ public class PeopleFragment extends Fragment {
     @OnItemClick(R.id.favorites_list)
     protected void onFavoritesItemClicked(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), PersonDetailActivity.class);
-        intent.putExtra(PersonDetailActivity.PERSON_KEY, (MITPerson)favoritePersonsAdapter.getItem(position));
+        intent.putExtra(PersonDetailActivity.PERSON_KEY, (MITPerson) favoritePersonsAdapter.getItem(position));
         this.startActivity(intent);
     }
 
@@ -237,7 +268,25 @@ public class PeopleFragment extends Fragment {
         startActivity(SharedActivityManager.createEmergencyContactsIntent(getActivity()));
     }
 
+    private boolean searchTextChanged(View sender, Object handler, String s) {
+        if (!TextUtils.isEmpty(s) && s.length() >= 3) {
+            recentSearchListView.setVisibility(View.VISIBLE);
+            searchRecommendationsAdapter.getFilter().filter(s);
+        } else {
+            recentSearchListView.setVisibility(View.GONE);
+        }
+        return false;
+    }
+
     private boolean performSearch(View sender, Object handler, String searchText) {
+        SharedPreferences.Editor edior = sharedPreferences.edit();
+        if (!recentSearches.contains(searchText)) {
+            recentSearches.add(searchText);
+            edior.putStringSet(PEOPLE_DIRECTORY_SEARCH_HISTORY, recentSearches);
+            edior.apply();
+        }
+
+
         this.setMode(Mode.LIST_BLANK);
 
         if (this.requestRunning != null && !this.requestRunning.isComplete()) {
