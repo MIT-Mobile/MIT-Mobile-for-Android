@@ -1,8 +1,17 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.Context;
+import android.text.TextUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 
 import com.google.gson.annotations.SerializedName;
+
+import edu.mit.mitmobile2.DateUtils;
+import edu.mit.mitmobile2.R;
 
 
 public class MITDiningMeal {
@@ -37,6 +46,43 @@ public class MITDiningMeal {
 
 	public HashSet<MITDiningMenuItem> getItems() {
 		return items;
+	}
+
+	public Date getStartTime() {
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(houseDay.dateString + startTimeString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Date getEndTime() {
+		try {
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(houseDay.dateString + endTimeString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public String mealHoursDescription(Context context) {
+		String description = null;
+
+		if (TextUtils.isEmpty(startTimeString) || TextUtils.isEmpty(endTimeString)) {
+			if (!TextUtils.isEmpty(message)) {
+				description = message;
+			} else {
+				description = context.getString(R.string.dining_venue_status_closed);
+			}
+		} else {
+			String startString = DateUtils.MITShortTimeOfDayString(getStartTime());
+			String endString = DateUtils.MITShortTimeOfDayString(getEndTime());
+
+			description = context.getString(R.string.dining_venue_start_end_template, startString, endString);
+		}
+
+		return description;
 	}
 
 	@Override

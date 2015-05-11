@@ -1,5 +1,8 @@
 package edu.mit.mitmobile2.dining.adapters;
 
+import android.content.Context;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +12,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.model.MITDiningDining;
+import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
+import edu.mit.mitmobile2.dining.model.MITDiningLinks;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -21,9 +27,17 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
     private static final int ROW_TYPE_RESOURCE = 2;
     private static final int ROW_TYPES_COUNT = 3;
 
-    private ArrayList<Object> listAnnouncements;
-    private ArrayList<Object> listVenues;
-    private ArrayList<Object> listResources;
+    private Context context;
+    private ArrayList<MITDiningDining> listAnnouncements;
+    private ArrayList<MITDiningHouseVenue> listVenues;
+    private ArrayList<MITDiningLinks> listResources;
+
+    public HouseDiningAdapter(Context context, ArrayList<MITDiningDining> listAnnouncements, ArrayList<MITDiningHouseVenue> listVenues, ArrayList<MITDiningLinks> listResources) {
+        this.context = context;
+        this.listAnnouncements = listAnnouncements;
+        this.listVenues = listVenues;
+        this.listResources = listResources;
+    }
 
     @Override
     public View getHeaderView(int i, View view, ViewGroup viewGroup) {
@@ -39,7 +53,29 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.headerTextView.setText("");
+        String headerTitle = "";
+
+        long headerId = getHeaderId(i);
+        switch ((int) headerId) {
+            case ROW_TYPE_ANNOUNCEMENT: {
+                if (listAnnouncements != null && listAnnouncements.size() > 0 && !TextUtils.isEmpty(listAnnouncements.get(0).getAnnouncementsHTML())) {
+                    headerTitle = listAnnouncements.get(0).getAnnouncementsHTML();
+                } else {
+                    headerTitle = context.getString(R.string.dining_house_section_announcements);
+                }
+            }
+            break;
+            case ROW_TYPE_VENUE: {
+                headerTitle = context.getString(R.string.dining_house_section_venues);
+            }
+            break;
+            case ROW_TYPE_RESOURCE: {
+                headerTitle = context.getString(R.string.dining_house_section_resources);
+            }
+            break;
+        }
+
+        viewHolder.headerTextView.setText(Html.fromHtml(headerTitle));
 
         return view;
     }
@@ -86,6 +122,10 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
+
+                MITDiningDining dining = (MITDiningDining) getItem(position);
+
+                holder.announcementMessageTextView.setText(dining.getAnnouncementsHTML());
             }
             break;
             case ROW_TYPE_VENUE: {
@@ -101,6 +141,18 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
+
+                MITDiningHouseVenue venue = (MITDiningHouseVenue) getItem(position);
+
+                holder.venueTitleTextView.setText(venue.getName());
+                holder.venueTimeTextView.setText(venue.hoursToday(context));
+                if (venue.isOpenNow()) {
+                    holder.venueStatusTextView.setTextColor(context.getResources().getColor(R.color.status_green));
+                    holder.venueStatusTextView.setText(R.string.dining_venue_status_open);
+                } else {
+                    holder.venueStatusTextView.setTextColor(context.getResources().getColor(R.color.status_red));
+                    holder.venueStatusTextView.setText(R.string.dining_venue_status_closed);
+                }
             }
             break;
             case ROW_TYPE_RESOURCE: {
@@ -113,6 +165,10 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
+
+                MITDiningLinks link = (MITDiningLinks) getItem(position);
+
+                holder.resourceTitleTextView.setText(link.getName());
             }
             break;
         }

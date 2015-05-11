@@ -76,4 +76,7 @@
 
     <color name="lt_yellow">#FFFDCD</color>
 
+    <color name="status_green">#4CAF50</color>
+    <color name="status_red">#F44336</color>
+
 </resources>
