@@ -9,6 +9,12 @@
     <!-- We ignore orientation tool warnings because we will programmatically decide what is visible and
          what isn't via our PeopleFragment.setMode(...) method -->
 
+    <ListView android:id="@+id/recent_search_list"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/default_layout"
         android:layout_width="fill_parent"
