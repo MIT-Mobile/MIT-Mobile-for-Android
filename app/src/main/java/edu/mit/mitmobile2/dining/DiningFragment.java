@@ -14,8 +14,17 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
+import java.util.List;
+
+import edu.mit.mitmobile2.MITAPIClient;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.DiningPagerAdapter;
+import edu.mit.mitmobile2.dining.model.MITDiningDining;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class DiningFragment extends Fragment implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 
@@ -29,6 +38,8 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     private ViewPager viewPager;
 
     private DiningPagerAdapter pagerAdapter;
+
+    private List<MITDiningDining> mitDiningDinings;
 
     public static DiningFragment newInstance() {
         DiningFragment fragment = new DiningFragment();
@@ -58,6 +69,8 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
             if (savedInstanceState.containsKey(KEY_STATE_SELECTED_TAB)) {
                 tabHost.setCurrentTabByTag(savedInstanceState.getString(KEY_STATE_SELECTED_TAB));
             }
+        } else {
+            fetchDiningOptions();
         }
 
         return view;
@@ -118,6 +131,23 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     public void onTabChanged(String tabId) {
         int pos = tabHost.getCurrentTab();
         viewPager.setCurrentItem(pos);
+    }
+
+    /* Network */
+
+    private void fetchDiningOptions() {
+        DiningManager.getDiningOptions(getActivity(), new Callback<List<MITDiningDining>>() {
+
+            @Override
+            public void success(List<MITDiningDining> mitDiningDinings, Response response) {
+                DiningFragment.this.mitDiningDinings = mitDiningDinings;
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
     }
 
     /* Private methods */

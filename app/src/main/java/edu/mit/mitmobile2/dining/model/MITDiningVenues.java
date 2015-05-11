@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.dining.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.HashSet;
 
 
