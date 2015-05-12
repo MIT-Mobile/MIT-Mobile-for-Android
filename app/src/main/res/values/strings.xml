@@ -166,4 +166,17 @@
     <string name="event_filter_clear">Clear</string>
     <string name="event_recent_header">RECENTS</string>
 
+    <string name="filters_activity_title">Filters</string>
+    <string name="filter_farm">Farm to Fork</string>
+    <string name="filter_well">For Your Well-Being</string>
+    <string name="filter_halal">Halal</string>
+    <string name="filter_humane">Humane</string>
+    <string name="filter_balance">In Balance</string>
+    <string name="filter_kosher">Kosher</string>
+    <string name="filter_gluten">Made without Gluten</string>
+    <string name="filter_organic">Organic</string>
+    <string name="filter_seafood">Seafood Watch</string>
+    <string name="filter_vegan">Vegan</string>
+    <string name="filter_vegetarian">Vegetarian</string>
+
 </resources>

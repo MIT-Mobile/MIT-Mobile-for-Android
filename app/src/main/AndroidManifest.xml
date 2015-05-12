@@ -243,6 +243,10 @@
             android:name=".events.activities.EventsDetailActivity"
             android:label="@string/title_activity_events_detail"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".dining.FiltersActivity"
+            android:label="@string/filters_activity_title"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
