@@ -25,6 +25,7 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailDay;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
@@ -74,7 +75,7 @@ public class DiningRetailActivity extends AppCompatActivity {
 
         ButterKnife.inject(this);
 
-        venue = getIntent().getParcelableExtra("VENUE");
+        venue = getIntent().getParcelableExtra(Constants.DINING_VENUE_KEY);
 
         if (venue == null) {
             return;
@@ -277,11 +278,5 @@ public class DiningRetailActivity extends AppCompatActivity {
             sectionImage.setVisibility(View.VISIBLE);
             sectionImage.setImageResource(imageRes);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("VENUE", venue);
     }
 }

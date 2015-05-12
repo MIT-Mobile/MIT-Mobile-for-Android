@@ -14,6 +14,7 @@ public class Constants {
     public static final String CURRENT_ACTIVE_ALARM_IDS = "activeAlarmIds";
     public static final String ALARM_ID_KEY = "alarm";
     public static final String ALARM_DESCRIPTION = "alarmDescription";
+    public static final String DINING_VENUE_KEY = "venue";
     
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
@@ -96,17 +97,6 @@ public class Constants {
     public static class Resources {
         public static final String RESOURCE_PATH = "/resource";
         public static final String RESOURCE_ROOMSET_PATH = "/resourceroomset";
-//        public static final String STOP_INFO_PATH = "/routes/{route}/stops/{stop}";
-//        public static final String PREDICTIONS_PATH = "/predictions";
-//        public static final String VEHICLES_PATH = "/vehicles";
-//
-//        public static final String MIT_TUPLES_KEY = "mitTuples";
-//        public static final String CR_TUPLES_KEY = "crTuples";
-//        public static final String MODULE_KEY = "module";
-//        public static final String PATH_KEY = "path";
-//        public static final String URI_KEY = "uri";
-//        public static final String PATHS_KEY = "pathParams";
-//        public static final String QUERIES_KEY = "queryParams";
     }
 
     public class Dining {

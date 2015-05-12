@@ -82,7 +82,8 @@
             android:paddingTop="10dp"
             android:text="@string/venue_hours"
             android:textColor="@color/mit_red"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/hours_layout"
