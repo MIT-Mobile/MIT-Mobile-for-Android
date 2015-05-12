@@ -39,7 +39,7 @@ public class DiningManager  extends RetrofitManager {
         return m.invoke(MIT_DINING_SERVICE);
     }
 
-    public static DiningManagerCall getDiningOptions(Activity activity, Callback<List<MITDiningDining>> dining) {
+    public static DiningManagerCall getDiningOptions(Activity activity, Callback<MITDiningDining> dining) {
         DiningManagerCallWrapper<?> returnValue = new DiningManagerCallWrapper<>(new MITAPIClient(activity), dining);
 
         returnValue.getClient().get(Constants.DINING, Constants.Dining.DINING_PATH, null, null, returnValue);
@@ -49,7 +49,7 @@ public class DiningManager  extends RetrofitManager {
 
     public interface MitDiningService {
         @GET(Constants.Dining.DINING_PATH)
-        void _getcontacts(Callback<List<MITDiningDining>> callback);
+        void _getcontacts(Callback<MITDiningDining> callback);
     }
 
     public static class DiningManagerCallWrapper<T>  extends MITAPIClient.ApiCallWrapper<T> implements DiningManagerCall, Callback<T> {

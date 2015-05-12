@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.R;
@@ -28,6 +30,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
     private static final int ROW_TYPES_COUNT = 3;
 
     private Context context;
+    private MITDiningDining mitDiningDining;
     private ArrayList<MITDiningDining> listAnnouncements;
     private ArrayList<MITDiningHouseVenue> listVenues;
     private ArrayList<MITDiningLinks> listResources;
@@ -37,6 +40,16 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
         this.listAnnouncements = listAnnouncements;
         this.listVenues = listVenues;
         this.listResources = listResources;
+    }
+
+    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining) {
+        this.context = context;
+        this.mitDiningDining = mitDiningDining;
+        this.listAnnouncements = new ArrayList<>();
+        this.listVenues = new ArrayList<>();
+        this.listResources = new ArrayList<>();
+
+        refreshData();
     }
 
     @Override
@@ -58,11 +71,11 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
         long headerId = getHeaderId(i);
         switch ((int) headerId) {
             case ROW_TYPE_ANNOUNCEMENT: {
-                if (listAnnouncements != null && listAnnouncements.size() > 0 && !TextUtils.isEmpty(listAnnouncements.get(0).getAnnouncementsHTML())) {
-                    headerTitle = listAnnouncements.get(0).getAnnouncementsHTML();
-                } else {
+//                if (listAnnouncements != null && listAnnouncements.size() > 0 && !TextUtils.isEmpty(listAnnouncements.get(0).getAnnouncementsHTML())) {
+//                    headerTitle = listAnnouncements.get(0).getAnnouncementsHTML();
+//                } else {
                     headerTitle = context.getString(R.string.dining_house_section_announcements);
-                }
+//                }
             }
             break;
             case ROW_TYPE_VENUE: {
@@ -153,6 +166,12 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                     holder.venueStatusTextView.setTextColor(context.getResources().getColor(R.color.status_red));
                     holder.venueStatusTextView.setText(R.string.dining_venue_status_closed);
                 }
+
+                try {
+                    Picasso.with(context).load(venue.getIconURL()).placeholder(R.drawable.grey_rect).into(holder.venueImageView);
+                } catch (NullPointerException e) {
+                    Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.venueImageView);
+                }
             }
             break;
             case ROW_TYPE_RESOURCE: {
@@ -207,5 +226,32 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 
         // resources
         TextView resourceTitleTextView;
+    }
+
+    public void setMitDiningDining(MITDiningDining mitDiningDining) {
+        this.mitDiningDining = mitDiningDining;
+
+        refreshData();
+    }
+
+    private void refreshData() {
+        listAnnouncements.clear();
+        listVenues.clear();
+        listResources.clear();
+
+        if (mitDiningDining != null) {
+            listAnnouncements.add(mitDiningDining);
+
+            // check lists are not null to prevent adding additional
+            // null verifications in other methods
+            if (mitDiningDining.getVenues() != null && mitDiningDining.getVenues().getHouse() != null) {
+                listVenues = mitDiningDining.getVenues().getHouse();
+            }
+            if (mitDiningDining.getLinks() != null) {
+                listResources = mitDiningDining.getLinks();
+            }
+        }
+
+        notifyDataSetChanged();
     }
 }

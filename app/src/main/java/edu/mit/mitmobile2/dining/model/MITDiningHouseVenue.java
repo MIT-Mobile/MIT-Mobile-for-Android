@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.dining.model;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,17 +14,33 @@ import edu.mit.mitmobile2.DateUtils;
 
 
 public class MITDiningHouseVenue {
+
+	@SerializedName("id")
+	protected String identifier;
+
+	@SerializedName("url")
+	protected String url;
+
+	@SerializedName("name")
+	protected String name;
+
+	@SerializedName("short_name")
+	protected String shortName;
+
     @SerializedName("icon_url")
     protected String iconURL;
-    @SerializedName("id")
-    protected String identifier;
-    protected String name;
-    protected Object payment; /* The ObjC Folks dont know what this is it seems */
-    @SerializedName("short_name")
-    protected String shortName;
+
+	@SerializedName("location")
     protected MITDiningLocation location;
-    protected HashSet<MITDiningHouseDay> mealsByDay;
+
+	@SerializedName("meals_by_day")
+    protected ArrayList<MITDiningHouseDay> mealsByDay;
+
+	@Expose
     protected MITDiningVenues venues;
+
+	@Expose
+	protected Object payment; /* The ObjC Folks dont know what this is it seems */
 
 	public String getIconURL() {
 		return iconURL;
@@ -49,7 +66,7 @@ public class MITDiningHouseVenue {
 		return location;
 	}
 
-	public HashSet<MITDiningHouseDay> getMealsByDay() {
+	public ArrayList<MITDiningHouseDay> getMealsByDay() {
 		return mealsByDay;
 	}
 

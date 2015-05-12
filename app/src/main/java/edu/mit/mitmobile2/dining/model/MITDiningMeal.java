@@ -5,9 +5,11 @@ import android.text.TextUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import edu.mit.mitmobile2.DateUtils;
@@ -15,14 +17,24 @@ import edu.mit.mitmobile2.R;
 
 
 public class MITDiningMeal {
-    @SerializedName("end_time")
-    protected String endTimeString;
-    protected String message;
-    protected String name;
+
+	@SerializedName("name")
+	protected String name;
+
     @SerializedName("start_time")
     protected String startTimeString;
-    protected MITDiningHouseDay houseDay;
-    protected HashSet<MITDiningMenuItem> items;
+
+	@SerializedName("end_time")
+	protected String endTimeString;
+
+	@SerializedName("items")
+    protected ArrayList<MITDiningMenuItem> items;
+
+	@Expose
+	protected MITDiningHouseDay houseDay;							// back reference
+
+	@Expose
+	protected String message;
 
 	public String getEndTimeString() {
 		return endTimeString;
@@ -44,13 +56,17 @@ public class MITDiningMeal {
 		return houseDay;
 	}
 
-	public HashSet<MITDiningMenuItem> getItems() {
+	public ArrayList<MITDiningMenuItem> getItems() {
 		return items;
+	}
+
+	public void setHouseDay(MITDiningHouseDay houseDay) {
+		this.houseDay = houseDay;
 	}
 
 	public Date getStartTime() {
 		try {
-			return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(houseDay.dateString + startTimeString);
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(houseDay.dateString + " " + startTimeString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -59,7 +75,7 @@ public class MITDiningMeal {
 
 	public Date getEndTime() {
 		try {
-			return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(houseDay.dateString + endTimeString);
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(houseDay.dateString + " " + endTimeString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

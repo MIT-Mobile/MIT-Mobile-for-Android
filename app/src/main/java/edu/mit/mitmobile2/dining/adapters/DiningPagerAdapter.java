@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
+
 import edu.mit.mitmobile2.dining.fragments.HouseDiningFragment;
 import edu.mit.mitmobile2.dining.fragments.RetailFragment;
 
@@ -13,21 +15,31 @@ import edu.mit.mitmobile2.dining.fragments.RetailFragment;
  */
 public class DiningPagerAdapter extends FragmentPagerAdapter {
 
+    private ArrayList<Fragment> fragments;
+
     public DiningPagerAdapter(FragmentManager fm) {
         super(fm);
+        fragments = new ArrayList<>();
+        initFragments();
+    }
+
+    private void initFragments() {
+        fragments.clear();
+        fragments.add(HouseDiningFragment.newInstance());
+        fragments.add(RetailFragment.newInstance());
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0: return HouseDiningFragment.newInstance();
-            case 1: return RetailFragment.newInstance();
-            default: return null;
-        }
+        return fragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return fragments.size();
+    }
+
+    public ArrayList<Fragment> getFragments() {
+        return fragments;
     }
 }

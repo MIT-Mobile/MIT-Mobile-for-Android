@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.interfaces.Updateable;
+import edu.mit.mitmobile2.dining.model.MITDiningDining;
 
 /**
  * Created by serg on 5/8/15.
  */
-public class RetailFragment extends Fragment {
+public class RetailFragment extends Fragment implements Updateable {
 
     public static RetailFragment newInstance() {
         RetailFragment fragment = new RetailFragment();
@@ -25,5 +27,12 @@ public class RetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dining_retail, null);
 
         return view;
+    }
+
+    /* Updateable */
+
+    @Override
+    public void onDining(MITDiningDining mitDiningDining) {
+        // TODO: add logic here
     }
 }

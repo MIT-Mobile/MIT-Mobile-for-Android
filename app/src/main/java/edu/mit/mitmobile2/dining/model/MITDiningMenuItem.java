@@ -7,13 +7,21 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class MITDiningMenuItem {
-    @SerializedName("dietary_flags")
-    protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
+
+    @SerializedName("station")
+    protected String station;
+
+	@SerializedName("name")
+	protected String name;
+
     @SerializedName("description")
     protected String itemDescription;
-    protected String name;
-    protected String station;
+
+	@Expose
     protected ArrayList<MITDiningMeal> meal;
+
+	@Expose
+	protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
 
 	public Object getDietaryFlags() {
 		return dietaryFlags;

@@ -1,24 +1,32 @@
 package edu.mit.mitmobile2.dining.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
 public class MITDiningVenues {
+
+	@SerializedName("house")
+    protected ArrayList<MITDiningHouseVenue> house;
+
+	@SerializedName("retail")
+    protected ArrayList<MITDiningRetailVenue> retail;
+
+    @Expose
     protected MITDiningDining dining;
-    protected HashSet<MITDiningHouseVenue> house;
-    protected HashSet<MITDiningRetailVenue> retail;
 
 	public MITDiningDining getDining() {
 		return dining;
 	}
 
-	public HashSet<MITDiningHouseVenue> getHouse() {
+	public ArrayList<MITDiningHouseVenue> getHouse() {
 		return house;
 	}
 
-	public HashSet<MITDiningRetailVenue> getRetail() {
+	public ArrayList<MITDiningRetailVenue> getRetail() {
 		return retail;
 	}
 

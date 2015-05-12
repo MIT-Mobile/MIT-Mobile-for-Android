@@ -1,15 +1,24 @@
 package edu.mit.mitmobile2.dining.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
 public class MITDiningDining {
+
     @SerializedName("announcements_html")
     protected String announcementsHTML;
+
+    @SerializedName("url")
     protected String url;
-    protected HashSet<MITDiningLinks> links;
+
+    @SerializedName("links")
+    protected ArrayList<MITDiningLinks> links;
+
+    @SerializedName("venues")
 	protected MITDiningVenues venues;
 
 	public String getAnnouncementsHTML() {
@@ -20,7 +29,7 @@ public class MITDiningDining {
 		return url;
 	}
 
-	public HashSet<MITDiningLinks> getLinks() {
+	public ArrayList<MITDiningLinks> getLinks() {
 		return links;
 	}
 

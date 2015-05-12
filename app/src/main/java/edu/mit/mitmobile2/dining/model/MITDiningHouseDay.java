@@ -12,17 +12,25 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import edu.mit.mitmobile2.R;
 
 
 public class MITDiningHouseDay {
+
     @SerializedName("date")
     protected String dateString;
-    protected String message;
-    protected MITDiningHouseVenue houseVenue;
-    protected HashSet<MITDiningMeal> meals;
+
+	@SerializedName("meals")
+    protected ArrayList<MITDiningMeal> meals;
+
+	@Expose
+	protected String message;
+
+	@Expose
+	protected MITDiningHouseVenue houseVenue;
 
 	public String getDateString() {
 		return dateString;
@@ -36,7 +44,7 @@ public class MITDiningHouseDay {
 		return houseVenue;
 	}
 
-	public HashSet<MITDiningMeal> getMeals() {
+	public ArrayList<MITDiningMeal> getMeals() {
 		return meals;
 	}
 

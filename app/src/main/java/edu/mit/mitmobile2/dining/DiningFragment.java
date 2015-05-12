@@ -21,7 +21,12 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.DiningPagerAdapter;
+import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
+import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
+import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
+import edu.mit.mitmobile2.dining.model.MITDiningMeal;
+import edu.mit.mitmobile2.dining.model.MITDiningVenues;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -39,7 +44,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
 
     private DiningPagerAdapter pagerAdapter;
 
-    private List<MITDiningDining> mitDiningDinings;
+    private MITDiningDining mitDiningDining;
 
     public static DiningFragment newInstance() {
         DiningFragment fragment = new DiningFragment();
@@ -136,11 +141,29 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     /* Network */
 
     private void fetchDiningOptions() {
-        DiningManager.getDiningOptions(getActivity(), new Callback<List<MITDiningDining>>() {
+        DiningManager.getDiningOptions(getActivity(), new Callback<MITDiningDining>() {
 
             @Override
-            public void success(List<MITDiningDining> mitDiningDinings, Response response) {
-                DiningFragment.this.mitDiningDinings = mitDiningDinings;
+            public void success(MITDiningDining mitDiningDining, Response response) {
+                DiningFragment.this.mitDiningDining = mitDiningDining;
+
+                for (MITDiningHouseVenue houseVenue : DiningFragment.this.mitDiningDining.getVenues().getHouse()) {
+                    if (houseVenue.getMealsByDay() != null) {
+                        for (MITDiningHouseDay day : houseVenue.getMealsByDay()) {
+                            if (day.getMeals() != null) {
+                                for (MITDiningMeal meal : day.getMeals()) {
+                                    meal.setHouseDay(day);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (Fragment fragment : pagerAdapter.getFragments()) {
+                    if (fragment instanceof Updateable) {
+                        ((Updateable) fragment).onDining(mitDiningDining);
+                    }
+                }
             }
 
             @Override
