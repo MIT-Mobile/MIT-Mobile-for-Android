@@ -7,7 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -23,7 +23,7 @@ import edu.mit.mitmobile2.shared.SharedActivityManager;
 import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
-public class MITActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
+public class MITActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 

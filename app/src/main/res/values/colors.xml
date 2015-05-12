@@ -52,7 +52,7 @@
     <color name="medium_grey">#ffcacaca</color>
     <color name="medium_grey_2">#ffdddddd</color>
     <color name="medium_light_grey">#ffececec</color>
-    
+
     <color name="mit_red">#FFA31F34</color>
     <color name="mit_red_dark">#831725</color>
     <color name="light_grey">#F8F8F8</color>
@@ -73,4 +73,6 @@
 
     <color name="search_events_hint_bg">#EEEEEE</color>
     <color name="search_events_hint_text">#898C8D</color>
+    <color name="closed_red">#FFF44336</color>
+    <color name="open_green">#ff0ba907</color>
 </resources>
