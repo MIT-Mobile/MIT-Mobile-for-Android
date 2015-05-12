@@ -169,4 +169,35 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="MITDiningFilterRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/activity_horizontal_margin</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="MITDiningFilterIcon">
+        <item name="android:layout_width">@dimen/filter_icon_size</item>
+        <item name="android:layout_height">@dimen/filter_icon_size</item>
+    </style>
+
+    <style name="MITDiningFilterName">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginLeft">@dimen/filter_name_margin</item>
+        <item name="android:textSize">@dimen/filter_name_text_size</item>
+    </style>
+
+    <style name="MITDiningFilterIcon.Check">
+        <item name="android:src">@drawable/ic_check_red</item>
+    </style>
+
+    <style name="MITDiningFilterDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@color/divider_grey</item>
+    </style>
+
 </resources>

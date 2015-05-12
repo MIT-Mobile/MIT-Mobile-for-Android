@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/filters_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/row_filter"/>
+    <LinearLayout
+        style="@style/MITDiningFilterRow"
+        android:id="@+id/farm_filter_row">
 
-</FrameLayout>
+        <ImageView
+            style="@style/MITDiningFilterIcon"/>
+
+        <TextView
+            style="@style/MITDiningFilterName"/>
+
+        <ImageView
+            style="@style/MITDiningFilterIcon.Check"/>
+
+    </LinearLayout>
+
+    <View
+        style="@style/MITDiningFilterDivider"/>
+
+</LinearLayout>
