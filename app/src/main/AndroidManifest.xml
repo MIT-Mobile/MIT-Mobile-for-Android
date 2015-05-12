@@ -246,6 +246,11 @@
             android:label="@string/title_activity_dining_retail"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".dining.FiltersActivity"
+            android:label="@string/filters_activity_title"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

@@ -110,4 +110,10 @@
     <dimen name="events_search_hint_padding_top_bottom">6dp</dimen>
 
     <dimen name="events_search_cell_padding">14dp</dimen>
+
+    <!--dining-->
+    <dimen name="filter_icon_size">24dp</dimen>
+    <dimen name="filter_name_margin">32dp</dimen>
+    <dimen name="filter_name_text_size">16sp</dimen>
+
 </resources>
