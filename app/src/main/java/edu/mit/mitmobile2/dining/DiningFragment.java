@@ -49,7 +49,7 @@ public class DiningFragment extends Fragment {
             public void success(List<MITDiningRetailVenue> mitDiningRetailVenues, Response response) {
                 LoggingManager.Timber.d("Success!");
                 Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
-                intent.putExtra("VENUE", mitDiningRetailVenues.get(8));
+                intent.putExtra("VENUE", mitDiningRetailVenues.get(10));
             }
 
             @Override

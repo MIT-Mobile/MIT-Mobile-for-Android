@@ -1,5 +1,7 @@
 package edu.mit.mitmobile2.dining;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,6 +24,7 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailDay;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
@@ -62,6 +65,8 @@ public class DiningRetailActivity extends AppCompatActivity {
     @InjectView(R.id.favorites_button)
     Button favoritesButton;
 
+    private MITDiningRetailVenue venue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +74,7 @@ public class DiningRetailActivity extends AppCompatActivity {
 
         ButterKnife.inject(this);
 
-        MITDiningRetailVenue venue = getIntent().getParcelableExtra("VENUE");
+        venue = getIntent().getParcelableExtra("VENUE");
 
         if (venue == null) {
             return;
@@ -80,25 +85,42 @@ public class DiningRetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(venue.getName());
 
         retailName.setText(venue.getName());
-        retailStatus.setText("Open");
 
         String cuisineString = buildString(venue.getCuisine());
         foodInfo.setText(cuisineString);
 
         retailDescription.loadData(venue.getDescriptionHTML(), "text/html;charset=utf-8", "utf-8");
 
-        setupInfoSegment(menuLayout, R.string.venue_menu, venue.getMenuURL(), null);
+        setupInfoSegment(menuLayout, R.string.venue_menu, venue.getMenuURL(), R.drawable.open_in_browser);
 
         String paymentString = buildString(venue.getPayment());
-        setupInfoSegment(paymentLayout, R.string.venue_payment, paymentString, null);
+        setupInfoSegment(paymentLayout, R.string.venue_payment, paymentString, -1);
 
         buildHoursSegment(venue);
 
         String location = venue.getLocation().getLocationDescription() == null ? venue.getLocation().getStreet() + "\n" + venue.getLocation().getCity() + ", " + venue.getLocation().getState() : venue.getLocation().getLocationDescription();
-        setupInfoSegment(locationLayout, R.string.venue_location, location, null);
-        setupInfoSegment(homepageLayout, R.string.venue_homepage, venue.getHomepageURL(), null);
+        setupInfoSegment(locationLayout, R.string.venue_location, location, R.drawable.ic_navigation);
+        setupInfoSegment(homepageLayout, R.string.venue_homepage, venue.getHomepageURL(), R.drawable.open_in_browser);
 
         favoritesButton.setText(R.string.venue_add_to_favs);
+    }
+
+    @OnClick(R.id.homepage_segment)
+    void goToHomepage() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(venue.getHomepageURL()));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.menu_segment)
+    void goToMenu() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(venue.getMenuURL()));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.location_segment)
+    void goToLocation() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + Uri.encode(venue.getLocation().getLatitude()) + "," + Uri.encode(venue.getLocation().getLongitude())));
+        startActivity(intent);
     }
 
     private String buildString(List<String> list) {
@@ -236,7 +258,7 @@ public class DiningRetailActivity extends AppCompatActivity {
         hoursLayout.addView(layout);
     }
 
-    private void setupInfoSegment(RelativeLayout layout, int title, String info, String imageUrl) {
+    private void setupInfoSegment(RelativeLayout layout, int title, String info, int imageRes) {
         TextView sectionTitle = (TextView) layout.findViewById(R.id.section_title);
         TextView sectionInfo = (TextView) layout.findViewById(R.id.section_info);
         ImageView sectionImage = (ImageView) layout.findViewById(R.id.section_image);
@@ -249,12 +271,17 @@ public class DiningRetailActivity extends AppCompatActivity {
         sectionTitle.setText(getString(title));
         sectionInfo.setText(info);
 
-        if (imageUrl == null) {
+        if (imageRes == -1) {
             sectionImage.setVisibility(View.GONE);
         } else {
             sectionImage.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(imageUrl).fit().centerInside().into(sectionImage);
+            sectionImage.setImageResource(imageRes);
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("VENUE", venue);
+    }
 }
