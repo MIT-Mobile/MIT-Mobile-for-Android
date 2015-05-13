@@ -113,6 +113,11 @@
             android:id="@+id/favorites_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/light_grey"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textAllCaps="true"
             android:textColor="@color/mit_red" />
 
