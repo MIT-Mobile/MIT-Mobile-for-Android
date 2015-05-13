@@ -14,9 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-import java.util.List;
-
-import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
@@ -26,7 +23,6 @@ import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
-import edu.mit.mitmobile2.dining.model.MITDiningVenues;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -36,15 +32,23 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     private static final String TAG_TABHOST_HOUSE_DINING = "tag_house_dining";
     private static final String TAG_TABHOST_RETAIL = "tag_retail";
 
+    private static final String KEY_STATE_DINING = "state_dining";
     private static final String KEY_STATE_SELECTED_TAB = "state_selected_tab";
+    private static final String KEY_STATE_SCREEN_MODE = "state_screen_mode";
+
+    private static final int SCREEN_MODE_LIST = 0;
+    private static final int SCREEN_MODE_MAP = 1;
 
     private TabHost tabHost;
     private TabWidget tabWidget;
     private ViewPager viewPager;
+    private MenuItem screenModeToggleMenuItem;
 
     private DiningPagerAdapter pagerAdapter;
 
     private MITDiningDining mitDiningDining;
+
+    private int screenMode = SCREEN_MODE_LIST;
 
     public static DiningFragment newInstance() {
         DiningFragment fragment = new DiningFragment();
@@ -74,6 +78,12 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
             if (savedInstanceState.containsKey(KEY_STATE_SELECTED_TAB)) {
                 tabHost.setCurrentTabByTag(savedInstanceState.getString(KEY_STATE_SELECTED_TAB));
             }
+            if (savedInstanceState.containsKey(KEY_STATE_SCREEN_MODE)) {
+                screenMode = savedInstanceState.getInt(KEY_STATE_SCREEN_MODE);
+            }
+            if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
+                mitDiningDining = (MITDiningDining) savedInstanceState.getSerializable(KEY_STATE_DINING);
+            }
         } else {
             fetchDiningOptions();
         }
@@ -90,16 +100,21 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.menu_dining, menu);
+
+        screenModeToggleMenuItem = menu.findItem(R.id.action_list_map_toggle);
+
         super.onCreateOptionsMenu(menu, inflater);
 
         getActivity().setTitle(R.string.title_activity_dining);
+        applyScreenMode();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_list_map_toggle: {
-                // TODO: toggle list/map here
+                toggleScreenMode();
+                applyScreenMode();
             }
             break;
         }
@@ -108,7 +123,12 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (mitDiningDining != null) {
+            outState.putSerializable(KEY_STATE_DINING, mitDiningDining);
+        }
         outState.putString(KEY_STATE_SELECTED_TAB, tabHost.getCurrentTabTag());
+        outState.putInt(KEY_STATE_SCREEN_MODE, screenMode);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -147,6 +167,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
             public void success(MITDiningDining mitDiningDining, Response response) {
                 DiningFragment.this.mitDiningDining = mitDiningDining;
 
+                // set back references here
                 for (MITDiningHouseVenue houseVenue : DiningFragment.this.mitDiningDining.getVenues().getHouse()) {
                     if (houseVenue.getMealsByDay() != null) {
                         for (MITDiningHouseDay day : houseVenue.getMealsByDay()) {
@@ -159,11 +180,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
                     }
                 }
 
-                for (Fragment fragment : pagerAdapter.getFragments()) {
-                    if (fragment instanceof Updateable) {
-                        ((Updateable) fragment).onDining(mitDiningDining);
-                    }
-                }
+                notifyDiningUpdated(DiningFragment.this.mitDiningDining);
             }
 
             @Override
@@ -174,6 +191,44 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     }
 
     /* Private methods */
+
+    private void toggleScreenMode() {
+        switch (screenMode) {
+            case SCREEN_MODE_MAP: {
+                screenMode = SCREEN_MODE_LIST;
+            }
+            break;
+            case SCREEN_MODE_LIST: {
+                screenMode = SCREEN_MODE_MAP;
+            }
+            break;
+        }
+    }
+
+    private void applyScreenMode() {
+        if (viewPager != null && screenModeToggleMenuItem != null) {
+            switch (screenMode) {
+                case SCREEN_MODE_MAP: {
+                    viewPager.setVisibility(View.GONE);
+                    screenModeToggleMenuItem.setIcon(R.drawable.ic_list);
+                }
+                break;
+                case SCREEN_MODE_LIST: {
+                    viewPager.setVisibility(View.VISIBLE);
+                    screenModeToggleMenuItem.setIcon(R.drawable.ic_map);
+                }
+                break;
+            }
+        }
+    }
+
+    private void notifyDiningUpdated(MITDiningDining mitDiningDining) {
+        for (Fragment fragment : pagerAdapter.getFragments()) {
+            if (fragment instanceof Updateable) {
+                ((Updateable) fragment).onDining(mitDiningDining);
+            }
+        }
+    }
 
     private void initViewPager() {
         viewPager.setAdapter(pagerAdapter);

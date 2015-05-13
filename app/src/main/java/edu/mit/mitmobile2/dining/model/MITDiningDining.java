@@ -1,5 +1,9 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -7,7 +11,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class MITDiningDining {
+public class MITDiningDining implements Serializable {
 
     @SerializedName("announcements_html")
     protected String announcementsHTML;

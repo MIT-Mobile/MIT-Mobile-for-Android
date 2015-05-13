@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.dining.model;
 
-public class MITDiningLinks {
+import java.io.Serializable;
+
+public class MITDiningLinks implements Serializable {
     protected String name;
     protected String url;
 //    protected MITDiningDining dining;

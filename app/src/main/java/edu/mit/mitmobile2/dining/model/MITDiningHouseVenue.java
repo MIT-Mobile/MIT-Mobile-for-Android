@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.dining.model;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
 import edu.mit.mitmobile2.DateUtils;
 
 
-public class MITDiningHouseVenue {
+public class MITDiningHouseVenue implements Serializable {
 
 	@SerializedName("id")
 	protected String identifier;

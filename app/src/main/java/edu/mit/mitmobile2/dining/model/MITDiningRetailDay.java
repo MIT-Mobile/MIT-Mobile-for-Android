@@ -1,11 +1,12 @@
 package edu.mit.mitmobile2.dining.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.google.gson.annotations.SerializedName;
 
 
-public class MITDiningRetailDay {
+public class MITDiningRetailDay implements Serializable {
     @SerializedName("date")
     protected String dateString;
     @SerializedName("end_time")

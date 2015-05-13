@@ -3,7 +3,9 @@ package edu.mit.mitmobile2.dining.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MITDiningLocation {
+import java.io.Serializable;
+
+public class MITDiningLocation implements Serializable {
 
 	@SerializedName("latitude")
 	protected String latitude;

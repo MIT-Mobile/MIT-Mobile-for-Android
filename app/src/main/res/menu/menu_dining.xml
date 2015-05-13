@@ -4,6 +4,6 @@
 
     <item
         android:id="@+id/action_list_map_toggle"
-        android:title="MAP"
+        android:icon="@drawable/ic_map"
         app:showAsAction="always" />
 </menu>

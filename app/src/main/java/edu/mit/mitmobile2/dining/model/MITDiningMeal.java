@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.dining.model;
 import android.content.Context;
 import android.text.TextUtils;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import edu.mit.mitmobile2.DateUtils;
 import edu.mit.mitmobile2.R;
 
 
-public class MITDiningMeal {
+public class MITDiningMeal implements Serializable {
 
 	@SerializedName("name")
 	protected String name;

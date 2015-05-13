@@ -21,6 +21,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener {
 
+    private static final String KEY_STATE_DINING = "state_dining";
+
     private StickyListHeadersListView listView;
 
     private HouseDiningAdapter adapter;
@@ -42,7 +44,24 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
 
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
+                mitDiningDining = (MITDiningDining) savedInstanceState.getSerializable(KEY_STATE_DINING);
+
+                onDining(mitDiningDining);
+            }
+        }
+
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mitDiningDining != null) {
+            outState.putSerializable(KEY_STATE_DINING, mitDiningDining);
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     /* Updateable */
@@ -50,7 +69,9 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
     @Override
     public void onDining(MITDiningDining mitDiningDining) {
         this.mitDiningDining = mitDiningDining;
-        adapter.setMitDiningDining(mitDiningDining);
+        if (adapter != null) {
+            adapter.setMitDiningDining(mitDiningDining);
+        }
     }
 
     /* AdapterView.OnItemClickListener */

@@ -3,11 +3,12 @@ package edu.mit.mitmobile2.dining.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class MITDiningVenues {
+public class MITDiningVenues implements Serializable {
 
 	@SerializedName("house")
     protected ArrayList<MITDiningHouseVenue> house;

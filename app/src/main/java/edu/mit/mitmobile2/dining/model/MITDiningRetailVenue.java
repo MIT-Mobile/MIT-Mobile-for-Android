@@ -1,11 +1,12 @@
 package edu.mit.mitmobile2.dining.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 import com.google.gson.annotations.SerializedName;
 
 
-public class MITDiningRetailVenue {
+public class MITDiningRetailVenue implements Serializable {
     protected Object cuisine;  /* The ObjC Folks dont know what this is it seems */
     @SerializedName("description_html")
     protected String descriptionHTML;

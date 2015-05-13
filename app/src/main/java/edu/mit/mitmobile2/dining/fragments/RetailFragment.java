@@ -20,6 +20,8 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class RetailFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener {
 
+    private static final String KEY_STATE_DINING = "state_dining";
+
     private StickyListHeadersListView listView;
 
     private RetailAdapter adapter;
@@ -40,7 +42,24 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
         listView = (StickyListHeadersListView) view.findViewById(R.id.list_retail);
         listView.setAdapter(adapter);
 
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
+                mitDiningDining = (MITDiningDining) savedInstanceState.getSerializable(KEY_STATE_DINING);
+
+                onDining(mitDiningDining);
+            }
+        }
+
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mitDiningDining != null) {
+            outState.putSerializable(KEY_STATE_DINING, mitDiningDining);
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     /* Updateable */
@@ -48,7 +67,9 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     @Override
     public void onDining(MITDiningDining mitDiningDining) {
         this.mitDiningDining = mitDiningDining;
-        adapter.setRetailVenues(mitDiningDining.getVenues().getRetail());
+        if (adapter != null) {
+            adapter.setRetailVenues(mitDiningDining.getVenues().getRetail());
+        }
     }
 
     /* AdapterView.OnItemClickListener */

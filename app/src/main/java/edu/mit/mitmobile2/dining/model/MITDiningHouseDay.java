@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.text.TextUtilsCompat;
 import android.text.TextUtils;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import com.google.gson.annotations.SerializedName;
 import edu.mit.mitmobile2.R;
 
 
-public class MITDiningHouseDay {
+public class MITDiningHouseDay implements Serializable {
 
     @SerializedName("date")
     protected String dateString;

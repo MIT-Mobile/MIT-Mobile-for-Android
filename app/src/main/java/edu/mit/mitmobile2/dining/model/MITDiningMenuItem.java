@@ -1,12 +1,13 @@
 package edu.mit.mitmobile2.dining.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class MITDiningMenuItem {
+public class MITDiningMenuItem implements Serializable {
 
     @SerializedName("station")
     protected String station;
