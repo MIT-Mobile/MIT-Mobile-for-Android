@@ -117,4 +117,9 @@
     <dimen name="dining_house_venues_cell_padding">14dp</dimen>
     <dimen name="dining_house_venues_cell_image_padding">14dp</dimen>
     <dimen name="dining_house_announcement_cell_padding">14dp</dimen>
+
+    <dimen name="filter_icon_size">24dp</dimen>
+    <dimen name="filter_name_margin">32dp</dimen>
+    <dimen name="filter_name_text_size">16sp</dimen>
+
 </resources>

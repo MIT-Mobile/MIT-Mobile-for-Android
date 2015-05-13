@@ -1,9 +1,15 @@
 package edu.mit.mitmobile2.news.fragments;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -17,20 +23,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
+import edu.mit.mitmobile2.MITSearchAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.MITSearchAdapter;
 import edu.mit.mitmobile2.news.NewsFragment;
 import edu.mit.mitmobile2.news.NewsFragmentCallback;
 import edu.mit.mitmobile2.news.activities.NewsCategoryActivity;
@@ -54,7 +54,7 @@ public class SearchFragment extends Fragment implements NewsFragmentCallback {
 
     private List<String> recentSearches;
     private SharedPreferences sharedPreferences;
-    private MITSearchAdapter mitSearchAdapter;
+    private MITSearchAdapter<MITNewsStory> mitSearchAdapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment implements NewsFragmentCallback {
             recentSearches.addAll(set);
         }
 
-        mitSearchAdapter = new MITSearchAdapter(getActivity().getApplicationContext(), recentSearches, this);
+        mitSearchAdapter = new MITSearchAdapter<MITNewsStory>(getActivity().getApplicationContext(), recentSearches, this);
         recentSearchListView.setAdapter(mitSearchAdapter);
 
         return view;

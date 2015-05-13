@@ -1,5 +1,9 @@
 package edu.mit.mitmobile2;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +13,23 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import edu.mit.mitmobile2.news.NewsFragmentCallback;
 
-public class MITSearchAdapter extends BaseAdapter implements Filterable {
+public class MITSearchAdapter<T> extends BaseAdapter implements Filterable {
     private List<String> recentSearches;
     private LayoutInflater listContainer;
-    private NewsFragmentCallback callback;
+    private FragmentCallback<T> callback;
     private SearchItemFilter searchItemFilter = new SearchItemFilter();
     private List<String> filteredData = null;
 
-    public MITSearchAdapter(Context context, List<String> recentSearches, NewsFragmentCallback callback) {
-        this.recentSearches = recentSearches;
-        this.filteredData = recentSearches;
+    public MITSearchAdapter(Context context, Collection<String> recentSearches, FragmentCallback<T> callback) {
+        this.recentSearches = new ArrayList<>(recentSearches);
+        this.filteredData = new ArrayList<>(recentSearches);
         this.callback = callback;
         listContainer = LayoutInflater.from(context);
     }
+
     @Override
     public int getCount() {
         return filteredData.size();
@@ -112,6 +114,11 @@ public class MITSearchAdapter extends BaseAdapter implements Filterable {
             filteredData = (ArrayList<String>) results.values;
             notifyDataSetChanged();
         }
+    }
+
+    public interface FragmentCallback<T> {
+        void itemClicked(T item);
+        void itemSearch(String searchText);
     }
 }
 
