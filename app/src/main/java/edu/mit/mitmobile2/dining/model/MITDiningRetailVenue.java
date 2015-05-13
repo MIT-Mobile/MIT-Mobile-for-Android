@@ -87,6 +87,10 @@ public class MITDiningRetailVenue implements Parcelable {
         return venues;
     }
 
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "MITDiningRetailVenue{" +

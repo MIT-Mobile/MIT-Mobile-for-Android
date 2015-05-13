@@ -19,13 +19,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailDay;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
@@ -103,7 +106,9 @@ public class DiningRetailActivity extends AppCompatActivity {
         setupInfoSegment(locationLayout, R.string.venue_location, location, R.drawable.ic_navigation);
         setupInfoSegment(homepageLayout, R.string.venue_homepage, venue.getHomepageURL(), R.drawable.open_in_browser);
 
-        favoritesButton.setText(R.string.venue_add_to_favs);
+        boolean favorite = isVenueFavorite();
+        favoritesButton.setText(!favorite ? R.string.venue_add_to_favs : R.string.venue_remove_from_favs);
+        venue.setFavorite(favorite);
     }
 
     @OnClick(R.id.homepage_segment)
@@ -122,6 +127,39 @@ public class DiningRetailActivity extends AppCompatActivity {
     void goToLocation() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + Uri.encode(venue.getLocation().getLatitude()) + "," + Uri.encode(venue.getLocation().getLongitude())));
         startActivity(intent);
+    }
+
+    @OnClick(R.id.favorites_button)
+    void toggleFavorites() {
+        venue.setFavorite(!venue.isFavorite());
+        if (!venue.isFavorite()) {
+            if (PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).contains(Constants.FAVORITE_VENUES_KEY)) {
+                Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
+                stringSet.remove(venue.getIdentifier());
+                PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+            }
+        } else {
+            if (PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).contains(Constants.FAVORITE_VENUES_KEY)) {
+                Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
+                stringSet.add(venue.getIdentifier());
+                PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+            } else {
+                Set<String> stringSet = new HashSet<>();
+                stringSet.add(venue.getIdentifier());
+                PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+            }
+        }
+
+        favoritesButton.setText(!venue.isFavorite() ? R.string.venue_add_to_favs : R.string.venue_remove_from_favs);
+    }
+
+    private boolean isVenueFavorite() {
+        if (!PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).contains(Constants.FAVORITE_VENUES_KEY)) {
+            return false;
+        } else {
+            Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
+            return stringSet.contains(venue.getIdentifier());
+        }
     }
 
     private String buildString(List<String> list) {
