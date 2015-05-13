@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.tour.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.webkit.WebView;
@@ -31,7 +32,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.tour.model.MITTourStopDirection;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
-public class TourDirectionsActivity extends ActionBarActivity {
+public class TourDirectionsActivity extends AppCompatActivity {
 
     private MapView mapView;
 

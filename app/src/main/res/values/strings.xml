@@ -160,11 +160,22 @@
     <string name="today">TODAY</string>
     <string name="calendars">CALENDARS</string>
 
+    <!--DINING-->
     <string name="event_search_hint_template" formatted="false">\"%s\"</string>
     <string name="event_search_hint_with_category_template" formatted="false">\"%s\" in %s</string>
     <string name="event_filter_header">FILTERS</string>
     <string name="event_filter_clear">Clear</string>
     <string name="event_recent_header">RECENTS</string>
+    <string name="title_activity_dining_retail">DiningRetailActivity</string>
+    <string name="venue_menu">menu</string>
+    <string name="venue_payment">payment</string>
+    <string name="venue_hours">hours</string>
+    <string name="venue_location">location</string>
+    <string name="venue_homepage">home page</string>
+    <string name="venue_add_to_favs">ADD TO FAVORITES</string>
+    <string name="venue_remove_from_favs">REMOVE FROM FAVORITES</string>
+    <string name="open_until">"Open until "</string>
+    <string name="closed">Closed</string>
 
     <string name="filters_activity_title">Filters</string>
     <string name="filter_farm">Farm to Fork</string>
