@@ -1,23 +1,22 @@
 package edu.mit.mitmobile2.dining.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
-
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+
 import edu.mit.mitmobile2.DateUtils;
 import edu.mit.mitmobile2.R;
 
-
-public class MITDiningMeal implements Serializable {
+public class MITDiningMeal implements Parcelable {
 
 	@SerializedName("name")
 	protected String name;
@@ -29,7 +28,7 @@ public class MITDiningMeal implements Serializable {
 	protected String endTimeString;
 
 	@SerializedName("items")
-    protected ArrayList<MITDiningMenuItem> items;
+    protected HashSet<MITDiningMenuItem> items;
 
 	@Expose
 	protected MITDiningHouseDay houseDay;							// back reference
@@ -57,12 +56,24 @@ public class MITDiningMeal implements Serializable {
 		return houseDay;
 	}
 
-	public ArrayList<MITDiningMenuItem> getItems() {
+	public HashSet<MITDiningMenuItem> getItems() {
 		return items;
 	}
 
 	public void setHouseDay(MITDiningHouseDay houseDay) {
 		this.houseDay = houseDay;
+	}
+
+	@Override
+	public String toString() {
+		return "MITDiningMeal{" +
+				"endTimeString='" + endTimeString + '\'' +
+				", message='" + message + '\'' +
+				", name='" + name + '\'' +
+				", startTimeString='" + startTimeString + '\'' +
+				", houseDay=" + houseDay +
+				", items=" + items +
+				'}';
 	}
 
 	public Date getStartTime() {
@@ -102,15 +113,40 @@ public class MITDiningMeal implements Serializable {
 		return description;
 	}
 
-	@Override
-	public String toString() {
-		return "MITDiningMeal{" +
-			"endTimeString='" + endTimeString + '\'' +
-			", message='" + message + '\'' +
-			", name='" + name + '\'' +
-			", startTimeString='" + startTimeString + '\'' +
-			", houseDay=" + houseDay +
-			", items=" + items +
-			'}';
-	}
+    protected MITDiningMeal(Parcel in) {
+        endTimeString = in.readString();
+        message = in.readString();
+        name = in.readString();
+        startTimeString = in.readString();
+        houseDay = (MITDiningHouseDay) in.readValue(MITDiningHouseDay.class.getClassLoader());
+        items = (HashSet) in.readValue(HashSet.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(endTimeString);
+        dest.writeString(message);
+        dest.writeString(name);
+        dest.writeString(startTimeString);
+        dest.writeValue(houseDay);
+        dest.writeValue(items);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<MITDiningMeal> CREATOR = new Parcelable.Creator<MITDiningMeal>() {
+        @Override
+        public MITDiningMeal createFromParcel(Parcel in) {
+            return new MITDiningMeal(in);
+        }
+
+        @Override
+        public MITDiningMeal[] newArray(int size) {
+            return new MITDiningMeal[size];
+        }
+    };
 }

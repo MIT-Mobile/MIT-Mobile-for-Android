@@ -82,11 +82,40 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
                 screenMode = savedInstanceState.getInt(KEY_STATE_SCREEN_MODE);
             }
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
-                mitDiningDining = (MITDiningDining) savedInstanceState.getSerializable(KEY_STATE_DINING);
+                mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
             }
         } else {
             fetchDiningOptions();
         }
+
+        /*
+
+        final Intent intent = new Intent(getActivity(), DiningRetailActivity.class);
+
+        TextView tv = (TextView) view.findViewById(R.id.module_title);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
+
+        MITAPIClient mitApiClient = new MITAPIClient(getActivity());
+        mitApiClient.get(Constants.DINING, Constants.Dining.DINING_RETAIL_PATH, null, null, new Callback<List<MITDiningRetailVenue>>() {
+            @Override
+            public void success(List<MITDiningRetailVenue> mitDiningRetailVenues, Response response) {
+                LoggingManager.Timber.d("Success!");
+                Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+                intent.putExtra(Constants.DINING_VENUE_KEY, mitDiningRetailVenues.get(10));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+
+        */
 
         return view;
     }
@@ -124,7 +153,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mitDiningDining != null) {
-            outState.putSerializable(KEY_STATE_DINING, mitDiningDining);
+            outState.putParcelable(KEY_STATE_DINING, mitDiningDining);
         }
         outState.putString(KEY_STATE_SELECTED_TAB, tabHost.getCurrentTabTag());
         outState.putInt(KEY_STATE_SCREEN_MODE, screenMode);

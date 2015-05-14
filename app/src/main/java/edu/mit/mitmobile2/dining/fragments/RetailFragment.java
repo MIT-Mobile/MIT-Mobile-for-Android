@@ -44,7 +44,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
-                mitDiningDining = (MITDiningDining) savedInstanceState.getSerializable(KEY_STATE_DINING);
+                mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
 
                 onDining(mitDiningDining);
             }
@@ -56,7 +56,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mitDiningDining != null) {
-            outState.putSerializable(KEY_STATE_DINING, mitDiningDining);
+            outState.putParcelable(KEY_STATE_DINING, mitDiningDining);
         }
 
         super.onSaveInstanceState(outState);

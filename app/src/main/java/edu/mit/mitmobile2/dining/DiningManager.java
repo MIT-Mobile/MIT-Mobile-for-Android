@@ -11,6 +11,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
+import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -18,12 +19,12 @@ import retrofit.http.GET;
 /**
  * Created by grmartin on 5/7/15.
  */
-public class DiningManager  extends RetrofitManager {
+public class DiningManager extends RetrofitManager {
     private static final MitDiningService MIT_DINING_SERVICE = MIT_REST_ADAPTER.create(MitDiningService.class);
 
     @SuppressWarnings("unused")
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
-        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
         Method m = findMethodViaDirectReflection(MitDiningService.class, path, pathParams, queryParams, Callback.class);
         LoggingManager.Timber.d("Method = " + m);
@@ -32,7 +33,7 @@ public class DiningManager  extends RetrofitManager {
 
     @SuppressWarnings("unused")
     public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams)
-        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
         Method m = findMethodViaDirectReflection(MitDiningService.class, path, pathParams, queryParams);
         LoggingManager.Timber.d("Method = " + m);
@@ -50,13 +51,17 @@ public class DiningManager  extends RetrofitManager {
     public interface MitDiningService {
         @GET(Constants.Dining.DINING_PATH)
         void _getcontacts(Callback<MITDiningDining> callback);
+
+        @GET(Constants.Dining.DINING_RETAIL_PATH)
+        void _getretail(Callback<List<MITDiningRetailVenue>> callback);
     }
 
-    public static class DiningManagerCallWrapper<T>  extends MITAPIClient.ApiCallWrapper<T> implements DiningManagerCall, Callback<T> {
+    public static class DiningManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements DiningManagerCall, Callback<T> {
         public DiningManagerCallWrapper(MITAPIClient client, Callback<T> callback) {
             super(client, callback);
         }
     }
 
-    public interface DiningManagerCall extends MITAPIClient.ApiCall {}
+    public interface DiningManagerCall extends MITAPIClient.ApiCall {
+    }
 }

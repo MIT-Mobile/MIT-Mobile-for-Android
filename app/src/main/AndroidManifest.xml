@@ -152,13 +152,7 @@
             android:name=".mobius.ResourceViewActivity"
             android:launchMode="standard"
             android:parentActivityName=".mobius.ResourceListActivity"
-            android:theme="@style/Theme.MyTheme">
-
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mobius.ResourceListActivity" />
-        </activity>
+            android:theme="@style/Theme.MyTheme" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -212,12 +206,12 @@
             android:name=".emergency.activity.EmergencyContactsActivity"
             android:label="@string/title_activity_emergency_contacts"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyTheme"></activity>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".people.activity.PersonDetailActivity"
             android:label="@string/title_activity_person_detail"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.MyTheme"></activity>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".news.activities.NewsStoryActivity"
             android:parentActivityName=".MITMainActivity"
@@ -232,20 +226,24 @@
             android:label="@string/title_activity_news_image_gallery"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
-
         <activity
             android:name=".events.activities.CalendarsActivity"
             android:label="@string/title_activity_events_calendars"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
-
         <activity
             android:name=".events.activities.EventsDetailActivity"
             android:label="@string/title_activity_events_detail"
             android:theme="@style/Theme.MyTheme" />
         <activity
+            android:name=".dining.DiningRetailActivity"
+            android:label="@string/title_activity_dining_retail"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
             android:name=".dining.FiltersActivity"
             android:label="@string/filters_activity_title"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
     </application>
 

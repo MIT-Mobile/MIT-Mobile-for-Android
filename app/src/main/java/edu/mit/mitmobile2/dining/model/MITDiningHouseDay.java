@@ -1,10 +1,13 @@
 package edu.mit.mitmobile2.dining.model;
 
 import android.content.Context;
-import android.support.v4.text.TextUtilsCompat;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,19 +16,15 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import edu.mit.mitmobile2.R;
 
-
-public class MITDiningHouseDay implements Serializable {
+public class MITDiningHouseDay implements Parcelable {
 
     @SerializedName("date")
     protected String dateString;
 
 	@SerializedName("meals")
-    protected ArrayList<MITDiningMeal> meals;
+    protected HashSet<MITDiningMeal> meals;
 
 	@Expose
 	protected String message;
@@ -45,7 +44,7 @@ public class MITDiningHouseDay implements Serializable {
 		return houseVenue;
 	}
 
-	public ArrayList<MITDiningMeal> getMeals() {
+	public HashSet<MITDiningMeal> getMeals() {
 		return meals;
 	}
 
@@ -119,4 +118,37 @@ public class MITDiningHouseDay implements Serializable {
 			", meals=" + meals +
 			'}';
 	}
+
+    protected MITDiningHouseDay(Parcel in) {
+        dateString = in.readString();
+        message = in.readString();
+        houseVenue = (MITDiningHouseVenue) in.readValue(MITDiningHouseVenue.class.getClassLoader());
+        meals = (HashSet) in.readValue(HashSet.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(dateString);
+        dest.writeString(message);
+        dest.writeValue(houseVenue);
+        dest.writeValue(meals);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<MITDiningHouseDay> CREATOR = new Parcelable.Creator<MITDiningHouseDay>() {
+        @Override
+        public MITDiningHouseDay createFromParcel(Parcel in) {
+            return new MITDiningHouseDay(in);
+        }
+
+        @Override
+        public MITDiningHouseDay[] newArray(int size) {
+            return new MITDiningHouseDay[size];
+        }
+    };
 }

@@ -1,32 +1,32 @@
 package edu.mit.mitmobile2.dining.model;
 
 import android.content.Context;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+import java.util.HashSet;
+
 import edu.mit.mitmobile2.DateUtils;
 
 
-public class MITDiningHouseVenue implements Serializable {
 
-	@SerializedName("id")
-	protected String identifier;
+public class MITDiningHouseVenue implements Parcelable {
 
-	@SerializedName("url")
-	protected String url;
+    @SerializedName("id")
+    protected String identifier;
 
-	@SerializedName("name")
-	protected String name;
+    @SerializedName("url")
+    protected String url;
 
-	@SerializedName("short_name")
-	protected String shortName;
+    @SerializedName("name")
+    protected String name;
+
+    @SerializedName("short_name")
+    protected String shortName;
 
     @SerializedName("icon_url")
     protected String iconURL;
@@ -35,7 +35,7 @@ public class MITDiningHouseVenue implements Serializable {
     protected MITDiningLocation location;
 
 	@SerializedName("meals_by_day")
-    protected ArrayList<MITDiningHouseDay> mealsByDay;
+    protected HashSet<MITDiningHouseDay> mealsByDay;
 
 	@Expose
     protected MITDiningVenues venues;
@@ -67,7 +67,7 @@ public class MITDiningHouseVenue implements Serializable {
 		return location;
 	}
 
-	public ArrayList<MITDiningHouseDay> getMealsByDay() {
+	public HashSet<MITDiningHouseDay> getMealsByDay() {
 		return mealsByDay;
 	}
 
@@ -101,17 +101,58 @@ public class MITDiningHouseVenue implements Serializable {
 		return returnDay;
 	}
 
-	@Override
-	public String toString() {
-		return "MITDiningHouseVenue{" +
-			"iconURL='" + iconURL + '\'' +
-			", identifier='" + identifier + '\'' +
-			", name='" + name + '\'' +
-			", payment=" + payment +
-			", shortName='" + shortName + '\'' +
-			", location=" + location +
-			", mealsByDay=" + mealsByDay +
-			", venues=" + venues +
-			'}';
-	}
+    @Override
+    public String toString() {
+        return "MITDiningHouseVenue{" +
+                "iconURL='" + iconURL + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", name='" + name + '\'' +
+                ", payment=" + payment +
+                ", shortName='" + shortName + '\'' +
+                ", location=" + location +
+                ", mealsByDay=" + mealsByDay +
+                ", venues=" + venues +
+                '}';
+    }
+
+    protected MITDiningHouseVenue(Parcel in) {
+        iconURL = in.readString();
+        identifier = in.readString();
+        name = in.readString();
+        payment = (Object) in.readValue(Object.class.getClassLoader());
+        shortName = in.readString();
+        location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
+        mealsByDay = (HashSet) in.readValue(HashSet.class.getClassLoader());
+        venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(iconURL);
+        dest.writeString(identifier);
+        dest.writeString(name);
+        dest.writeValue(payment);
+        dest.writeString(shortName);
+        dest.writeValue(location);
+        dest.writeValue(mealsByDay);
+        dest.writeValue(venues);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<MITDiningHouseVenue> CREATOR = new Parcelable.Creator<MITDiningHouseVenue>() {
+        @Override
+        public MITDiningHouseVenue createFromParcel(Parcel in) {
+            return new MITDiningHouseVenue(in);
+        }
+
+        @Override
+        public MITDiningHouseVenue[] newArray(int size) {
+            return new MITDiningHouseVenue[size];
+        }
+    };
 }

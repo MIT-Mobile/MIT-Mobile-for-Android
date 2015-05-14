@@ -46,7 +46,7 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
-                mitDiningDining = (MITDiningDining) savedInstanceState.getSerializable(KEY_STATE_DINING);
+                mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
 
                 onDining(mitDiningDining);
             }
@@ -58,7 +58,7 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mitDiningDining != null) {
-            outState.putSerializable(KEY_STATE_DINING, mitDiningDining);
+            outState.putParcelable(KEY_STATE_DINING, mitDiningDining);
         }
 
         super.onSaveInstanceState(outState);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
@@ -25,7 +26,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.news.adapters.MITNewsGalleryPagerAdapter;
 import edu.mit.mitmobile2.news.models.MITNewsGalleryImage;
 
-public class NewsImageGalleryActivity extends ActionBarActivity {
+public class NewsImageGalleryActivity extends AppCompatActivity {
 
     @InjectView(R.id.image_gallery_view_pager)
     ViewPager viewPager;

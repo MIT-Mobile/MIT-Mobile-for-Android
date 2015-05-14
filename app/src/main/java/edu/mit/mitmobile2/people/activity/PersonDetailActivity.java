@@ -2,13 +2,14 @@ package edu.mit.mitmobile2.people.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.people.fragment.PersonDetailFragment;
 
-public class PersonDetailActivity extends ActionBarActivity {
+public class PersonDetailActivity extends AppCompatActivity {
     public static final String PERSON_KEY = "6A3F6D22-78C0-40F6-8AB9-4D66282AD8DE";
 
     @Override
