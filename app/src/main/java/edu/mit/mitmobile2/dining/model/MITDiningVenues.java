@@ -3,39 +3,49 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
 public class MITDiningVenues implements Parcelable {
+
+    @SerializedName("house")
+    protected ArrayList<MITDiningHouseVenue> house;
+
+    @SerializedName("retail")
+    protected ArrayList<MITDiningRetailVenue> retail;
+
+    @Expose
     protected MITDiningDining dining;
-    protected HashSet<MITDiningHouseVenue> house;
-    protected HashSet<MITDiningRetailVenue> retail;
 
-    public MITDiningDining getDining() {
-        return dining;
-    }
+	public MITDiningDining getDining() {
+		return dining;
+	}
 
-    public HashSet<MITDiningHouseVenue> getHouse() {
-        return house;
-    }
+	public ArrayList<MITDiningHouseVenue> getHouse() {
+		return house;
+	}
 
-    public HashSet<MITDiningRetailVenue> getRetail() {
-        return retail;
-    }
+	public ArrayList<MITDiningRetailVenue> getRetail() {
+		return retail;
+	}
 
-    @Override
-    public String toString() {
-        return "MITDiningVenues{" +
-                "dining=" + dining +
-                ", house=" + house +
-                ", retail=" + retail +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "MITDiningVenues{" +
+			"dining=" + dining +
+			", house=" + house +
+			", retail=" + retail +
+			'}';
+	}
 
     protected MITDiningVenues(Parcel in) {
         dining = (MITDiningDining) in.readValue(MITDiningDining.class.getClassLoader());
-        house = (HashSet) in.readValue(HashSet.class.getClassLoader());
-        retail = (HashSet) in.readValue(HashSet.class.getClassLoader());
+        house = (ArrayList) in.readArrayList(ArrayList.class.getClassLoader());
+        retail = (ArrayList) in.readValue(ArrayList.class.getClassLoader());
     }
 
     @Override
@@ -46,8 +56,8 @@ public class MITDiningVenues implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(dining);
-        dest.writeValue(house);
-        dest.writeValue(retail);
+        dest.writeList(house);
+        dest.writeList(retail);
     }
 
     @SuppressWarnings("unused")

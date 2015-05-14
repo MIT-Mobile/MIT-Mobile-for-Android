@@ -101,7 +101,7 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".dining.DiningActivity"
+            android:name=".dining.activities.DiningActivity"
             android:label="@string/title_activity_dining"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />

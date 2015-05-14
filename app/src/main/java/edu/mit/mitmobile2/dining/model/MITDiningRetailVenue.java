@@ -3,10 +3,10 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
 
 public class MITDiningRetailVenue implements Parcelable {
     protected List<String> cuisine;  /* The ObjC Folks dont know what this is it seems */

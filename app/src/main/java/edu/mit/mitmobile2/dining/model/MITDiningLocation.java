@@ -3,21 +3,38 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MITDiningLocation implements Parcelable {
-    protected String city;
+    @SerializedName("latitude")
     protected String latitude;
+
+    @SerializedName("longitude")
+    protected String longitude;
+
     @SerializedName("description")
     protected String locationDescription;
-    protected String longitude;
-    @SerializedName("mit_room_number")
-    protected String mitRoomNumber;
-    protected String state;
+
+    @SerializedName("street")
     protected String street;
-    @SerializedName("zip_code")
+
+    @Expose
+    protected String city;
+
+    @Expose
+    protected String mitRoomNumber;
+
+	@Expose
+    protected String state;
+
+	@Expose
     protected String zipCode;
+
+	@Expose
     protected MITDiningHouseVenue houseVenue;
+
+	@Expose
     protected MITDiningRetailVenue retailVenue;
 
     public String getCity() {
