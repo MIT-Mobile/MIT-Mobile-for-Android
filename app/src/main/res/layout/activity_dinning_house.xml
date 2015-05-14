@@ -13,7 +13,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dinning_house_padding">
+            android:layout_marginTop="@dimen/dinning_house_padding"
+            android:layout_marginBottom="@dimen/dinning_house_padding">
             <ImageView
                 android:id="@+id/house_image_view"
                 android:layout_width="@dimen/dinning_image_view_size"
@@ -61,12 +62,7 @@
                 />
         </RelativeLayout>
 
-        <FrameLayout
-            android:id="@+id/dinning_house_week_fragment"
-            android:layout_marginTop="@dimen/dinning_house_padding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+        <include layout="@layout/dinning_house_week"/>
     </LinearLayout>
 
 

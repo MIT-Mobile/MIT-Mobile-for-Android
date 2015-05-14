@@ -11,13 +11,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseMenuPagerAdapter;
-import edu.mit.mitmobile2.dining.fragments.HouseWeekFragment;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 
 public class DinningHouseActivity extends MITActivity {
@@ -32,6 +34,14 @@ public class DinningHouseActivity extends MITActivity {
     ViewPager houseMenuViewpager;
     @InjectView(R.id.info_image_view)
     ImageView infoImageView;
+    @InjectView(R.id.date_text_text_view)
+    TextView dateTextView;
+    @InjectView(R.id.info_text_view)
+    TextView infoTextView;
+    @InjectView(R.id.forward_image_view)
+    ImageView forwardImageView;
+    @InjectView(R.id.back_image_view)
+    ImageView backImageView;
 
     private HouseMenuPagerAdapter houseMenuPagerAdapter;
 
@@ -49,9 +59,6 @@ public class DinningHouseActivity extends MITActivity {
 
         buildHouseMenuPager();
 
-        HouseWeekFragment fragment = new HouseWeekFragment();
-        getFragmentManager().beginTransaction().replace(R.id.dinning_house_week_fragment, fragment).commit();
-
         infoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,7 +68,10 @@ public class DinningHouseActivity extends MITActivity {
         });
 
         houseNameTextView.setText(venue.getName());
+        dateTextView.setText("Today, " + getCurrentDate());
+
         houseHoursTextView.setText("Opens at 5:30PM");
+        infoTextView.setText("Breakfast 8am - 10am");
 
         try {
             Picasso.with(this).load(venue.getIconURL()).placeholder(R.drawable.grey_rect).into(houseImageView);
@@ -75,6 +85,13 @@ public class DinningHouseActivity extends MITActivity {
         houseMenuPagerAdapter = new HouseMenuPagerAdapter(getFragmentManager());
         houseMenuViewpager.setAdapter(houseMenuPagerAdapter);
 
+    }
+
+    private String getCurrentDate() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("LLL dd");
+        String date = sdf.format(cal.getTime());
+        return date;
     }
 
     @Override
