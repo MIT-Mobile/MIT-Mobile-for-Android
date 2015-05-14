@@ -9,11 +9,13 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import edu.mit.mitmobile2.DateUtils;
 
 
@@ -37,75 +39,75 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
     @SerializedName("short_name")
     protected String shortName;
 
-	@SerializedName("location")
+    @SerializedName("location")
     protected MITDiningLocation location;
 
-	@SerializedName("meals_by_day")
-    protected HashSet<MITDiningHouseDay> mealsByDay;
+    @SerializedName("meals_by_day")
+    protected List<MITDiningHouseDay> mealsByDay;
 
-	@Expose
+    @Expose
     protected MITDiningVenues venues;
 
-	@Expose
-	protected Object payment; /* The ObjC Folks dont know what this is it seems */
+    @Expose
+    protected Object payment; /* The ObjC Folks dont know what this is it seems */
 
-	public String getIconURL() {
-		return iconURL;
-	}
+    public String getIconURL() {
+        return iconURL;
+    }
 
-	public String getIdentifier() {
-		return identifier;
-	}
+    public String getIdentifier() {
+        return identifier;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Object getPayment() {
-		return payment;
-	}
+    public Object getPayment() {
+        return payment;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    public String getShortName() {
+        return shortName;
+    }
 
-	public MITDiningLocation getLocation() {
-		return location;
-	}
+    public MITDiningLocation getLocation() {
+        return location;
+    }
 
-	public HashSet<MITDiningHouseDay> getMealsByDay() {
-		return mealsByDay;
-	}
+    public List<MITDiningHouseDay> getMealsByDay() {
+        return mealsByDay;
+    }
 
-	public MITDiningVenues getVenues() {
-		return venues;
-	}
+    public MITDiningVenues getVenues() {
+        return venues;
+    }
 
-	public String hoursToday(Context context) {
-		MITDiningHouseDay today = houseDayForDate(new Date());
-		return today.dayHoursDescription(context);
-	}
+    public String hoursToday(Context context) {
+        MITDiningHouseDay today = houseDayForDate(new Date());
+        return today.dayHoursDescription(context);
+    }
 
-	public boolean isOpenNow() {
-		Date date = new Date();
-		MITDiningHouseDay day = houseDayForDate(date);
-		MITDiningMeal meal = day.mealForDate(date);
-		return (meal != null);
-	}
+    public boolean isOpenNow() {
+        Date date = new Date();
+        MITDiningHouseDay day = houseDayForDate(date);
+        MITDiningMeal meal = day.mealForDate(date);
+        return (meal != null);
+    }
 
-	public MITDiningHouseDay houseDayForDate(Date date) {
-		MITDiningHouseDay returnDay = null;
-		if (date != null) {
-			Date startOfDate = DateUtils.startOfDay(date);
-			for (MITDiningHouseDay day : mealsByDay) {
-				if (day.getDate() != null && DateUtils.areEqualToDateIgnoringTime(day.getDate(), startOfDate)) {
-					returnDay = day;
-					break;
-				}
-			}
-		}
-		return returnDay;
-	}
+    public MITDiningHouseDay houseDayForDate(Date date) {
+        MITDiningHouseDay returnDay = null;
+        if (date != null) {
+            Date startOfDate = DateUtils.startOfDay(date);
+            for (MITDiningHouseDay day : mealsByDay) {
+                if (day.getDate() != null && DateUtils.areEqualToDateIgnoringTime(day.getDate(), startOfDate)) {
+                    returnDay = day;
+                    break;
+                }
+            }
+        }
+        return returnDay;
+    }
 
     @Override
     public String toString() {
@@ -128,7 +130,13 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
         payment = (Object) in.readValue(Object.class.getClassLoader());
         shortName = in.readString();
         location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
-        mealsByDay = (HashSet) in.readValue(HashSet.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            mealsByDay = new ArrayList<>();
+            in.readList(mealsByDay, MITDiningHouseDay.class.getClassLoader());
+        } else {
+            mealsByDay = null;
+        }
+
         venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
     }
 
@@ -145,7 +153,12 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
         dest.writeValue(payment);
         dest.writeString(shortName);
         dest.writeValue(location);
-        dest.writeValue(mealsByDay);
+        if (mealsByDay == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mealsByDay);
+        }
         dest.writeValue(venues);
     }
 
