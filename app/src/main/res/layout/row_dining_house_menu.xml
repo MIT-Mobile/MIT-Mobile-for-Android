@@ -8,9 +8,9 @@
         android:id="@+id/menu_type_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dinning_house_padding"
+        android:layout_marginTop="@dimen/dining_house_padding"
         android:textColor="@color/mit_grey"
-        android:textSize="@dimen/dinning_house_content_text_size"
+        android:textSize="@dimen/dining_house_content_text_size"
         />
 
     <LinearLayout
@@ -22,14 +22,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="@dimen/dinning_house_title_text_size"
+            android:textSize="@dimen/dining_house_title_text_size"
             />
 
         <ImageView
             android:id="@+id/menu_image_view"
-            android:layout_width="@dimen/dinning_menu_image_size"
-            android:layout_height="@dimen/dinning_menu_image_size"
-            android:layout_marginLeft="@dimen/dinning_menu_image_padding"
+            android:layout_width="@dimen/dining_menu_image_size"
+            android:layout_height="@dimen/dining_menu_image_size"
+            android:layout_marginLeft="@dimen/dining_menu_image_padding"
             />
     </LinearLayout>
 
@@ -37,9 +37,9 @@
         android:id='@+id/menu_detail_text_view'
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dinning_house_padding"
+        android:layout_marginBottom="@dimen/dining_house_padding"
         android:textColor="@color/mit_grey"
-        android:textSize="@dimen/dinning_house_content_text_size"
+        android:textSize="@dimen/dining_house_content_text_size"
         />
 
 </LinearLayout>

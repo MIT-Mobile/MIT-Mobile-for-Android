@@ -8,10 +8,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dinning_house_week_padding_top"
-        android:paddingBottom="@dimen/dinning_house_week_padding_top"
-        android:paddingLeft="@dimen/dinning_house_padding"
-        android:paddingRight="@dimen/dinning_house_padding">
+        android:paddingTop="@dimen/dining_house_week_padding_top"
+        android:paddingBottom="@dimen/dining_house_week_padding_top"
+        android:paddingLeft="@dimen/dining_house_padding"
+        android:paddingRight="@dimen/dining_house_padding">
         <ImageView
             android:id='@+id/back_image_view'
             android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/mit_red"
-                android:textSize="@dimen/dinning_house_title_text_size"
+                android:textSize="@dimen/dining_house_title_text_size"
                 />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="@dimen/dinning_house_content_text_size"
+                android:textSize="@dimen/dining_house_content_text_size"
                 />
         </LinearLayout>
 

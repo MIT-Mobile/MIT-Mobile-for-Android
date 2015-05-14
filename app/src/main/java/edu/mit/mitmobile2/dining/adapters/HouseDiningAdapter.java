@@ -153,7 +153,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                     holder.venueTitleTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_title);
                     holder.venueTimeTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_time);
                     holder.venueStatusTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_status);
-                    holder.dinningHouseRow = (LinearLayout) convertView.findViewById(R.id.dinning_house_row);
+                    holder.diningHouseRow = (LinearLayout) convertView.findViewById(R.id.dining_house_row);
 
                     convertView.setTag(holder);
                 } else {
@@ -178,7 +178,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                     Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.venueImageView);
                 }
 
-                holder.dinningHouseRow.setOnClickListener(new View.OnClickListener() {
+                holder.diningHouseRow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         callback.dinningHouseVenueCallback(venue);
@@ -242,7 +242,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 
         // resources
         TextView resourceTitleTextView;
-        LinearLayout dinningHouseRow;
+        LinearLayout diningHouseRow;
     }
 
     public void setMitDiningDining(MITDiningDining mitDiningDining) {

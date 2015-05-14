@@ -13,14 +13,14 @@
             android:id="@+id/menu_detail_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dinning_house_padding"
+            android:paddingLeft="@dimen/dining_house_padding"
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dinning_house_padding"
-            android:paddingRight="@dimen/dinning_house_padding"
+            android:paddingLeft="@dimen/dining_house_padding"
+            android:paddingRight="@dimen/dining_house_padding"
             android:text="@string/dining_no_menu_info"
             android:layout_gravity="center_vertical"
             android:visibility="gone"

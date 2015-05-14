@@ -30,7 +30,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
     TextView houseNameTextView;
     @InjectView(R.id.house_hours_text_view)
     TextView houseHoursTextView;
-    @InjectView(R.id.dinning_house_menu_viewpager)
+    @InjectView(R.id.dining_house_menu_viewpager)
     ViewPager houseMenuViewpager;
     @InjectView(R.id.date_text_text_view)
     TextView dateTextView;

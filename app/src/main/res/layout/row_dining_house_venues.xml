@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:id="@+id/dinning_house_row">
+    android:id="@+id/dining_house_row">
 
     <edu.mit.mitmobile2.dining.views.SquareImageView
         android:id="@+id/row_venues_iv_image"
