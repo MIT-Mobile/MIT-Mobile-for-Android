@@ -3,23 +3,24 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MITDiningVenues implements Parcelable {
     protected MITDiningDining dining;
-    protected HashSet<MITDiningHouseVenue> house;
-    protected HashSet<MITDiningRetailVenue> retail;
+    protected List<MITDiningHouseVenue> house;
+    protected List<MITDiningRetailVenue> retail;
 
     public MITDiningDining getDining() {
         return dining;
     }
 
-    public HashSet<MITDiningHouseVenue> getHouse() {
+    public List<MITDiningHouseVenue> getHouse() {
         return house;
     }
 
-    public HashSet<MITDiningRetailVenue> getRetail() {
+    public List<MITDiningRetailVenue> getRetail() {
         return retail;
     }
 
@@ -34,8 +35,20 @@ public class MITDiningVenues implements Parcelable {
 
     protected MITDiningVenues(Parcel in) {
         dining = (MITDiningDining) in.readValue(MITDiningDining.class.getClassLoader());
-        house = (HashSet) in.readValue(HashSet.class.getClassLoader());
-        retail = (HashSet) in.readValue(HashSet.class.getClassLoader());
+
+        if (in.readByte() == 0x01) {
+            house = new ArrayList<>();
+            in.readList(house, MITDiningHouseVenue.class.getClassLoader());
+        } else {
+            house = null;
+        }
+
+        if (in.readByte() == 0x01) {
+            retail = new ArrayList<>();
+            in.readList(retail, MITDiningRetailVenue.class.getClassLoader());
+        } else {
+            retail = null;
+        }
     }
 
     @Override
@@ -46,8 +59,18 @@ public class MITDiningVenues implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(dining);
-        dest.writeValue(house);
-        dest.writeValue(retail);
+        if (house == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(house);
+        }
+        if (retail == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(retail);
+        }
     }
 
     @SuppressWarnings("unused")

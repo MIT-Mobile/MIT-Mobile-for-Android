@@ -1,14 +1,21 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.SerializedName;
 
-public class MITDiningRetailVenue implements Parcelable {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.maps.MapItem;
+
+public class MITDiningRetailVenue extends MapItem implements Parcelable {
     protected List<String> cuisine;  /* The ObjC Folks dont know what this is it seems */
     @SerializedName("description_html")
     protected String descriptionHTML;
@@ -113,7 +120,7 @@ public class MITDiningRetailVenue implements Parcelable {
 
     protected MITDiningRetailVenue(Parcel in) {
         if (in.readByte() == 0x01) {
-            cuisine = new ArrayList<String>();
+            cuisine = new ArrayList<>();
             in.readList(cuisine, String.class.getClassLoader());
         } else {
             cuisine = null;
@@ -127,14 +134,14 @@ public class MITDiningRetailVenue implements Parcelable {
         menuURL = in.readString();
         name = in.readString();
         if (in.readByte() == 0x01) {
-            payment = new ArrayList<String>();
+            payment = new ArrayList<>();
             in.readList(payment, String.class.getClassLoader());
         } else {
             payment = null;
         }
         shortName = in.readString();
         if (in.readByte() == 0x01) {
-            hours = new ArrayList<MITDiningRetailDay>();
+            hours = new ArrayList<>();
             in.readList(hours, MITDiningRetailDay.class.getClassLoader());
         } else {
             hours = null;
@@ -193,4 +200,38 @@ public class MITDiningRetailVenue implements Parcelable {
             return new MITDiningRetailVenue[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
+        options.position(position);
+        options.snippet(this.toString());
+        return options;
+    }
+
+    @Override
+    public String getMarkerText() {
+        return "";
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

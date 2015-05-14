@@ -1,14 +1,21 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.HashSet;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.SerializedName;
 
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.maps.MapItem;
 
-public class MITDiningHouseVenue implements Parcelable {
+
+public class MITDiningHouseVenue extends MapItem implements Parcelable {
     @SerializedName("icon_url")
     protected String iconURL;
     @SerializedName("id")
@@ -107,4 +114,38 @@ public class MITDiningHouseVenue implements Parcelable {
             return new MITDiningHouseVenue[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
+        options.position(position);
+        options.snippet(this.toString());
+        return options;
+    }
+
+    @Override
+    public String getMarkerText() {
+        return "";
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }
