@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 
 import edu.mit.mitmobile2.R;
 
@@ -24,7 +23,7 @@ public class MITDiningHouseDay implements Parcelable {
     protected String dateString;
 
 	@SerializedName("meals")
-    protected HashSet<MITDiningMeal> meals;
+    protected ArrayList<MITDiningMeal> meals;
 
 	@Expose
 	protected String message;
@@ -44,7 +43,7 @@ public class MITDiningHouseDay implements Parcelable {
 		return houseVenue;
 	}
 
-	public HashSet<MITDiningMeal> getMeals() {
+	public ArrayList<MITDiningMeal> getMeals() {
 		return meals;
 	}
 
@@ -119,36 +118,46 @@ public class MITDiningHouseDay implements Parcelable {
 			'}';
 	}
 
-    protected MITDiningHouseDay(Parcel in) {
-        dateString = in.readString();
-        message = in.readString();
-        houseVenue = (MITDiningHouseVenue) in.readValue(MITDiningHouseVenue.class.getClassLoader());
-        meals = (HashSet) in.readValue(HashSet.class.getClassLoader());
-    }
+	protected MITDiningHouseDay(Parcel in) {
+		dateString = in.readString();
+		if (in.readByte() == 0x01) {
+			meals = new ArrayList<MITDiningMeal>();
+			in.readList(meals, MITDiningMeal.class.getClassLoader());
+		} else {
+			meals = null;
+		}
+		message = in.readString();
+		houseVenue = (MITDiningHouseVenue) in.readValue(MITDiningHouseVenue.class.getClassLoader());
+	}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(dateString);
-        dest.writeString(message);
-        dest.writeValue(houseVenue);
-        dest.writeValue(meals);
-    }
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(dateString);
+		if (meals == null) {
+			dest.writeByte((byte) (0x00));
+		} else {
+			dest.writeByte((byte) (0x01));
+			dest.writeList(meals);
+		}
+		dest.writeString(message);
+		dest.writeValue(houseVenue);
+	}
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<MITDiningHouseDay> CREATOR = new Parcelable.Creator<MITDiningHouseDay>() {
-        @Override
-        public MITDiningHouseDay createFromParcel(Parcel in) {
-            return new MITDiningHouseDay(in);
-        }
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<MITDiningHouseDay> CREATOR = new Parcelable.Creator<MITDiningHouseDay>() {
+		@Override
+		public MITDiningHouseDay createFromParcel(Parcel in) {
+			return new MITDiningHouseDay(in);
+		}
 
-        @Override
-        public MITDiningHouseDay[] newArray(int size) {
-            return new MITDiningHouseDay[size];
-        }
-    };
+		@Override
+		public MITDiningHouseDay[] newArray(int size) {
+			return new MITDiningHouseDay[size];
+		}
+	};
 }
