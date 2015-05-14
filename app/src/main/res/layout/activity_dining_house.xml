@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="edu.mit.mitmobile2.dining.activities.DiningHouseActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.35"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dining_house_padding"
+            android:layout_marginBottom="@dimen/dining_house_padding">
+            <ImageView
+                android:id="@+id/house_image_view"
+                android:layout_width="@dimen/dining_image_view_size"
+                android:layout_height="@dimen/dining_image_view_size"
+                android:layout_marginLeft="@dimen/dining_house_padding"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_info_outline"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dining_house_padding"
+                android:layout_toRightOf="@id/house_image_view"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/house_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dining_house_title_text_size"
+                    android:layout_gravity="top"
+                    />
+
+                <TextView
+                    android:id='@+id/house_hours_text_view'
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dining_house_padding"
+                    android:textColor="@color/mit_red_light"
+                    android:textSize="@dimen/dining_house_content_text_size"
+                    android:layout_gravity="bottom"
+                    />
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/info_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dining_house_padding"
+                android:src="@drawable/ic_info_outline"
+                />
+        </RelativeLayout>
+
+        <include layout="@layout/dining_house_week"/>
+    </LinearLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/dining_house_menu_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+</LinearLayout>

@@ -2,11 +2,11 @@ package edu.mit.mitmobile2.dining.adapters;
 
 import android.content.Context;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningLinks;
@@ -34,6 +35,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
     private ArrayList<MITDiningDining> listAnnouncements;
     private ArrayList<MITDiningHouseVenue> listVenues;
     private ArrayList<MITDiningLinks> listResources;
+    private DiningHouseCallback callback;
 
     public HouseDiningAdapter(Context context, ArrayList<MITDiningDining> listAnnouncements, ArrayList<MITDiningHouseVenue> listVenues, ArrayList<MITDiningLinks> listResources) {
         this.context = context;
@@ -42,12 +44,13 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
         this.listResources = listResources;
     }
 
-    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining) {
+    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining, DiningHouseCallback callback) {
         this.context = context;
         this.mitDiningDining = mitDiningDining;
         this.listAnnouncements = new ArrayList<>();
         this.listVenues = new ArrayList<>();
         this.listResources = new ArrayList<>();
+        this.callback = callback;
 
         refreshData();
     }
@@ -150,13 +153,14 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                     holder.venueTitleTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_title);
                     holder.venueTimeTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_time);
                     holder.venueStatusTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_status);
+                    holder.diningHouseRow = (LinearLayout) convertView.findViewById(R.id.dining_house_row);
 
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
 
-                MITDiningHouseVenue venue = (MITDiningHouseVenue) getItem(position);
+                final MITDiningHouseVenue venue = (MITDiningHouseVenue) getItem(position);
 
                 holder.venueTitleTextView.setText(venue.getName());
                 holder.venueTimeTextView.setText(venue.hoursToday(context));
@@ -173,6 +177,13 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 } catch (NullPointerException e) {
                     Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.venueImageView);
                 }
+
+                holder.diningHouseRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callback.dinningHouseVenueCallback(venue);
+                    }
+                });
 
                 boolean isLast = (listVenues.indexOf(venue) == listVenues.size() - 1);
                 holder.venueDivider.setVisibility(isLast ? View.GONE : View.VISIBLE);
@@ -231,6 +242,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 
         // resources
         TextView resourceTitleTextView;
+        LinearLayout diningHouseRow;
     }
 
     public void setMitDiningDining(MITDiningDining mitDiningDining) {
