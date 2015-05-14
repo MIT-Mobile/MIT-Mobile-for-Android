@@ -204,4 +204,6 @@
     <string name="dining_no_menu_info">No Matching Items</string>
     <string name="dining_house_actionbar">filter</string>
 
+    <string name="announcements_activity_title">Announcements</string>
+
 </resources>

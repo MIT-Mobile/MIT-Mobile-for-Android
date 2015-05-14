@@ -247,12 +247,15 @@
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".dining.activities.DiningHouseActivity"
-            android:theme="@style/Theme.MyTheme">
-        </activity>
+            android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".dining.activities.DiningHouseInfoActivity"
-            android:theme="@style/Theme.MyTheme">
-        </activity>
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".dining.AnnouncementsActivity"
+            android:label="@string/announcements_activity_title"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
