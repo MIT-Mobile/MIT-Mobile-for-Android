@@ -202,4 +202,6 @@
     <string name="filter_vegan">Vegan</string>
     <string name="filter_vegetarian">Vegetarian</string>
 
+    <string name="announcements_activity_title">Announcements</string>
+
 </resources>

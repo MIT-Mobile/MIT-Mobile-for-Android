@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.AnnouncementsActivity;
 import edu.mit.mitmobile2.dining.adapters.HouseDiningAdapter;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
@@ -84,7 +85,9 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
         if (selectedItem instanceof MITDiningDining) {                              // announcement
             MITDiningDining dining = (MITDiningDining) selectedItem;
-            // TODO: add logic here
+            Intent intent = new Intent(getActivity(), AnnouncementsActivity.class);
+            intent.putExtra(AnnouncementsActivity.ANNOUNCEMENTS_EXTRA, dining.getAnnouncementsHTML());
+            startActivity(intent);
         } else if (selectedItem instanceof MITDiningHouseVenue) {                   // venue
             MITDiningHouseVenue houseVenue = (MITDiningHouseVenue) selectedItem;
             // TODO: add logic here
