@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -14,7 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class MITDiningRetailVenue extends MapItem implements Parcelable {
     protected List<String> cuisine;  /* The ObjC Folks dont know what this is it seems */
@@ -37,7 +40,6 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
     protected String shortName;
     protected List<MITDiningRetailDay> hours;
     protected MITDiningLocation location;
-    protected MITDiningVenues venues;
 
     public List<String> getCuisine() {
         return cuisine;
@@ -91,10 +93,6 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
         return location;
     }
 
-    public MITDiningVenues getVenues() {
-        return venues;
-    }
-
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
@@ -115,7 +113,6 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
                 ", shortName='" + shortName + '\'' +
                 ", hours=" + hours +
                 ", location=" + location +
-                ", venues=" + venues +
                 '}';
     }
 
@@ -148,7 +145,7 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
             hours = null;
         }
         location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
-        venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
+        setMarkerText(in.readString());
     }
 
     @Override
@@ -186,7 +183,7 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
             dest.writeList(hours);
         }
         dest.writeValue(location);
-        dest.writeValue(venues);
+        dest.writeString(getMarkerText());
     }
 
     @SuppressWarnings("unused")
@@ -210,15 +207,19 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
     @Override
     public MarkerOptions getMarkerOptions() {
         MarkerOptions options = new MarkerOptions();
-        LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
-        options.position(position);
-        options.snippet(this.toString());
+        if (location.getLatitude() != null && location.getLongitude() != null) {
+            LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
+            options.position(position);
+        } else {
+            LoggingManager.Timber.d("NULL");
+        }
+        options.snippet(new Gson().toJson(this, MITDiningRetailVenue.class));
         return options;
     }
 
     @Override
-    public String getMarkerText() {
-        return "";
+    public int getIconResource() {
+        return R.drawable.ic_pin_red;
     }
 
     @Override

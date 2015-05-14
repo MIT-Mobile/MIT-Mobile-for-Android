@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.dining;
+package edu.mit.mitmobile2.dining.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningVenues;
 import edu.mit.mitmobile2.maps.MITMapView;

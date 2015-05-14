@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -21,6 +22,7 @@ import edu.mit.mitmobile2.DateUtils;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 
 public class MITDiningHouseVenue extends MapItem implements Parcelable {
@@ -44,9 +46,6 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
 
     @SerializedName("meals_by_day")
     protected List<MITDiningHouseDay> mealsByDay;
-
-    @Expose
-    protected MITDiningVenues venues;
 
     @Expose
     protected Object payment; /* The ObjC Folks dont know what this is it seems */
@@ -77,10 +76,6 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
 
     public List<MITDiningHouseDay> getMealsByDay() {
         return mealsByDay;
-    }
-
-    public MITDiningVenues getVenues() {
-        return venues;
     }
 
     public String hoursToday(Context context) {
@@ -119,7 +114,6 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
                 ", shortName='" + shortName + '\'' +
                 ", location=" + location +
                 ", mealsByDay=" + mealsByDay +
-                ", venues=" + venues +
                 '}';
     }
 
@@ -136,8 +130,6 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
         } else {
             mealsByDay = null;
         }
-
-        venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
     }
 
     @Override
@@ -159,7 +151,6 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(mealsByDay);
         }
-        dest.writeValue(venues);
     }
 
     @SuppressWarnings("unused")
@@ -183,15 +174,14 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
     @Override
     public MarkerOptions getMarkerOptions() {
         MarkerOptions options = new MarkerOptions();
-        LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
-        options.position(position);
-        options.snippet(this.toString());
+        if (location.getLatitude() != null && location.getLongitude() != null) {
+            LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
+            options.position(position);
+        } else {
+            LoggingManager.Timber.d("NULL");
+        }
+        options.snippet(new Gson().toJson(this, MITDiningHouseVenue.class));
         return options;
-    }
-
-    @Override
-    public String getMarkerText() {
-        return "";
     }
 
     @Override
