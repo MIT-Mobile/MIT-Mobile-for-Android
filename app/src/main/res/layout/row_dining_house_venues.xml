@@ -52,6 +52,7 @@
             android:paddingRight="@dimen/dining_house_venues_cell_padding" />
 
         <View
+            android:id="@+id/row_venues_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/row_venues_tv_time"

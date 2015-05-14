@@ -7,8 +7,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 import edu.mit.mitmobile2.DateUtils;
 
@@ -35,7 +35,7 @@ public class MITDiningHouseVenue implements Parcelable {
     protected MITDiningLocation location;
 
 	@SerializedName("meals_by_day")
-    protected HashSet<MITDiningHouseDay> mealsByDay;
+    protected ArrayList<MITDiningHouseDay> mealsByDay;
 
 	@Expose
     protected MITDiningVenues venues;
@@ -67,7 +67,7 @@ public class MITDiningHouseVenue implements Parcelable {
 		return location;
 	}
 
-	public HashSet<MITDiningHouseDay> getMealsByDay() {
+	public ArrayList<MITDiningHouseDay> getMealsByDay() {
 		return mealsByDay;
 	}
 
@@ -116,13 +116,18 @@ public class MITDiningHouseVenue implements Parcelable {
     }
 
     protected MITDiningHouseVenue(Parcel in) {
-        iconURL = in.readString();
         identifier = in.readString();
+        url = in.readString();
         name = in.readString();
-        payment = (Object) in.readValue(Object.class.getClassLoader());
         shortName = in.readString();
+        iconURL = in.readString();
         location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
-        mealsByDay = (HashSet) in.readValue(HashSet.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            mealsByDay = new ArrayList<MITDiningHouseDay>();
+            in.readList(mealsByDay, MITDiningHouseDay.class.getClassLoader());
+        } else {
+            mealsByDay = null;
+        }
         venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
     }
 
@@ -133,13 +138,18 @@ public class MITDiningHouseVenue implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(iconURL);
         dest.writeString(identifier);
+        dest.writeString(url);
         dest.writeString(name);
-        dest.writeValue(payment);
         dest.writeString(shortName);
+        dest.writeString(iconURL);
         dest.writeValue(location);
-        dest.writeValue(mealsByDay);
+        if (mealsByDay == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mealsByDay);
+        }
         dest.writeValue(venues);
     }
 

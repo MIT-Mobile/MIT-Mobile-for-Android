@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 import edu.mit.mitmobile2.DateUtils;
 import edu.mit.mitmobile2.R;
@@ -28,7 +28,7 @@ public class MITDiningMeal implements Parcelable {
 	protected String endTimeString;
 
 	@SerializedName("items")
-    protected HashSet<MITDiningMenuItem> items;
+    protected ArrayList<MITDiningMenuItem> items;
 
 	@Expose
 	protected MITDiningHouseDay houseDay;							// back reference
@@ -56,7 +56,7 @@ public class MITDiningMeal implements Parcelable {
 		return houseDay;
 	}
 
-	public HashSet<MITDiningMenuItem> getItems() {
+	public ArrayList<MITDiningMenuItem> getItems() {
 		return items;
 	}
 
@@ -113,40 +113,48 @@ public class MITDiningMeal implements Parcelable {
 		return description;
 	}
 
-    protected MITDiningMeal(Parcel in) {
-        endTimeString = in.readString();
-        message = in.readString();
-        name = in.readString();
-        startTimeString = in.readString();
-        houseDay = (MITDiningHouseDay) in.readValue(MITDiningHouseDay.class.getClassLoader());
-        items = (HashSet) in.readValue(HashSet.class.getClassLoader());
-    }
+	protected MITDiningMeal(Parcel in) {
+		name = in.readString();
+		startTimeString = in.readString();
+		endTimeString = in.readString();
+		if (in.readByte() == 0x01) {
+			items = new ArrayList<MITDiningMenuItem>();
+			in.readList(items, MITDiningMenuItem.class.getClassLoader());
+		} else {
+			items = null;
+		}
+		message = in.readString();
+	}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(endTimeString);
-        dest.writeString(message);
-        dest.writeString(name);
-        dest.writeString(startTimeString);
-        dest.writeValue(houseDay);
-        dest.writeValue(items);
-    }
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(name);
+		dest.writeString(startTimeString);
+		dest.writeString(endTimeString);
+		if (items == null) {
+			dest.writeByte((byte) (0x00));
+		} else {
+			dest.writeByte((byte) (0x01));
+			dest.writeList(items);
+		}
+		dest.writeString(message);
+	}
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<MITDiningMeal> CREATOR = new Parcelable.Creator<MITDiningMeal>() {
-        @Override
-        public MITDiningMeal createFromParcel(Parcel in) {
-            return new MITDiningMeal(in);
-        }
+	@SuppressWarnings("unused")
+	public static final Parcelable.Creator<MITDiningMeal> CREATOR = new Parcelable.Creator<MITDiningMeal>() {
+		@Override
+		public MITDiningMeal createFromParcel(Parcel in) {
+			return new MITDiningMeal(in);
+		}
 
-        @Override
-        public MITDiningMeal[] newArray(int size) {
-            return new MITDiningMeal[size];
-        }
-    };
+		@Override
+		public MITDiningMeal[] newArray(int size) {
+			return new MITDiningMeal[size];
+		}
+	};
 }

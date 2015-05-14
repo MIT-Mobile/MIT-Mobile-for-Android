@@ -149,6 +149,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 if (convertView == null) {
                     convertView = View.inflate(parent.getContext(), R.layout.row_dining_house_venues, null);
 
+                    holder.venueDivider = convertView.findViewById(R.id.row_venues_divider);
                     holder.venueImageView = (ImageView) convertView.findViewById(R.id.row_venues_iv_image);
                     holder.venueTitleTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_title);
                     holder.venueTimeTextView = (TextView) convertView.findViewById(R.id.row_venues_tv_time);
@@ -184,6 +185,9 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                         callback.dinningHouseVenueCallback(venue);
                     }
                 });
+
+                boolean isLast = (listVenues.indexOf(venue) == listVenues.size() - 1);
+                holder.venueDivider.setVisibility(isLast ? View.GONE : View.VISIBLE);
             }
             break;
             case ROW_TYPE_RESOURCE: {
@@ -231,6 +235,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
         TextView announcementMessageTextView;
 
         // venues
+        View venueDivider;
         ImageView venueImageView;
         TextView venueTitleTextView;
         TextView venueTimeTextView;
@@ -238,7 +243,6 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 
         // resources
         TextView resourceTitleTextView;
-
         LinearLayout dinningHouseRow;
     }
 
