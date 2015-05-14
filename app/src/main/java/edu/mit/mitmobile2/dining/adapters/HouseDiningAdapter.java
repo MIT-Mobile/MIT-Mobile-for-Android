@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.dining.adapters;
 
 import android.content.Context;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.dining.callback.DinningHouseCallback;
+import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningLinks;
@@ -36,7 +35,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
     private ArrayList<MITDiningDining> listAnnouncements;
     private ArrayList<MITDiningHouseVenue> listVenues;
     private ArrayList<MITDiningLinks> listResources;
-    private DinningHouseCallback callback;
+    private DiningHouseCallback callback;
 
     public HouseDiningAdapter(Context context, ArrayList<MITDiningDining> listAnnouncements, ArrayList<MITDiningHouseVenue> listVenues, ArrayList<MITDiningLinks> listResources) {
         this.context = context;
@@ -45,7 +44,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
         this.listResources = listResources;
     }
 
-    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining, DinningHouseCallback callback) {
+    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining, DiningHouseCallback callback) {
         this.context = context;
         this.mitDiningDining = mitDiningDining;
         this.listAnnouncements = new ArrayList<>();

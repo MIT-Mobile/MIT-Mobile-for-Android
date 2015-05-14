@@ -12,9 +12,9 @@ import android.widget.AdapterView;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.dining.activities.DinningHouseActivity;
+import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.adapters.HouseDiningAdapter;
-import edu.mit.mitmobile2.dining.callback.DinningHouseCallback;
+import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
@@ -24,7 +24,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Created by serg on 5/8/15.
  */
-public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener, DinningHouseCallback {
+public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener, DiningHouseCallback {
 
     private static final String KEY_STATE_DINING = "state_dining";
 
@@ -32,7 +32,7 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
     private HouseDiningAdapter adapter;
     private MITDiningDining mitDiningDining;
-    private DinningHouseCallback callback;
+    private DiningHouseCallback callback;
 
     public static HouseDiningFragment newInstance() {
         HouseDiningFragment fragment = new HouseDiningFragment();
@@ -44,7 +44,7 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dining_house, null);
 
-        callback = (DinningHouseCallback) this;
+        callback = (DiningHouseCallback) this;
 
         adapter = new HouseDiningAdapter(getActivity(), null, callback);
 
@@ -110,8 +110,8 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
     @Override
     public void dinningHouseVenueCallback(MITDiningHouseVenue venue) {
-        Intent intent = new Intent(getActivity(), DinningHouseActivity.class);
-        intent.putExtra(Constants.Dining.DINNING_HOUSE, venue);
+        Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
+        intent.putExtra(Constants.Dining.DINING_HOUSE, venue);
         startActivity(intent);
     }
 }

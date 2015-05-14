@@ -201,8 +201,7 @@
     <string name="filter_seafood">Seafood Watch</string>
     <string name="filter_vegan">Vegan</string>
     <string name="filter_vegetarian">Vegetarian</string>
-    <string name="title_activity_dinning_house">DinningHouseActivity</string>
-    <string name="dinning_no_menu_info">No Mathing Items</string>
-    <string name="dinning_house_actionbar">filter</string>
+    <string name="dining_no_menu_info">No Matching Items</string>
+    <string name="dining_house_actionbar">filter</string>
 
 </resources>

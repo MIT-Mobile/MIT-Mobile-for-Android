@@ -246,11 +246,11 @@
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".dining.activities.DinningHouseActivity"
+            android:name=".dining.activities.DiningHouseActivity"
             android:theme="@style/Theme.MyTheme">
         </activity>
         <activity
-            android:name=".dining.activities.DinningHouseInfoActivity"
+            android:name=".dining.activities.DiningHouseInfoActivity"
             android:theme="@style/Theme.MyTheme">
         </activity>
     </application>

@@ -47,7 +47,7 @@ public class HouseMenuDetailAdapter extends BaseAdapter{
         if (view != null) {
             viewHolder = (ViewHolder) view.getTag();
         } else {
-            view = listContainer.inflate(R.layout.row_dinning_house_menu, parent, false);
+            view = listContainer.inflate(R.layout.row_dining_house_menu, parent, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         }

@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,12 +18,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseMenuPagerAdapter;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 
-public class DinningHouseActivity extends MITActivity {
+public class DiningHouseActivity extends AppCompatActivity  {
 
     @InjectView(R.id.house_image_view)
     ImageView houseImageView;
@@ -44,7 +43,7 @@ public class DinningHouseActivity extends MITActivity {
 
     @OnClick(R.id.info_image_view)
     public void gotoHouseInfo() {
-        Intent intent = new Intent(getApplicationContext(), DinningHouseInfoActivity.class);
+        Intent intent = new Intent(this, DiningHouseInfoActivity.class);
         startActivity(intent);
     }
 
@@ -53,10 +52,10 @@ public class DinningHouseActivity extends MITActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dinning_house);
+        setContentView(R.layout.activity_dining_house);
         ButterKnife.inject(this);
 
-        MITDiningHouseVenue venue = getIntent().getParcelableExtra(Constants.Dining.DINNING_HOUSE);
+        MITDiningHouseVenue venue = getIntent().getParcelableExtra(Constants.Dining.DINING_HOUSE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -93,7 +92,7 @@ public class DinningHouseActivity extends MITActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_dinning_house, menu);
+        getMenuInflater().inflate(R.menu.menu_dining_house, menu);
         return true;
     }
 
