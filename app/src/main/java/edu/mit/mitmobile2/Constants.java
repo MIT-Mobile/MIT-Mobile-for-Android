@@ -104,5 +104,6 @@ public class Constants {
     public class Dining {
         public static final String DINING_PATH = "/";
         public static final String DINING_RETAIL_PATH = "/venues/retail";
+        public static final String DINING_HOUSE = "diningHouse";
     }
 }

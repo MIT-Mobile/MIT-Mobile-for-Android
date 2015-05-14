@@ -10,8 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.AnnouncementsActivity;
+import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.adapters.HouseDiningAdapter;
+import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
@@ -21,7 +25,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * Created by serg on 5/8/15.
  */
-public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener {
+public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener, DiningHouseCallback {
 
     private static final String KEY_STATE_DINING = "state_dining";
 
@@ -29,6 +33,7 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
     private HouseDiningAdapter adapter;
     private MITDiningDining mitDiningDining;
+    private DiningHouseCallback callback;
 
     public static HouseDiningFragment newInstance() {
         HouseDiningFragment fragment = new HouseDiningFragment();
@@ -40,7 +45,9 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dining_house, null);
 
-        adapter = new HouseDiningAdapter(getActivity(), null);
+        callback = (DiningHouseCallback) this;
+
+        adapter = new HouseDiningAdapter(getActivity(), null, callback);
 
         listView = (StickyListHeadersListView) view.findViewById(R.id.list_dining_house);
         listView.setOnItemClickListener(this);
@@ -84,7 +91,9 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
         if (selectedItem instanceof MITDiningDining) {                              // announcement
             MITDiningDining dining = (MITDiningDining) selectedItem;
-            // TODO: add logic here
+            Intent intent = new Intent(getActivity(), AnnouncementsActivity.class);
+            intent.putExtra(AnnouncementsActivity.ANNOUNCEMENTS_EXTRA, dining.getAnnouncementsHTML());
+            startActivity(intent);
         } else if (selectedItem instanceof MITDiningHouseVenue) {                   // venue
             MITDiningHouseVenue houseVenue = (MITDiningHouseVenue) selectedItem;
             // TODO: add logic here
@@ -100,5 +109,12 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
                 // TODO: show toast here or so
             }
         }
+    }
+
+    @Override
+    public void dinningHouseVenueCallback(MITDiningHouseVenue venue) {
+        Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
+        intent.putExtra(Constants.Dining.DINING_HOUSE, venue);
+        startActivity(intent);
     }
 }

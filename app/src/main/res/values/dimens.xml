@@ -121,5 +121,14 @@
     <dimen name="filter_icon_size">24dp</dimen>
     <dimen name="filter_name_margin">32dp</dimen>
     <dimen name="filter_name_text_size">16sp</dimen>
+    <dimen name="dining_house_title_text_size">16sp</dimen>
+    <dimen name="dining_house_content_text_size">14sp</dimen>
+    <dimen name="dining_image_view_size">40dp</dimen>
+    <dimen name="dining_house_schedule_padding">40dp</dimen>
+    <dimen name="dining_house_padding">16dp</dimen>
+    <dimen name="dining_house_week_padding_top">8dp</dimen>
+    <dimen name="dining_menu_image_size">24dp</dimen>
+    <dimen name="dining_menu_image_padding">7dp</dimen>
+    <dimen name="dining_schedule_padding_vertical">11dp</dimen>
 
 </resources>
