@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/search"
+        android:id="@+id/menu_filter"
         app:showAsAction="always|collapseActionView"
         android:icon="@drawable/ic_filter_list"
         android:title="@string/dining_house_actionbar"/>
