@@ -1,58 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="edu.mit.mitmobile2.dining.activities.DiningActivity">
 
-    <TabHost
+    <it.neokree.materialtabs.MaterialTabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="48dp"
+        app:accentColor="@color/mit_red"
+        app:primaryColor="@color/white"
+        app:textColor="@color/mit_red" />
 
-        <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/dining_map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/my_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/solo_map_fab_margin"
+            android:layout_marginRight="@dimen/solo_map_fab_margin"
+            android:visibility="gone" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:orientation="horizontal" />
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="0" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/dining_map"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:visibility="gone" />
-
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/my_location_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="@dimen/solo_map_fab_margin"
-                    android:layout_marginRight="@dimen/solo_map_fab_margin"
-                    android:visibility="gone" />
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </RelativeLayout>
-        </LinearLayout>
-    </TabHost>
 </LinearLayout>

@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.dining.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -88,7 +90,15 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
             // TODO: add logic here
         } else if (selectedItem instanceof MITDiningLinks) {                        // resource
             MITDiningLinks link = (MITDiningLinks) selectedItem;
-            // TODO: add logic here
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(link.getUrl()));
+                startActivity(intent);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                // TODO: show toast here or so
+            }
         }
     }
 }

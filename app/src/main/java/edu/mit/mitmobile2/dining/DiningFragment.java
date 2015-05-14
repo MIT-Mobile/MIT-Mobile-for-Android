@@ -45,25 +45,27 @@ import edu.mit.mitmobile2.dining.model.MITDiningVenues;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import it.neokree.materialtabs.MaterialTab;
+import it.neokree.materialtabs.MaterialTabHost;
+import it.neokree.materialtabs.MaterialTabListener;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DiningFragment extends Fragment implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener, GoogleMap.OnMapLoadedCallback,
+
+public class DiningFragment extends Fragment implements MaterialTabListener, ViewPager.OnPageChangeListener, GoogleMap.OnMapLoadedCallback,
         GoogleMap.InfoWindowAdapter,
         GoogleMap.OnInfoWindowClickListener {
 
-    private static final String TAG_TABHOST_HOUSE_DINING = "tag_house_dining";
-    private static final String TAG_TABHOST_RETAIL = "tag_retail";
-
     private static final String KEY_STATE_DINING = "state_dining";
-    private static final String KEY_STATE_SELECTED_TAB = "state_selected_tab";
+    private static final String KEY_STATE_CURRENT_SCREEN_POSITION = "state_selected_tab";
     private static final String KEY_STATE_SCREEN_MODE = "state_screen_mode";
 
     private static final int SCREEN_MODE_LIST = 0;
     private static final int SCREEN_MODE_MAP = 1;
 
-    private TabHost tabHost;
+    private MaterialTabHost tabHost;
     private TabWidget tabWidget;
     private ViewPager viewPager;
     private MenuItem screenModeToggleMenuItem;
@@ -91,7 +93,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
         View view = inflater.inflate(R.layout.content_dining, null);
         setHasOptionsMenu(true);
 
-        tabHost = (TabHost) view.findViewById(android.R.id.tabhost);
+        tabHost = (MaterialTabHost) view.findViewById(android.R.id.tabhost);
         tabWidget = (TabWidget) view.findViewById(android.R.id.tabs);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
@@ -101,8 +103,8 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
         initViewPager();
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(KEY_STATE_SELECTED_TAB)) {
-                tabHost.setCurrentTabByTag(savedInstanceState.getString(KEY_STATE_SELECTED_TAB));
+            if (savedInstanceState.containsKey(KEY_STATE_CURRENT_SCREEN_POSITION)) {
+                tabHost.setSelectedNavigationItem(savedInstanceState.getInt(KEY_STATE_CURRENT_SCREEN_POSITION));
             }
             if (savedInstanceState.containsKey(KEY_STATE_SCREEN_MODE)) {
                 screenMode = savedInstanceState.getInt(KEY_STATE_SCREEN_MODE);
@@ -220,7 +222,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
         if (mitDiningDining != null) {
             outState.putParcelable(KEY_STATE_DINING, mitDiningDining);
         }
-        outState.putString(KEY_STATE_SELECTED_TAB, tabHost.getCurrentTabTag());
+        outState.putInt(KEY_STATE_CURRENT_SCREEN_POSITION, viewPager.getCurrentItem());
         outState.putInt(KEY_STATE_SCREEN_MODE, screenMode);
 
         super.onSaveInstanceState(outState);
@@ -231,7 +233,7 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     @Override
     public void onPageScrolled(int i, float v, int i1) {
         int pos = viewPager.getCurrentItem();
-        tabHost.setCurrentTab(pos);
+        tabHost.setSelectedNavigationItem(pos);
     }
 
     @Override
@@ -244,12 +246,21 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
         // empty
     }
 
-    /* TabHost.OnTabChangeListener */
+    /* MaterialTabListener */
 
     @Override
-    public void onTabChanged(String tabId) {
-        int pos = tabHost.getCurrentTab();
-        viewPager.setCurrentItem(pos);
+    public void onTabSelected(MaterialTab materialTab) {
+        viewPager.setCurrentItem(materialTab.getPosition());
+    }
+
+    @Override
+    public void onTabReselected(MaterialTab materialTab) {
+        // empty
+    }
+
+    @Override
+    public void onTabUnselected(MaterialTab materialTab) {
+        // empty
     }
 
     /* Network */
@@ -334,12 +345,8 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
     }
 
     private void initTabHost() {
-        tabHost.setup();
-
-        addTab(tabHost, tabHost.newTabSpec(TAG_TABHOST_HOUSE_DINING).setIndicator(getString(R.string.dining_tab_house_dining)));
-        addTab(tabHost, tabHost.newTabSpec(TAG_TABHOST_RETAIL).setIndicator(getString(R.string.dining_tab_retail)));
-
-        tabHost.setOnTabChangedListener(this);
+        tabHost.addTab(tabHost.newTab().setText(getString(R.string.dining_tab_house_dining)).setTabListener(this));
+        tabHost.addTab(tabHost.newTab().setText(getString(R.string.dining_tab_retail)).setTabListener(this));
     }
 
     private void addTab(TabHost tabHost, TabHost.TabSpec tabSpec) {
@@ -435,5 +442,4 @@ public class DiningFragment extends Fragment implements TabHost.OnTabChangeListe
             return v;
         }
     }
-
 }
