@@ -16,6 +16,7 @@ import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
@@ -32,8 +33,6 @@ public class DinningHouseActivity extends MITActivity {
     TextView houseHoursTextView;
     @InjectView(R.id.dinning_house_menu_viewpager)
     ViewPager houseMenuViewpager;
-    @InjectView(R.id.info_image_view)
-    ImageView infoImageView;
     @InjectView(R.id.date_text_text_view)
     TextView dateTextView;
     @InjectView(R.id.info_text_view)
@@ -42,6 +41,12 @@ public class DinningHouseActivity extends MITActivity {
     ImageView forwardImageView;
     @InjectView(R.id.back_image_view)
     ImageView backImageView;
+
+    @OnClick(R.id.info_image_view)
+    public void gotoHouseInfo() {
+        Intent intent = new Intent(getApplicationContext(), DinningHouseInfoActivity.class);
+        startActivity(intent);
+    }
 
     private HouseMenuPagerAdapter houseMenuPagerAdapter;
 
@@ -58,14 +63,6 @@ public class DinningHouseActivity extends MITActivity {
         setTitle(venue.getShortName());
 
         buildHouseMenuPager();
-
-        infoImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DinningHouseInfoActivity.class);
-                startActivity(intent);
-            }
-        });
 
         houseNameTextView.setText(venue.getName());
         dateTextView.setText("Today, " + getCurrentDate());
