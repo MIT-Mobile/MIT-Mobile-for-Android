@@ -213,7 +213,9 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
         } else {
             LoggingManager.Timber.d("NULL");
         }
-        options.snippet(new Gson().toJson(this, MITDiningRetailVenue.class));
+
+        MITDiningVenueSnippet snippet = new MITDiningVenueSnippet(identifier, name);
+        options.snippet(snippet.toString());
         return options;
     }
 

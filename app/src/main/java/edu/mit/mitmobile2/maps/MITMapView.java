@@ -246,6 +246,10 @@ public class MITMapView {
         }
     }
 
+    public void clearMapItems() {
+        mapItems.clear();
+    }
+
     public void addMapItemList(ArrayList<MapItem> mapItems, boolean clear) {
         addMapItemList(mapItems, clear, true);
     }
