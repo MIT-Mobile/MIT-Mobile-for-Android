@@ -122,7 +122,7 @@ public class MITDiningHouseVenue implements Parcelable {
         payment = (Object) in.readValue(Object.class.getClassLoader());
         shortName = in.readString();
         location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
-        //mealsByDay = (HashSet) in.readValue(HashSet.class.getClassLoader());
+        mealsByDay = (HashSet) in.readValue(HashSet.class.getClassLoader());
         venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
     }
 
@@ -139,7 +139,7 @@ public class MITDiningHouseVenue implements Parcelable {
         dest.writeValue(payment);
         dest.writeString(shortName);
         dest.writeValue(location);
-        //dest.writeValue(mealsByDay);
+        dest.writeValue(mealsByDay);
         dest.writeValue(venues);
     }
 
