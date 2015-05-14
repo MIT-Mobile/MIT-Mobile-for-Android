@@ -73,6 +73,12 @@
 
     <color name="search_events_hint_bg">#EEEEEE</color>
     <color name="search_events_hint_text">#898C8D</color>
+
+    <color name="lt_yellow">#FFFDCD</color>
+
+    <color name="status_green">#4CAF50</color>
+    <color name="status_red">#F44336</color>
+
     <color name="closed_red">#FFF44336</color>
     <color name="open_green">#ff0ba907</color>
 </resources>

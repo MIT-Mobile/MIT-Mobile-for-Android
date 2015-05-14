@@ -3,17 +3,22 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashSet;
-
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 
 public class MITDiningDining implements Parcelable {
     @SerializedName("announcements_html")
     protected String announcementsHTML;
+
+    @SerializedName("url")
     protected String url;
-    protected HashSet<MITDiningLinks> links;
-    protected MITDiningVenues venues;
+
+    @SerializedName("links")
+    protected ArrayList<MITDiningLinks> links;
+
+    @SerializedName("venues")
+	protected MITDiningVenues venues;
 
     public String getAnnouncementsHTML() {
         return announcementsHTML;
@@ -23,7 +28,7 @@ public class MITDiningDining implements Parcelable {
         return url;
     }
 
-    public HashSet<MITDiningLinks> getLinks() {
+    public ArrayList<MITDiningLinks> getLinks() {
         return links;
     }
 
@@ -44,7 +49,12 @@ public class MITDiningDining implements Parcelable {
     protected MITDiningDining(Parcel in) {
         announcementsHTML = in.readString();
         url = in.readString();
-        links = (HashSet) in.readValue(HashSet.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            links = new ArrayList<MITDiningLinks>();
+            in.readList(links, MITDiningLinks.class.getClassLoader());
+        } else {
+            links = null;
+        }
         venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
     }
 
@@ -57,7 +67,12 @@ public class MITDiningDining implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(announcementsHTML);
         dest.writeString(url);
-        dest.writeValue(links);
+        if (links == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(links);
+        }
         dest.writeValue(venues);
     }
 

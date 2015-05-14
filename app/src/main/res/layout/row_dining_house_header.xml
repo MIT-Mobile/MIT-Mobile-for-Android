@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_grey"
-    android:orientation="horizontal">
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/divider_grey" />
+    android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/event_header_title"
-        style="@style/TextAppearance.AppCompat.Medium"
+        android:id="@+id/row_header_tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/header_indicator"
-        android:layout_centerVertical="true"
+        android:background="@color/light_grey"
+        android:paddingBottom="@dimen/dining_house_header_cell_padding_top_bottom"
         android:paddingLeft="@dimen/dining_house_header_cell_padding_left_right"
         android:paddingRight="@dimen/dining_house_header_cell_padding_left_right"
         android:paddingTop="@dimen/dining_house_header_cell_padding_top_bottom"
-        android:paddingBottom="@dimen/dining_house_header_cell_padding_top_bottom"
         android:textColor="@color/mit_red" />
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="@color/divider_grey" />
+
 </RelativeLayout>

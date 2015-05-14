@@ -6,9 +6,13 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
 
 public class MITDiningVenues implements Parcelable {
+
+    @Expose
     protected MITDiningDining dining;
+
     protected List<MITDiningHouseVenue> house;
     protected List<MITDiningRetailVenue> retail;
 
@@ -35,7 +39,6 @@ public class MITDiningVenues implements Parcelable {
 
     protected MITDiningVenues(Parcel in) {
         dining = (MITDiningDining) in.readValue(MITDiningDining.class.getClassLoader());
-
         if (in.readByte() == 0x01) {
             house = new ArrayList<>();
             in.readList(house, MITDiningHouseVenue.class.getClassLoader());

@@ -177,6 +177,18 @@
     <string name="open_until">"Open until "</string>
     <string name="closed">Closed</string>
 
+    <!--Dining-->
+    <string name="dining_tab_house_dining">HOUSE DINING</string>
+    <string name="dining_tab_retail">RETAIL</string>
+
+    <string name="dining_house_section_announcements">ANNOUNCEMENTS</string>
+    <string name="dining_house_section_venues">VENUES</string>
+    <string name="dining_house_section_resources">RESOURCES</string>
+    <string name="dining_venue_status_open">Open</string>
+    <string name="dining_venue_status_closed">Closed</string>
+    <string name="dining_venue_closed_for_the_day">Closed for the day</string>
+    <string name="dining_venue_start_end_template" formatted="false">%s - %s</string>
+
     <string name="filters_activity_title">Filters</string>
     <string name="filter_farm">Farm to Fork</string>
     <string name="filter_well">For Your Well-Being</string>

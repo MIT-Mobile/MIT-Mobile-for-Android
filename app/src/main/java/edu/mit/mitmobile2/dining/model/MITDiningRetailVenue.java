@@ -5,12 +5,13 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.annotations.SerializedName;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.maps.MapItem;

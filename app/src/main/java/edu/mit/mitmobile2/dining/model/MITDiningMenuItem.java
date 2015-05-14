@@ -3,51 +3,58 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 
 public class MITDiningMenuItem implements Parcelable {
-    @SerializedName("dietary_flags")
-    protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
-    @SerializedName("description")
-    protected String itemDescription;
-    protected String name;
     @SerializedName("station")
     protected String station;
+
+	@SerializedName("name")
+	protected String name;
+
+    @SerializedName("description")
+    protected String itemDescription;
+
+	@Expose
     protected ArrayList<MITDiningMeal> meal;
 
-    public Object getDietaryFlags() {
-        return dietaryFlags;
-    }
+	@Expose
+	protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
 
-    public String getItemDescription() {
-        return itemDescription;
-    }
+	public Object getDietaryFlags() {
+		return dietaryFlags;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getItemDescription() {
+		return itemDescription;
+	}
 
-    public String getStation() {
-        return station;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public ArrayList<MITDiningMeal> getMeal() {
-        return meal;
-    }
+	public String getStation() {
+		return station;
+	}
 
-    @Override
-    public String toString() {
-        return "MITDiningMenuItem{" +
-                "dietaryFlags=" + dietaryFlags +
-                ", itemDescription='" + itemDescription + '\'' +
-                ", name='" + name + '\'' +
-                ", station='" + station + '\'' +
-                ", meal=" + meal +
-                '}';
-    }
+	public ArrayList<MITDiningMeal> getMeal() {
+		return meal;
+	}
+
+	@Override
+	public String toString() {
+		return "MITDiningMenuItem{" +
+			"dietaryFlags=" + dietaryFlags +
+			", itemDescription='" + itemDescription + '\'' +
+			", name='" + name + '\'' +
+			", station='" + station + '\'' +
+			", meal=" + meal +
+			'}';
+	}
 
     protected MITDiningMenuItem(Parcel in) {
         dietaryFlags = (Object) in.readValue(Object.class.getClassLoader());
