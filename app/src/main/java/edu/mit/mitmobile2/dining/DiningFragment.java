@@ -222,9 +222,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         viewPager.setCurrentItem(position);
         tabHost.setSelectedNavigationItem(position);
 
-        mitMapView.clearMapItems();
         updateMapItems(position == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
-        mitMapView.setToDefaultBounds(false, 0);
     }
 
     @Override
@@ -269,7 +267,6 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
 
                 DiningFragment.this.mitDiningDining = mitDiningDining;
                 updateMapItems(tabHost.getCurrentTab().getPosition() == 1 ? (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getRetail() : (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getHouse(), true);
-                mitMapView.setToDefaultBounds(false, 0);
                 notifyDiningUpdated(DiningFragment.this.mitDiningDining);
             }
 
@@ -290,6 +287,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
             break;
             case SCREEN_MODE_LIST: {
                 screenMode = SCREEN_MODE_MAP;
+                updateMapItems(tabHost.getCurrentTab().getPosition() == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
             }
             break;
         }
@@ -335,10 +333,13 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     }
 
     protected void updateMapItems(ArrayList mapItems, boolean fit) {
+        mitMapView.clearMapItems();
+
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mitMapView.clearDynamic();
         }
         mitMapView.addMapItemList(mapItems, true, fit);
+        mitMapView.setToDefaultBounds(false, 0);
     }
 
     @Override

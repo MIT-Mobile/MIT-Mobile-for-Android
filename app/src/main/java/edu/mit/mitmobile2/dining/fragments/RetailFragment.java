@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.dining.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.adapters.RetailAdapter;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
@@ -41,6 +44,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
 
         listView = (StickyListHeadersListView) view.findViewById(R.id.list_retail);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
@@ -77,6 +81,8 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MITDiningRetailVenue selectedVenue = adapter.getItem(position);
-        // TODO: add logic here
+        Intent intent = new Intent(getActivity(), DiningRetailActivity.class);
+        intent.putExtra(Constants.DINING_VENUE_KEY, selectedVenue);
+        startActivity(intent);
     }
 }
