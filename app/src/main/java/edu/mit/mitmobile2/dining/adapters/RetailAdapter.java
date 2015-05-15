@@ -94,10 +94,8 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         MITDiningRetailVenue venue = getItem(position);
 
         holder.venueTitleTextView.setText(venue.getName());
-        // holder.venueTimeTextView.setText(venue.hoursToday(context));
-        // if (venue.isOpenNow()) {
-        // TODO: add logic here
-        if (true) {
+        holder.venueTimeTextView.setText(venue.hoursToday(context));
+        if (venue.isOpenNow()) {
             holder.venueStatusTextView.setTextColor(context.getResources().getColor(R.color.status_green));
             holder.venueStatusTextView.setText(R.string.dining_venue_status_open);
         } else {

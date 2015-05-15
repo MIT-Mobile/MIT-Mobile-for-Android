@@ -1,12 +1,17 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import edu.mit.mitmobile2.DateUtils;
 
 public class MITDiningRetailVenue implements Parcelable {
     protected List<String> cuisine;  /* The ObjC Folks dont know what this is it seems */
@@ -109,6 +114,64 @@ public class MITDiningRetailVenue implements Parcelable {
                 ", location=" + location +
                 ", venues=" + venues +
                 '}';
+    }
+
+    public boolean isOpenNow() {
+        long currentTime = new Date().getTime();
+        boolean isOpenNow = false;
+
+        for (MITDiningRetailDay retailDay : hours) {
+            if (!TextUtils.isEmpty(retailDay.getStartTimeString())) {
+                long retailDayStartTime = retailDay.getStartTime().getTime();
+                long retailDayEndTime = retailDay.getEndTime().getTime();
+
+                if (retailDayStartTime <= currentTime && currentTime <= retailDayEndTime) {
+                    isOpenNow = true;
+                    break;
+                }
+            }
+        }
+
+        return isOpenNow;
+    }
+
+    public String hoursToday(Context context) {
+        String hoursSummary = null;
+
+        Date nowDate = new Date();
+        long nowInterval = nowDate.getTime();
+
+        MITDiningRetailDay yesterdayRetailDay = retailDayForDate(nowDate);
+        long yesterdayEndTime = 0;
+        try {
+            yesterdayEndTime = yesterdayRetailDay.getEndTime().getTime();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        if (nowInterval < yesterdayEndTime) {
+            hoursSummary = yesterdayRetailDay.hoursSummary(context);
+        } else {
+            MITDiningRetailDay todayRetailDay = retailDayForDate(nowDate);
+            hoursSummary = todayRetailDay.hoursSummary(context);
+        }
+
+        return hoursSummary;
+    }
+
+    private MITDiningRetailDay retailDayForDate(Date date) {
+        MITDiningRetailDay returnDay = null;
+        if (date != null) {
+            Date startOfDate = DateUtils.startOfDay(date);
+            for (MITDiningRetailDay retailDay : hours) {
+                if (DateUtils.areEqualToDateIgnoringTime(retailDay.getDate(), startOfDate)) {
+                    returnDay = retailDay;
+                    break;
+                }
+            }
+        }
+
+        return returnDay;
     }
 
     protected MITDiningRetailVenue(Parcel in) {
