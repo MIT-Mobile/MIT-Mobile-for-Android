@@ -138,7 +138,7 @@ public class MITDiningMeal implements Parcelable {
         dest.writeString(message);
         dest.writeString(name);
         dest.writeString(startTimeString);
-        dest.writeValue(houseDateString);
+        dest.writeString(houseDateString);
         if (items == null) {
             dest.writeByte((byte) (0x00));
         } else {

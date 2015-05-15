@@ -12,28 +12,28 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.InjectViews;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.model.MITDiningMenuItem;
 
-public class HouseMenuDetailAdapter extends BaseAdapter{
+public class HouseMealMenuAdapter extends BaseAdapter{
 
     private LayoutInflater listContainer;
-    private Context context;
-    private List<String> testData;
+    private List<MITDiningMenuItem> menuItems;
 
-    public HouseMenuDetailAdapter(Context context, List<String> testData) {
+    public HouseMealMenuAdapter(Context context, List<MITDiningMenuItem> menuItems) {
         listContainer = LayoutInflater.from(context);
-        this.context = context;
-        this.testData = testData;
+        this.menuItems = menuItems;
     }
 
     @Override
     public int getCount() {
-        return testData.size();
+        return menuItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return testData.get(position);
+        return menuItems.get(position);
     }
 
     @Override
@@ -52,10 +52,21 @@ public class HouseMenuDetailAdapter extends BaseAdapter{
             view.setTag(viewHolder);
         }
 
-        viewHolder.menuTypeTextView.setText("BOWLS");
-        viewHolder.menuNameTextView.setText("Chicken in peanut hoisin sauce");
-        viewHolder.menuDetailTextView.setText("rice\npasta");
-        viewHolder.menuImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.dining_meal_farm_to_fork_big));
+        MITDiningMenuItem item = menuItems.get(position);
+
+        if (item.getStation() != null) {
+            viewHolder.menuTypeTextView.setText(item.getStation());
+            viewHolder.menuTypeTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.menuTypeTextView.setVisibility(View.GONE);
+        }
+        viewHolder.menuNameTextView.setText(item.getName());
+        if (item.getItemDescription() != null) {
+            viewHolder.menuDetailTextView.setText(item.getItemDescription());
+            viewHolder.menuDetailTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.menuDetailTextView.setVisibility(View.GONE);
+        }
 
         return view;
     }
@@ -65,8 +76,8 @@ public class HouseMenuDetailAdapter extends BaseAdapter{
         TextView menuTypeTextView;
         @InjectView(R.id.menu_name_text_view)
         TextView menuNameTextView;
-        @InjectView(R.id.menu_image_view)
-        ImageView menuImageView;
+        @InjectViews({R.id.menu_first_image_view, R.id.menu_second_image_view, R.id.menu_third_image_view, R.id.menu_forth_image_view})
+        List<ImageView> imageViews;
         @InjectView(R.id.menu_detail_text_view)
         TextView menuDetailTextView;
 
