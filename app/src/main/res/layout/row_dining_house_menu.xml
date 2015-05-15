@@ -28,34 +28,22 @@
 
         <ImageView
             android:id="@+id/menu_first_image_view"
-            android:layout_width="@dimen/dining_menu_image_size"
-            android:layout_height="@dimen/dining_menu_image_size"
-            android:layout_marginLeft="@dimen/dining_menu_image_padding"
-            android:visibility="gone"
+            style="@style/MITDiningMenuFlagImageView"
             />
 
         <ImageView
             android:id="@+id/menu_second_image_view"
-            android:layout_width="@dimen/dining_menu_image_size"
-            android:layout_height="@dimen/dining_menu_image_size"
-            android:layout_marginLeft="@dimen/dining_menu_image_padding"
-            android:visibility="gone"
+            style="@style/MITDiningMenuFlagImageView"
             />
 
         <ImageView
             android:id="@+id/menu_third_image_view"
-            android:layout_width="@dimen/dining_menu_image_size"
-            android:layout_height="@dimen/dining_menu_image_size"
-            android:layout_marginLeft="@dimen/dining_menu_image_padding"
-            android:visibility="gone"
+            style="@style/MITDiningMenuFlagImageView"
             />
 
         <ImageView
             android:id="@+id/menu_forth_image_view"
-            android:layout_width="@dimen/dining_menu_image_size"
-            android:layout_height="@dimen/dining_menu_image_size"
-            android:layout_marginLeft="@dimen/dining_menu_image_padding"
-            android:visibility="gone"
+            style="@style/MITDiningMenuFlagImageView"
             />
     </LinearLayout>
 
