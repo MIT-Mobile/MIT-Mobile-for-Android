@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
@@ -20,9 +21,6 @@ import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningLinks;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-/**
- * Created by serg on 5/8/15.
- */
 public class HouseDiningAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private static final int ROW_TYPE_ANNOUNCEMENT = 0;
@@ -32,9 +30,10 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 
     private Context context;
     private MITDiningDining mitDiningDining;
-    private ArrayList<MITDiningDining> listAnnouncements;
-    private ArrayList<MITDiningHouseVenue> listVenues;
-    private ArrayList<MITDiningLinks> listResources;
+    private List<MITDiningDining> listAnnouncements;
+    private List<MITDiningHouseVenue> listVenues;
+    private List<MITDiningLinks> listResources;
+
     private DiningHouseCallback callback;
 
     public HouseDiningAdapter(Context context, ArrayList<MITDiningDining> listAnnouncements, ArrayList<MITDiningHouseVenue> listVenues, ArrayList<MITDiningLinks> listResources) {
@@ -77,7 +76,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 //                if (listAnnouncements != null && listAnnouncements.size() > 0 && !TextUtils.isEmpty(listAnnouncements.get(0).getAnnouncementsHTML())) {
 //                    headerTitle = listAnnouncements.get(0).getAnnouncementsHTML();
 //                } else {
-                    headerTitle = context.getString(R.string.dining_house_section_announcements);
+                headerTitle = context.getString(R.string.dining_house_section_announcements);
 //                }
             }
             break;

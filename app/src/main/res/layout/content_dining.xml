@@ -14,20 +14,31 @@
         app:primaryColor="@color/white"
         app:textColor="@color/mit_red" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="MapView should be here" />
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/dining_map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/my_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/solo_map_fab_margin"
+            android:layout_marginRight="@dimen/solo_map_fab_margin"
+            android:visibility="gone" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </FrameLayout>
+    </RelativeLayout>
+
 </LinearLayout>

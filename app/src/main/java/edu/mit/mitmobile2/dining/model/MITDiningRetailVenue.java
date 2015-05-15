@@ -1,14 +1,25 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MITDiningRetailVenue implements Parcelable {
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
+
+public class MITDiningRetailVenue extends MapItem implements Parcelable {
     protected List<String> cuisine;  /* The ObjC Folks dont know what this is it seems */
     @SerializedName("description_html")
     protected String descriptionHTML;
@@ -29,7 +40,6 @@ public class MITDiningRetailVenue implements Parcelable {
     protected String shortName;
     protected List<MITDiningRetailDay> hours;
     protected MITDiningLocation location;
-    protected MITDiningVenues venues;
 
     public List<String> getCuisine() {
         return cuisine;
@@ -83,10 +93,6 @@ public class MITDiningRetailVenue implements Parcelable {
         return location;
     }
 
-    public MITDiningVenues getVenues() {
-        return venues;
-    }
-
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
@@ -107,13 +113,12 @@ public class MITDiningRetailVenue implements Parcelable {
                 ", shortName='" + shortName + '\'' +
                 ", hours=" + hours +
                 ", location=" + location +
-                ", venues=" + venues +
                 '}';
     }
 
     protected MITDiningRetailVenue(Parcel in) {
         if (in.readByte() == 0x01) {
-            cuisine = new ArrayList<String>();
+            cuisine = new ArrayList<>();
             in.readList(cuisine, String.class.getClassLoader());
         } else {
             cuisine = null;
@@ -127,20 +132,20 @@ public class MITDiningRetailVenue implements Parcelable {
         menuURL = in.readString();
         name = in.readString();
         if (in.readByte() == 0x01) {
-            payment = new ArrayList<String>();
+            payment = new ArrayList<>();
             in.readList(payment, String.class.getClassLoader());
         } else {
             payment = null;
         }
         shortName = in.readString();
         if (in.readByte() == 0x01) {
-            hours = new ArrayList<MITDiningRetailDay>();
+            hours = new ArrayList<>();
             in.readList(hours, MITDiningRetailDay.class.getClassLoader());
         } else {
             hours = null;
         }
         location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
-        venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
+        setMarkerText(in.readString());
     }
 
     @Override
@@ -178,7 +183,7 @@ public class MITDiningRetailVenue implements Parcelable {
             dest.writeList(hours);
         }
         dest.writeValue(location);
-        dest.writeValue(venues);
+        dest.writeString(getMarkerText());
     }
 
     @SuppressWarnings("unused")
@@ -193,4 +198,44 @@ public class MITDiningRetailVenue implements Parcelable {
             return new MITDiningRetailVenue[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        if (location.getLatitude() != null && location.getLongitude() != null) {
+            LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
+            options.position(position);
+        } else {
+            LoggingManager.Timber.d("NULL");
+        }
+
+        MITDiningVenueSnippet snippet = new MITDiningVenueSnippet(identifier, name);
+        options.snippet(snippet.toString());
+        return options;
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.ic_pin_red;
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }
