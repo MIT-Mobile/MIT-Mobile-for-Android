@@ -98,7 +98,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
         diningMeals = new ArrayList<>();
         for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
             for (MITDiningMeal mitDiningMeal : diningHouseDay.getMeals()) {
-                mitDiningMeal.setHouseDay(diningHouseDay);
+                mitDiningMeal.setHouseDateString(diningHouseDay.getDateString());
                 diningMeals.add(mitDiningMeal);
             }
         }
@@ -108,10 +108,10 @@ public class DiningHouseActivity extends AppCompatActivity  {
         houseMenuViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (diningMeals.get(position).getHouseDay().getDateString().equals(getCurrentDate())) {
-                    dateTextView.setText("Today, " + formatSimpletDate(diningMeals.get(position).getHouseDay().getDateString()));
+                if (diningMeals.get(position).getHouseDateString().equals(getCurrentDate())) {
+                    dateTextView.setText("Today, " + formatSimpletDate(diningMeals.get(position).getHouseDateString()));
                 } else {
-                    dateTextView.setText(formatDate(diningMeals.get(position).getHouseDay().getDateString()));
+                    dateTextView.setText(formatDate(diningMeals.get(position).getHouseDateString()));
                 }
 
                 infoTextView.setText(diningMeals.get(position).getName() + " "
@@ -136,7 +136,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
         String currentDate = getCurrentDate();
 
         for (int i = 0; i < meals.size() - 1; i++) {
-            if (currentDate.equals(meals.get(i).getHouseDay().getDateString())) {
+            if (currentDate.equals(meals.get(i).getHouseDateString())) {
                 String startTime = meals.get(i).getStartTimeString().replace(":", "");
                 String endTime = meals.get(i).getEndTimeString().replace(":", "");
                 if ((Integer.parseInt(getCurrentTime()) >= Integer.parseInt(startTime)) && (Integer.parseInt(getCurrentTime()) <= Integer.parseInt(endTime))) {
@@ -145,12 +145,12 @@ public class DiningHouseActivity extends AppCompatActivity  {
                     houseHoursTextView.setTextColor(getResources().getColor(R.color.status_green));
                     break;
                 } else if (Integer.parseInt(getCurrentTime()) < Integer.parseInt(startTime)){
-                    index = i + 1;
+                    index = i;
                     houseHoursTextView.setText("Opens at " + DateFormat.format("h:mm a", formatMealTime(meals.get(index).getStartTimeString())));
                     houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
                     break;
                 } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))
-                        && (!currentDate.equals(meals.get(i + 1).getHouseDay().getDateString()))) {
+                        && (!currentDate.equals(meals.get(i + 1).getHouseDateString()))) {
                     index = i;
                     houseHoursTextView.setText(getResources().getString(R.string.close_today));
                     houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
@@ -188,7 +188,6 @@ public class DiningHouseActivity extends AppCompatActivity  {
 
         try {
             date = originalDate.parse(dateString);
-            System.out.println(date);
         } catch (ParseException e) {
             LoggingManager.Timber.e(e, "___________DateFormatError___________");
         }
@@ -205,7 +204,6 @@ public class DiningHouseActivity extends AppCompatActivity  {
 
         try {
             date = originalDate.parse(dateString);
-            System.out.println(date);
         } catch (ParseException e) {
             LoggingManager.Timber.e(e, "___________DateFormatError___________");
         }
@@ -221,7 +219,6 @@ public class DiningHouseActivity extends AppCompatActivity  {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         try {
             date = format.parse(timeString);
-            System.out.println(date);
         } catch (ParseException e) {
             LoggingManager.Timber.e(e, "___________DateFormatError___________");
         }
