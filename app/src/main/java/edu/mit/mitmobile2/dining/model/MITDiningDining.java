@@ -18,7 +18,7 @@ public class MITDiningDining implements Parcelable {
     protected ArrayList<MITDiningLinks> links;
 
     @SerializedName("venues")
-	protected MITDiningVenues venues;
+    protected MITDiningVenues venues;
 
     public String getAnnouncementsHTML() {
         return announcementsHTML;
@@ -50,7 +50,7 @@ public class MITDiningDining implements Parcelable {
         announcementsHTML = in.readString();
         url = in.readString();
         if (in.readByte() == 0x01) {
-            links = new ArrayList<MITDiningLinks>();
+            links = new ArrayList<>();
             in.readList(links, MITDiningLinks.class.getClassLoader());
         } else {
             links = null;

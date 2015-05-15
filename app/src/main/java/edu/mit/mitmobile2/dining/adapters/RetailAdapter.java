@@ -10,18 +10,16 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-/**
- * Created by serg on 5/13/15.
- */
 public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private Context context;
-    private ArrayList<MITDiningRetailVenue> retailVenues;
+    private List<MITDiningRetailVenue> retailVenues;
 
     public RetailAdapter(Context context) {
         this(context, null);
@@ -130,7 +128,7 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         TextView venueStatusTextView;
     }
 
-    public void setRetailVenues(ArrayList<MITDiningRetailVenue> retailVenues) {
+    public void setRetailVenues(List<MITDiningRetailVenue> retailVenues) {
         this.retailVenues = retailVenues;
 
         notifyDataSetChanged();
