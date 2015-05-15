@@ -247,9 +247,11 @@
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".dining.activities.DiningHouseActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".dining.activities.DiningHouseInfoActivity"
+            android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".dining.AnnouncementsActivity"
