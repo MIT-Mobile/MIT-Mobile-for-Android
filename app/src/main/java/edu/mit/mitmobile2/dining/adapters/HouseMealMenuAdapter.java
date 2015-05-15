@@ -14,15 +14,18 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.InjectViews;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.dining.model.MITDiningMenuItem;
 
 public class HouseMealMenuAdapter extends BaseAdapter{
 
     private LayoutInflater listContainer;
     private List<MITDiningMenuItem> menuItems;
+    private Context context;
 
     public HouseMealMenuAdapter(Context context, List<MITDiningMenuItem> menuItems) {
         listContainer = LayoutInflater.from(context);
+        this.context = context;
         this.menuItems = menuItems;
     }
 
@@ -66,6 +69,29 @@ public class HouseMealMenuAdapter extends BaseAdapter{
             viewHolder.menuDetailTextView.setVisibility(View.VISIBLE);
         } else {
             viewHolder.menuDetailTextView.setVisibility(View.GONE);
+        }
+
+        List<String> flags = item.getDietaryFlags();
+
+        if ((flags != null) && (flags.size() > 0)) {
+            for (int i = 0; i < flags.size(); i++) {
+                if (flags.get(i).contains("-")) {
+                    flags.get(i).replaceAll("\\s", "-");
+                }
+                int resId =  context.getResources().getIdentifier("dining_" + flags.get(i)
+                                .toLowerCase().replaceAll("\\s", ""), "drawable",
+                        context.getPackageName());
+                if (resId > 0) {
+                    viewHolder.imageViews.get(i).setImageResource(resId);
+                    viewHolder.imageViews.get(i).setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.imageViews.get(i).setVisibility(View.GONE);
+                }
+            }
+        } else {
+            for (ImageView imageView : viewHolder.imageViews) {
+                imageView.setVisibility(View.GONE);
+            }
         }
 
         return view;

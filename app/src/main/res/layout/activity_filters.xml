@@ -14,7 +14,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_farm_to_fork_big"/>
+                android:src="@drawable/dining_farmtofork"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -33,7 +33,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_well_being_big"/>
+                android:src="@drawable/dining_foryourwellbeing"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -52,7 +52,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_halal_big"/>
+                android:src="@drawable/dining_halal"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -71,7 +71,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_humane_big"/>
+                android:src="@drawable/dining_humane"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -90,7 +90,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_in_balance_big"/>
+                android:src="@drawable/dining_inbalance"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -109,7 +109,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_well_being_big"/>
+                android:src="@drawable/dining_foryourwellbeing"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -128,7 +128,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_gluten_free_big"/>
+                android:src="@drawable/dining_madewithoutgluten"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -147,7 +147,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_organic_big"/>
+                android:src="@drawable/dining_organic"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -166,7 +166,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_seafood_big"/>
+                android:src="@drawable/dining_seafoodwatch"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -185,7 +185,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_vegan_big"/>
+                android:src="@drawable/dining_vegan"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
@@ -204,7 +204,7 @@
 
             <ImageView
                 style="@style/MITDiningFilterIcon"
-                android:src="@drawable/dining_meal_vegetarian_big"/>
+                android:src="@drawable/dining_vegetarian"/>
 
             <TextView
                 style="@style/MITDiningFilterName"
