@@ -189,6 +189,9 @@
     <string name="dining_venue_closed_for_the_day">Closed for the day</string>
     <string name="dining_venue_start_end_template" formatted="false">%s - %s</string>
 
+    <string name="retail_category_favorites">Favorites</string>
+    <string name="retail_category_other">Other</string>
+
     <string name="filters_activity_title">Filters</string>
     <string name="filter_farm">Farm to Fork</string>
     <string name="filter_well">For Your Well-Being</string>
