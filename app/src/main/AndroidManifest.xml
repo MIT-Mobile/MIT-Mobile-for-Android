@@ -241,7 +241,7 @@
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".dining.FiltersActivity"
+            android:name=".dining.activities.FiltersActivity"
             android:label="@string/filters_activity_title"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
@@ -254,7 +254,7 @@
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".dining.AnnouncementsActivity"
+            android:name=".dining.activities.AnnouncementsActivity"
             android:label="@string/announcements_activity_title"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />

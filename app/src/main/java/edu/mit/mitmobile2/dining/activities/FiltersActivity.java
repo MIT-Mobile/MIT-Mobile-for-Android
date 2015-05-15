@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.dining;
+package edu.mit.mitmobile2.dining.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

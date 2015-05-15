@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.dining.AnnouncementsActivity;
+import edu.mit.mitmobile2.dining.activities.AnnouncementsActivity;
 import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.adapters.HouseDiningAdapter;
 import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;

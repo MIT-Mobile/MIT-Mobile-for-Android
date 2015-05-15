@@ -202,7 +202,7 @@
     <string name="filter_vegan">Vegan</string>
     <string name="filter_vegetarian">Vegetarian</string>
     <string name="dining_no_menu_info">No Items</string>
-    <string name="dining_house_actionbar">filter</string>
+    <string name="dining_house_actionbar">Filters</string>
     <string name="payment">payment</string>
     <string name="hours">hours</string>
     <string name="house_location">location</string>
