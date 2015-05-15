@@ -140,7 +140,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
                 String startTime = meals.get(i).getStartTimeString().replace(":", "");
                 String endTime = meals.get(i).getEndTimeString().replace(":", "");
                 if ((Integer.parseInt(getCurrentTime()) >= Integer.parseInt(startTime)) && (Integer.parseInt(getCurrentTime()) <= Integer.parseInt(endTime))) {
-                    index = i + 1;
+                    index = i;
                     houseHoursTextView.setText("Open until " + DateFormat.format("h:mm a", formatMealTime(meals.get(index).getEndTimeString())));
                     houseHoursTextView.setTextColor(getResources().getColor(R.color.status_green));
                     break;
