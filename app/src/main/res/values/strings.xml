@@ -192,6 +192,8 @@
     <string name="retail_category_favorites">Favorites</string>
     <string name="retail_category_other">Other</string>
 
+    <string name="close_today">Closed for the day</string>
+
     <string name="filters_activity_title">Filters</string>
     <string name="filter_farm">Farm to Fork</string>
     <string name="filter_well">For Your Well-Being</string>
@@ -204,9 +206,15 @@
     <string name="filter_seafood">Seafood Watch</string>
     <string name="filter_vegan">Vegan</string>
     <string name="filter_vegetarian">Vegetarian</string>
-    <string name="dining_no_menu_info">No Matching Items</string>
+    <string name="dining_no_menu_info">No Items</string>
     <string name="dining_house_actionbar">Filters</string>
-
+    <string name="payment">payment</string>
+    <string name="hours">hours</string>
+    <string name="house_location">location</string>
+    <string name="mon">MON</string>
+    <string name="mon_fri">MON-FRI</string>
+    <string name="tu_fri">TUE-FRI</string>
+    <string name="sat_sun">SAT-SUN</string>
     <string name="announcements_activity_title">Announcements</string>
 
 </resources>

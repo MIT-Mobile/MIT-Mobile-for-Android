@@ -3,48 +3,55 @@ package edu.mit.mitmobile2.dining.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
+import java.util.List;
 
+import com.google.gson.annotations.Expose;
 
 public class MITDiningVenues implements Parcelable {
-
-    @SerializedName("house")
-    protected ArrayList<MITDiningHouseVenue> house;
-
-    @SerializedName("retail")
-    protected ArrayList<MITDiningRetailVenue> retail;
 
     @Expose
     protected MITDiningDining dining;
 
-	public MITDiningDining getDining() {
-		return dining;
-	}
+    protected List<MITDiningHouseVenue> house;
+    protected List<MITDiningRetailVenue> retail;
 
-	public ArrayList<MITDiningHouseVenue> getHouse() {
-		return house;
-	}
+    public MITDiningDining getDining() {
+        return dining;
+    }
 
-	public ArrayList<MITDiningRetailVenue> getRetail() {
-		return retail;
-	}
+    public List<MITDiningHouseVenue> getHouse() {
+        return house;
+    }
 
-	@Override
-	public String toString() {
-		return "MITDiningVenues{" +
-			"dining=" + dining +
-			", house=" + house +
-			", retail=" + retail +
-			'}';
-	}
+    public List<MITDiningRetailVenue> getRetail() {
+        return retail;
+    }
+
+    @Override
+    public String toString() {
+        return "MITDiningVenues{" +
+                "dining=" + dining +
+                ", house=" + house +
+                ", retail=" + retail +
+                '}';
+    }
 
     protected MITDiningVenues(Parcel in) {
         dining = (MITDiningDining) in.readValue(MITDiningDining.class.getClassLoader());
-        house = (ArrayList) in.readArrayList(ArrayList.class.getClassLoader());
-        retail = (ArrayList) in.readValue(ArrayList.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            house = new ArrayList<>();
+            in.readList(house, MITDiningHouseVenue.class.getClassLoader());
+        } else {
+            house = null;
+        }
+
+        if (in.readByte() == 0x01) {
+            retail = new ArrayList<>();
+            in.readList(retail, MITDiningRetailVenue.class.getClassLoader());
+        } else {
+            retail = null;
+        }
     }
 
     @Override
@@ -55,8 +62,18 @@ public class MITDiningVenues implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(dining);
-        dest.writeList(house);
-        dest.writeList(retail);
+        if (house == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(house);
+        }
+        if (retail == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(retail);
+        }
     }
 
     @SuppressWarnings("unused")

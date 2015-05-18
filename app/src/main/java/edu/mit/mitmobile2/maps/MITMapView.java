@@ -130,16 +130,18 @@ public class MITMapView {
 
                     case MapItem.MARKERTYPE:
                         if (mItem.getMarkerText() != null) {
-                            int iconResource = mItem.getIconResource();
-                            IconGenerator iconGenerator = new IconGenerator(mContext);
-                            iconGenerator.setBackground(mContext.getResources().getDrawable(iconResource));
-                            iconGenerator.setTextAppearance(mContext, R.style.MITTourStopIcon);
-                            iconGenerator.setContentPadding(25, 20, 25, 25);
+                            if (mItem.getMarkerOptions().getPosition() != null) {
+                                int iconResource = mItem.getIconResource();
+                                IconGenerator iconGenerator = new IconGenerator(mContext);
+                                iconGenerator.setBackground(mContext.getResources().getDrawable(iconResource));
+                                iconGenerator.setTextAppearance(mContext, R.style.MITTourStopIcon);
+                                iconGenerator.setContentPadding(25, 20, 25, 25);
 
-                            Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
-                            Marker marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
-                            if (mItem.isDynamic()) {
-                                dynamicMarkers.add(marker);
+                                Bitmap bitmap = iconGenerator.makeIcon(mItem.getMarkerText());
+                                Marker marker = mMap.addMarker(mItem.getMarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+                                if (mItem.isDynamic()) {
+                                    dynamicMarkers.add(marker);
+                                }
                             }
                         } else {
                             Marker marker;
@@ -244,6 +246,10 @@ public class MITMapView {
         }
     }
 
+    public void clearMapItems() {
+        mapItems.clear();
+    }
+
     public void addMapItemList(ArrayList<MapItem> mapItems, boolean clear) {
         addMapItemList(mapItems, clear, true);
     }
@@ -255,7 +261,9 @@ public class MITMapView {
         for (int i = 0; i < mapItems.size(); i++) {
             MapItem mItem = mapItems.get(i);
             if (mItem.getMapItemType() == MapItem.MARKERTYPE) {
-                b.include(mItem.getMarkerOptions().getPosition());
+                if (mItem.getMarkerOptions().getPosition() != null) {
+                    b.include(mItem.getMarkerOptions().getPosition());
+                }
             } else if (mItem.getMapItemType() == MapItem.POLYLINETYPE) {
                 for (LatLng point : mItem.getPolylineOptions().getPoints()) {
                     b.include(point);

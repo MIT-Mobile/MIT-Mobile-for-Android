@@ -1,20 +1,34 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.mit.mitmobile2.DateUtils;
 
 
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapItem;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
-public class MITDiningHouseVenue implements Parcelable {
+
+public class MITDiningHouseVenue extends MapItem implements Parcelable {
+    @SerializedName("icon_url")
+    protected String iconURL;
 
     @SerializedName("id")
     protected String identifier;
@@ -28,78 +42,68 @@ public class MITDiningHouseVenue implements Parcelable {
     @SerializedName("short_name")
     protected String shortName;
 
-    @SerializedName("icon_url")
-    protected String iconURL;
-
-	@SerializedName("location")
+    @SerializedName("location")
     protected MITDiningLocation location;
 
-	@SerializedName("meals_by_day")
-    protected ArrayList<MITDiningHouseDay> mealsByDay;
+    @SerializedName("meals_by_day")
+    protected List<MITDiningHouseDay> mealsByDay;
 
-	@Expose
-    protected MITDiningVenues venues;
+    @Expose
+    protected Object payment; /* The ObjC Folks dont know what this is it seems */
 
-	@Expose
-	protected Object payment; /* The ObjC Folks dont know what this is it seems */
+    public String getIconURL() {
+        return iconURL;
+    }
 
-	public String getIconURL() {
-		return iconURL;
-	}
+    public String getIdentifier() {
+        return identifier;
+    }
 
-	public String getIdentifier() {
-		return identifier;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Object getPayment() {
+        return payment;
+    }
 
-	public Object getPayment() {
-		return payment;
-	}
+    public String getShortName() {
+        return shortName;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    public MITDiningLocation getLocation() {
+        return location;
+    }
 
-	public MITDiningLocation getLocation() {
-		return location;
-	}
+    public List<MITDiningHouseDay> getMealsByDay() {
+        return mealsByDay;
+    }
 
-	public ArrayList<MITDiningHouseDay> getMealsByDay() {
-		return mealsByDay;
-	}
+    public String hoursToday(Context context) {
+        MITDiningHouseDay today = houseDayForDate(new Date());
+        return today.dayHoursDescription(context);
+    }
 
-	public MITDiningVenues getVenues() {
-		return venues;
-	}
+    public boolean isOpenNow() {
+        Date date = new Date();
+        MITDiningHouseDay day = houseDayForDate(date);
+        MITDiningMeal meal = day.mealForDate(date);
+        return (meal != null);
+    }
 
-	public String hoursToday(Context context) {
-		MITDiningHouseDay today = houseDayForDate(new Date());
-		return today.dayHoursDescription(context);
-	}
-
-	public boolean isOpenNow() {
-		Date date = new Date();
-		MITDiningHouseDay day = houseDayForDate(date);
-		MITDiningMeal meal = day.mealForDate(date);
-		return (meal != null);
-	}
-
-	public MITDiningHouseDay houseDayForDate(Date date) {
-		MITDiningHouseDay returnDay = null;
-		if (date != null) {
-			Date startOfDate = DateUtils.startOfDay(date);
-			for (MITDiningHouseDay day : mealsByDay) {
-				if (day.getDate() != null && DateUtils.areEqualToDateIgnoringTime(day.getDate(), startOfDate)) {
-					returnDay = day;
-					break;
-				}
-			}
-		}
-		return returnDay;
-	}
+    public MITDiningHouseDay houseDayForDate(Date date) {
+        MITDiningHouseDay returnDay = null;
+        if (date != null) {
+            Date startOfDate = DateUtils.startOfDay(date);
+            for (MITDiningHouseDay day : mealsByDay) {
+                if (day.getDate() != null && DateUtils.areEqualToDateIgnoringTime(day.getDate(), startOfDate)) {
+                    returnDay = day;
+                    break;
+                }
+            }
+        }
+        return returnDay;
+    }
 
     @Override
     public String toString() {
@@ -111,7 +115,6 @@ public class MITDiningHouseVenue implements Parcelable {
                 ", shortName='" + shortName + '\'' +
                 ", location=" + location +
                 ", mealsByDay=" + mealsByDay +
-                ", venues=" + venues +
                 '}';
     }
 
@@ -123,12 +126,12 @@ public class MITDiningHouseVenue implements Parcelable {
         iconURL = in.readString();
         location = (MITDiningLocation) in.readValue(MITDiningLocation.class.getClassLoader());
         if (in.readByte() == 0x01) {
-            mealsByDay = new ArrayList<MITDiningHouseDay>();
+            mealsByDay = new ArrayList<>();
+
             in.readList(mealsByDay, MITDiningHouseDay.class.getClassLoader());
         } else {
             mealsByDay = null;
         }
-        venues = (MITDiningVenues) in.readValue(MITDiningVenues.class.getClassLoader());
     }
 
     @Override
@@ -150,7 +153,6 @@ public class MITDiningHouseVenue implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(mealsByDay);
         }
-        dest.writeValue(venues);
     }
 
     @SuppressWarnings("unused")
@@ -165,4 +167,45 @@ public class MITDiningHouseVenue implements Parcelable {
             return new MITDiningHouseVenue[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        if (location.getLatitude() != null && location.getLongitude() != null) {
+            LatLng position = new LatLng(Double.parseDouble(location.getLatitude()), Double.parseDouble(location.getLongitude()));
+            options.position(position);
+        } else {
+            LoggingManager.Timber.d("NULL");
+        }
+
+        MITDiningVenueSnippet snippet = new MITDiningVenueSnippet(identifier, name);
+        options.snippet(snippet.toString());
+
+        return options;
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.ic_pin_red;
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

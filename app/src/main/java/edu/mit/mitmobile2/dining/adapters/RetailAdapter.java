@@ -17,19 +17,17 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningBuilding;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-/**
- * Created by serg on 5/13/15.
- */
 public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private Context context;
-    private ArrayList<MITDiningRetailVenue> retailVenues;
+    private List<MITDiningRetailVenue> retailVenues;
 
     private ArrayList<MITDiningRetailVenue> favoriteVenues;
     private LinkedHashMap<MITDiningBuilding, ArrayList<MITDiningRetailVenue>> retailArrayMap;
@@ -174,7 +172,7 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         return false;
     }
 
-    public void setRetailVenues(ArrayList<MITDiningRetailVenue> retailVenues) {
+    public void setRetailVenues(List<MITDiningRetailVenue> retailVenues) {
         if (retailVenues == null) {
             return;
         }

@@ -7,66 +7,59 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MITDiningMenuItem implements Parcelable {
     @SerializedName("station")
     protected String station;
 
-	@SerializedName("name")
-	protected String name;
+    @SerializedName("name")
+    protected String name;
 
     @SerializedName("description")
     protected String itemDescription;
 
-	@Expose
-    protected ArrayList<MITDiningMeal> meal;
+    @SerializedName("dietary_flags")
+    @Expose
+    protected List<String> dietaryFlags;
 
-	@Expose
-	protected Object dietaryFlags;  /* The ObjC Folks dont know what this is it seems */
+    public List<String> getDietaryFlags() {
+        return dietaryFlags;
+    }
 
-	public Object getDietaryFlags() {
-		return dietaryFlags;
-	}
+    public String getItemDescription() {
+        return itemDescription;
+    }
 
-	public String getItemDescription() {
-		return itemDescription;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getStation() {
+        return station;
+    }
 
-	public String getStation() {
-		return station;
-	}
-
-	public ArrayList<MITDiningMeal> getMeal() {
-		return meal;
-	}
-
-	@Override
-	public String toString() {
-		return "MITDiningMenuItem{" +
-			"dietaryFlags=" + dietaryFlags +
-			", itemDescription='" + itemDescription + '\'' +
-			", name='" + name + '\'' +
-			", station='" + station + '\'' +
-			", meal=" + meal +
-			'}';
-	}
+    @Override
+    public String toString() {
+        return "MITDiningMenuItem{" +
+                "dietaryFlags=" + dietaryFlags +
+                ", itemDescription='" + itemDescription + '\'' +
+                ", name='" + name + '\'' +
+                ", station='" + station + '\'' +
+                '}';
+    }
 
     protected MITDiningMenuItem(Parcel in) {
-        dietaryFlags = (Object) in.readValue(Object.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            dietaryFlags = new ArrayList<>();
+            in.readList(dietaryFlags, String.class.getClassLoader());
+        } else {
+            dietaryFlags = null;
+        }
         itemDescription = in.readString();
         name = in.readString();
         station = in.readString();
-        if (in.readByte() == 0x01) {
-            meal = new ArrayList<MITDiningMeal>();
-            in.readList(meal, MITDiningMeal.class.getClassLoader());
-        } else {
-            meal = null;
-        }
     }
 
     @Override
@@ -76,16 +69,15 @@ public class MITDiningMenuItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(dietaryFlags);
-        dest.writeString(itemDescription);
-        dest.writeString(name);
-        dest.writeString(station);
-        if (meal == null) {
+        if (dietaryFlags == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(meal);
+            dest.writeList(dietaryFlags);
         }
+        dest.writeString(itemDescription);
+        dest.writeString(name);
+        dest.writeString(station);
     }
 
     @SuppressWarnings("unused")

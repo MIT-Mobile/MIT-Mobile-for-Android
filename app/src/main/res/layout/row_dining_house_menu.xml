@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/dining_house_padding"
+    android:paddingBottom="@dimen/dining_house_padding">
 
     <TextView
         android:id="@+id/menu_type_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dining_house_padding"
         android:textColor="@color/mit_grey"
         android:textSize="@dimen/dining_house_content_text_size"
         />
@@ -26,10 +27,23 @@
             />
 
         <ImageView
-            android:id="@+id/menu_image_view"
-            android:layout_width="@dimen/dining_menu_image_size"
-            android:layout_height="@dimen/dining_menu_image_size"
-            android:layout_marginLeft="@dimen/dining_menu_image_padding"
+            android:id="@+id/menu_first_image_view"
+            style="@style/MITDiningMenuFlagImageView"
+            />
+
+        <ImageView
+            android:id="@+id/menu_second_image_view"
+            style="@style/MITDiningMenuFlagImageView"
+            />
+
+        <ImageView
+            android:id="@+id/menu_third_image_view"
+            style="@style/MITDiningMenuFlagImageView"
+            />
+
+        <ImageView
+            android:id="@+id/menu_forth_image_view"
+            style="@style/MITDiningMenuFlagImageView"
             />
     </LinearLayout>
 
@@ -37,7 +51,6 @@
         android:id='@+id/menu_detail_text_view'
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dining_house_padding"
         android:textColor="@color/mit_grey"
         android:textSize="@dimen/dining_house_content_text_size"
         />
