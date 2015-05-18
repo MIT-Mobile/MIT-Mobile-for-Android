@@ -1,12 +1,10 @@
 package edu.mit.mitmobile2.dining.activities;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
@@ -33,11 +31,30 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         MITDiningHouseVenue venue = getIntent().getParcelableExtra(Constants.Dining.HOUSE_INFO);
+        String houseStatus = getIntent().getStringExtra(Constants.Dining.HOUSE_STATUS);
 
         setTitle(venue.getShortName());
 
         houseNameTextView.setText(venue.getName());
         locationTextView.setText(venue.getLocation().getLocationDescription());
+
+        String paymentStr = "";
+        for (int i = 0; i < venue.getPayment().size(); i++) {
+            if (i < venue.getPayment().size() - 1) {
+                paymentStr = paymentStr + venue.getPayment().get(i) + ", ";
+            } else {
+                paymentStr = paymentStr + venue.getPayment().get(i);
+            }
+        }
+        paymentTextView.setText(paymentStr);
+
+        if (houseStatus.contains("until")) {
+            houseStatusTextView.setTextColor(getResources().getColor(R.color.status_green));
+        } else if (houseStatus.contains("at") || houseStatus.contains("Closed")) {
+            houseStatusTextView.setTextColor(getResources().getColor(R.color.status_red));
+        }
+        houseStatusTextView.setText(houseStatus);
+
 
         try {
             Picasso.with(this).load(venue.getIconURL()).placeholder(R.drawable.grey_rect).into(houseImageView);
