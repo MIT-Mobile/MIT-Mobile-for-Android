@@ -10,6 +10,7 @@
         android:id="@+id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:visibility="visible"
         app:accentColor="@color/mit_red"
         app:primaryColor="@color/white"
         app:textColor="@color/mit_red" />

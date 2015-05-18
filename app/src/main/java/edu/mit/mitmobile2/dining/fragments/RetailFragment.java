@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
@@ -24,7 +26,6 @@ import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.adapters.RetailAdapter;
-import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import edu.mit.mitmobile2.maps.MapManager;
@@ -35,7 +36,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class RetailFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener {
+public class RetailFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String KEY_STATE_DINING = "state_dining";
 
@@ -76,8 +77,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
                 mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
-
-                onDining(mitDiningDining);
+                fetchMapPlaces();
             }
         }
 
@@ -128,11 +128,10 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
 
     /* Updateable */
 
-    @Override
-    public void onDining(MITDiningDining mitDiningDining) {
-        this.mitDiningDining = mitDiningDining;
+    @Subscribe
+    public void newDiningInfoAvailable(OttoBusEvent.NewDiningInfoEvent event) {
+        this.mitDiningDining = event.getMitDiningDining();
         fetchMapPlaces();
-
     }
 
     /* AdapterView.OnItemClickListener */
@@ -162,5 +161,17 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MitMobileApplication.bus.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        MitMobileApplication.bus.register(this);
+        super.onPause();
     }
 }

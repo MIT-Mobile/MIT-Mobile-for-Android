@@ -110,9 +110,12 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
                 mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
             }
+
+            MitMobileApplication.bus.post(new OttoBusEvent.NewDiningInfoEvent(mitDiningDining));
         } else {
             tabHost.setSelectedNavigationItem(0);
             fetchDiningOptions();
+            tabHost.invalidate();
         }
 
         setupMap(view, savedInstanceState);
@@ -122,7 +125,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
 
     private void setupMap(View view, Bundle savedInstanceState) {
         MapView googleMapView = (MapView) view.findViewById(R.id.dining_map);
-        googleMapView.onCreate(savedInstanceState);
+        googleMapView.onCreate(null);
 
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
         mitMapView.setMapViewExpanded(true);
@@ -332,11 +335,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     }
 
     private void notifyDiningUpdated(MITDiningDining mitDiningDining) {
-        for (Fragment fragment : pagerAdapter.getFragments()) {
-            if (fragment instanceof Updateable) {
-                ((Updateable) fragment).onDining(mitDiningDining);
-            }
-        }
+        MitMobileApplication.bus.post(new OttoBusEvent.NewDiningInfoEvent(mitDiningDining));
     }
 
     private void initViewPager() {

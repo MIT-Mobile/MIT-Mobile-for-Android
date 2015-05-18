@@ -28,7 +28,7 @@ import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningLinks;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener, DiningHouseCallback {
+public class HouseDiningFragment extends Fragment implements AdapterView.OnItemClickListener, DiningHouseCallback {
 
     private static final String KEY_STATE_DINING = "state_dining";
 
@@ -66,19 +66,18 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(true);
-            }
-        }, 200);
-
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
                 mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
-
-                onDining(mitDiningDining);
+                updateAdapter(mitDiningDining);
             }
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            }, 200);
         }
 
         return view;
@@ -89,6 +88,19 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
         refreshLayout.setRefreshing(false);
     }
 
+    @Subscribe
+    public void newDiningInfoAvailable(OttoBusEvent.NewDiningInfoEvent event) {
+        updateAdapter(event.getMitDiningDining());
+    }
+
+    private void updateAdapter(MITDiningDining mitDiningDining) {
+        this.mitDiningDining = mitDiningDining;
+        if (adapter != null) {
+            adapter.setMitDiningDining(mitDiningDining);
+        }
+        refreshLayout.setRefreshing(false);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mitDiningDining != null) {
@@ -96,17 +108,6 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
         }
 
         super.onSaveInstanceState(outState);
-    }
-
-    /* Updateable */
-
-    @Override
-    public void onDining(MITDiningDining mitDiningDining) {
-        this.mitDiningDining = mitDiningDining;
-        if (adapter != null) {
-            adapter.setMitDiningDining(mitDiningDining);
-        }
-        refreshLayout.setRefreshing(false);
     }
 
     /* AdapterView.OnItemClickListener */

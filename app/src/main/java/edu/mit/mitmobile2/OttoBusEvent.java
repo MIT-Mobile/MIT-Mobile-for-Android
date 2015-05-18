@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2;
 
+import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import retrofit.RetrofitError;
 
@@ -59,6 +60,18 @@ public class OttoBusEvent {
 
     public static class RefreshCompletedEvent {
         public RefreshCompletedEvent() {
+        }
+    }
+
+    public static class NewDiningInfoEvent {
+        MITDiningDining mitDiningDining;
+
+        public NewDiningInfoEvent(MITDiningDining mitDiningDining) {
+            this.mitDiningDining = mitDiningDining;
+        }
+
+        public MITDiningDining getMitDiningDining() {
+            return mitDiningDining;
         }
     }
 }
