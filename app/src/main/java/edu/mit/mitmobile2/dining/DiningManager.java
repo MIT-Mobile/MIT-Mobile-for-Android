@@ -11,6 +11,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
+import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
@@ -54,6 +55,9 @@ public class DiningManager extends RetrofitManager {
 
         @GET(Constants.Dining.DINING_RETAIL_PATH)
         void _getretail(Callback<List<MITDiningRetailVenue>> callback);
+
+        @GET(Constants.Dining.DINING_HOUSE_PATH)
+        void _gethouse(Callback<List<MITDiningHouseVenue>> callback);
     }
 
     public static class DiningManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements DiningManagerCall, Callback<T> {

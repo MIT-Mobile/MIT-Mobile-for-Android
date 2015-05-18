@@ -55,7 +55,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_dining_house);
         ButterKnife.inject(this);
 
-        MITDiningHouseVenue venue = getIntent().getParcelableExtra(Constants.Dining.DINING_HOUSE);
+        MITDiningHouseVenue venue = getIntent().getParcelableExtra(Constants.DINING_HOUSE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);

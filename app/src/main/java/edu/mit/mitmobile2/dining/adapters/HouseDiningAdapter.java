@@ -180,7 +180,7 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 holder.diningHouseRow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callback.dinningHouseVenueCallback(venue);
+                        callback.diningHouseVenueCallback(venue);
                     }
                 });
 

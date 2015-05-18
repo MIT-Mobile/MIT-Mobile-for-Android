@@ -3,7 +3,7 @@ package edu.mit.mitmobile2.dining.adapters;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import edu.mit.mitmobile2.dining.fragments.RetailFragment;
 /**
  * Created by serg on 5/8/15.
  */
-public class DiningPagerAdapter extends FragmentPagerAdapter {
+public class DiningPagerAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<Fragment> fragments;
 

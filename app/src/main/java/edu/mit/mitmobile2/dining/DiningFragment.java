@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -23,6 +22,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -63,7 +63,6 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     private static final int SCREEN_MODE_MAP = 1;
 
     private MaterialTabHost tabHost;
-    private TabWidget tabWidget;
     private ViewPager viewPager;
     private MenuItem screenModeToggleMenuItem;
     private MITMapView mitMapView;
@@ -90,8 +89,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         View view = inflater.inflate(R.layout.content_dining, null);
         setHasOptionsMenu(true);
 
-        tabHost = (MaterialTabHost) view.findViewById(android.R.id.tabhost);
-        tabWidget = (TabWidget) view.findViewById(android.R.id.tabs);
+        tabHost = (MaterialTabHost) view.findViewById(R.id.tabhost);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
         pagerAdapter = new DiningPagerAdapter(getActivity().getFragmentManager());
@@ -273,8 +271,14 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
             @Override
             public void failure(RetrofitError error) {
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+                MitMobileApplication.bus.post(new OttoBusEvent.RefreshCompletedEvent());
             }
         });
+    }
+
+    @Subscribe
+    public void updateDiningInfo(OttoBusEvent.UpdateDiningInfoEvent event) {
+        fetchDiningOptions();
     }
 
     /* Private methods */
