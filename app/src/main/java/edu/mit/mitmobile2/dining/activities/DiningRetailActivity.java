@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.dining.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -132,21 +133,25 @@ public class DiningRetailActivity extends AppCompatActivity {
     @OnClick(R.id.favorites_button)
     void toggleFavorites() {
         venue.setFavorite(!venue.isFavorite());
-        if (!venue.isFavorite()) {
-            if (PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).contains(Constants.FAVORITE_VENUES_KEY)) {
-                Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
-                stringSet.remove(venue.getIdentifier());
-                PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+        SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this);
+        String id = venue.getIdentifier();
+        Set<String> stringSet = new HashSet<>();
+        if (isVenueFavorite()) {
+            if (sharedPrefs.contains(Constants.FAVORITE_VENUES_KEY)) {
+                stringSet.addAll(sharedPrefs.getStringSet(Constants.FAVORITE_VENUES_KEY, null));
+                stringSet.remove(id);
+                sharedPrefs.edit().remove(Constants.FAVORITE_VENUES_KEY).commit();
+                sharedPrefs.edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
             }
         } else {
-            if (PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).contains(Constants.FAVORITE_VENUES_KEY)) {
-                Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
-                stringSet.add(venue.getIdentifier());
-                PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+            if (sharedPrefs.contains(Constants.FAVORITE_VENUES_KEY)) {
+                stringSet.addAll(sharedPrefs.getStringSet(Constants.FAVORITE_VENUES_KEY, null));
+                stringSet.add(id);
+                sharedPrefs.edit().remove(Constants.FAVORITE_VENUES_KEY).commit();
+                sharedPrefs.edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
             } else {
-                Set<String> stringSet = new HashSet<>();
-                stringSet.add(venue.getIdentifier());
-                PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+                stringSet.add(id);
+                sharedPrefs.edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
             }
         }
 
@@ -184,7 +189,7 @@ public class DiningRetailActivity extends AppCompatActivity {
         String message = venue.getHours().get(0).getMessage();
         Date startDate = venue.getHours().get(0).getDate();
 
-        checkCurrentStatus(venue.getHours().get(0).getDateString(), startTime, endTime, startDate);
+        checkCurrentStatus(venue, endTime, startDate);
 
         for (int i = 1; i < venue.getHours().size(); i++) {
             MITDiningRetailDay d = venue.getHours().get(i);
@@ -213,11 +218,11 @@ public class DiningRetailActivity extends AppCompatActivity {
             endTime = d.getEndTimeString();
             message = d.getMessage();
 
-            checkCurrentStatus(d.getDateString(), startTime, endTime, d.getDate());
+            checkCurrentStatus(venue, endTime, d.getDate());
         }
     }
 
-    private void checkCurrentStatus(String dateString, String startTime, String endTime, Date startDate) {
+    private void checkCurrentStatus(MITDiningRetailVenue venue, String endTime, Date startDate) {
         Date time = Calendar.getInstance(Locale.US).getTime();
 
         Calendar c1 = Calendar.getInstance();
@@ -227,10 +232,7 @@ public class DiningRetailActivity extends AppCompatActivity {
         c2.setTime(time);
 
         if (c1.get(Calendar.DAY_OF_WEEK) == c2.get(Calendar.DAY_OF_WEEK)) {
-            Date startDateFromTime = getDateFromTime(dateString + " " + startTime, "yyyy-MM-dd hh:mm:ss");
-            Date endDateFromTime = getDateFromTime(dateString + " " + endTime, "yyyy-MM-dd hh:mm:ss");
-
-            if (time.after(startDateFromTime) && time.before(endDateFromTime)) {
+            if (venue.isOpenNow()) {
                 retailStatus.setText(getString(R.string.open_until) + formatTime(endTime));
                 retailStatus.setTextColor(getResources().getColor(R.color.open_green));
             } else {

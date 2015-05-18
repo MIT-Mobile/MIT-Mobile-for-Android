@@ -16,9 +16,11 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.adapters.RetailAdapter;
@@ -33,9 +35,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-/**
- * Created by serg on 5/8/15.
- */
 public class RetailFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener {
 
     private static final String KEY_STATE_DINING = "state_dining";
@@ -94,6 +93,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
                     int i = mitDiningRetailVenues.indexOf(retailVenue);
                     String markerText = (i + 1) < 10 ? "   " + (i + 1) + "   " : "  " + (i + 1) + "  ";
                     retailVenue.setMarkerText(markerText);
+                    retailVenue.setFavorite(isVenueFavorite(retailVenue));
                 }
                 mitDiningDining.getVenues().setRetail(mitDiningRetailVenues);
                 adapter.setRetailVenues(mitDiningRetailVenues, mitMapPlaces);
@@ -106,6 +106,15 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
                 refreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private boolean isVenueFavorite(MITDiningRetailVenue venue) {
+        if (!PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).contains(Constants.FAVORITE_VENUES_KEY)) {
+            return false;
+        } else {
+            Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
+            return stringSet.contains(venue.getIdentifier());
+        }
     }
 
     @Override

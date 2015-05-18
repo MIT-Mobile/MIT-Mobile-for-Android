@@ -25,10 +25,12 @@ import com.google.gson.Gson;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
@@ -262,6 +264,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
                     int i = venues.getRetail().indexOf(retailVenue);
                     String markerText = (i + 1) < 10 ? "   " + (i + 1) + "   " : "  " + (i + 1) + "  ";
                     retailVenue.setMarkerText(markerText);
+                    retailVenue.setFavorite(isVenueFavorite(retailVenue));
                 }
 
                 DiningFragment.this.mitDiningDining = mitDiningDining;
@@ -280,6 +283,15 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     @Subscribe
     public void updateDiningInfo(OttoBusEvent.UpdateDiningInfoEvent event) {
         fetchDiningOptions();
+    }
+
+    private boolean isVenueFavorite(MITDiningRetailVenue venue) {
+        if (!PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).contains(Constants.FAVORITE_VENUES_KEY)) {
+            return false;
+        } else {
+            Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
+            return stringSet.contains(venue.getIdentifier());
+        }
     }
 
     /* Private methods */
