@@ -7,12 +7,16 @@
         android:id="@+id/date_range_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/mit_grey"
         />
 
-    <LinearLayout
-        android:id="@+id/hours_range_layout"
+    <ListView
+        android:id="@+id/meals_list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:dividerHeight="0dp"
+        android:divider="@null"
         />
 </LinearLayout>

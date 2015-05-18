@@ -122,20 +122,20 @@ public class DiningHouseActivity extends AppCompatActivity  {
                     dateTextView.setText(formatDate(diningMeals.get(position).getHouseDateString()));
                 }
 
-                CharSequence startTime;
-                CharSequence endTime;
+                String startTime;
+                String endTime;
                 if (diningMeals.get(position).getStartTimeString().endsWith(":00:00")) {
-                    startTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getStartTimeString()));
+                    startTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
                 } else {
-                    startTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString()));
+                    startTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
                 }
                 if (diningMeals.get(position).getEndTimeString().endsWith(":00:00")) {
-                    endTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getEndTimeString()));
+                    endTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
                 } else {
-                    endTime =DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString()));
+                    endTime =DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
                 }
                 infoTextView.setText(diningMeals.get(position).getName() + " "
-                        + startTime + "-"
+                        + startTime + " - "
                         + endTime);
             }
 
