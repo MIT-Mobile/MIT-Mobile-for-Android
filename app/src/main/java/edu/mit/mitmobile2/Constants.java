@@ -108,5 +108,6 @@ public class Constants {
         public static final String HOUSE_MEAL = "houseMeal";
         public static final String HOUSE_INFO = "houseInfo";
         public static final String HOUSE_STATUS = "houseStatus";
+        public static final String FILTERS_KEY = "filtersKey";
     }
 }

@@ -6,9 +6,6 @@ import android.webkit.WebView;
 
 import edu.mit.mitmobile2.R;
 
-/**
- * Created by philipcorriveau on 5/13/15.
- */
 public class AnnouncementsActivity extends AppCompatActivity {
 
     public static final String ANNOUNCEMENTS_EXTRA = "ANNOUNCEMENTS_EXTRA";
