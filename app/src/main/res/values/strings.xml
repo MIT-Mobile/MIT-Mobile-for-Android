@@ -188,7 +188,12 @@
     <string name="dining_venue_status_closed">Closed</string>
     <string name="dining_venue_closed_for_the_day">Closed for the day</string>
     <string name="dining_venue_start_end_template" formatted="false">%s - %s</string>
+
+    <string name="retail_category_favorites">Favorites</string>
+    <string name="retail_category_other">Other</string>
+
     <string name="close_today">Closed for the day</string>
+
     <string name="filters_activity_title">Filters</string>
     <string name="filter_farm">Farm to Fork</string>
     <string name="filter_well">For Your Well-Being</string>
@@ -206,10 +211,9 @@
     <string name="payment">payment</string>
     <string name="hours">hours</string>
     <string name="house_location">location</string>
-    <string name="mon">MON</string>
-    <string name="mon_fri">MON-FRI</string>
-    <string name="tu_fri">TUE-FRI</string>
-    <string name="sat_sun">SAT-SUN</string>
+    <string name="house_today">Today, %1$s</string>
+    <string name="house_tomorrow">Tomorrow, %1$s</string>
+    <string name="house_yesterday">Yesterday, %1$s</string>
     <string name="announcements_activity_title">Announcements</string>
 
 </resources>
