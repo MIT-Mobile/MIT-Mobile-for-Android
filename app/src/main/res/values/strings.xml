@@ -211,10 +211,9 @@
     <string name="payment">payment</string>
     <string name="hours">hours</string>
     <string name="house_location">location</string>
-    <string name="mon">MON</string>
-    <string name="mon_fri">MON-FRI</string>
-    <string name="tu_fri">TUE-FRI</string>
-    <string name="sat_sun">SAT-SUN</string>
+    <string name="house_today">Today, %1$s</string>
+    <string name="house_tomorrow">Tomorrow, %1$s</string>
+    <string name="house_yesterday">Yesterday, %1$s</string>
     <string name="announcements_activity_title">Announcements</string>
 
 </resources>

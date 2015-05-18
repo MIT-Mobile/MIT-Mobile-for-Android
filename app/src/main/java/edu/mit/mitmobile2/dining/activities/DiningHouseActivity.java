@@ -49,6 +49,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
     public void gotoHouseInfo() {
         Intent intent = new Intent(this, DiningHouseInfoActivity.class);
         intent.putExtra(Constants.Dining.HOUSE_INFO, venue);
+        intent.putExtra(Constants.Dining.HOUSE_STATUS, houseHoursTextView.getText().toString());
         startActivity(intent);
     }
 
@@ -70,6 +71,8 @@ public class DiningHouseActivity extends AppCompatActivity  {
     private List<MITDiningMeal> diningMeals;
     private MITDiningHouseVenue venue;
 
+    private SimpleDateFormat dateFormat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
         ButterKnife.inject(this);
 
         venue = getIntent().getParcelableExtra(Constants.Dining.DINING_HOUSE);
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         setTitle(venue.getShortName());
 
@@ -109,14 +113,30 @@ public class DiningHouseActivity extends AppCompatActivity  {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (diningMeals.get(position).getHouseDateString().equals(getCurrentDate())) {
-                    dateTextView.setText("Today, " + formatSimpletDate(diningMeals.get(position).getHouseDateString()));
+                    dateTextView.setText(getResources().getString(R.string.house_today, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                } else if (diningMeals.get(position).getHouseDateString().equals(getYesterdayDate())) {
+                    dateTextView.setText(getResources().getString(R.string.house_yesterday, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                } else if (diningMeals.get(position).getHouseDateString().equals(getTomorrowDate())) {
+                    dateTextView.setText(getResources().getString(R.string.house_tomorrow, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
                 } else {
                     dateTextView.setText(formatDate(diningMeals.get(position).getHouseDateString()));
                 }
 
+                CharSequence startTime;
+                CharSequence endTime;
+                if (diningMeals.get(position).getStartTimeString().endsWith(":00:00")) {
+                    startTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getStartTimeString()));
+                } else {
+                    startTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString()));
+                }
+                if (diningMeals.get(position).getEndTimeString().endsWith(":00:00")) {
+                    endTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getEndTimeString()));
+                } else {
+                    endTime =DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString()));
+                }
                 infoTextView.setText(diningMeals.get(position).getName() + " "
-                        + DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString())) + "-"
-                        + DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString())));
+                        + startTime + "-"
+                        + endTime);
             }
 
             @Override
@@ -135,7 +155,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
         int index = 0;
         String currentDate = getCurrentDate();
 
-        for (int i = 0; i < meals.size() - 1; i++) {
+        for (int i = 0; i < meals.size(); i++) {
             if (currentDate.equals(meals.get(i).getHouseDateString())) {
                 String startTime = meals.get(i).getStartTimeString().replace(":", "");
                 String endTime = meals.get(i).getEndTimeString().replace(":", "");
@@ -149,13 +169,19 @@ public class DiningHouseActivity extends AppCompatActivity  {
                     houseHoursTextView.setText("Opens at " + DateFormat.format("h:mm a", formatMealTime(meals.get(index).getStartTimeString())));
                     houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
                     break;
-                } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))
-                        && (!currentDate.equals(meals.get(i + 1).getHouseDateString()))) {
-                    index = i;
-                    houseHoursTextView.setText(getResources().getString(R.string.close_today));
-                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-                    break;
-                } else {
+                } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))) {
+                    if (i == meals.size() - 1) {
+                        index = i;
+                        houseHoursTextView.setText(getResources().getString(R.string.close_today));
+                        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                        break;
+                    } else if (!currentDate.equals(meals.get(i + 1).getHouseDateString())) {
+                        index = i;
+                        houseHoursTextView.setText(getResources().getString(R.string.close_today));
+                        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                        break;
+                    }
+                }else {
                     continue;
                 }
             }
@@ -165,10 +191,24 @@ public class DiningHouseActivity extends AppCompatActivity  {
     }
 
     private String getCurrentDate() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String date = sdf.format(cal.getTime());
+        Calendar calendar = Calendar.getInstance();
+        String date = dateFormat.format(calendar.getTime());
+        return date;
+    }
 
+    private String getYesterdayDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        Date yesterday = calendar.getTime();
+        String date = dateFormat.format(yesterday);
+        return date;
+    }
+
+    private String getTomorrowDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorrow = calendar.getTime();
+        String date = dateFormat.format(tomorrow);
         return date;
     }
 
@@ -179,7 +219,6 @@ public class DiningHouseActivity extends AppCompatActivity  {
 
         return time;
     }
-
 
     private String formatDate(String dateString) {
         Date date = new Date();

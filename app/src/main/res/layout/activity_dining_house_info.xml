@@ -5,6 +5,7 @@
     android:paddingLeft="@dimen/dining_house_padding"
     android:paddingTop="@dimen/dining_house_padding"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="edu.mit.mitmobile2.dining.activities.DinningHouseInfoActivity">
 
     <LinearLayout
