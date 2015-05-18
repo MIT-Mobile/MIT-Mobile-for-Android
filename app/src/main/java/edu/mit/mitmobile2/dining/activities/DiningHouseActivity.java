@@ -113,11 +113,11 @@ public class DiningHouseActivity extends AppCompatActivity  {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (diningMeals.get(position).getHouseDateString().equals(getCurrentDate())) {
-                    dateTextView.setText("Today, " + formatSimpletDate(diningMeals.get(position).getHouseDateString()));
+                    dateTextView.setText(getResources().getString(R.string.house_today, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
                 } else if (diningMeals.get(position).getHouseDateString().equals(getYesterdayDate())) {
-                    dateTextView.setText("Yesterday, " + formatSimpletDate(diningMeals.get(position).getHouseDateString()));
+                    dateTextView.setText(getResources().getString(R.string.house_yesterday, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
                 } else if (diningMeals.get(position).getHouseDateString().equals(getTomorrowDate())) {
-                    dateTextView.setText("Tomorrow, " + formatSimpletDate(diningMeals.get(position).getHouseDateString()));
+                    dateTextView.setText(getResources().getString(R.string.house_tomorrow, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
                 } else {
                     dateTextView.setText(formatDate(diningMeals.get(position).getHouseDateString()));
                 }
