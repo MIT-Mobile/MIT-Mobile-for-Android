@@ -182,9 +182,6 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         this.retailVenues = retailVenues;
         this.mitMapPlaces = mitMapPlaces;
 
-        // TODO: remove this later
-        this.retailVenues.get(0).setFavorite(true); // tor test purposes
-
         ArrayMap<MITDiningBuilding, ArrayList<MITDiningRetailVenue>> tempArrayMap = new ArrayMap<>();
         MITDiningBuilding buildingOther = null;
 
