@@ -141,8 +141,8 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
 
     private String formatDate(String dateString) {
         Date date = new Date();
-        SimpleDateFormat formatedDate = new SimpleDateFormat("EEE");
-              SimpleDateFormat originalDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formattedDate = new SimpleDateFormat("EEE");
+        SimpleDateFormat originalDate = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             date = originalDate.parse(dateString);
@@ -150,7 +150,7 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
             LoggingManager.Timber.e(e, "___________DateFormatError___________");
         }
 
-        String formattedString = formatedDate.format(date).toUpperCase();
+        String formattedString = formattedDate.format(date).toUpperCase();
 
         return formattedString;
     }
