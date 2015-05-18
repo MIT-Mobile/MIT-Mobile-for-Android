@@ -14,6 +14,9 @@ import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
+
+import java.util.ArrayList;
+
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
@@ -22,6 +25,9 @@ import edu.mit.mitmobile2.dining.adapters.RetailAdapter;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
+import edu.mit.mitmobile2.maps.MapManager;
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -39,6 +45,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     private RetailAdapter adapter;
     private MITDiningDining mitDiningDining;
     private SwipeRefreshLayout refreshLayout;
+    private List<MITMapPlace> mitMapPlaces;
 
     public RetailFragment() {
     }
@@ -89,7 +96,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
                     retailVenue.setMarkerText(markerText);
                 }
                 mitDiningDining.getVenues().setRetail(mitDiningRetailVenues);
-                adapter.setRetailVenues(mitDiningRetailVenues);
+                adapter.setRetailVenues(mitDiningRetailVenues, mitMapPlaces);
                 refreshLayout.setRefreshing(false);
             }
 
@@ -115,9 +122,8 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     @Override
     public void onDining(MITDiningDining mitDiningDining) {
         this.mitDiningDining = mitDiningDining;
-        if (adapter != null) {
-            adapter.setRetailVenues(mitDiningDining.getVenues().getRetail());
-        }
+        fetchMapPlaces();
+
     }
 
     /* AdapterView.OnItemClickListener */
@@ -128,5 +134,24 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
         Intent intent = new Intent(getActivity(), DiningRetailActivity.class);
         intent.putExtra(Constants.DINING_VENUE_KEY, selectedVenue);
         startActivity(intent);
+    }
+
+    /* Network */
+
+    private void fetchMapPlaces() {
+        MapManager.getMapPlaces(getActivity(), new Callback<ArrayList<MITMapPlace>>() {
+            @Override
+            public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
+                if (adapter != null) {
+                    RetailFragment.this.mitMapPlaces = mitMapPlaces;
+                    adapter.setRetailVenues(mitDiningDining.getVenues().getRetail(), mitMapPlaces);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
     }
 }

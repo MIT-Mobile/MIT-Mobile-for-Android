@@ -30,6 +30,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.adapters.DiningPagerAdapter;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
@@ -45,7 +46,6 @@ import edu.mit.mitmobile2.maps.MapItem;
 import it.neokree.materialtabs.MaterialTab;
 import it.neokree.materialtabs.MaterialTabHost;
 import it.neokree.materialtabs.MaterialTabListener;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -90,6 +90,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         setHasOptionsMenu(true);
 
         tabHost = (MaterialTabHost) view.findViewById(R.id.tabhost);
+
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
         pagerAdapter = new DiningPagerAdapter(getActivity().getFragmentManager());
@@ -386,12 +387,15 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
                 }
             }
         } else {
-            MITDiningVenueSnippet venue = gson.fromJson(snippet, MITDiningVenueSnippet.class);
-
-            //TODO: Hook into the DiningHouseActivity
-            /*Intent intent = new Intent(getActivity(), DiningRetailActivity.class);
-            intent.putExtra(Constants.DINING_VENUE_KEY, venue);
-            startActivity(intent);*/
+            MITDiningVenueSnippet v = gson.fromJson(snippet, MITDiningVenueSnippet.class);
+            for (MITDiningHouseVenue venue : mitDiningDining.getVenues().getHouse()) {
+                if (venue.getIdentifier().equals(v.getId())) {
+                    Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
+                    intent.putExtra(Constants.DINING_HOUSE, venue);
+                    startActivity(intent);
+                    return;
+                }
+            }
         }
     }
 

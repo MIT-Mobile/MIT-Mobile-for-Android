@@ -203,4 +203,12 @@
         <item name="android:background">@color/divider_grey</item>
     </style>
 
+    <style name="MITDiningMenuFlagImageView">
+        <item name="android:layout_width">@dimen/dining_meal_flag_size</item>
+        <item name="android:layout_height">@dimen/dining_meal_flag_size</item>
+        <item name="android:layout_marginLeft">@dimen/dining_menu_image_padding</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

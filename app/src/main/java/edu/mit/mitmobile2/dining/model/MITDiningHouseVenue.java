@@ -48,8 +48,8 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
     @SerializedName("meals_by_day")
     protected List<MITDiningHouseDay> mealsByDay;
 
-    @Expose
-    protected Object payment; /* The ObjC Folks dont know what this is it seems */
+    @SerializedName("payment")
+    protected List<String> payment;
 
     public String getIconURL() {
         return iconURL;
@@ -63,7 +63,7 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
         return name;
     }
 
-    public Object getPayment() {
+    public List<String> getPayment() {
         return payment;
     }
 
@@ -132,6 +132,12 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
         } else {
             mealsByDay = null;
         }
+        if (in.readByte() == 0x01) {
+            payment = new ArrayList<>();
+            in.readList(payment, String.class.getClassLoader());
+        } else {
+            payment = null;
+        }
     }
 
     @Override
@@ -152,6 +158,12 @@ public class MITDiningHouseVenue extends MapItem implements Parcelable {
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(mealsByDay);
+        }
+        if (payment == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(payment);
         }
     }
 

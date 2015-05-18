@@ -19,16 +19,16 @@ public class MITDiningLocation implements Parcelable {
     @SerializedName("street")
     protected String street;
 
-    @Expose
+    @SerializedName("city")
     protected String city;
 
-    @Expose
+    @SerializedName("mit_room_number")
     protected String mitRoomNumber;
 
-	@Expose
+	@SerializedName("state")
     protected String state;
 
-	@Expose
+	@SerializedName("zip_code")
     protected String zipCode;
 
 	@Expose

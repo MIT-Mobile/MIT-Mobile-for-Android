@@ -24,7 +24,7 @@ public class MITDiningMenuItem implements Parcelable {
     @Expose
     protected List<String> dietaryFlags;
 
-    public Object getDietaryFlags() {
+    public List<String> getDietaryFlags() {
         return dietaryFlags;
     }
 

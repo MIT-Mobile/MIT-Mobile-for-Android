@@ -26,6 +26,7 @@ public class Constants {
     public static final String EMERGENCY = "emergency";
     public static final String EVENTS = "events";
     public static final String DINING = "dining";
+    public static final String MAP = "map";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -107,5 +108,16 @@ public class Constants {
         public static final String DINING_PATH = "/";
         public static final String DINING_RETAIL_PATH = "/venues/retail";
         public static final String DINING_HOUSE_PATH = "/venues/house";
+
+        public static final String DINING_HOUSE = "diningHouse";
+        public static final String HOUSE_MEAL = "houseMeal";
+        public static final String HOUSE_INFO = "houseInfo";
+        public static final String HOUSE_STATUS = "houseStatus";
+        public static final String FILTERS_KEY = "filtersKey";
+    }
+
+    public class Map {
+        public static final String MAP_PATH = "/";
+        public static final String MAP_PLACES = "/places";
     }
 }
