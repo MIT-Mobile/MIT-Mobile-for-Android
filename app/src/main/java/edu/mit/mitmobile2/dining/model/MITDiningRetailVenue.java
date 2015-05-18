@@ -1,20 +1,22 @@
 package edu.mit.mitmobile2.dining.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DateUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
@@ -114,6 +116,64 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
                 ", hours=" + hours +
                 ", location=" + location +
                 '}';
+    }
+
+    public boolean isOpenNow() {
+        long currentTime = new Date().getTime();
+        boolean isOpenNow = false;
+
+        for (MITDiningRetailDay retailDay : hours) {
+            if (!TextUtils.isEmpty(retailDay.getStartTimeString())) {
+                long retailDayStartTime = retailDay.getStartTime().getTime();
+                long retailDayEndTime = retailDay.getEndTime().getTime();
+
+                if (retailDayStartTime <= currentTime && currentTime <= retailDayEndTime) {
+                    isOpenNow = true;
+                    break;
+                }
+            }
+        }
+
+        return isOpenNow;
+    }
+
+    public String hoursToday(Context context) {
+        String hoursSummary = null;
+
+        Date nowDate = new Date();
+        long nowInterval = nowDate.getTime();
+
+        MITDiningRetailDay yesterdayRetailDay = retailDayForDate(nowDate);
+        long yesterdayEndTime = 0;
+        try {
+            yesterdayEndTime = yesterdayRetailDay.getEndTime().getTime();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        if (nowInterval < yesterdayEndTime) {
+            hoursSummary = yesterdayRetailDay.hoursSummary(context);
+        } else {
+            MITDiningRetailDay todayRetailDay = retailDayForDate(nowDate);
+            hoursSummary = todayRetailDay.hoursSummary(context);
+        }
+
+        return hoursSummary;
+    }
+
+    private MITDiningRetailDay retailDayForDate(Date date) {
+        MITDiningRetailDay returnDay = null;
+        if (date != null) {
+            Date startOfDate = DateUtils.startOfDay(date);
+            for (MITDiningRetailDay retailDay : hours) {
+                if (DateUtils.areEqualToDateIgnoringTime(retailDay.getDate(), startOfDate)) {
+                    returnDay = retailDay;
+                    break;
+                }
+            }
+        }
+
+        return returnDay;
     }
 
     protected MITDiningRetailVenue(Parcel in) {

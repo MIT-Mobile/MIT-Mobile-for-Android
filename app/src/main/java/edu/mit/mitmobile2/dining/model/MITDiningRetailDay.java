@@ -1,7 +1,9 @@
 package edu.mit.mitmobile2.dining.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import edu.mit.mitmobile2.DateUtils;
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class MITDiningRetailDay implements Parcelable {
@@ -49,6 +53,41 @@ public class MITDiningRetailDay implements Parcelable {
             retailDate = buildDateFromString(dateString);
         }
         return retailDate;
+    }
+
+    public Date getStartTime() {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(dateString + " " + startTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Date getEndTime() {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(dateString + " " + endTimeString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String hoursSummary(Context context) {
+        String hoursSummary = null;
+
+        if (!TextUtils.isEmpty(message)) {
+            hoursSummary = message;
+        } else if (!TextUtils.isEmpty(startTimeString) && !TextUtils.isEmpty(endTimeString)) {
+            String startString = DateUtils.MITShortTimeOfDayString(getStartTime());
+            String endString = DateUtils.MITShortTimeOfDayString(getEndTime());
+
+            hoursSummary = context.getString(R.string.dining_venue_start_end_template, startString, endString).toLowerCase();
+        } else {
+            hoursSummary = context.getString(R.string.dining_venue_closed_for_the_day);
+        }
+
+        return hoursSummary;
     }
 
     @Override
