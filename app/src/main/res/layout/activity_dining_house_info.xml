@@ -83,7 +83,12 @@
             android:text="@string/hours"
             />
 
-        <include layout="@layout/dining_house_info_hours" />
+        <LinearLayout
+            android:id="@+id/house_hours_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
     </LinearLayout>
 
     <View
