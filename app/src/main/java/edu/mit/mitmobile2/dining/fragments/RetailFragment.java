@@ -8,11 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import java.util.ArrayList;
+
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.RetailAdapter;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
+import edu.mit.mitmobile2.maps.MapManager;
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -67,9 +76,8 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     @Override
     public void onDining(MITDiningDining mitDiningDining) {
         this.mitDiningDining = mitDiningDining;
-        if (adapter != null) {
-            adapter.setRetailVenues(mitDiningDining.getVenues().getRetail());
-        }
+        fetchMapPlaces();
+
     }
 
     /* AdapterView.OnItemClickListener */
@@ -78,5 +86,23 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         MITDiningRetailVenue selectedVenue = adapter.getItem(position);
         // TODO: add logic here
+    }
+
+    /* Network */
+
+    private void fetchMapPlaces() {
+        MapManager.getMapPlaces(getActivity(), new Callback<ArrayList<MITMapPlace>>() {
+            @Override
+            public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
+                if (adapter != null) {
+                    adapter.setRetailVenues(mitDiningDining.getVenues().getRetail(), mitMapPlaces);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
     }
 }

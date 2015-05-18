@@ -15,33 +15,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningBuilding;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private Context context;
     private List<MITDiningRetailVenue> retailVenues;
+    private List<MITMapPlace> mitMapPlaces;
 
     private ArrayList<MITDiningRetailVenue> favoriteVenues;
     private LinkedHashMap<MITDiningBuilding, ArrayList<MITDiningRetailVenue>> retailArrayMap;
 
     public RetailAdapter(Context context) {
-        this(context, null);
+        this(context, null, null);
     }
 
-    public RetailAdapter(Context context, ArrayList<MITDiningRetailVenue> retailVenues) {
+    public RetailAdapter(Context context, ArrayList<MITDiningRetailVenue> retailVenues, ArrayList<MITMapPlace> mitMapPlaces) {
         this.context = context;
         this.favoriteVenues = new ArrayList<>();
         this.retailArrayMap = new LinkedHashMap<>();
 
-        setRetailVenues(retailVenues);
+        setRetailVenues(retailVenues, mitMapPlaces);
     }
 
     @Override
@@ -172,12 +174,13 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         return false;
     }
 
-    public void setRetailVenues(List<MITDiningRetailVenue> retailVenues) {
+    public void setRetailVenues(List<MITDiningRetailVenue> retailVenues, List<MITMapPlace> mitMapPlaces) {
         if (retailVenues == null) {
             return;
         }
 
         this.retailVenues = retailVenues;
+        this.mitMapPlaces = mitMapPlaces;
 
         // TODO: remove this later
         this.retailVenues.get(0).setFavorite(true); // tor test purposes
@@ -212,7 +215,7 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         Collections.sort(buildingKeysList, new Comparator<MITDiningBuilding>() {
             @Override
             public int compare(MITDiningBuilding lhs, MITDiningBuilding rhs) {
-                return lhs.getName().compareTo(rhs.getName());
+                return lhs.getSortableName().compareTo(rhs.getSortableName());
             }
         });
 
@@ -229,6 +232,7 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         // add sorted grouped venues
         for (MITDiningBuilding building : buildingKeysList) {
             retailArrayMap.put(building, tempArrayMap.get(building));
+            building.setName(getTitleForBuilding(building));
         }
 
         // add other venues
@@ -237,6 +241,19 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
         }
 
         notifyDataSetChanged();
+    }
+
+    private String getTitleForBuilding(MITDiningBuilding building) {
+        if (mitMapPlaces != null) {
+            for (MITMapPlace place : mitMapPlaces) {
+                if (!TextUtils.isEmpty(place.getBldgnum()) && !TextUtils.isEmpty(building.getName())
+                        && place.getBldgnum().equals(building.getName())) {
+                    return String.format("%s - %s", building.getName(), place.getName().toUpperCase());
+                }
+            }
+        }
+
+        return building.getName();
     }
 
     private MITDiningBuilding buildingForVenue(MITDiningRetailVenue venue) {
@@ -253,14 +270,14 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
                 if (matcher.find()) {
                     building.setName(matcher.group(0));
 
-                    String letters = "0";
-                    if (matcher.groupCount() > 1) {
-                        letters = matcher.group(1);
+                    String letters = matcher.group(1);
+                    if (TextUtils.isEmpty(letters)) {
+                        letters = "0";
                     }
 
-                    String numbers = "0";
-                    if (matcher.groupCount() > 2) {
-                        numbers = matcher.group(2);
+                    String numbers = matcher.group(2);
+                    if (TextUtils.isEmpty(numbers)) {
+                        numbers = "0";
                     }
 
                     building.setSortableName(String.format("%s%5s", letters, numbers));

@@ -64,5 +64,11 @@
     "test": "http://mobile-test.mit.edu/apis/calendars/",
     "prod": "http://m.mit.edu/apis/calendars/",
     "manager": "edu.mit.mitmobile2.events.EventManager"
+  },
+  "map": {
+    "dev": "http://mobile-dev.mit.edu/apis/map/",
+    "test": "http://mobile-test.mit.edu/apis/map/",
+    "prod": "http://m.mit.edu/apis/map/",
+    "manager": "edu.mit.mitmobile2.maps.MapManager"
   }
 }

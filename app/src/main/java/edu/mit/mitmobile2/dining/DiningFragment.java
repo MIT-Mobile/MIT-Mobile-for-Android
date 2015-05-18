@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -62,7 +61,6 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     private static final int SCREEN_MODE_MAP = 1;
 
     private MaterialTabHost tabHost;
-    private TabWidget tabWidget;
     private ViewPager viewPager;
     private MenuItem screenModeToggleMenuItem;
     private MITMapView mitMapView;
@@ -90,7 +88,6 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         setHasOptionsMenu(true);
 
         tabHost = (MaterialTabHost) view.findViewById(android.R.id.tabhost);
-        tabWidget = (TabWidget) view.findViewById(android.R.id.tabs);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
         pagerAdapter = new DiningPagerAdapter(getActivity().getFragmentManager());
