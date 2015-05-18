@@ -51,4 +51,14 @@ public class OttoBusEvent {
             return position;
         }
     }
+
+    public static class UpdateDiningInfoEvent {
+        public UpdateDiningInfoEvent() {
+        }
+    }
+
+    public static class RefreshCompletedEvent {
+        public RefreshCompletedEvent() {
+        }
+    }
 }

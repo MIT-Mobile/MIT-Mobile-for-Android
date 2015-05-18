@@ -28,6 +28,14 @@ public class MITDiningVenues implements Parcelable {
         return retail;
     }
 
+    public void setHouse(List<MITDiningHouseVenue> house) {
+        this.house = house;
+    }
+
+    public void setRetail(List<MITDiningRetailVenue> retail) {
+        this.retail = retail;
+    }
+
     @Override
     public String toString() {
         return "MITDiningVenues{" +

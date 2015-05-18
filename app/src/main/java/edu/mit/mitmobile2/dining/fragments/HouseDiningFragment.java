@@ -4,13 +4,19 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.squareup.otto.Subscribe;
+
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.activities.AnnouncementsActivity;
 import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
@@ -22,9 +28,6 @@ import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningLinks;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-/**
- * Created by serg on 5/8/15.
- */
 public class HouseDiningFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener, DiningHouseCallback {
 
     private static final String KEY_STATE_DINING = "state_dining";
@@ -33,7 +36,11 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
 
     private HouseDiningAdapter adapter;
     private MITDiningDining mitDiningDining;
-    private DiningHouseCallback callback;
+    private SwipeRefreshLayout refreshLayout;
+
+
+    public HouseDiningFragment() {
+    }
 
     public static HouseDiningFragment newInstance() {
         HouseDiningFragment fragment = new HouseDiningFragment();
@@ -45,13 +52,26 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dining_house, null);
 
-        callback = (DiningHouseCallback) this;
-
-        adapter = new HouseDiningAdapter(getActivity(), null, callback);
+        adapter = new HouseDiningAdapter(getActivity(), null, this);
 
         listView = (StickyListHeadersListView) view.findViewById(R.id.list_dining_house);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
+
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.dining_refreshlayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                MitMobileApplication.bus.post(new OttoBusEvent.UpdateDiningInfoEvent());
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        }, 200);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
@@ -62,6 +82,11 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
         }
 
         return view;
+    }
+
+    @Subscribe
+    public void refreshCompleted(OttoBusEvent.RefreshCompletedEvent event) {
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -81,6 +106,7 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
         if (adapter != null) {
             adapter.setMitDiningDining(mitDiningDining);
         }
+        refreshLayout.setRefreshing(false);
     }
 
     /* AdapterView.OnItemClickListener */
@@ -112,9 +138,21 @@ public class HouseDiningFragment extends Fragment implements Updateable, Adapter
     }
 
     @Override
-    public void dinningHouseVenueCallback(MITDiningHouseVenue venue) {
+    public void diningHouseVenueCallback(MITDiningHouseVenue venue) {
         Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
-        intent.putExtra(Constants.Dining.DINING_HOUSE, venue);
+        intent.putExtra(Constants.DINING_HOUSE, venue);
         startActivity(intent);
+    }
+
+    @Override
+    public void onPause() {
+        MitMobileApplication.bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MitMobileApplication.bus.register(this);
     }
 }

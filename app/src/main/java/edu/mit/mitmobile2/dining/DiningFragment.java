@@ -22,13 +22,17 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.adapters.DiningPagerAdapter;
 import edu.mit.mitmobile2.dining.interfaces.Updateable;
@@ -87,7 +91,8 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         View view = inflater.inflate(R.layout.content_dining, null);
         setHasOptionsMenu(true);
 
-        tabHost = (MaterialTabHost) view.findViewById(android.R.id.tabhost);
+        tabHost = (MaterialTabHost) view.findViewById(R.id.tabhost);
+
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
         pagerAdapter = new DiningPagerAdapter(getActivity().getFragmentManager());
@@ -218,9 +223,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         viewPager.setCurrentItem(position);
         tabHost.setSelectedNavigationItem(position);
 
-        mitMapView.clearMapItems();
         updateMapItems(position == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
-        mitMapView.setToDefaultBounds(false, 0);
     }
 
     @Override
@@ -261,19 +264,34 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
                     int i = venues.getRetail().indexOf(retailVenue);
                     String markerText = (i + 1) < 10 ? "   " + (i + 1) + "   " : "  " + (i + 1) + "  ";
                     retailVenue.setMarkerText(markerText);
+                    retailVenue.setFavorite(isVenueFavorite(retailVenue));
                 }
 
                 DiningFragment.this.mitDiningDining = mitDiningDining;
                 updateMapItems(tabHost.getCurrentTab().getPosition() == 1 ? (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getRetail() : (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getHouse(), true);
-                mitMapView.setToDefaultBounds(false, 0);
                 notifyDiningUpdated(DiningFragment.this.mitDiningDining);
             }
 
             @Override
             public void failure(RetrofitError error) {
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+                MitMobileApplication.bus.post(new OttoBusEvent.RefreshCompletedEvent());
             }
         });
+    }
+
+    @Subscribe
+    public void updateDiningInfo(OttoBusEvent.UpdateDiningInfoEvent event) {
+        fetchDiningOptions();
+    }
+
+    private boolean isVenueFavorite(MITDiningRetailVenue venue) {
+        if (!PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).contains(Constants.FAVORITE_VENUES_KEY)) {
+            return false;
+        } else {
+            Set<String> stringSet = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).getStringSet(Constants.FAVORITE_VENUES_KEY, null);
+            return stringSet.contains(venue.getIdentifier());
+        }
     }
 
     /* Private methods */
@@ -286,6 +304,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
             break;
             case SCREEN_MODE_LIST: {
                 screenMode = SCREEN_MODE_MAP;
+                updateMapItems(tabHost.getCurrentTab().getPosition() == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
             }
             break;
         }
@@ -331,10 +350,13 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     }
 
     protected void updateMapItems(ArrayList mapItems, boolean fit) {
+        mitMapView.clearMapItems();
+
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mitMapView.clearDynamic();
         }
         mitMapView.addMapItemList(mapItems, true, fit);
+        mitMapView.setToDefaultBounds(false, 0);
     }
 
     @Override
@@ -377,12 +399,15 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
                 }
             }
         } else {
-            MITDiningVenueSnippet venue = gson.fromJson(snippet, MITDiningVenueSnippet.class);
-
-            //TODO: Hook into the DiningHouseActivity
-            /*Intent intent = new Intent(getActivity(), DiningRetailActivity.class);
-            intent.putExtra(Constants.DINING_VENUE_KEY, venue);
-            startActivity(intent);*/
+            MITDiningVenueSnippet v = gson.fromJson(snippet, MITDiningVenueSnippet.class);
+            for (MITDiningHouseVenue venue : mitDiningDining.getVenues().getHouse()) {
+                if (venue.getIdentifier().equals(v.getId())) {
+                    Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
+                    intent.putExtra(Constants.DINING_HOUSE, venue);
+                    startActivity(intent);
+                    return;
+                }
+            }
         }
     }
 

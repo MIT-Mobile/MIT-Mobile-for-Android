@@ -3,5 +3,5 @@ package edu.mit.mitmobile2.dining.callback;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 
 public interface DiningHouseCallback {
-    void dinningHouseVenueCallback (MITDiningHouseVenue venue);
+    void diningHouseVenueCallback(MITDiningHouseVenue venue);
 }
