@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.dining.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class RetailFragment extends Fragment implements Updateable, AdapterView.OnItemClickListener {
 
     private static final String KEY_STATE_DINING = "state_dining";
+    private static final String KEY_STATE_PLACES = "state_places";
 
     private StickyListHeadersListView listView;
 
@@ -77,8 +79,15 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
                 mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
 
-                onDining(mitDiningDining);
+                if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
+                    mitMapPlaces = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
+                    onMapPlaces(mitMapPlaces);
+                } else {
+                    onDining(mitDiningDining);
+                }
             }
+
+
         }
 
         return view;
@@ -122,6 +131,9 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
         if (mitDiningDining != null) {
             outState.putParcelable(KEY_STATE_DINING, mitDiningDining);
         }
+        if (mitMapPlaces != null) {
+            outState.putParcelableArrayList(KEY_STATE_PLACES, (ArrayList<? extends Parcelable>) mitMapPlaces);
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -151,10 +163,7 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
         MapManager.getMapPlaces(getActivity(), new Callback<ArrayList<MITMapPlace>>() {
             @Override
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
-                if (adapter != null) {
-                    RetailFragment.this.mitMapPlaces = mitMapPlaces;
-                    adapter.setRetailVenues(mitDiningDining.getVenues().getRetail(), mitMapPlaces);
-                }
+                onMapPlaces(mitMapPlaces);
             }
 
             @Override
@@ -162,5 +171,12 @@ public class RetailFragment extends Fragment implements Updateable, AdapterView.
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
+    }
+
+    private void onMapPlaces(List<MITMapPlace> mitMapPlaces) {
+        if (adapter != null) {
+            RetailFragment.this.mitMapPlaces = mitMapPlaces;
+            adapter.setRetailVenues(mitDiningDining.getVenues().getRetail(), mitMapPlaces);
+        }
     }
 }
