@@ -218,6 +218,10 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
     }
 
     private boolean isHighlighted(MITCalendar calendar) {
+        if (checkedCalendar == null) {
+            return false;
+        }
+
         for (MITCalendar c : calendar.getCategories()) {
             if (c.getIdentifier().equals(checkedCalendar.getIdentifier())) {
                 return true;

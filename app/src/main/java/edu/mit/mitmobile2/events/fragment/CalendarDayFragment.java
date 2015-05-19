@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,10 +25,12 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.activities.EventsDetailActivity;
 import edu.mit.mitmobile2.events.adapters.CalendarEventAdapter;
 import edu.mit.mitmobile2.events.callback.CalendarDayCallback;
+import edu.mit.mitmobile2.events.model.MITCalendar;
 import edu.mit.mitmobile2.events.model.MITCalendarEvent;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
@@ -35,7 +40,10 @@ import retrofit.client.Response;
 public class CalendarDayFragment extends Fragment implements CalendarDayCallback {
 
     private static final String DATE = "date";
-    private CalendarDayCallback callback;
+    private String calendarFilterId = "";
+
+    private SwipeRefreshLayout refreshLayout;
+    private CalendarEventAdapter adapter;
 
     public CalendarDayFragment() {
     }
@@ -58,15 +66,27 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar_day, null);
 
-        callback = (CalendarDayCallback) this;
-
         ListView listView = (ListView) view.findViewById(R.id.daily_events_list);
+
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.devents_refresh_layout);
+        refreshLayout.setEnabled(false);
 
         String dateString = getArguments().getString(DATE);
 
-        final CalendarEventAdapter adapter = new CalendarEventAdapter(getActivity(), new ArrayList<MITCalendarEvent>(), callback);
+        adapter = new CalendarEventAdapter(getActivity(), new ArrayList<MITCalendarEvent>(), this);
         listView.setAdapter(adapter);
 
+        SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
+        if (filterChanged(sharedPrefs)) {
+            getCalendarEvents(dateString, true);
+        } else {
+            getCalendarEvents(dateString, false);
+        }
+
+        return view;
+    }
+
+    private void getCalendarEvents(String dateString, boolean addCategory) {
         MITAPIClient mitApiClient = new MITAPIClient(getActivity());
 
         HashMap<String, String> pathParams = new HashMap<>();
@@ -76,8 +96,9 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
         queryParams.put("start", dateString);
         queryParams.put("end", dateString);
 
-        final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.devents_refresh_layout);
-        refreshLayout.setEnabled(false);
+        if (addCategory && !calendarFilterId.equals("")) {
+            queryParams.put("category", calendarFilterId);
+        }
 
         // Needs to be posted delayed because of bug in SwipeRefreshLayout
         new Handler().postDelayed(new Runnable() {
@@ -101,8 +122,25 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
                 refreshLayout.setRefreshing(false);
             }
         });
+    }
 
-        return view;
+    public boolean filterChanged(SharedPreferences sharedPrefs) {
+        if (sharedPrefs.contains(Constants.CALENDAR_FILTER_KEY)) {
+            MITCalendar calendar = new Gson().fromJson(sharedPrefs.getString(Constants.CALENDAR_FILTER_KEY, ""), MITCalendar.class);
+
+            if (!calendarFilterId.equals(calendar.getIdentifier())) {
+                if (calendar.getIdentifier().equals("events_calendar")) {
+                    calendarFilterId = "";
+                } else {
+                    calendarFilterId = calendar.getIdentifier();
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -110,5 +148,15 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
         Intent intent = new Intent(this.getActivity(), EventsDetailActivity.class);
         intent.putExtra(Constants.Events.CALENDAR_EVENT, calendarEvent);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
+        if (filterChanged(sharedPrefs)) {
+            getCalendarEvents(getArguments().getString(DATE), true);
+        }
     }
 }
