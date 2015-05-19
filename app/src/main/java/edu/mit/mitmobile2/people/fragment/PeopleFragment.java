@@ -99,6 +99,7 @@ public class PeopleFragment extends Fragment {
 
         this.quickDialAdapter = new MITPeopleDirectoryPersonAdapter(quickDialItems(subjectView.getContext()));
         this.searchListAdapter = new MITPeopleDirectoryPersonAdapter();
+        this.searchListAdapter.setHideIcon(true);
         this.favoritePersonsAdapter = new MITPeopleDirectoryPersonAdapter();
         this.favoritePersonsAdapter.setForceShortMode(true);
 
@@ -115,10 +116,12 @@ public class PeopleFragment extends Fragment {
         }
 
         this.searchRecommendationsAdapter = new MITSearchAdapter<>(getActivity(), recentSearches, new MITSearchAdapter.FragmentCallback<String>() {
-            @Override public void itemClicked(String story) { /* No-Op */ }
+            @Override
+            public void itemClicked(String story) { /* No-Op */ }
 
-            @Override public void itemSearch(String searchText) {
-                performSearch(recentSearchListView, new Pair<>(searchRecommendationsAdapter,this), searchText);
+            @Override
+            public void itemSearch(String searchText) {
+                performSearch(recentSearchListView, new Pair<>(searchRecommendationsAdapter, this), searchText);
             }
         });
 
@@ -179,7 +182,10 @@ public class PeopleFragment extends Fragment {
 
 
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override public boolean onMenuItemActionExpand(MenuItem item) { return true; }
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
@@ -242,7 +248,7 @@ public class PeopleFragment extends Fragment {
     @OnItemClick(R.id.search_list)
     protected void onSearchItemClicked(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), PersonDetailActivity.class);
-        intent.putExtra(PersonDetailActivity.PERSON_KEY, (MITPerson)searchListAdapter.getItem(position));
+        intent.putExtra(PersonDetailActivity.PERSON_KEY, (MITPerson) searchListAdapter.getItem(position));
         this.startActivity(intent);
     }
 
@@ -295,12 +301,14 @@ public class PeopleFragment extends Fragment {
         }
 
         this.requestRunning = PeopleDirectoryManager.searchPeople(getActivity(), searchText, new Callback<List<MITPerson>>() {
-            @Override public void success(List<MITPerson> list, Response response) {
+            @Override
+            public void success(List<MITPerson> list, Response response) {
                 Timber.d("Success!");
                 searchListAdapter.updateItems(list);
             }
 
-            @Override public void failure(RetrofitError error) {
+            @Override
+            public void failure(RetrofitError error) {
                 Timber.e(error, "Failed");
             }
 
@@ -314,13 +322,21 @@ public class PeopleFragment extends Fragment {
      * Current view mode of this fragment.
      */
     public enum Mode {
-        /** This is the parimary or default screen that is shown with our quick dial and favorites */
+        /**
+         * This is the parimary or default screen that is shown with our quick dial and favorites
+         */
         NO_SEARCH(false),
-        /** We are showing a list, but it is "blank" as no search has been performed. */
+        /**
+         * We are showing a list, but it is "blank" as no search has been performed.
+         */
         LIST_BLANK(true),
-        /** We are showing a list, but it is "blank" as no data was found. (NYI?) */
+        /**
+         * We are showing a list, but it is "blank" as no data was found. (NYI?)
+         */
         LIST_NODATA(true),
-        /** We are showing a list, with valid data. */
+        /**
+         * We are showing a list, with valid data.
+         */
         LIST_DATA(true);
 
         private final boolean listViewVisible;
@@ -340,8 +356,9 @@ public class PeopleFragment extends Fragment {
 
 
     /**
-     * A custom instance of the MITPerson class that should not be persisted to a databae, it is only used for the
-     * "Quick Dial" entires on this screen.
+     * A custom instance of the MITPerson class that should not be persisted to a database, it is only used for the
+     * "Quick Dial" entries on this screen.
+     *
      * @author grmartin
      */
     public static class SpecialPerson extends MITPerson {
