@@ -136,7 +136,12 @@ public class DiningFragment extends Fragment implements ViewPager.OnPageChangeLi
         }
 
         if (mitDiningDining != null) {
-            updateMapItems((ArrayList) mitDiningDining.getVenues().getRetail(), true);
+            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_STATE_CURRENT_SCREEN_POSITION)) {
+                int pos = savedInstanceState.getInt(KEY_STATE_CURRENT_SCREEN_POSITION);
+                updateMapItems(pos == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
+            } else {
+                updateMapItems((ArrayList) mitDiningDining.getVenues().getRetail(), true);
+            }
             mitMapView.setToDefaultBounds(false, 0);
         }
 
