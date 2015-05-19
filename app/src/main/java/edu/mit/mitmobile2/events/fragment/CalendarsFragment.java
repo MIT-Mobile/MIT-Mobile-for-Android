@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.events.fragment;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -13,11 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
+import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.EventManager;
 import edu.mit.mitmobile2.events.adapters.CalendarsAdapter;
@@ -28,9 +34,6 @@ import retrofit.client.Response;
 
 import static butterknife.ButterKnife.inject;
 
-/**
- * Created by serg on 4/28/15.
- */
 public class CalendarsFragment extends Fragment {
 
     public interface OnCalendarsFragmentInteractionListener {
@@ -93,6 +96,11 @@ public class CalendarsFragment extends Fragment {
         }
 
         adapter = new CalendarsAdapter(getActivity().getApplicationContext(), mitCalendars);
+
+        SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
+        if (sharedPrefs.contains(Constants.CALENDAR_FILTER_KEY)) {
+            adapter.setSavedFilter(sharedPrefs.getString(Constants.CALENDAR_FILTER_KEY, ""));
+        }
         expandableListViewClickListener = new ExpandableListViewClickListener();
 
         calendarsListView.setAdapter(adapter);
@@ -149,7 +157,7 @@ public class CalendarsFragment extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
-//                LoggingManager.Log.d(TAG, "ERROR => " + error);
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
     }
@@ -165,6 +173,7 @@ public class CalendarsFragment extends Fragment {
             if (adapter.isCheckable(groupPosition, childPosition)) {
                 selectedEventCategory = adapter.getChild(groupPosition, childPosition);
                 adapter.setCheckedCalendar(selectedEventCategory);
+                saveFilterInPrefs();
             }
             return false;
         }
@@ -174,6 +183,7 @@ public class CalendarsFragment extends Fragment {
             if (adapter.isCheckable(groupPosition)) {
                 selectedEventCategory = adapter.getGroup(groupPosition);
                 adapter.setCheckedCalendar(selectedEventCategory);
+                saveFilterInPrefs();
 
                 if (selectedEventCategory.getIdentifier().equals(ID_CALENDAR_ACADEMIC)) {
                     interactionListener.onAcademicCalendarSelected(selectedEventCategory);
@@ -182,6 +192,11 @@ public class CalendarsFragment extends Fragment {
                 }
             }
             return false;
+        }
+
+        private void saveFilterInPrefs() {
+            String json = new Gson().toJson(selectedEventCategory, MITCalendar.class);
+            PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).edit().putString(Constants.CALENDAR_FILTER_KEY, json).commit();
         }
     }
 }

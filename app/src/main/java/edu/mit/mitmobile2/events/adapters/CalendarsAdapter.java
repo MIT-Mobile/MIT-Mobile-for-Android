@@ -8,15 +8,14 @@ import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.events.model.MITCalendar;
 
-/**
- * Created by serg on 4/28/15.
- */
 public class CalendarsAdapter extends BaseExpandableListAdapter {
 
     private static final int ROW_TYPE_HEADER = 0;
@@ -48,11 +47,11 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupType(int groupPosition) {
-         if (groupPosition == headerGroupPositionRegistrar || groupPosition == headerGroupPositionEvents) {
-             return ROW_TYPE_HEADER;
-         } else {
-             return ROW_TYPE_GROUP;
-         }
+        if (groupPosition == headerGroupPositionRegistrar || groupPosition == headerGroupPositionEvents) {
+            return ROW_TYPE_HEADER;
+        } else {
+            return ROW_TYPE_GROUP;
+        }
     }
 
     @Override
@@ -140,6 +139,11 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
                 if (hasChildren) {
                     holder.indicator.setVisibility(View.VISIBLE);
                     holder.indicator.setRotation(isExpanded ? -90 : 90);
+                    if (isHighlighted(calendar) && !isExpanded) {
+                        holder.indicator.setColorFilter(context.getResources().getColor(R.color.mit_red));
+                    } else {
+                        holder.indicator.clearColorFilter();
+                    }
                 } else {
                     holder.indicator.setVisibility(View.GONE);
                 }
@@ -201,7 +205,7 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
     }
 
     private boolean isChecked(MITCalendar calendar) {
-        return checkedCalendar != null && calendar.equals(checkedCalendar);
+        return checkedCalendar != null && calendar.getIdentifier().equals(checkedCalendar.getIdentifier());
     }
 
     public MITCalendar getCheckedCalendar() {
@@ -211,6 +215,15 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
     public void setCheckedCalendar(MITCalendar checkedCalendar) {
         this.checkedCalendar = checkedCalendar;
         notifyDataSetInvalidated();
+    }
+
+    private boolean isHighlighted(MITCalendar calendar) {
+        for (MITCalendar c : calendar.getCategories()) {
+            if (c.getIdentifier().equals(checkedCalendar.getIdentifier())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isCheckable(int groupPosition) {
@@ -231,5 +244,9 @@ public class CalendarsAdapter extends BaseExpandableListAdapter {
 
         // child
         private CheckedTextView child;
+    }
+
+    public void setSavedFilter(String calendar) {
+        this.checkedCalendar = new Gson().fromJson(calendar, MITCalendar.class);
     }
 }

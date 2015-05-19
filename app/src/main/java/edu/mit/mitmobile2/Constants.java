@@ -18,7 +18,7 @@ public class Constants {
     public static final String FAVORITE_VENUES_KEY = "favoriteVenues";
     public static final String ALL_DINING_KEY = "allDining";
     public static final String DINING_HOUSE = "diningHouse";
-
+    public static final String CALENDAR_FILTER_KEY = "calendarFilter";
 
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
