@@ -134,17 +134,20 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
                 } else {
                     calendarFilterId = calendar.getIdentifier();
                 }
+                getActivity().setTitle(calendar.getName());
                 return true;
             } else {
+                getActivity().setTitle(calendar.getName());
                 return false;
             }
         } else {
+            getActivity().setTitle(getActivity().getString(R.string.all_events));
             return false;
         }
     }
 
     @Override
-    public void CaldendarDayDetail(MITCalendarEvent calendarEvent) {
+    public void calendarDayDetail(MITCalendarEvent calendarEvent) {
         Intent intent = new Intent(this.getActivity(), EventsDetailActivity.class);
         intent.putExtra(Constants.Events.CALENDAR_EVENT, calendarEvent);
         startActivity(intent);
