@@ -259,7 +259,7 @@
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".libraries.activities.LibraryDetailActivity"
+            android:name=".libraries.activities.LibraryAccountItemDetailActivity"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
     </application>

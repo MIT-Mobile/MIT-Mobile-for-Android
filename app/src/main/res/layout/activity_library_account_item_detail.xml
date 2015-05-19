@@ -67,11 +67,9 @@
 
             <View
                 style="@style/MITView"
-                android:layout_marginBottom="@dimen/library_detail_margin"
                 android:layout_marginTop="@dimen/library_detail_margin" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 </ScrollView>
