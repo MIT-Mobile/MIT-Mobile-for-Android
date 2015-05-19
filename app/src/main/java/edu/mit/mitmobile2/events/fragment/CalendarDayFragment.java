@@ -77,16 +77,13 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
         listView.setAdapter(adapter);
 
         SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
-        if (filterChanged(sharedPrefs)) {
-            getCalendarEvents(dateString, true);
-        } else {
-            getCalendarEvents(dateString, false);
-        }
+        filterChanged(sharedPrefs);
+        getCalendarEvents(dateString);
 
         return view;
     }
 
-    private void getCalendarEvents(String dateString, boolean addCategory) {
+    private void getCalendarEvents(String dateString) {
         MITAPIClient mitApiClient = new MITAPIClient(getActivity());
 
         HashMap<String, String> pathParams = new HashMap<>();
@@ -96,7 +93,7 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
         queryParams.put("start", dateString);
         queryParams.put("end", dateString);
 
-        if (addCategory && !calendarFilterId.equals("")) {
+        if (!calendarFilterId.equals("")) {
             queryParams.put("category", calendarFilterId);
         }
 
@@ -159,7 +156,7 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
 
         SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
         if (filterChanged(sharedPrefs)) {
-            getCalendarEvents(getArguments().getString(DATE), true);
+            getCalendarEvents(getArguments().getString(DATE));
         }
     }
 }
