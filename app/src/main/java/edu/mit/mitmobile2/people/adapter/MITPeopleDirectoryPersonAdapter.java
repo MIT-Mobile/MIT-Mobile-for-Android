@@ -26,13 +26,14 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
     private List<MITPeopleDirectoryPersonAdaptable> people;
 
     private boolean forceShortMode;
+    private boolean hideIcon;
 
     public MITPeopleDirectoryPersonAdapter() {
-        this.people = (new ArrayList<MITPeopleDirectoryPersonAdaptable>(0));
+        this.people = (new ArrayList<>(0));
     }
 
     public MITPeopleDirectoryPersonAdapter(ArrayList<? extends MITPeopleDirectoryPersonAdaptable> people) {
-        this.people = (new ArrayList<MITPeopleDirectoryPersonAdaptable>(people.size()));
+        this.people = (new ArrayList<>(people.size()));
         this.people.addAll(people);
     }
 
@@ -95,7 +96,7 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
             }
         }
 
-        holder.configureHeight(useShortLayout);
+        holder.configureHeight(useShortLayout, this.hideIcon);
 
         holder.title.setText(title);
 
@@ -105,11 +106,17 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
             holder.subtitle.setText(subtitle);
         }
 
+        holder.icon.setVisibility((hideIcon || useShortLayout) ? View.GONE : View.VISIBLE);
+
         return view;
     }
 
     public void setForceShortMode(boolean forceShortMode) {
         this.forceShortMode = forceShortMode;
+    }
+
+    public void setHideIcon(boolean hideIcon) {
+        this.hideIcon = hideIcon;
     }
 
     public boolean isForceShortMode() {
@@ -151,7 +158,7 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
             return holder;
         }
 
-        public void configureHeight(boolean useShortLayout) {
+        public void configureHeight(boolean useShortLayout, boolean hideIcon) {
             this.rowContainer.setMinimumHeight((int) (useShortLayout ? getDimension(R.dimen.people_row_height_short) : getDimension(R.dimen.people_row_height_tall)));
 
             if (useShortLayout) {
@@ -160,6 +167,10 @@ public class MITPeopleDirectoryPersonAdapter extends BaseAdapter {
             } else {
                 this.icon.setVisibility(View.VISIBLE);
                 this.subtitle.setVisibility(View.VISIBLE);
+            }
+
+            if (hideIcon) {
+                this.icon.setVisibility(View.GONE);
             }
         }
     }

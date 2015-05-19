@@ -118,7 +118,7 @@ public class SearchEventsFragment extends Fragment implements SearchRecentAdapte
         mitCalendarEvents = new ArrayList<>();
         eventsAdapter = new CalendarSearchEventAdapter(getActivity().getApplicationContext(), mitCalendarEvents, new CalendarDayCallback() {
             @Override
-            public void CaldendarDayDetail(MITCalendarEvent calendarEvent) {
+            public void calendarDayDetail(MITCalendarEvent calendarEvent) {
                 Intent intent = new Intent(getActivity(), EventsDetailActivity.class);
                 intent.putExtra(Constants.Events.CALENDAR_EVENT, calendarEvent);
                 startActivity(intent);
