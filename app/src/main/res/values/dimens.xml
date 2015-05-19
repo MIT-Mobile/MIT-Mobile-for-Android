@@ -132,4 +132,7 @@
     <dimen name="dining_schedule_padding_vertical">11dp</dimen>
     <dimen name="dining_meal_flag_size">14dp</dimen>
 
+    <!--library-->
+    <dimen name="library_detail_margin">14dp</dimen>
+
 </resources>
