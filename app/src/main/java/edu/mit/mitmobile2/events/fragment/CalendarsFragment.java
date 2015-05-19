@@ -124,6 +124,7 @@ public class CalendarsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_done: {
                 interactionListener.onDone(selectedEventCategory);
+                saveFilterInPrefs();
             }
         }
 
@@ -166,6 +167,11 @@ public class CalendarsFragment extends Fragment {
         inject(this, view);
     }
 
+    private void saveFilterInPrefs() {
+        String json = new Gson().toJson(selectedEventCategory, MITCalendar.class);
+        PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).edit().putString(Constants.CALENDAR_FILTER_KEY, json).commit();
+    }
+
     private class ExpandableListViewClickListener implements ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
 
         @Override
@@ -173,7 +179,6 @@ public class CalendarsFragment extends Fragment {
             if (adapter.isCheckable(groupPosition, childPosition)) {
                 selectedEventCategory = adapter.getChild(groupPosition, childPosition);
                 adapter.setCheckedCalendar(selectedEventCategory);
-                saveFilterInPrefs();
             }
             return false;
         }
@@ -183,7 +188,6 @@ public class CalendarsFragment extends Fragment {
             if (adapter.isCheckable(groupPosition)) {
                 selectedEventCategory = adapter.getGroup(groupPosition);
                 adapter.setCheckedCalendar(selectedEventCategory);
-                saveFilterInPrefs();
 
                 if (selectedEventCategory.getIdentifier().equals(ID_CALENDAR_ACADEMIC)) {
                     interactionListener.onAcademicCalendarSelected(selectedEventCategory);
@@ -192,11 +196,6 @@ public class CalendarsFragment extends Fragment {
                 }
             }
             return false;
-        }
-
-        private void saveFilterInPrefs() {
-            String json = new Gson().toJson(selectedEventCategory, MITCalendar.class);
-            PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).edit().putString(Constants.CALENDAR_FILTER_KEY, json).commit();
         }
     }
 }
