@@ -10,10 +10,9 @@ import java.util.ArrayList;
 import edu.mit.mitmobile2.dining.fragments.HouseDiningFragment;
 import edu.mit.mitmobile2.dining.fragments.RetailFragment;
 
-/**
- * Created by serg on 5/8/15.
- */
 public class DiningPagerAdapter extends FragmentStatePagerAdapter {
+
+    private final String[] TITLES = {"House Dining", "Retail"};
 
     private ArrayList<Fragment> fragments;
 
@@ -37,6 +36,11 @@ public class DiningPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return fragments.size();
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return TITLES[position];
     }
 
     public ArrayList<Fragment> getFragments() {

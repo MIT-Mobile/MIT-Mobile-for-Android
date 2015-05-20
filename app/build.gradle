@@ -46,5 +46,5 @@ dependencies {
     compile 'org.threeten:threetenbp:1.2'
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
-    compile 'it.neokree:MaterialTabs:0.11'
+    compile 'com.jpardogo.materialtabstrip:library:1.0.9'
 }
