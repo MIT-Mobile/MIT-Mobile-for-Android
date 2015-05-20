@@ -1,5 +1,8 @@
 package edu.mit.mitmobile2.libraries.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -96,4 +99,47 @@ public class MITLibrariesMITLoanItem extends MITLibrariesMITItem {
     public void setHasHold(boolean hasHold) {
         this.hasHold = hasHold;
     }
+
+    protected MITLibrariesMITLoanItem(Parcel in) {
+        long tmpLoanedAt = in.readLong();
+        loanedAt = tmpLoanedAt != -1 ? new Date(tmpLoanedAt) : null;
+        long tmpDueAt = in.readLong();
+        dueAt = tmpDueAt != -1 ? new Date(tmpDueAt) : null;
+        overdue = in.readByte() != 0x00;
+        longOverdue = in.readByte() != 0x00;
+        pendingFine = in.readInt();
+        formattedPendingFine = in.readString();
+        dueText = in.readString();
+        hasHold = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(loanedAt != null ? loanedAt.getTime() : -1L);
+        dest.writeLong(dueAt != null ? dueAt.getTime() : -1L);
+        dest.writeByte((byte) (overdue ? 0x01 : 0x00));
+        dest.writeByte((byte) (longOverdue ? 0x01 : 0x00));
+        dest.writeInt(pendingFine);
+        dest.writeString(formattedPendingFine);
+        dest.writeString(dueText);
+        dest.writeByte((byte) (hasHold ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<MITLibrariesMITLoanItem> CREATOR = new Parcelable.Creator<MITLibrariesMITLoanItem>() {
+        @Override
+        public MITLibrariesMITLoanItem createFromParcel(Parcel in) {
+            return new MITLibrariesMITLoanItem(in);
+        }
+
+        @Override
+        public MITLibrariesMITLoanItem[] newArray(int size) {
+            return new MITLibrariesMITLoanItem[size];
+        }
+    };
 }
