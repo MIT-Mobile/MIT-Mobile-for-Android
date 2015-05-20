@@ -258,6 +258,10 @@
             android:label="@string/announcements_activity_title"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".libraries.activities.LibraryAccountItemDetailActivity"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
