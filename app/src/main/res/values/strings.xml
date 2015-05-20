@@ -244,5 +244,6 @@
     <string name="login">LOGIN</string>
     <string name="login_info">Log in with your MIT Kerberos username or Touchstone Collaboration Account to continue.</string>
     <string name="remember_login">Remember Login</string>
+    <string name="title_activity_account">Your Account</string>
 
 </resources>
