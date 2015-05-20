@@ -70,5 +70,11 @@
     "test": "http://mobile-test.mit.edu/apis/map/",
     "prod": "http://m.mit.edu/apis/map/",
     "manager": "edu.mit.mitmobile2.maps.MapManager"
+  },
+  "library": {
+    "dev": "http://mobile-dev.mit.edu/apis/libraries/",
+    "test": "http://mobile-test.mit.edu/apis/libraries/",
+    "prod": "http://m.mit.edu/apis/libraries/",
+    "manager": "edu.mit.mitmobile2.libraries.LibraryManager"
   }
 }
