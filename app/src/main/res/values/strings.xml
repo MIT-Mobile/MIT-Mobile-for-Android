@@ -216,5 +216,26 @@
     <string name="house_yesterday">Yesterday, %1$s</string>
     <string name="announcements_activity_title">Announcements</string>
     <string name="all_events">All Events</string>
+    <string name="your_account">Your Account</string>
+
+    <string-array name="link_titles">
+        <item>Search</item>
+        <item>Locations &amp; Hours</item>
+        <item>Find a Study Space</item>
+        <item>Ask Us</item>
+        <item>Tell Us</item>
+        <item>News &amp; Events</item>
+        <item>Full MIT Libraries Site</item>
+    </string-array>
+
+    <string-array name="link_urls">
+        <item>http://www.google.com</item>
+        <item>http://www.google.com</item>
+        <item>http://www.google.com</item>
+        <item>http://www.google.com</item>
+        <item>http://libguides.mit.edu</item>
+        <item>http://news-libraries.mit.edu</item>
+        <item>http://libraries.mit.edu</item>
+    </string-array>
 
 </resources>
