@@ -208,6 +208,7 @@
     <string name="filter_vegetarian">Vegetarian</string>
     <string name="dining_no_menu_info">No Items</string>
     <string name="dining_house_actionbar">Filters</string>
+    <string name="dining_filter_actionbar">DONE</string>
     <string name="payment">payment</string>
     <string name="hours">hours</string>
     <string name="house_location">location</string>
@@ -215,6 +216,7 @@
     <string name="house_tomorrow">Tomorrow, %1$s</string>
     <string name="house_yesterday">Yesterday, %1$s</string>
     <string name="announcements_activity_title">Announcements</string>
+    <string name="filter_showing">Showing</string>
     <string name="all_events">All Events</string>
     <string name="your_account">Your Account</string>
 

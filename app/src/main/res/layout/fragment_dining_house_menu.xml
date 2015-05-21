@@ -4,13 +4,58 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     tools:context="edu.mit.mitmobile2.dining.fragments.HouseMenuFragment">
-
-    <ListView
-        android:id="@+id/menu_detail_list_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dining_house_padding"
-        />
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/filter_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dining_house_padding"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_showing"
+                    android:layout_gravity="center"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/filter_image_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/filter_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+
+            <View
+                style="@style/MITView"
+                android:layout_marginTop="3dp"
+                />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/menu_detail_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/dining_house_padding"
+            />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/no_items_text_view"

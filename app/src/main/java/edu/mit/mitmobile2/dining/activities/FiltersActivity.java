@@ -1,9 +1,12 @@
 package edu.mit.mitmobile2.dining.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,27 +15,13 @@ import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.model.SelectedFilters;
 
 public class FiltersActivity extends AppCompatActivity {
-
-    public enum Filters {
-        FARM_TO_FORK,
-        FOR_YOUR_WELL_BEING,
-        HALAL,
-        HUMANE,
-        IN_BALANCE,
-        KOSHER,
-        MADE_WITHOUT_GLUTEN,
-        ORGANIC,
-        SEAFOOD_WATCH,
-        VEGAN,
-        VEGETARIAN
-    }
 
     private LinearLayout filtersLinearLayout;
     private SelectedFilters selectedFilters;
@@ -50,7 +39,7 @@ public class FiltersActivity extends AppCompatActivity {
             updateSelectedFilters();
         } else {
             selectedFilters = new SelectedFilters();
-            selectedFilters.setFiltersSet(new HashSet<Filters>());
+            selectedFilters.setFiltersSet(new HashSet<SelectedFilters.Filters>());
         }
     }
 
@@ -61,8 +50,8 @@ public class FiltersActivity extends AppCompatActivity {
     }
 
     private void updateSelectedFilters() {
-        for (Filters filter : selectedFilters.getFiltersSet()) {
-            int filterIndex = Arrays.asList(Filters.values()).indexOf(filter);
+        for (SelectedFilters.Filters filter : selectedFilters.getFiltersSet()) {
+            int filterIndex = Arrays.asList(SelectedFilters.Filters.values()).indexOf(filter);
             //Spacer views also counted
             int filterViewIndex = filterIndex * 2;
             ImageView checkImage = (ImageView) filtersLinearLayout.getChildAt(filterViewIndex).findViewById(R.id.checkbox);
@@ -77,7 +66,7 @@ public class FiltersActivity extends AppCompatActivity {
         int viewIndex = filtersLinearLayout.indexOfChild(view);
         //Spacer views also counted
         int filterPosition = viewIndex / 2;
-        selectedFilters.toggleFilter(Filters.values()[filterPosition]);
+        selectedFilters.toggleFilter(SelectedFilters.Filters.values()[filterPosition]);
     }
 
     private void saveSelectedFilters() {
@@ -87,27 +76,24 @@ public class FiltersActivity extends AppCompatActivity {
         sharedPreferences.edit().putString(Constants.Dining.FILTERS_KEY, selectedFiltersJson).apply();
     }
 
-    public class SelectedFilters {
-        private Set<Filters> filtersSet;
 
-        public SelectedFilters() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_dining_filter, menu);
+        return true;
+    }
 
-        }
-
-        public Set<Filters> getFiltersSet() {
-            return filtersSet;
-        }
-
-        public void setFiltersSet(Set<Filters> filtersSet) {
-            this.filtersSet = filtersSet;
-        }
-
-        public void toggleFilter(Filters filter) {
-            if (filtersSet.contains(filter)) {
-                filtersSet.remove(filter);
-            } else {
-                filtersSet.add(filter);
-            }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_done) {
+            saveSelectedFilters();
+            Intent intent = new Intent(this, DiningHouseActivity.class);
+            intent.putExtra(Constants.Dining.DINING_HOUSE, getIntent().getParcelableExtra(Constants.Dining.DINING_HOUSE));
+            intent.putExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 }
