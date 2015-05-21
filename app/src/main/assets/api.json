@@ -71,10 +71,16 @@
     "prod": "http://m.mit.edu/apis/map/",
     "manager": "edu.mit.mitmobile2.maps.MapManager"
   },
-  "library": {
+  "libraries": {
     "dev": "http://mobile-dev.mit.edu/apis/libraries/",
     "test": "http://mobile-test.mit.edu/apis/libraries/",
     "prod": "http://m.mit.edu/apis/libraries/",
+    "manager": "edu.mit.mitmobile2.libraries.LibraryManager"
+  },
+  "secure": {
+    "dev": "http://mobile-dev.mit.edu/apis/secure/",
+    "test": "http://mobile-test.mit.edu/apis/secure/",
+    "prod": "http://m.mit.edu/apis/secure/",
     "manager": "edu.mit.mitmobile2.libraries.LibraryManager"
   }
 }

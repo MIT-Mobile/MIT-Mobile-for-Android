@@ -28,6 +28,7 @@ public class Constants {
     public static final String DINING = "dining";
     public static final String MAP = "map";
     public static final String LIBRARIES = "libraries";
+    public static final String SECURE = "secure";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -124,6 +125,17 @@ public class Constants {
 
     public class Libraries {
         public static final String LIBRARIES_PATH = "/";
+        public static final String LIBRARIES_LINKS_PATH = "/links";
+        public static final String LIBRARIES_LOCATIONS_PATH = "/locations";
+        public static final String LIBRARIES_WORLDCATS_PATH = "/worldcat";
+        public static final String LIBRARIES_WORLDCAT_PATH = "/worldcat/{itemId}";
 
+
+    }
+
+    public class Secure {
+        public static final String SECURE_LIBRARIES_ASK_US = "/libraries/forms/askUs";
+        public static final String SECURE_LIBRARIES_ACCOUNT_PATH = "/libraries/account";
+        public static final String SECURE_USER_PATH = "/user";
     }
 }

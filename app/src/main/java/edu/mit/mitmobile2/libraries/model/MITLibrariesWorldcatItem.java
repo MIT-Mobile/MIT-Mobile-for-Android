@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,49 +31,49 @@ public class MITLibrariesWorldcatItem implements Parcelable {
     private List<MITLibrariesCoverImage> coverImages;
 
     @SerializedName("authors")
-    private List<Object> author;                        // TODO: clarify proper type (String?)
+    private List<String> author;
 
     @SerializedName("years")
-    private List<Object> year;                          // TODO: clarify proper type (String?)
+    private List<String> year;
 
     @SerializedName("publishers")
-    private List<Object> publisher;                     // TODO: clarify proper type (String?)
+    private List<String> publisher;
 
     @SerializedName("formats")
-    private List<Object> format;                        // TODO: clarify proper type (String?)
+    private List<String> format;
 
     @SerializedName("isbns")
-    private List<Object> isbns;                         // TODO: clarify proper type (String?)
+    private List<String> isbns;
 
     @SerializedName("subjects")
-    private List<Object> subject;                       // TODO: clarify proper type (String?)
+    private List<String> subject;
 
     @SerializedName("langs")
-    private List<Object> language;                      // TODO: clarify proper type (String?)
+    private List<String> language;
 
     @SerializedName("extents")
-    private List<Object> extent;                        // TODO: clarify proper type (String?)
+    private List<String> extent;
 
     @SerializedName("summaries")
-    private List<Object> summaries;                     // TODO: clarify proper type (String?)
+    private List<String> summaries;
 
     @SerializedName("editions")
-    private List<Object> editions;                      // TODO: clarify proper type (String?)
+    private List<String> editions;
 
     @SerializedName("address")
-    private List<Object> address;                       // TODO: clarify proper type (String?)
+    private List<String> address;
 
     @SerializedName("holdings")
     private List<MITLibrariesHolding> holdings;
 
     @SerializedName("citations")
-    private List<Object> rawCitations;                  // TODO: clarify proper type (HashMap?)
+    private HashMap<String, String> rawCitations;
 
     @SerializedName("composed-html")
     private String composedHTML;
 
     @Expose
-    private List<Object> citations;
+    private List<Object> citationsList;
 
     public MITLibrariesWorldcatItem() {
         // empty constructor
@@ -118,91 +119,91 @@ public class MITLibrariesWorldcatItem implements Parcelable {
         this.coverImages = coverImages;
     }
 
-    public List<Object> getAuthor() {
+    public List<String> getAuthor() {
         return author;
     }
 
-    public void setAuthor(List<Object> author) {
+    public void setAuthor(List<String> author) {
         this.author = author;
     }
 
-    public List<Object> getYear() {
+    public List<String> getYear() {
         return year;
     }
 
-    public void setYear(List<Object> year) {
+    public void setYear(List<String> year) {
         this.year = year;
     }
 
-    public List<Object> getPublisher() {
+    public List<String> getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(List<Object> publisher) {
+    public void setPublisher(List<String> publisher) {
         this.publisher = publisher;
     }
 
-    public List<Object> getFormat() {
+    public List<String> getFormat() {
         return format;
     }
 
-    public void setFormat(List<Object> format) {
+    public void setFormat(List<String> format) {
         this.format = format;
     }
 
-    public List<Object> getIsbns() {
+    public List<String> getIsbns() {
         return isbns;
     }
 
-    public void setIsbns(List<Object> isbns) {
+    public void setIsbns(List<String> isbns) {
         this.isbns = isbns;
     }
 
-    public List<Object> getSubject() {
+    public List<String> getSubject() {
         return subject;
     }
 
-    public void setSubject(List<Object> subject) {
+    public void setSubject(List<String> subject) {
         this.subject = subject;
     }
 
-    public List<Object> getLanguage() {
+    public List<String> getLanguage() {
         return language;
     }
 
-    public void setLanguage(List<Object> language) {
+    public void setLanguage(List<String> language) {
         this.language = language;
     }
 
-    public List<Object> getExtent() {
+    public List<String> getExtent() {
         return extent;
     }
 
-    public void setExtent(List<Object> extent) {
+    public void setExtent(List<String> extent) {
         this.extent = extent;
     }
 
-    public List<Object> getSummaries() {
+    public List<String> getSummaries() {
         return summaries;
     }
 
-    public void setSummaries(List<Object> summaries) {
+    public void setSummaries(List<String> summaries) {
         this.summaries = summaries;
     }
 
-    public List<Object> getEditions() {
+    public List<String> getEditions() {
         return editions;
     }
 
-    public void setEditions(List<Object> editions) {
+    public void setEditions(List<String> editions) {
         this.editions = editions;
     }
 
-    public List<Object> getAddress() {
+    public List<String> getAddress() {
         return address;
     }
 
-    public void setAddress(List<Object> address) {
+    public void setAddress(List<String> address) {
         this.address = address;
     }
 
@@ -214,11 +215,11 @@ public class MITLibrariesWorldcatItem implements Parcelable {
         this.holdings = holdings;
     }
 
-    public List<Object> getRawCitations() {
+    public HashMap<String, String> getRawCitations() {
         return rawCitations;
     }
 
-    public void setRawCitations(List<Object> rawCitations) {
+    public void setRawCitations(HashMap<String, String> rawCitations) {
         this.rawCitations = rawCitations;
     }
 
@@ -231,11 +232,11 @@ public class MITLibrariesWorldcatItem implements Parcelable {
     }
 
     public List<Object> getCitations() {
-        if (citations == null) {
+        if (citationsList == null) {
             // TODO: parse rawCitations here
             throw new UnsupportedOperationException("Method not implemented");
         }
-        return citations;
+        return citationsList;
     }
 
     protected MITLibrariesWorldcatItem(Parcel in) {
@@ -250,68 +251,68 @@ public class MITLibrariesWorldcatItem implements Parcelable {
             coverImages = null;
         }
         if (in.readByte() == 0x01) {
-            author = new ArrayList<Object>();
-            in.readList(author, Object.class.getClassLoader());
+            author = new ArrayList<String>();
+            in.readList(author, String.class.getClassLoader());
         } else {
             author = null;
         }
         if (in.readByte() == 0x01) {
-            year = new ArrayList<Object>();
-            in.readList(year, Object.class.getClassLoader());
+            year = new ArrayList<String>();
+            in.readList(year, String.class.getClassLoader());
         } else {
             year = null;
         }
         if (in.readByte() == 0x01) {
-            publisher = new ArrayList<Object>();
-            in.readList(publisher, Object.class.getClassLoader());
+            publisher = new ArrayList<String>();
+            in.readList(publisher, String.class.getClassLoader());
         } else {
             publisher = null;
         }
         if (in.readByte() == 0x01) {
-            format = new ArrayList<Object>();
-            in.readList(format, Object.class.getClassLoader());
+            format = new ArrayList<String>();
+            in.readList(format, String.class.getClassLoader());
         } else {
             format = null;
         }
         if (in.readByte() == 0x01) {
-            isbns = new ArrayList<Object>();
-            in.readList(isbns, Object.class.getClassLoader());
+            isbns = new ArrayList<String>();
+            in.readList(isbns, String.class.getClassLoader());
         } else {
             isbns = null;
         }
         if (in.readByte() == 0x01) {
-            subject = new ArrayList<Object>();
-            in.readList(subject, Object.class.getClassLoader());
+            subject = new ArrayList<String>();
+            in.readList(subject, String.class.getClassLoader());
         } else {
             subject = null;
         }
         if (in.readByte() == 0x01) {
-            language = new ArrayList<Object>();
-            in.readList(language, Object.class.getClassLoader());
+            language = new ArrayList<String>();
+            in.readList(language, String.class.getClassLoader());
         } else {
             language = null;
         }
         if (in.readByte() == 0x01) {
-            extent = new ArrayList<Object>();
-            in.readList(extent, Object.class.getClassLoader());
+            extent = new ArrayList<String>();
+            in.readList(extent, String.class.getClassLoader());
         } else {
             extent = null;
         }
         if (in.readByte() == 0x01) {
-            summaries = new ArrayList<Object>();
-            in.readList(summaries, Object.class.getClassLoader());
+            summaries = new ArrayList<String>();
+            in.readList(summaries, String.class.getClassLoader());
         } else {
             summaries = null;
         }
         if (in.readByte() == 0x01) {
-            editions = new ArrayList<Object>();
-            in.readList(editions, Object.class.getClassLoader());
+            editions = new ArrayList<String>();
+            in.readList(editions, String.class.getClassLoader());
         } else {
             editions = null;
         }
         if (in.readByte() == 0x01) {
-            address = new ArrayList<Object>();
-            in.readList(address, Object.class.getClassLoader());
+            address = new ArrayList<String>();
+            in.readList(address, String.class.getClassLoader());
         } else {
             address = null;
         }
@@ -321,18 +322,13 @@ public class MITLibrariesWorldcatItem implements Parcelable {
         } else {
             holdings = null;
         }
-        if (in.readByte() == 0x01) {
-            rawCitations = new ArrayList<Object>();
-            in.readList(rawCitations, Object.class.getClassLoader());
-        } else {
-            rawCitations = null;
-        }
+        rawCitations = (HashMap) in.readValue(HashMap.class.getClassLoader());
         composedHTML = in.readString();
         if (in.readByte() == 0x01) {
-            citations = new ArrayList<Object>();
-            in.readList(citations, Object.class.getClassLoader());
+            citationsList = new ArrayList<Object>();
+            in.readList(citationsList, Object.class.getClassLoader());
         } else {
-            citations = null;
+            citationsList = null;
         }
     }
 
@@ -425,18 +421,13 @@ public class MITLibrariesWorldcatItem implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(holdings);
         }
-        if (rawCitations == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(rawCitations);
-        }
+        dest.writeValue(rawCitations);
         dest.writeString(composedHTML);
-        if (citations == null) {
+        if (citationsList == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(citations);
+            dest.writeList(citationsList);
         }
     }
 
