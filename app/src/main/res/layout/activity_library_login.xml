@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="40dp"
+    tools:context="edu.mit.mitmobile2.libraries.activities.LibraryLoginActivity">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_grey" />
+
+    <EditText
+        android:id="@+id/username_edittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/username_or_email"
+        android:padding="10dp"
+        android:textColor="@color/medium_grey" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/shuttle_home_image_padding"
+        android:background="@color/divider_grey" />
+
+    <EditText
+        android:id="@+id/password_edittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/pwd"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/medium_grey" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_grey" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="@string/login"
+        android:textColor="@color/mit_red" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp"
+        android:text="@string/login_info" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/top_line"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_grey" />
+
+        <TextView
+            android:id="@+id/login_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_line"
+            android:padding="15dp"
+            android:text="@string/remember_login" />
+
+        <Switch
+            android:id="@+id/save_login_info_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/mit_red"
+            android:layout_marginRight="15dp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/login_text"
+            android:background="@color/divider_grey" />
+    </RelativeLayout>
+</LinearLayout>

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.libraries.activities.AccountActivity;
+import edu.mit.mitmobile2.libraries.activities.LibraryLoginActivity;
 import edu.mit.mitmobile2.libraries.adapter.LibraryLinksAdapter;
 
 public class LibrariesFragment extends Fragment {
@@ -62,7 +64,8 @@ public class LibrariesFragment extends Fragment {
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Go to account screen
+                Intent intent = new Intent(getActivity(), AccountActivity.class);
+                startActivity(intent);
             }
         });
 

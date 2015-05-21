@@ -3,15 +3,10 @@ package edu.mit.mitmobile2.libraries.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by serg on 5/19/15.
- */
 public class MITLibrariesMITFineItem extends MITLibrariesMITItem implements Parcelable {
 
     @SerializedName("status")
@@ -26,10 +21,9 @@ public class MITLibrariesMITFineItem extends MITLibrariesMITItem implements Parc
     @SerializedName("amount")
     private int amount;
 
-    @SerializedName("status")
+    @SerializedName("fined_at")
     private String finedAtDateString;
 
-    @Expose
     private Date finedAtDate;
 
     public MITLibrariesMITFineItem() {
@@ -85,6 +79,7 @@ public class MITLibrariesMITFineItem extends MITLibrariesMITItem implements Parc
     }
 
     protected MITLibrariesMITFineItem(Parcel in) {
+        super(in);
         status = in.readString();
         fineDescription = in.readString();
         formattedAmount = in.readString();
@@ -101,6 +96,7 @@ public class MITLibrariesMITFineItem extends MITLibrariesMITItem implements Parc
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeString(status);
         dest.writeString(fineDescription);
         dest.writeString(formattedAmount);
