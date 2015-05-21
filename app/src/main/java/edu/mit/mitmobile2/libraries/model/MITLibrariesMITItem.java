@@ -9,9 +9,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by serg on 5/19/15.
- */
 public class MITLibrariesMITItem implements Parcelable {
 
     @SerializedName("call_number")
@@ -44,6 +41,7 @@ public class MITLibrariesMITItem implements Parcelable {
     @SerializedName("barcode")
     private String barcode;
 
+    @SerializedName("cover_images")
     @Expose
     private List<MITLibrariesCoverImage> coverImages;
 
@@ -151,7 +149,7 @@ public class MITLibrariesMITItem implements Parcelable {
         subLibrary = in.readString();
         barcode = in.readString();
         if (in.readByte() == 0x01) {
-            coverImages = new ArrayList<MITLibrariesCoverImage>();
+            coverImages = new ArrayList<>();
             in.readList(coverImages, MITLibrariesCoverImage.class.getClassLoader());
         } else {
             coverImages = null;

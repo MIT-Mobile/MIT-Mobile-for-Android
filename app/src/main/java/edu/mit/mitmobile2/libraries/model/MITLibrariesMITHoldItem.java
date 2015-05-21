@@ -48,6 +48,7 @@ public class MITLibrariesMITHoldItem extends MITLibrariesMITItem implements Parc
     }
 
     protected MITLibrariesMITHoldItem(Parcel in) {
+        super(in);
         status = in.readString();
         pickupLocation = in.readString();
         readyForPickup = in.readByte() != 0x00;
@@ -60,6 +61,7 @@ public class MITLibrariesMITHoldItem extends MITLibrariesMITItem implements Parc
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeString(status);
         dest.writeString(pickupLocation);
         dest.writeByte((byte) (readyForPickup ? 0x01 : 0x00));

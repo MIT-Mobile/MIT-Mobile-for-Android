@@ -83,6 +83,7 @@ public class AccountItemAdapter extends BaseAdapter {
                 holder.status.setText(loanItem.getDueText());
                 holder.status.setTextColor(context.getResources().getColor(R.color.closed_red));
                 holder.status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
+                holder.status.setCompoundDrawablePadding(20);
             } else {
                 holder.status.setVisibility(View.GONE);
                 holder.statusSubtext.setVisibility(View.VISIBLE);
@@ -94,7 +95,9 @@ public class AccountItemAdapter extends BaseAdapter {
                 holder.status.setText(context.getString(R.string.ready_at) + holdItem.getPickupLocation());
                 holder.status.setTextColor(context.getResources().getColor(R.color.open_green));
                 holder.status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow, 0, 0, 0);
+                holder.status.setCompoundDrawablePadding(20);
                 holder.statusSubtext.setText(holdItem.getStatus());
+                holder.statusSubtext.setCompoundDrawablePadding(20);
             } else {
                 holder.status.setVisibility(View.GONE);
                 holder.statusSubtext.setVisibility(View.VISIBLE);
@@ -105,11 +108,30 @@ public class AccountItemAdapter extends BaseAdapter {
             holder.status.setText(fineItem.getFormattedAmount());
             holder.status.setTextColor(context.getResources().getColor(R.color.closed_red));
             holder.status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
+            holder.status.setCompoundDrawablePadding(20);
             holder.statusSubtext.setVisibility(View.GONE);
         }
 
-        Picasso.with(context).load(item.getCoverImages().get(1).getUrl()).fit().centerCrop().into(holder.image);
+        Picasso.with(context).load(item.getCoverImages().get(0).getUrl()).into(holder.image);
 
         return view;
+    }
+
+    public void updateFineItems(List<MITLibrariesMITFineItem> items) {
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void updateLoanItems(List<MITLibrariesMITLoanItem> items) {
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void updateHoldItems(List<MITLibrariesMITHoldItem> items) {
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
     }
 }
