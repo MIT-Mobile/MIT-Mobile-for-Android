@@ -55,15 +55,14 @@ public class AccountPageFragment extends Fragment {
         return view;
     }
 
-    public void buildAndAddHeaderView(String s1, String s2) {
+    public void buildAndAddHeaderView(String s1, String s2, int resColorS1) {
         View view = View.inflate(getActivity(), R.layout.library_item_header, null);
         TextView item1 = (TextView) view.findViewById(R.id.header_item_1);
         TextView item2 = (TextView) view.findViewById(R.id.header_item_2);
 
-        //TODO: Set text color based on content
-
         if (!TextUtils.isEmpty(s1)) {
             item1.setText(s1);
+            item1.setTextColor(getResources().getColor(resColorS1));
         } else {
             item1.setVisibility(View.GONE);
         }

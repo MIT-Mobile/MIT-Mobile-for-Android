@@ -81,6 +81,7 @@
             android:text="@string/remember_login" />
 
         <Switch
+            android:id="@+id/save_login_info_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

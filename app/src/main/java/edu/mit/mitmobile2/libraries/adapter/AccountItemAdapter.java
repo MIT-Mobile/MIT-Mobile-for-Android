@@ -12,7 +12,10 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.libraries.model.MITLibrariesMITFineItem;
+import edu.mit.mitmobile2.libraries.model.MITLibrariesMITHoldItem;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesMITItem;
+import edu.mit.mitmobile2.libraries.model.MITLibrariesMITLoanItem;
 
 public class AccountItemAdapter extends BaseAdapter {
 
@@ -21,6 +24,7 @@ public class AccountItemAdapter extends BaseAdapter {
         TextView description;
         ImageView image;
         TextView status;
+        TextView statusSubtext;
     }
 
     private Context context;
@@ -59,6 +63,7 @@ public class AccountItemAdapter extends BaseAdapter {
             holder.description = (TextView) view.findViewById(R.id.item_description);
             holder.status = (TextView) view.findViewById(R.id.item_status);
             holder.image = (ImageView) view.findViewById(R.id.item_image);
+            holder.statusSubtext = (TextView) view.findViewById(R.id.item_status_subtext);
 
             view.setTag(holder);
         } else {
@@ -68,9 +73,42 @@ public class AccountItemAdapter extends BaseAdapter {
         MITLibrariesMITItem item = (MITLibrariesMITItem) getItem(position);
 
         holder.title.setText(item.getTitle());
-        holder.description.setText(item.getMaterial());
-        holder.status.setText("A");
-        Picasso.with(context).load(item.getCoverImages().get(0).getUrl()).fit().centerCrop().into(holder.image);
+        holder.description.setText(item.getYear() + "; " + item.getAuthor());
+
+        if (item instanceof MITLibrariesMITLoanItem) {
+            MITLibrariesMITLoanItem loanItem = (MITLibrariesMITLoanItem) item;
+            if (loanItem.isLongOverdue() || loanItem.isOverdue()) {
+                holder.status.setVisibility(View.VISIBLE);
+                holder.statusSubtext.setVisibility(View.GONE);
+                holder.status.setText(loanItem.getDueText());
+                holder.status.setTextColor(context.getResources().getColor(R.color.closed_red));
+                holder.status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
+            } else {
+                holder.status.setVisibility(View.GONE);
+                holder.statusSubtext.setVisibility(View.VISIBLE);
+                holder.statusSubtext.setText(loanItem.getDueText());
+            }
+        } else if (item instanceof MITLibrariesMITHoldItem) {
+            MITLibrariesMITHoldItem holdItem = (MITLibrariesMITHoldItem) item;
+            if (holdItem.isReadyForPickup()) {
+                holder.status.setText(context.getString(R.string.ready_at) + holdItem.getPickupLocation());
+                holder.status.setTextColor(context.getResources().getColor(R.color.open_green));
+                holder.status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_arrow, 0, 0, 0);
+                holder.statusSubtext.setText(holdItem.getStatus());
+            } else {
+                holder.status.setVisibility(View.GONE);
+                holder.statusSubtext.setVisibility(View.VISIBLE);
+                holder.statusSubtext.setText(holdItem.getStatus());
+            }
+        } else if (item instanceof MITLibrariesMITFineItem) {
+            MITLibrariesMITFineItem fineItem = (MITLibrariesMITFineItem) item;
+            holder.status.setText(fineItem.getFormattedAmount());
+            holder.status.setTextColor(context.getResources().getColor(R.color.closed_red));
+            holder.status.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_alert, 0, 0, 0);
+            holder.statusSubtext.setVisibility(View.GONE);
+        }
+
+        Picasso.with(context).load(item.getCoverImages().get(1).getUrl()).fit().centerCrop().into(holder.image);
 
         return view;
     }

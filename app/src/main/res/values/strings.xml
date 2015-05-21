@@ -245,5 +245,10 @@
     <string name="login_info">Log in with your MIT Kerberos username or Touchstone Collaboration Account to continue.</string>
     <string name="remember_login">Remember Login</string>
     <string name="title_activity_account">Your Account</string>
+    <string name="loans_overdue" formatted="false">%d items, %d overdue</string>
+    <string name="fines_total" formatted="false">$%d as of %s</string>
+    <string name="library_fine_payment_info">Payable at any MIT library service desk.\nTechCASH accepted only at Hayden Library.</string>
+    <string name="library_holds_pickup" formatted="false">%d items, %d ready for pickup</string>
+    <string name="ready_at">"Ready at "</string>
 
 </resources>
