@@ -96,8 +96,6 @@ public class DiningHouseActivity extends AppCompatActivity  {
         }
     }
 
-
-
     private void buildHouseMenuPager() {
         diningMeals = new ArrayList<>();
         for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
@@ -108,7 +106,13 @@ public class DiningHouseActivity extends AppCompatActivity  {
         }
         houseMenuPagerAdapter = new HouseMenuPagerAdapter(getFragmentManager(), diningMeals);
         houseMenuViewpager.setAdapter(houseMenuPagerAdapter);
-        houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+
+        if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
+            houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+        } else {
+            houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+        }
+
         houseMenuViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -274,6 +278,8 @@ public class DiningHouseActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_filter) {
             Intent intent = new Intent(this, FiltersActivity.class);
+            intent.putExtra(Constants.Dining.DINING_HOUSE, venue);
+            intent.putExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, houseMenuViewpager.getCurrentItem());
             startActivity(intent);
             return true;
         } else {
