@@ -61,6 +61,8 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
 
     private void updateUiElements(MITLibrariesMITItem item) {
 
+        setTitle(item.getTitle());
+
         if (item.getCoverImages() != null && item.getCoverImages().size() > 0) {
             String url = item.getCoverImages().get(0).getUrl();
             Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.grey_rect).into(imageViewImage);
@@ -79,6 +81,8 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
 
         if (item instanceof MITLibrariesMITFineItem) {
             updateUiElements((MITLibrariesMITFineItem)item);
+        } else if (item instanceof MITLibrariesMITLoanItem) {
+            updateUiElements((MITLibrariesMITLoanItem)item);
         }
 
         // fill details UI here
@@ -121,6 +125,12 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
     }
 
     private void updateUiElements(MITLibrariesMITLoanItem item) {
-        // TODO:
+        if (item.isOverdue()) {
+            textViewPrice.setTextColor(getResources().getColor(R.color.statusbar_red));
+            textViewPrice.setText(item.getDueText());
+        } else {
+            textViewPrice.setTextColor(getResources().getColor(R.color.mit_grey));
+            textViewPrice.setCompoundDrawables(null, null, null, null);
+        }
     }
 }
