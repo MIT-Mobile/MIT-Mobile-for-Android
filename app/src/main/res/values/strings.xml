@@ -253,4 +253,8 @@
     <string name="library_holds_pickup" formatted="false">%d items, %d ready for pickup</string>
     <string name="ready_at">"Ready at "</string>
 
+    <string name="library_item_detail_format">"format"</string>
+    <string name="library_item_detail_publisher">"publisher"</string>
+    <string name="library_item_detail_isbn">"ISBN"</string>
+
 </resources>

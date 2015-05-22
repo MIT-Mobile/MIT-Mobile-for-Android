@@ -4,8 +4,14 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
@@ -21,6 +27,7 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
     private TextView textViewTitle;
     private TextView textViewDescription;
     private ImageView imageViewImage;
+    private LinearLayout linearLayoutDetailContent;
 
     private MITLibrariesMITItem librariesMITItem;
 
@@ -33,6 +40,7 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
         textViewTitle = (TextView) findViewById(R.id.library_detail_tv_title);
         textViewDescription = (TextView) findViewById(R.id.library_detail_tv_description);
         imageViewImage = (ImageView) findViewById(R.id.library_detail_iv_image);
+        linearLayoutDetailContent = (LinearLayout) findViewById(R.id.library_detail_ll_detail_content);
 
         librariesMITItem = getIntent().getParcelableExtra(Constants.ACCOUNT_ITEM_KEY);
 
@@ -42,16 +50,7 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
             if (savedInstanceState.containsKey(KEY_STATE_LIBRARY_ITEM)) {
                 librariesMITItem = savedInstanceState.getParcelable(KEY_STATE_LIBRARY_ITEM);
             }
-        } else {
-            // TODO: get librariesMITItem from extras or API call + remove fake
-            /*librariesMITItem = new MITLibrariesMITItem();
-            librariesMITItem.setTitle("Title");
-            librariesMITItem.setMaterial("Format");
-            librariesMITItem.setImprint("Imprint");
-            librariesMITItem.setIsbn("isbn");*/
         }
-
-
     }
 
     @Override
@@ -61,6 +60,11 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
     }
 
     private void updateUiElements(MITLibrariesMITItem item) {
+
+        if (item.getCoverImages() != null && item.getCoverImages().size() > 0) {
+            String url = item.getCoverImages().get(0).getUrl();
+            Picasso.with(getApplicationContext()).load(url).placeholder(R.drawable.grey_rect).into(imageViewImage);
+        }
 
         textViewTitle.setText(item.getTitle());
 
@@ -72,6 +76,44 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
         }
 
         textViewDescription.setText(description);
+
+        if (item instanceof MITLibrariesMITFineItem) {
+            updateUiElements((MITLibrariesMITFineItem)item);
+        }
+
+        // fill details UI here
+        ArrayList<View> detailViews = new ArrayList<>();
+        if (!TextUtils.isEmpty(item.getMaterial())) {
+            detailViews.add(getItemDetailView(getString(R.string.library_item_detail_format), item.getMaterial()));
+        }
+        if (!TextUtils.isEmpty(item.getImprint())) {
+            detailViews.add(getItemDetailView(getString(R.string.library_item_detail_publisher), item.getImprint()));
+        }
+        if (!TextUtils.isEmpty(item.getIsbn())) {
+            detailViews.add(getItemDetailView(getString(R.string.library_item_detail_isbn), item.getIsbn()));
+        }
+
+        linearLayoutDetailContent.removeAllViews();
+        for (View view : detailViews) {
+            linearLayoutDetailContent.addView(getItemDetailDividerView());
+            linearLayoutDetailContent.addView(view);
+        }
+    }
+
+    private View getItemDetailView(String title, String description) {
+        View view = getLayoutInflater().inflate(R.layout.row_library_account_item_detail, null);
+
+        TextView textViewTitle = (TextView) view.findViewById(R.id.library_item_detail_tv_title);
+        TextView textViewDescription = (TextView) view.findViewById(R.id.library_item_detail_tv_description);
+
+        textViewTitle.setText(title);
+        textViewDescription.setText(description);
+
+        return view;
+    }
+
+    private View getItemDetailDividerView() {
+        return getLayoutInflater().inflate(R.layout.view_library_account_item_detail_divider, null);
     }
 
     private void updateUiElements(MITLibrariesMITFineItem item) {
