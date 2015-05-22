@@ -28,6 +28,7 @@ public class Constants {
     public static final String EVENTS = "events";
     public static final String DINING = "dining";
     public static final String MAP = "map";
+    public static final String LIBRARIES = "libraries";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -121,5 +122,10 @@ public class Constants {
     public class Map {
         public static final String MAP_PATH = "/";
         public static final String MAP_PLACES = "/places";
+    }
+
+    public class Libraries {
+        public static final String LIBRARIES_PATH = "/";
+
     }
 }
