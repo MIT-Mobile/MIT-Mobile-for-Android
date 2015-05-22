@@ -262,6 +262,16 @@
             android:name=".libraries.activities.LibraryAccountItemDetailActivity"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".libraries.activities.LibraryLoginActivity"
+            android:label="@string/title_activity_library_login"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".libraries.activities.AccountActivity"
+            android:label="@string/title_activity_account"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

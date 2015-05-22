@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dining_house_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:id="@+id/dining_house_row">
+    android:orientation="horizontal">
 
     <edu.mit.mitmobile2.dining.views.SquareImageView
         android:id="@+id/row_venues_iv_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
         android:layout_margin="@dimen/dining_house_venues_cell_image_padding"
-        android:layout_weight="5"
         android:background="@color/light_grey"
         android:src="@drawable/title_bar_logo_button" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_gravity="bottom">
 
         <TextView
             android:id="@+id/row_venues_tv_title"

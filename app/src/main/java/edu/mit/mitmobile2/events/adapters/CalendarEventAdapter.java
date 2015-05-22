@@ -81,7 +81,7 @@ public class CalendarEventAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (callback != null) {
-                    callback.CaldendarDayDetail(event);
+                    callback.calendarDayDetail(event);
                 }
             }
         });

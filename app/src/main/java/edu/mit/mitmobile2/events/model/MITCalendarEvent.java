@@ -412,7 +412,7 @@ public class MITCalendarEvent implements Parcelable {
     };
 
     private Date buildDateFromString(String stringToParse) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
         try {
             return format.parse(stringToParse);
         } catch (ParseException e) {

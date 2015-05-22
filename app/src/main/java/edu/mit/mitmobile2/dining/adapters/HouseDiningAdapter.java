@@ -140,7 +140,9 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
 
                 MITDiningDining dining = (MITDiningDining) getItem(position);
 
-                holder.announcementMessageTextView.setText(Html.fromHtml(dining.getAnnouncementsHTML()));
+                if (dining != null && dining.getAnnouncementsHTML() != null) {
+                    holder.announcementMessageTextView.setText(Html.fromHtml(dining.getAnnouncementsHTML()));
+                }
             }
             break;
             case ROW_TYPE_VENUE: {

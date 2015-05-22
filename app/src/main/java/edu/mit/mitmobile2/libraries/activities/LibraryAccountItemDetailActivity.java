@@ -7,14 +7,12 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesMITFineItem;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesMITItem;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesMITLoanItem;
 
-/**
- * Created by serg on 5/19/15.
- */
 public class LibraryAccountItemDetailActivity extends AppCompatActivity {
 
     private static final String KEY_STATE_LIBRARY_ITEM = "state_library_item";
@@ -36,17 +34,21 @@ public class LibraryAccountItemDetailActivity extends AppCompatActivity {
         textViewDescription = (TextView) findViewById(R.id.library_detail_tv_description);
         imageViewImage = (ImageView) findViewById(R.id.library_detail_iv_image);
 
+        librariesMITItem = getIntent().getParcelableExtra(Constants.ACCOUNT_ITEM_KEY);
+
+        updateUiElements(librariesMITItem);
+
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_LIBRARY_ITEM)) {
                 librariesMITItem = savedInstanceState.getParcelable(KEY_STATE_LIBRARY_ITEM);
             }
         } else {
             // TODO: get librariesMITItem from extras or API call + remove fake
-            librariesMITItem = new MITLibrariesMITItem();
+            /*librariesMITItem = new MITLibrariesMITItem();
             librariesMITItem.setTitle("Title");
             librariesMITItem.setMaterial("Format");
             librariesMITItem.setImprint("Imprint");
-            librariesMITItem.setIsbn("isbn");
+            librariesMITItem.setIsbn("isbn");*/
         }
 
 

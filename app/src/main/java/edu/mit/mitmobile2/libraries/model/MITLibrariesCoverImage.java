@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by serg on 5/19/15.
- */
 public class MITLibrariesCoverImage implements Parcelable {
 
     @SerializedName("width")
@@ -21,6 +18,18 @@ public class MITLibrariesCoverImage implements Parcelable {
 
     public MITLibrariesCoverImage() {
         // empty constructor
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     protected MITLibrariesCoverImage(Parcel in) {

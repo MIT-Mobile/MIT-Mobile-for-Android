@@ -7,16 +7,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-/**
- * Created by serg on 5/19/15.
- */
 public class MITLibrariesMITLoanItem extends MITLibrariesMITItem {
 
     @SerializedName("loaned_at")
-    private Date loanedAt;
+    private String loanedAtString;
 
     @SerializedName("due_at")
-    private Date dueAt;
+    private String dueAtString;
 
     @SerializedName("overdue")
     private boolean overdue;
@@ -36,20 +33,34 @@ public class MITLibrariesMITLoanItem extends MITLibrariesMITItem {
     @SerializedName("has_hold")
     private boolean hasHold;
 
-    public Date getLoanedAt() {
-        return loanedAt;
+    private Date loanedAtDate;
+
+    private Date dueAtDate;
+
+    public String getDueAtString() {
+        return dueAtString;
     }
 
-    public void setLoanedAt(Date loanedAt) {
-        this.loanedAt = loanedAt;
+    public void setDueAtString(String dueAtString) {
+        this.dueAtString = dueAtString;
     }
 
-    public Date getDueAt() {
-        return dueAt;
+    public String getLoanedAtString() {
+        return loanedAtString;
     }
 
-    public void setDueAt(Date dueAt) {
-        this.dueAt = dueAt;
+    public void setLoanedAtString(String loanedAtString) {
+        this.loanedAtString = loanedAtString;
+    }
+
+    public Date getDueAtDate() {
+        // TODO: Date Formatting
+        return dueAtDate;
+    }
+
+    public Date getLoanedAtDate() {
+        // TODO: Date Formatting
+        return loanedAtDate;
     }
 
     public boolean isOverdue() {
@@ -101,10 +112,13 @@ public class MITLibrariesMITLoanItem extends MITLibrariesMITItem {
     }
 
     protected MITLibrariesMITLoanItem(Parcel in) {
-        long tmpLoanedAt = in.readLong();
-        loanedAt = tmpLoanedAt != -1 ? new Date(tmpLoanedAt) : null;
-        long tmpDueAt = in.readLong();
-        dueAt = tmpDueAt != -1 ? new Date(tmpDueAt) : null;
+        super(in);
+//        long tmpLoanedAt = in.readLong();
+//        loanedAtString = tmpLoanedAt != -1 ? new Date(tmpLoanedAt) : null;
+//        long tmpDueAt = in.readLong();
+//        dueAtString = tmpDueAt != -1 ? new Date(tmpDueAt) : null;
+        loanedAtString = in.readString();
+        dueAtString = in.readString();
         overdue = in.readByte() != 0x00;
         longOverdue = in.readByte() != 0x00;
         pendingFine = in.readInt();
@@ -120,8 +134,11 @@ public class MITLibrariesMITLoanItem extends MITLibrariesMITItem {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(loanedAt != null ? loanedAt.getTime() : -1L);
-        dest.writeLong(dueAt != null ? dueAt.getTime() : -1L);
+        super.writeToParcel(dest, flags);
+//        dest.writeLong(loanedAtString != null ? loanedAtString.getTime() : -1L);
+//        dest.writeLong(dueAtString != null ? dueAtString.getTime() : -1L);
+        dest.writeString(loanedAtString);
+        dest.writeString(dueAtString);
         dest.writeByte((byte) (overdue ? 0x01 : 0x00));
         dest.writeByte((byte) (longOverdue ? 0x01 : 0x00));
         dest.writeInt(pendingFine);

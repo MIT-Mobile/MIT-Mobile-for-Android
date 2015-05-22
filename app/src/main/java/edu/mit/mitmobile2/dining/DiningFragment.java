@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,7 +36,6 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.activities.DiningHouseActivity;
 import edu.mit.mitmobile2.dining.activities.DiningRetailActivity;
 import edu.mit.mitmobile2.dining.adapters.DiningPagerAdapter;
-import edu.mit.mitmobile2.dining.interfaces.Updateable;
 import edu.mit.mitmobile2.dining.model.MITDiningDining;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
@@ -45,17 +45,15 @@ import edu.mit.mitmobile2.dining.model.MITDiningVenueSnippet;
 import edu.mit.mitmobile2.dining.model.MITDiningVenues;
 import edu.mit.mitmobile2.maps.MITMapView;
 import edu.mit.mitmobile2.maps.MapItem;
-import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabHost;
-import it.neokree.materialtabs.MaterialTabListener;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class DiningFragment extends Fragment implements MaterialTabListener, ViewPager.OnPageChangeListener, GoogleMap.OnMapLoadedCallback,
+public class DiningFragment extends Fragment implements ViewPager.OnPageChangeListener, GoogleMap.OnMapLoadedCallback,
         GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowClickListener {
+        GoogleMap.OnInfoWindowClickListener,
+        PagerSlidingTabStrip.OnTabReselectedListener {
 
     private static final String KEY_STATE_DINING = "state_dining";
     private static final String KEY_STATE_CURRENT_SCREEN_POSITION = "state_selected_tab";
@@ -64,7 +62,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     private static final int SCREEN_MODE_LIST = 0;
     private static final int SCREEN_MODE_MAP = 1;
 
-    private MaterialTabHost tabHost;
+    private PagerSlidingTabStrip tabHost;
     private ViewPager viewPager;
     private MenuItem screenModeToggleMenuItem;
     private MITMapView mitMapView;
@@ -91,18 +89,19 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         View view = inflater.inflate(R.layout.content_dining, null);
         setHasOptionsMenu(true);
 
-        tabHost = (MaterialTabHost) view.findViewById(R.id.tabhost);
+        tabHost = (PagerSlidingTabStrip) view.findViewById(R.id.tabhost);
 
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
         pagerAdapter = new DiningPagerAdapter(getActivity().getFragmentManager());
 
         initTabHost();
-        initViewPager();
+        viewPager.setAdapter(pagerAdapter);
+        tabHost.setViewPager(viewPager);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(KEY_STATE_CURRENT_SCREEN_POSITION)) {
-                tabHost.setSelectedNavigationItem(savedInstanceState.getInt(KEY_STATE_CURRENT_SCREEN_POSITION));
+                viewPager.setCurrentItem(savedInstanceState.getInt(KEY_STATE_CURRENT_SCREEN_POSITION));
             }
             if (savedInstanceState.containsKey(KEY_STATE_SCREEN_MODE)) {
                 screenMode = savedInstanceState.getInt(KEY_STATE_SCREEN_MODE);
@@ -110,8 +109,10 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
             if (savedInstanceState.containsKey(KEY_STATE_DINING)) {
                 mitDiningDining = savedInstanceState.getParcelable(KEY_STATE_DINING);
             }
+
+            MitMobileApplication.bus.post(new OttoBusEvent.NewDiningInfoEvent(mitDiningDining));
         } else {
-            tabHost.setSelectedNavigationItem(0);
+            viewPager.setCurrentItem(0);
             fetchDiningOptions();
         }
 
@@ -122,7 +123,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
 
     private void setupMap(View view, Bundle savedInstanceState) {
         MapView googleMapView = (MapView) view.findViewById(R.id.dining_map);
-        googleMapView.onCreate(savedInstanceState);
+        googleMapView.onCreate(null);
 
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
         mitMapView.setMapViewExpanded(true);
@@ -135,7 +136,12 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         }
 
         if (mitDiningDining != null) {
-            updateMapItems((ArrayList) mitDiningDining.getVenues().getRetail(), true);
+            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_STATE_CURRENT_SCREEN_POSITION)) {
+                int pos = savedInstanceState.getInt(KEY_STATE_CURRENT_SCREEN_POSITION);
+                updateMapItems(pos == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
+            } else {
+                updateMapItems((ArrayList) mitDiningDining.getVenues().getRetail(), true);
+            }
             mitMapView.setToDefaultBounds(false, 0);
         }
 
@@ -201,8 +207,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
 
     @Override
     public void onPageScrolled(int i, float v, int i1) {
-        int pos = viewPager.getCurrentItem();
-        tabHost.setSelectedNavigationItem(pos);
+
     }
 
     @Override
@@ -211,29 +216,15 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     }
 
     @Override
+    public void onTabReselected(int i) {
+        // empty
+    }
+
+    @Override
     public void onPageScrollStateChanged(int i) {
-        // empty
-    }
-
-    /* MaterialTabListener */
-
-    @Override
-    public void onTabSelected(MaterialTab materialTab) {
-        int position = materialTab.getPosition();
-        viewPager.setCurrentItem(position);
-        tabHost.setSelectedNavigationItem(position);
-
-        updateMapItems(position == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
-    }
-
-    @Override
-    public void onTabReselected(MaterialTab materialTab) {
-        // empty
-    }
-
-    @Override
-    public void onTabUnselected(MaterialTab materialTab) {
-        // empty
+        if (i == 0) {
+            updateMapItems(viewPager.getCurrentItem() == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
+        }
     }
 
     /* Network */
@@ -268,7 +259,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
                 }
 
                 DiningFragment.this.mitDiningDining = mitDiningDining;
-                updateMapItems(tabHost.getCurrentTab().getPosition() == 1 ? (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getRetail() : (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getHouse(), true);
+                updateMapItems(viewPager.getCurrentItem() == 1 ? (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getRetail() : (ArrayList) DiningFragment.this.mitDiningDining.getVenues().getHouse(), true);
                 notifyDiningUpdated(DiningFragment.this.mitDiningDining);
             }
 
@@ -304,7 +295,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
             break;
             case SCREEN_MODE_LIST: {
                 screenMode = SCREEN_MODE_MAP;
-                updateMapItems(tabHost.getCurrentTab().getPosition() == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
+                updateMapItems(viewPager.getCurrentItem() == 1 ? (ArrayList) mitDiningDining.getVenues().getRetail() : (ArrayList) mitDiningDining.getVenues().getHouse(), true);
             }
             break;
         }
@@ -314,7 +305,6 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         if (viewPager != null && screenModeToggleMenuItem != null) {
             switch (screenMode) {
                 case SCREEN_MODE_MAP: {
-                    viewPager.setVisibility(View.GONE);
                     mitMapView.getGoogleMapView().setVisibility(View.VISIBLE);
                     myLocationButton.setVisibility(View.VISIBLE);
                     screenModeToggleMenuItem.setIcon(R.drawable.ic_list);
@@ -332,21 +322,16 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
     }
 
     private void notifyDiningUpdated(MITDiningDining mitDiningDining) {
-        for (Fragment fragment : pagerAdapter.getFragments()) {
-            if (fragment instanceof Updateable) {
-                ((Updateable) fragment).onDining(mitDiningDining);
-            }
-        }
-    }
-
-    private void initViewPager() {
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOnPageChangeListener(this);
+        MitMobileApplication.bus.post(new OttoBusEvent.NewDiningInfoEvent(mitDiningDining));
     }
 
     private void initTabHost() {
-        tabHost.addTab(tabHost.newTab().setText(getString(R.string.dining_tab_house_dining)).setTabListener(this));
-        tabHost.addTab(tabHost.newTab().setText(getString(R.string.dining_tab_retail)).setTabListener(this));
+        tabHost.setOnTabReselectedListener(this);
+        tabHost.setAllCaps(true);
+        tabHost.setOnPageChangeListener(this);
+        tabHost.setTextColorResource(R.color.mit_red);
+        tabHost.setIndicatorColorResource(R.color.mit_red);
+        tabHost.setShouldExpand(true);
     }
 
     protected void updateMapItems(ArrayList mapItems, boolean fit) {
@@ -387,7 +372,7 @@ public class DiningFragment extends Fragment implements MaterialTabListener, Vie
         String snippet = marker.getSnippet();
         Gson gson = new Gson();
 
-        if (tabHost.getCurrentTab().getPosition() == 1) {
+        if (viewPager.getCurrentItem() == 1) {
             MITDiningVenueSnippet v = gson.fromJson(snippet, MITDiningVenueSnippet.class);
 
             for (MITDiningRetailVenue venue : mitDiningDining.getVenues().getRetail()) {
