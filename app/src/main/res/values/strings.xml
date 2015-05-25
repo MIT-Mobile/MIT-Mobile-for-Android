@@ -243,4 +243,8 @@
     <string name="library_item_detail_publisher">"publisher"</string>
     <string name="library_item_detail_isbn">"ISBN"</string>
 
+    <string name="library_closed_today">Closed Today</string>
+    <string name="library_midnight">midnight</string>
+    <string name="library_noon">noon</string>
+
 </resources>

@@ -5,6 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import edu.mit.mitmobile2.DateUtils;
+
 /**
  * Created by serg on 5/20/15.
  */
@@ -46,6 +51,14 @@ public class MITLibrariesExceptionsTerm implements Parcelable {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    /* Helpers */
+
+    public boolean isOpenOnDayOfDate(Date date) {
+        return DateUtils.dateFallsBetweenDates(date, dates.getStartDate(), dates.getEndDate(), Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+    }
+
+    /* Parcelable */
 
     protected MITLibrariesExceptionsTerm(Parcel in) {
         dates = (MITLibrariesDate) in.readValue(MITLibrariesDate.class.getClassLoader());

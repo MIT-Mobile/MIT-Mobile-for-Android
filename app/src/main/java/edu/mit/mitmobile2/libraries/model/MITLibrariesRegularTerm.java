@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
+import edu.mit.mitmobile2.DateUtils;
+
 /**
  * Created by serg on 5/20/15.
  */
@@ -35,6 +39,24 @@ public class MITLibrariesRegularTerm implements Parcelable {
     public void setHours(MITLibrariesDate hours) {
         this.hours = hours;
     }
+
+    /* Helpers */
+
+    /*
+    - (BOOL)isOpenOnDayOfDate:(NSDate *)date
+{
+    NSString *dayOfWeekAbbreviation = [date MITDateCode];
+
+    return ([self.days rangeOfString:dayOfWeekAbbreviation].location != NSNotFound);
+}
+    */
+
+    public boolean isOpenOnDayOfDate(Date date) {
+        String dayOfWeekAbbreviation = DateUtils.MITDateCode(date);
+        return days != null && days.contains(dayOfWeekAbbreviation);
+    }
+
+    /* Parcelable */
 
     protected MITLibrariesRegularTerm(Parcel in) {
         days = in.readString();

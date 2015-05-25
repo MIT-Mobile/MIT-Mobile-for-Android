@@ -1,12 +1,17 @@
 package edu.mit.mitmobile2.libraries.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import edu.mit.mitmobile2.R;
 
 /**
  * Created by serg on 5/20/15.
@@ -32,7 +37,7 @@ public class MITLibrariesLibrary implements Parcelable {
     private List<MITLibrariesTerm> terms;
 
     @SerializedName("coordinates")
-    private List<Object> coordinateArray;           // TODO: clarify proper type
+    private List<Double> coordinateArray;
 
     public MITLibrariesLibrary() {
         // empty constructor
@@ -86,13 +91,52 @@ public class MITLibrariesLibrary implements Parcelable {
         this.terms = terms;
     }
 
-    public List<Object> getCoordinateArray() {
+    public List<Double> getCoordinateArray() {
         return coordinateArray;
     }
 
-    public void setCoordinateArray(List<Object> coordinateArray) {
+    public void setCoordinateArray(List<Double> coordinateArray) {
         this.coordinateArray = coordinateArray;
     }
+
+    /* Helpers */
+
+    public String hoursStringForDate(Context context, Date date) {
+        for (MITLibrariesTerm term : terms) {
+            if (term.isDateFallsInTerm(date)) {
+                return term.hoursStringForDate(context, date);
+            }
+        }
+
+        return context.getString(R.string.library_closed_today);
+    }
+
+    public boolean isOpenAtDate(Date date) {
+        for (MITLibrariesTerm term : terms) {
+            if (term.isOpenAtDate(date)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOpenOnDayOfDate(Date date) {
+        for (MITLibrariesTerm term : terms) {
+            if (term.isOpenOnDayOfDate(date)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public LatLng getLatLng() {
+        if (coordinateArray != null && coordinateArray.size() >= 2) {
+            return new LatLng(coordinateArray.get(0), coordinateArray.get(1));
+        }
+        return new LatLng(0, 0);
+    }
+
+    /* Parcelable */
 
     protected MITLibrariesLibrary(Parcel in) {
         identifier = in.readString();
@@ -107,8 +151,8 @@ public class MITLibrariesLibrary implements Parcelable {
             terms = null;
         }
         if (in.readByte() == 0x01) {
-            coordinateArray = new ArrayList<Object>();
-            in.readList(coordinateArray, Object.class.getClassLoader());
+            coordinateArray = new ArrayList<Double>();
+            in.readList(coordinateArray, Double.class.getClassLoader());
         } else {
             coordinateArray = null;
         }

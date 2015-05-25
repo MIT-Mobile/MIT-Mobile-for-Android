@@ -1,17 +1,25 @@
 package edu.mit.mitmobile2.libraries.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import edu.mit.mitmobile2.DateUtils;
+import edu.mit.mitmobile2.R;
 
 /**
  * Created by serg on 5/20/15.
  */
 public class MITLibrariesTerm implements Parcelable {
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     @SerializedName("name")
     private String name;
@@ -71,6 +79,163 @@ public class MITLibrariesTerm implements Parcelable {
     public void setExceptionsTerm(List<MITLibrariesExceptionsTerm> exceptionsTerm) {
         this.exceptionsTerm = exceptionsTerm;
     }
+
+    /* Helpers */
+
+    private SimpleDateFormat dateFormat;
+
+    private SimpleDateFormat getDateFormat() {
+        if (dateFormat == null) {
+            dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        }
+        return dateFormat;
+    }
+
+    public boolean isDateFallsInTerm(Date date) {
+        Date startDate = DateUtils.startOfDay(dates.getStartDate());
+        Date endDate = DateUtils.startOfDay(dates.getEndDate());
+
+        return DateUtils.dateFallsBetweenDates(date, startDate, endDate);
+    }
+
+    /*
+    for (MITLibrariesClosingsTerm *term in self.closingsTerm) {
+        if ([term isClosedOnDate:date]) {
+            return kMITLibraryClosedMessageString;
+        }
+    }
+
+    for (MITLibrariesExceptionsTerm *term in self.exceptionsTerm) {
+        if ([term isOpenOnDayOfDate:date]) {
+            return [term.hours hoursRangesString];
+        }
+    }
+
+    for (MITLibrariesRegularTerm *term in self.regularTerm) {
+        if ([term isOpenOnDayOfDate:date]) {
+            return [term.hours hoursRangesString];
+        }
+    }
+
+    return kMITLibraryClosedMessageString;
+}
+    */
+
+    public String hoursStringForDate(Context context, Date date) {
+        if (!isDateFallsInTerm(date)) {
+            return context.getString(R.string.library_closed_today);
+        }
+
+        for (MITLibrariesClosingsTerm term : closingsTerm) {
+            if (term.isClosedOnDate(date)) {
+                return context.getString(R.string.library_closed_today);
+            }
+        }
+
+        for (MITLibrariesExceptionsTerm term : exceptionsTerm) {
+            if (term.isOpenOnDayOfDate(date)) {
+                return term.getHours().hoursRangesString(context);
+            }
+        }
+
+        for (MITLibrariesRegularTerm term : regularTerm) {
+            if (term.isOpenOnDayOfDate(date)) {
+                return term.getHours().hoursRangesString(context);
+            }
+        }
+
+        return context.getString(R.string.library_closed_today);
+    }
+
+    /*
+    - (BOOL)isOpenAtDate:(NSDate *)date
+{
+    [self.dateFormatter setDateFormat:@"yyyy-MM-dd"];
+
+    NSDate *startDate = [[self.dateFormatter dateFromString:self.dates.start] startOfDay];
+    NSDate *endDate = [[self.dateFormatter dateFromString:self.dates.end] endOfDay];
+
+    // Check to see if the date even falls within the term
+    if (![date dateFallsBetweenStartDate:startDate endDate:endDate])
+    {
+        return NO;
+    }
+
+    // Check to see if the date falls within an exception
+    for (MITLibrariesExceptionsTerm *term in self.exceptionsTerm) {
+        if ([term isOpenOnDate:date]) {
+            return YES;
+        }
+    }
+
+    // Check to see if the library is explicitly closed
+    for (MITLibrariesClosingsTerm *term in self.closingsTerm) {
+        if ([term isClosedOnDate:date]) {
+            return NO;
+        }
+    }
+
+    // Check to see if the library is open for the day of the week
+    for (MITLibrariesRegularTerm *term in self.regularTerm) {
+        if ([term isOpenOnDate:date]) {
+            return YES;
+        }
+    }
+
+    return NO;
+}
+    */
+
+    public boolean isOpenAtDate(Date date) {
+        // TODO:
+        return false;
+    }
+
+    /*
+- (BOOL)isOpenOnDayOfDate:(NSDate *)date
+{
+    [self.dateFormatter setDateFormat:@"yyyy-MM-dd"];
+
+    NSDate *startDate = [[self.dateFormatter dateFromString:self.dates.start] startOfDay];
+    NSDate *endDate = [[self.dateFormatter dateFromString:self.dates.end] endOfDay];
+
+    // Check to see if the date even falls within the term
+    if (![date dateFallsBetweenStartDate:startDate endDate:endDate])
+    {
+        return NO;
+    }
+
+    // Check to see if the date falls within an exception
+    for (MITLibrariesExceptionsTerm *term in self.exceptionsTerm) {
+        if ([term isOpenOnDayOfDate:date]) {
+            return YES;
+        }
+    }
+
+    // Check to see if the library is explicitly closed
+    for (MITLibrariesClosingsTerm *term in self.closingsTerm) {
+        if ([term isClosedOnDate:date]) {
+            return NO;
+        }
+    }
+
+    // Check to see if the library is open for the day of the week
+    for (MITLibrariesRegularTerm *term in self.regularTerm) {
+        if ([term isOpenOnDayOfDate:date]) {
+            return YES;
+        }
+    }
+
+    return NO;
+}
+    */
+
+    public boolean isOpenOnDayOfDate(Date date) {
+        // TODO:
+        return true;
+    }
+
+    /* Parcelable */
 
     protected MITLibrariesTerm(Parcel in) {
         name = in.readString();
