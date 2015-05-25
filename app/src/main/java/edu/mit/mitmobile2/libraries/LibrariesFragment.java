@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +14,40 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.activities.AccountActivity;
 import edu.mit.mitmobile2.libraries.adapter.LibraryLinksAdapter;
+import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class LibrariesFragment extends Fragment {
+
+    private static final String KEY_STATE_LIBRARY_LINKS = "state_library_links";
 
     @InjectView(R.id.library_links_listview)
     ListView linksListview;
 
+    private List<MITLibrariesLink> links;
+    private LibraryLinksAdapter adapter;
+
     public LibrariesFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        links = new ArrayList<>();
     }
 
     @Nullable
@@ -49,13 +72,14 @@ public class LibrariesFragment extends Fragment {
 
         linksListview.addHeaderView(headerView);
 
-        LibraryLinksAdapter adapter = new LibraryLinksAdapter(getActivity(), getResources().getStringArray(R.array.link_urls));
+        adapter = new LibraryLinksAdapter(getActivity(), links);
         linksListview.setAdapter(adapter);
 
         linksListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getStringArray(R.array.link_urls)[position - 1]));
+                MITLibrariesLink link = adapter.getItem(position - 1);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.getUrl()));
                 startActivity(intent);
             }
         });
@@ -67,6 +91,16 @@ public class LibrariesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        if (savedInstanceState == null) {
+            fetchLinks();
+        } else {
+            if (savedInstanceState.containsKey(KEY_STATE_LIBRARY_LINKS)) {
+                ArrayList<MITLibrariesLink> savedLinks = savedInstanceState.getParcelableArrayList(KEY_STATE_LIBRARY_LINKS);
+                links.addAll(savedLinks);
+                adapter.notifyDataSetChanged();
+            }
+        }
 
         return view;
     }
@@ -182,5 +216,33 @@ public class LibrariesFragment extends Fragment {
             }
         });
         */
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(KEY_STATE_LIBRARY_LINKS, (ArrayList<? extends Parcelable>) links);
+        super.onSaveInstanceState(outState);
+    }
+
+    /* Network */
+
+    private void fetchLinks() {
+        LibraryManager.getLinks(getActivity(), new Callback<List<MITLibrariesLink>>() {
+
+            @Override
+            public void success(List<MITLibrariesLink> mitLibrariesLink, Response response) {
+                links.clear();
+                if (mitLibrariesLink != null) {
+                    links.addAll(mitLibrariesLink);
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
     }
 }

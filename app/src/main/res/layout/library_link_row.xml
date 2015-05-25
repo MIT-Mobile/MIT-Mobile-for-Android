@@ -5,15 +5,14 @@
 
     <TextView
         android:id="@+id/link_title"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="@dimen/shuttle_home_image_padding"
         android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/link_icon"
