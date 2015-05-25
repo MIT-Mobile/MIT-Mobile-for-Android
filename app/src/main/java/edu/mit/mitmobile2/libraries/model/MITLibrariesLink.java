@@ -20,6 +20,10 @@ public class MITLibrariesLink implements Parcelable {
         // empty constructor
     }
 
+    public MITLibrariesLink(String title) {
+        this.title = title;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -35,7 +35,7 @@ public class LibrariesFragment extends Fragment {
     private static final String KEY_STATE_LIBRARY_LINKS = "state_library_links";
 
     @InjectView(R.id.library_links_listview)
-    ListView linksListview;
+    ListView linksListView;
 
     private List<MITLibrariesLink> links;
     private LibraryLinksAdapter adapter;
@@ -70,17 +70,21 @@ public class LibrariesFragment extends Fragment {
 
         centerView.setBackgroundResource(R.color.white);
 
-        linksListview.addHeaderView(headerView);
+        linksListView.addHeaderView(headerView);
 
         adapter = new LibraryLinksAdapter(getActivity(), links);
-        linksListview.setAdapter(adapter);
+        linksListView.setAdapter(adapter);
 
-        linksListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        linksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MITLibrariesLink link = adapter.getItem(position - 1);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.getUrl()));
-                startActivity(intent);
+                if (!TextUtils.isEmpty(link.getUrl())) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.getUrl()));
+                    startActivity(intent);
+                } else {
+                    // TODO: add fragment navigation logic here
+                }
             }
         });
 
@@ -97,8 +101,7 @@ public class LibrariesFragment extends Fragment {
         } else {
             if (savedInstanceState.containsKey(KEY_STATE_LIBRARY_LINKS)) {
                 ArrayList<MITLibrariesLink> savedLinks = savedInstanceState.getParcelableArrayList(KEY_STATE_LIBRARY_LINKS);
-                links.addAll(savedLinks);
-                adapter.notifyDataSetChanged();
+                refreshLinks(savedLinks);
             }
         }
 
@@ -108,22 +111,6 @@ public class LibrariesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        /*
-        LibraryManager.getLinks(getActivity(), new Callback<List<MITLibrariesLink>>() {
-
-            @Override
-            public void success(List<MITLibrariesLink> mitLibrariesLink, Response response) {
-                // TODO: handle data
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
-            }
-        });
-        */
-
         /*
         LibraryManager.getLibraries(getActivity(), new Callback<List<MITLibrariesLibrary>>() {
 
@@ -231,12 +218,7 @@ public class LibrariesFragment extends Fragment {
 
             @Override
             public void success(List<MITLibrariesLink> mitLibrariesLink, Response response) {
-                links.clear();
-                if (mitLibrariesLink != null) {
-                    links.addAll(mitLibrariesLink);
-                }
-
-                adapter.notifyDataSetChanged();
+                refreshLinks(mitLibrariesLink);
             }
 
             @Override
@@ -244,5 +226,19 @@ public class LibrariesFragment extends Fragment {
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
+    }
+
+    private void refreshLinks(List<MITLibrariesLink> mitLibrariesLink) {
+        links.clear();
+        if (mitLibrariesLink != null) {
+            // add predefined links here
+            String[] predefinedLinks = getResources().getStringArray(R.array.predefined_link_titles);
+            for (String title : predefinedLinks) {
+                links.add(new MITLibrariesLink(title));
+            }
+            links.addAll(mitLibrariesLink);
+        }
+
+        adapter.notifyDataSetChanged();
     }
 }

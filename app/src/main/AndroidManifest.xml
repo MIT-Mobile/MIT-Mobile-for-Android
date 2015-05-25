@@ -260,7 +260,7 @@
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".libraries.activities.LibraryAccountItemDetailActivity"
-            android:parentActivityName=".MITMainActivity"
+            android:parentActivityName=".libraries.activities.AccountActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
             android:name=".libraries.activities.LibraryLoginActivity"
