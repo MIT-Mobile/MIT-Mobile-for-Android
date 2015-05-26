@@ -238,8 +238,6 @@ public class DiningHouseActivity extends AppCompatActivity  {
             }
         }
 
-        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-
         return index;
     }
 
