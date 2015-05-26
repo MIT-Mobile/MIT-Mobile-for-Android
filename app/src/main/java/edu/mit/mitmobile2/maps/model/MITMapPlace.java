@@ -1,14 +1,44 @@
 package edu.mit.mitmobile2.maps.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by serg on 5/18/15.
- */
-public class MITMapPlace implements Parcelable {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapItem;
+
+public class MITMapPlace extends MapItem implements Parcelable {
+
+    public class MITMapPlaceSnippet {
+        String name;
+        String id;
+        String buildingNumber;
+
+        public MITMapPlaceSnippet(String buildingNumber, String id, String name) {
+            this.buildingNumber = buildingNumber;
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getBuildingNumber() {
+            return buildingNumber;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
     @SerializedName("id")
     private String id;
@@ -23,10 +53,10 @@ public class MITMapPlace implements Parcelable {
     private double longitude;
 
     @SerializedName("bldgnum")
-    private String bldgnum;
+    private String buildingNumber;
 
     @SerializedName("bldgimg")
-    private String bldgimg;
+    private String buildingImageUrl;
 
     @SerializedName("street")
     private String street;
@@ -40,6 +70,7 @@ public class MITMapPlace implements Parcelable {
     @SerializedName("viewangle")
     private String viewangle;
 
+    private int index;
     // TODO: add fields:
     // category
     // contents
@@ -77,20 +108,20 @@ public class MITMapPlace implements Parcelable {
         this.longitude = longitude;
     }
 
-    public String getBldgnum() {
-        return bldgnum;
+    public String getBuildingNumber() {
+        return buildingNumber;
     }
 
-    public void setBldgnum(String bldgnum) {
-        this.bldgnum = bldgnum;
+    public void setBuildingNumber(String buildingNumber) {
+        this.buildingNumber = buildingNumber;
     }
 
-    public String getBldgimg() {
-        return bldgimg;
+    public String getBuildingImageUrl() {
+        return buildingImageUrl;
     }
 
-    public void setBldgimg(String bldgimg) {
-        this.bldgimg = bldgimg;
+    public void setBuildingImageUrl(String buildingImageUrl) {
+        this.buildingImageUrl = buildingImageUrl;
     }
 
     public String getStreet() {
@@ -130,8 +161,8 @@ public class MITMapPlace implements Parcelable {
         name = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
-        bldgnum = in.readString();
-        bldgimg = in.readString();
+        buildingNumber = in.readString();
+        buildingImageUrl = in.readString();
         street = in.readString();
         architect = in.readString();
         mailing = in.readString();
@@ -149,8 +180,8 @@ public class MITMapPlace implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-        dest.writeString(bldgnum);
-        dest.writeString(bldgimg);
+        dest.writeString(buildingNumber);
+        dest.writeString(buildingImageUrl);
         dest.writeString(street);
         dest.writeString(architect);
         dest.writeString(mailing);
@@ -169,4 +200,38 @@ public class MITMapPlace implements Parcelable {
             return new MITMapPlace[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        options.position(new LatLng(latitude, longitude));
+        String snippet = new Gson().toJson(new MITMapPlaceSnippet(buildingNumber, id, name));
+        options.snippet(snippet);
+        return options;
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.ic_pin_red;
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

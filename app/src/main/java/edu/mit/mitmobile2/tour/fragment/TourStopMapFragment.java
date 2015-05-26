@@ -64,8 +64,7 @@ public class TourStopMapFragment extends FullscreenMapFragment {
         }
 
         if (tour != null) {
-            updateMapItems((ArrayList) tour.getStops(), true);
-            mitMapView.setToDefaultBounds(false, 0);
+            updateMapItems((ArrayList) tour.getStops(), false, true);
             drawRoutePath();
         }
 
@@ -95,8 +94,7 @@ public class TourStopMapFragment extends FullscreenMapFragment {
     @Subscribe
     public void mitTourLoadedEvent(OttoBusEvent.TourInfoLoadedEvent event) {
         tour = event.getTour();
-        updateMapItems((ArrayList) tour.getStops(), true);
-        mitMapView.setToDefaultBounds(false, 0);
+        updateMapItems((ArrayList) tour.getStops(), false, true);
         drawRoutePath();
     }
 

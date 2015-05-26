@@ -36,10 +36,10 @@ public class MapManager extends RetrofitManager {
         return m.invoke(MIT_MAP_SERVICE);
     }
 
-    public static MapManagerCall getMapPlaces(Activity activity, Callback<ArrayList<MITMapPlace>> places) {
+    public static MapManagerCall getMapPlaces(Activity activity, HashMap<String, String> queryParams, Callback<ArrayList<MITMapPlace>> places) {
         MapManagerCallWrapper<?> returnValue = new MapManagerCallWrapper<>(new MITAPIClient(activity), places);
 
-        returnValue.getClient().get(Constants.MAP, Constants.Map.MAP_PLACES, null, null, returnValue);
+        returnValue.getClient().get(Constants.MAP, Constants.Map.MAP_PLACES, null, queryParams, returnValue);
 
         return returnValue;
     }

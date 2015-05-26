@@ -111,13 +111,13 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
         startAnimation(listButton, 0, 0, displayMetrics.heightPixels, listButton.getY(), DURATION_INCOMING_LIST, 100);
     }
 
-    protected void updateMapItems(ArrayList mapItems, boolean fit) {
+    protected void updateMapItems(ArrayList mapItems, boolean clear, boolean fit) {
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mitMapView.clearDynamic();
         }
-        mitMapView.addMapItemList(mapItems, false, fit);
+        mitMapView.addMapItemList(mapItems, clear, fit);
+        mitMapView.setToDefaultBounds(false, 0);
     }
-
 
     @Override
     public void onAnimationStart(Animation animation) {

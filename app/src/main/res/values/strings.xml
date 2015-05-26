@@ -257,4 +257,6 @@
     <string name="library_item_detail_publisher">"publisher"</string>
     <string name="library_item_detail_isbn">"ISBN"</string>
 
+    <string name="maps_search_hint">Search MIT Campus</string>
+
 </resources>

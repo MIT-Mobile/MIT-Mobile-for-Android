@@ -31,14 +31,18 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.maps.MapFragment;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.events.fragment.EventsFragment;
+import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.tour.fragment.TourFragment;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
+import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 
-public class MITMainActivity extends MITActivity {
+public class MITMainActivity extends MITActivity implements FullscreenMapCallback {
 
     private static DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -126,86 +130,6 @@ public class MITMainActivity extends MITActivity {
         checkForIncomingIntent(savedInstanceState);
     }
 
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.mitmodule, menu);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        if (null != searchView) {
-            searchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(false);
-        }
-
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-            public boolean onQueryTextChange(String newText) {
-                // this is your adapter that will be filtered
-                return true;
-            }
-
-            public boolean onQueryTextSubmit(String query) {
-                //Here u can get the value "query" which is entered in the search box.
-                Timber.d("Search triggered");
-                searchView.clearFocus();
-                return handleSearch(query);
-            }
-        };
-
-        searchView.setOnQueryTextListener(queryTextListener);
-
-        // show or hide the search menu based on the hasSearch property
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        if (searchItem != null) {
-            searchItem.setVisible(this.hasSearch);
-        }
-        return true;
-    }
-*/
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.mitmodule, menu);
-//
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        MenuItem item = menu.findItem(R.id.action_search);
-//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-//        if (null != searchView) {
-//            searchView.setSearchableInfo(searchManager
-//                    .getSearchableInfo(getComponentName()));
-//            searchView.setIconifiedByDefault(false);
-//        }
-//
-//        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-//            public boolean onQueryTextChange(String newText) {
-//                // this is your adapter that will be filtered
-//                return true;
-//            }
-//
-//            public boolean onQueryTextSubmit(String query) {
-//                //Here u can get the value "query" which is entered in the search box.
-//                Log.d("ZZZ", "search triggered");
-//                searchView.clearFocus();
-//                return handleSearch(query);
-//            }
-//        };
-//
-//        searchView.setOnQueryTextListener(queryTextListener);
-//
-//
-//        // show or hide the search menu based on the hasSearch property
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        if (searchItem != null) {
-//            searchItem.setVisible(this.hasSearch);
-//        }
-//        return true;
-//    }
-//
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -220,16 +144,13 @@ public class MITMainActivity extends MITActivity {
 
         return super.onOptionsItemSelected(item);
     }
-//
-//
-//    // Placeholder handleSearch method
-//    // Override this method in subclass to define search functionality
-//    protected boolean handleSearch(String search) {
-//        return true;
-//    }
 
+    @Override
+    public void switchViews(boolean toList) {
+        getFragmentManager().beginTransaction().add(R.id.content_frame, new EventsFragment()).commit();
+    }
 
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
