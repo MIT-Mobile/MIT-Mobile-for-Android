@@ -101,7 +101,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
     private void buildHouseMenuPager() {
         diningMeals = new ArrayList<>();
         for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
-            if (diningHouseDay.getMeals() != null) {
+            if (!diningHouseDay.getMessage().startsWith("Closed")) {
                 for (MITDiningMeal mitDiningMeal : diningHouseDay.getMeals()) {
                     mitDiningMeal.setHouseDateString(diningHouseDay.getDateString());
                     diningMeals.add(mitDiningMeal);
