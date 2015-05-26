@@ -68,8 +68,10 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
             houseStatusTextView.setTextColor(getResources().getColor(R.color.status_green));
         } else if (houseStatus.contains("at") || houseStatus.contains("Closed")) {
             houseStatusTextView.setTextColor(getResources().getColor(R.color.status_red));
+        } else {
+            houseStatusTextView.setText(houseStatus);
+            houseStatusTextView.setTextColor(getResources().getColor(R.color.status_red));
         }
-        houseStatusTextView.setText(houseStatus);
 
         buildHoursSegment();
 
@@ -81,36 +83,58 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
     }
 
     private void buildHoursSegment() {
-        List<MITDiningMeal> meals = venue.getMealsByDay().get(0).getMeals();
-        String startDate = venue.getMealsByDay().get(0).getDateString();
+        if (venue.getMealsByDay().get(0).getMeals() != null) {
+            List<MITDiningMeal> meals = venue.getMealsByDay().get(0).getMeals();
+            String startDate = venue.getMealsByDay().get(0).getDateString();
 
-        List<MITDiningMeal> previousMeals = meals;
+            List<MITDiningMeal> previousMeals = meals;
 
-        for (int i = 1; i < venue.getMealsByDay().size(); i++) {
-            if (!checkMeals(venue.getMealsByDay().get(i).getMeals(), previousMeals)) {
-                String endDate = venue.getMealsByDay().get(i - 1).getDateString();
-                meals = venue.getMealsByDay().get(i - 1).getMeals();
+            for (int i = 1; i < venue.getMealsByDay().size(); i++) {
+                if (!checkMeals(venue.getMealsByDay().get(i).getMeals(), previousMeals)) {
+                    String endDate = venue.getMealsByDay().get(i - 1).getDateString();
+                    meals = venue.getMealsByDay().get(i - 1).getMeals();
 
-                String range = formatDate(startDate) + " - " + formatDate(endDate);
-                buildAndAddView(range, meals);
+                    String range = formatDate(startDate) + " - " + formatDate(endDate);
+                    buildAndAddView(range, meals);
 
-                previousMeals = venue.getMealsByDay().get(i).getMeals();
-                startDate = venue.getMealsByDay().get(i).getDateString();
-            } else if (i == venue.getMealsByDay().size() - 1) {
-                String endDate = venue.getMealsByDay().get(i).getDateString();
-                meals = venue.getMealsByDay().get(i).getMeals();
+                    previousMeals = venue.getMealsByDay().get(i).getMeals();
+                    startDate = venue.getMealsByDay().get(i).getDateString();
+                } else if (i == venue.getMealsByDay().size() - 1) {
+                    String endDate = venue.getMealsByDay().get(i).getDateString();
+                    meals = venue.getMealsByDay().get(i).getMeals();
 
-                String range = formatDate(startDate) + " - " + formatDate(endDate);
-                buildAndAddView(range, meals);
+                    String range = formatDate(startDate) + " - " + formatDate(endDate);
+                    buildAndAddView(range, meals);
+                }
             }
+        } else {
+            buildAnddAddView();
         }
     }
 
+    private void buildAnddAddView() {
+        LinearLayout layout = (LinearLayout) View.inflate(this, R.layout.dining_house_date_range_segment, null);
+        TextView dateRangeTextView = (TextView) layout.findViewById(R.id.date_range_text_view);
+        ListView mealsListView = (ListView) layout.findViewById(R.id.meals_list_view);
+        TextView hoursTextView = (TextView) layout.findViewById(R.id.hours_text_view);
+
+        dateRangeTextView.setText(getResources().getString(R.string.mon_sun));
+        hoursTextView.setText(getResources().getString(R.string.dining_day_closed));
+
+        mealsListView.setVisibility(View.GONE);
+        hoursTextView.setVisibility(View.VISIBLE);
+
+        hoursLayout.addView(layout);
+    }
 
     private void buildAndAddView(String range, List<MITDiningMeal> meals) {
         LinearLayout layout = (LinearLayout) View.inflate(this, R.layout.dining_house_date_range_segment, null);
         TextView dateRangeTextView = (TextView) layout.findViewById(R.id.date_range_text_view);
         ListView mealsListView = (ListView) layout.findViewById(R.id.meals_list_view);
+        TextView hoursTextView = (TextView) layout.findViewById(R.id.hours_text_view);
+
+        mealsListView.setVisibility(View.VISIBLE);
+        hoursTextView.setVisibility(View.GONE);
 
         dateRangeTextView.setText(range);
 

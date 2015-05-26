@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseMealMenuAdapter;
+import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
 import edu.mit.mitmobile2.dining.model.MITDiningMenuItem;
 import edu.mit.mitmobile2.dining.model.SelectedFilters;
@@ -41,6 +42,7 @@ public class HouseMenuFragment extends Fragment {
 
     private HouseMealMenuAdapter houseMealMenuAdapter;
     private MITDiningMeal meal;
+    private MITDiningHouseDay day;
     private Set<SelectedFilters.Filters> filtersSet;
     private List<MITDiningMenuItem> filterItems;
     private List<String> filterNames;
@@ -50,6 +52,17 @@ public class HouseMenuFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putParcelable(Constants.Dining.HOUSE_MEAL, meal);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+
+    public static HouseMenuFragment newInstance(MITDiningHouseDay day) {
+        HouseMenuFragment fragment = new HouseMenuFragment();
+
+        Bundle args = new Bundle();
+        args.putParcelable(Constants.Dining.HOUSE_DAY, day);
         fragment.setArguments(args);
 
         return fragment;
@@ -71,6 +84,8 @@ public class HouseMenuFragment extends Fragment {
 
         if (getArguments() != null && getArguments().containsKey(Constants.Dining.HOUSE_MEAL)) {
             meal = getArguments().getParcelable(Constants.Dining.HOUSE_MEAL);
+        } else if (getArguments() != null && getArguments().containsKey(Constants.Dining.HOUSE_DAY)){
+            day = getArguments().getParcelable(Constants.Dining.HOUSE_DAY);
         }
 
         SharedPreferences sharedPreferences = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this.getActivity());
@@ -78,28 +93,48 @@ public class HouseMenuFragment extends Fragment {
 
         filterItems = new ArrayList<>();
 
-        if (filterGson != "" && meal.getItems() != null) {
-            filtersSet = getFiltersSet(filterGson);
-            filterNames = new ArrayList<>();
-            filterNames = convertToFilterList(filtersSet);
+        filtersSet = getFiltersSet(filterGson);
+        filterNames = new ArrayList<>();
+        filterNames = convertToFilterList(filtersSet);
 
-            if (filterNames.size() > 0) {
-                updateMealMenuItems();
-                filterLayout.setVisibility(View.VISIBLE);
-                for (int i =0; i < filterNames.size(); i++) {
-                    buildAndAddFilterImages(filterNames.get(i).toString());
+        if (meal != null) {
+            if (filterGson != "" && meal.getItems() != null) {
+                if (filterNames.size() > 0) {
+                    updateMealMenuItems();
+                    filterLayout.setVisibility(View.VISIBLE);
+                    for (int i =0; i < filterNames.size(); i++) {
+                        buildAndAddFilterImages(filterNames.get(i).toString());
+                    }
+                } else {
+                    filterLayout.setVisibility(View.GONE);
+                    filterItems.addAll(meal.getItems());
+                    buildAndUpdateMenuSegment(filterItems);
                 }
             } else {
                 filterLayout.setVisibility(View.GONE);
-                filterItems.addAll(meal.getItems());
+                if(meal.getItems() != null) {
+                    filterItems.addAll(meal.getItems());
+                }
                 buildAndUpdateMenuSegment(filterItems);
             }
-        } else {
-            filterLayout.setVisibility(View.GONE);
-            if(meal.getItems() != null) {
-                filterItems.addAll(meal.getItems());
+        } else if (day != null) {
+            if (filterGson != "") {
+                if (filterNames.size() > 0) {
+                    filterLayout.setVisibility(View.VISIBLE);
+                    for (int i =0; i < filterNames.size(); i++) {
+                        buildAndAddFilterImages(filterNames.get(i).toString());
+                    }
+                } else {
+                    filterLayout.setVisibility(View.GONE);
+                }
+
+            } else {
+                filterLayout.setVisibility(View.GONE);
             }
-            buildAndUpdateMenuSegment(filterItems);
+
+            noItemsTextView.setText(getResources().getString(R.string.dining_day_closed));
+            noItemsTextView.setVisibility(View.VISIBLE);
+            menuDetailListView.setVisibility(View.GONE);
         }
 
         return view;
