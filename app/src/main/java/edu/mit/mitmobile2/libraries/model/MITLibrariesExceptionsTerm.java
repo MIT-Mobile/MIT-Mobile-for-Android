@@ -3,8 +3,11 @@ package edu.mit.mitmobile2.libraries.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,6 +26,12 @@ public class MITLibrariesExceptionsTerm implements Parcelable {
 
     @SerializedName("reason")
     private String reason;
+
+    @Expose
+    private Date startDate;
+
+    @Expose
+    private Date endDate;
 
     public MITLibrariesExceptionsTerm() {
         // empty constructor
@@ -53,6 +62,44 @@ public class MITLibrariesExceptionsTerm implements Parcelable {
     }
 
     /* Helpers */
+
+    public Date getStartDate() {
+        if (startDate == null) {
+            String startDateString = String.format("%s %s", dates.getStart(), hours.getStart());
+            try {
+                startDate =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startDateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        if (endDate == null) {
+            String startDateString = String.format("%s %s", dates.getEnd(), hours.getEnd());
+            try {
+                endDate =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startDateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return endDate;
+    }
+
+    public boolean isOpenOnDate(Date date) {
+        Date endDate = getEndDate();
+        if (endDate.equals(DateUtils.startOfDay(date))) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(endDate);
+            calendar.add(Calendar.DATE, 1);
+            endDate = calendar.getTime();
+        }
+
+        return DateUtils.dateFallsBetweenDates(date, getStartDate(), endDate);
+    }
 
     public boolean isOpenOnDayOfDate(Date date) {
         return DateUtils.dateFallsBetweenDates(date, dates.getStartDate(), dates.getEndDate(), Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
