@@ -142,14 +142,14 @@ public class MITLibrariesTerm implements Parcelable {
 
         // Check to see if the library is explicitly closed
         for (MITLibrariesClosingsTerm term : closingsTerm) {
-            if ([term.isClosedOnDate(date)) {
+            if (term.isClosedOnDate(date)) {
                 return false;
             }
         }
 
         // Check to see if the library is open for the day of the week
         for (MITLibrariesRegularTerm term : regularTerm) {
-            if ([term.isOpenOnDate(date)) {
+            if (term.isOpenOnDate(date)) {
                 return true;
             }
         }
