@@ -77,28 +77,6 @@ public class MITLibrariesDate implements Parcelable {
         return endDate;
     }
 
-    /*
-    // This assumes that the dates stored are hours only, no day information
-    - (NSString *)hoursRangesString
-    {
-        NSDateFormatter *dateFormatter = [MITLibrariesDate dateFormatter];
-
-        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-
-        // We don't really care what the date is, only the hours of that date (things sometimes go screwy if you trying to dateFromString with just hours)
-        NSString *dateDayString = [dateFormatter stringFromDate:[NSDate date]];
-
-        NSString *startDateString = [NSString stringWithFormat:@"%@ %@", dateDayString, self.start];
-        NSString *endDateString = [NSString stringWithFormat:@"%@ %@", dateDayString, self.end];
-
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSDate *startDate = [dateFormatter dateFromString:startDateString];
-        NSDate *endDate = [dateFormatter dateFromString:endDateString];
-
-        return [[NSString stringWithFormat:@"%@-%@", [self smartStringForDate:startDate], [self smartStringForDate:endDate]] lowercaseString];
-    }
-    */
-
     /**
      * This assumes that the dates stored are hours only, no day information
      *
@@ -146,6 +124,28 @@ public class MITLibrariesDate implements Parcelable {
             }
 
             return new SimpleDateFormat(dateFormat).format(date);
+        }
+    }
+
+    public String dayRangesString() {
+        if (start.equals(end)) {
+            return new SimpleDateFormat("MMM d").format(getStartDate());
+        } else {
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMM ");
+
+            String startingMonth = monthFormat.format(getStartDate());
+            String endingMonth = monthFormat.format(getEndDate());
+
+            SimpleDateFormat dayFormat = new SimpleDateFormat("d");
+
+            String startingDay = dayFormat.format(getStartDate());
+            String endingDay = dayFormat.format(getEndDate());
+
+            if (startingMonth.equals(endingMonth)) {
+                endingMonth = "";
+            }
+
+            return String.format("%s%s-%s%s", startingMonth, startingDay, endingMonth, endingDay);
         }
     }
 

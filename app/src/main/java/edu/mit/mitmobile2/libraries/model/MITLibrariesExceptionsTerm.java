@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.libraries.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -103,6 +104,10 @@ public class MITLibrariesExceptionsTerm implements Parcelable {
 
     public boolean isOpenOnDayOfDate(Date date) {
         return DateUtils.dateFallsBetweenDates(date, dates.getStartDate(), dates.getEndDate(), Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH);
+    }
+
+    public String termHoursDescription(Context context) {
+        return String.format("%s %s (%s)", dates.dayRangesString(), hours.hoursRangesString(context), reason);
     }
 
     /* Parcelable */
