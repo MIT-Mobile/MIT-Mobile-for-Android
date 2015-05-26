@@ -256,5 +256,11 @@
     <string name="library_item_detail_format">"format"</string>
     <string name="library_item_detail_publisher">"publisher"</string>
     <string name="library_item_detail_isbn">"ISBN"</string>
+    <string name="title_activity_maps_categories">MapsCategoriesActivity</string>
+
+    <!--Maps categories-->
+    <string name="map_categories_title_categories">Categories</string>
+    <string name="map_categories_title_bookmarks">Bookmarks</string>
+    <string name="map_categories_title_recents">Recents</string>
 
 </resources>
