@@ -115,6 +115,7 @@ public class DiningHouseActivity extends AppCompatActivity {
 
             if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
                 houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+                findCurrentMeal(diningMeals);
             } else {
                 houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
             }
