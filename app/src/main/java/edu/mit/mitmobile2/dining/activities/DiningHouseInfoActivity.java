@@ -69,9 +69,10 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
         } else if (houseStatus.contains("at") || houseStatus.contains("Closed")) {
             houseStatusTextView.setTextColor(getResources().getColor(R.color.status_red));
         } else {
-            houseStatusTextView.setText(houseStatus);
             houseStatusTextView.setTextColor(getResources().getColor(R.color.status_red));
         }
+
+        houseStatusTextView.setText(houseStatus);
 
         buildHoursSegment();
 

@@ -31,7 +31,7 @@ import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
-public class DiningHouseActivity extends AppCompatActivity  {
+public class DiningHouseActivity extends AppCompatActivity {
 
     @InjectView(R.id.house_image_view)
     ImageView houseImageView;
@@ -101,7 +101,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
     private void buildHouseMenuPager() {
         diningMeals = new ArrayList<>();
         for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
-            if (!diningHouseDay.getMessage().startsWith("Closed")) {
+            if (diningHouseDay.getMeals() != null) {
                 for (MITDiningMeal mitDiningMeal : diningHouseDay.getMeals()) {
                     mitDiningMeal.setHouseDateString(diningHouseDay.getDateString());
                     diningMeals.add(mitDiningMeal);

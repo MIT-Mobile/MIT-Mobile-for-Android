@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseMealMenuAdapter;
+import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
 import edu.mit.mitmobile2.dining.model.MITDiningMenuItem;
@@ -93,12 +94,12 @@ public class HouseMenuFragment extends Fragment {
 
         filterItems = new ArrayList<>();
 
-        filtersSet = getFiltersSet(filterGson);
-        filterNames = new ArrayList<>();
-        filterNames = convertToFilterList(filtersSet);
-
         if (meal != null) {
             if (filterGson != "" && meal.getItems() != null) {
+                filtersSet = getFiltersSet(filterGson);
+                filterNames = new ArrayList<>();
+                filterNames = convertToFilterList(filtersSet);
+
                 if (filterNames.size() > 0) {
                     updateMealMenuItems();
                     filterLayout.setVisibility(View.VISIBLE);
@@ -119,6 +120,10 @@ public class HouseMenuFragment extends Fragment {
             }
         } else if (day != null) {
             if (filterGson != "") {
+                filtersSet = getFiltersSet(filterGson);
+                filterNames = new ArrayList<>();
+                filterNames = convertToFilterList(filtersSet);
+
                 if (filterNames.size() > 0) {
                     filterLayout.setVisibility(View.VISIBLE);
                     for (int i =0; i < filterNames.size(); i++) {
