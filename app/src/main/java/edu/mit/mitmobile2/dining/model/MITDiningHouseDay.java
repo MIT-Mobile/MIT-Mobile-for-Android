@@ -60,12 +60,14 @@ public class MITDiningHouseDay implements Parcelable {
     public MITDiningMeal mealForDate(Date date) {
         MITDiningMeal returnMeal = null;
         long dateInterval = date.getTime();
-        for (MITDiningMeal meal : meals) {
-            long startTime = (meal.getStartTime() == null) ? 0 : meal.getStartTime().getTime();
-            long endTime = (meal.getEndTime() == null) ? 0 : meal.getEndTime().getTime();
-            if (startTime <= dateInterval && dateInterval < endTime) {
-                returnMeal = meal;
-                break;
+        if (meals != null) {
+            for (MITDiningMeal meal : meals) {
+                long startTime = (meal.getStartTime() == null) ? 0 : meal.getStartTime().getTime();
+                long endTime = (meal.getEndTime() == null) ? 0 : meal.getEndTime().getTime();
+                if (startTime <= dateInterval && dateInterval < endTime) {
+                    returnMeal = meal;
+                    break;
+                }
             }
         }
 
