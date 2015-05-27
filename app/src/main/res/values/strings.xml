@@ -219,6 +219,8 @@
     <string name="filter_showing">Showing</string>
     <string name="all_events">All Events</string>
     <string name="your_account">Your Account</string>
+    <string name="dining_day_closed">Closed</string>
+    <string name="mon_sun">MON - SUN</string>
 
     <string-array name="predefined_link_titles">
         <item>Locations &amp; Hours</item>

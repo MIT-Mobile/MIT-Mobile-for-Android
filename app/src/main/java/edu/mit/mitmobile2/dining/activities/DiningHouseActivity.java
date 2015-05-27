@@ -24,13 +24,14 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.adapters.HouseDayPagerAdapter;
 import edu.mit.mitmobile2.dining.adapters.HouseMenuPagerAdapter;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
-public class DiningHouseActivity extends AppCompatActivity  {
+public class DiningHouseActivity extends AppCompatActivity {
 
     @InjectView(R.id.house_image_view)
     ImageView houseImageView;
@@ -68,6 +69,7 @@ public class DiningHouseActivity extends AppCompatActivity  {
     }
 
     private HouseMenuPagerAdapter houseMenuPagerAdapter;
+    private HouseDayPagerAdapter houseDayPagerAdapter;
     private List<MITDiningMeal> diningMeals;
     private MITDiningHouseVenue venue;
 
@@ -98,49 +100,83 @@ public class DiningHouseActivity extends AppCompatActivity  {
 
     private void buildHouseMenuPager() {
         diningMeals = new ArrayList<>();
-        for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
-            for (MITDiningMeal mitDiningMeal : diningHouseDay.getMeals()) {
-                mitDiningMeal.setHouseDateString(diningHouseDay.getDateString());
-                diningMeals.add(mitDiningMeal);
+        if (!venue.hoursToday(this).toLowerCase().startsWith("closed")) {
+            for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
+                if (diningHouseDay.getMeals() != null) {
+                    for (MITDiningMeal mitDiningMeal : diningHouseDay.getMeals()) {
+                        mitDiningMeal.setHouseDateString(diningHouseDay.getDateString());
+                        diningMeals.add(mitDiningMeal);
+                    }
+                }
             }
         }
-        houseMenuPagerAdapter = new HouseMenuPagerAdapter(getFragmentManager(), diningMeals);
-        houseMenuViewpager.setAdapter(houseMenuPagerAdapter);
 
-        if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
-            houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+        if (diningMeals.size() > 0) {
+            houseMenuPagerAdapter = new HouseMenuPagerAdapter(getFragmentManager(), diningMeals);
+            houseMenuViewpager.setAdapter(houseMenuPagerAdapter);
+
+            if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
+                houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+                findCurrentMeal(diningMeals);
+            } else {
+                houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+            }
         } else {
-            houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+            houseDayPagerAdapter = new HouseDayPagerAdapter(getFragmentManager(), venue.getMealsByDay());
+            houseMenuViewpager.setAdapter(houseDayPagerAdapter);
+
+            if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
+                houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+            } else {
+                houseMenuViewpager.setCurrentItem(findCurrentHouseDay(venue.getMealsByDay()));
+            }
         }
 
         houseMenuViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (diningMeals.get(position).getHouseDateString().equals(getCurrentDate())) {
-                    dateTextView.setText(getResources().getString(R.string.house_today, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
-                } else if (diningMeals.get(position).getHouseDateString().equals(getYesterdayDate())) {
-                    dateTextView.setText(getResources().getString(R.string.house_yesterday, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
-                } else if (diningMeals.get(position).getHouseDateString().equals(getTomorrowDate())) {
-                    dateTextView.setText(getResources().getString(R.string.house_tomorrow, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
-                } else {
-                    dateTextView.setText(formatDate(diningMeals.get(position).getHouseDateString()));
-                }
+                if (diningMeals.size() > 0) {
+                    if (diningMeals.get(position).getHouseDateString().equals(getCurrentDate())) {
+                        dateTextView.setText(getResources().getString(R.string.house_today, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                    } else if (diningMeals.get(position).getHouseDateString().equals(getYesterdayDate())) {
+                        dateTextView.setText(getResources().getString(R.string.house_yesterday, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                    } else if (diningMeals.get(position).getHouseDateString().equals(getTomorrowDate())) {
+                        dateTextView.setText(getResources().getString(R.string.house_tomorrow, formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                    } else {
+                        dateTextView.setText(formatDate(diningMeals.get(position).getHouseDateString()));
+                    }
 
-                String startTime;
-                String endTime;
-                if (diningMeals.get(position).getStartTimeString().endsWith(":00:00")) {
-                    startTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
+                    String startTime;
+                    String endTime;
+                    if (diningMeals.get(position).getStartTimeString().endsWith(":00:00")) {
+                        startTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
+                    } else {
+                        startTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
+                    }
+                    if (diningMeals.get(position).getEndTimeString().endsWith(":00:00")) {
+                        endTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
+                    } else {
+                        endTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
+                    }
+                    infoTextView.setText(diningMeals.get(position).getName() + " "
+                            + startTime + " - "
+                            + endTime);
                 } else {
-                    startTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
+                    MITDiningHouseDay day = venue.getMealsByDay().get(position);
+                    if (day.getDateString().equals(getCurrentDate())) {
+                        dateTextView.setText(getResources().getString(R.string.house_today, formatSimpletDate(day.getDateString())));
+                    } else if (day.getDateString().equals(getYesterdayDate())) {
+                        dateTextView.setText(getResources().getString(R.string.house_yesterday, formatSimpletDate(day.getDateString())));
+                    } else if (day.getDateString().equals(getTomorrowDate())) {
+                        dateTextView.setText(getResources().getString(R.string.house_tomorrow, formatSimpletDate(day.getDateString())));
+                    } else {
+                        dateTextView.setText(formatDate(day.getDateString()));
+                    }
+
+                    houseHoursTextView.setText(day.getMessage());
+                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                    infoTextView.setText(day.getMessage());
                 }
-                if (diningMeals.get(position).getEndTimeString().endsWith(":00:00")) {
-                    endTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
-                } else {
-                    endTime =DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
-                }
-                infoTextView.setText(diningMeals.get(position).getName() + " "
-                        + startTime + " - "
-                        + endTime);
             }
 
             @Override
@@ -188,6 +224,20 @@ public class DiningHouseActivity extends AppCompatActivity  {
                 }else {
                     continue;
                 }
+            }
+        }
+
+        return index;
+    }
+
+    private int findCurrentHouseDay(List<MITDiningHouseDay> days) {
+        int index = 0;
+        String currentDate = getCurrentDate();
+
+        for (int i = 0; i < days.size(); i++) {
+            if (days.get(i).getDateString().equals(currentDate)) {
+                index = i;
+                break;
             }
         }
 

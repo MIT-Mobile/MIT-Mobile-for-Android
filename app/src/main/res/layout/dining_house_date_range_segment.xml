@@ -10,6 +10,16 @@
         android:textColor="@color/mit_grey"
         />
 
+    <TextView
+        android:id="@+id/hours_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="30dp"
+        android:visibility="gone"
+        />
+
     <ListView
         android:id="@+id/meals_list_view"
         android:layout_width="wrap_content"
