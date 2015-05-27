@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     public interface OnCategoriesFragmentInteractionListener {
 
@@ -61,6 +63,7 @@ public class CategoriesFragment extends Fragment {
 
         adapter = new CategoriesAdapter();
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         if (savedInstanceState == null) {
             fetchCategories();
@@ -73,6 +76,17 @@ public class CategoriesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /* AdapterView.OnItemClickListener */
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MITMapCategory selectedCategory = adapter.getItem(position);
+
+        if (selectedCategory.getCategories() != null && selectedCategory.getCategories().size() > 0) {
+            getFragmentManager().beginTransaction().replace(R.id.fragment_root, CategoryDetailFragment.newInstance()).addToBackStack(null).commit();
+        }
     }
 
     /* Network */

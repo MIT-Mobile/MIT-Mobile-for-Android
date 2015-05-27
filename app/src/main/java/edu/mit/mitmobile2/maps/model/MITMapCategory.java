@@ -2,7 +2,7 @@ package edu.mit.mitmobile2.maps.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by serg on 5/27/15.
@@ -17,6 +17,9 @@ public class MITMapCategory {
 
     @SerializedName("url")
     private String url;
+
+    @SerializedName("categories")
+    private List<MITMapCategory> categories;
 
 //    private HashMap<Object, Object> places;
 //    private HashMap<Object, Object> placeContents;
@@ -46,5 +49,13 @@ public class MITMapCategory {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public List<MITMapCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<MITMapCategory> categories) {
+        this.categories = categories;
     }
 }
