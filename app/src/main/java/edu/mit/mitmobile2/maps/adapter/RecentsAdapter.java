@@ -3,6 +3,9 @@ package edu.mit.mitmobile2.maps.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import edu.mit.mitmobile2.R;
 
 /**
  * Created by serg on 5/27/15.
@@ -29,7 +32,7 @@ public class RecentsAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
 
         if (convertView == null) {
-            convertView = View.inflate(parent.getContext(), 1, null);
+            convertView = View.inflate(parent.getContext(), R.layout.row_map_category_recent, null);
 
             viewHolder = new ViewHolder();
 
@@ -42,6 +45,6 @@ public class RecentsAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-
+        TextView textViewTitle;
     }
 }

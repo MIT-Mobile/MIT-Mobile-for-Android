@@ -10,6 +10,7 @@ import java.util.HashMap;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
+import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
@@ -44,9 +45,20 @@ public class MapManager extends RetrofitManager {
         return returnValue;
     }
 
+    public static MapManagerCall getMapPlaceCategories(Activity activity, Callback<ArrayList<MITMapCategory>> categories) {
+        MapManagerCallWrapper<?> returnValue = new MapManagerCallWrapper<>(new MITAPIClient(activity), categories);
+
+        returnValue.getClient().get(Constants.MAP, Constants.Map.MAP_PLACE_CATEGORIES_PATH, null, null, returnValue);
+
+        return returnValue;
+    }
+
     public interface MitMapService {
         @GET(Constants.Map.MAP_PLACES)
         void _getmapplaces(Callback<ArrayList<MITMapPlace>> callback);
+
+        @GET(Constants.Map.MAP_PLACE_CATEGORIES_PATH)
+        void _getmapplacecategories(Callback<ArrayList<MITMapCategory>> callback);
     }
 
     public static class MapManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements MapManagerCall, Callback<T> {

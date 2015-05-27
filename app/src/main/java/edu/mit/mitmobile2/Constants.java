@@ -123,6 +123,7 @@ public class Constants {
     public class Map {
         public static final String MAP_PATH = "/";
         public static final String MAP_PLACES = "/places";
+        public static final String MAP_PLACE_CATEGORIES_PATH = "/place_categories";
     }
 
     public class Libraries {

@@ -28,6 +28,7 @@
     <string name="title_activity_news_category">NewsCategoryActivity</string>
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
     <string name="title_activity_events_detail">Event Details</string>
+    <string name="title_activity_maps_categories">Categories</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -256,7 +257,7 @@
     <string name="library_item_detail_format">"format"</string>
     <string name="library_item_detail_publisher">"publisher"</string>
     <string name="library_item_detail_isbn">"ISBN"</string>
-    <string name="title_activity_maps_categories">MapsCategoriesActivity</string>
+
 
     <!--Maps categories-->
     <string name="map_categories_title_categories">Categories</string>

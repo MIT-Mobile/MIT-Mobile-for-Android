@@ -3,9 +3,14 @@ package edu.mit.mitmobile2.maps.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 
 /**
@@ -15,8 +20,8 @@ public class CategoriesAdapter extends BaseAdapter {
 
     private ArrayList<MITMapCategory> categories;
 
-    public CategoriesAdapter(ArrayList<MITMapCategory> categories) {
-        this.categories = categories;
+    public CategoriesAdapter() {
+        this.categories = new ArrayList<>();
     }
 
     @Override
@@ -25,7 +30,7 @@ public class CategoriesAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public MITMapCategory getItem(int position) {
         return categories.get(position);
     }
 
@@ -39,19 +44,35 @@ public class CategoriesAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
 
         if (convertView == null) {
-            convertView = View.inflate(parent.getContext(), 1, null);
+            convertView = View.inflate(parent.getContext(), R.layout.row_map_category_category, null);
 
             viewHolder = new ViewHolder();
+            viewHolder.textViewTitle = (TextView) convertView.findViewById(R.id.map_category_tv_title);
+            viewHolder.imageViewIcon = (ImageView) convertView.findViewById(R.id.map_category_iv_icon);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        MITMapCategory category = getItem(position);
+
+        viewHolder.textViewTitle.setText(category.getName());
+
         return convertView;
     }
 
     class ViewHolder {
+        TextView textViewTitle;
+        ImageView imageViewIcon;
+    }
 
+    public void refreshCategories(ArrayList<MITMapCategory> categories) {
+        this.categories.clear();
+        if (categories != null) {
+            this.categories.addAll(categories);
+        }
+
+        notifyDataSetChanged();
     }
 }

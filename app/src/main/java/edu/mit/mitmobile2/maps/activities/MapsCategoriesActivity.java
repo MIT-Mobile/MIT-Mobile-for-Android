@@ -10,8 +10,11 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.adapter.CategoriesPagerAdapter;
+import edu.mit.mitmobile2.maps.fragments.BookmarksFragment;
+import edu.mit.mitmobile2.maps.fragments.CategoriesFragment;
+import edu.mit.mitmobile2.maps.fragments.RecentsFragment;
 
-public class MapsCategoriesActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.OnTabReselectedListener {
+public class MapsCategoriesActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.OnTabReselectedListener, CategoriesFragment.OnCategoriesFragmentInteractionListener, BookmarksFragment.OnBookmarksFragmentInteractionListener, RecentsFragment.OnRecentsFragmentInteractionListener {
 
     private ViewPager viewPager;
     private PagerSlidingTabStrip tabHost;
