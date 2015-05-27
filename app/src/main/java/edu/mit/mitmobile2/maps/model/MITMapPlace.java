@@ -10,6 +10,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapItem;
@@ -70,11 +73,9 @@ public class MITMapPlace extends MapItem implements Parcelable {
     @SerializedName("viewangle")
     private String viewangle;
 
-    private int index;
-    // TODO: add fields:
-    // category
-    // contents
+    private List<String> category = new ArrayList<>();
 
+    private List<MITMapPlaceContent> contents = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -156,6 +157,22 @@ public class MITMapPlace extends MapItem implements Parcelable {
         this.viewangle = viewangle;
     }
 
+    public List<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<String> category) {
+        this.category = category;
+    }
+
+    public List<MITMapPlaceContent> getContents() {
+        return contents;
+    }
+
+    public void setContents(List<MITMapPlaceContent> contents) {
+        this.contents = contents;
+    }
+
     protected MITMapPlace(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -167,6 +184,18 @@ public class MITMapPlace extends MapItem implements Parcelable {
         architect = in.readString();
         mailing = in.readString();
         viewangle = in.readString();
+        if (in.readByte() == 0x01) {
+            category = new ArrayList<>();
+            in.readList(category, String.class.getClassLoader());
+        } else {
+            category = null;
+        }
+        if (in.readByte() == 0x01) {
+            contents = new ArrayList<>();
+            in.readList(contents, MITMapPlaceContent.class.getClassLoader());
+        } else {
+            contents = null;
+        }
     }
 
     @Override
@@ -186,6 +215,18 @@ public class MITMapPlace extends MapItem implements Parcelable {
         dest.writeString(architect);
         dest.writeString(mailing);
         dest.writeString(viewangle);
+        if (category == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(category);
+        }
+        if (contents == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(contents);
+        }
     }
 
     @SuppressWarnings("unused")

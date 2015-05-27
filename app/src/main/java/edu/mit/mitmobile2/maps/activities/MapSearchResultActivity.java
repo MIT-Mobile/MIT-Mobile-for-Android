@@ -14,13 +14,12 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.adapters.MapSearchResultAdapter;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
 public class MapSearchResultActivity extends AppCompatActivity {
-
-    private static final String PLACES_KEY = "places";
 
     @InjectView(R.id.map_search_listview)
     ListView listView;
@@ -35,7 +34,7 @@ public class MapSearchResultActivity extends AppCompatActivity {
 
         ButterKnife.inject(this);
 
-        List<MITMapPlace> places = getIntent().getParcelableArrayListExtra(PLACES_KEY);
+        List<MITMapPlace> places = getIntent().getParcelableArrayListExtra(Constants.PLACES_KEY);
 
         if (places.size() > 0) {
             listView.setVisibility(View.VISIBLE);

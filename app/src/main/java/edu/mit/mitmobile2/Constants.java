@@ -20,6 +20,8 @@ public class Constants {
     public static final String DINING_HOUSE = "diningHouse";
     public static final String CALENDAR_FILTER_KEY = "calendarFilter";
     public static final String ACCOUNT_ITEM_KEY = "accountItem";
+    public static final String PLACES_KEY = "places";
+    public static final String POSITION_KEY = "position";
 
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
@@ -124,6 +126,8 @@ public class Constants {
     public class Map {
         public static final String MAP_PATH = "/";
         public static final String MAP_PLACES = "/places";
+
+        public static final String MAP_BOOKMARKS = "mapBookmarks";
     }
 
     public class Libraries {

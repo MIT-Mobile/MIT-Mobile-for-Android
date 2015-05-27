@@ -33,11 +33,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITSearchAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.activities.MapPlaceDetailActivity;
 import edu.mit.mitmobile2.maps.activities.MapSearchResultActivity;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
@@ -191,19 +193,16 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         Gson gson = new Gson();
 
         MITMapPlace.MITMapPlaceSnippet snippet = gson.fromJson(marker.getSnippet(), MITMapPlace.MITMapPlaceSnippet.class);
-//        String type = snippet.type;
-//        int index = snippet.index;
 
-        // TODO: Go to detail screen
+        Intent intent = new Intent(getActivity(), MapPlaceDetailActivity.class);
 
-        /*Intent intent = new Intent(getActivity(), TourStopActivity.class);
-        intent.putExtra(Constants.Tours.TOUR_KEY, tour);
-        intent.putExtra(Constants.Tours.TOUR_STOP_TYPE, type);
-        intent.putExtra(Constants.Tours.CURRENT_MAIN_LOOP_STOP, index);
-        if (type.equals(Constants.Tours.SIDE_TRIP)) {
-            intent.putExtra(Constants.Tours.TOUR_STOP, tour.getStops().get(index));
+        for (MITMapPlace place : places) {
+            if (snippet.getId().equals(place.getId())) {
+                intent.putExtra(Constants.PLACES_KEY, place);
+                startActivity(intent);
+                break;
+            }
         }
-        startActivity(intent);*/
     }
 
     @Override
@@ -290,7 +289,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public void switchViews(boolean toList) {
         Intent intent = new Intent(getActivity(), MapSearchResultActivity.class);
         //noinspection unchecked
-        intent.putParcelableArrayListExtra("places", (ArrayList) places);
+        intent.putParcelableArrayListExtra(Constants.PLACES_KEY, (ArrayList) places);
         startActivityForResult(intent, 100);
     }
 
@@ -299,7 +298,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            int position = data.getIntExtra("position", -1);
+            int position = data.getIntExtra(Constants.POSITION_KEY, -1);
             selectMarker(position);
             mitMapView.setToDefaultBounds(false, 0);
         }
