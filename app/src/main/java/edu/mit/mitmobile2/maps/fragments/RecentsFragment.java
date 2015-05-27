@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.adapter.RecentsAdapter;
 
 public class RecentsFragment extends Fragment {
 
     public interface OnRecentsFragmentInteractionListener {
     }
+
+    private RecentsAdapter adapter;
 
     private OnRecentsFragmentInteractionListener mListener;
 
@@ -40,7 +43,9 @@ public class RecentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recents, container, false);
+        View view = inflater.inflate(R.layout.fragment_recents, container, false);
+
+        return view;
     }
 
     @Override

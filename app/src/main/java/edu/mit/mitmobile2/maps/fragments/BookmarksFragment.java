@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.adapter.BookmarksAdapter;
 
 public class BookmarksFragment extends Fragment {
 
     public interface OnBookmarksFragmentInteractionListener {
 
     }
+
+    private BookmarksAdapter adapter;
 
     private OnBookmarksFragmentInteractionListener mListener;
 
@@ -41,7 +44,9 @@ public class BookmarksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_bookmarks, container, false);
+        View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+
+        return view;
     }
 
     @Override

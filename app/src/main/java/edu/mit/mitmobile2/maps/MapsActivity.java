@@ -25,6 +25,7 @@ import java.util.Map;
 
 import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.activities.MapsCategoriesActivity;
 
 public class MapsActivity extends MITMainActivity {
 
@@ -52,9 +53,6 @@ public class MapsActivity extends MITMainActivity {
             }
         }
 
-        // for tests
-//        Intent i = new Intent(this, MapsCategoriesActivity.class);
-//        startActivity(i);
     }
 
     @Override
