@@ -5,12 +5,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
 /**
  * Created by serg on 5/27/15.
  */
 public class BookmarksAdapter extends BaseAdapter {
+
+    private ArrayList<MITMapPlace> bookmarkedPlaces;
+
+    public BookmarksAdapter() {
+        this.bookmarkedPlaces = new ArrayList<>();
+    }
 
     @Override
     public int getCount() {
@@ -46,5 +55,14 @@ public class BookmarksAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView textViewTitle;
+    }
+
+    private void updateBookmarkedPlaces(ArrayList<MITMapPlace> bookmarkedPlaces) {
+        this.bookmarkedPlaces.clear();
+        if (bookmarkedPlaces != null) {
+            this.bookmarkedPlaces.addAll(bookmarkedPlaces);
+        }
+
+        notifyDataSetChanged();
     }
 }
