@@ -31,18 +31,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.maps.MapFragment;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.mit.mitmobile2.events.fragment.EventsFragment;
-import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.tour.fragment.TourFragment;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
-import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 
-public class MITMainActivity extends MITActivity implements FullscreenMapCallback {
+public class MITMainActivity extends MITActivity {
 
     private static DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -143,11 +139,6 @@ public class MITMainActivity extends MITActivity implements FullscreenMapCallbac
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void switchViews(boolean toList) {
-        getFragmentManager().beginTransaction().add(R.id.content_frame, new EventsFragment()).commit();
     }
 
     /* The click listener for ListView in the navigation drawer */

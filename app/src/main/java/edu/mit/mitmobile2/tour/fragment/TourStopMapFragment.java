@@ -23,6 +23,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.shared.fragment.FullscreenMapFragment;
 import edu.mit.mitmobile2.tour.activities.TourStopActivity;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
@@ -43,6 +44,7 @@ public class TourStopMapFragment extends FullscreenMapFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        mapCallback = (FullscreenMapCallback) getActivity();
         callback = (TourSelfGuidedCallback) getActivity();
 
         //noinspection ConstantConditions

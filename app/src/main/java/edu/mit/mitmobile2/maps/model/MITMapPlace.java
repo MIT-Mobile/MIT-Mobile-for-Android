@@ -221,6 +221,11 @@ public class MITMapPlace extends MapItem implements Parcelable {
     }
 
     @Override
+    public boolean isDynamic() {
+        return true;
+    }
+
+    @Override
     protected String getTableName() {
         return null;
     }

@@ -1,10 +1,11 @@
 package edu.mit.mitmobile2.maps;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.mit.mitmobile2.MITSearchAdapter;
@@ -36,13 +38,15 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.activities.MapSearchResultActivity;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
+import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.shared.fragment.FullscreenMapFragment;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MapsFragment extends FullscreenMapFragment {
+public class MapsFragment extends FullscreenMapFragment implements FullscreenMapCallback {
 
     private static final String MAPS_SEARCH_HISTORY = "mapSearchHistory";
 
@@ -53,6 +57,7 @@ public class MapsFragment extends FullscreenMapFragment {
     private SharedPreferences sharedPreferences;
     private SearchView searchView;
     private TextView searchTextView;
+    private List<MITMapPlace> places;
 
     public MapsFragment() {
     }
@@ -62,17 +67,19 @@ public class MapsFragment extends FullscreenMapFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        mapCallback = this;
+
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_padding);
+        places = new ArrayList<>();
 
         this.setHasOptionsMenu(true);
 
-        PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
+        sharedPreferences = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
 
         //noinspection ConstantConditions
         recentsListview = (ListView) view.findViewById(R.id.map_listview);
 
         recentSearches = new LinkedHashSet<>();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         Set<String> set = sharedPreferences.getStringSet(MAPS_SEARCH_HISTORY, null);
 
         if (set != null) {
@@ -106,13 +113,12 @@ public class MapsFragment extends FullscreenMapFragment {
     }
 
     private boolean performSearch(View sender, Object handler, String searchText) {
-        HashSet<String> recentSearches = new LinkedHashSet<>();
-
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (!recentSearches.contains(searchText)) {
             recentSearches.add(searchText);
             editor.putStringSet(MAPS_SEARCH_HISTORY, recentSearches);
             editor.apply();
+            recentSearchAdapter.updateRecents(recentSearches);
         }
 
         this.setMode(Mode.LIST_BLANK);
@@ -134,6 +140,7 @@ public class MapsFragment extends FullscreenMapFragment {
 
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                places = mitMapPlaces;
             }
 
             @Override
@@ -151,9 +158,6 @@ public class MapsFragment extends FullscreenMapFragment {
         this.mode = mode;
 
         recentsListview.setVisibility(View.GONE);
-
-//        this.searchList.setVisibility(mode.isListViewVisible() ? View.VISIBLE : View.GONE);
-//        this.defaultLayout.setVisibility(mode.isListViewVisible() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -238,6 +242,7 @@ public class MapsFragment extends FullscreenMapFragment {
                     setMode(Mode.NO_SEARCH);
                 }
                 updateMapItems(new ArrayList(), true, true);
+                places.clear();
                 return true;
             }
         });
@@ -245,7 +250,6 @@ public class MapsFragment extends FullscreenMapFragment {
         searchView.setQueryHint(getString(R.string.maps_search_hint));
 
         View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-//        View bar = searchView.findViewById(android.support.v7.appcompat.R.id.search_bar);
 
         //noinspection ConstantConditions IntelliJ/AndroidStudio incorrectly thinks this can never be null.
         assert searchPlate != null;
@@ -273,6 +277,31 @@ public class MapsFragment extends FullscreenMapFragment {
         super.onStart();
         if (mode == null) {
             this.setMode(Mode.getDefault());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        animateFABs();
+    }
+
+    @Override
+    public void switchViews(boolean toList) {
+        Intent intent = new Intent(getActivity(), MapSearchResultActivity.class);
+        //noinspection unchecked
+        intent.putParcelableArrayListExtra("places", (ArrayList) places);
+        startActivityForResult(intent, 100);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            int position = data.getIntExtra("position", -1);
+            selectMarker(position);
+            mitMapView.setToDefaultBounds(false, 0);
         }
     }
 

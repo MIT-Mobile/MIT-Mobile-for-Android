@@ -34,12 +34,12 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
     private static final int DURATION_INCOMING_LOCATION = 200;
     private static final int DURATION_INCOMING_LIST = 201;
     private static final int DURATION_OUTGOING_LIST = 300;
-    private static final int DURATION_OUTGOING_LOCATION = 301;
+    protected static final int DURATION_OUTGOING_LOCATION = 301;
 
     protected MITMapView mitMapView;
     private FloatingActionButton myLocationButton;
     private FloatingActionButton listButton;
-    private FullscreenMapCallback callback;
+    protected FullscreenMapCallback mapCallback;
 
     public FullscreenMapFragment() {
     }
@@ -52,8 +52,6 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tour_stop_map, null);
-
-        callback = (FullscreenMapCallback) getActivity();
 
         MapView googleMapView = (MapView) view.findViewById(R.id.tour_map);
         googleMapView.onCreate(savedInstanceState);
@@ -106,6 +104,10 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
             }
         });
 
+        animateFABs();
+    }
+
+    protected void animateFABs() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         startAnimation(myLocationButton, 0, 0, displayMetrics.heightPixels, myLocationButton.getY(), DURATION_INCOMING_LOCATION, 0);
         startAnimation(listButton, 0, 0, displayMetrics.heightPixels, listButton.getY(), DURATION_INCOMING_LIST, 100);
@@ -115,8 +117,13 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
         if (mapItems.size() == 0 || ((MapItem) mapItems.get(0)).isDynamic()) {
             mitMapView.clearDynamic();
         }
+        //noinspection unchecked
         mitMapView.addMapItemList(mapItems, clear, fit);
         mitMapView.setToDefaultBounds(false, 0);
+    }
+
+    protected void selectMarker(int position) {
+        mitMapView.selectMapItem(position);
     }
 
     @Override
@@ -139,7 +146,7 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
                 break;
             case DURATION_OUTGOING_LOCATION:
                 myLocationButton.setVisibility(View.INVISIBLE);
-                callback.switchViews(true);
+                mapCallback.switchViews(true);
                 break;
         }
     }

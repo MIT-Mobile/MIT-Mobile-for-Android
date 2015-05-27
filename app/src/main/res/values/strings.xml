@@ -258,5 +258,7 @@
     <string name="library_item_detail_isbn">"ISBN"</string>
 
     <string name="maps_search_hint">Search MIT Campus</string>
+    <string name="title_activity_map_search_result">Results</string>
+    <string name="done">DONE</string>
 
 </resources>
