@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -63,12 +64,21 @@ public class MapSearchResultAdapter extends BaseAdapter {
 
 
         MITMapPlace place = getItem(position);
-        holder.title.setText((position + 1) + ". Building " + place.getBuildingNumber());
-        holder.subtitle.setText(place.getName());
+        String buildingNumber = place.getBuildingNumber();
+
+        if (!TextUtils.isEmpty(buildingNumber)) {
+            holder.title.setText((position + 1) + ". Building " + buildingNumber);
+            holder.subtitle.setVisibility(View.VISIBLE);
+            holder.subtitle.setText(place.getName());
+        } else {
+            holder.title.setText(place.getName());
+            holder.subtitle.setVisibility(View.GONE);
+        }
+
         holder.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Go to place detail view
+                // TODO: Go to place detail view - need asset for info
             }
         });
 

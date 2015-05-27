@@ -66,18 +66,20 @@ public class MapPlaceDetailActivity extends AppCompatActivity {
     }
 
     private void buildContentString() {
-        StringBuilder builder = new StringBuilder();
+        if (place.getContents() != null && place.getContents().size() > 0) {
+            StringBuilder builder = new StringBuilder();
 
-        for (MITMapPlaceContent content : place.getContents()) {
-            if (content.getCategory() == null || content.getCategory().size() == 0 || !content.getCategory().get(0).equals("room")) {
-                builder.append("&#8226; ");
-                builder.append(content.getName());
-                builder.append("<br/>");
+            for (MITMapPlaceContent content : place.getContents()) {
+                if (content.getCategory() == null || content.getCategory().size() == 0 || !content.getCategory().get(0).equals("room")) {
+                    builder.append("&#8226; ");
+                    builder.append(content.getName());
+                    builder.append("<br/>");
+                }
             }
-        }
 
-        placeContents.setLineSpacing(0f, 1.5f);
-        placeContents.setText(Html.fromHtml(builder.toString()));
+            placeContents.setLineSpacing(0f, 1.5f);
+            placeContents.setText(Html.fromHtml(builder.toString()));
+        }
     }
 
     @OnClick(R.id.open_in_gmaps_button)
