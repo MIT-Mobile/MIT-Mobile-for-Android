@@ -143,8 +143,9 @@ public class PeopleFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        if (mode == null)
+        if (mode == null) {
             this.setMode(Mode.getDefault());
+        }
 
         updateFavoritesListVisibility();
     }
@@ -209,7 +210,6 @@ public class PeopleFragment extends Fragment {
         assert searchText != null;
 
         searchText.setTextColor(Color.WHITE);
-        searchText.setHintTextColor(Color.WHITE);
     }
 
     @Override
@@ -285,11 +285,11 @@ public class PeopleFragment extends Fragment {
     }
 
     private boolean performSearch(View sender, Object handler, String searchText) {
-        SharedPreferences.Editor edior = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (!recentSearches.contains(searchText)) {
             recentSearches.add(searchText);
-            edior.putStringSet(PEOPLE_DIRECTORY_SEARCH_HISTORY, recentSearches);
-            edior.apply();
+            editor.putStringSet(PEOPLE_DIRECTORY_SEARCH_HISTORY, recentSearches);
+            editor.apply();
         }
 
 

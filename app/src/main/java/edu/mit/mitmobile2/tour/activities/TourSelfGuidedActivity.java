@@ -12,6 +12,7 @@ import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.fragment.TourStopListFragment;
 import edu.mit.mitmobile2.tour.fragment.TourStopMapFragment;
@@ -22,7 +23,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
-public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuidedCallback {
+public class TourSelfGuidedActivity extends MITActivity implements TourSelfGuidedCallback, FullscreenMapCallback {
 
     /**
      * The plan:

@@ -272,6 +272,11 @@
             android:label="@string/title_activity_account"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".maps.activities.MapSearchResultActivity"
+            android:label="@string/title_activity_map_search_result"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

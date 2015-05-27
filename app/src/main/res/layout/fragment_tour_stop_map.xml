@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/solo_map_fab_margin"
-        android:layout_marginBottom="@dimen/solo_map_fab_margin" />
+        android:layout_marginBottom="@dimen/solo_map_fab_margin"
+        android:layout_marginRight="@dimen/solo_map_fab_margin" />
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/my_location_button"
@@ -31,5 +31,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
+
+    <ListView
+        android:id="@+id/map_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@color/divider_grey"
+        android:dividerHeight="1dp"
+        android:padding="0dp"
+        android:scrollbars="none"
+        android:visibility="gone" />
 
 </RelativeLayout>
