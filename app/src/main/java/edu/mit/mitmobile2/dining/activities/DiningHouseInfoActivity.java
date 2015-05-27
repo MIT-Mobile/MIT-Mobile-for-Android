@@ -109,11 +109,11 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
                 }
             }
         } else {
-            buildAnddAddView();
+            buildAndAddView();
         }
     }
 
-    private void buildAnddAddView() {
+    private void buildAndAddView() {
         LinearLayout layout = (LinearLayout) View.inflate(this, R.layout.dining_house_date_range_segment, null);
         TextView dateRangeTextView = (TextView) layout.findViewById(R.id.date_range_text_view);
         ListView mealsListView = (ListView) layout.findViewById(R.id.meals_list_view);
