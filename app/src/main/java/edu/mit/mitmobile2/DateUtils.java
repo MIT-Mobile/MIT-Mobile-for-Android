@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.HashMap;
 
 public class DateUtils {
 
@@ -67,4 +68,80 @@ public class DateUtils {
         }
     }
 
+    public static boolean dateFallsBetweenDates(Date date, Date startDate, Date endDate) {
+        return startDate.compareTo(date) * date.compareTo(endDate) > 0;
+    }
+
+    public static boolean dateFallsBetweenDates(Date date, Date startDate, Date endDate, Integer... calendarComponents) {
+        return dateFallsBetweenDates(getDate(date, calendarComponents), getDate(startDate, calendarComponents), getDate(endDate, calendarComponents));
+    }
+
+    /*
+    - (NSString *)MITDateCode
+{
+    NSCalendarUnit calendarUnits = (NSDayCalendarUnit | NSWeekdayCalendarUnit);
+    NSDateComponents *dateComponents = [[NSCalendar cachedCurrentCalendar] components:calendarUnits fromDate:self];
+
+    switch (dateComponents.weekday) {
+        case 1: {
+            return @"U";
+        }
+
+        case 2: {
+            return @"M";
+        }
+
+        case 3: {
+            return @"T";
+        }
+
+        case 4: {
+            return @"W";
+        }
+
+        case 5: {
+            return @"R";
+        }
+
+        case 6: {
+            return @"F";
+        }
+
+        case 7: {
+            return @"S";
+        }
+
+        default: {
+            return nil;
+        }
+    }
+}
+    */
+
+    private static final String[] dateCodes = {"U", "M", "T", "W", "R", "F", "S"};
+
+    public static String MITDateCode(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        return dateCodes[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+    }
+
+    private static Date getDate(Date date, Integer... calendarComponents) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        HashMap<Integer, Integer> componentValues = new HashMap<>();
+        for (Integer component : calendarComponents) {
+            componentValues.put(component, calendar.get(component));
+        }
+
+        Date newDate = new Date(0);
+        calendar.setTime(newDate);
+        for (Integer key : componentValues.keySet()) {
+            calendar.set(key, componentValues.get(key));
+        }
+
+        return calendar.getTime();
+    }
 }
