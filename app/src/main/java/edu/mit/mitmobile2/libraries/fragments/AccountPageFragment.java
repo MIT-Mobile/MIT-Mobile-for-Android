@@ -46,6 +46,9 @@ public class AccountPageFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    return;
+                }
                 Intent intent = new Intent(getActivity(), LibraryAccountItemDetailActivity.class);
                 intent.putExtra(Constants.ACCOUNT_ITEM_KEY, (MITLibrariesMITItem) adapter.getItem(position - 1));
                 startActivity(intent);

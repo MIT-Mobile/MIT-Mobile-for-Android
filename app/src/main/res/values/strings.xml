@@ -220,24 +220,10 @@
     <string name="all_events">All Events</string>
     <string name="your_account">Your Account</string>
 
-    <string-array name="link_titles">
-        <item>Search</item>
+    <string-array name="predefined_link_titles">
         <item>Locations &amp; Hours</item>
-        <item>Find a Study Space</item>
         <item>Ask Us</item>
         <item>Tell Us</item>
-        <item>News &amp; Events</item>
-        <item>Full MIT Libraries Site</item>
-    </string-array>
-
-    <string-array name="link_urls">
-        <item>http://www.google.com</item>
-        <item>http://www.google.com</item>
-        <item>http://www.google.com</item>
-        <item>http://www.google.com</item>
-        <item>http://libguides.mit.edu</item>
-        <item>http://news-libraries.mit.edu</item>
-        <item>http://libraries.mit.edu</item>
     </string-array>
 
     <string name="title_activity_library_login">Touchstone</string>
@@ -256,5 +242,9 @@
     <string name="library_item_detail_format">"format"</string>
     <string name="library_item_detail_publisher">"publisher"</string>
     <string name="library_item_detail_isbn">"ISBN"</string>
+
+    <string name="library_closed_today">Closed Today</string>
+    <string name="library_midnight">midnight</string>
+    <string name="library_noon">noon</string>
 
 </resources>
