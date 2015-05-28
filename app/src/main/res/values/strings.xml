@@ -254,5 +254,6 @@
     <string name="title_activity_map_place_detail">MapPlaceDetailActivity</string>
     <string name="open_in_gmaps">Open in Google Maps</string>
     <string name="add_to_bookmarks">Add to Bookmarks</string>
+    <string name="remove_from_bookmarks">Remove from Bookmarks</string>
 
 </resources>

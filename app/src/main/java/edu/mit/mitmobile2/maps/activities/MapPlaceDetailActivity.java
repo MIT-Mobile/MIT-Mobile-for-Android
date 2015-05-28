@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
@@ -63,6 +64,7 @@ public class MapPlaceDetailActivity extends AppCompatActivity {
         buildContentString();
 
         placeViewAngle.setText(place.getViewangle());
+        bookmarksButton.setText(DBAdapter.getInstance().placeIsBookmarked(place) ? getString(R.string.remove_from_bookmarks) : getString(R.string.add_to_bookmarks));
     }
 
     private void buildContentString() {
@@ -90,14 +92,14 @@ public class MapPlaceDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_to_bookmarks_button)
     void toggleBookmarks() {
-        // TODO: Add / remove from bookmarks
-        /*Set<String> bookmarks = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this).getStringSet(Constants.Map.MAP_BOOKMARKS, null);
-        if (bookmarks != null) {
-            bookmarks.add(place.getId());
+        if (!DBAdapter.getInstance().placeIsBookmarked(place)) {
+            DBAdapter.getInstance().acquire(place);
+            place.persistToDatabase();
+            bookmarksButton.setText(getString(R.string.remove_from_bookmarks));
         } else {
-            Set<String> set = new LinkedHashSet<>();
-            set.add(place.getId());
-        }*/
+            DBAdapter.getInstance().deletePlaceFromDb(place);
+            bookmarksButton.setText(getString(R.string.add_to_bookmarks));
+        }
     }
 
     @Override

@@ -105,7 +105,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     }
 
     private boolean searchTextChanged(View sender, Object handler, String s) {
-        if (!TextUtils.isEmpty(s) && s.length() >= 1) {
+        if (!TextUtils.isEmpty(s) && s.length() >= 0) {
             recentsListview.setVisibility(View.VISIBLE);
             recentSearchAdapter.getFilter().filter(s);
         } else {
@@ -232,6 +232,8 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                recentsListview.setVisibility(View.VISIBLE);
+                recentSearchAdapter.getFilter().filter("");
                 return true;
             }
 
@@ -242,6 +244,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 }
                 updateMapItems(new ArrayList(), true, true);
                 places.clear();
+                recentsListview.setVisibility(View.GONE);
                 return true;
             }
         });

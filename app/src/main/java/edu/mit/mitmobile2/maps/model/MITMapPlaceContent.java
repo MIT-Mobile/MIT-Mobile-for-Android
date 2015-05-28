@@ -1,14 +1,23 @@
 package edu.mit.mitmobile2.maps.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import com.google.gson.reflect.TypeToken;
 
-public class MITMapPlaceContent implements Parcelable {
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.DatabaseObject;
+import edu.mit.mitmobile2.Schema;
+
+public class MITMapPlaceContent extends DatabaseObject implements Parcelable {
 
     @Expose
     private String name;
@@ -18,6 +27,8 @@ public class MITMapPlaceContent implements Parcelable {
     private String url;
     @Expose
     private List<String> altname = new ArrayList<>();
+
+    private String placeId;
 
     public String getName() {
         return name;
@@ -51,6 +62,49 @@ public class MITMapPlaceContent implements Parcelable {
         this.altname = altname;
     }
 
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
+
+    public MITMapPlaceContent() {
+    }
+
+    @Override
+    protected String getTableName() {
+        return Schema.MapPlaceContent.TABLE_NAME;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+        setName(cursor.getString(cursor.getColumnIndex(Schema.MapPlaceContent.CONTENT_NAME)));
+        String categoriesString = cursor.getString(cursor.getColumnIndex(Schema.MapPlaceContent.CATEGORIES));
+        if (!TextUtils.isEmpty(categoriesString)) {
+            //noinspection unchecked
+            setCategory((List<String>) new Gson().fromJson(categoriesString, new TypeToken<List<String>>() {
+            }.getType()));
+        }
+        setUrl(cursor.getString(cursor.getColumnIndex(Schema.MapPlaceContent.URL)));
+        String altNamesString = cursor.getString(cursor.getColumnIndex(Schema.MapPlaceContent.ALT_NAMES));
+        if (!TextUtils.isEmpty(altNamesString)) {
+            //noinspection unchecked
+            setAltname((List<String>) new Gson().fromJson(altNamesString, new TypeToken<List<String>>() {
+            }.getType()));
+        }
+        setPlaceId(cursor.getString(cursor.getColumnIndex(Schema.MapPlaceContent.PLACE_ID)));
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        values.put(Schema.MapPlaceContent.CONTENT_NAME, this.name);
+        values.put(Schema.MapPlaceContent.CATEGORIES, new Gson().toJson(this.category));
+        values.put(Schema.MapPlaceContent.URL, this.url);
+        values.put(Schema.MapPlaceContent.ALT_NAMES, new Gson().toJson(this.altname));
+        values.put(Schema.MapPlaceContent.PLACE_ID, this.placeId);
+    }
 
     protected MITMapPlaceContent(Parcel in) {
         name = in.readString();
