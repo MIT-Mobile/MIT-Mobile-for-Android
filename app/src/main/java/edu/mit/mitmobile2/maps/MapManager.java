@@ -38,9 +38,18 @@ public class MapManager extends RetrofitManager {
     }
 
     public static MapManagerCall getMapPlaces(Activity activity, Callback<ArrayList<MITMapPlace>> places) {
+        return getMapPlaces(activity, null, places);
+    }
+
+    public static MapManagerCall getMapPlaces(Activity activity, MITMapCategory category, Callback<ArrayList<MITMapPlace>> places) {
         MapManagerCallWrapper<?> returnValue = new MapManagerCallWrapper<>(new MITAPIClient(activity), places);
 
-        returnValue.getClient().get(Constants.MAP, Constants.Map.MAP_PLACES, null, null, returnValue);
+        HashMap<String, String> queryParams = new HashMap<>();
+        if (category != null) {
+            queryParams.put("category", category.getIdentifier());
+        }
+
+        returnValue.getClient().get(Constants.MAP, Constants.Map.MAP_PLACES, null, queryParams, returnValue);
 
         return returnValue;
     }

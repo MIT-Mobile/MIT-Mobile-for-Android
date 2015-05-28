@@ -1,9 +1,13 @@
 package edu.mit.mitmobile2.maps.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
+
+import edu.mit.mitmobile2.R;
 
 /**
  * Created by serg on 5/18/15.
@@ -23,10 +27,10 @@ public class MITMapPlace implements Parcelable {
     private double longitude;
 
     @SerializedName("bldgnum")
-    private String bldgnum;
+    private String buildingNumber;
 
     @SerializedName("bldgimg")
-    private String bldgimg;
+    private String buildingImage;
 
     @SerializedName("street")
     private String street;
@@ -77,20 +81,20 @@ public class MITMapPlace implements Parcelable {
         this.longitude = longitude;
     }
 
-    public String getBldgnum() {
-        return bldgnum;
+    public String getBuildingNumber() {
+        return buildingNumber;
     }
 
-    public void setBldgnum(String bldgnum) {
-        this.bldgnum = bldgnum;
+    public void setBuildingNumber(String buildingNumber) {
+        this.buildingNumber = buildingNumber;
     }
 
-    public String getBldgimg() {
-        return bldgimg;
+    public String getBuildingImage() {
+        return buildingImage;
     }
 
-    public void setBldgimg(String bldgimg) {
-        this.bldgimg = bldgimg;
+    public void setBuildingImage(String buildingImage) {
+        this.buildingImage = buildingImage;
     }
 
     public String getStreet() {
@@ -125,13 +129,33 @@ public class MITMapPlace implements Parcelable {
         this.viewangle = viewangle;
     }
 
+    /* Helpers */
+
+    public String getTitle(Context context) {
+        if (TextUtils.isEmpty(buildingNumber)) {
+            return name;
+        } else {
+            return context.getString(R.string.map_categories_detail_place_title, buildingNumber);
+        }
+    }
+
+    public String getSubtitle(Context context) {
+        if (!name.equals(getTitle(context))) {
+            return name;
+        }
+
+        return "";
+    }
+
+    /* Parcelable */
+
     protected MITMapPlace(Parcel in) {
         id = in.readString();
         name = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
-        bldgnum = in.readString();
-        bldgimg = in.readString();
+        buildingNumber = in.readString();
+        buildingImage = in.readString();
         street = in.readString();
         architect = in.readString();
         mailing = in.readString();
@@ -149,8 +173,8 @@ public class MITMapPlace implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-        dest.writeString(bldgnum);
-        dest.writeString(bldgimg);
+        dest.writeString(buildingNumber);
+        dest.writeString(buildingImage);
         dest.writeString(street);
         dest.writeString(architect);
         dest.writeString(mailing);

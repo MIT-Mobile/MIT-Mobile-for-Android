@@ -31,7 +31,7 @@ public class MapsCategoriesActivity extends AppCompatActivity implements ViewPag
 
         setupTabHost();
 
-        adapter = new CategoriesPagerAdapter(this, getFragmentManager());
+        adapter = new CategoriesPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabHost.setViewPager(viewPager);
     }
