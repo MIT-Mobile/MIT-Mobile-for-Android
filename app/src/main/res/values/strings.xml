@@ -215,6 +215,9 @@
     <string name="house_today">Today, %1$s</string>
     <string name="house_tomorrow">Tomorrow, %1$s</string>
     <string name="house_yesterday">Yesterday, %1$s</string>
+    <string name="house_today_landscape">Today\'s %1$s, %2$s</string>
+    <string name="house_tomorrow_landscape">Tomorrow\'s %1$s, %2$s</string>
+    <string name="house_yesterday_landscape">Yesterday\'s %1$s, %2$s</string>
     <string name="announcements_activity_title">Announcements</string>
     <string name="filter_showing">Showing</string>
     <string name="all_events">All Events</string>

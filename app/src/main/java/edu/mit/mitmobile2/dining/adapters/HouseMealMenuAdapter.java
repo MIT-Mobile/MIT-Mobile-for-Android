@@ -16,6 +16,7 @@ import butterknife.InjectViews;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.dining.model.MITDiningMenuItem;
+import edu.mit.mitmobile2.dining.utils.DiningUtils;
 
 public class HouseMealMenuAdapter extends BaseAdapter{
 
@@ -71,18 +72,10 @@ public class HouseMealMenuAdapter extends BaseAdapter{
             viewHolder.menuDetailTextView.setVisibility(View.GONE);
         }
 
-        List<String> flags = item.getDietaryFlags();
-
-        if ((flags != null) && (flags.size() > 0)) {
-            for (int i = 0; i < flags.size(); i++) {
-                if (flags.get(i).contains("-")) {
-                    flags.get(i).replaceAll("\\s", "-");
-                }
-                int resId =  context.getResources().getIdentifier("dining_" + flags.get(i)
-                                .toLowerCase().replaceAll("\\s", ""), "drawable",
-                        context.getPackageName());
-                if (resId > 0) {
-                    viewHolder.imageViews.get(i).setImageResource(resId);
+        if ((item.getDietaryFlags() != null) && (item.getDietaryFlags().size() > 0)) {
+            for (int i = 0; i < item.getDietaryFlags().size(); i++) {
+                if (DiningUtils.getMenuDietaryFlagImage(context, item.getDietaryFlags().get(i)) > 0) {
+                    viewHolder.imageViews.get(i).setImageResource(DiningUtils.getMenuDietaryFlagImage(context, item.getDietaryFlags().get(i)));
                     viewHolder.imageViews.get(i).setVisibility(View.VISIBLE);
                 } else {
                     viewHolder.imageViews.get(i).setVisibility(View.GONE);
