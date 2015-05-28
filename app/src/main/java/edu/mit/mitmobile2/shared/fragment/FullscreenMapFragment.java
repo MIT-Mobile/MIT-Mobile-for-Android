@@ -120,6 +120,9 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
         //noinspection unchecked
         mitMapView.addMapItemList(mapItems, clear, fit);
         mitMapView.setToDefaultBounds(false, 0);
+        if (mapItems.size() == 1) {
+            mitMapView.showSingleItem();
+        }
     }
 
     protected void selectMarker(int position) {

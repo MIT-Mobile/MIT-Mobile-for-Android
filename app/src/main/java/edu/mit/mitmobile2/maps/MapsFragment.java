@@ -34,11 +34,13 @@ import java.util.List;
 import java.util.Set;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITSearchAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.activities.MapItemPagerActivity;
 import edu.mit.mitmobile2.maps.activities.MapPlaceDetailActivity;
 import edu.mit.mitmobile2.maps.activities.MapSearchResultActivity;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
@@ -269,6 +271,9 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             if (this.mode != Mode.NO_SEARCH) {
                 this.setMode(Mode.NO_SEARCH);
             }
+        } else if (item.getItemId() == R.id.categories) {
+            Intent intent = new Intent(getActivity(), MapItemPagerActivity.class);
+            startActivityForResult(intent, 200);
         }
 
         return super.onOptionsItemSelected(item);
@@ -301,9 +306,35 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            int position = data.getIntExtra(Constants.POSITION_KEY, -1);
-            selectMarker(position);
-            mitMapView.setToDefaultBounds(false, 0);
+            if (requestCode == 100) {
+                int position = data.getIntExtra(Constants.POSITION_KEY, -1);
+                selectMarker(position);
+                mitMapView.setToDefaultBounds(false, 0);
+            } else if (requestCode == 200) {
+                int type = data.getIntExtra(Constants.Map.TAB_TYPE, -1);
+
+                switch (type) {
+                    case 0:
+                        break;
+                    case 1:
+                        String id = data.getStringExtra(Constants.PLACES_KEY);
+                        MITMapPlace place = DBAdapter.getInstance().getBookmark(id);
+
+                        places.clear();
+                        places.add(place);
+
+                        updateMapItems((ArrayList) places, true, true);
+                        break;
+                    case 2:
+                        String query = data.getStringExtra(Constants.Map.RECENT_QUERY);
+                        if (!TextUtils.isEmpty(query)) {
+                            performSearch(searchView, this, query);
+                        }
+                        break;
+                    default:
+                }
+
+            }
         }
     }
 

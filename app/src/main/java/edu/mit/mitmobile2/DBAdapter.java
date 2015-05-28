@@ -501,7 +501,7 @@ public class DBAdapter {
     public List<MITMapPlaceContent> getMapPlaceContent(String id) {
         List<MITMapPlaceContent> contents = new ArrayList<>();
         Cursor cursor = db.query(Schema.MapPlaceContent.TABLE_NAME, Schema.MapPlaceContent.ALL_COLUMNS,
-                String.format("WHERE %s='%s'", Schema.MapPlaceContent.PLACE_ID, id), null, null, null, null);
+                String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, id), null, null, null, null);
         try {
             while (cursor.moveToNext()) {
                 MITMapPlaceContent content = new MITMapPlaceContent();
@@ -527,5 +527,36 @@ public class DBAdapter {
     public void deletePlaceFromDb(MITMapPlace place) {
         db.delete(Schema.MapPlace.TABLE_NAME, String.format("%s='%s'", Schema.MapPlace.PLACE_ID, place.getId()), null);
         db.delete(Schema.MapPlaceContent.TABLE_NAME, String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, place.getId()), null);
+    }
+
+    public List<MITMapPlace> getBookmarks() {
+        List<MITMapPlace> bookmarks = new ArrayList<>();
+        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
+                null, null, null, null, null);
+        try {
+            while (cursor.moveToNext()) {
+                MITMapPlace place = new MITMapPlace();
+                place.buildFromCursor(cursor, this);
+                bookmarks.add(place);
+            }
+        } finally {
+            cursor.close();
+        }
+        return bookmarks;
+    }
+
+    public MITMapPlace getBookmark(String id) {
+        MITMapPlace place = null;
+        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
+                String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, id), null, null, null, null);
+        try {
+            if (cursor.moveToFirst()) {
+                place = new MITMapPlace();
+                place.buildFromCursor(cursor, this);
+            }
+        } finally {
+            cursor.close();
+        }
+        return place;
     }
 }

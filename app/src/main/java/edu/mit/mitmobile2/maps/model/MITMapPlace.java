@@ -176,6 +176,9 @@ public class MITMapPlace extends MapItem implements Parcelable {
         this.contents = contents;
     }
 
+    public MITMapPlace() {
+    }
+
     protected MITMapPlace(Parcel in) {
         id = in.readString();
         name = in.readString();

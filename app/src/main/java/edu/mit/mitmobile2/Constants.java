@@ -22,6 +22,7 @@ public class Constants {
     public static final String ACCOUNT_ITEM_KEY = "accountItem";
     public static final String PLACES_KEY = "places";
     public static final String POSITION_KEY = "position";
+    public static final String MAPS_SEARCH_HISTORY = "mapSearchHistory";
 
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
@@ -128,6 +129,8 @@ public class Constants {
         public static final String MAP_PLACES = "/places";
 
         public static final String MAP_BOOKMARKS = "mapBookmarks";
+        public static final String RECENT_QUERY = "recentQuery";
+        public static final String TAB_TYPE = "tabType";
     }
 
     public class Libraries {
