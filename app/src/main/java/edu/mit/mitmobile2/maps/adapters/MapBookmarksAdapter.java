@@ -5,11 +5,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.callbacks.BookmarkCallback;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
 public class MapBookmarksAdapter extends BaseAdapter {
@@ -17,14 +19,18 @@ public class MapBookmarksAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView title;
         TextView subtitle;
+        ImageView deleteButton;
     }
 
     private Context context;
     private List<MITMapPlace> bookmarks;
+    private boolean editMode = false;
+    private BookmarkCallback callback;
 
-    public MapBookmarksAdapter(Context context, List<MITMapPlace> bookmarks) {
+    public MapBookmarksAdapter(Context context, List<MITMapPlace> bookmarks, BookmarkCallback callback) {
         this.context = context;
         this.bookmarks = bookmarks;
+        this.callback = callback;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class MapBookmarksAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         View view = convertView;
 
@@ -53,6 +59,7 @@ public class MapBookmarksAdapter extends BaseAdapter {
 
             holder.title = (TextView) view.findViewById(R.id.map_search_result_title);
             holder.subtitle = (TextView) view.findViewById(R.id.map_search_result_subtitle);
+            holder.deleteButton = (ImageView) view.findViewById(R.id.delete_bookmark_button);
 
             view.setTag(holder);
         } else {
@@ -71,6 +78,30 @@ public class MapBookmarksAdapter extends BaseAdapter {
             holder.subtitle.setVisibility(View.GONE);
         }
 
+        if (editMode) {
+            holder.deleteButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.deleteButton.setVisibility(View.GONE);
+        }
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.removeBookmark(position);
+            }
+        });
+
         return view;
+    }
+
+    public void toggleEditMode() {
+        this.editMode = !this.editMode;
+        notifyDataSetChanged();
+    }
+
+    public void updateItems(List<MITMapPlace> bookmarks) {
+        this.bookmarks.clear();
+        this.bookmarks.addAll(bookmarks);
+        notifyDataSetChanged();
     }
 }
