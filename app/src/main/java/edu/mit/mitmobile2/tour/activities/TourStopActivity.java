@@ -6,6 +6,7 @@ import android.os.Bundle;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.callbacks.TourStopCallback;
 import edu.mit.mitmobile2.tour.fragment.TourStopFragment;
@@ -13,7 +14,7 @@ import edu.mit.mitmobile2.tour.fragment.TourStopViewPagerFragment;
 import edu.mit.mitmobile2.tour.model.MITTour;
 import edu.mit.mitmobile2.tour.model.MITTourStop;
 
-public class TourStopActivity extends MITActivity implements TourStopCallback, TourSelfGuidedCallback {
+public class TourStopActivity extends MITActivity implements TourStopCallback, TourSelfGuidedCallback, FullscreenMapCallback {
 
     private TourStopViewPagerFragment tourStopViewPagerFragment;
     private TourStopFragment tourStopsFragment;

@@ -1,13 +1,12 @@
 package edu.mit.mitmobile2;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.HashMap;
 
-/**
- * Created by serg on 5/11/15.
- */
 public class DateUtils {
 
     public static Date startOfDay(Date date) {
@@ -31,7 +30,7 @@ public class DateUtils {
 
     /**
      * Extra compact string representation of the date's time components.
-     *
+     * <p/>
      * This returns only the time of day for the date. The format is similar to "h:mma", but with the minute component only included when non-zero, e.g. "9pm", "10:30am", "4:01pm".
      *
      * @param date Date to be represented as string
@@ -41,7 +40,7 @@ public class DateUtils {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
-        SimpleDateFormat format = null;
+        SimpleDateFormat format;
         if (cal.get(Calendar.MINUTE) != 0) {
             format = new SimpleDateFormat("h:mma");
         } else {
@@ -49,6 +48,24 @@ public class DateUtils {
         }
 
         return format.format(date);
+    }
+
+    public static Date buildLongDateFromString(String stringToParse) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        try {
+            return format.parse(stringToParse);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static Date buildShortDateFromString(String stringToParse) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        try {
+            return format.parse(stringToParse);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     public static boolean dateFallsBetweenDates(Date date, Date startDate, Date endDate) {

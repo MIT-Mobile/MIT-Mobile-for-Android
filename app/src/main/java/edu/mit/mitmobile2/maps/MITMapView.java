@@ -275,11 +275,13 @@ public class MITMapView {
 
     public void setToDefaultBounds(boolean animate, int animationLength) {
         Resources resources = mContext.getResources();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), mapBoundsPadding);
-        if (animate) {
-            mMap.animateCamera(cameraUpdate, animationLength, null);
-        } else {
-            mMap.moveCamera(cameraUpdate);
+        if (defaultBounds != null) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(defaultBounds, resources.getDisplayMetrics().widthPixels, (int) resources.getDimension(R.dimen.shuttle_routes_map_header_height), mapBoundsPadding);
+            if (animate) {
+                mMap.animateCamera(cameraUpdate, animationLength, null);
+            } else {
+                mMap.moveCamera(cameraUpdate);
+            }
         }
     }
 
@@ -377,6 +379,16 @@ public class MITMapView {
         }
 
         return offsetHeading;
+    }
+
+    public void selectMapItem(int position) {
+        dynamicMarkers.get(position).showInfoWindow();
+    }
+
+    public void showSingleItem() {
+        if (dynamicMarkers.size() > 0) {
+            dynamicMarkers.get(0).showInfoWindow();
+        }
     }
 }
 

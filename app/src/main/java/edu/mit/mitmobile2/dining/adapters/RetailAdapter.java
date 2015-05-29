@@ -243,8 +243,8 @@ public class RetailAdapter extends BaseAdapter implements StickyListHeadersAdapt
     private String getTitleForBuilding(MITDiningBuilding building) {
         if (mitMapPlaces != null) {
             for (MITMapPlace place : mitMapPlaces) {
-                if (!TextUtils.isEmpty(place.getBldgnum()) && !TextUtils.isEmpty(building.getName())
-                        && place.getBldgnum().equals(building.getName())) {
+                if (!TextUtils.isEmpty(place.getBuildingNumber()) && !TextUtils.isEmpty(building.getName())
+                        && place.getBuildingNumber().equals(building.getName())) {
                     return String.format("%s - %s", building.getName(), place.getName().toUpperCase());
                 }
             }

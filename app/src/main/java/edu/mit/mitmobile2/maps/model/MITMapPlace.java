@@ -1,14 +1,50 @@
 package edu.mit.mitmobile2.maps.model;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
-/**
- * Created by serg on 5/18/15.
- */
-public class MITMapPlace implements Parcelable {
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.mit.mitmobile2.DBAdapter;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.maps.MapItem;
+
+public class MITMapPlace extends MapItem implements Parcelable {
+
+    public class MITMapPlaceSnippet {
+        String name;
+        String id;
+        String buildingNumber;
+
+        public MITMapPlaceSnippet(String buildingNumber, String id, String name) {
+            this.buildingNumber = buildingNumber;
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getBuildingNumber() {
+            return buildingNumber;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
     @SerializedName("id")
     private String id;
@@ -23,10 +59,10 @@ public class MITMapPlace implements Parcelable {
     private double longitude;
 
     @SerializedName("bldgnum")
-    private String bldgnum;
+    private String buildingNumber;
 
     @SerializedName("bldgimg")
-    private String bldgimg;
+    private String buildingImageUrl;
 
     @SerializedName("street")
     private String street;
@@ -40,10 +76,9 @@ public class MITMapPlace implements Parcelable {
     @SerializedName("viewangle")
     private String viewangle;
 
-    // TODO: add fields:
-    // category
-    // contents
+    private List<String> category = new ArrayList<>();
 
+    private List<MITMapPlaceContent> contents = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -77,20 +112,20 @@ public class MITMapPlace implements Parcelable {
         this.longitude = longitude;
     }
 
-    public String getBldgnum() {
-        return bldgnum;
+    public String getBuildingNumber() {
+        return buildingNumber;
     }
 
-    public void setBldgnum(String bldgnum) {
-        this.bldgnum = bldgnum;
+    public void setBuildingNumber(String buildingNumber) {
+        this.buildingNumber = buildingNumber;
     }
 
-    public String getBldgimg() {
-        return bldgimg;
+    public String getBuildingImageUrl() {
+        return buildingImageUrl;
     }
 
-    public void setBldgimg(String bldgimg) {
-        this.bldgimg = bldgimg;
+    public void setBuildingImageUrl(String buildingImageUrl) {
+        this.buildingImageUrl = buildingImageUrl;
     }
 
     public String getStreet() {
@@ -125,17 +160,48 @@ public class MITMapPlace implements Parcelable {
         this.viewangle = viewangle;
     }
 
+    public List<String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<String> category) {
+        this.category = category;
+    }
+
+    public List<MITMapPlaceContent> getContents() {
+        return contents;
+    }
+
+    public void setContents(List<MITMapPlaceContent> contents) {
+        this.contents = contents;
+    }
+
+    public MITMapPlace() {
+    }
+
     protected MITMapPlace(Parcel in) {
         id = in.readString();
         name = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
-        bldgnum = in.readString();
-        bldgimg = in.readString();
+        buildingNumber = in.readString();
+        buildingImageUrl = in.readString();
         street = in.readString();
         architect = in.readString();
         mailing = in.readString();
         viewangle = in.readString();
+        if (in.readByte() == 0x01) {
+            category = new ArrayList<>();
+            in.readList(category, String.class.getClassLoader());
+        } else {
+            category = null;
+        }
+        if (in.readByte() == 0x01) {
+            contents = new ArrayList<>();
+            in.readList(contents, MITMapPlaceContent.class.getClassLoader());
+        } else {
+            contents = null;
+        }
     }
 
     @Override
@@ -149,12 +215,24 @@ public class MITMapPlace implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-        dest.writeString(bldgnum);
-        dest.writeString(bldgimg);
+        dest.writeString(buildingNumber);
+        dest.writeString(buildingImageUrl);
         dest.writeString(street);
         dest.writeString(architect);
         dest.writeString(mailing);
         dest.writeString(viewangle);
+        if (category == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(category);
+        }
+        if (contents == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(contents);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -169,4 +247,76 @@ public class MITMapPlace implements Parcelable {
             return new MITMapPlace[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        options.position(new LatLng(latitude, longitude));
+        String snippet = new Gson().toJson(new MITMapPlaceSnippet(buildingNumber, id, name));
+        options.snippet(snippet);
+        return options;
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.ic_pin_red;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
+
+    @Override
+    protected String getTableName() {
+        return Schema.MapPlace.TABLE_NAME;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+        setId(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.PLACE_ID)));
+        setName(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.PLACE_NAME)));
+        setLatitude(cursor.getDouble(cursor.getColumnIndex(Schema.MapPlace.LATITUDE)));
+        setLongitude(cursor.getDouble(cursor.getColumnIndex(Schema.MapPlace.LONGITUDE)));
+        setBuildingNumber(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.BUILDING_NUM)));
+        setBuildingImageUrl(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.BUILDING_IMAGE_URL)));
+        setStreet(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.STREET)));
+        setArchitect(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.ARCHITECT)));
+        setMailing(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.MAILING)));
+        setViewangle(cursor.getString(cursor.getColumnIndex(Schema.MapPlace.VIEW_ANGLE)));
+
+        String categoriesString = cursor.getString(cursor.getColumnIndex(Schema.MapPlace.CATEGORIES));
+        if (!TextUtils.isEmpty(categoriesString)) {
+            //noinspection unchecked
+            setCategory((List<String>) new Gson().fromJson(categoriesString, new TypeToken<List<String>>() {
+            }.getType()));
+        }
+        setContents(dbAdapter.getMapPlaceContent(this.id));
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+        values.put(Schema.MapPlace.PLACE_ID, this.id);
+        values.put(Schema.MapPlace.PLACE_NAME, this.name);
+        values.put(Schema.MapPlace.LATITUDE, this.latitude);
+        values.put(Schema.MapPlace.LONGITUDE, this.longitude);
+        values.put(Schema.MapPlace.BUILDING_NUM, this.buildingNumber);
+        values.put(Schema.MapPlace.BUILDING_IMAGE_URL, this.buildingImageUrl);
+        values.put(Schema.MapPlace.STREET, this.street);
+        values.put(Schema.MapPlace.ARCHITECT, this.architect);
+        values.put(Schema.MapPlace.MAILING, this.mailing);
+        values.put(Schema.MapPlace.VIEW_ANGLE, this.viewangle);
+        values.put(Schema.MapPlace.CATEGORIES, new Gson().toJson(this.category));
+
+        for (MITMapPlaceContent content : this.contents) {
+            content.setPlaceId(this.id);
+            dbAdapter.acquire(content);
+            content.persistToDatabase();
+        }
+    }
 }

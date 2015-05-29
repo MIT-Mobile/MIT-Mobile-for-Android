@@ -17,6 +17,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
+import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class DBAdapter {
@@ -27,7 +30,7 @@ public class DBAdapter {
     @SuppressWarnings("PointlessBitwiseExpression")
     public static class Conditional {
         public static int COLUMN_IS_RAW = 1 << 0;
-        public static int VALUE_IS_RAW =  1 << 1;
+        public static int VALUE_IS_RAW = 1 << 1;
 
         public final String column;
         public final Object value;
@@ -71,7 +74,7 @@ public class DBAdapter {
     }
 
     public static String escapeIdentifier(String identifier) {
-        StringBuilder sb = new StringBuilder((identifier.length()*2)+2);
+        StringBuilder sb = new StringBuilder((identifier.length() * 2) + 2);
         sb.append('"');
         if (identifier.indexOf('"') != -1) {
             int length = identifier.length();
@@ -92,18 +95,19 @@ public class DBAdapter {
     }
 
     public static boolean isNumeric(Object object) {
-        return  object instanceof Integer   ||
-                object instanceof Boolean   ||
-                object instanceof Long      ||
-                object instanceof Float     ||
-                object instanceof Double    ||
-                object instanceof Short     ||
-                object instanceof Byte      ||
+        return object instanceof Integer ||
+                object instanceof Boolean ||
+                object instanceof Long ||
+                object instanceof Float ||
+                object instanceof Double ||
+                object instanceof Short ||
+                object instanceof Byte ||
                 object instanceof Character;
     }
+
     public static boolean isFloatingPoint(Object object) {
-        return object instanceof Float     ||
-               object instanceof Double;
+        return object instanceof Float ||
+                object instanceof Double;
 
     }
 
@@ -264,6 +268,8 @@ public class DBAdapter {
             db.execSQL(Schema.Path.CREATE_TABLE_SQL);
             db.execSQL(Schema.Location.CREATE_TABLE_SQL);
             db.execSQL(Schema.Alerts.CREATE_TABLE_SQL);
+            db.execSQL(Schema.MapPlace.CREATE_TABLE_SQL);
+            db.execSQL(Schema.MapPlaceContent.CREATE_TABLE_SQL);
             db.execSQL(Schema.Person.CREATE_TABLE_SQL);
 
             db.execSQL(Schema.Person.CREATE_INDICIES_SQL);
@@ -281,6 +287,8 @@ public class DBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Path.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Location.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Alerts.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.MapPlace.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.MapPlaceContent.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Person.TABLE_NAME);
         }
 
@@ -402,7 +410,7 @@ public class DBAdapter {
 
         ConditionalResult conditional = generateConditionalClause(conditionals);
 
-        Cursor cur = db.rawQuery("SELECT count(*) FROM "+escapeIdentifier(tableName)+" WHERE " + conditional.conditional, conditional.boundValues);
+        Cursor cur = db.rawQuery("SELECT count(*) FROM " + escapeIdentifier(tableName) + " WHERE " + conditional.conditional, conditional.boundValues);
         if (cur.moveToFirst()) {
             retVal = cur.getInt(0);
         }
@@ -413,14 +421,14 @@ public class DBAdapter {
 
     private ConditionalResult generateConditionalClause(Conditional... conditionals) {
         StringBuilder builder = new StringBuilder();
-        List<String> vals = new LinkedList<String>();
+        List<String> vals = new LinkedList<>();
 
         boolean first = true;
         for (Conditional cnd : conditionals) {
             if (first) first = false;
             else builder.append(" AND ");
 
-            builder.append( cnd.isColumnRaw() ? cnd.column : escapeIdentifier(cnd.column) );
+            builder.append(cnd.isColumnRaw() ? cnd.column : escapeIdentifier(cnd.column));
             builder.append(" ");
 
             if (cnd.isValueRaw()) {
@@ -430,10 +438,10 @@ public class DBAdapter {
 
                 if (isNumeric(cnd.value)) {
                     if (isFloatingPoint(cnd.value)) {
-                        builder.append(Double.toString((double)cnd.value));
+                        builder.append(Double.toString((double) cnd.value));
                     } else {
                         if (cnd.value instanceof Boolean) {
-                            builder.append(((boolean)cnd.value) ? 0x01 : 0x00);
+                            builder.append(((boolean) cnd.value) ? 0x01 : 0x00);
                         } else {
                             builder.append(Long.toString((long) cnd.value));
                         }
@@ -449,7 +457,7 @@ public class DBAdapter {
     }
 
     public Cursor simpleConditionedSelect(String tableName, String[] cols, String whereCol, boolean condition) {
-        return db.query(true, tableName, cols, escapeIdentifier(whereCol)+" = " + (condition ? 0x01 : 0x00), null, null, null, null, null);
+        return db.query(true, tableName, cols, escapeIdentifier(whereCol) + " = " + (condition ? 0x01 : 0x00), null, null, null, null, null);
     }
 
     public boolean exists(String tableName, String[] columns) {
@@ -488,5 +496,67 @@ public class DBAdapter {
             db.endTransaction();
         }
         return ids;
+    }
+
+    public List<MITMapPlaceContent> getMapPlaceContent(String id) {
+        List<MITMapPlaceContent> contents = new ArrayList<>();
+        Cursor cursor = db.query(Schema.MapPlaceContent.TABLE_NAME, Schema.MapPlaceContent.ALL_COLUMNS,
+                String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, id), null, null, null, null);
+        try {
+            while (cursor.moveToNext()) {
+                MITMapPlaceContent content = new MITMapPlaceContent();
+                content.buildFromCursor(cursor, this);
+                contents.add(content);
+            }
+        } finally {
+            cursor.close();
+        }
+        return contents;
+    }
+
+    public boolean placeIsBookmarked(MITMapPlace place) {
+        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
+                String.format("%s='%s'", Schema.MapPlace.PLACE_ID, place.getId()), null, null, null, null);
+
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+
+        return exists;
+    }
+
+    public void deletePlaceFromDb(MITMapPlace place) {
+        db.delete(Schema.MapPlace.TABLE_NAME, String.format("%s='%s'", Schema.MapPlace.PLACE_ID, place.getId()), null);
+        db.delete(Schema.MapPlaceContent.TABLE_NAME, String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, place.getId()), null);
+    }
+
+    public List<MITMapPlace> getBookmarks() {
+        List<MITMapPlace> bookmarks = new ArrayList<>();
+        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
+                null, null, null, null, null);
+        try {
+            while (cursor.moveToNext()) {
+                MITMapPlace place = new MITMapPlace();
+                place.buildFromCursor(cursor, this);
+                bookmarks.add(place);
+            }
+        } finally {
+            cursor.close();
+        }
+        return bookmarks;
+    }
+
+    public MITMapPlace getBookmark(String id) {
+        MITMapPlace place = null;
+        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
+                String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, id), null, null, null, null);
+        try {
+            if (cursor.moveToFirst()) {
+                place = new MITMapPlace();
+                place.buildFromCursor(cursor, this);
+            }
+        } finally {
+            cursor.close();
+        }
+        return place;
     }
 }
