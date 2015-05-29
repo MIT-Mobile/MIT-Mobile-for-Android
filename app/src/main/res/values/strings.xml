@@ -223,9 +223,21 @@
     <string name="mon_sun">MON - SUN</string>
 
     <string-array name="predefined_link_titles">
+        <item>Search</item>
         <item>Locations &amp; Hours</item>
+        <item>Find a Study Space</item>
         <item>Ask Us</item>
         <item>Tell Us</item>
+        <item>News &amp; Events</item>
+    </string-array>
+
+    <string-array name="predefined_links">
+        <item>http://libraries.mit.edu/search/</item>
+        <item>http://libraries.mit.edu/hours/</item>
+        <item>http://libraries.mit.edu/study/</item>
+        <item>http://libraries.mit.edu/ask/</item>
+        <item>http://libraries.mit.edu/tellus</item>
+        <item>http://libraries.mit.edu/news/</item>
     </string-array>
 
     <string name="title_activity_library_login">Touchstone</string>

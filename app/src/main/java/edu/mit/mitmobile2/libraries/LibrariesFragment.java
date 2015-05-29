@@ -232,9 +232,10 @@ public class LibrariesFragment extends Fragment {
         links.clear();
         if (mitLibrariesLink != null) {
             // add predefined links here
-            String[] predefinedLinks = getResources().getStringArray(R.array.predefined_link_titles);
-            for (String title : predefinedLinks) {
-                links.add(new MITLibrariesLink(title));
+            String[] predefinedTitles = getResources().getStringArray(R.array.predefined_link_titles);
+            String[] predefinedLinks = getResources().getStringArray(R.array.predefined_links);
+            for (int i = 0; i < predefinedLinks.length; i++) {
+                links.add(new MITLibrariesLink(predefinedTitles[i], predefinedLinks[i]));
             }
             links.addAll(mitLibrariesLink);
         }
