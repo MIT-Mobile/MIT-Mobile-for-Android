@@ -67,6 +67,12 @@ public class MITSearchAdapter<T> extends BaseAdapter implements Filterable {
         return view;
     }
 
+    public void updateRecents(Collection<String> places) {
+        recentSearches.clear();
+        recentSearches.addAll(places);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Filter getFilter() {
         return searchItemFilter;
@@ -93,7 +99,7 @@ public class MITSearchAdapter<T> extends BaseAdapter implements Filterable {
             int count = unFilteredList.size();
             final ArrayList<String> filteredList = new ArrayList<>(count);
 
-            String filterableString ;
+            String filterableString;
 
             for (int i = 0; i < count; i++) {
                 filterableString = unFilteredList.get(i);
@@ -118,6 +124,7 @@ public class MITSearchAdapter<T> extends BaseAdapter implements Filterable {
 
     public interface FragmentCallback<T> {
         void itemClicked(T item);
+
         void itemSearch(String searchText);
     }
 }

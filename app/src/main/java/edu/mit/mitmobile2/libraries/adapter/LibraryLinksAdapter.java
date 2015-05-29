@@ -6,7 +6,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
 
 public class LibraryLinksAdapter extends BaseAdapter {
 
@@ -15,21 +18,21 @@ public class LibraryLinksAdapter extends BaseAdapter {
     }
 
     private Context context;
-    private String[] links;
+    private List<MITLibrariesLink> links;
 
-    public LibraryLinksAdapter(Context context, String[] links) {
+    public LibraryLinksAdapter(Context context, List<MITLibrariesLink> links) {
         this.context = context;
         this.links = links;
     }
 
     @Override
     public int getCount() {
-        return links.length;
+        return links.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return links[position];
+    public MITLibrariesLink getItem(int position) {
+        return links.get(position);
     }
 
     @Override
@@ -53,7 +56,9 @@ public class LibraryLinksAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.linkTitle.setText(context.getResources().getStringArray(R.array.link_titles)[position]);
+        MITLibrariesLink link = getItem(position);
+
+        holder.linkTitle.setText(link.getTitle());
 
         return view;
     }

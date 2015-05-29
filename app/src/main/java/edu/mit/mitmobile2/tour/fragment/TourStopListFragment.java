@@ -17,6 +17,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.tour.adapters.TourStopAdapter;
 import edu.mit.mitmobile2.tour.callbacks.TourSelfGuidedCallback;
 import edu.mit.mitmobile2.tour.model.MITTour;
@@ -30,6 +31,7 @@ public class TourStopListFragment extends Fragment implements Animation.Animatio
     TourStopAdapter adapter;
     MITTour tour;
     TourSelfGuidedCallback callback;
+    FullscreenMapCallback mapCallback;
 
     private FloatingActionButton floatingActionButton;
 
@@ -42,10 +44,12 @@ public class TourStopListFragment extends Fragment implements Animation.Animatio
         View view = inflater.inflate(R.layout.fragment_tour_stop_list, null);
 
         callback = (TourSelfGuidedCallback) getActivity();
+        mapCallback = (FullscreenMapCallback) getActivity();
 
         StickyListHeadersListView listView = (StickyListHeadersListView) view.findViewById(R.id.sticky_header_list_view);
 
         View headerView = View.inflate(getActivity(), R.layout.tour_list_header_top, null);
+        headerView.setVisibility(View.VISIBLE);
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +132,7 @@ public class TourStopListFragment extends Fragment implements Animation.Animatio
         switch (duration) {
             case DURATION_OUTGOING:
                 floatingActionButton.setVisibility(View.INVISIBLE);
-                callback.switchViews(false);
+                mapCallback.switchViews(false);
                 break;
             case DURATION_INCOMING:
                 floatingActionButton.setVisibility(View.VISIBLE);

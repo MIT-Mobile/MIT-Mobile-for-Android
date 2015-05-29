@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.MitMobileApplication;
@@ -104,7 +105,10 @@ public class CategoryIndexedDetailFragment extends Fragment {
     }
 
     private void fetchCategoryPlaces(MITMapCategory category) {
-        MapManager.getMapPlaces(getActivity(), category, new Callback<ArrayList<MITMapPlace>>() {
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("category", category.getIdentifier());
+
+        MapManager.getMapPlaces(getActivity(), queryParams, new Callback<ArrayList<MITMapPlace>>() {
 
             @Override
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {

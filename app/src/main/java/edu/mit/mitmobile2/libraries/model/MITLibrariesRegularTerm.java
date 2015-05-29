@@ -5,6 +5,13 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import edu.mit.mitmobile2.DateUtils;
+
 /**
  * Created by serg on 5/20/15.
  */
@@ -35,6 +42,46 @@ public class MITLibrariesRegularTerm implements Parcelable {
     public void setHours(MITLibrariesDate hours) {
         this.hours = hours;
     }
+
+    /* Helpers */
+
+    public boolean isOpenOnDayOfDate(Date date) {
+        String dayOfWeekAbbreviation = DateUtils.MITDateCode(date);
+        return days != null && days.contains(dayOfWeekAbbreviation);
+    }
+
+    public boolean isOpenOnDate(Date date) {
+        if (!isOpenOnDayOfDate(date)) {
+            return false;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String startDateString = String.format("%s %s", format.format(date), hours.getStart());
+        String endDateString = String.format("%s %s", format.format(date), hours.getEnd());
+
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date startDate = dateTimeFormat.parse(startDateString);
+
+            // We can get back 00:00:00 as a time a library shuts, which should actually be midnight of the following day, so we need to adjust for this...
+            Date endDate = dateTimeFormat.parse(endDateString);
+
+            if (endDate.equals(DateUtils.startOfDay(date))) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(endDate);
+                calendar.add(Calendar.DATE, 1);
+                endDate = calendar.getTime();
+            }
+
+            return DateUtils.dateFallsBetweenDates(date, startDate, endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /* Parcelable */
 
     protected MITLibrariesRegularTerm(Parcel in) {
         days = in.readString();

@@ -5,18 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Locale;
 
-import edu.mit.mitmobile2.shared.logging.LoggingManager;
-
-/**
- * Created by grmartin on 4/27/15.
- */
+import edu.mit.mitmobile2.DateUtils;
 
 public class MITCalendarEvent implements Parcelable {
     @SerializedName("id")
@@ -83,7 +76,7 @@ public class MITCalendarEvent implements Parcelable {
 
     public Date getStartDate() {
         if (startDate == null) {
-            startDate = buildDateFromString(startAt);
+            startDate = buildDate(startAt);
         }
         return startDate;
     }
@@ -94,7 +87,7 @@ public class MITCalendarEvent implements Parcelable {
 
     public Date getEndDate() {
         if (endDate == null) {
-            endDate = buildDateFromString(endAt);
+            endDate = buildDate(endAt);
         }
         return endDate;
     }
@@ -193,7 +186,7 @@ public class MITCalendarEvent implements Parcelable {
 
     public Date getCreatedDate() {
         if (createdDate == null) {
-            createdDate = buildDateFromString(createdAt);
+            buildDate(createdAt);
         }
         return createdDate;
     }
@@ -212,7 +205,7 @@ public class MITCalendarEvent implements Parcelable {
 
     public Date getModifiedDate() {
         if (modifiedDate == null) {
-            modifiedDate = buildDateFromString(modifiedAt);
+            modifiedDate = buildDate(modifiedAt);
         }
         return modifiedDate;
     }
@@ -411,13 +404,15 @@ public class MITCalendarEvent implements Parcelable {
         }
     };
 
-    private Date buildDateFromString(String stringToParse) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
-        try {
-            return format.parse(stringToParse);
-        } catch (ParseException e) {
-            LoggingManager.Timber.e(e, "Failed");
-            return new Date();
+    private Date buildDate(String dateString) {
+        Date date = DateUtils.buildLongDateFromString(dateString);
+        if (date == null) {
+            date = DateUtils.buildShortDateFromString(dateString);
         }
+        if (date == null) {
+            date = new Date();
+        }
+
+        return date;
     }
 }

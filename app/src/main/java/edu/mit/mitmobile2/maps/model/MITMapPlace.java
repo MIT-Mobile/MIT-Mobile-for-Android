@@ -1,19 +1,50 @@
 package edu.mit.mitmobile2.maps.model;
 
 import android.content.Context;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.MapItem;
 
 /**
  * Created by serg on 5/18/15.
  */
-public class MITMapPlace implements Parcelable {
 
+public class MITMapPlace extends MapItem implements Parcelable {
+
+    public class MITMapPlaceSnippet {
+        String name;
+        String id;
+        String buildingNumber;
+
+        public MITMapPlaceSnippet(String buildingNumber, String id, String name) {
+            this.buildingNumber = buildingNumber;
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getBuildingNumber() {
+            return buildingNumber;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
     @SerializedName("id")
     private String id;
 
@@ -30,7 +61,7 @@ public class MITMapPlace implements Parcelable {
     private String buildingNumber;
 
     @SerializedName("bldgimg")
-    private String buildingImage;
+    private String buildingImageUrl;
 
     @SerializedName("street")
     private String street;
@@ -44,6 +75,7 @@ public class MITMapPlace implements Parcelable {
     @SerializedName("viewangle")
     private String viewangle;
 
+    private int index;
     // TODO: add fields:
     // category
     // contents
@@ -89,12 +121,12 @@ public class MITMapPlace implements Parcelable {
         this.buildingNumber = buildingNumber;
     }
 
-    public String getBuildingImage() {
-        return buildingImage;
+    public String getBuildingImageUrl() {
+        return buildingImageUrl;
     }
 
-    public void setBuildingImage(String buildingImage) {
-        this.buildingImage = buildingImage;
+    public void setBuildingImageUrl(String buildingImageUrl) {
+        this.buildingImageUrl = buildingImageUrl;
     }
 
     public String getStreet() {
@@ -155,7 +187,7 @@ public class MITMapPlace implements Parcelable {
         latitude = in.readDouble();
         longitude = in.readDouble();
         buildingNumber = in.readString();
-        buildingImage = in.readString();
+        buildingImageUrl = in.readString();
         street = in.readString();
         architect = in.readString();
         mailing = in.readString();
@@ -174,7 +206,7 @@ public class MITMapPlace implements Parcelable {
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(buildingNumber);
-        dest.writeString(buildingImage);
+        dest.writeString(buildingImageUrl);
         dest.writeString(street);
         dest.writeString(architect);
         dest.writeString(mailing);
@@ -193,4 +225,43 @@ public class MITMapPlace implements Parcelable {
             return new MITMapPlace[size];
         }
     };
+
+    @Override
+    public int getMapItemType() {
+        return MARKERTYPE;
+    }
+
+    @Override
+    public MarkerOptions getMarkerOptions() {
+        MarkerOptions options = new MarkerOptions();
+        options.position(new LatLng(latitude, longitude));
+        String snippet = new Gson().toJson(new MITMapPlaceSnippet(buildingNumber, id, name));
+        options.snippet(snippet);
+        return options;
+    }
+
+    @Override
+    public int getIconResource() {
+        return R.drawable.ic_pin_red;
+    }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
+
+    @Override
+    protected String getTableName() {
+        return null;
+    }
+
+    @Override
+    protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+
+    }
+
+    @Override
+    public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
+
+    }
 }

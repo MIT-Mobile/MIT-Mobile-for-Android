@@ -158,7 +158,7 @@ public class RetailFragment extends Fragment implements AdapterView.OnItemClickL
     /* Network */
 
     private void fetchMapPlaces() {
-        MapManager.getMapPlaces(getActivity(), new Callback<ArrayList<MITMapPlace>>() {
+        MapManager.getMapPlaces(getActivity(), null, new Callback<ArrayList<MITMapPlace>>() {
             @Override
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
                 onMapPlaces(mitMapPlaces);
