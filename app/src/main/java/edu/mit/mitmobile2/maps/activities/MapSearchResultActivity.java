@@ -17,15 +17,18 @@ import butterknife.InjectView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.adapters.MapSearchResultAdapter;
+import edu.mit.mitmobile2.maps.callbacks.SearchResultListCallback;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
-public class MapSearchResultActivity extends AppCompatActivity {
+public class MapSearchResultActivity extends AppCompatActivity implements SearchResultListCallback {
 
     @InjectView(R.id.map_search_listview)
     ListView listView;
 
     @InjectView(R.id.no_results_textview)
     TextView noResultsTextView;
+
+    private MapSearchResultAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,7 @@ public class MapSearchResultActivity extends AppCompatActivity {
 
         if (places.size() > 0) {
             listView.setVisibility(View.VISIBLE);
-            MapSearchResultAdapter adapter = new MapSearchResultAdapter(this, places);
+            adapter = new MapSearchResultAdapter(this, places, this);
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,5 +89,13 @@ public class MapSearchResultActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void goToPlaceDetail(int position) {
+        MITMapPlace place = adapter.getItem(position);
+        Intent intent = new Intent(this, MapPlaceDetailActivity.class);
+        intent.putExtra(Constants.PLACES_KEY, place);
+        startActivity(intent);
     }
 }

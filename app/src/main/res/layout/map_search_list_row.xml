@@ -22,12 +22,18 @@
         android:textColor="@color/mit_grey"
         android:textSize="12sp" />
 
-    <ImageView
+    <TextView
         android:id="@+id/info_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/red_circle_stroke"
+        android:gravity="center"
+        android:text="i"
+        android:textColor="@color/mit_red"
+        android:textStyle="bold"
         android:visibility="gone" />
 
     <ImageView
