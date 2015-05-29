@@ -49,6 +49,8 @@ public class MapListBookmarkFragment extends MapListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.done_button) {
+            getActivity().setResult(Activity.RESULT_CANCELED);
+            getActivity().finish();
             return true;
         } else if (item.getItemId() == R.id.edit_button) {
             return true;

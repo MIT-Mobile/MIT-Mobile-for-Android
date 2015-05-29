@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -21,6 +22,9 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
 
     @InjectView(R.id.map_item_listview)
     protected ListView listView;
+
+    @InjectView(R.id.no_results_textview)
+    protected TextView noResultsView;
 
     protected BaseAdapter adapter;
 
@@ -52,10 +56,7 @@ public class MapListFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.home) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return item.getItemId() == R.id.home || super.onOptionsItemSelected(item);
     }
 
     @Override

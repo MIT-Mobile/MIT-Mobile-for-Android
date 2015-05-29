@@ -42,6 +42,9 @@ public class MapListRecentsFragment extends MapListFragment {
         }
 
         listView.setAdapter(adapter);
+        if (adapter.getCount() == 0) {
+            noResultsView.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -57,8 +60,13 @@ public class MapListRecentsFragment extends MapListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.done_button) {
+            getActivity().setResult(Activity.RESULT_CANCELED);
+            getActivity().finish();
             return true;
         } else if (item.getItemId() == R.id.clear_button) {
+            PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity()).edit().remove(Constants.MAPS_SEARCH_HISTORY).apply();
+            ((MapRecentsAdapter) adapter).updateItems(new ArrayList<String>());
+            noResultsView.setVisibility(View.VISIBLE);
             return true;
         }
 

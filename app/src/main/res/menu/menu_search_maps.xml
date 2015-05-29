@@ -7,4 +7,9 @@
         android:title="@string/search_title"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/categories"
+        android:title="C"
+        app:showAsAction="always" />
 </menu>

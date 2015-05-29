@@ -211,7 +211,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
 
-        inflater.inflate(R.menu.menu_search, menu);
+        inflater.inflate(R.menu.menu_search_maps, menu);
 
         super.onCreateOptionsMenu(menu, inflater);
 

@@ -64,4 +64,10 @@ public class MapRecentsAdapter extends BaseAdapter {
 
         return view;
     }
+
+    public void updateItems(List<String> recents) {
+        this.recents.clear();
+        this.recents.addAll(recents);
+        notifyDataSetChanged();
+    }
 }

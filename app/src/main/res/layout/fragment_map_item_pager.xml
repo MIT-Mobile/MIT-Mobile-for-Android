@@ -7,6 +7,16 @@
     <ListView
         android:id="@+id/map_item_listview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/no_results_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_results"
+        android:textColor="@color/mit_grey"
+        android:textSize="24sp"
+        android:visibility="gone" />
 
 </RelativeLayout>
