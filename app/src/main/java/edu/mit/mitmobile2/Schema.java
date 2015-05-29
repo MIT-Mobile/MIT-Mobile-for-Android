@@ -29,12 +29,12 @@ public class Schema {
             final int count = statements.length;
             String[] outputSet = new String[count];
 
-            for (int i = 0; count>i ; i++) {
-                final String stmt  = this.statements[i];
+            for (int i = 0; count > i; i++) {
+                final String stmt = this.statements[i];
                 if (stmt.contains(" ")) {
                     outputSet[i] = stmt;
                 } else {
-                    outputSet[i] = "["+stmt+"]";
+                    outputSet[i] = "[" + stmt + "]";
                 }
             }
 
@@ -250,7 +250,7 @@ public class Schema {
         public static final String IS_FAVORITE = "is_favorite";
         public static final String EXTENDED_DATA = "nonatomicdata";
 
-        public static final String IDX_FAVORITES = "IDX_"+TABLE_NAME+"_IS_FAVORITE";
+        public static final String IDX_FAVORITES = "IDX_" + TABLE_NAME + "_IS_FAVORITE";
 
         public static final String[] ALL_COLUMNS = new String[]{
                 ID_COL, PERSON_ID, IS_FAVORITE, EXTENDED_DATA
@@ -267,9 +267,66 @@ public class Schema {
 
         public static final String CREATE_TABLE_SQL =
                 buildCreateSQL(TABLE_NAME,
-                               PERSON_ID + " text not null, " +
-                               IS_FAVORITE + " integer not null default 0, " +
-                               EXTENDED_DATA + " text not null "
+                        PERSON_ID + " text not null, " +
+                                IS_FAVORITE + " integer not null default 0, " +
+                                EXTENDED_DATA + " text not null "
                 );
+    }
+
+    public static final class MapPlace extends Table {
+        public static final String TABLE_NAME = "map_place";
+        public static final String PLACE_ID = "place_id";
+        public static final String PLACE_NAME = "place_name";
+        public static final String LATITUDE = "latitude";
+        public static final String LONGITUDE = "longitude";
+        public static final String BUILDING_NUM = "building_num";
+        public static final String BUILDING_IMAGE_URL = "building_image_url";
+        public static final String STREET = "street";
+        public static final String ARCHITECT = "architect";
+        public static final String MAILING = "mailing";
+        public static final String VIEW_ANGLE = "view_angle";
+        public static final String CATEGORIES = "categories";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                        PLACE_ID + " text not null, " +
+                                PLACE_NAME + " text not null, " +
+                                LATITUDE + " double not null, " +
+                                LONGITUDE + " double not null, " +
+                                BUILDING_NUM + " text, " +
+                                BUILDING_IMAGE_URL + " text, " +
+                                STREET + " text, " +
+                                ARCHITECT + " text, " +
+                                MAILING + " text, " +
+                                VIEW_ANGLE + " text, " +
+                                CATEGORIES + " text"
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, PLACE_ID, PLACE_NAME, LATITUDE, LONGITUDE, BUILDING_NUM, BUILDING_IMAGE_URL,
+                STREET, ARCHITECT, MAILING, VIEW_ANGLE, CATEGORIES
+        };
+    }
+
+    public static final class MapPlaceContent extends Table {
+        public static final String TABLE_NAME = "map_place_content";
+        public static final String CONTENT_NAME = "content_name";
+        public static final String CATEGORIES = "categories";
+        public static final String URL = "url";
+        public static final String ALT_NAMES = "alt_names";
+        public static final String PLACE_ID = "place_id";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                        CONTENT_NAME + " text not null, " +
+                                CATEGORIES + " text, " +
+                                URL + " text, " +
+                                ALT_NAMES + " text, " +
+                                PLACE_ID + " text not null"
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, CONTENT_NAME, CATEGORIES, URL, ALT_NAMES, PLACE_ID
+        };
     }
 }

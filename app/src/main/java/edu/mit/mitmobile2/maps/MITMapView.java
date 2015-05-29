@@ -384,5 +384,11 @@ public class MITMapView {
     public void selectMapItem(int position) {
         dynamicMarkers.get(position).showInfoWindow();
     }
+
+    public void showSingleItem() {
+        if (dynamicMarkers.size() > 0) {
+            dynamicMarkers.get(0).showInfoWindow();
+        }
+    }
 }
 

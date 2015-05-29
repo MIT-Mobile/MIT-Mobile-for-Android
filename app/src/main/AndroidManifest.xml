@@ -277,6 +277,16 @@
             android:label="@string/title_activity_map_search_result"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".maps.activities.MapPlaceDetailActivity"
+            android:label="@string/title_activity_map_place_detail"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".maps.activities.MapItemPagerActivity"
+            android:label="@string/title_activity_map_item_pager"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
