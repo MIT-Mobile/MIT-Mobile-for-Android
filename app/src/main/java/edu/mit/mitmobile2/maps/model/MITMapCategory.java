@@ -63,6 +63,22 @@ public class MITMapCategory implements Parcelable {
         this.categories = categories;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MITMapCategory category = (MITMapCategory) o;
+
+        return !(identifier != null ? !identifier.equals(category.identifier) : category.identifier != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier != null ? identifier.hashCode() : 0;
+    }
+
     /* Helpers */
 
     public String getSectionIndexTitle() {

@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.maps.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class CategoryIndexedDetailFragment extends Fragment {
 
@@ -29,7 +31,8 @@ public class CategoryIndexedDetailFragment extends Fragment {
 
     private static final String KEY_STATE_PLACES = "key_state_places";
 
-    private ListView listView;
+    private StickyListHeadersListView listView;
+    private SwipeRefreshLayout refreshLayout;
 
     private CategoryIndexedAdapter adapter;
 
@@ -77,7 +80,8 @@ public class CategoryIndexedDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_indexed_detail, container, false);
 
-        listView = (ListView) view.findViewById(R.id.list);
+        listView = (StickyListHeadersListView) view.findViewById(R.id.list);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.category_indexed_refreshlayout);
 
         adapter = new CategoryIndexedAdapter(category);
         listView.setAdapter(adapter);
@@ -88,6 +92,7 @@ public class CategoryIndexedDetailFragment extends Fragment {
         } else {
             if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
                 places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
+                onPlacesReceived((ArrayList<MITMapPlace>) places);
             }
         }
 
@@ -104,7 +109,7 @@ public class CategoryIndexedDetailFragment extends Fragment {
         }
     }
 
-    private void fetchCategoryPlaces(MITMapCategory category) {
+    private void fetchCategoryPlaces(final MITMapCategory category) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("category", category.getIdentifier());
 
@@ -112,6 +117,9 @@ public class CategoryIndexedDetailFragment extends Fragment {
 
             @Override
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
+                for (MITMapPlace place : mitMapPlaces) {
+                    place.setCategory(category);
+                }
                 onPlacesReceived(mitMapPlaces);
             }
 
@@ -128,5 +136,8 @@ public class CategoryIndexedDetailFragment extends Fragment {
         if (adapter != null) {
             adapter.updatePlaces(places);
         }
+
+        refreshLayout.setRefreshing(false);
+        refreshLayout.setEnabled(false);
     }
 }

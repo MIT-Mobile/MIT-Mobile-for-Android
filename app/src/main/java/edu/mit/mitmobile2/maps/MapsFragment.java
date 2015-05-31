@@ -70,8 +70,8 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-//        Intent i = new Intent(getActivity(), MapsCategoriesActivity.class);
-//        startActivity(i);
+        Intent i = new Intent(getActivity(), MapsCategoriesActivity.class);
+        startActivity(i);
 
         mapCallback = this;
 

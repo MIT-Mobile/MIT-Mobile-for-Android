@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import edu.mit.mitmobile2.DBAdapter;
@@ -74,6 +75,9 @@ public class MITMapPlace extends MapItem implements Parcelable {
 
     @SerializedName("viewangle")
     private String viewangle;
+
+    @Expose
+    private MITMapCategory mitCategory;
 
     private int index;
     // TODO: add fields:
@@ -159,6 +163,14 @@ public class MITMapPlace extends MapItem implements Parcelable {
 
     public void setViewangle(String viewangle) {
         this.viewangle = viewangle;
+    }
+
+    public MITMapCategory getCategory() {
+        return mitCategory;
+    }
+
+    public void setCategory(MITMapCategory category) {
+        this.mitCategory = category;
     }
 
     /* Helpers */

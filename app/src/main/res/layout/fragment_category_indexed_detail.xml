@@ -5,10 +5,16 @@
     android:background="@color/white"
     tools:context="edu.mit.mitmobile2.maps.fragments.CategoryIndexedDetailFragment">
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fastScrollEnabled="true" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/category_indexed_refreshlayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fastScrollEnabled="true" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
