@@ -259,5 +259,17 @@
     <string name="library_closed_today">Closed Today</string>
     <string name="library_midnight">midnight</string>
     <string name="library_noon">noon</string>
+    <string name="title_activity_map_place_detail">MapPlaceDetailActivity</string>
+    <string name="open_in_gmaps">Open in Google Maps</string>
+    <string name="add_to_bookmarks">Add to Bookmarks</string>
+    <string name="remove_from_bookmarks">Remove from Bookmarks</string>
+    <string name="title_activity_map_item_pager">MapItemPagerActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="categories">CATEGORIES</string>
+    <string name="bookmarks">BOOKMARKS</string>
+    <string name="recents">RECENTS</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,30 +12,29 @@ import java.util.List;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
-public class MapSearchResultAdapter extends BaseAdapter {
+public class MapBookmarksAdapter extends BaseAdapter {
 
     private class ViewHolder {
         TextView title;
         TextView subtitle;
-        ImageView info;
     }
 
     private Context context;
-    private List<MITMapPlace> places;
+    private List<MITMapPlace> bookmarks;
 
-    public MapSearchResultAdapter(Context context, List<MITMapPlace> places) {
+    public MapBookmarksAdapter(Context context, List<MITMapPlace> bookmarks) {
         this.context = context;
-        this.places = places;
+        this.bookmarks = bookmarks;
     }
 
     @Override
     public int getCount() {
-        return places.size();
+        return bookmarks.size();
     }
 
     @Override
     public MITMapPlace getItem(int position) {
-        return places.get(position);
+        return bookmarks.get(position);
     }
 
     @Override
@@ -55,19 +53,17 @@ public class MapSearchResultAdapter extends BaseAdapter {
 
             holder.title = (TextView) view.findViewById(R.id.map_search_result_title);
             holder.subtitle = (TextView) view.findViewById(R.id.map_search_result_subtitle);
-            holder.info = (ImageView) view.findViewById(R.id.info_icon);
 
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-
         MITMapPlace place = getItem(position);
         String buildingNumber = place.getBuildingNumber();
 
         if (!TextUtils.isEmpty(buildingNumber)) {
-            holder.title.setText((position + 1) + ". Building " + buildingNumber);
+            holder.title.setText("Building " + buildingNumber);
             holder.subtitle.setVisibility(View.VISIBLE);
             holder.subtitle.setText(place.getName());
         } else {
@@ -75,14 +71,6 @@ public class MapSearchResultAdapter extends BaseAdapter {
             holder.subtitle.setVisibility(View.GONE);
         }
 
-        holder.info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Go to place detail view - need asset for info
-            }
-        });
-
         return view;
     }
-
 }

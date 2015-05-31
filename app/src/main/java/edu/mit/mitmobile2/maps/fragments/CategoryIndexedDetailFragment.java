@@ -118,7 +118,7 @@ public class CategoryIndexedDetailFragment extends Fragment {
             @Override
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
                 for (MITMapPlace place : mitMapPlaces) {
-                    place.setCategory(category);
+                    place.setMitCategory(category);
                 }
                 onPlacesReceived(mitMapPlaces);
             }

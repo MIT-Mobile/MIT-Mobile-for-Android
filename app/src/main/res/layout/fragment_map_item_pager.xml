@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.mit.mitmobile2.maps.activities.MapItemPagerActivity$PlaceholderFragment">
+
+    <ListView
+        android:id="@+id/map_item_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/no_results_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_results"
+        android:textColor="@color/mit_grey"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

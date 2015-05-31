@@ -82,7 +82,7 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
     public int getPositionForSection(int sectionIndex) {
         String section = sections.get(sectionIndex);
         for (int i = 0; i < getCount(); i++) {
-            if (getItem(i).getCategory().getSectionIndexTitle().equalsIgnoreCase(section)) {
+            if (getItem(i).getMitCategory().getSectionIndexTitle().equalsIgnoreCase(section)) {
                 return i;
             }
         }
@@ -93,7 +93,7 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
     @Override
     public int getSectionForPosition(int position) {
         MITMapPlace place = getItem(position);
-        return sections.indexOf(place.getCategory().getSectionIndexTitle());
+        return sections.indexOf(place.getMitCategory().getSectionIndexTitle());
     }
 
     /* StickyListHeadersAdapter */
