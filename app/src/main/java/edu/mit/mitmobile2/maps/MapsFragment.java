@@ -3,7 +3,6 @@ package edu.mit.mitmobile2.maps;
 import android.content.Intent;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,8 +23,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import edu.mit.mitmobile2.MitMapFragment;
-import edu.mit.mitmobile2.maps.activities.MapsCategoriesActivity;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
@@ -275,8 +272,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 this.setMode(Mode.NO_SEARCH);
             }
         } else if (item.getItemId() == R.id.categories) {
-//            Intent i = new Intent(getActivity(), MapsCategoriesActivity.class);
-//            startActivity(i);
             Intent intent = new Intent(getActivity(), MapItemPagerActivity.class);
             startActivityForResult(intent, 200);
         }

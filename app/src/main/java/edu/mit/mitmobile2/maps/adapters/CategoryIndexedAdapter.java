@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.maps.adapter;
+package edu.mit.mitmobile2.maps.adapters;
 
 import android.text.TextUtils;
 import android.view.View;

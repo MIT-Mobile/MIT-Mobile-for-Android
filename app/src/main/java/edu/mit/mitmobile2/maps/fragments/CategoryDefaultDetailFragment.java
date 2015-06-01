@@ -19,7 +19,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapManager;
-import edu.mit.mitmobile2.maps.adapter.CategoryDefaultAdapter;
+import edu.mit.mitmobile2.maps.adapters.CategoryDefaultAdapter;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import retrofit.Callback;

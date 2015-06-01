@@ -1,8 +1,6 @@
 package edu.mit.mitmobile2.maps.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapManager;
-import edu.mit.mitmobile2.maps.adapter.CategoriesAdapter;
+import edu.mit.mitmobile2.maps.adapters.CategoriesAdapter;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import retrofit.Callback;
 import retrofit.RetrofitError;
