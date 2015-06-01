@@ -1,31 +1,32 @@
 package edu.mit.mitmobile2.maps.fragments;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapManager;
 import edu.mit.mitmobile2.maps.adapter.CategoryDefaultAdapter;
-import edu.mit.mitmobile2.maps.adapter.CategoryIndexedAdapter;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class CategoryDefaultDetailFragment extends Fragment {
+public class CategoryDefaultDetailFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String KEY_MAP_CATEGORY = "key_map_category";
 
@@ -78,18 +79,41 @@ public class CategoryDefaultDetailFragment extends Fragment {
         adapter = new CategoryDefaultAdapter(category);
         listView.addHeaderView(headerViewAllOnMap);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         if (savedInstanceState == null) {
             places = new ArrayList<>();
             getPlaces();
         } else {
             if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
-                 places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
-                 onPlacesReceived(places);
+                places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
+                onPlacesReceived(places);
             }
         }
 
         return view;
+    }
+
+    /* AdapterView.OnItemClickListener */
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (places == null || places.size() == 0) {
+            return;
+        }
+
+        Intent result = new Intent();
+
+        if (position == 0) {
+            // add all is selected
+            result.putExtra(Constants.PLACES_KEY, places);
+        } else {
+            result.putExtra(Constants.PLACES_KEY, places.get(position - 1));
+        }
+
+        result.putExtra(Constants.Map.TAB_TYPE, 0);
+        getActivity().setResult(Activity.RESULT_OK, result);
+        getActivity().finish();
     }
 
     /* Network */
@@ -121,6 +145,9 @@ public class CategoryDefaultDetailFragment extends Fragment {
     }
 
     private void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces) {
+        this.places.clear();
+        this.places.addAll(mitMapPlaces);
+
         if (adapter != null) {
             adapter.updatePlaces(mitMapPlaces);
         }

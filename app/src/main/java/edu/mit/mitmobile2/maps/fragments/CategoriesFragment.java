@@ -21,20 +21,14 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class CategoriesFragment extends MapListFragment implements AdapterView.OnItemClickListener {
 
     private static final String KEY_STATE_CATEGORIES = "key_state_categories";
-
-    public interface OnCategoriesFragmentInteractionListener {
-
-    }
 
     private ListView listView;
 
     private CategoriesAdapter adapter;
     private ArrayList<MITMapCategory> mitMapCategories;
-
-    private OnCategoriesFragmentInteractionListener mListener;
 
     public static CategoriesFragment newInstance() {
         CategoriesFragment fragment = new CategoriesFragment();
@@ -43,17 +37,6 @@ public class CategoriesFragment extends Fragment implements AdapterView.OnItemCl
 
     public CategoriesFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnCategoriesFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -87,12 +70,6 @@ public class CategoriesFragment extends Fragment implements AdapterView.OnItemCl
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     /* AdapterView.OnItemClickListener */
 
     @Override
@@ -101,13 +78,13 @@ public class CategoriesFragment extends Fragment implements AdapterView.OnItemCl
 
         if (selectedCategory.getCategories() != null && selectedCategory.getCategories().size() > 0) {
             boolean shouldSortCategory = selectedCategory.getIdentifier().equals("building_name");
-            getChildFragmentManager()
+            getActivity().getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_root, CategoryIndexedDetailFragment.newInstance(selectedCategory, shouldSortCategory))
                     .addToBackStack(null)
                     .commit();
         } else {
-            getChildFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_root, CategoryDefaultDetailFragment.newInstance(selectedCategory))
                     .addToBackStack(null)

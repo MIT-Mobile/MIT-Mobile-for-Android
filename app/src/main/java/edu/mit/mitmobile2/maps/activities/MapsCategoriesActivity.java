@@ -14,7 +14,7 @@ import edu.mit.mitmobile2.maps.fragments.BookmarksFragment;
 import edu.mit.mitmobile2.maps.fragments.CategoriesFragment;
 import edu.mit.mitmobile2.maps.fragments.RecentsFragment;
 
-public class MapsCategoriesActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.OnTabReselectedListener, CategoriesFragment.OnCategoriesFragmentInteractionListener, BookmarksFragment.OnBookmarksFragmentInteractionListener, RecentsFragment.OnRecentsFragmentInteractionListener {
+public class MapsCategoriesActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, PagerSlidingTabStrip.OnTabReselectedListener, BookmarksFragment.OnBookmarksFragmentInteractionListener, RecentsFragment.OnRecentsFragmentInteractionListener {
 
     private ViewPager viewPager;
     private PagerSlidingTabStrip tabHost;
@@ -31,7 +31,7 @@ public class MapsCategoriesActivity extends AppCompatActivity implements ViewPag
 
         setupTabHost();
 
-        adapter = new CategoriesPagerAdapter(this, getSupportFragmentManager());
+        adapter = new CategoriesPagerAdapter(this, getFragmentManager());
         viewPager.setAdapter(adapter);
         tabHost.setViewPager(viewPager);
     }

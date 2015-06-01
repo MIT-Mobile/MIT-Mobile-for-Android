@@ -1,17 +1,21 @@
 package edu.mit.mitmobile2.maps.fragments;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
@@ -24,7 +28,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class CategoryIndexedDetailFragment extends Fragment {
+public class CategoryIndexedDetailFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String KEY_MAP_CATEGORY = "key_map_category";
     private static final String KEY_MAP_SHOULD_SORT = "key_map_should_sort";
@@ -85,18 +89,31 @@ public class CategoryIndexedDetailFragment extends Fragment {
 
         adapter = new CategoryIndexedAdapter(category);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         if (savedInstanceState == null) {
             sectionedPlaces = new ArrayList[category.getCategories().size()];
             getPlaces();
         } else {
             if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
+                // TODO:
                 // places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
                 // onPlacesReceived((ArrayList<MITMapPlace>) places);
             }
         }
 
         return view;
+    }
+
+    /* AdapterView.OnItemClickListener */
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent result = new Intent();
+        result.putExtra(Constants.PLACES_KEY, adapter.getItem(position));
+        result.putExtra(Constants.Map.TAB_TYPE, 0);
+        getActivity().setResult(Activity.RESULT_OK, result);
+        getActivity().finish();
     }
 
     /* Network */
