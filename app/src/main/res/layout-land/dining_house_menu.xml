@@ -25,6 +25,16 @@
         android:textSize="@dimen/dining_house_content_text_size"
         />
 
+    <TextView
+        android:id="@+id/closed_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dining_day_closed"
+        android:textColor="@color/mit_grey"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
     <LinearLayout
         android:id="@+id/menu_layout"
         android:layout_width="match_parent"

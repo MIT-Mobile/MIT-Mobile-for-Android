@@ -39,6 +39,7 @@ public class HouseMenuRecyclerAdapter extends RecyclerView.Adapter<HouseMenuRecy
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
         public TextView hoursTextView;
+        public TextView closedTextView;
         public LinearLayout menuLayout;
 
         public ViewHolder(View view) {
@@ -47,6 +48,7 @@ public class HouseMenuRecyclerAdapter extends RecyclerView.Adapter<HouseMenuRecy
             nameTextView = (TextView) view.findViewById(R.id.name_text_view);
             hoursTextView = (TextView) view.findViewById(R.id.hours_text_view);
             menuLayout = (LinearLayout) view.findViewById(R.id.menu_layout);
+            closedTextView = (TextView) view.findViewById(R.id.closed_text_view);
         }
     }
 
@@ -102,8 +104,12 @@ public class HouseMenuRecyclerAdapter extends RecyclerView.Adapter<HouseMenuRecy
 
         if (!startTime.isEmpty() && (!endTime.isEmpty())) {
             holder.hoursTextView.setText(startTime + " - " + endTime);
+            holder.closedTextView.setVisibility(View.GONE);
+            holder.menuLayout.setVisibility(View.VISIBLE);
         } else {
-            holder.hoursTextView.setText(context.getString(R.string.dining_day_closed));
+            holder.hoursTextView.setText("");
+            holder.closedTextView.setVisibility(View.VISIBLE);
+            holder.menuLayout.setVisibility(View.GONE);
         }
     }
 

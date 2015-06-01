@@ -78,9 +78,9 @@ public class DiningHouseActivity extends AppCompatActivity {
             houseNameTextView.setText(venue.getName());
             dateTextView.setText("Today, " + getCurrentDate());
 
-            try {
+            if (venue.getIconURL() != null) {
                 Picasso.with(this).load(venue.getIconURL()).placeholder(R.drawable.grey_rect).into(houseImageView);
-            } catch (NullPointerException e) {
+            } else {
                 Picasso.with(this).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(houseImageView);
             }
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
