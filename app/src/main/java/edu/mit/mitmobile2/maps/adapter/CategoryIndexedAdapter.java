@@ -1,16 +1,13 @@
 package edu.mit.mitmobile2.maps.adapter;
 
-import android.text.Html;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -76,9 +73,17 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
         }
 
         MITMapPlace place = getItem(position);
+        String title = place.getTitle(parent.getContext());
+        String description = place.getSubtitle(parent.getContext());
 
-        viewHolder.textViewTitle.setText(place.getTitle(parent.getContext()));
-        viewHolder.textViewDescription.setText(place.getSubtitle(parent.getContext()));
+        viewHolder.textViewTitle.setText(title);
+
+        if (TextUtils.isEmpty(description)) {
+            viewHolder.textViewDescription.setVisibility(View.GONE);
+        } else {
+            viewHolder.textViewDescription.setVisibility(View.VISIBLE);
+            viewHolder.textViewDescription.setText(description);
+        }
 
         return convertView;
     }
@@ -116,9 +121,9 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        String headerTitle = sections[((int) getHeaderId(position))];
+        MITMapCategory subCategory = category.getCategories().get((int) getHeaderId(position));
 
-        viewHolder.headerTextView.setText(Html.fromHtml(headerTitle));
+        viewHolder.headerTextView.setText(subCategory.getName());
 
         return view;
     }
