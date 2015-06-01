@@ -27,7 +27,6 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         if (fragments[position] == null) {
             switch (position) {
                 case 0:
-                    // fragments[position] = MapListFragment.newInstance();
                     fragments[position] = CategoriesFragment.newInstance();
                     break;
                 case 1:
