@@ -10,12 +10,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.MapManager;
+import edu.mit.mitmobile2.maps.adapter.CategoryDefaultAdapter;
 import edu.mit.mitmobile2.maps.adapter.CategoryIndexedAdapter;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
@@ -24,38 +24,31 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class CategoryIndexedDetailFragment extends Fragment {
+public class CategoryDefaultDetailFragment extends Fragment {
 
     private static final String KEY_MAP_CATEGORY = "key_map_category";
-    private static final String KEY_MAP_SHOULD_SORT = "key_map_should_sort";
 
     private static final String KEY_STATE_PLACES = "key_state_places";
 
-    private StickyListHeadersListView listView;
+    private ListView listView;
     private SwipeRefreshLayout refreshLayout;
 
-    private CategoryIndexedAdapter adapter;
+    private CategoryDefaultAdapter adapter;
 
     private MITMapCategory category;
-    private ArrayList<MITMapPlace>[] sectionedPlaces;
-    private boolean shouldSortCategory;
+    private ArrayList<MITMapPlace> places;
 
-    public static CategoryIndexedDetailFragment newInstance(MITMapCategory category) {
-        return newInstance(category, false);
-    }
-
-    public static CategoryIndexedDetailFragment newInstance(MITMapCategory category, boolean shouldSortCategory) {
-        CategoryIndexedDetailFragment fragment = new CategoryIndexedDetailFragment();
+    public static CategoryDefaultDetailFragment newInstance(MITMapCategory category) {
+        CategoryDefaultDetailFragment fragment = new CategoryDefaultDetailFragment();
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_MAP_CATEGORY, category);
-        bundle.putBoolean(KEY_MAP_SHOULD_SORT, shouldSortCategory);
         fragment.setArguments(bundle);
 
         return fragment;
     }
 
-    public CategoryIndexedDetailFragment() {
+    public CategoryDefaultDetailFragment() {
         // Required empty public constructor
     }
 
@@ -68,31 +61,27 @@ public class CategoryIndexedDetailFragment extends Fragment {
             if (arguments.containsKey(KEY_MAP_CATEGORY)) {
                 category = arguments.getParcelable(KEY_MAP_CATEGORY);
             }
-
-            if (arguments.containsKey(KEY_MAP_SHOULD_SORT)) {
-                shouldSortCategory = arguments.getBoolean(KEY_MAP_SHOULD_SORT);
-            }
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_category_indexed_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_category_default_detail, container, false);
 
-        listView = (StickyListHeadersListView) view.findViewById(R.id.list);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.category_indexed_refreshlayout);
+        listView = (ListView) view.findViewById(R.id.list);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.category_default_refreshlayout);
 
-        adapter = new CategoryIndexedAdapter(category);
+        adapter = new CategoryDefaultAdapter(category);
         listView.setAdapter(adapter);
 
         if (savedInstanceState == null) {
-            sectionedPlaces = new ArrayList[category.getCategories().size()];
+            places = new ArrayList<>();
             getPlaces();
         } else {
             if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
-                // places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
-                // onPlacesReceived((ArrayList<MITMapPlace>) places);
+                 places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
+                 onPlacesReceived(places);
             }
         }
 
@@ -103,14 +92,10 @@ public class CategoryIndexedDetailFragment extends Fragment {
 
     private void getPlaces() {
         refreshLayout.setRefreshing(true);
-
-        for (int i = 0; i < category.getCategories().size(); i++) {
-            MITMapCategory subCategory = category.getCategories().get(i);
-            fetchCategoryPlaces(subCategory, i);
-        }
+        fetchCategoryPlaces(category);
     }
 
-    private void fetchCategoryPlaces(final MITMapCategory category, final int subcategoryIndex) {
+    private void fetchCategoryPlaces(final MITMapCategory category) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("category", category.getIdentifier());
 
@@ -121,7 +106,7 @@ public class CategoryIndexedDetailFragment extends Fragment {
                 for (MITMapPlace place : mitMapPlaces) {
                     place.setMitCategory(category);
                 }
-                onPlacesReceived(mitMapPlaces, subcategoryIndex);
+                onPlacesReceived(mitMapPlaces);
             }
 
             @Override
@@ -131,11 +116,9 @@ public class CategoryIndexedDetailFragment extends Fragment {
         });
     }
 
-    private synchronized void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces, int subcategoryIndex) {
-        sectionedPlaces[subcategoryIndex] = mitMapPlaces;
-
+    private void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces) {
         if (adapter != null) {
-            adapter.updatePlaces(mitMapPlaces, subcategoryIndex);
+            adapter.updatePlaces(mitMapPlaces);
         }
 
         refreshLayout.setRefreshing(false);

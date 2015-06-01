@@ -61,7 +61,7 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = View.inflate(parent.getContext(), R.layout.row_map_category_detail_place, null);
+            convertView = View.inflate(parent.getContext(), R.layout.row_map_category_indexed_detail_place, null);
 
             viewHolder = new ViewHolder();
             viewHolder.textViewTitle = (TextView) convertView.findViewById(R.id.map_category_detail_tv_title);
@@ -112,7 +112,7 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
         ViewHolder viewHolder = new ViewHolder();
 
         if (view == null) {
-            view = View.inflate(viewGroup.getContext(), R.layout.row_map_category_detail_header, null);
+            view = View.inflate(viewGroup.getContext(), R.layout.row_map_category_indexed_detail_header, null);
 
             viewHolder.headerTextView = (TextView) view.findViewById(R.id.header_title);
 

@@ -107,7 +107,11 @@ public class CategoriesFragment extends Fragment implements AdapterView.OnItemCl
                     .addToBackStack(null)
                     .commit();
         } else {
-            // TODO: navigate to default detail screen
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_root, CategoryDefaultDetailFragment.newInstance(selectedCategory))
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
