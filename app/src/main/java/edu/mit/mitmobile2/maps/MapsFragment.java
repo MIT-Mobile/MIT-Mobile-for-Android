@@ -230,7 +230,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             }
         });
 
-
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
