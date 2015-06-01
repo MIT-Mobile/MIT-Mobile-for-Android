@@ -16,9 +16,10 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.adapters.MapBookmarksAdapter;
+import edu.mit.mitmobile2.maps.callbacks.BookmarkCallback;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
-public class MapListBookmarkFragment extends MapListFragment {
+public class MapListBookmarkFragment extends MapListFragment implements BookmarkCallback {
 
     public MapListBookmarkFragment() {
     }
@@ -32,7 +33,7 @@ public class MapListBookmarkFragment extends MapListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        adapter = new MapBookmarksAdapter(getActivity(), DBAdapter.getInstance().getBookmarks());
+        adapter = new MapBookmarksAdapter(getActivity(), DBAdapter.getInstance().getBookmarks(), this);
         listView.setAdapter(adapter);
 
         return view;
@@ -53,6 +54,7 @@ public class MapListBookmarkFragment extends MapListFragment {
             getActivity().finish();
             return true;
         } else if (item.getItemId() == R.id.edit_button) {
+            ((MapBookmarksAdapter) adapter).toggleEditMode();
             return true;
         }
 
@@ -66,5 +68,13 @@ public class MapListBookmarkFragment extends MapListFragment {
         result.putExtra(Constants.Map.TAB_TYPE, 1);
         getActivity().setResult(Activity.RESULT_OK, result);
         getActivity().finish();
+    }
+
+    @Override
+    public void removeBookmark(int position) {
+        MapBookmarksAdapter bookmarkAdapter = (MapBookmarksAdapter) adapter;
+        MITMapPlace place = bookmarkAdapter.getItem(position);
+        DBAdapter.getInstance().deletePlaceFromDb(place);
+        bookmarkAdapter.updateItems(DBAdapter.getInstance().getBookmarks());
     }
 }

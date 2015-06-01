@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mit.mitmobile2.maps.activities.MapItemPagerActivity$PlaceholderFragment">
+    tools:context="edu.mit.mitmobile2.maps.activities.MapItemPagerActivity$PlaceholderFragment"
+    android:background="@color/white">
 
     <ListView
         android:id="@+id/map_item_listview"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
 
     <TextView
         android:id="@+id/no_results_textview"

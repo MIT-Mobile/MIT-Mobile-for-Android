@@ -2,7 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/map_search_result_title"
@@ -19,12 +22,27 @@
         android:textColor="@color/mit_grey"
         android:textSize="12sp" />
 
-    <ImageView
+    <TextView
         android:id="@+id/info_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:layout_marginRight="10dp"
+        android:background="@drawable/red_circle_stroke"
+        android:gravity="center"
+        android:text="i"
+        android:textColor="@color/mit_red"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/delete_bookmark_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/shuttle_stops_current"
+        android:visibility="gone" />
 
 </RelativeLayout>

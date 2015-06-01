@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.callbacks.SearchResultListCallback;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
 public class MapSearchResultAdapter extends BaseAdapter {
@@ -18,15 +19,17 @@ public class MapSearchResultAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView title;
         TextView subtitle;
-        ImageView info;
+        TextView info;
     }
 
     private Context context;
     private List<MITMapPlace> places;
+    private SearchResultListCallback callback;
 
-    public MapSearchResultAdapter(Context context, List<MITMapPlace> places) {
+    public MapSearchResultAdapter(Context context, List<MITMapPlace> places, SearchResultListCallback callback) {
         this.context = context;
         this.places = places;
+        this.callback = callback;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class MapSearchResultAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         View view = convertView;
 
@@ -55,7 +58,7 @@ public class MapSearchResultAdapter extends BaseAdapter {
 
             holder.title = (TextView) view.findViewById(R.id.map_search_result_title);
             holder.subtitle = (TextView) view.findViewById(R.id.map_search_result_subtitle);
-            holder.info = (ImageView) view.findViewById(R.id.info_icon);
+            holder.info = (TextView) view.findViewById(R.id.info_icon);
 
             view.setTag(holder);
         } else {
@@ -75,10 +78,12 @@ public class MapSearchResultAdapter extends BaseAdapter {
             holder.subtitle.setVisibility(View.GONE);
         }
 
+        holder.info.setVisibility(View.VISIBLE);
+
         holder.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Go to place detail view - need asset for info
+                callback.goToPlaceDetail(position);
             }
         });
 
