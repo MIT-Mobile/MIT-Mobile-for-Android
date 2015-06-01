@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps.fragments;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class CategoriesFragment extends MapListFragment implements AdapterView.O
     private static final String KEY_STATE_CATEGORIES = "key_state_categories";
 
     private ListView listView;
+    private SwipeRefreshLayout refreshLayout;
 
     private CategoriesAdapter adapter;
     private ArrayList<MITMapCategory> mitMapCategories;
@@ -43,6 +45,7 @@ public class CategoriesFragment extends MapListFragment implements AdapterView.O
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
 
         listView = (ListView) view.findViewById(R.id.list);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.category_refreshlayout);
 
         adapter = new CategoriesAdapter();
         listView.setAdapter(adapter);
@@ -93,6 +96,13 @@ public class CategoriesFragment extends MapListFragment implements AdapterView.O
     /* Network */
 
     private void fetchCategories() {
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        }, 200);
+
         MapManager.getMapPlaceCategories(getActivity(), new Callback<ArrayList<MITMapCategory>>() {
             @Override
             public void success(ArrayList<MITMapCategory> mitMapCategories, Response response) {
@@ -101,6 +111,9 @@ public class CategoriesFragment extends MapListFragment implements AdapterView.O
                 if (adapter != null) {
                     adapter.refreshCategories(mitMapCategories);
                 }
+
+                refreshLayout.setRefreshing(false);
+                refreshLayout.setEnabled(false);
             }
 
             @Override

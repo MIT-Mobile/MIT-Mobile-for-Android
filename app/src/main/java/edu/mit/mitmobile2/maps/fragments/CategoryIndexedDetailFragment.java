@@ -39,8 +39,10 @@ public class CategoryIndexedDetailFragment extends Fragment implements AdapterVi
     private CategoryIndexedAdapter adapter;
 
     private MITMapCategory category;
-    private ArrayList<MITMapPlace>[] sectionedPlaces;
     private boolean shouldSortCategory;
+
+    private ArrayList<MITMapPlace>[] sectionedPlaces;
+    private boolean arePlacesFilled;
 
     public static CategoryIndexedDetailFragment newInstance(MITMapCategory category) {
         return newInstance(category, false);
@@ -89,18 +91,25 @@ public class CategoryIndexedDetailFragment extends Fragment implements AdapterVi
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey(KEY_STATE_PLACES)) {
             sectionedPlaces = new ArrayList[category.getCategories().size()];
             getPlaces();
         } else {
-            if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
-                // TODO:
-                // places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
-                // onPlacesReceived((ArrayList<MITMapPlace>) places);
+            sectionedPlaces = (ArrayList<MITMapPlace>[]) savedInstanceState.getSerializable(KEY_STATE_PLACES);
+            for (int i = 0; i < sectionedPlaces.length; i++) {
+                onPlacesReceived(sectionedPlaces[i], i);
             }
         }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (arePlacesFilled) {
+            outState.putSerializable(KEY_STATE_PLACES, sectionedPlaces);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     /* AdapterView.OnItemClickListener */
@@ -117,7 +126,12 @@ public class CategoryIndexedDetailFragment extends Fragment implements AdapterVi
     /* Network */
 
     private void getPlaces() {
-        refreshLayout.setRefreshing(true);
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        }, 200);
 
         for (int i = 0; i < category.getCategories().size(); i++) {
             MITMapCategory subCategory = category.getCategories().get(i);
@@ -151,6 +165,13 @@ public class CategoryIndexedDetailFragment extends Fragment implements AdapterVi
 
         if (adapter != null) {
             adapter.updatePlaces(mitMapPlaces, subcategoryIndex);
+        }
+
+        arePlacesFilled = true;
+        for (ArrayList<MITMapPlace> places : sectionedPlaces) {
+            if (places ==  null) {
+                arePlacesFilled = false;
+            }
         }
 
         refreshLayout.setRefreshing(false);

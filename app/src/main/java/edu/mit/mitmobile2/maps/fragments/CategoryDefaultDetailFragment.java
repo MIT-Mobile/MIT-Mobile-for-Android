@@ -81,17 +81,22 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        if (savedInstanceState == null) {
-            places = new ArrayList<>();
+        if (savedInstanceState == null || !savedInstanceState.containsKey(KEY_STATE_PLACES)) {
             getPlaces();
         } else {
-            if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
-                places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
-                onPlacesReceived(places);
-            }
+            ArrayList<MITMapPlace> places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
+            onPlacesReceived(places);
         }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (places != null) {
+            outState.putParcelableArrayList(KEY_STATE_PLACES, places);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     /* AdapterView.OnItemClickListener */
@@ -119,7 +124,12 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
     /* Network */
 
     private void getPlaces() {
-        refreshLayout.setRefreshing(true);
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);
+            }
+        }, 200);
         fetchCategoryPlaces(category);
     }
 
@@ -145,8 +155,7 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
     }
 
     private void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces) {
-        this.places.clear();
-        this.places.addAll(mitMapPlaces);
+        this.places = mitMapPlaces;
 
         if (adapter != null) {
             adapter.updatePlaces(mitMapPlaces);

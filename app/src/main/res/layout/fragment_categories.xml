@@ -5,11 +5,17 @@
     android:layout_height="match_parent"
     tools:context="edu.mit.mitmobile2.maps.fragments.CategoriesFragment">
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/category_refreshlayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
