@@ -37,7 +37,7 @@ public class CategoryIndexedDetailFragment extends Fragment {
     private CategoryIndexedAdapter adapter;
 
     private MITMapCategory category;
-    private List<MITMapPlace> places;
+    private ArrayList<MITMapPlace>[] sectionedPlaces;
     private boolean shouldSortCategory;
 
     public static CategoryIndexedDetailFragment newInstance(MITMapCategory category) {
@@ -87,12 +87,12 @@ public class CategoryIndexedDetailFragment extends Fragment {
         listView.setAdapter(adapter);
 
         if (savedInstanceState == null) {
-            places = new ArrayList<>();
+            sectionedPlaces = new ArrayList[category.getCategories().size()];
             getPlaces();
         } else {
             if (savedInstanceState.containsKey(KEY_STATE_PLACES)) {
-                places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
-                onPlacesReceived((ArrayList<MITMapPlace>) places);
+                // places = savedInstanceState.getParcelableArrayList(KEY_STATE_PLACES);
+                // onPlacesReceived((ArrayList<MITMapPlace>) places);
             }
         }
 
@@ -102,14 +102,13 @@ public class CategoryIndexedDetailFragment extends Fragment {
     /* Network */
 
     private void getPlaces() {
-        places.clear();
-
-        for (MITMapCategory subCategory : category.getCategories()) {
-            fetchCategoryPlaces(subCategory);
+        for (int i = 0; i < category.getCategories().size(); i++) {
+            MITMapCategory subCategory = category.getCategories().get(i);
+            fetchCategoryPlaces(subCategory, i);
         }
     }
 
-    private void fetchCategoryPlaces(final MITMapCategory category) {
+    private void fetchCategoryPlaces(final MITMapCategory category, final int subcategoryIndex) {
         HashMap<String, String> queryParams = new HashMap<>();
         queryParams.put("category", category.getIdentifier());
 
@@ -120,7 +119,7 @@ public class CategoryIndexedDetailFragment extends Fragment {
                 for (MITMapPlace place : mitMapPlaces) {
                     place.setMitCategory(category);
                 }
-                onPlacesReceived(mitMapPlaces);
+                onPlacesReceived(mitMapPlaces, subcategoryIndex);
             }
 
             @Override
@@ -130,11 +129,11 @@ public class CategoryIndexedDetailFragment extends Fragment {
         });
     }
 
-    private synchronized void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces) {
-        places.addAll(mitMapPlaces);
+    private synchronized void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces, int subcategoryIndex) {
+        sectionedPlaces[subcategoryIndex] = mitMapPlaces;
 
         if (adapter != null) {
-            adapter.updatePlaces(places);
+            adapter.updatePlaces(mitMapPlaces, subcategoryIndex);
         }
 
         refreshLayout.setRefreshing(false);

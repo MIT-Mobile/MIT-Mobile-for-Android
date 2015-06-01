@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps.adapter;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +10,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,12 +26,22 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
 
     private MITMapCategory category;
     private List<MITMapPlace> places;
-    private List<String> sections;
+
+    private ArrayList<MITMapPlace>[] sectionedPlaces;
+    private String[] sections;
+    private HashMap<Integer, Integer> keySet;
 
     public CategoryIndexedAdapter(MITMapCategory category) {
         this.category = category;
         this.places = new ArrayList<>();
-        this.sections = new ArrayList<>();
+        this.keySet = new HashMap<>();
+        this.sections = new String[category.getCategories().size()];
+        this.sectionedPlaces = new ArrayList[category.getCategories().size()];
+
+        for (int i = 0; i < category.getCategories().size(); i++) {
+            sections[i] = category.getCategories().get(i).getSectionIndexTitle();
+            sectionedPlaces[i] = new ArrayList<>();
+        }
     }
 
     @Override
@@ -75,31 +87,23 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
 
     @Override
     public Object[] getSections() {
-        return sections.toArray(new String[sections.size()]);
+        return sections;
     }
 
     @Override
     public int getPositionForSection(int sectionIndex) {
-        String section = sections.get(sectionIndex);
-        for (int i = 0; i < getCount(); i++) {
-            if (getItem(i).getMitCategory().getSectionIndexTitle().equalsIgnoreCase(section)) {
-                return i;
-            }
-        }
-
-        return 0;
+        return keySet.get(sectionIndex);
     }
 
     @Override
     public int getSectionForPosition(int position) {
-        MITMapPlace place = getItem(position);
-        return sections.indexOf(place.getMitCategory().getSectionIndexTitle());
+        return 0;
     }
 
     /* StickyListHeadersAdapter */
 
     @Override
-    public View getHeaderView(int i, View view, ViewGroup viewGroup) {
+    public View getHeaderView(int position, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder = new ViewHolder();
 
         if (view == null) {
@@ -112,7 +116,7 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        String headerTitle = sections.get(getSectionForPosition(i));
+        String headerTitle = sections[((int) getHeaderId(position))];
 
         viewHolder.headerTextView.setText(Html.fromHtml(headerTitle));
 
@@ -120,21 +124,32 @@ public class CategoryIndexedAdapter extends BaseAdapter implements SectionIndexe
     }
 
     @Override
-    public long getHeaderId(int i) {
-        return getSectionForPosition(i);
+    public long getHeaderId(int position) {
+        MITMapPlace place = getItem(position);
+        for (int i = 0; i < sections.length; i++) {
+            if (sections[i].equals(place.getMitCategory().getSectionIndexTitle())) {
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     /* Helpers */
 
-    public void updatePlaces(List<MITMapPlace> places) {
+    public void updatePlaces(List<MITMapPlace> places, int sectionIndex) {
         this.places.clear();
-        if (places != null) {
-            this.places.addAll(places);
-        }
+        this.keySet.clear();
 
-        sections.clear();
-        for (MITMapCategory subCategory : category.getCategories()) {
-            sections.add(subCategory.getSectionIndexTitle());
+        this.sectionedPlaces[sectionIndex] = (ArrayList<MITMapPlace>) places;
+
+        int currentPlacesCount = 0;
+        for (int i = 0; i < sectionedPlaces.length; i++) {
+            ArrayList<MITMapPlace> sectionPlaces = sectionedPlaces[i];
+            this.places.addAll(sectionPlaces);
+
+            keySet.put(i, currentPlacesCount);
+            currentPlacesCount += sectionPlaces.size();
         }
 
         notifyDataSetChanged();
