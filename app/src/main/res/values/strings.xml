@@ -272,4 +272,6 @@
     <string name="bookmarks">BOOKMARKS</string>
     <string name="recents">RECENTS</string>
 
+    <string name="view_all_on_map">View All on Map</string>
+
 </resources>

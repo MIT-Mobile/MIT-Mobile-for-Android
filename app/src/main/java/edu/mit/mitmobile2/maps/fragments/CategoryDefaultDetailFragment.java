@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,7 +73,10 @@ public class CategoryDefaultDetailFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.list);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.category_default_refreshlayout);
 
+        View headerViewAllOnMap = getActivity().getLayoutInflater().inflate(R.layout.header_map_category_default_detail, null);
+
         adapter = new CategoryDefaultAdapter(category);
+        listView.addHeaderView(headerViewAllOnMap);
         listView.setAdapter(adapter);
 
         if (savedInstanceState == null) {
