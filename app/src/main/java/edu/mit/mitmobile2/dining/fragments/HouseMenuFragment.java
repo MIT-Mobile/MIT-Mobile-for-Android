@@ -22,7 +22,6 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseMealMenuAdapter;
-import edu.mit.mitmobile2.dining.callback.DiningHouseCallback;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
 import edu.mit.mitmobile2.dining.model.MITDiningMenuItem;

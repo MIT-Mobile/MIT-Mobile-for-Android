@@ -34,6 +34,8 @@ public class Constants {
     public static final String LIBRARIES = "libraries";
     public static final String SECURE = "secure";
 
+    public static final String LOCATION_KEY = "location";
+
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
         public static final String ROUTE_INFO_PATH = "/routes/{route}";
