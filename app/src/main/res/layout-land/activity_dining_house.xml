@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id='@+id/house_hours_text_view'
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/mit_red"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dining_house_title_text_size"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/dining_house_menu_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>
