@@ -5,12 +5,15 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import edu.mit.mitmobile2.Constants;
@@ -161,6 +164,24 @@ public class CategoryIndexedDetailFragment extends Fragment implements AdapterVi
     }
 
     private synchronized void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces, int subcategoryIndex) {
+        if (shouldSortCategory) {
+            Collections.sort(mitMapPlaces, new Comparator<MITMapPlace>() {
+
+                @Override
+                public int compare(MITMapPlace lhs, MITMapPlace rhs) {
+                    String lPLace = getPlace(lhs);
+                    String rPLace = getPlace(rhs);
+
+                    return lPLace.compareTo(rPLace);
+                }
+
+                private String getPlace(MITMapPlace place) {
+                    String subtitle = place.getSubtitle(getActivity());
+                    return TextUtils.isEmpty(subtitle) ? place.getTitle(getActivity()) : subtitle;
+                }
+            });
+        }
+
         sectionedPlaces[subcategoryIndex] = mitMapPlaces;
 
         if (adapter != null) {

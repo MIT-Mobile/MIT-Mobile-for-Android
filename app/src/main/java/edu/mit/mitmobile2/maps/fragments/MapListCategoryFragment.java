@@ -20,22 +20,21 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends MapListFragment implements AdapterView.OnItemClickListener {
+public class MapListCategoryFragment extends MapListFragment {
 
     private static final String KEY_STATE_CATEGORIES = "key_state_categories";
 
-    private ListView listView;
     private SwipeRefreshLayout refreshLayout;
 
     private CategoriesAdapter adapter;
     private ArrayList<MITMapCategory> mitMapCategories;
 
-    public static CategoriesFragment newInstance() {
-        CategoriesFragment fragment = new CategoriesFragment();
+    public static MapListCategoryFragment newInstance() {
+        MapListCategoryFragment fragment = new MapListCategoryFragment();
         return fragment;
     }
 
-    public CategoriesFragment() {
+    public MapListCategoryFragment() {
         // Required empty public constructor
     }
 
@@ -106,7 +105,7 @@ public class CategoriesFragment extends MapListFragment implements AdapterView.O
         MapManager.getMapPlaceCategories(getActivity(), new Callback<ArrayList<MITMapCategory>>() {
             @Override
             public void success(ArrayList<MITMapCategory> mitMapCategories, Response response) {
-                CategoriesFragment.this.mitMapCategories = mitMapCategories;
+                MapListCategoryFragment.this.mitMapCategories = mitMapCategories;
 
                 if (adapter != null) {
                     adapter.refreshCategories(mitMapCategories);

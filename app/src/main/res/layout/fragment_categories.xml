@@ -3,7 +3,7 @@
     android:id="@+id/fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.mit.mitmobile2.maps.fragments.CategoriesFragment">
+    tools:context="edu.mit.mitmobile2.maps.fragments.MapListCategoryFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/category_refreshlayout"
