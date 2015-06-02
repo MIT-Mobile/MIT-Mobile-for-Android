@@ -129,7 +129,7 @@ public class Constants {
     public class Map {
         public static final String MAP_PATH = "/";
         public static final String MAP_PLACES = "/places";
-
+        public static final String MAP_PLACE_CATEGORIES_PATH = "/place_categories";
         public static final String MAP_BOOKMARKS = "mapBookmarks";
         public static final String RECENT_QUERY = "recentQuery";
         public static final String TAB_TYPE = "tabType";
