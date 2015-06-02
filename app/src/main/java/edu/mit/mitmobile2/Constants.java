@@ -35,6 +35,7 @@ public class Constants {
     public static final String SECURE = "secure";
 
     public static final String LOCATION_KEY = "location";
+    public static final String LOCATION_SHOULD_SANITIZE_QUERY_KEY = "location_should_sanitize_query_key";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";

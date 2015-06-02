@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.webkit.WebView;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +31,7 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.MITActivity;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
@@ -103,7 +107,15 @@ public class EventsDetailActivity extends MITActivity {
 
     @OnClick(R.id.location_layout)
     public void openLocationIntent() {
-        //TODO : link to Map Module
+        Intent intent = new Intent(this, MITMainActivity.class);
+
+        if (TextUtils.isEmpty(event.getLocation().getRoomNumber())) {
+            intent.putExtra(Constants.LOCATION_KEY, event.getLocation().getDescription());
+        } else {
+            intent.putExtra(Constants.LOCATION_KEY, event.getLocation().getRoomNumber());
+            intent.putExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, true);
+        }
+        startActivity(intent);
     }
 
     @OnClick(R.id.phone_layout)
