@@ -76,6 +76,15 @@ public class MapItemPagerActivity extends AppCompatActivity implements ViewPager
     }
 
     @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }

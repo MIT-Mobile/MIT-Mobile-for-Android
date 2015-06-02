@@ -1,8 +1,8 @@
 package edu.mit.mitmobile2.maps;
 
+import android.content.Intent;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -230,7 +230,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             }
         });
 
-
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -314,9 +313,22 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 int type = data.getIntExtra(Constants.Map.TAB_TYPE, -1);
 
                 switch (type) {
-                    case 0:
+                    case 0: {
+                        MITMapPlace place = data.getParcelableExtra(Constants.PLACES_KEY);
+                        ArrayList<MITMapPlace> placesExtra = data.getParcelableArrayListExtra(Constants.PLACES_KEY);
+
+                        places.clear();
+
+                        if (place != null) {
+                            places.add(place);
+                        } else if (placesExtra != null) {
+                            places.addAll(placesExtra);
+                        }
+
+                        updateMapItems((ArrayList) places, true, true);
+                    }
                         break;
-                    case 1:
+                    case 1: {
                         String id = data.getStringExtra(Constants.PLACES_KEY);
                         MITMapPlace place = DBAdapter.getInstance().getBookmark(id);
 
@@ -324,12 +336,14 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                         places.add(place);
 
                         updateMapItems((ArrayList) places, true, true);
+                    }
                         break;
-                    case 2:
+                    case 2: {
                         String query = data.getStringExtra(Constants.Map.RECENT_QUERY);
                         if (!TextUtils.isEmpty(query)) {
                             performSearch(searchView, this, query);
                         }
+                    }
                         break;
                     default:
                 }
