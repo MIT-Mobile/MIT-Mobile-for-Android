@@ -218,6 +218,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         MenuItem menuItem = menu.findItem(R.id.search);
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -250,7 +251,14 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             }
         });
 
-        searchView.setQueryHint(getString(R.string.maps_search_hint));
+        if (getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
+            String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
+            menuItem.expandActionView();
+            searchView.setQuery(queryText, true);
+        } else {
+            searchView.setQueryHint(getString(R.string.maps_search_hint));
+            menuItem.collapseActionView();
+        }
 
         View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
 

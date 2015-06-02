@@ -1,4 +1,6 @@
 package edu.mit.mitmobile2.dining.activities;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,7 +18,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseHoursAdapter;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
@@ -37,6 +41,13 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
     TextView locationTextView;
     @InjectView(R.id.house_hours_layout)
     LinearLayout hoursLayout;
+
+    @OnClick(R.id.location_layout)
+    public void openLocationInMap() {
+        Intent intent = new Intent(this, MITMainActivity.class);
+        intent.putExtra(Constants.LOCATION_KEY, venue.getLocation().getLocationDescription());
+        startActivity(intent);
+    }
 
     private MITDiningHouseVenue venue;
 

@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/dining_house_padding"
     android:paddingTop="@dimen/dining_house_padding"
     android:orientation="vertical"
     android:background="@color/white"
@@ -12,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dining_house_padding"
+        android:layout_marginLeft="@dimen/dining_house_padding"
         android:layout_marginTop="@dimen/dining_schedule_padding_vertical"
         android:orientation="horizontal">
         <ImageView
@@ -43,11 +43,12 @@
 
     <View
         style="@style/MITView"
-        />
+        android:layout_marginLeft="@dimen/dining_house_padding" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dining_house_padding"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -70,11 +71,13 @@
     </LinearLayout>
 
     <View
-        style="@style/MITView" />
+        style="@style/MITView"
+        android:layout_marginLeft="@dimen/dining_house_padding" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dining_house_padding"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -95,14 +98,18 @@
     </LinearLayout>
 
     <View
-        style="@style/MITView" />
+        style="@style/MITView"
+        android:layout_marginLeft="@dimen/dining_house_padding" />
 
     <RelativeLayout
+        android:id="@+id/location_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/mit_selector">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dining_house_padding"
             android:layout_marginTop="@dimen/dining_schedule_padding_vertical"
             android:layout_marginBottom="@dimen/dining_schedule_padding_vertical"
             android:orientation="vertical">
@@ -135,5 +142,6 @@
     </RelativeLayout>
 
     <View
-        style="@style/MITView" />
+        style="@style/MITView"
+        android:layout_marginLeft="@dimen/dining_house_padding" />
 </LinearLayout>

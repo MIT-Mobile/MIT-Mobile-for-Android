@@ -85,6 +85,12 @@ public class MITMainActivity extends MITActivity {
             ContentResolver.addPeriodicSync(MitMobileApplication.mAccount, MitMobileApplication.AUTHORITY, Bundle.EMPTY, MitMobileApplication.INTERVAL_SECS);
         }
 
+        if (getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
+            swapInFragment(getPackageName() + ".maps.MapsFragment", "Map");
+        } else {
+            checkForIncomingIntent(savedInstanceState);
+        }
+
         // get progress bar
         this.progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -122,8 +128,6 @@ public class MITMainActivity extends MITActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        checkForIncomingIntent(savedInstanceState);
     }
 
     @Override
