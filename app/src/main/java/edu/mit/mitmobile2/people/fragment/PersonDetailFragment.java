@@ -1,13 +1,9 @@
 package edu.mit.mitmobile2.people.fragment;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
@@ -23,9 +19,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import butterknife.InjectView;
 import butterknife.OnItemClick;
 import edu.mit.mitmobile2.BuildConfig;
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.DirectoryDisplayProperty;
@@ -182,7 +185,7 @@ public class PersonDetailFragment extends Fragment {
         if (enableCreate && enableEdit) {
             enableCreateAndEdit = false;
         } else if (enableCreate && enableCreateAndEdit) {
-             enableCreate = false;
+            enableCreate = false;
         }
 
         if (enableCreate)
@@ -230,11 +233,11 @@ public class PersonDetailFragment extends Fragment {
                 item = litem;
             }
 
-            if (item instanceof List && ((List)item).size() >= 1) {
+            if (item instanceof List && ((List) item).size() >= 1) {
                 List subjectList = (List) item;
                 final int sz = subjectList.size();
 
-                for (int i =0; sz>i; i++) {
+                for (int i = 0; sz > i; i++) {
                     list.add(new MITContactInformation(this.person, new MITPersonIndexPath(attr, i)));
                 }
             }
@@ -252,7 +255,14 @@ public class PersonDetailFragment extends Fragment {
 
         assert displayProperty != null;
 
-        startActivity(displayProperty.getActionIcon().generateIntent(contactInfo.getValue()));
+        if (displayProperty == DirectoryDisplayProperty.OFFICE) {
+            Intent intent = new Intent(getActivity(), MITMainActivity.class);
+            intent.putExtra(Constants.LOCATION_KEY, contactInfo.getValue());
+            intent.putExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, true);
+            startActivity(intent);
+        } else {
+            startActivity(displayProperty.getActionIcon().generateIntent(contactInfo.getValue()));
+        }
     }
 
     @OnItemClick(R.id.contact_management_actions_list)
@@ -264,17 +274,20 @@ public class PersonDetailFragment extends Fragment {
                 IntentValueSet intent = SharedIntentManager.createEditContactIntent();
                 addContactInformation(intent);
                 startActivity(intent);
-            }    break;
+            }
+            break;
             case CREATE_NEW_CONTACT_TAG: {
                 IntentValueSet intent = SharedIntentManager.createInsertContactIntent();
                 addContactInformation(intent);
                 startActivity(intent);
-            }    break;
+            }
+            break;
             case ADD_TO_EXISTING_OR_INSERT_NEW_TAG: {
                 IntentValueSet intent = SharedIntentManager.createInsertEditContactIntent();
                 addContactInformation(intent);
                 startActivity(intent);
-            }    break;
+            }
+            break;
             case ADD_TO_FAVORITES_TAG:
                 this.person.setFavorite(true);
                 PeopleDirectoryManager.addUpdate(this.person);
@@ -335,7 +348,7 @@ public class PersonDetailFragment extends Fragment {
             if (!set.isDestroyed()) {
                 data.add(set);
             } else {
-                Log.d(TAG, "addContactInformation(...) Invalidated & Destoryed => "+set);
+                Log.d(TAG, "addContactInformation(...) Invalidated & Destoryed => " + set);
             }
         }
 
