@@ -10,6 +10,7 @@ import android.app.Activity;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
+import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoAnnouncement;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Callback;
@@ -39,6 +40,14 @@ public class EmergencyManager extends RetrofitManager {
         return m.invoke(MIT_EMERGENCY_SERVICE);
     }
 
+    public static EmergencyManagerCall getAnnouncement(Activity activity, Callback<MITEmergencyInfoAnnouncement> announcement) {
+        EmergencyManagerCallWrapper<?> returnValue = new EmergencyManagerCallWrapper<>(new MITAPIClient(activity), announcement);
+
+        returnValue.getClient().get(Constants.EMERGENCY, Constants.Emergency.ANNOUNCEMENT_PATH, null, null, returnValue);
+
+        return returnValue;
+    }
+
     public static EmergencyManagerCall getContacts(Activity activity, Callback<List<MITEmergencyInfoContact>> people) {
         EmergencyManagerCallWrapper<?> returnValue = new EmergencyManagerCallWrapper<>(new MITAPIClient(activity), people);
 
@@ -49,7 +58,7 @@ public class EmergencyManager extends RetrofitManager {
 
     public interface MitEmergencyService {
         @GET(Constants.Emergency.ANNOUNCEMENT_PATH)
-        void _getannouncement(Callback<List<UNIMPLEMENTED>> callback);
+        void _getannouncement(Callback<MITEmergencyInfoAnnouncement> callback);
         @GET(Constants.Emergency.CONTACTS_PATH)
         void _getcontacts(Callback<List<MITEmergencyInfoContact>> callback);
     }
@@ -61,18 +70,4 @@ public class EmergencyManager extends RetrofitManager {
     }
 
     public interface EmergencyManagerCall extends MITAPIClient.ApiCall {}
-
-    /**
-     * This class is provided as a blank placeholder for stubbed methods, will throw upon .ctor
-     */
-    static class UNIMPLEMENTED {
-        static {
-            new UNIMPLEMENTED();
-        }
-
-        public UNIMPLEMENTED() {
-            throw new RuntimeException("The caller of this class is meant only as a stub and is not yet implemented," +
-                    " please implement it and once complete remove this class.", new RuntimeException("xyzzy-java-ex:unimplemented:" + getClass().getCanonicalName()));
-        }
-    }
 }

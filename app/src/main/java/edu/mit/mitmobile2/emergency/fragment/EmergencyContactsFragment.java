@@ -12,7 +12,7 @@ import android.widget.ListView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.emergency.EmergencyManager;
 import edu.mit.mitmobile2.emergency.EmergencyManager.EmergencyManagerCall;
-import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactInfoAdapter;
+import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsAdapter;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 import edu.mit.mitmobile2.shared.SharedIntentManager;
 import retrofit.Callback;
@@ -25,7 +25,7 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
  * Created by grmartin on 4/16/15.
  */
 public class EmergencyContactsFragment extends ListFragment {
-    private MITEmergencyContactInfoAdapter adapter;
+    private MITEmergencyContactsAdapter adapter;
     private EmergencyManagerCall requestRunning;
 
     public EmergencyContactsFragment() {
@@ -35,7 +35,7 @@ public class EmergencyContactsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_emergency_contacts, container, false);
 
-        this.setListAdapter(adapter = new MITEmergencyContactInfoAdapter());
+        this.setListAdapter(adapter = new MITEmergencyContactsAdapter());
 
         return rootView;
     }
