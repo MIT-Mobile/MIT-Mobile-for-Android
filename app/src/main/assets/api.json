@@ -82,5 +82,11 @@
     "test": "http://mobile-test.mit.edu/apis/secure/",
     "prod": "http://m.mit.edu/apis/secure/",
     "manager": "edu.mit.mitmobile2.libraries.LibraryManager"
+  },
+  "links": {
+    "dev": "http://mobile-dev.mit.edu/apis/",
+    "test": "http://mobile-test.mit.edu/apis/",
+    "prod": "http://m.mit.edu/apis/",
+    "manager": "edu.mit.mitmobile2.links.LinksManager"
   }
 }
