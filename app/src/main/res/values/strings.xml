@@ -279,5 +279,8 @@
 
     <!--emergency info-->
 
+    <string name="emergency_posted_template">Posted %s</string>
+    <string name="emergency_more_contacts">More Emergency Contacts</string>
+
 
 </resources>

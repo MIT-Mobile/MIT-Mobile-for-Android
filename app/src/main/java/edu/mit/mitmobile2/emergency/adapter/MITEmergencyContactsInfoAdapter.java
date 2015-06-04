@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +20,9 @@ import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 
 public class MITEmergencyContactsInfoAdapter extends MITEmergencyContactsAdapter {
 
-    private static final int ROW_TYPE_ANNOUNCEMENT = 0;
-    private static final int ROW_TYPE_CONTACT = 1;
-    private static final int ROW_TYPE_SHOW_MORE = 2;
+    public static final int ROW_TYPE_ANNOUNCEMENT = 0;
+    public static final int ROW_TYPE_CONTACT = 1;
+    public static final int ROW_TYPE_SHOW_MORE = 2;
 
     private static final int ROW_TYPES_COUNT = 3;
 
@@ -71,17 +72,62 @@ public class MITEmergencyContactsInfoAdapter extends MITEmergencyContactsAdapter
 
         switch (itemViewType) {
             case ROW_TYPE_ANNOUNCEMENT: {
-                // TODO:
+                ViewHolder viewHolder;
+                if (convertView == null) {
+                    convertView = View.inflate(parent.getContext(), R.layout.row_emergency_announcement, null);
+
+                    viewHolder = new ViewHolder();
+                    viewHolder.webViewAnnouncement = (WebView) convertView.findViewById(R.id.emergency_webview);
+                    viewHolder.textViewPosted = (TextView) convertView.findViewById(R.id.emergency_tv_posted);
+
+                    convertView.setTag(viewHolder);
+                } else {
+                    viewHolder = (ViewHolder) convertView.getTag();
+                }
+
+                MITEmergencyInfoAnnouncement announcement = (MITEmergencyInfoAnnouncement) getItem(position);
+
+                if (announcement != null) {
+                    String html = announcement.getAnnouncementHtml();
+                    String mime = "text/html";
+                    String encoding = "utf-8";
+
+                    viewHolder.webViewAnnouncement.loadData(html, mime, encoding);
+                    // M/d/y h:mm a zz
+                    // viewHolder.textViewPosted.setText("stub");
+                }
             }
+            break;
             case ROW_TYPE_CONTACT: {
-                return super.getView(position, convertView, parent);
+                convertView = super.getView(position, convertView, parent);
             }
+            break;
             case ROW_TYPE_SHOW_MORE: {
-                // TODO:
+                ViewHolder viewHolder;
+                if (convertView == null) {
+                    convertView = View.inflate(parent.getContext(), R.layout.row_emergency_show_more, null);
+
+                    viewHolder = new ViewHolder();
+                    viewHolder.textViewMoreContacts = (TextView) convertView.findViewById(R.id.emergency_tv_show_more_contacts);
+
+                    convertView.setTag(viewHolder);
+                } else {
+                    viewHolder = (ViewHolder) convertView.getTag();
+                }
             }
+            break;
         }
 
-        return null;
+        return convertView;
+    }
+
+    class ViewHolder {
+        // announcement
+        WebView webViewAnnouncement;
+        TextView textViewPosted;
+
+        // more
+        TextView textViewMoreContacts;
     }
 }
 

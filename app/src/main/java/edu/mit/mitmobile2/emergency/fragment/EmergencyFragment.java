@@ -2,21 +2,23 @@ package edu.mit.mitmobile2.emergency.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.emergency.EmergencyManager;
-import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsAdapter;
 import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsInfoAdapter;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoAnnouncement;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
@@ -24,7 +26,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class EmergencyFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String KEY_STATE_ANNOUNCEMENT = "key_state_announcement";
     private static final String KEY_STATE_CONTACTS = "key_state_contacts";
@@ -50,9 +52,11 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
         listView = (ListView) view.findViewById(R.id.list);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refreshlayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         adapter = new MITEmergencyContactsInfoAdapter();
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         getActivity().setTitle(R.string.title_activity_emergency);
 
@@ -61,7 +65,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         } else {
             announcement = savedInstanceState.getParcelable(KEY_STATE_ANNOUNCEMENT);
 
-
+            adapter.updateAnnouncement(announcement);
         }
 
         if (savedInstanceState == null || savedInstanceState.containsKey(KEY_STATE_CONTACTS)) {
@@ -76,14 +80,13 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (announcement != null) {
+            outState.putParcelable(KEY_STATE_ANNOUNCEMENT, announcement);
+        }
+        if (contacts != null) {
+            outState.putParcelableArrayList(KEY_STATE_CONTACTS, (ArrayList<? extends Parcelable>) contacts);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -91,34 +94,51 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        int rowType = adapter.getItemViewType(position);
+        if (rowType == MITEmergencyContactsInfoAdapter.ROW_TYPE_SHOW_MORE && contacts != null) {
+            ((AppCompatActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, EmergencyContactsFragment.newInstance(contacts)).addToBackStack(null).commit();
+        }
+    }
 
+    /* SwipeRefreshLayout.OnRefreshListener */
+
+    @Override
+    public void onRefresh() {
+        fetchAnnouncement();
+        fetchContacts();
     }
 
     /* Network */
 
     private void fetchAnnouncement() {
+        swipeRefreshLayout.setRefreshing(true);
+
         EmergencyManager.getAnnouncement(getActivity(), new Callback<MITEmergencyInfoAnnouncement>() {
             @Override
             public void success(MITEmergencyInfoAnnouncement mitEmergencyInfoAnnouncement, Response response) {
+                swipeRefreshLayout.setRefreshing(false);
                 announcement = mitEmergencyInfoAnnouncement;
 
                 if (adapter != null) {
-                    adapter.notifyDataSetChanged();
+                    adapter.updateAnnouncement(announcement);
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
+                swipeRefreshLayout.setRefreshing(false);
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
     }
 
     private void fetchContacts() {
+        swipeRefreshLayout.setRefreshing(true);
         EmergencyManager.getContacts(getActivity(), new Callback<List<MITEmergencyInfoContact>>() {
 
             @Override
             public void success(List<MITEmergencyInfoContact> mitEmergencyInfoContacts, Response response) {
+                swipeRefreshLayout.setRefreshing(false);
                 contacts = mitEmergencyInfoContacts;
 
                 onContactsReceived(contacts);
@@ -126,6 +146,7 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
 
             @Override
             public void failure(RetrofitError error) {
+                swipeRefreshLayout.setRefreshing(false);
                 MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
             }
         });
