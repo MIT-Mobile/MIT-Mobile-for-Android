@@ -16,22 +16,24 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 
 
-public class MITEmergencyContactInfoAdapter extends BaseAdapter {
+public class MITEmergencyContactsAdapter extends BaseAdapter {
 
-    private List<MITEmergencyInfoContact> people;
+    protected List<MITEmergencyInfoContact> people;
 
-    public MITEmergencyContactInfoAdapter() {
+    public MITEmergencyContactsAdapter() {
         this.people = (new ArrayList<MITEmergencyInfoContact>(0));
     }
 
-    public MITEmergencyContactInfoAdapter(ArrayList<? extends MITEmergencyInfoContact> people) {
+    public MITEmergencyContactsAdapter(ArrayList<? extends MITEmergencyInfoContact> people) {
         this.people = (new ArrayList<MITEmergencyInfoContact>(people.size()));
         this.people.addAll(people);
     }
 
     public void updateItems(List<? extends MITEmergencyInfoContact> list) {
         this.people.clear();
-        this.people.addAll(list);
+        if (list != null) {
+            this.people.addAll(list);
+        }
         notifyDataSetChanged();
     }
 

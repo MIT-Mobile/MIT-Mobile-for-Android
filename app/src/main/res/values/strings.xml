@@ -277,4 +277,10 @@
 
     <string name="view_all_on_map">View All on Map</string>
 
+    <!--emergency info-->
+
+    <string name="emergency_posted_template">Posted %s</string>
+    <string name="emergency_more_contacts">More Emergency Contacts</string>
+
+
 </resources>
