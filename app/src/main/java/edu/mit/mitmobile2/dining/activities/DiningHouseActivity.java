@@ -18,6 +18,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -138,9 +140,9 @@ public class DiningHouseActivity extends AppCompatActivity {
 
             if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
                 houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
-                findCurrentMeal(diningMeals);
+                findCurrentMeal();
             } else {
-                houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+                houseMenuViewpager.setCurrentItem(findTodayMealIndex());
             }
         } else {
             houseDayPagerAdapter = new HouseDayPagerAdapter(getFragmentManager(), venue.getMealsByDay());
@@ -231,9 +233,9 @@ public class DiningHouseActivity extends AppCompatActivity {
 
             if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
                 houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
-                findCurrentMeal(diningMeals);
+                findCurrentMeal();
             } else {
-                houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+                houseMenuViewpager.setCurrentItem(findTodayMealIndex());
             }
         } else {
             houseDayPagerAdapter = new HouseDayPagerAdapter(getFragmentManager(), venue.getMealsByDay());
@@ -287,43 +289,54 @@ public class DiningHouseActivity extends AppCompatActivity {
         });
     }
 
-    private int findCurrentMeal(List<MITDiningMeal> meals) {
-        int index = 0;
+    private MITDiningMeal findCurrentMeal() {
+        MITDiningMeal todayMeal = diningMeals.get(0);
         String currentDate = getCurrentDate();
 
-        for (int i = 0; i < meals.size(); i++) {
-            if (currentDate.equals(meals.get(i).getHouseDateString())) {
-                String startTime = meals.get(i).getStartTimeString().replace(":", "");
-                String endTime = meals.get(i).getEndTimeString().replace(":", "");
-                if ((Integer.parseInt(getCurrentTime()) >= Integer.parseInt(startTime)) && (Integer.parseInt(getCurrentTime()) <= Integer.parseInt(endTime))) {
-                    index = i;
-                    houseHoursTextView.setText("Open until " + DateFormat.format("h:mm a", DiningUtils.formatMealTime(meals.get(index).getEndTimeString())));
-                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_green));
-                    break;
-                } else if (Integer.parseInt(getCurrentTime()) < Integer.parseInt(startTime)){
-                    index = i;
-                    houseHoursTextView.setText("Opens at " + DateFormat.format("h:mm a", DiningUtils.formatMealTime(meals.get(index).getStartTimeString())));
+        List<MITDiningMeal> todayMeals = new ArrayList<>();
+        for (MITDiningMeal meal : diningMeals) {
+            if (currentDate.equals(meal.getHouseDateString())) {
+                todayMeals.add(meal);
+            }
+        }
+        Collections.sort(todayMeals, new Comparator<MITDiningMeal>() {
+            @Override
+            public int compare(MITDiningMeal lhs, MITDiningMeal rhs) {
+                return lhs.getStartTimeString().compareToIgnoreCase(rhs.getStartTimeString());
+            }
+        });
+
+        for (int i = 0; i < todayMeals.size(); i++) {
+            String startTime = todayMeals.get(i).getStartTimeString().replace(":", "");
+            String endTime = todayMeals.get(i).getEndTimeString().replace(":", "");
+            if ((Integer.parseInt(getCurrentTime()) >= Integer.parseInt(startTime)) && (Integer.parseInt(getCurrentTime()) <= Integer.parseInt(endTime))) {
+                todayMeal = todayMeals.get(i);
+                houseHoursTextView.setText("Open until " + DateFormat.format("h:mm a", DiningUtils.formatMealTime(todayMeals.get(i).getEndTimeString())));
+                houseHoursTextView.setTextColor(getResources().getColor(R.color.status_green));
+                break;
+            } else if (Integer.parseInt(getCurrentTime()) < Integer.parseInt(startTime)){
+                todayMeal = todayMeals.get(i);
+                houseHoursTextView.setText("Opens at " + DateFormat.format("h:mm a", DiningUtils.formatMealTime(todayMeals.get(i).getStartTimeString())));
+                houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                break;
+            } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))) {
+                if (i == todayMeals.size() - 1) {
+                    todayMeal = todayMeals.get(i);
+                    houseHoursTextView.setText(getResources().getString(R.string.close_today));
                     houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
                     break;
-                } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))) {
-                    if (i == meals.size() - 1) {
-                        index = i;
-                        houseHoursTextView.setText(getResources().getString(R.string.close_today));
-                        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-                        break;
-                    } else if (!currentDate.equals(meals.get(i + 1).getHouseDateString())) {
-                        index = i;
-                        houseHoursTextView.setText(getResources().getString(R.string.close_today));
-                        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-                        break;
-                    }
-                }else {
-                    continue;
+                } else if (!currentDate.equals(todayMeals.get(i + 1).getHouseDateString())) {
+                    todayMeal = todayMeals.get(i);
+                    houseHoursTextView.setText(getResources().getString(R.string.close_today));
+                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                    break;
                 }
+            }else {
+                continue;
             }
         }
 
-        return index;
+        return todayMeal;
     }
 
     private int findCurrentHouseDay(List<MITDiningHouseDay> days) {
@@ -400,6 +413,17 @@ public class DiningHouseActivity extends AppCompatActivity {
         String formattedString = formatedDate.format(date);
 
         return formattedString;
+    }
+
+    private int findTodayMealIndex() {
+        int index = 0;
+        for(int i = 0; i < diningMeals.size(); i++) {
+            if (diningMeals.get(i).equals(findCurrentMeal())) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     @Override
