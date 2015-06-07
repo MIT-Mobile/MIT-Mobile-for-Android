@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/link_title"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shuttle_home_image_padding"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/link_url"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/link_title"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="@dimen/shuttle_home_image_padding"
+        android:textColor="@color/black" />
+
+    <ImageView
+        android:id="@+id/link_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="@dimen/shuttle_home_image_padding"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_open_in_browser"
+        android:tint="@color/mit_red" />
+
+    <View
+        style="@style/MITView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/shuttle_home_image_padding" />
+
+</RelativeLayout>
