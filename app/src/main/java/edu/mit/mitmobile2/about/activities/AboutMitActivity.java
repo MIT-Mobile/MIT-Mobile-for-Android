@@ -12,8 +12,8 @@ import edu.mit.mitmobile2.R;
 public class AboutMitActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_mit);
     }
 }

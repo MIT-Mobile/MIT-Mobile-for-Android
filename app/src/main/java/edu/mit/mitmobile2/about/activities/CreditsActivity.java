@@ -12,8 +12,8 @@ import edu.mit.mitmobile2.R;
 public class CreditsActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
     }
 }
