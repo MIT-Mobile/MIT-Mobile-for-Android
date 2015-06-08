@@ -154,9 +154,11 @@ public class CalendarDayFragment extends Fragment implements CalendarDayCallback
     public void onResume() {
         super.onResume();
 
-        SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
-        if (filterChanged(sharedPrefs)) {
-            getCalendarEvents(getArguments().getString(DATE));
+        if (CalendarDayFragment.this.isVisible()) {
+            SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
+            if (filterChanged(sharedPrefs)) {
+                getCalendarEvents(getArguments().getString(DATE));
+            }
         }
     }
 }
