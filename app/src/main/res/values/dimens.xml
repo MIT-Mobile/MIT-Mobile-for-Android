@@ -135,4 +135,13 @@
     <!--library-->
     <dimen name="library_detail_margin">14dp</dimen>
 
+    <!--map-->
+    <dimen name="map_category_detail_header_cell_padding_left_right">14dp</dimen>
+    <dimen name="map_category_detail_header_cell_padding_top_bottom">8dp</dimen>
+    <dimen name="map_category_detail_cell_padding_left_right">14dp</dimen>
+    <dimen name="map_category_detail_cell_padding_top_bottom">14dp</dimen>
+
+    <!--emergency-->
+    <dimen name="emergency_cell_padding">14dp</dimen>
+
 </resources>

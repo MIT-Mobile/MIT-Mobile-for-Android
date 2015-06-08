@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.maps.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,6 +10,7 @@ import android.text.TextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
@@ -19,6 +21,10 @@ import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.MapItem;
+
+/**
+ * Created by serg on 5/18/15.
+ */
 
 public class MITMapPlace extends MapItem implements Parcelable {
 
@@ -45,7 +51,6 @@ public class MITMapPlace extends MapItem implements Parcelable {
             return name;
         }
     }
-
     @SerializedName("id")
     private String id;
 
@@ -76,9 +81,20 @@ public class MITMapPlace extends MapItem implements Parcelable {
     @SerializedName("viewangle")
     private String viewangle;
 
+    @Expose
+    private MITMapCategory mitCategory;
+
+    private int index;
+    // TODO: add fields:
+    // category
+    // contents
     private List<String> category = new ArrayList<>();
 
     private List<MITMapPlaceContent> contents = new ArrayList<>();
+
+    public MITMapPlace() {
+        // empty constructor
+    }
 
     public String getId() {
         return id;
@@ -160,6 +176,14 @@ public class MITMapPlace extends MapItem implements Parcelable {
         this.viewangle = viewangle;
     }
 
+    public MITMapCategory getMitCategory() {
+        return mitCategory;
+    }
+
+    public void setMitCategory(MITMapCategory category) {
+        this.mitCategory = category;
+    }
+
     public List<String> getCategory() {
         return category;
     }
@@ -176,8 +200,25 @@ public class MITMapPlace extends MapItem implements Parcelable {
         this.contents = contents;
     }
 
-    public MITMapPlace() {
+    /* Helpers */
+
+    public String getTitle(Context context) {
+        if (TextUtils.isEmpty(buildingNumber)) {
+            return name;
+        } else {
+            return context.getString(R.string.map_categories_detail_place_title, buildingNumber);
+        }
     }
+
+    public String getSubtitle(Context context) {
+        if (!name.equals(getTitle(context))) {
+            return name;
+        }
+
+        return "";
+    }
+
+    /* Parcelable */
 
     protected MITMapPlace(Parcel in) {
         id = in.readString();

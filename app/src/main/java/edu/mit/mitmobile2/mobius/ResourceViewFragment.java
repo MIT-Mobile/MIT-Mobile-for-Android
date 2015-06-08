@@ -26,21 +26,12 @@ import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.Response;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import edu.mit.mitmobile2.MITAPIClient;
@@ -53,8 +44,6 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
- *
- *
  */
 public class ResourceViewFragment extends Fragment {
 
@@ -67,7 +56,7 @@ public class ResourceViewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         TabHost tabHost;
         final ResourceItem resourceItem = getArguments().getParcelable("resource");
         Timber.d("room = " + resourceItem.getName());
@@ -93,7 +82,7 @@ public class ResourceViewFragment extends Fragment {
             imgUrl += resourceItem.getImages()[0] + "?size=large";
             Timber.d("image url = " + imgUrl);
             ImageView resourceImage = (ImageView) v.findViewById(R.id.resource_image);
-            Ion.with(resourceImage).load(imgUrl);
+            Picasso.with(getActivity()).load(imgUrl).into(resourceImage);
         }
 
         // Resource Name
@@ -101,14 +90,13 @@ public class ResourceViewFragment extends Fragment {
         resourceName.setText(resourceItem.getName());
 
         // Resource Status
-        TextView resource_online = (TextView)v.findViewById(R.id.resource_online);
-        TextView resource_offline = (TextView)v.findViewById(R.id.resource_offline);
+        TextView resource_online = (TextView) v.findViewById(R.id.resource_online);
+        TextView resource_offline = (TextView) v.findViewById(R.id.resource_offline);
 
         if (resourceItem.getStatus().equalsIgnoreCase(ResourceItem.ONLINE)) {
             resource_online.setVisibility(View.VISIBLE);
             resource_offline.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             resource_online.setVisibility(View.GONE);
             resource_offline.setVisibility(View.VISIBLE);
         }
@@ -118,7 +106,7 @@ public class ResourceViewFragment extends Fragment {
                 LinearLayout tab1 = (LinearLayout) inflater.inflate(R.layout.resource_shop_tab, null);
 
                 // Resource Hours
-                TableLayout resourceHours = (TableLayout)tab1.findViewById(R.id.resource_hours);
+                TableLayout resourceHours = (TableLayout) tab1.findViewById(R.id.resource_hours);
                 // loop through the roomset hours and combine repeating hours where possible
 
                 HashMap<String, String> hoursMap = new HashMap<String, String>();
@@ -131,9 +119,8 @@ public class ResourceViewFragment extends Fragment {
 
                         if (hoursMap.containsKey(rh.getDay())) {
                             h = hoursMap.get(rh.getDay()) + '\n' + rh.getStart_time() + " - " + rh.getEnd_time();
-                            hoursMap.put(rh.getDay(),h);
-                        }
-                        else {
+                            hoursMap.put(rh.getDay(), h);
+                        } else {
                             hoursMap.put(rh.getDay(), rh.getStart_time() + " - " + rh.getEnd_time());
                         }
                     }
@@ -165,23 +152,23 @@ public class ResourceViewFragment extends Fragment {
                 resourceRoom.setText(resourceItem.getRoom());
 
                 //View Map
-                ImageView resourceViewMap = (ImageView)tab1.findViewById(R.id.resource_view_map);
+                ImageView resourceViewMap = (ImageView) tab1.findViewById(R.id.resource_view_map);
                 resourceViewMap.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
                             JSONObject params = new JSONObject("{'where':[]}");
-                                JSONObject criteria = new JSONObject();
-                                criteria.put("field", "_id");
-                                criteria.put("value",resourceItem.get_id());
-                                params.getJSONArray("where").put(criteria);
-                                Intent i = new Intent(getActivity(),ResourceListActivity.class);
-                                i.putExtra("params",params.toString());
-                                startActivity(i);
+                            JSONObject criteria = new JSONObject();
+                            criteria.put("field", "_id");
+                            criteria.put("value", resourceItem.get_id());
+                            params.getJSONArray("where").put(criteria);
+                            Intent i = new Intent(getActivity(), ResourceListActivity.class);
+                            i.putExtra("params", params.toString());
+                            startActivity(i);
                         } catch (JSONException e) {
                             Timber.d(e.getMessage());
                         }
-                   }
+                    }
                 });
                 return tab1;
             }

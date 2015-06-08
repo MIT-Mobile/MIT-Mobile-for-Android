@@ -34,6 +34,10 @@ public class Constants {
     public static final String LIBRARIES = "libraries";
     public static final String SECURE = "secure";
     public static final String LOGIN = "login";
+    public static final String LINKS = "links";
+
+    public static final String LOCATION_KEY = "location";
+    public static final String LOCATION_SHOULD_SANITIZE_QUERY_KEY = "location_should_sanitize_query_key";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";
@@ -128,7 +132,7 @@ public class Constants {
     public class Map {
         public static final String MAP_PATH = "/";
         public static final String MAP_PLACES = "/places";
-
+        public static final String MAP_PLACE_CATEGORIES_PATH = "/place_categories";
         public static final String MAP_BOOKMARKS = "mapBookmarks";
         public static final String RECENT_QUERY = "recentQuery";
         public static final String TAB_TYPE = "tabType";
@@ -140,13 +144,15 @@ public class Constants {
         public static final String LIBRARIES_LOCATIONS_PATH = "/locations";
         public static final String LIBRARIES_WORLDCATS_PATH = "/worldcat";
         public static final String LIBRARIES_WORLDCAT_PATH = "/worldcat/{itemId}";
-
-
     }
 
     public class Secure {
         public static final String SECURE_LIBRARIES_ASK_US = "/libraries/forms/askUs";
         public static final String SECURE_LIBRARIES_ACCOUNT_PATH = "/libraries/account";
         public static final String SECURE_USER_PATH = "/user";
+    }
+
+    public class Links {
+        public static final String LINKS_PATH = "/links";
     }
 }

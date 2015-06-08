@@ -1,12 +1,14 @@
 package edu.mit.mitmobile2.dining.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,12 +18,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.adapters.HouseDayPagerAdapter;
@@ -29,44 +30,20 @@ import edu.mit.mitmobile2.dining.adapters.HouseMenuPagerAdapter;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseDay;
 import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningMeal;
+import edu.mit.mitmobile2.dining.utils.DiningUtils;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class DiningHouseActivity extends AppCompatActivity {
 
-    @InjectView(R.id.house_image_view)
-    ImageView houseImageView;
-    @InjectView(R.id.house_name_text_view)
-    TextView houseNameTextView;
-    @InjectView(R.id.house_hours_text_view)
-    TextView houseHoursTextView;
-    @InjectView(R.id.dining_house_menu_viewpager)
-    ViewPager houseMenuViewpager;
-    @InjectView(R.id.date_text_text_view)
-    TextView dateTextView;
-    @InjectView(R.id.info_text_view)
-    TextView infoTextView;
-
-    @OnClick(R.id.info_image_view)
-    public void gotoHouseInfo() {
-        Intent intent = new Intent(this, DiningHouseInfoActivity.class);
-        intent.putExtra(Constants.Dining.HOUSE_INFO, venue);
-        intent.putExtra(Constants.Dining.HOUSE_STATUS, houseHoursTextView.getText().toString());
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.forward_image_view)
-    public void goToNextHouseMeal() {
-        if (houseMenuViewpager.getCurrentItem() < (diningMeals.size() - 1)) {
-            houseMenuViewpager.setCurrentItem(houseMenuViewpager.getCurrentItem() + 1);
-        }
-    }
-
-    @OnClick(R.id.back_image_view)
-    public void goToPreviousHouseMeal() {
-        if (houseMenuViewpager.getCurrentItem() > 0) {
-            houseMenuViewpager.setCurrentItem(houseMenuViewpager.getCurrentItem() - 1);
-        }
-    }
+    private ImageView houseImageView;
+    private TextView houseNameTextView;
+    private TextView houseHoursTextView;
+    private ViewPager houseMenuViewpager;
+    private TextView dateTextView;
+    private TextView infoTextView;
+    private ImageView infoImageView;
+    private ImageView backImageView;
+    private ImageView forwardImageView;
 
     private HouseMenuPagerAdapter houseMenuPagerAdapter;
     private HouseDayPagerAdapter houseDayPagerAdapter;
@@ -79,26 +56,72 @@ public class DiningHouseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dining_house);
-        ButterKnife.inject(this);
 
         venue = getIntent().getParcelableExtra(Constants.Dining.DINING_HOUSE);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         setTitle(venue.getShortName());
 
-        buildHouseMenuPager();
+        houseMenuViewpager = (ViewPager) this.findViewById(R.id.dining_house_menu_viewpager);
+        houseHoursTextView = (TextView) this.findViewById(R.id.house_hours_text_view);
 
-        houseNameTextView.setText(venue.getName());
-        dateTextView.setText("Today, " + getCurrentDate());
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            houseImageView = (ImageView) this.findViewById(R.id.house_image_view);
+            houseNameTextView = (TextView) this.findViewById(R.id.house_name_text_view);
+            dateTextView = (TextView) this.findViewById(R.id.date_text_text_view);
+            infoTextView = (TextView) this.findViewById(R.id.info_text_view);
+            infoImageView = (ImageView) this.findViewById(R.id.info_image_view);
+            backImageView = (ImageView) this.findViewById(R.id.back_image_view);
+            forwardImageView = (ImageView) this.findViewById(R.id.forward_image_view);
 
-        try {
-            Picasso.with(this).load(venue.getIconURL()).placeholder(R.drawable.grey_rect).into(houseImageView);
-        } catch (NullPointerException e) {
-            Picasso.with(this).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(houseImageView);
+            setViewsListener();
+            buildPortraitMenuPager();
+
+            houseNameTextView.setText(venue.getName());
+            dateTextView.setText("Today, " + getCurrentDate());
+
+            if (venue.getIconURL() != null) {
+                Picasso.with(this).load(venue.getIconURL()).placeholder(R.drawable.grey_rect).into(houseImageView);
+            } else {
+                Picasso.with(this).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(houseImageView);
+            }
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            houseHoursTextView.setText("Today, " + getCurrentDate());
+            buildLandscapeMenuPager();
         }
     }
 
-    private void buildHouseMenuPager() {
+    private void setViewsListener() {
+        infoImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DiningHouseInfoActivity.class);
+                intent.putExtra(Constants.Dining.HOUSE_INFO, venue);
+                intent.putExtra(Constants.Dining.HOUSE_STATUS, houseHoursTextView.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        forwardImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (houseMenuViewpager.getCurrentItem() < (diningMeals.size() - 1)) {
+                    houseMenuViewpager.setCurrentItem(houseMenuViewpager.getCurrentItem() + 1);
+                }
+            }
+        });
+
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (houseMenuViewpager.getCurrentItem() > 0) {
+                    houseMenuViewpager.setCurrentItem(houseMenuViewpager.getCurrentItem() - 1);
+                }
+            }
+        });
+    }
+
+    private void buildPortraitMenuPager() {
         diningMeals = new ArrayList<>();
         if (!venue.hoursToday(this).toLowerCase().startsWith("closed")) {
             for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
@@ -117,9 +140,9 @@ public class DiningHouseActivity extends AppCompatActivity {
 
             if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
                 houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
-                findCurrentMeal(diningMeals);
+                findCurrentMeal();
             } else {
-                houseMenuViewpager.setCurrentItem(findCurrentMeal(diningMeals));
+                houseMenuViewpager.setCurrentItem(findTodayMealIndex());
             }
         } else {
             houseDayPagerAdapter = new HouseDayPagerAdapter(getFragmentManager(), venue.getMealsByDay());
@@ -149,14 +172,14 @@ public class DiningHouseActivity extends AppCompatActivity {
                     String startTime;
                     String endTime;
                     if (diningMeals.get(position).getStartTimeString().endsWith(":00:00")) {
-                        startTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
+                        startTime = DateFormat.format("h a", DiningUtils.formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
                     } else {
-                        startTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
+                        startTime = DateFormat.format("h:mm a", DiningUtils.formatMealTime(diningMeals.get(position).getStartTimeString())).toString().toLowerCase();
                     }
                     if (diningMeals.get(position).getEndTimeString().endsWith(":00:00")) {
-                        endTime = DateFormat.format("h a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
+                        endTime = DateFormat.format("h a", DiningUtils.formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
                     } else {
-                        endTime = DateFormat.format("h:mm a", formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
+                        endTime = DateFormat.format("h:mm a", DiningUtils.formatMealTime(diningMeals.get(position).getEndTimeString())).toString().toLowerCase();
                     }
                     infoTextView.setText(diningMeals.get(position).getName() + " "
                             + startTime + " - "
@@ -191,43 +214,129 @@ public class DiningHouseActivity extends AppCompatActivity {
         });
     }
 
-    private int findCurrentMeal(List<MITDiningMeal> meals) {
-        int index = 0;
-        String currentDate = getCurrentDate();
-
-        for (int i = 0; i < meals.size(); i++) {
-            if (currentDate.equals(meals.get(i).getHouseDateString())) {
-                String startTime = meals.get(i).getStartTimeString().replace(":", "");
-                String endTime = meals.get(i).getEndTimeString().replace(":", "");
-                if ((Integer.parseInt(getCurrentTime()) >= Integer.parseInt(startTime)) && (Integer.parseInt(getCurrentTime()) <= Integer.parseInt(endTime))) {
-                    index = i;
-                    houseHoursTextView.setText("Open until " + DateFormat.format("h:mm a", formatMealTime(meals.get(index).getEndTimeString())));
-                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_green));
-                    break;
-                } else if (Integer.parseInt(getCurrentTime()) < Integer.parseInt(startTime)){
-                    index = i;
-                    houseHoursTextView.setText("Opens at " + DateFormat.format("h:mm a", formatMealTime(meals.get(index).getStartTimeString())));
-                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-                    break;
-                } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))) {
-                    if (i == meals.size() - 1) {
-                        index = i;
-                        houseHoursTextView.setText(getResources().getString(R.string.close_today));
-                        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-                        break;
-                    } else if (!currentDate.equals(meals.get(i + 1).getHouseDateString())) {
-                        index = i;
-                        houseHoursTextView.setText(getResources().getString(R.string.close_today));
-                        houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
-                        break;
+    private void buildLandscapeMenuPager() {
+        diningMeals = new ArrayList<>();
+        if (!venue.hoursToday(this).toLowerCase().startsWith("closed")) {
+            for (MITDiningHouseDay diningHouseDay : venue.getMealsByDay()) {
+                if (diningHouseDay.getMeals() != null) {
+                    for (MITDiningMeal mitDiningMeal : diningHouseDay.getMeals()) {
+                        mitDiningMeal.setHouseDateString(diningHouseDay.getDateString());
+                        diningMeals.add(mitDiningMeal);
                     }
-                }else {
-                    continue;
                 }
             }
         }
 
-        return index;
+        if (diningMeals.size() > 0) {
+            houseMenuPagerAdapter = new HouseMenuPagerAdapter(getFragmentManager(), diningMeals);
+            houseMenuViewpager.setAdapter(houseMenuPagerAdapter);
+
+            if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
+                houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+                findCurrentMeal();
+            } else {
+                houseMenuViewpager.setCurrentItem(findTodayMealIndex());
+            }
+        } else {
+            houseDayPagerAdapter = new HouseDayPagerAdapter(getFragmentManager(), venue.getMealsByDay());
+            houseMenuViewpager.setAdapter(houseDayPagerAdapter);
+
+            if (getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1) != -1) {
+                houseMenuViewpager.setCurrentItem(getIntent().getIntExtra(Constants.Dining.HOUSE_MENU_PAGER_INDEX, -1));
+            } else {
+                houseMenuViewpager.setCurrentItem(findCurrentHouseDay(venue.getMealsByDay()));
+            }
+        }
+
+        houseMenuViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                houseHoursTextView.setTextColor(getResources().getColor(R.color.white));
+                if (diningMeals.size() > 0) {
+                    if (diningMeals.get(position).getHouseDateString().equals(getCurrentDate())) {
+                        houseHoursTextView.setText(getResources().getString(R.string.house_today_landscape, diningMeals.get(position).getName(), formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                    } else if (diningMeals.get(position).getHouseDateString().equals(getYesterdayDate())) {
+                        houseHoursTextView.setText(getResources().getString(R.string.house_yesterday_landscape, diningMeals.get(position).getName(), formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                    } else if (diningMeals.get(position).getHouseDateString().equals(getTomorrowDate())) {
+                        houseHoursTextView.setText(getResources().getString(R.string.house_tomorrow_landscape, diningMeals.get(position).getName(), formatSimpletDate(diningMeals.get(position).getHouseDateString())));
+                    } else {
+                        String[] dates = formatDate(diningMeals.get(position).getHouseDateString()).split(",");
+                        houseHoursTextView.setText(dates[0] + "' " + diningMeals.get(position).getName() + " " + dates[1]);
+                    }
+                } else {
+                    MITDiningHouseDay day = venue.getMealsByDay().get(position);
+                    if (day.getDateString().equals(getCurrentDate())) {
+                        houseHoursTextView.setText(getResources().getString(R.string.house_today, formatSimpletDate(day.getDateString())));
+                    } else if (day.getDateString().equals(getYesterdayDate())) {
+                        houseHoursTextView.setText(getResources().getString(R.string.house_yesterday, formatSimpletDate(day.getDateString())));
+                    } else if (day.getDateString().equals(getTomorrowDate())) {
+                        houseHoursTextView.setText(getResources().getString(R.string.house_tomorrow, formatSimpletDate(day.getDateString())));
+                    } else {
+                        houseHoursTextView.setText(formatDate(day.getDateString()));
+                    }
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private MITDiningMeal findCurrentMeal() {
+        MITDiningMeal todayMeal = diningMeals.get(0);
+        String currentDate = getCurrentDate();
+
+        List<MITDiningMeal> todayMeals = new ArrayList<>();
+        for (MITDiningMeal meal : diningMeals) {
+            if (currentDate.equals(meal.getHouseDateString())) {
+                todayMeals.add(meal);
+            }
+        }
+        Collections.sort(todayMeals, new Comparator<MITDiningMeal>() {
+            @Override
+            public int compare(MITDiningMeal lhs, MITDiningMeal rhs) {
+                return lhs.getStartTimeString().compareToIgnoreCase(rhs.getStartTimeString());
+            }
+        });
+
+        for (int i = 0; i < todayMeals.size(); i++) {
+            String startTime = todayMeals.get(i).getStartTimeString().replace(":", "");
+            String endTime = todayMeals.get(i).getEndTimeString().replace(":", "");
+            if ((Integer.parseInt(getCurrentTime()) >= Integer.parseInt(startTime)) && (Integer.parseInt(getCurrentTime()) <= Integer.parseInt(endTime))) {
+                todayMeal = todayMeals.get(i);
+                houseHoursTextView.setText("Open until " + DateFormat.format("h:mm a", DiningUtils.formatMealTime(todayMeals.get(i).getEndTimeString())));
+                houseHoursTextView.setTextColor(getResources().getColor(R.color.status_green));
+                break;
+            } else if (Integer.parseInt(getCurrentTime()) < Integer.parseInt(startTime)){
+                todayMeal = todayMeals.get(i);
+                houseHoursTextView.setText("Opens at " + DateFormat.format("h:mm a", DiningUtils.formatMealTime(todayMeals.get(i).getStartTimeString())));
+                houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                break;
+            } else if ((Integer.parseInt(getCurrentTime()) > Integer.parseInt(endTime))) {
+                if (i == todayMeals.size() - 1) {
+                    todayMeal = todayMeals.get(i);
+                    houseHoursTextView.setText(getResources().getString(R.string.close_today));
+                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                    break;
+                } else if (!currentDate.equals(todayMeals.get(i + 1).getHouseDateString())) {
+                    todayMeal = todayMeals.get(i);
+                    houseHoursTextView.setText(getResources().getString(R.string.close_today));
+                    houseHoursTextView.setTextColor(getResources().getColor(R.color.status_red));
+                    break;
+                }
+            }else {
+                continue;
+            }
+        }
+
+        return todayMeal;
     }
 
     private int findCurrentHouseDay(List<MITDiningHouseDay> days) {
@@ -306,21 +415,26 @@ public class DiningHouseActivity extends AppCompatActivity {
         return formattedString;
     }
 
-
-    private Date formatMealTime(String timeString) {
-        Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        try {
-            date = format.parse(timeString);
-        } catch (ParseException e) {
-            LoggingManager.Timber.e(e, "___________DateFormatError___________");
+    private int findTodayMealIndex() {
+        int index = 0;
+        for(int i = 0; i < diningMeals.size(); i++) {
+            if (diningMeals.get(i).equals(findCurrentMeal())) {
+                index = i;
+                break;
+            }
         }
-        return date;
+        return index;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dining_house, menu);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            menu.findItem(R.id.menu_filter).setVisible(false);
+        } else {
+            menu.findItem(R.id.menu_filter).setVisible(true);
+        }
         return true;
     }
 

@@ -104,7 +104,7 @@ public abstract class DatabaseObject extends Observable implements Observer {
     public static final long INVALID_ID = Long.MIN_VALUE;
 
     @NonAtomicExclude
-    private long databaseId = INVALID_ID;
+    protected long databaseId = INVALID_ID;
     @NonAtomicExclude
     private boolean isDirty = false;
     @NonAtomicExclude

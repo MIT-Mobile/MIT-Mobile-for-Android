@@ -28,6 +28,7 @@
     <string name="title_activity_news_category">NewsCategoryActivity</string>
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
     <string name="title_activity_events_detail">Event Details</string>
+    <string name="title_activity_maps_categories">Categories</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -215,6 +216,9 @@
     <string name="house_today">Today, %1$s</string>
     <string name="house_tomorrow">Tomorrow, %1$s</string>
     <string name="house_yesterday">Yesterday, %1$s</string>
+    <string name="house_today_landscape">Today\'s %1$s, %2$s</string>
+    <string name="house_tomorrow_landscape">Tomorrow\'s %1$s, %2$s</string>
+    <string name="house_yesterday_landscape">Yesterday\'s %1$s, %2$s</string>
     <string name="announcements_activity_title">Announcements</string>
     <string name="filter_showing">Showing</string>
     <string name="all_events">All Events</string>
@@ -257,6 +261,13 @@
     <string name="library_item_detail_publisher">"publisher"</string>
     <string name="library_item_detail_isbn">"ISBN"</string>
 
+    <!--Maps categories-->
+    <string name="map_categories_title_categories">Categories</string>
+    <string name="map_categories_title_bookmarks">Bookmarks</string>
+    <string name="map_categories_title_recents">Recents</string>
+
+    <string name="map_categories_detail_place_title">Building %s</string>
+
     <string name="maps_search_hint">Search MIT Campus</string>
     <string name="title_activity_map_search_result">Results</string>
     <string name="done">DONE</string>
@@ -275,5 +286,13 @@
     <string name="categories">CATEGORIES</string>
     <string name="bookmarks">BOOKMARKS</string>
     <string name="recents">RECENTS</string>
+
+    <string name="view_all_on_map">View All on Map</string>
+
+    <!--emergency info-->
+
+    <string name="emergency_posted_template">Posted %s</string>
+    <string name="emergency_more_contacts">More Emergency Contacts</string>
+
 
 </resources>

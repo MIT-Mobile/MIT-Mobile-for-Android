@@ -36,7 +36,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.1.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'com.squareup.retrofit:retrofit:1.8.0@jar'
-    // Replaced by LoggingManager: compile 'com.jakewharton.timber:timber:2.4.1'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.getbase:floatingactionbutton:1.7.0'
@@ -44,7 +43,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'org.threeten:threetenbp:1.2'
-    compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
     compile('com.squareup.retrofit:converter-simplexml:1.9.0') {

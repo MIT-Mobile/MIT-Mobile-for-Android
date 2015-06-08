@@ -1,8 +1,8 @@
 package edu.mit.mitmobile2.maps;
 
+import android.content.Intent;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -218,6 +218,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         MenuItem menuItem = menu.findItem(R.id.search);
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -229,7 +230,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 return searchTextChanged(searchView, this, s);
             }
         });
-
 
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -251,7 +251,19 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             }
         });
 
-        searchView.setQueryHint(getString(R.string.maps_search_hint));
+        if (getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
+            String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
+
+            if (getActivity().getIntent().getBooleanExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, false)) {
+                queryText = sanitizeMapSearchString(queryText);
+            }
+
+            menuItem.expandActionView();
+            searchView.setQuery(queryText, true);
+        } else {
+            searchView.setQueryHint(getString(R.string.maps_search_hint));
+            menuItem.collapseActionView();
+        }
 
         View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
 
@@ -314,9 +326,22 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 int type = data.getIntExtra(Constants.Map.TAB_TYPE, -1);
 
                 switch (type) {
-                    case 0:
+                    case 0: {
+                        MITMapPlace place = data.getParcelableExtra(Constants.PLACES_KEY);
+                        ArrayList<MITMapPlace> placesExtra = data.getParcelableArrayListExtra(Constants.PLACES_KEY);
+
+                        places.clear();
+
+                        if (place != null) {
+                            places.add(place);
+                        } else if (placesExtra != null) {
+                            places.addAll(placesExtra);
+                        }
+
+                        updateMapItems((ArrayList) places, true, true);
+                    }
                         break;
-                    case 1:
+                    case 1: {
                         String id = data.getStringExtra(Constants.PLACES_KEY);
                         MITMapPlace place = DBAdapter.getInstance().getBookmark(id);
 
@@ -324,12 +349,14 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                         places.add(place);
 
                         updateMapItems((ArrayList) places, true, true);
+                    }
                         break;
-                    case 2:
+                    case 2: {
                         String query = data.getStringExtra(Constants.Map.RECENT_QUERY);
                         if (!TextUtils.isEmpty(query)) {
                             performSearch(searchView, this, query);
                         }
+                    }
                         break;
                     default:
                 }
@@ -369,5 +396,26 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         public static Mode getDefault() {
             return NO_SEARCH;
         }
+    }
+
+    private String sanitizeMapSearchString(String query) {
+        String buildingNumber = "";
+        String[] roomComponents = query.split("-");
+        String firstComponent = (roomComponents != null && roomComponents.length > 0) ? roomComponents[0] : null;
+        if (!TextUtils.isEmpty(firstComponent) && firstComponent.length() == 1 && firstComponent.matches("[a-zA-Z]")) {
+            // First component is a letter.  Someone probably put N-51 or E-15 instead of N51 or E15
+            if (roomComponents.length >= 2) {
+                String secondComponent = roomComponents[1];
+                if (Integer.getInteger(secondComponent) != null && Integer.getInteger(secondComponent) > 0) {
+                    buildingNumber = firstComponent + secondComponent;
+                }
+            } else {
+                buildingNumber = query;
+            }
+        } else {
+            buildingNumber = firstComponent;
+        }
+
+        return buildingNumber;
     }
 }

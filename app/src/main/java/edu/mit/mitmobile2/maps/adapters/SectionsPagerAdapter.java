@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.maps.fragments.MapListCategoryFragment;
 import edu.mit.mitmobile2.maps.fragments.MapListBookmarkFragment;
 import edu.mit.mitmobile2.maps.fragments.MapListFragment;
 import edu.mit.mitmobile2.maps.fragments.MapListRecentsFragment;
@@ -26,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         if (fragments[position] == null) {
             switch (position) {
                 case 0:
-                    fragments[position] = MapListFragment.newInstance();
+                    fragments[position] = MapListCategoryFragment.newInstance();
                     break;
                 case 1:
                     fragments[position] = MapListBookmarkFragment.newInstance();

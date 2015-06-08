@@ -358,6 +358,7 @@ public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDi
         lastUpCalendar = (Calendar) in.readValue(Calendar.class.getClassLoader());
         favorite = in.readByte() != 0x00;
         favoriteIndex = in.readInt();
+        databaseId = in.readLong();
     }
 
     @Override
@@ -417,6 +418,7 @@ public class MITPerson extends DatabaseObject implements Parcelable, MITPeopleDi
         dest.writeValue(lastUpCalendar);
         dest.writeByte((byte) (favorite ? 0x01 : 0x00));
         dest.writeInt(favoriteIndex);
+        dest.writeLong(databaseId);
     }
 
     @SuppressWarnings("unused")
