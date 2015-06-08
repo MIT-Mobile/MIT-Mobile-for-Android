@@ -107,6 +107,15 @@
 		"intent":"edu.mit.mitmobile2.links.LinksFragment",
 		"url":"mitmobile2://links"
 	},
+
+	"about":{
+	  "long_name":"About",
+	  "short_name":"About",
+	  "menu_icon":"menu_about",
+	  "home_icon":"home_about",
+	  "intent":"edu.mit.mitmobile2.about.AboutFragment",
+	  "url":"mitmobile2://about"
+	},
 	
 	"mobius":{
 		"long_name":"Mobius",
