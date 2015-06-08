@@ -154,4 +154,6 @@ public class Constants {
     public class Links {
         public static final String LINKS_PATH = "/links";
     }
+
+    public static final String FEEDBACK_EMAIL = "android-app-feedback@mit.edu";
 }

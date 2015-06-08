@@ -13,7 +13,8 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
     <View
         style="@style/MITView"
@@ -23,29 +24,42 @@
         android:layout_marginRight="20dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
         android:text="@string/about_description"
         android:textColor="@color/black" />
+
+    <View
+        style="@style/MITView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true" />
+
+    <View
+        style="@style/MITView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
         android:text="@string/about_copyright"
         android:textColor="@color/mit_grey" />
 
