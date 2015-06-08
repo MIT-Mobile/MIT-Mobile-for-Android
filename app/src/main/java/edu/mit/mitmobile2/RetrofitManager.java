@@ -1,5 +1,15 @@
 package edu.mit.mitmobile2;
 
+import android.text.TextUtils;
+import android.util.Base64;
+
+import com.squareup.okhttp.OkHttpClient;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.convert.AnnotationStrategy;
+import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.strategy.Strategy;
+
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,9 +20,12 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
+import retrofit.converter.SimpleXMLConverter;
 
 public abstract class RetrofitManager {
-    public static final class FluentParamMap extends FluentMap<String, String> {}
+    public static final class FluentParamMap extends FluentMap<String, String> {
+    }
 
 
     private static class MitEndpoint implements Endpoint {
@@ -45,6 +58,9 @@ public abstract class RetrofitManager {
     protected static HashMap<String, String> paths;
     protected static HashMap<String, String> queries;
 
+    protected static String userName;
+    protected static String password;
+
     private static MitEndpoint mitEndpoint = MitEndpoint.create();
 
     private static RequestInterceptor requestInterceptor = new RequestInterceptor() {
@@ -63,6 +79,12 @@ public abstract class RetrofitManager {
                 }
                 queries.clear();
             }
+
+            if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
+                String credentials = userName + ":" + password;
+                String base64EncodedCredentials = new String(Base64.encode(credentials.getBytes(), Base64.NO_WRAP));
+                request.addHeader("Authorization", "Basic " + base64EncodedCredentials);
+            }
         }
     };
 
@@ -78,6 +100,24 @@ public abstract class RetrofitManager {
             .setLogLevel(RestAdapter.LogLevel.FULL)
             .build();
 
+    static Strategy strategy = new AnnotationStrategy();
+    static Serializer serializer = new Persister(strategy);
+    static OkHttpClient okHttpClient = new OkHttpClient();
+
+    protected static RestAdapter LOGIN_AUTH_ADAPTER = new RestAdapter.Builder()
+            .setEndpoint(mitEndpoint)
+            .setLog(new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                    Timber.d(message);
+                }
+            })
+            .setRequestInterceptor(requestInterceptor)
+            .setLogLevel(RestAdapter.LogLevel.FULL)
+            .setClient(new OkClient(okHttpClient))
+            .setConverter(new SimpleXMLConverter(serializer))
+            .build();
+
     public static void changeEndpoint(String url) {
         if (mitEndpoint.getUrl() != null) {
             if (!(mitEndpoint.getUrl() + "/").equals(url)) {
@@ -91,12 +131,13 @@ public abstract class RetrofitManager {
     /**
      * Similar to {@see buildMethodName} this method returns the Service Interface method handling the requested
      * call via direct Annotation matching.
-     *
+     * <p/>
      * If this call falls to find an expected method (this should -never- happen) we fallback to the old logic.
-     * @param klass The class provided as the Interface handler.
-     * @param path The path constant of the method we are looking for.
-     * @param pathParams ??? This appears to be unused but we take it as input since the older call does.
-     * @param queryParams ??? This appears to be unused but we take it as input since the older call does.
+     *
+     * @param klass          The class provided as the Interface handler.
+     * @param path           The path constant of the method we are looking for.
+     * @param pathParams     ??? This appears to be unused but we take it as input since the older call does.
+     * @param queryParams    ??? This appears to be unused but we take it as input since the older call does.
      * @param parameterTypes Expected parameter types to match against the method we are looking for.
      * @return A method if found for the specified web API call path.
      */
@@ -111,19 +152,19 @@ public abstract class RetrofitManager {
         for (Method method : klass.getMethods()) {
             if (!Arrays.equals(method.getParameterTypes(), parameterTypes)) continue;
 
-            retrofit.http.GET annotationG    = method.getAnnotation(retrofit.http.GET.class);
-            retrofit.http.POST annotationPo  = method.getAnnotation(retrofit.http.POST.class);
-            retrofit.http.PUT annotationPu   = method.getAnnotation(retrofit.http.PUT.class);
+            retrofit.http.GET annotationG = method.getAnnotation(retrofit.http.GET.class);
+            retrofit.http.POST annotationPo = method.getAnnotation(retrofit.http.POST.class);
+            retrofit.http.PUT annotationPu = method.getAnnotation(retrofit.http.PUT.class);
             retrofit.http.PATCH annotationPa = method.getAnnotation(retrofit.http.PATCH.class);
-            retrofit.http.HEAD annotationH   = method.getAnnotation(retrofit.http.HEAD.class);
+            retrofit.http.HEAD annotationH = method.getAnnotation(retrofit.http.HEAD.class);
             retrofit.http.DELETE annotationD = method.getAnnotation(retrofit.http.DELETE.class);
 
-            if (annotationG  != null && annotationG.value().equals(path))  return method;
+            if (annotationG != null && annotationG.value().equals(path)) return method;
             if (annotationPo != null && annotationPo.value().equals(path)) return method;
             if (annotationPu != null && annotationPu.value().equals(path)) return method;
             if (annotationPa != null && annotationPa.value().equals(path)) return method;
-            if (annotationH  != null && annotationH.value().equals(path))  return method;
-            if (annotationD  != null && annotationD.value().equals(path))  return method;
+            if (annotationH != null && annotationH.value().equals(path)) return method;
+            if (annotationD != null && annotationD.value().equals(path)) return method;
 
             if (method.getName().equals(fallbackMethodName)) fallbackMethod = method;
         }

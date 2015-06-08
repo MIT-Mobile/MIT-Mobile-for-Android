@@ -33,6 +33,7 @@ public class Constants {
     public static final String MAP = "map";
     public static final String LIBRARIES = "libraries";
     public static final String SECURE = "secure";
+    public static final String LOGIN = "login";
 
     public static class Shuttles {
         public static final String ALL_ROUTES_PATH = "/routes";

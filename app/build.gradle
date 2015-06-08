@@ -47,4 +47,9 @@ dependencies {
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
+    compile('com.squareup.retrofit:converter-simplexml:1.9.0') {
+        exclude(group: 'xpp3', module: 'xpp3')
+        exclude(group: 'stax', module: 'stax-api')
+        exclude(group: 'stax', module: 'stax')
+    }
 }

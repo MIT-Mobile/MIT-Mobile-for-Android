@@ -23,7 +23,7 @@ import butterknife.InjectView;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.libraries.activities.AccountActivity;
+import edu.mit.mitmobile2.libraries.activities.LibraryLoginActivity;
 import edu.mit.mitmobile2.libraries.adapter.LibraryLinksAdapter;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
 import retrofit.Callback;
@@ -91,7 +91,7 @@ public class LibrariesFragment extends Fragment {
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AccountActivity.class);
+                Intent intent = new Intent(getActivity(), LibraryLoginActivity.class);
                 startActivity(intent);
             }
         });
