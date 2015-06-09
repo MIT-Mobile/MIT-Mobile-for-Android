@@ -144,4 +144,9 @@
     <!--emergency-->
     <dimen name="emergency_cell_padding">14dp</dimen>
 
+    <!--facilities-->
+    <dimen name="facilities_home_section_vertical_padding">26dp</dimen>
+    <dimen name="facilities_home__line_vertical_padding">16dp</dimen>
+    <dimen name="facilities_cell_height">45dp</dimen>
+
 </resources>

@@ -282,5 +282,23 @@
     <string name="emergency_posted_template">Posted %s</string>
     <string name="emergency_more_contacts">More Emergency Contacts</string>
 
-
+    <!--facilities-->
+    <string name="facilities_title">Building Services</string>
+    <string name="facilities_home_info">Use this tool to report on-campus maintenance issues such as leaks, lighting, and locks. You can mark your location and optionally include a photo of ths issue.</string>
+    <string name="facilities_contact_via">Contact via</string>
+    <string name="facilities_urgent_issues">For urgent issues contact Facilities...</string>
+    <string name="facilities_email">email</string>
+    <string name="facilities_location">location</string>
+    <string name="facilities_room">room</string>
+    <string name="facilities_problem_type">problem type</string>
+    <string name="facilities_description">description</string>
+    <string name="facilities_attach_photo">Attach Photo</string>
+    <string name="facilities_remove_photo">Remove Photo</string>
+    <string name="facilities_submit">Submit</string>
+    <string name="facilities_urgent_call_info">Call(617)253-4948</string>
+    <string name="facilities_urgent_email_info">Email txtdof@mit.edu</string>
+    <string name="facilities_urgent_call_number">(617)253-4948</string>
+    <string name="facilities_urgent_email_address">txtdof@mit.edu</string>
+    <string name="facilities_urgent_email_subject">Request from Building Services</string>
+    <string name="select_image_source">Select Source</string>
 </resources>
