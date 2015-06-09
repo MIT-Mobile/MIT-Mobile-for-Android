@@ -46,7 +46,7 @@ public class MapListCategoryFragment extends MapListFragment {
         listView = (ListView) view.findViewById(R.id.list);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.category_refreshlayout);
 
-        adapter = new CategoriesAdapter();
+        adapter = new CategoriesAdapter(getActivity());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 

@@ -22,10 +22,6 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.MapItem;
 
-/**
- * Created by serg on 5/18/15.
- */
-
 public class MITMapPlace extends MapItem implements Parcelable {
 
     public class MITMapPlaceSnippet {
@@ -51,6 +47,7 @@ public class MITMapPlace extends MapItem implements Parcelable {
             return name;
         }
     }
+
     @SerializedName("id")
     private String id;
 
@@ -243,6 +240,7 @@ public class MITMapPlace extends MapItem implements Parcelable {
         } else {
             contents = null;
         }
+        setMarkerText(in.readString());
     }
 
     @Override
@@ -274,6 +272,7 @@ public class MITMapPlace extends MapItem implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(contents);
         }
+        dest.writeString(getMarkerText());
     }
 
     @SuppressWarnings("unused")

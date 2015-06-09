@@ -11,7 +11,8 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:tint="@color/mit_grey"/>
 
     <TextView
         android:id="@+id/map_category_tv_title"
