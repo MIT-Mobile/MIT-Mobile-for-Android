@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class FacilitiesFragment extends Fragment {
 
@@ -131,7 +132,7 @@ public class FacilitiesFragment extends Fragment {
             try {
                 getNewPhotoFromActivity(data);
             } catch (IOException e) {
-                e.printStackTrace();
+                LoggingManager.Timber.d("____________photo error____________", e);
             }
         }
 
