@@ -51,6 +51,7 @@
             />
 
         <LinearLayout
+            android:id="@+id/location_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -75,6 +76,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/room_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -100,6 +102,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/problem_type_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"

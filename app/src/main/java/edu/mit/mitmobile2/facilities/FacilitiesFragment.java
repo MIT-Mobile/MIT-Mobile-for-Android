@@ -77,6 +77,21 @@ public class FacilitiesFragment extends Fragment {
         }).show();
     }
 
+    @OnClick(R.id.location_layout)
+    public void selectLocation() {
+        //TODO : go to location screen
+    }
+
+    @OnClick(R.id.room_layout)
+    public void selectRoom() {
+        //TODO : go to room screen
+    }
+
+    @OnClick(R.id.problem_type_layout)
+    public void selectProblemType() {
+        //TODO : go to problem type screen
+    }
+
     @OnClick(R.id.attach_remove_photo_text_view)
     public void attachOrRemovePhoto() {
         if (!isAttached) {
