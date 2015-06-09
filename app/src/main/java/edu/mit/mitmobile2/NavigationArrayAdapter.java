@@ -9,48 +9,62 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class NavigationArrayAdapter extends ArrayAdapter<NavItem>  {
+public class NavigationArrayAdapter extends ArrayAdapter<NavItem> {
 
-	public NavigationArrayAdapter(Context context, int resource,int textViewResourceId, List<NavItem> objects) {
-		super(context, resource, textViewResourceId, objects);
-		this.objects = (ArrayList<NavItem>)objects;
-	}
+    private class ViewHolder {
+        ImageView moduleIcon;
+        TextView moduleText;
+    }
+
+    public NavigationArrayAdapter(Context context, int resource, int textViewResourceId, List<NavItem> objects) {
+        super(context, resource, textViewResourceId, objects);
+        this.objects = (ArrayList<NavItem>) objects;
+    }
 
 
-	// declaring our ArrayList of items
-	private ArrayList<NavItem> objects;
-		
+    // declaring our ArrayList of items
+    private ArrayList<NavItem> objects;
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent){
 
-		// assign the view we are converting to a local variable
-		View v = convertView;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
 
-		// first check to see if the view is null. if so, we have to inflate it.
-		// to inflate it basically means to render, or show, the view.
-		if (v == null) {
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = inflater.inflate(R.layout.drawer_list_item, null);
-		}
+        // assign the view we are converting to a local variable
+        View v = convertView;
 
-		NavItem i = objects.get(position);
+        // first check to see if the view is null. if so, we have to inflate it.
+        // to inflate it basically means to render, or show, the view.
+        if (v == null) {
+            holder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = inflater.inflate(R.layout.drawer_list_item, null);
 
-		if (i != null) {
+            holder.moduleIcon = (ImageView) v.findViewById(R.id.module_icon);
+            holder.moduleText = (TextView) v.findViewById(R.id.module_text);
 
-			// This is how you obtain a reference to the TextViews.
-			// These TextViews are created in the XML files we defined.
+            v.setTag(holder);
+        } else {
+            holder = (ViewHolder) v.getTag();
+        }
 
-			TextView mTextView  = (TextView) v.findViewById(R.id.navItemText);
-			Log.d("ZZZ","icon = " + i.getMenuIcon());
-			mTextView.setText(i.getLongName());
-			mTextView.setCompoundDrawablesWithIntrinsicBounds(i.getMenuIcon(), 0, 0, 0);
-		}
+        NavItem i = objects.get(position);
 
-		// the view must be returned to our activity
-		return v;
+        if (i != null) {
+            // This is how you obtain a reference to the TextViews.
+            // These TextViews are created in the XML files we defined.
 
-	}
+            Log.d("ZZZ", "icon = " + i.getMenuIcon());
+
+            holder.moduleText.setText(i.getShortName());
+            holder.moduleIcon.setImageResource(i.getMenuIcon());
+        }
+
+        // the view must be returned to our activity
+        return v;
+
+    }
 }

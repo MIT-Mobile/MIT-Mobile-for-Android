@@ -4,21 +4,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-/**
- * Created by serg on 5/28/15.
- */
 public class CategoryDefaultAdapter extends BaseAdapter {
 
     private MITMapCategory category;
