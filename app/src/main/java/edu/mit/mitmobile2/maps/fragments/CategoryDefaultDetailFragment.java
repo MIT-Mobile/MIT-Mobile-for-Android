@@ -111,7 +111,7 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
 
         if (position == 0) {
             // add all is selected
-            result.putExtra(Constants.PLACES_KEY, places);
+            result.putParcelableArrayListExtra(Constants.PLACES_KEY, places);
         } else {
             result.putExtra(Constants.PLACES_KEY, places.get(position - 1));
         }
@@ -143,6 +143,7 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
                 for (MITMapPlace place : mitMapPlaces) {
                     place.setMitCategory(category);
+                    setMarkerIndex(mitMapPlaces, place);
                 }
                 onPlacesReceived(mitMapPlaces);
             }
@@ -155,7 +156,16 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
     }
 
     private void onPlacesReceived(ArrayList<MITMapPlace> mitMapPlaces) {
-        this.places = mitMapPlaces;
+        for (MITMapPlace place : mitMapPlaces) {
+            setMarkerIndex(mitMapPlaces, place);
+        }
+
+        if (this.places != null) {
+            this.places.clear();
+            this.places.addAll(mitMapPlaces);
+        } else {
+            this.places = mitMapPlaces;
+        }
 
         if (adapter != null) {
             adapter.updatePlaces(mitMapPlaces);
@@ -163,5 +173,11 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
 
         refreshLayout.setRefreshing(false);
         refreshLayout.setEnabled(false);
+    }
+
+    private void setMarkerIndex(ArrayList<MITMapPlace> mitMapPlaces, MITMapPlace place) {
+        int i = mitMapPlaces.indexOf(place);
+        String markerText = (i + 1) < 10 ? "   " + (i + 1) + "   " : "  " + (i + 1) + "  ";
+        place.setMarkerText(markerText);
     }
 }

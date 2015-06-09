@@ -1,11 +1,25 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navItemText"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center_vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:textColor="#000"
-    android:background="#FFF"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/module_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:tint="@color/mit_grey" />
+
+    <TextView
+        android:id="@+id/module_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="#000" />
+
+</LinearLayout>
