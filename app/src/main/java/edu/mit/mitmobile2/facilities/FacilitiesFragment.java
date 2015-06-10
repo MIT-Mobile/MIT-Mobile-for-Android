@@ -40,9 +40,14 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class FacilitiesFragment extends Fragment {
 
@@ -121,6 +126,21 @@ public class FacilitiesFragment extends Fragment {
         } else {
             attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_attach_photo));
         }
+
+        /*
+        FacilitiesManager.getProblemTypes(getActivity(), new Callback<List<String>>() {
+
+            @Override
+            public void success(List<String> strings, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
 
         return view;
     }

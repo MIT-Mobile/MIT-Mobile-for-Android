@@ -159,5 +159,6 @@ public class Constants {
     public class Facilities {
         public static final String FACILITIES_PATH = "/";
         public static final String FACILITIES_LOCATION_CATEGORIES_PATH = "/location_categories";
+        public static final String FACILITIES_PROBLEM_TYPES_PATH = "/problem_types";
     }
 }
