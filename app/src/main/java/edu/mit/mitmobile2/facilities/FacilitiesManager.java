@@ -12,7 +12,9 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.facilities.model.FacilitiesCategory;
+import edu.mit.mitmobile2.facilities.model.FacilityPlace;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -64,6 +66,14 @@ public class FacilitiesManager extends RetrofitManager {
         return returnValue;
     }
 
+    public static FacilityManagerCall getPlaces(Activity activity, Callback<List<FacilityPlace>> callback) {
+        LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
+
+        returnValue.getClient().get(Constants.FACILITIES, Constants.Facilities.FACILITIES_PLACES_PATH, null, null, returnValue);
+
+        return returnValue;
+    }
+
     /* POST requests */
 
     // http://m.mit.edu/apis/building_services/problems
@@ -77,6 +87,9 @@ public class FacilitiesManager extends RetrofitManager {
 
         @GET(Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH)
         void _get_location_properties(Callback<HashMap<String, HashMap<String, String>>> callback);
+
+        @GET(Constants.Facilities.FACILITIES_PLACES_PATH)
+        void _get_places(Callback<List<FacilityPlace>> callback);
     }
 
     public static class LibraryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements FacilityManagerCall, Callback<T> {
