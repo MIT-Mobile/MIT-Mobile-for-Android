@@ -34,6 +34,7 @@ public class Constants {
     public static final String LIBRARIES = "libraries";
     public static final String SECURE = "secure";
     public static final String LINKS = "links";
+    public static final String FACILITIES = "facilities";
 
     public static final String LOCATION_KEY = "location";
     public static final String LOCATION_SHOULD_SANITIZE_QUERY_KEY = "location_should_sanitize_query_key";
@@ -153,5 +154,10 @@ public class Constants {
 
     public class Links {
         public static final String LINKS_PATH = "/links";
+    }
+
+    public class Facilities {
+        public static final String FACILITIES_PATH = "/";
+        public static final String FACILITIES_LOCATION_CATEGORIES_PATH = "/location_categories";
     }
 }
