@@ -156,8 +156,12 @@ public class Constants {
         public static final String LINKS_PATH = "/links";
     }
 
+
     public class Facilities {
         public static final String FACILITIES_PATH = "/";
         public static final String FACILITIES_LOCATION_CATEGORIES_PATH = "/location_categories";
     }
+
+    public static final String FEEDBACK_EMAIL = "android-app-feedback@mit.edu";
+
 }
