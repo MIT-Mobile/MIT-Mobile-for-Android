@@ -20,6 +20,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.about.activities.AboutMitActivity;
 import edu.mit.mitmobile2.about.activities.CreditsActivity;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class AboutFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -41,7 +42,7 @@ public class AboutFragment extends Fragment implements AdapterView.OnItemClickLi
         try {
             versionName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            LoggingManager.Timber.d("Get version name error", e);
         }
 
         textViewVersion.setText(getString(R.string.about_version_title_template, versionName));
