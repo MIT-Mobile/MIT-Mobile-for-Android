@@ -307,4 +307,5 @@
     <string name="inside">Inside</string>
     <string name="outside">Outside</string>
     <string name="title_activity_problem_types">ProblemTypesActivity</string>
+    <string name="problem_query">What is it?</string>
 </resources>

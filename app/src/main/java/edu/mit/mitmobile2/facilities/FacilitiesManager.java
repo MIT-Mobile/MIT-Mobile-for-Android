@@ -48,11 +48,22 @@ public class FacilitiesManager extends RetrofitManager {
         return returnValue;
     }
 
+    public static FacilityManagerCall getProblemTypes(Activity activity, Callback<List<String>> callback) {
+        LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
+
+        returnValue.getClient().get(Constants.FACILITIES, Constants.Facilities.FACILITES_PROBLEM_TYPES, null, null, returnValue);
+
+        return returnValue;
+    }
+
     /* POST requests */
 
     public interface MitFacilityService {
         @GET(Constants.Facilities.FACILITIES_LOCATION_CATEGORIES_PATH)
         void _getfacilities(Callback<HashMap<String, FacilitiesCategory>> callback);
+
+        @GET(Constants.Facilities.FACILITES_PROBLEM_TYPES)
+        void _getproblemtypes(Callback<List<String>> callback);
 
     }
 

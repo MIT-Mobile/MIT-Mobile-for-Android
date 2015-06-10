@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.facilities.activity;
 
+import android.content.Intent;
 import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 
 import java.util.ArrayList;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.adapter.RoomsAdapter;
 import edu.mit.mitmobile2.facilities.model.FacilitiesRoom;
@@ -30,6 +32,7 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
         StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         View header = View.inflate(this, R.layout.rooms_list_header, null);
         listView.addHeaderView(header);
@@ -92,6 +95,10 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        String problem = (String) parent.getItemAtPosition(position);
+        Intent result = new Intent();
+        result.putExtra(Constants.FACILITIES_ROOM_NUMBER, problem);
+        setResult(RESULT_OK, result);
+        finish();
     }
 }

@@ -1,46 +1,75 @@
 package edu.mit.mitmobile2.facilities.activity;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import edu.mit.mitmobile2.R;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ProblemTypesActivity extends ActionBarActivity {
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
+import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.facilities.FacilitiesManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
+public class ProblemTypesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private static final String PROBLEM_KEY = "problem";
+
+    private List<String> problemTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_problem_types);
 
-        ListView listView = (ListView) findViewById(R.id.problem_types_listview);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        listView.setAdapter(adapter);
+        setTitle(getString(R.string.problem_query));
 
-    }
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_problem_types, menu);
-        return true;
-    }
+        if (savedInstanceState != null && savedInstanceState.containsKey(PROBLEM_KEY)) {
+            problemTypes = savedInstanceState.getStringArrayList(PROBLEM_KEY);
+            adapter.addAll(problemTypes);
+        } else {
+            FacilitiesManager.getProblemTypes(this, new Callback<List<String>>() {
+                @Override
+                public void success(List<String> strings, Response response) {
+                    problemTypes = strings;
+                    adapter.addAll(problemTypes);
+                }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                @Override
+                public void failure(RetrofitError error) {
+                    MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+                }
+            });
         }
 
-        return super.onOptionsItemSelected(item);
+        ListView listView = (ListView) findViewById(R.id.problem_types_listview);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putStringArrayList(PROBLEM_KEY, (ArrayList) problemTypes);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String problem = (String) parent.getItemAtPosition(position);
+        Intent result = new Intent();
+        result.putExtra(Constants.FACILITIES_PROBLEM_TYPE, problem);
+        setResult(RESULT_OK, result);
+        finish();
     }
 }
