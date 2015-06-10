@@ -301,4 +301,5 @@
     <string name="facilities_urgent_email_address">txtdof@mit.edu</string>
     <string name="facilities_urgent_email_subject">Request from Building Services</string>
     <string name="select_image_source">Select Source</string>
+    <string name="title_activity_room_detail">RoomDetailActivity</string>
 </resources>

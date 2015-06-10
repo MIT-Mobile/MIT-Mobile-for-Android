@@ -90,11 +90,6 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".facilities.FacilitiesActivity"
-            android:label="@string/title_activity_facilities"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
             android:name=".dining.activities.DiningActivity"
             android:label="@string/title_activity_dining"
             android:launchMode="singleTop"
@@ -279,6 +274,11 @@
         <activity
             android:name=".maps.activities.MapItemPagerActivity"
             android:label="@string/title_activity_map_item_pager"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".facilities.RoomDetailActivity"
+            android:label="@string/title_activity_room_detail"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
     </application>
