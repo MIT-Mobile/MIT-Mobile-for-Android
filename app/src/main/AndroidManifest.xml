@@ -281,6 +281,11 @@
             android:label="@string/title_activity_room_detail"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".facilities.activity.LocationActivity"
+            android:label="@string/location_title"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
