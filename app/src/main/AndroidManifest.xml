@@ -291,6 +291,16 @@
             android:label="@string/title_activity_problem_types"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".about.activities.AboutMitActivity"
+            android:label="@string/about_about"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".about.activities.CreditsActivity"
+            android:label="@string/about_credits"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>
