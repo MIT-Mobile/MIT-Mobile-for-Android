@@ -104,7 +104,7 @@ public class MITMainActivity extends MITActivity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.navItemText, MITMainActivity.navigationTitles);
+        adapter = new NavigationArrayAdapter(this, R.layout.drawer_list_item, R.id.module_text, MITMainActivity.navigationTitles);
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 

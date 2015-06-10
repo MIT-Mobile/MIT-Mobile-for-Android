@@ -7,6 +7,12 @@
     android:paddingRight="@dimen/map_category_detail_cell_padding_left_right"
     android:paddingTop="@dimen/map_category_detail_cell_padding_top_bottom">
 
+    <ImageView
+        android:id="@+id/category_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical" />
+
     <TextView
         android:id="@+id/map_category_detail_tv_title"
         android:layout_width="wrap_content"
