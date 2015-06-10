@@ -14,7 +14,7 @@ public class FacilitiesCategory {
     private HashSet<String> locationIds;
     private Date lastUpdated;
     private HashSet<FacilitiesCategory> subcategories;
-    private HashSet<FacilitiesLocation> locations;
+    private HashSet<String> locations;
     private FacilitiesCategory parent;
 
     public String getUid() {
@@ -57,11 +57,11 @@ public class FacilitiesCategory {
         this.subcategories = subcategories;
     }
 
-    public HashSet<FacilitiesLocation> getLocations() {
+    public HashSet<String> getLocations() {
         return locations;
     }
 
-    public void setLocations(HashSet<FacilitiesLocation> locations) {
+    public void setLocations(HashSet<String> locations) {
         this.locations = locations;
     }
 

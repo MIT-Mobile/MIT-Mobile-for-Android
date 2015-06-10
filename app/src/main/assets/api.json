@@ -88,5 +88,11 @@
     "test": "http://mobile-test.mit.edu/apis/",
     "prod": "http://m.mit.edu/apis/",
     "manager": "edu.mit.mitmobile2.links.LinksManager"
+  },
+  "facilities": {
+    "dev": "http://mobile-dev.mit.edu/apis/building_services/",
+    "test": "http://mobile-test.mit.edu/apis/building_services/",
+    "prod": "http://m.mit.edu/apis/building_services/",
+    "manager": "edu.mit.mitmobile2.facilities.FacilitiesManager"
   }
 }
