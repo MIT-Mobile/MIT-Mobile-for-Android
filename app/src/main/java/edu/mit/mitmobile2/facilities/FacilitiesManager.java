@@ -56,14 +56,27 @@ public class FacilitiesManager extends RetrofitManager {
         return returnValue;
     }
 
+    public static FacilityManagerCall getLocationProperties(Activity activity, Callback<HashMap<String, HashMap<String, String>>> callback) {
+        LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
+
+        returnValue.getClient().get(Constants.FACILITIES, Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH, null, null, returnValue);
+
+        return returnValue;
+    }
+
     /* POST requests */
+
+    // http://m.mit.edu/apis/building_services/problems
 
     public interface MitFacilityService {
         @GET(Constants.Facilities.FACILITIES_LOCATION_CATEGORIES_PATH)
-        void _getfacilities(Callback<HashMap<String, FacilitiesCategory>> callback);
+        void _get_facilities(Callback<HashMap<String, FacilitiesCategory>> callback);
 
         @GET(Constants.Facilities.FACILITIES_PROBLEM_TYPES_PATH)
-        void _getproblemtypes(Callback<List<String>> callback);
+        void _get_problem_types(Callback<List<String>> callback);
+
+        @GET(Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH)
+        void _get_location_properties(Callback<HashMap<String, HashMap<String, String>>> callback);
     }
 
     public static class LibraryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements FacilityManagerCall, Callback<T> {

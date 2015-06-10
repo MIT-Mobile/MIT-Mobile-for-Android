@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -132,6 +133,21 @@ public class FacilitiesFragment extends Fragment {
 
             @Override
             public void success(List<String> strings, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getLocationProperties(getActivity(), new Callback<HashMap<String, HashMap<String, String>>>() {
+
+            @Override
+            public void success(HashMap<String, HashMap<String, String>> stringHashMapHashMap, Response response) {
                 // TODO: handle response
             }
 
