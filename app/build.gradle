@@ -50,4 +50,5 @@ dependencies {
         exclude(group: 'stax', module: 'stax-api')
         exclude(group: 'stax', module: 'stax')
     }
+    compile 'com.cocosw:bottomsheet:1.+@aar'
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/phone_item"
+        android:title="@string/facilities_urgent_call_info"
+        android:icon="@drawable/ic_call_red"
+        />
+    <item
+        android:id="@+id/email_item"
+        android:title="@string/facilities_urgent_email_info"
+        android:icon="@drawable/ic_email_red"
+        />
+</menu>

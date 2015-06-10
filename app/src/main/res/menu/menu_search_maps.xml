@@ -10,6 +10,6 @@
 
     <item
         android:id="@+id/categories"
-        android:title="C"
+        android:icon="@drawable/ic_library"
         app:showAsAction="always" />
 </menu>

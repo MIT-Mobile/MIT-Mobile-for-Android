@@ -85,7 +85,6 @@
     <string name="mit_admissions">MIT Admissions</string>
     <string name="open_button">Open</string>
     <string name="feedback_subject">Feedback for MIT Mobile</string>
-    <string name="feedback_email_address">android-app-feedback@mit.edu</string>
     <string name="mit_about_guided_tour_url">http://web.mit.edu/institute-events/events/</string>
     <string name="mit_admissions_url">http://mitadmissions.org/</string>
     <string name="guided_tour_info">Regularly scheduled student-led campus tours are conducted Monday through Friday at 11 am and at 3 pm, excluding legal US holidays and the winter break period.</string>
@@ -294,5 +293,41 @@
     <string name="emergency_posted_template">Posted %s</string>
     <string name="emergency_more_contacts">More Emergency Contacts</string>
 
+    <!--facilities-->
+    <string name="facilities_title">Building Services</string>
+    <string name="facilities_home_info">Use this tool to report on-campus maintenance issues such as leaks, lighting, and locks. You can mark your location and optionally include a photo of ths issue.</string>
+    <string name="facilities_contact_via">Contact via</string>
+    <string name="facilities_urgent_issues">For urgent issues contact Facilities...</string>
+    <string name="facilities_email">email</string>
+    <string name="facilities_location">location</string>
+    <string name="facilities_room">room</string>
+    <string name="facilities_problem_type">problem type</string>
+    <string name="facilities_description">description</string>
+    <string name="facilities_attach_photo">Attach Photo</string>
+    <string name="facilities_remove_photo">Remove Photo</string>
+    <string name="facilities_submit">Submit</string>
+    <string name="facilities_urgent_call_info">Call(617)253-4948</string>
+    <string name="facilities_urgent_email_info">Email txtdof@mit.edu</string>
+    <string name="facilities_urgent_call_number">(617)253-4948</string>
+    <string name="facilities_urgent_email_address">txtdof@mit.edu</string>
+    <string name="facilities_urgent_email_subject">Request from Building Services</string>
+    <string name="select_image_source">Select Source</string>
 
+    <!--about-->
+
+    <string name="about_version_title_template">MIT Mobile %s</string>
+    <string name="about_description">MIT Mobile for Android has been collaboratively designed and developed by MIT students and staff to extend the Institute\’s mobile framework to the Android platform. If you have ideas for improvements or new functionality, we\’d love to hear them.</string>
+    <string name="about_copyright">Copyright © 2015 Massachusetts Institute of Technology. All rights reserved.</string>
+    <string name="about_credits">Credits</string>
+    <string name="about_about">About MIT</string>
+    <string name="about_send_feedback">Send Feedback</string>
+    <string name="about_feedback_template" formatted="false">Feedback for MIT Mobile %s (%s) on %s %s</string>
+    <string name="about_mit_full">
+    The Massachusetts Institute of Technology, a co-educational privately endowed research university, is dedicated to advancing knowledge and educating students in science, technology, and other areas of scholarship to serve the nation and world. The Institute has more than 900 faculty and 10,000 undergraduate and graduate students.
+
+    MIT\'s commitment to innovation has led to a host of scientific breakthroughs and technological advances. Achievements include the first chemical synthesis of penicillin and vitamin A, the development of inertial guidance systems, modern technologies for artificial limbs, and the magnetic core memory that led to the development of digital computers. Sixty-three alumni, faculty, researchers and staff have won the Nobel Prizes.
+    </string>
+
+    <string name="location_title">Location</string>
+    <string name="locations_nearby">Nearby Locations</string>
 </resources>

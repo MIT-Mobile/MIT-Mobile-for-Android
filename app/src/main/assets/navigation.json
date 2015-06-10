@@ -2,26 +2,26 @@
 	"news":{
 		"long_name":"MIT News",
 		"short_name":"News",
-		"menu_icon":"menu_news",
+		"menu_icon":"ic_newspaper",
 		"home_icon":"home_news",
 		"intent":"edu.mit.mitmobile2.news.NewsFragment",
 		"url":"mitmobile2://news"
 	},
-	
-	
+
+
 	"shuttles": {
 		"long_name":"Shuttles",
 		"short_name":"Shuttles",
-		"menu_icon":"menu_shuttles",
+		"menu_icon":"ic_shuttle",
 		"home_icon":"home_shuttles",
 		"intent":"edu.mit.mitmobile2.shuttles.fragment.ShuttlesFragment",
 		"url":"mitmobile2://shuttles"
 	},
-	
+
 	"maps":{
 		"long_name":"Map",
 		"short_name":"Map",
-		"menu_icon":"menu_maps",
+		"menu_icon":"ic_map",
 		"home_icon":"home_map",
 		"intent":"edu.mit.mitmobile2.maps.MapsFragment",
 		"url":"mitmobile2://maps"
@@ -30,16 +30,16 @@
 	"events":{
 		"long_name":"Events Calendar",
 		"short_name":"Events",
-		"menu_icon":"menu_events",
+		"menu_icon":"ic_events_calendar",
 		"home_icon":"home_events",
 		"intent":"edu.mit.mitmobile2.events.fragment.EventsFragment",
 		"url":"mitmobile2://events"
 	},
-	
+
 	"people":{
 		"long_name":"People Directory",
 		"short_name":"Directory",
-		"menu_icon":"menu_directory",
+		"menu_icon":"ic_people_directory",
 		"home_icon":"home_people",
 		"intent":"edu.mit.mitmobile2.people.fragment.PeopleFragment",
 		"url":"mitmobile2://people"
@@ -48,57 +48,57 @@
 	"tour":{
 		"long_name":"Campus Tour",
 		"short_name":"Tours",
-		"menu_icon":"menu_tour",
+		"menu_icon":"ic_campus_tour",
 		"home_icon":"home_tour",
 		"intent":"edu.mit.mitmobile2.tour.fragment.TourFragment",
 		"url":"mitmobile2://tour"
 	},
-	
+
 	"emergency":{
 		"long_name":"Emergency Info",
 		"short_name":"Emergency",
-		"menu_icon":"menu_emergency",
+		"menu_icon":"ic_emergency_info",
 		"home_icon":"home_emergency",
 		"intent":"edu.mit.mitmobile2.emergency.fragment.EmergencyFragment",
 		"url":"mitmobile2://emergency"
 	},
-	
+
 	"libraries":{
 		"long_name":"Libraries",
 		"short_name":"Libraries",
-		"menu_icon":"menu_libraries",
+		"menu_icon":"ic_library",
 		"home_icon":"home_libraries",
 		"intent":"edu.mit.mitmobile2.libraries.LibrariesFragment",
 		"url":"mitmobile2://libraries"
 	},
-	
+
 	"facilities":{
 		"long_name":"Bldg Services",
 		"short_name":"Bldg Services",
-		"menu_icon":"menu_facilities",
+		"menu_icon":"ic_bldg_services",
 		"home_icon":"home_facilities",
 		"intent":"edu.mit.mitmobile2.facilities.FacilitiesFragment",
 		"url":"mitmobile2://facilities"
 	},
-	
+
 	"dining":{
 		"long_name":"Dining",
 		"short_name":"Dining",
-		"menu_icon":"home_dining",
+		"menu_icon":"ic_dining",
 		"home_icon":"home_dining",
 		"intent":"edu.mit.mitmobile2.dining.DiningFragment",
 		"url":"mitmobile2://dining"
 	},
-	
+
 	"qrreader":{
 		"long_name":"Scanner",
 		"short_name":"Scanner",
-		"menu_icon":"menu_qr",
+		"menu_icon":"ic_qr_scanner",
 		"home_icon":"home_qr",
 		"intent":"edu.mit.mitmobile2.qrreader.QrReaderFragment",
 		"url":"mitmobile2://qrreader"
 	},
-	
+
 	"links":{
 		"long_name":"Links",
 		"short_name":"Links",
@@ -107,7 +107,14 @@
 		"intent":"edu.mit.mitmobile2.links.LinksFragment",
 		"url":"mitmobile2://links"
 	},
-	
+	"about":{
+	  "long_name":"About",
+	  "short_name":"About",
+	  "menu_icon":"menu_about",
+	  "home_icon":"home_about",
+	  "intent":"edu.mit.mitmobile2.about.AboutFragment",
+	  "url":"mitmobile2://about"
+	},
 	"mobius":{
 		"long_name":"Mobius",
 		"short_name":"Mobius",
