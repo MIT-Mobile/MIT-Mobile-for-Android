@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.facilities;
+package edu.mit.mitmobile2.facilities.activity;
 
 import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
@@ -6,12 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+
+import java.util.ArrayList;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.facilities.adapter.RoomsAdapter;
+import edu.mit.mitmobile2.facilities.model.FacilitiesRoom;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class RoomDetailActivity extends AppCompatActivity {
+public class RoomDetailActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private SearchView searchView;
 
@@ -20,10 +26,13 @@ public class RoomDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_detail);
 
-        RoomsAdapter adapter = new RoomsAdapter();
+        RoomsAdapter adapter = new RoomsAdapter(this, new ArrayList<FacilitiesRoom>());
 
         StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
         listView.setAdapter(adapter);
+
+        View header = View.inflate(this, R.layout.rooms_list_header, null);
+        listView.addHeaderView(header);
     }
 
     @Override
@@ -62,6 +71,7 @@ public class RoomDetailActivity extends AppCompatActivity {
     }
 
     private boolean performSearch() {
+        //TODO: Query MIT api for building
         return true;
     }
 
@@ -78,5 +88,10 @@ public class RoomDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }

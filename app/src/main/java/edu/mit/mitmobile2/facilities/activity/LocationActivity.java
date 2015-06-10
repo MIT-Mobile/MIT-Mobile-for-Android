@@ -8,9 +8,6 @@ import android.widget.ListView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.adapter.LocationAdapter;
 
-/**
- * Created by serg on 6/9/15.
- */
 public class LocationActivity extends AppCompatActivity {
 
     private ListView listView;

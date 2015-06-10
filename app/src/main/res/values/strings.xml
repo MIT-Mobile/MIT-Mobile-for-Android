@@ -304,4 +304,7 @@
     <string name="title_activity_room_detail">RoomDetailActivity</string>
     <string name="location_title">Location</string>
     <string name="locations_nearby">Nearby Locations</string>
+    <string name="inside">Inside</string>
+    <string name="outside">Outside</string>
+    <string name="title_activity_problem_types">ProblemTypesActivity</string>
 </resources>

@@ -42,6 +42,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
+import edu.mit.mitmobile2.facilities.activity.RoomDetailActivity;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class FacilitiesFragment extends Fragment {
@@ -87,7 +88,8 @@ public class FacilitiesFragment extends Fragment {
 
     @OnClick(R.id.room_layout)
     public void selectRoom() {
-        //TODO : go to room screen
+        Intent intent = new Intent(getActivity(), RoomDetailActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.problem_type_layout)

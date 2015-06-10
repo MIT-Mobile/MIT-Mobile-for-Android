@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.facilities;
+package edu.mit.mitmobile2.facilities.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -9,16 +9,23 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.facilities.model.FacilitiesRoom;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private class ViewHolder {
         TextView roomView;
+        TextView headerTextView;
     }
 
     private Context context;
-    private List<Object> rooms;
+    private List<FacilitiesRoom> rooms;
+
+    public RoomsAdapter(Context context, List<FacilitiesRoom> rooms) {
+        this.context = context;
+        this.rooms = rooms;
+    }
 
     @Override
     public int getCount() {
@@ -26,7 +33,7 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
     }
 
     @Override
-    public Object getItem(int position) {
+    public FacilitiesRoom getItem(int position) {
         return rooms.get(position);
     }
 
@@ -50,18 +57,34 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             holder = (ViewHolder) v.getTag();
         }
 
-        holder.roomView.setText("");
+        FacilitiesRoom room = getItem(position);
+
+        holder.roomView.setText(room.getNumber());
 
         return v;
     }
 
     @Override
     public View getHeaderView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        ViewHolder viewHolder = new ViewHolder();
+
+        if (view == null) {
+            view = View.inflate(viewGroup.getContext(), R.layout.row_calendar_academic_header, null);
+
+            viewHolder.headerTextView = (TextView) view.findViewById(R.id.event_header_title);
+
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
+        }
+
+        viewHolder.headerTextView.setText(getItem(i).getFloor());
+
+        return view;
     }
 
     @Override
     public long getHeaderId(int i) {
-        return 0;
+        return Long.parseLong(getItem(i).getFloor());
     }
 }

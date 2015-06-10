@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.mit.mitmobile2.facilities.RoomDetailActivity">
+    tools:context="edu.mit.mitmobile2.facilities.activity.RoomDetailActivity">
 
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:id="@+id/rooms_list_view"
