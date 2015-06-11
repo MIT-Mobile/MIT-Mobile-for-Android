@@ -189,6 +189,24 @@ public class FacilitiesFragment extends Fragment {
         });
         */
 
+        /*
+
+        Does not work :(
+
+        FacilitiesManager.postProblem("test.email@abc.def", "test message", "test problem type", new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
         return view;
     }
 
