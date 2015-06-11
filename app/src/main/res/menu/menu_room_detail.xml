@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="edu.mit.mitmobile2.facilities.activity.RoomDetailActivity">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/action_search"
+        android:orderInCategory="100"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always" />
+</menu>

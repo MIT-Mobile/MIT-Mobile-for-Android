@@ -90,11 +90,6 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MyTheme" />
         <activity
-            android:name=".facilities.FacilitiesActivity"
-            android:label="@string/title_activity_facilities"
-            android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme" />
-        <activity
             android:name=".dining.activities.DiningActivity"
             android:label="@string/title_activity_dining"
             android:launchMode="singleTop"
@@ -282,8 +277,18 @@
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
+            android:name=".facilities.activity.RoomDetailActivity"
+            android:label="@string/title_activity_room_detail"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
             android:name=".facilities.activity.LocationActivity"
             android:label="@string/location_title"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".facilities.activity.ProblemTypesActivity"
+            android:label="@string/title_activity_problem_types"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
         <activity
