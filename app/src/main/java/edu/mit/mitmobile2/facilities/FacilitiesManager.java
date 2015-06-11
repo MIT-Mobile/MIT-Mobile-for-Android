@@ -18,7 +18,11 @@ import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
+import retrofit.client.Response;
+import retrofit.http.Field;
 import retrofit.http.GET;
+import retrofit.http.Multipart;
+import retrofit.http.POST;
 
 public class FacilitiesManager extends RetrofitManager {
     private static final MitFacilityService MIT_FACILITY_SERVICE = MIT_REST_ADAPTER.create(MitFacilityService.class);
@@ -102,6 +106,17 @@ public class FacilitiesManager extends RetrofitManager {
 
         @GET(Constants.Facilities.FACILITIES_PLACE_CATEGORIES_PATH)
         void _get_place_categories(Callback<List<FacilityPlaceCategory>> callback);
+
+        @POST(Constants.Facilities.FACILITIES_PROBLEMS_PATH)
+        void _post_problem(@Field("email") String email,
+                           @Field("message") String message,
+                           @Field("problem_type") String problemType,
+                           @Field("building") String building,                  // optional
+                           @Field("building_by_user") String buildingByUser,    // optional
+                           @Field("room") String room,                          // optional
+                           @Field("room_by_user") String roomByUser,            // optional
+                           @Field("image") String image,                        // optional, base64 (multipart - ?)
+                           Response callback);
     }
 
     public static class LibraryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements FacilityManagerCall, Callback<T> {

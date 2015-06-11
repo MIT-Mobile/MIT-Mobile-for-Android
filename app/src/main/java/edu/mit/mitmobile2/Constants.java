@@ -163,5 +163,6 @@ public class Constants {
         public static final String FACILITIES_LOCATION_PROPERTIES_PATH = "/location_properties";
         public static final String FACILITIES_PLACES_PATH = "/places";
         public static final String FACILITIES_PLACE_CATEGORIES_PATH = "/place_categories";
+        public static final String FACILITIES_PROBLEMS_PATH = "/problems";
     }
 }
