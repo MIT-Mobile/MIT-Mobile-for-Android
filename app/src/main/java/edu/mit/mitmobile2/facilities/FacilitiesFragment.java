@@ -46,6 +46,7 @@ import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
 import edu.mit.mitmobile2.facilities.model.FacilityPlace;
+import edu.mit.mitmobile2.facilities.model.FacilityPlaceCategory;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -163,6 +164,21 @@ public class FacilitiesFragment extends Fragment {
         FacilitiesManager.getPlaces(getActivity(), new Callback<List<FacilityPlace>>() {
             @Override
             public void success(List<FacilityPlace> facilityPlaces, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getPlaceCategories(getActivity(), new Callback<List<FacilityPlaceCategory>>() {
+
+            @Override
+            public void success(List<FacilityPlaceCategory> facilityPlaceCategories, Response response) {
                 // TODO: handle response
             }
 
