@@ -25,6 +25,14 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+
+    maven {
+        url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/"
+    }
+}
+
 dependencies {
     compile 'com.google.android.gms:play-services:7.0.0'
     compile 'com.android.support:support-v4:22.1.0'
@@ -48,4 +56,5 @@ dependencies {
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
     compile 'com.cocosw:bottomsheet:1.+@aar'
+    compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:1.0.0'
 }
