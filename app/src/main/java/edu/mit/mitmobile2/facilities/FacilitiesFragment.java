@@ -35,22 +35,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import edu.mit.mitmobile2.MitMobileApplication;
-import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
-import edu.mit.mitmobile2.facilities.model.FacilityPlace;
-import edu.mit.mitmobile2.facilities.model.FacilityPlaceCategory;
+import edu.mit.mitmobile2.facilities.activity.ProblemTypesActivity;
+import edu.mit.mitmobile2.facilities.activity.RoomDetailActivity;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class FacilitiesFragment extends Fragment {
 
@@ -95,12 +89,14 @@ public class FacilitiesFragment extends Fragment {
 
     @OnClick(R.id.room_layout)
     public void selectRoom() {
-        //TODO : go to room screen
+        Intent intent = new Intent(getActivity(), RoomDetailActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.problem_type_layout)
     public void selectProblemType() {
-        //TODO : go to problem type screen
+        Intent intent = new Intent(getActivity(), ProblemTypesActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.attach_remove_photo_text_view)

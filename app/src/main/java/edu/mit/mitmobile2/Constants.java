@@ -23,6 +23,8 @@ public class Constants {
     public static final String PLACES_KEY = "places";
     public static final String POSITION_KEY = "position";
     public static final String MAPS_SEARCH_HISTORY = "mapSearchHistory";
+    public static final String FACILITIES_PROBLEM_TYPE = "problemType";
+    public static final String FACILITIES_ROOM_NUMBER = "roomNumber";
 
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
@@ -156,6 +158,7 @@ public class Constants {
         public static final String LINKS_PATH = "/links";
     }
 
+
     public class Facilities {
         public static final String FACILITIES_PATH = "/";
         public static final String FACILITIES_LOCATION_CATEGORIES_PATH = "/location_categories";
@@ -165,4 +168,7 @@ public class Constants {
         public static final String FACILITIES_PLACE_CATEGORIES_PATH = "/place_categories";
         public static final String FACILITIES_PROBLEMS_PATH = "/problems";
     }
+
+    public static final String FEEDBACK_EMAIL = "android-app-feedback@mit.edu";
+
 }

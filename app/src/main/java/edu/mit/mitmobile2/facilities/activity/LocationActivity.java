@@ -20,9 +20,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by serg on 6/9/15.
- */
 public class LocationActivity extends AppCompatActivity {
 
     private ListView listView;
