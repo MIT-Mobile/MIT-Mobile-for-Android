@@ -162,7 +162,11 @@ public class Constants {
     public class Facilities {
         public static final String FACILITIES_PATH = "/";
         public static final String FACILITIES_LOCATION_CATEGORIES_PATH = "/location_categories";
-        public static final String FACILITES_PROBLEM_TYPES = "/problem_types/";
+        public static final String FACILITIES_PROBLEM_TYPES_PATH = "/problem_types";
+        public static final String FACILITIES_LOCATION_PROPERTIES_PATH = "/location_properties";
+        public static final String FACILITIES_PLACES_PATH = "/places";
+        public static final String FACILITIES_PLACE_CATEGORIES_PATH = "/place_categories";
+        public static final String FACILITIES_PROBLEMS_PATH = "/problems";
     }
 
     public static final String FEEDBACK_EMAIL = "android-app-feedback@mit.edu";

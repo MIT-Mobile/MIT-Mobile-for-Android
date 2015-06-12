@@ -126,6 +126,83 @@ public class FacilitiesFragment extends Fragment {
             attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_attach_photo));
         }
 
+        /*
+        FacilitiesManager.getProblemTypes(getActivity(), new Callback<List<String>>() {
+
+            @Override
+            public void success(List<String> strings, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getLocationProperties(getActivity(), new Callback<HashMap<String, HashMap<String, String>>>() {
+
+            @Override
+            public void success(HashMap<String, HashMap<String, String>> stringHashMapHashMap, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getPlaces(getActivity(), new Callback<List<FacilityPlace>>() {
+            @Override
+            public void success(List<FacilityPlace> facilityPlaces, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getPlaceCategories(getActivity(), new Callback<List<FacilityPlaceCategory>>() {
+
+            @Override
+            public void success(List<FacilityPlaceCategory> facilityPlaceCategories, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+
+        Does not work :(
+
+        FacilitiesManager.postProblem("test.email@abc.def", "test message", "test problem type", new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
         return view;
     }
 
