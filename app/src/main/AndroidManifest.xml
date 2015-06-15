@@ -301,6 +301,11 @@
             android:label="@string/about_credits"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".qrreader.activities.ScannerInfoActivity"
+            android:label="@string/title_activity_scanner_info"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

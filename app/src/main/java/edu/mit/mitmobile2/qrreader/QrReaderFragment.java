@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.qrreader;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PointF;
 import android.hardware.Camera;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
 
@@ -93,7 +95,8 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.scanner_tv_info: {
-                // TODO: navigate to "info" screen
+                Intent intent = new Intent(getActivity(), ScannerInfoActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.scanner_tv_advanced: {

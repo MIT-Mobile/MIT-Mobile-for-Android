@@ -29,6 +29,7 @@
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
     <string name="title_activity_events_detail">Event Details</string>
     <string name="title_activity_maps_categories">Categories</string>
+    <string name="title_activity_scanner_info">Info</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -330,6 +331,9 @@
     <string name="scan_info">Info</string>
     <string name="scan_advanced">Advanced</string>
 
+    <string name="scan_info_description">
+    Many groups at MIT use QR codes and barcodes to tag objects with extra information, such as URLs, phone numbers, and other data.\nMIT Mobile\'s Scanner can recognize those codes and can provide special functionality in some cases.
+    </string>
 
 
 </resources>
