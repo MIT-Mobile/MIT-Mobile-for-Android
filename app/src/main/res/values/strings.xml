@@ -326,6 +326,9 @@
     <!--scanner-->
     <string name="scan_disclaimer">To scan a QR code or barcode, frame it below.\nAvoid glare and shadows.</string>
     <string name="scan_no_camera">A camera is required to scan QR codes and barcodes</string>
+    <string name="scan_history">History</string>
+    <string name="scan_info">Info</string>
+    <string name="scan_advanced">Advanced</string>
 
 
 

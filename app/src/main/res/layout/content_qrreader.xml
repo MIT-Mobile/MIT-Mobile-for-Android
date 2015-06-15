@@ -9,18 +9,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
+    <edu.mit.mitmobile2.qrreader.view.ScannerBgLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/scanner_bg">
 
         <TextView
-            android:id="@+id/scannet_tv_disclaimer"
+            android:id="@+id/scanner_tv_disclaimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
             android:gravity="center_horizontal"
-            android:text="@string/scan_disclaimer" />
+            android:text="@string/scan_disclaimer"
+            android:textColor="@color/white" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/scanner_tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:padding="20dp"
+            android:text="@string/scan_info"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/scanner_tv_advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center_horizontal"
+            android:padding="20dp"
+            android:text="@string/scan_advanced"
+            android:textColor="@color/white" />
+
+    </edu.mit.mitmobile2.qrreader.view.ScannerBgLayout>
 
 </FrameLayout>
