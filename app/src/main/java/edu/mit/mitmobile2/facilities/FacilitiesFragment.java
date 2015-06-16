@@ -42,6 +42,8 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
+import edu.mit.mitmobile2.facilities.activity.ProblemTypesActivity;
+import edu.mit.mitmobile2.facilities.activity.RoomDetailActivity;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class FacilitiesFragment extends Fragment {
@@ -87,12 +89,14 @@ public class FacilitiesFragment extends Fragment {
 
     @OnClick(R.id.room_layout)
     public void selectRoom() {
-        //TODO : go to room screen
+        Intent intent = new Intent(getActivity(), RoomDetailActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.problem_type_layout)
     public void selectProblemType() {
-        //TODO : go to problem type screen
+        Intent intent = new Intent(getActivity(), ProblemTypesActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.attach_remove_photo_text_view)
@@ -121,6 +125,83 @@ public class FacilitiesFragment extends Fragment {
         } else {
             attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_attach_photo));
         }
+
+        /*
+        FacilitiesManager.getProblemTypes(getActivity(), new Callback<List<String>>() {
+
+            @Override
+            public void success(List<String> strings, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getLocationProperties(getActivity(), new Callback<HashMap<String, HashMap<String, String>>>() {
+
+            @Override
+            public void success(HashMap<String, HashMap<String, String>> stringHashMapHashMap, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getPlaces(getActivity(), new Callback<List<FacilityPlace>>() {
+            @Override
+            public void success(List<FacilityPlace> facilityPlaces, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+        FacilitiesManager.getPlaceCategories(getActivity(), new Callback<List<FacilityPlaceCategory>>() {
+
+            @Override
+            public void success(List<FacilityPlaceCategory> facilityPlaceCategories, Response response) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
+
+        /*
+
+        Does not work :(
+
+        FacilitiesManager.postProblem("test.email@abc.def", "test message", "test problem type", new Callback<Response>() {
+
+            @Override
+            public void success(Response response, Response response2) {
+                // TODO: handle response
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+        */
 
         return view;
     }
