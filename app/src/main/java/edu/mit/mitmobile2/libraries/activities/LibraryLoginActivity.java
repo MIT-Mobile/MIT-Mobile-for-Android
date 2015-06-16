@@ -6,7 +6,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -14,14 +13,13 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.LibraryManager;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesXmlObject;
-import edu.mit.mitmobile2.libraries.model.RelayState;
-import edu.mit.mitmobile2.libraries.model.XmlHeader;
+import edu.mit.mitmobile2.libraries.model.xml.touchstone.MITTouchstoneResponse;
+import edu.mit.mitmobile2.libraries.model.xml.user.RelayState;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Header;
 import retrofit.client.Response;
-import retrofit.converter.SimpleXMLConverter;
 
 public class LibraryLoginActivity extends AppCompatActivity {
 
@@ -46,8 +44,6 @@ public class LibraryLoginActivity extends AppCompatActivity {
     void login() {
         String user = String.valueOf(username.getText());
         String pwd = String.valueOf(password.getText());
-
-        // TODO: Connect with touchstone somehow
 
 
         if (saveLoginSwitch.isChecked()) {
@@ -74,17 +70,40 @@ public class LibraryLoginActivity extends AppCompatActivity {
                 LoggingManager.Timber.e(error.getMessage());
             }
         });
-
-
     }
 
-    private void postUserLoginInfo(RelayState relayState, MITLibrariesXmlObject object) {
-        LibraryManager.changeEndpoint("https://idp.mit.edu/idp/profile/SAML2/SOAP/ECP/");
+    private void postUserLoginInfo(final RelayState relayState, MITLibrariesXmlObject object) {
+        LibraryManager.changeEndpoint("https://idp.touchstonenetwork.net/");
         LibraryManager.setUsernameAndPassword("mitlibrarytest@gmail.com", "readingrainbow22");
 
         object.setHeader(null);
 
-        LibraryManager.MIT_SECURE_SERVICE._postloginuser(new SimpleXMLConverter().toBody(object), new Callback<Response>() {
+        //TODO: Wrap Post call
+
+        LibraryManager.MIT_SECURE_SERVICE._postloginuser(object, new Callback<MITTouchstoneResponse>() {
+            @Override
+            public void success(MITTouchstoneResponse response, Response response2) {
+                LoggingManager.Timber.d("Success!");
+                postLoginAuth(relayState, response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                LoggingManager.Timber.e(error.getMessage());
+            }
+        });
+
+    }
+
+    private void postLoginAuth(RelayState relayState, MITTouchstoneResponse response) {
+        LibraryManager.changeEndpoint("https://mobile-dev.mit.edu/Shibboleth.sso/");
+
+        response.getHeader().setResponse(null);
+        response.getHeader().setRelayState(new edu.mit.mitmobile2.libraries.model.xml.touchstone.RelayState(relayState.getActor(), relayState.getMustUnderstand(), relayState.getValue()));
+
+        //TODO: Wrap Post call
+
+        LibraryManager.MIT_SECURE_SERVICE._postloginuser2(response, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 LoggingManager.Timber.d("Success!");
@@ -95,7 +114,6 @@ public class LibraryLoginActivity extends AppCompatActivity {
                 LoggingManager.Timber.e(error.getMessage());
             }
         });
-
     }
 
 }

@@ -4,6 +4,9 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 
+import edu.mit.mitmobile2.libraries.model.xml.user.XmlBody;
+import edu.mit.mitmobile2.libraries.model.xml.user.XmlHeader;
+
 @Namespace(reference = "http://schemas.xmlsoap.org/soap/envelope/")
 @Root(name = "Envelope")
 public class MITLibrariesXmlObject {

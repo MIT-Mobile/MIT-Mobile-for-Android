@@ -1,4 +1,4 @@
-package edu.mit.mitmobile2.libraries.model;
+package edu.mit.mitmobile2.libraries.model.xml.user;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;

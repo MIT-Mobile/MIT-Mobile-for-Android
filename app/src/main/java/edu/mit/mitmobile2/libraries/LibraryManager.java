@@ -18,6 +18,7 @@ import edu.mit.mitmobile2.libraries.model.MITLibrariesMITIdentity;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesUser;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesWorldcatItem;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesXmlObject;
+import edu.mit.mitmobile2.libraries.model.xml.touchstone.MITTouchstoneResponse;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -25,7 +26,6 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
-import retrofit.mime.TypedOutput;
 
 public class LibraryManager extends RetrofitManager {
     private static final MitLibraryService MIT_LIBRARY_SERVICE = MIT_REST_ADAPTER.create(MitLibraryService.class);
@@ -182,8 +182,14 @@ public class LibraryManager extends RetrofitManager {
         @Headers({
                 "Content-Type: application/vnd.paos+xml"
         })
-        @POST("/")
-        void _postloginuser(@Body TypedOutput obj, Callback<Response> callback);
+        @POST("/idp/profile/SAML2/SOAP/ECP")
+        void _postloginuser(@Body MITLibrariesXmlObject obj, Callback<MITTouchstoneResponse> callback);
+
+        @Headers({
+                "Content-Type: application/vnd.paos+xml"
+        })
+        @POST("/SAML2/ECP")
+        void _postloginuser2(@Body MITTouchstoneResponse obj, Callback<Response> callback);
     }
 
     public static class LibraryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements LibraryManagerCall, Callback<T> {

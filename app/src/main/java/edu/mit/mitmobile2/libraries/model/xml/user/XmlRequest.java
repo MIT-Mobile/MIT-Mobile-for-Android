@@ -1,17 +1,17 @@
-package edu.mit.mitmobile2.libraries.model;
+package edu.mit.mitmobile2.libraries.model.xml.user;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.Attribute;
 
-@Namespace(prefix = "paos", reference = "urn:liberty:paos:2003-08")
-@Root(name = "Request")
-public class PaosRequest {
+@Root(strict = false)
+public class XmlRequest {
 
-    @Attribute
+    @Attribute(required = false)
     private String service;
 
-    @Attribute
+    @Attribute(required = false)
     private String responseConsumerURL;
 
     @Namespace(prefix = "S")
@@ -54,8 +54,31 @@ public class PaosRequest {
         this.mustUnderstand = mustUnderstand;
     }
 
+    @Attribute(name = "IsPassive", required = false)
+    private String isPassive;
+
+    @Element(name = "Issuer", required = false)
+    @Namespace(prefix = "saml")
+    Issuer issuer;
+
+    public String getIsPassive() {
+        return isPassive;
+    }
+
+    public void setIsPassive(String IsPassive) {
+        this.isPassive = IsPassive;
+    }
+
+    public Issuer getIssuer() {
+        return issuer;
+    }
+
+    public void setIssuer(Issuer issuer) {
+        this.issuer = issuer;
+    }
+
     @Override
     public String toString() {
-        return "ClassPojo [service = " + service + ", responseConsumerURL = " + responseConsumerURL + "]";
+        return "ClassPojo [isPassive = " + isPassive + "]";
     }
 }
