@@ -30,20 +30,26 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
     private SearchView searchView;
     private FacilitiesBuilding building;
+    private RoomsAdapter adapter;
+    private StickyListHeadersListView listView;
+    private View headerTop;
+    private View headerBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_detail);
 
-        final RoomsAdapter adapter = new RoomsAdapter(this, new ArrayList<FacilitiesBuilding.Floor>());
+        adapter = new RoomsAdapter(this, new ArrayList<FacilitiesBuilding.Floor>());
 
-        StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
+        listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-        View header = View.inflate(this, R.layout.rooms_list_header, null);
-        listView.addHeaderView(header);
+        headerTop = View.inflate(this, R.layout.room_list_header_top, null);
+        headerBottom = View.inflate(this, R.layout.room_list_header_bottom, null);
+        listView.addHeaderView(headerTop);
+        listView.addHeaderView(headerBottom);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(BUILDING)) {
             building = savedInstanceState.getParcelable(BUILDING);
@@ -79,11 +85,21 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return performSearch();
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                if (s.length() > 0) {
+                    adapter.setSearchMode(true);
+                    listView.removeHeaderView(headerTop);
+                    listView.removeHeaderView(headerBottom);
+                } else {
+                    adapter.setSearchMode(false);
+                    listView.addHeaderView(headerTop);
+                    listView.addHeaderView(headerBottom);
+                }
+                performSearch(s);
                 return true;
             }
         });
@@ -102,8 +118,8 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
         return true;
     }
 
-    private boolean performSearch() {
-        //TODO: Query MIT api for building
+    private boolean performSearch(String query) {
+        adapter.getFilter().filter(query);
         return true;
     }
 
@@ -124,7 +140,24 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String room = (String) parent.getItemAtPosition(position);
+        String room;
+        if (!adapter.isSearchMode()) {
+            if (position == 0) {
+                room = "Inside";
+            } else if (position == 1) {
+                room = "Outside";
+            } else {
+                room = (String) parent.getItemAtPosition(position);
+            }
+        } else {
+            if (position == 0) {
+                String rawString = (String) parent.getItemAtPosition(position);
+                room = rawString.substring(rawString.indexOf("\"") + 1, rawString.lastIndexOf("\""));
+            } else {
+                room = (String) parent.getItemAtPosition(position);
+            }
+        }
+
         Intent result = new Intent();
         result.putExtra(Constants.FACILITIES_ROOM_NUMBER, room);
         setResult(RESULT_OK, result);

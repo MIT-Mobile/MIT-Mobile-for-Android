@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapter, Filterable {
 
     private class ViewHolder {
         TextView roomView;
@@ -22,27 +24,33 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
     private Context context;
     private List<FacilitiesBuilding.Floor> floors;
-    private List<String> rooms;
+    private List<String> allData;
+    private List<String> filteredData;
+    private boolean searchMode = false;
+
+    private SearchItemFilter searchItemFilter = new SearchItemFilter();
 
     public RoomsAdapter(Context context, List<FacilitiesBuilding.Floor> floors) {
         this.context = context;
         this.floors = floors;
 
-        rooms = new ArrayList<>();
+        allData = new ArrayList<>();
+        filteredData = new ArrayList<>();
 
         for (FacilitiesBuilding.Floor f : floors) {
-            rooms.addAll(f.getRooms());
+            allData.addAll(f.getRooms());
+            filteredData.addAll(f.getRooms());
         }
     }
 
     @Override
     public int getCount() {
-        return rooms.size();
+        return filteredData.size();
     }
 
     @Override
     public String getItem(int position) {
-        return rooms.get(position);
+        return filteredData.get(position);
     }
 
     @Override
@@ -65,7 +73,7 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             holder = (ViewHolder) v.getTag();
         }
 
-        String room = rooms.get(position);
+        String room = filteredData.get(position);
 
         holder.roomView.setText(room);
 
@@ -88,20 +96,27 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
         String text = "";
         for (FacilitiesBuilding.Floor f : floors) {
-            if (f.getRooms().contains(rooms.get(i))) {
+            if (f.getRooms().contains(allData.get(i))) {
                 text = String.valueOf(floors.indexOf(f));
             }
         }
 
         viewHolder.headerTextView.setText(context.getString(R.string.floor) + text);
 
+        if (searchMode) {
+            view.setAlpha(0);
+        } else {
+            view.setAlpha(1);
+        }
+
         return view;
+
     }
 
     @Override
     public long getHeaderId(int i) {
         for (FacilitiesBuilding.Floor f : floors) {
-            if (f.getRooms().contains(rooms.get(i))) {
+            if (f.getRooms().contains(allData.get(i))) {
                 return floors.indexOf(f);
             }
         }
@@ -109,14 +124,73 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
         return 0;
     }
 
+    @Override
+    public Filter getFilter() {
+        return searchItemFilter;
+    }
+
     public void updateItems(List<FacilitiesBuilding.Floor> floors) {
         this.floors.clear();
         this.floors.addAll(floors);
 
+        allData.clear();
+        filteredData.clear();
+
         for (FacilitiesBuilding.Floor f : this.floors) {
-            rooms.addAll(f.getRooms());
+            allData.addAll(f.getRooms());
+            filteredData.addAll(f.getRooms());
         }
 
         notifyDataSetChanged();
+    }
+
+    public void setSearchMode(boolean search) {
+        if (searchMode != search) {
+            this.searchMode = search;
+            notifyDataSetChanged();
+        }
+    }
+
+    public boolean isSearchMode() {
+        return searchMode;
+    }
+
+    private class SearchItemFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            String filterString = constraint.toString().toLowerCase();
+
+            FilterResults results = new FilterResults();
+
+            final List<String> unFilteredList = allData;
+
+            int count = unFilteredList.size();
+            final ArrayList<String> filteredList = new ArrayList<>(count);
+
+            String filterableString;
+
+            for (int i = 0; i < count; i++) {
+                filterableString = unFilteredList.get(i);
+                if (filterableString.toLowerCase().contains(filterString)) {
+                    filteredList.add(filterableString);
+                }
+            }
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredData.clear();
+            filteredData = (ArrayList<String>) results.values;
+            if (constraint.length() > 0) {
+                filteredData.add(0, String.format("Use \"%s\"", constraint));
+            }
+            notifyDataSetChanged();
+        }
     }
 }
