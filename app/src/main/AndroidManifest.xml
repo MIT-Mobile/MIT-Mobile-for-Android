@@ -306,6 +306,12 @@
             android:label="@string/title_activity_scanner_info"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
+        <activity
+            android:name=".qrreader.activities.ScannerHistoryActivity"
+            android:label="@string/title_activity_scanner_history"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
+
     </application>
 
 </manifest>

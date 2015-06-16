@@ -18,8 +18,13 @@ import android.widget.TextView;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
+import java.util.Date;
+
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
+import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
 
@@ -76,7 +81,8 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scanner_history: {
-                // TODO: navigate to history screen
+                Intent intent = new Intent(getActivity(), ScannerHistoryActivity.class);
+                startActivity(intent);
                 return true;
             }
         }
@@ -110,13 +116,21 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
 
     @Override
     public void onQRCodeRead(String s, PointF[] pointFs) {
-        // TODO: handle result
-        qrCodeReaderView.getCameraManager().getCamera().takePicture(null, null, null, new Camera.PictureCallback() {
-            @Override
-            public void onPictureTaken(byte[] data, Camera camera) {
-                // TODO: get current screenshot here
-            }
-        });
+        // TODO: stop scanning/add continuous scanning logic here
+        QRReaderResult result = new QRReaderResult();
+        result.setText(s);
+        result.setDate(new Date());
+
+        DBAdapter.getInstance().acquire(result);
+        result.persistToDatabase();
+
+//        qrCodeReaderView.getCameraManager().startPreview();
+//        qrCodeReaderView.getCameraManager().getCamera().takePicture(null, null, null, new Camera.PictureCallback() {
+//            @Override
+//            public void onPictureTaken(byte[] data, Camera camera) {
+//                // TODO: get current screenshot here
+//            }
+//        });
     }
 
     @Override

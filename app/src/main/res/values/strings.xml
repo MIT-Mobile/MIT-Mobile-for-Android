@@ -30,6 +30,7 @@
     <string name="title_activity_events_detail">Event Details</string>
     <string name="title_activity_maps_categories">Categories</string>
     <string name="title_activity_scanner_info">Info</string>
+    <string name="title_activity_scanner_history">History</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
