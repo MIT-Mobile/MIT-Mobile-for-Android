@@ -6,10 +6,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.facilities.model.FacilitiesRoom;
+import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapter {
@@ -20,11 +21,18 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
     }
 
     private Context context;
-    private List<FacilitiesRoom> rooms;
+    private List<FacilitiesBuilding.Floor> floors;
+    private List<String> rooms;
 
-    public RoomsAdapter(Context context, List<FacilitiesRoom> rooms) {
+    public RoomsAdapter(Context context, List<FacilitiesBuilding.Floor> floors) {
         this.context = context;
-        this.rooms = rooms;
+        this.floors = floors;
+
+        rooms = new ArrayList<>();
+
+        for (FacilitiesBuilding.Floor f : floors) {
+            rooms.addAll(f.getRooms());
+        }
     }
 
     @Override
@@ -33,7 +41,7 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
     }
 
     @Override
-    public FacilitiesRoom getItem(int position) {
+    public String getItem(int position) {
         return rooms.get(position);
     }
 
@@ -57,9 +65,9 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             holder = (ViewHolder) v.getTag();
         }
 
-        FacilitiesRoom room = getItem(position);
+        String room = rooms.get(position);
 
-        holder.roomView.setText(room.getNumber());
+        holder.roomView.setText(room);
 
         return v;
     }
@@ -78,13 +86,37 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.headerTextView.setText(getItem(i).getFloor());
+        String text = "";
+        for (FacilitiesBuilding.Floor f : floors) {
+            if (f.getRooms().contains(rooms.get(i))) {
+                text = String.valueOf(floors.indexOf(f));
+            }
+        }
+
+        viewHolder.headerTextView.setText(context.getString(R.string.floor) + text);
 
         return view;
     }
 
     @Override
     public long getHeaderId(int i) {
-        return Long.parseLong(getItem(i).getFloor());
+        for (FacilitiesBuilding.Floor f : floors) {
+            if (f.getRooms().contains(rooms.get(i))) {
+                return floors.indexOf(f);
+            }
+        }
+
+        return 0;
+    }
+
+    public void updateItems(List<FacilitiesBuilding.Floor> floors) {
+        this.floors.clear();
+        this.floors.addAll(floors);
+
+        for (FacilitiesBuilding.Floor f : this.floors) {
+            rooms.addAll(f.getRooms());
+        }
+
+        notifyDataSetChanged();
     }
 }

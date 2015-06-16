@@ -16,19 +16,27 @@ import java.util.ArrayList;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.adapter.RoomsAdapter;
-import edu.mit.mitmobile2.facilities.model.FacilitiesRoom;
+import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
+import edu.mit.mitmobile2.maps.MapManager;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class RoomDetailActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private static final String BUILDING = "building";
+
     private SearchView searchView;
+    private FacilitiesBuilding building;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_detail);
 
-        RoomsAdapter adapter = new RoomsAdapter(this, new ArrayList<FacilitiesRoom>());
+        final RoomsAdapter adapter = new RoomsAdapter(this, new ArrayList<FacilitiesBuilding.Floor>());
 
         StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
         listView.setAdapter(adapter);
@@ -36,6 +44,27 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
         View header = View.inflate(this, R.layout.rooms_list_header, null);
         listView.addHeaderView(header);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUILDING)) {
+            building = savedInstanceState.getParcelable(BUILDING);
+            if (building != null) {
+                adapter.updateItems(building.getFloors());
+            }
+        } else {
+            MapManager.getBuildingDetails(this, "W20", new Callback<FacilitiesBuilding>() {
+                @Override
+                public void success(FacilitiesBuilding facilitiesBuilding, Response response) {
+                    LoggingManager.Timber.d("Success!");
+                    building = facilitiesBuilding;
+                    adapter.updateItems(facilitiesBuilding.getFloors());
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    LoggingManager.Timber.e("Building details", error);
+                }
+            });
+        }
     }
 
     @Override
@@ -95,10 +124,16 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String problem = (String) parent.getItemAtPosition(position);
+        String room = (String) parent.getItemAtPosition(position);
         Intent result = new Intent();
-        result.putExtra(Constants.FACILITIES_ROOM_NUMBER, problem);
+        result.putExtra(Constants.FACILITIES_ROOM_NUMBER, room);
         setResult(RESULT_OK, result);
         finish();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUILDING, building);
     }
 }
