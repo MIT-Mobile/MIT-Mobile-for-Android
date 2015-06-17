@@ -24,6 +24,8 @@ import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
+import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter;
+import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter.OnScannerHistoryAdapterListener;
 import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {

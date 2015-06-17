@@ -13,8 +13,10 @@ import android.widget.ListView;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter;
+import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter.OnScannerHistoryAdapterListener;
+import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
 
-public class ScannerHistoryFragment extends Fragment {
+public class ScannerHistoryFragment extends Fragment implements OnScannerHistoryAdapterListener {
 
     private ListView listView;
 
@@ -36,7 +38,7 @@ public class ScannerHistoryFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.list);
 
-        adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory());
+        adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory(), this);
         listView.setAdapter(adapter);
 
         return view;
@@ -51,10 +53,19 @@ public class ScannerHistoryFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_edit) {
+            adapter.toggleEditMode();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /* OnScannerHistoryAdapterListener */
+
+    @Override
+    public void onDelete(int position, QRReaderResult result) {
+        DBAdapter.getInstance().deleteQrHistoryFromDb(result);
+        adapter.updateData(DBAdapter.getInstance().getScanningHistory());
     }
 }

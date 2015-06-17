@@ -18,10 +18,30 @@ import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
  */
 public class ScannerHistoryAdapter extends BaseAdapter {
 
-    private List<QRReaderResult> results;
+    public interface OnScannerHistoryAdapterListener {
+        void onDelete(int position, QRReaderResult result);
+    }
 
-    public ScannerHistoryAdapter(List<QRReaderResult> results) {
+    private List<QRReaderResult> results;
+    private OnScannerHistoryAdapterListener listener;
+    private boolean editMode;
+
+    public ScannerHistoryAdapter(List<QRReaderResult> results, OnScannerHistoryAdapterListener listener) {
         this.results = results;
+        this.listener = listener;
+    }
+
+    public void updateData(List<QRReaderResult> results) {
+        this.results.clear();
+        if (results != null) {
+            this.results.addAll(results);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void toggleEditMode() {
+        this.editMode = !this.editMode;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -40,7 +60,7 @@ public class ScannerHistoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(parent.getContext(), R.layout.row_scanning_history, null);
@@ -49,6 +69,7 @@ public class ScannerHistoryAdapter extends BaseAdapter {
             holder.imageViewThumbnail = (ImageView) convertView.findViewById(R.id.scanner_iv_thumbnail);
             holder.textViewText = (TextView) convertView.findViewById(R.id.scanner_tv_text);
             holder.textViewDate = (TextView) convertView.findViewById(R.id.scanner_tv_date);
+            holder.imageViewDelete = (ImageView) convertView.findViewById(R.id.delete_button);
 
             convertView.setTag(holder);
         } else {
@@ -60,6 +81,19 @@ public class ScannerHistoryAdapter extends BaseAdapter {
         holder.textViewText.setText(result.getText());
         holder.textViewDate.setText(DateUtils.getRelativeTimeSpanString(result.getDate().getTime(), new Date().getTime(), 0L, DateUtils.FORMAT_ABBREV_ALL));
 
+        if (editMode) {
+            holder.imageViewDelete.setVisibility(View.VISIBLE);
+        } else {
+            holder.imageViewDelete.setVisibility(View.GONE);
+        }
+
+        holder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onDelete(position, getItem(position));
+            }
+        });
+
         return convertView;
     }
 
@@ -67,5 +101,7 @@ public class ScannerHistoryAdapter extends BaseAdapter {
         ImageView imageViewThumbnail;
         TextView textViewText;
         TextView textViewDate;
+
+        ImageView imageViewDelete;
     }
 }

@@ -23,10 +23,19 @@ public class QRReaderResult extends DatabaseObject {
 //    @property (nonatomic, strong, readonly) MITScannerImage *imageData;
 //    @property (nonatomic, strong) UIImage *scanImage;
 
+    private long id;
     private Date date;
     private String text;
     private Bitmap thumbnail;
     private Bitmap image;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Date getDate() {
         return date;
@@ -69,6 +78,7 @@ public class QRReaderResult extends DatabaseObject {
 
     @Override
     protected void buildSubclassFromCursor(Cursor cursor, DBAdapter dbAdapter) {
+        setId(cursor.getLong(cursor.getColumnIndex(Schema.QrReaderResult.ID_COL)));
         setDate(new Date(cursor.getLong(cursor.getColumnIndex(Schema.QrReaderResult.DATE))));
         setText(cursor.getString(cursor.getColumnIndex(Schema.QrReaderResult.TEXT)));
     }

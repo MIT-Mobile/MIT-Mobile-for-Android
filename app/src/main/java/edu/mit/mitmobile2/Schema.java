@@ -337,8 +337,8 @@ public class Schema {
 
         public static final String CREATE_TABLE_SQL =
                 buildCreateSQL(TABLE_NAME,
-                                DATE + " integer, " +
-                                TEXT + " text"
+                                DATE + " INTEGER, " +
+                                TEXT + " TEXT"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{

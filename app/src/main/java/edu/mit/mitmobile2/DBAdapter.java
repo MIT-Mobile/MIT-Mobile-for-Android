@@ -580,4 +580,8 @@ public class DBAdapter {
 
         return results;
     }
+
+    public void deleteQrHistoryFromDb(QRReaderResult result) {
+        db.delete(Schema.QrReaderResult.TABLE_NAME, String.format("%s='%s'", Schema.QrReaderResult.ID_COL, result.getId()), null);
+    }
 }

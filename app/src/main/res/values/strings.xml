@@ -336,5 +336,6 @@
     Many groups at MIT use QR codes and barcodes to tag objects with extra information, such as URLs, phone numbers, and other data.\nMIT Mobile\'s Scanner can recognize those codes and can provide special functionality in some cases.
     </string>
 
+    <string name="scan_history_edit">Edit</string>
 
 </resources>
