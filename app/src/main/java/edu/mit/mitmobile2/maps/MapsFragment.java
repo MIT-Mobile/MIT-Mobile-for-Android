@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -251,20 +252,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             }
         });
 
-        if (getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
-            String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
-
-            if (getActivity().getIntent().getBooleanExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, false)) {
-                queryText = sanitizeMapSearchString(queryText);
-            }
-
-            menuItem.expandActionView();
-            searchView.setQuery(queryText, true);
-        } else {
-            searchView.setQueryHint(getString(R.string.maps_search_hint));
-            menuItem.collapseActionView();
-        }
-
         View searchPlate = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
 
         //noinspection ConstantConditions IntelliJ/AndroidStudio incorrectly thinks this can never be null.
@@ -275,6 +262,23 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         assert searchTextView != null;
 
         searchTextView.setTextColor(Color.WHITE);
+
+        if (getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
+            String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
+
+            if (getActivity().getIntent().getBooleanExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, false)) {
+                queryText = sanitizeMapSearchString(queryText);
+            }
+
+            menuItem.expandActionView();
+            EditText editText = (EditText) searchPlate.findViewById(R.id.search_src_text);
+            editText.setText(queryText);
+            searchView.setQuery(queryText, true);
+            getActivity().setIntent(new Intent());
+        } else {
+            searchView.setQueryHint(getString(R.string.maps_search_hint));
+            menuItem.collapseActionView();
+        }
     }
 
     @Override
@@ -340,7 +344,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
                         updateMapItems((ArrayList) places, true, true);
                     }
-                        break;
+                    break;
                     case 1: {
                         String id = data.getStringExtra(Constants.PLACES_KEY);
                         MITMapPlace place = DBAdapter.getInstance().getBookmark(id);
@@ -350,14 +354,14 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
                         updateMapItems((ArrayList) places, true, true);
                     }
-                        break;
+                    break;
                     case 2: {
                         String query = data.getStringExtra(Constants.Map.RECENT_QUERY);
                         if (!TextUtils.isEmpty(query)) {
                             performSearch(searchView, this, query);
                         }
                     }
-                        break;
+                    break;
                     default:
                 }
 

@@ -257,6 +257,7 @@ public class PersonDetailFragment extends Fragment {
 
         if (displayProperty == DirectoryDisplayProperty.OFFICE) {
             Intent intent = new Intent(getActivity(), MITMainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(Constants.LOCATION_KEY, contactInfo.getValue());
             intent.putExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, true);
             startActivity(intent);

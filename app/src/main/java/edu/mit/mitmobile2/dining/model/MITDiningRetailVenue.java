@@ -22,7 +22,7 @@ import edu.mit.mitmobile2.maps.MapItem;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 
 public class MITDiningRetailVenue extends MapItem implements Parcelable {
-    protected List<String> cuisine;  /* The ObjC Folks dont know what this is it seems */
+    protected List<String> cuisine;
     @SerializedName("description_html")
     protected String descriptionHTML;
     protected boolean favorite;
@@ -37,7 +37,7 @@ public class MITDiningRetailVenue extends MapItem implements Parcelable {
     @SerializedName("menu_url")
     protected String menuURL;
     protected String name;
-    protected List<String> payment;  /* The ObjC Folks dont know what this is it seems */
+    protected List<String> payment;
     @SerializedName("short_name")
     protected String shortName;
     protected List<MITDiningRetailDay> hours;
