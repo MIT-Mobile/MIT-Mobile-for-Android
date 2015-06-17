@@ -37,6 +37,7 @@ public class Constants {
     public static final String SECURE = "secure";
     public static final String LINKS = "links";
     public static final String FACILITIES = "facilities";
+    public static final String SCANNER = "scanner";
 
     public static final String LOCATION_KEY = "location";
     public static final String LOCATION_SHOULD_SANITIZE_QUERY_KEY = "location_should_sanitize_query_key";
@@ -167,6 +168,11 @@ public class Constants {
         public static final String FACILITIES_PLACES_PATH = "/places";
         public static final String FACILITIES_PLACE_CATEGORIES_PATH = "/place_categories";
         public static final String FACILITIES_PROBLEMS_PATH = "/problems";
+    }
+
+    public class Scanner {
+        public static final String SCANNER_PATH = "/";
+        public static final String SCANNER_MAPPINGS_PATH = "/mappings";
     }
 
     public static final String FEEDBACK_EMAIL = "android-app-feedback@mit.edu";

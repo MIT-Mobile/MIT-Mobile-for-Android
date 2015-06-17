@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.qrreader.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,15 +9,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryDetailActivity;
 import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter;
 import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter.OnScannerHistoryAdapterListener;
-import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
+import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 
-public class ScannerHistoryFragment extends Fragment implements OnScannerHistoryAdapterListener {
+public class ScannerHistoryFragment extends Fragment implements OnScannerHistoryAdapterListener, AdapterView.OnItemClickListener {
 
     private ListView listView;
 
@@ -40,6 +43,7 @@ public class ScannerHistoryFragment extends Fragment implements OnScannerHistory
 
         adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory(), this);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
 
         return view;
     }
@@ -64,8 +68,20 @@ public class ScannerHistoryFragment extends Fragment implements OnScannerHistory
     /* OnScannerHistoryAdapterListener */
 
     @Override
-    public void onDelete(int position, QRReaderResult result) {
+    public void onDelete(int position, QrReaderResult result) {
         DBAdapter.getInstance().deleteQrHistoryFromDb(result);
         adapter.updateData(DBAdapter.getInstance().getScanningHistory());
+    }
+
+    /* AdapterView.OnItemClickListener */
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        QrReaderResult result = adapter.getItem(position);
+
+        Intent intent = new Intent(getActivity(), ScannerHistoryDetailActivity.class);
+        intent.putExtra(ScannerHistoryDetailActivity.KEY_EXTRAS_SCANNER_RESULT, result);
+
+        startActivity(intent);
     }
 }

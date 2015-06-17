@@ -2,7 +2,8 @@ package edu.mit.mitmobile2.qrreader.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Date;
 
@@ -13,7 +14,7 @@ import edu.mit.mitmobile2.Schema;
 /**
  * Created by serg on 6/16/15.
  */
-public class QRReaderResult extends DatabaseObject {
+public class QrReaderResult extends DatabaseObject implements Parcelable {
 
 //    @property (nonatomic, strong) NSDate * date;
 //    @property (nonatomic, strong) UIImage * thumbnail;
@@ -26,8 +27,10 @@ public class QRReaderResult extends DatabaseObject {
     private long id;
     private Date date;
     private String text;
-    private Bitmap thumbnail;
-    private Bitmap image;
+
+    public QrReaderResult() {
+        // empty constructor
+    }
 
     public long getId() {
         return id;
@@ -53,22 +56,6 @@ public class QRReaderResult extends DatabaseObject {
         this.text = text;
     }
 
-    public Bitmap getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(Bitmap thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public Bitmap getImage() {
-        return image;
-    }
-
-    public void setImage(Bitmap image) {
-        this.image = image;
-    }
-
     /* DatabaseObject */
 
     @Override
@@ -88,4 +75,38 @@ public class QRReaderResult extends DatabaseObject {
         values.put(Schema.QrReaderResult.DATE, this.date.getTime());
         values.put(Schema.QrReaderResult.TEXT, this.text);
     }
+
+    /* Parcelable */
+
+    protected QrReaderResult(Parcel in) {
+        id = in.readLong();
+        long tmpDate = in.readLong();
+        date = tmpDate != -1 ? new Date(tmpDate) : null;
+        text = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeLong(date != null ? date.getTime() : -1L);
+        dest.writeString(text);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<QrReaderResult> CREATOR = new Parcelable.Creator<QrReaderResult>() {
+        @Override
+        public QrReaderResult createFromParcel(Parcel in) {
+            return new QrReaderResult(in);
+        }
+
+        @Override
+        public QrReaderResult[] newArray(int size) {
+            return new QrReaderResult[size];
+        }
+    };
 }

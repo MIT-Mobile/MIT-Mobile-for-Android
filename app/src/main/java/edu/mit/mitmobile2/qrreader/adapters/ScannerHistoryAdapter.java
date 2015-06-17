@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
+import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 
 /**
  * Created by serg on 6/16/15.
@@ -19,19 +19,19 @@ import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
 public class ScannerHistoryAdapter extends BaseAdapter {
 
     public interface OnScannerHistoryAdapterListener {
-        void onDelete(int position, QRReaderResult result);
+        void onDelete(int position, QrReaderResult result);
     }
 
-    private List<QRReaderResult> results;
+    private List<QrReaderResult> results;
     private OnScannerHistoryAdapterListener listener;
     private boolean editMode;
 
-    public ScannerHistoryAdapter(List<QRReaderResult> results, OnScannerHistoryAdapterListener listener) {
+    public ScannerHistoryAdapter(List<QrReaderResult> results, OnScannerHistoryAdapterListener listener) {
         this.results = results;
         this.listener = listener;
     }
 
-    public void updateData(List<QRReaderResult> results) {
+    public void updateData(List<QrReaderResult> results) {
         this.results.clear();
         if (results != null) {
             this.results.addAll(results);
@@ -50,7 +50,7 @@ public class ScannerHistoryAdapter extends BaseAdapter {
     }
 
     @Override
-    public QRReaderResult getItem(int position) {
+    public QrReaderResult getItem(int position) {
         return results.get(position);
     }
 
@@ -76,7 +76,7 @@ public class ScannerHistoryAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        QRReaderResult result = getItem(position);
+        QrReaderResult result = getItem(position);
 
         holder.textViewText.setText(result.getText());
         holder.textViewDate.setText(DateUtils.getRelativeTimeSpanString(result.getDate().getTime(), new Date().getTime(), 0L, DateUtils.FORMAT_ABBREV_ALL));

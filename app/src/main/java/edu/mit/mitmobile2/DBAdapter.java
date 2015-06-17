@@ -20,7 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
-import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
+import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class DBAdapter {
@@ -563,14 +563,14 @@ public class DBAdapter {
         return place;
     }
 
-    public List<QRReaderResult> getScanningHistory() {
-        List<QRReaderResult> results = new ArrayList<>();
+    public List<QrReaderResult> getScanningHistory() {
+        List<QrReaderResult> results = new ArrayList<>();
 
         Cursor cursor = db.query(Schema.QrReaderResult.TABLE_NAME, Schema.QrReaderResult.ALL_COLUMNS,
                 null, null, null, null, null);
         try {
             while (cursor.moveToNext()) {
-                QRReaderResult result = new QRReaderResult();
+                QrReaderResult result = new QrReaderResult();
                 result.buildFromCursor(cursor, this);
                 results.add(result);
             }
@@ -581,7 +581,7 @@ public class DBAdapter {
         return results;
     }
 
-    public void deleteQrHistoryFromDb(QRReaderResult result) {
+    public void deleteQrHistoryFromDb(QrReaderResult result) {
         db.delete(Schema.QrReaderResult.TABLE_NAME, String.format("%s='%s'", Schema.QrReaderResult.ID_COL, result.getId()), null);
     }
 }
