@@ -29,6 +29,8 @@
     <string name="title_activity_news_image_gallery">NewsImageGalleryActivity</string>
     <string name="title_activity_events_detail">Event Details</string>
     <string name="title_activity_maps_categories">Categories</string>
+    <string name="title_activity_scanner_info">Info</string>
+    <string name="title_activity_scanner_history">History</string>
 
     <!-- RESOURCES -->
     <string name="resource_info_text">Use this tool to find machines and machine shops at MIT.</string>
@@ -322,5 +324,17 @@
 
     MIT\'s commitment to innovation has led to a host of scientific breakthroughs and technological advances. Achievements include the first chemical synthesis of penicillin and vitamin A, the development of inertial guidance systems, modern technologies for artificial limbs, and the magnetic core memory that led to the development of digital computers. Sixty-three alumni, faculty, researchers and staff have won the Nobel Prizes.
     </string>
+
+    <!--scanner-->
+    <string name="scan_disclaimer">To scan a QR code or barcode, frame it below.\nAvoid glare and shadows.</string>
+    <string name="scan_no_camera">A camera is required to scan QR codes and barcodes</string>
+    <string name="scan_history">History</string>
+    <string name="scan_info">Info</string>
+    <string name="scan_advanced">Advanced</string>
+
+    <string name="scan_info_description">
+    Many groups at MIT use QR codes and barcodes to tag objects with extra information, such as URLs, phone numbers, and other data.\nMIT Mobile\'s Scanner can recognize those codes and can provide special functionality in some cases.
+    </string>
+
 
 </resources>

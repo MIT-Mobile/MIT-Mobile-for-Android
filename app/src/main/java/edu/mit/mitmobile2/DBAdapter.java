@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
+import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class DBAdapter {
@@ -271,6 +272,7 @@ public class DBAdapter {
             db.execSQL(Schema.MapPlace.CREATE_TABLE_SQL);
             db.execSQL(Schema.MapPlaceContent.CREATE_TABLE_SQL);
             db.execSQL(Schema.Person.CREATE_TABLE_SQL);
+            db.execSQL(Schema.QrReaderResult.CREATE_TABLE_SQL);
 
             db.execSQL(Schema.Person.CREATE_INDICIES_SQL);
 
@@ -290,6 +292,7 @@ public class DBAdapter {
             db.execSQL("DROP TABLE IF EXISTS " + Schema.MapPlace.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.MapPlaceContent.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + Schema.Person.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + Schema.QrReaderResult.TABLE_NAME);
         }
 
         private static void dropIndicies(SQLiteDatabase db, String[] indicies) {
@@ -558,5 +561,23 @@ public class DBAdapter {
             cursor.close();
         }
         return place;
+    }
+
+    public List<QRReaderResult> getScanningHistory() {
+        List<QRReaderResult> results = new ArrayList<>();
+
+        Cursor cursor = db.query(Schema.QrReaderResult.TABLE_NAME, Schema.QrReaderResult.ALL_COLUMNS,
+                null, null, null, null, null);
+        try {
+            while (cursor.moveToNext()) {
+                QRReaderResult result = new QRReaderResult();
+                result.buildFromCursor(cursor, this);
+                results.add(result);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return results;
     }
 }

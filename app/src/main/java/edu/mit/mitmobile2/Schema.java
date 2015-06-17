@@ -329,4 +329,20 @@ public class Schema {
                 ID_COL, CONTENT_NAME, CATEGORIES, URL, ALT_NAMES, PLACE_ID
         };
     }
+
+    public static final class QrReaderResult extends Table {
+        public static final String TABLE_NAME = "qr_reader_result";
+        public static final String DATE = "content_name";
+        public static final String TEXT = "categories";
+
+        public static final String CREATE_TABLE_SQL =
+                buildCreateSQL(TABLE_NAME,
+                                DATE + " integer, " +
+                                TEXT + " text"
+                );
+
+        public static final String[] ALL_COLUMNS = new String[]{
+                ID_COL, DATE, TEXT
+        };
+    }
 }

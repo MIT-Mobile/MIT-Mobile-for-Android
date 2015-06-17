@@ -82,4 +82,7 @@
 
     <color name="closed_red">#FFF44336</color>
     <color name="open_green">#ff0ba907</color>
+
+    <color name="scanner_bg">#40000000</color>
+    <color name="scanner_lines">#979797</color>
 </resources>
