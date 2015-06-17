@@ -6,16 +6,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapter, Filterable {
+public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapter, Filterable, SectionIndexer {
 
     private class ViewHolder {
         TextView roomView;
@@ -26,6 +28,9 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
     private List<FacilitiesBuilding.Floor> floors;
     private List<String> allData;
     private List<String> filteredData;
+    private List<String>[] sectionedRooms;
+    private String[] sections;
+    private HashMap<Integer, Integer> keySet;
     private boolean searchMode = false;
 
     private SearchItemFilter searchItemFilter = new SearchItemFilter();
@@ -37,9 +42,20 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
         allData = new ArrayList<>();
         filteredData = new ArrayList<>();
 
+        if (floors.size() > 0) {
+            sections = new String[floors.size()];
+            sectionedRooms = new ArrayList[floors.size()];
+        }
+        keySet = new HashMap<>();
+
         for (FacilitiesBuilding.Floor f : floors) {
+            int i = floors.indexOf(f);
+            keySet.put(i, this.allData.size());
+
             allData.addAll(f.getRooms());
             filteredData.addAll(f.getRooms());
+            sections[i] = String.valueOf(i);
+            sectionedRooms[i] = new ArrayList<>();
         }
     }
 
@@ -135,8 +151,26 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
         allData.clear();
         filteredData.clear();
+        keySet.clear();
+
+        if (sections == null || sectionedRooms == null) {
+            sections = new String[floors.size()];
+            sectionedRooms = new ArrayList[floors.size()];
+        }
 
         for (FacilitiesBuilding.Floor f : this.floors) {
+            int i = floors.indexOf(f);
+            keySet.put(i, this.allData.size());
+
+            if (sectionedRooms[i] == null) {
+                sectionedRooms[i] = new ArrayList<>();
+            }
+            sectionedRooms[i].addAll(f.getRooms());
+
+            if (sections[i] == null) {
+                sections[i] = String.valueOf(i);
+            }
+
             allData.addAll(f.getRooms());
             filteredData.addAll(f.getRooms());
         }
@@ -153,6 +187,21 @@ public class RoomsAdapter extends BaseAdapter implements StickyListHeadersAdapte
 
     public boolean isSearchMode() {
         return searchMode;
+    }
+
+    @Override
+    public Object[] getSections() {
+        return sections;
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        return keySet.get(sectionIndex);
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        return 0;
     }
 
     private class SearchItemFilter extends Filter {

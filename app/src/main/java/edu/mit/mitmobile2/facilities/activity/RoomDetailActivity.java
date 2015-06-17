@@ -40,11 +40,14 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_detail);
 
+        setTitle(getString(R.string.where));
+
         adapter = new RoomsAdapter(this, new ArrayList<FacilitiesBuilding.Floor>());
 
         listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setFastScrollEnabled(true);
 
         headerTop = View.inflate(this, R.layout.room_list_header_top, null);
         headerBottom = View.inflate(this, R.layout.room_list_header_bottom, null);
@@ -92,10 +95,12 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
             public boolean onQueryTextChange(String s) {
                 if (s.length() > 0) {
                     adapter.setSearchMode(true);
+                    listView.setFastScrollEnabled(false);
                     listView.removeHeaderView(headerTop);
                     listView.removeHeaderView(headerBottom);
                 } else {
                     adapter.setSearchMode(false);
+                    listView.setFastScrollEnabled(true);
                     listView.addHeaderView(headerTop);
                     listView.addHeaderView(headerBottom);
                 }

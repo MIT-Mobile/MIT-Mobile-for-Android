@@ -2,11 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="edu.mit.mitmobile2.facilities.activity.RoomDetailActivity">
 
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:id="@+id/rooms_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/white" />
 
 </RelativeLayout>
