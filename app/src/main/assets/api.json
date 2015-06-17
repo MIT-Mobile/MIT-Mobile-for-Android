@@ -66,9 +66,9 @@
     "manager": "edu.mit.mitmobile2.events.EventManager"
   },
   "map": {
-    "dev": "http://mobile-dev.mit.edu/apis/map/",
-    "test": "http://mobile-test.mit.edu/apis/map/",
-    "prod": "http://m.mit.edu/apis/map/",
+    "dev": "http://mobile-dev.mit.edu/apis/maps/",
+    "test": "http://mobile-test.mit.edu/apis/maps/",
+    "prod": "http://m.mit.edu/apis/maps/",
     "manager": "edu.mit.mitmobile2.maps.MapManager"
   },
   "libraries": {
