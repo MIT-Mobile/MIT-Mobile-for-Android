@@ -2,8 +2,10 @@ package edu.mit.mitmobile2.people.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
@@ -28,8 +30,10 @@ import butterknife.InjectView;
 import butterknife.OnItemClick;
 import edu.mit.mitmobile2.BuildConfig;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.DirectoryDisplayProperty;
 import edu.mit.mitmobile2.people.activity.PersonDetailActivity;
@@ -38,6 +42,7 @@ import edu.mit.mitmobile2.people.model.MITContactInformation;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.people.model.MITPersonAttribute;
 import edu.mit.mitmobile2.people.model.MITPersonIndexPath;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shared.SharedIntentManager;
 import edu.mit.mitmobile2.shared.adapter.MITSimpleTaggedActionAdapter;
 import edu.mit.mitmobile2.shared.android.BundleUtils;
@@ -290,12 +295,12 @@ public class PersonDetailFragment extends Fragment {
             break;
             case ADD_TO_FAVORITES_TAG:
                 this.person.setFavorite(true);
-                PeopleDirectoryManager.addUpdate(this.person);
+                addOrRemovePerson(this.person);
                 reloadContactManagementOptions();
                 break;
             case REMOVE_FROM_FAVORITES_TAG:
                 this.person.setFavorite(false);
-                PeopleDirectoryManager.addUpdate(this.person);
+                addOrRemovePerson(this.person);
                 reloadContactManagementOptions();
                 break;
         }
@@ -369,5 +374,22 @@ public class PersonDetailFragment extends Fragment {
             intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, out);
         }
 
+    }
+
+    private void addOrRemovePerson(MITPerson person) {
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        Cursor cursor = contentResolver.query(MITContentProvider.PEOPLE_URI, Schema.Person.ALL_COLUMNS, Schema.Person.PERSON_ID + "=?", new String[]{person.getUid()}, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                contentResolver.delete(MITContentProvider.PEOPLE_URI, Schema.Person.PERSON_ID + "=?", new String[]{person.getUid()});
+            } else {
+                ContentValues contentValues = new ContentValues();
+                person.fillInContentValues(contentValues, DBAdapter.getInstance());
+                contentResolver.insert(MITContentProvider.PEOPLE_URI, contentValues);
+            }
+        } finally {
+            cursor.close();
+        }
     }
 }

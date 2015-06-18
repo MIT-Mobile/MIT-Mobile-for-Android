@@ -20,7 +20,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import edu.mit.mitmobile2.shared.SharedActivityManager;
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class MITActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
@@ -98,7 +98,7 @@ public class MITActivity extends AppCompatActivity implements GoogleApiClient.Co
         cv.put(Schema.Location.LATITUDE, location.getLatitude());
         cv.put(Schema.Location.LONGITUDE, location.getLongitude());
         cv.put(Schema.Location.ID_COL, 1);
-        getContentResolver().insert(MITShuttlesProvider.LOCATION_URI, cv);
+        getContentResolver().insert(MITContentProvider.LOCATION_URI, cv);
     }
 
 

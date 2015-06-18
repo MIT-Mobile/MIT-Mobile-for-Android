@@ -32,7 +32,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shuttles.callbacks.ShuttleAdapterCallback;
 import edu.mit.mitmobile2.shuttles.utils.ShuttlesDatabaseHelper;
 import edu.mit.mitmobile2.shuttles.adapter.MITShuttleAdapter;
@@ -92,7 +92,7 @@ public class ShuttlesActivity extends MITMainActivity implements ShuttleAdapterC
     }
 
     private void loadCursor() {
-        Cursor cursor = getContentResolver().query(MITShuttlesProvider.ALL_ROUTES_URI, Schema.Route.ALL_COLUMNS, null, null, null);
+        Cursor cursor = getContentResolver().query(MITContentProvider.ALL_ROUTES_URI, Schema.Route.ALL_COLUMNS, null, null, null);
 
         List<MitMiniShuttleRoute> routes = new ArrayList<>();
         ShuttlesDatabaseHelper.generateMiniRouteObjects(routes, cursor);
@@ -164,7 +164,7 @@ public class ShuttlesActivity extends MITMainActivity implements ShuttleAdapterC
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
         bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.PREDICTIONS_PATH);
-        bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.PREDICTIONS_URI.toString());
+        bundle.putString(Constants.Shuttles.URI_KEY, MITContentProvider.PREDICTIONS_URI.toString());
 
         String mitTuples = mitShuttleAdapter.getRouteStopTuples("mit");
         String crTuples = mitShuttleAdapter.getRouteStopTuples("charles-river");
@@ -186,7 +186,7 @@ public class ShuttlesActivity extends MITMainActivity implements ShuttleAdapterC
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Shuttles.MODULE_KEY, Constants.SHUTTLES);
         bundle.putString(Constants.Shuttles.PATH_KEY, Constants.Shuttles.ALL_ROUTES_PATH);
-        bundle.putString(Constants.Shuttles.URI_KEY, MITShuttlesProvider.ALL_ROUTES_URI.toString());
+        bundle.putString(Constants.Shuttles.URI_KEY, MITContentProvider.ALL_ROUTES_URI.toString());
 
         // FORCE THE SYNC
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);

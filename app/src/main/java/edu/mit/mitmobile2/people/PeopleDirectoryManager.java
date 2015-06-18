@@ -114,14 +114,6 @@ public class PeopleDirectoryManager extends RetrofitManager {
         return returnList;
     }
 
-    public static void addUpdate(MITPerson person) {
-        final DBAdapter db = DBAdapter.getInstance();
-
-        db.acquireIfNeeded(person);
-
-        person.persistToDatabase();
-    }
-
     public interface MitPersonDirectoryService {
         @GET(Constants.People.PEOPLE_PATH)
         void _get(Callback<List<MITPerson>> callback);
