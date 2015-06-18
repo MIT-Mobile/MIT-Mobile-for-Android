@@ -45,6 +45,7 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
     @OnClick(R.id.location_layout)
     public void openLocationInMap() {
         Intent intent = new Intent(this, MITMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(Constants.LOCATION_KEY, venue.getLocation().getLocationDescription());
         startActivity(intent);
     }
@@ -159,15 +160,15 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
     private boolean checkMeals(List<MITDiningMeal> currentMeals, List<MITDiningMeal> previousMeals) {
         boolean isSame = true;
         if (currentMeals.size() != previousMeals.size()) {
-            isSame =false;
+            isSame = false;
         } else {
             for (int i = 0; i < currentMeals.size(); i++) {
                 if ((!currentMeals.get(i).getName().equals(previousMeals.get(i).getName()))) {
-                    isSame =false;
+                    isSame = false;
                 }
                 if ((!currentMeals.get(i).getStartTimeString().equals(previousMeals.get(i).getStartTimeString())) ||
                         (!currentMeals.get(i).getEndTimeString().equals(previousMeals.get(i).getEndTimeString()))) {
-                    isSame =false;
+                    isSame = false;
                 }
             }
         }

@@ -108,6 +108,7 @@ public class EventsDetailActivity extends MITActivity {
     @OnClick(R.id.location_layout)
     public void openLocationIntent() {
         Intent intent = new Intent(this, MITMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         if (TextUtils.isEmpty(event.getLocation().getRoomNumber())) {
             intent.putExtra(Constants.LOCATION_KEY, event.getLocation().getDescription());
@@ -175,7 +176,7 @@ public class EventsDetailActivity extends MITActivity {
 
         if (event.getStartAt() != null) {
             timeLayout.setVisibility(View.VISIBLE);
-            String dateString =  (String) DateFormat.format(CalendarWeekFragment.DATE_FORMAT, event.getStartDate());
+            String dateString = (String) DateFormat.format(CalendarWeekFragment.DATE_FORMAT, event.getStartDate());
             String timeString = (DateFormat.format("h:mm a", event.getStartDate()) + " - " + DateFormat.format("h:mm a", event.getEndDate()));
             timeTextView.setText(dateString + "\n" + timeString);
         } else {
@@ -258,7 +259,7 @@ public class EventsDetailActivity extends MITActivity {
             if (event.getContact().getName() != null) {
                 name = event.getContact().getName();
             }
-            foreMoreInfoTextView.setText(name + "(" + event.getContact().getEmail() +")");
+            foreMoreInfoTextView.setText(name + "(" + event.getContact().getEmail() + ")");
         } else {
             forMoreInfoLayout.setVisibility(View.GONE);
         }
