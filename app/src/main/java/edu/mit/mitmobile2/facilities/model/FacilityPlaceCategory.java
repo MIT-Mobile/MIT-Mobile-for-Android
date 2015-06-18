@@ -2,9 +2,7 @@ package edu.mit.mitmobile2.facilities.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by serg on 6/11/15.
- */
+
 public class FacilityPlaceCategory {
 
     @SerializedName("id")

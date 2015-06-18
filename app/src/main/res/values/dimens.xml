@@ -148,6 +148,7 @@
     <dimen name="facilities_home_section_vertical_padding">26dp</dimen>
     <dimen name="facilities_home__line_vertical_padding">16dp</dimen>
     <dimen name="facilities_cell_height">45dp</dimen>
+    <dimen name="faciliteis_image_view">400dp</dimen>
 
     <!--scanner-->
     <dimen name="scanner_padding">50dp</dimen>

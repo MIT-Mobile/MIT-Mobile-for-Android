@@ -1,8 +1,6 @@
 package edu.mit.mitmobile2.facilities.model;
 
-/**
- * Created by serg on 6/10/15.
- */
+
 public class FacilitiesRoom {
 
     private String floor;
