@@ -81,6 +81,10 @@ public class MITMapPlace extends MapItem implements Parcelable {
     @Expose
     private MITMapCategory mitCategory;
 
+    private String numberPrefix;
+    private int    numberNumber;
+    private String numberPostFix;
+
     private int index;
     // TODO: add fields:
     // category
@@ -90,7 +94,34 @@ public class MITMapPlace extends MapItem implements Parcelable {
     private List<MITMapPlaceContent> contents = new ArrayList<>();
 
     public MITMapPlace() {
-        // empty constructor
+
+    }
+
+    public void parseNumber(String number) {
+        int numberStart  = -1, numberEnd = - 1;
+        for (int i = 0; i  < number.length(); i++) {
+            if (Character.isDigit(number.charAt(i))) {
+                if (numberStart < 0) {
+                    numberStart = i;
+                }
+            }
+            else if (numberStart >= 0 && numberEnd < 0) {
+                numberEnd = i;
+            }
+        }
+        if (numberStart >= 0) {
+            if (numberEnd < 0) {
+                numberEnd = number.length();
+            }
+            numberPrefix = number.substring(0, numberStart);
+            numberNumber = Integer.parseInt(number.substring(numberStart, numberEnd));
+            numberPostFix = number.substring(numberEnd);
+        }
+        else {
+            numberPrefix = number;
+            numberNumber = 0;
+            numberPostFix = "";
+        }
     }
 
     public String getId() {
@@ -358,5 +389,19 @@ public class MITMapPlace extends MapItem implements Parcelable {
             dbAdapter.acquire(content);
             content.persistToDatabase();
         }
+    }
+
+    public int numberCompare(MITMapPlace rhs) {
+        int prefixCmp = numberPrefix.compareToIgnoreCase(rhs.numberPrefix);
+        if (prefixCmp != 0) {
+            return prefixCmp;
+        }
+        if (numberNumber < rhs.numberNumber) {
+            return -1;
+        }
+        if (numberNumber > rhs.numberNumber) {
+            return 1;
+        }
+        return numberPostFix.compareToIgnoreCase(rhs.numberPostFix);
     }
 }

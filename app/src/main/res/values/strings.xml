@@ -309,6 +309,8 @@
     <string name="outside">Outside</string>
     <string name="title_activity_problem_types">ProblemTypesActivity</string>
     <string name="problem_query">What is it?</string>
+    <string name="room_query">Where is it?</string>
+    <string name="report_submit">Report submitted successfully</string>
 
     <!--about-->
 

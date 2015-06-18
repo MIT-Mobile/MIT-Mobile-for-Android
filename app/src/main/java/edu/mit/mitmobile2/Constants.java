@@ -25,6 +25,10 @@ public class Constants {
     public static final String MAPS_SEARCH_HISTORY = "mapSearchHistory";
     public static final String FACILITIES_PROBLEM_TYPE = "problemType";
     public static final String FACILITIES_ROOM_NUMBER = "roomNumber";
+    public static final String FACILITIES_LOCATION = "location";
+    public static final String FACILITIES_PHOTO = "photo";
+    public static final String FACILITIES_EMAIL = "email";
+    public static final String FACILITIES_DESCRIPTION = "description";
 
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
@@ -37,6 +41,7 @@ public class Constants {
     public static final String SECURE = "secure";
     public static final String LINKS = "links";
     public static final String FACILITIES = "facilities";
+    public static final String OTHERS = "others";
 
     public static final String LOCATION_KEY = "location";
     public static final String LOCATION_SHOULD_SANITIZE_QUERY_KEY = "location_should_sanitize_query_key";
@@ -159,15 +164,22 @@ public class Constants {
         public static final String LINKS_PATH = "/links";
     }
 
-
     public class Facilities {
         public static final String FACILITIES_PATH = "/";
         public static final String FACILITIES_LOCATION_CATEGORIES_PATH = "/location_categories";
+        public static final String FACILITES_PROBLEM_TYPES = "/problem_types/";
         public static final String FACILITIES_PROBLEM_TYPES_PATH = "/problem_types";
         public static final String FACILITIES_LOCATION_PROPERTIES_PATH = "/location_properties";
         public static final String FACILITIES_PLACES_PATH = "/places";
         public static final String FACILITIES_PLACE_CATEGORIES_PATH = "/place_categories";
-        public static final String FACILITIES_PROBLEMS_PATH = "/problems";
+        public static final String FACILITIES_PROBLEMS_PATH = "/problems/";
+
+        public static final String LOCATIONS = "locations";
+        public static final String CATEGORY_NAME = "categoryName";
+    }
+
+    public class MitMain {
+        public static final String LOCATION_PATH = "/";
     }
 
     public static final String FEEDBACK_EMAIL = "android-app-feedback@mit.edu";
