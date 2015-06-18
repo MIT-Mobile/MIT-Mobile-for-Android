@@ -59,7 +59,7 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
         ButterKnife.inject(this);
 
         callback = (LocationCallback) this;
-        name = getIntent().getStringExtra(Constants.Facilities.CATEGORY_NAME);
+        name = getIntent().getStringExtra(Constants.FACILITIES_CATEGORY_KEY);
         setTitle(name);
 
         places = new ArrayList<>();
@@ -90,7 +90,7 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
                 if (name.equals(NEARBY_LOCATIONS)) {
                     updatePlacesByLocation();
                 } else {
-                    locationIdsbyCategory = getIntent().getStringArrayListExtra(Constants.Facilities.LOCATIONS);
+                    locationIdsbyCategory = getIntent().getStringArrayListExtra(Constants.FACILITIES_LOCATIONS_KEY);
                     updatePlacesByCategory();
                 }
             }

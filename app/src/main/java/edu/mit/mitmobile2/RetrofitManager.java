@@ -61,9 +61,9 @@ public abstract class RetrofitManager {
     protected static HashMap<String, String> paths;
     protected static HashMap<String, String> queries;
 
-    protected static MitEndpoint mitEndpoint = MitEndpoint.create();
+    private static MitEndpoint mitEndpoint = MitEndpoint.create();
 
-    protected static RequestInterceptor requestInterceptor = new RequestInterceptor() {
+    private static RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
             if (paths != null) {

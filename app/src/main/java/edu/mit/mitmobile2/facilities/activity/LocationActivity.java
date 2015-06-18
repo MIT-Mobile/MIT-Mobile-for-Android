@@ -79,10 +79,10 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
     @Override
     public void fetchPlacesByCategories(String name, HashSet<String> locations) {
         Intent intent = new Intent(this, PlaceActivity.class);
-        intent.putExtra(Constants.Facilities.CATEGORY_NAME, name);
+        intent.putExtra(Constants.FACILITIES_CATEGORY_KEY, name);
         if (!name.equals(NEARBY_LOCATIONS)) {
             ArrayList<String> locationList = new ArrayList<>(locations);
-            intent.putStringArrayListExtra(Constants.Facilities.LOCATIONS, locationList);
+            intent.putStringArrayListExtra(Constants.FACILITIES_LOCATIONS_KEY, locationList);
 
         }
         startActivity(intent);

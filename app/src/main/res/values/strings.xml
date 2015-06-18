@@ -309,11 +309,9 @@
     <string name="outside">Outside</string>
     <string name="title_activity_problem_types">ProblemTypesActivity</string>
     <string name="problem_query">What is it?</string>
-    <string name="room_query">Where is it?</string>
     <string name="report_submit">Report submitted successfully</string>
 
     <!--about-->
-
     <string name="about_version_title_template">MIT Mobile %s</string>
     <string name="about_description">MIT Mobile for Android has been collaboratively designed and developed by MIT students and staff to extend the Institute\’s mobile framework to the Android platform. If you have ideas for improvements or new functionality, we\’d love to hear them.</string>
     <string name="about_copyright">Copyright © 2015 Massachusetts Institute of Technology. All rights reserved.</string>
