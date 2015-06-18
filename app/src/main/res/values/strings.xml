@@ -340,5 +340,7 @@
     <string name="scan_history_edit">Edit</string>
     <string name="scan_property_office_use_only">Property Office Use Only</string>
     <string name="scan_open_in_browser">Open in browser</string>
+    <string name="scan_scanned">scanned</string>
+    <string name="scan_share">SHARE</string>
 
 </resources>

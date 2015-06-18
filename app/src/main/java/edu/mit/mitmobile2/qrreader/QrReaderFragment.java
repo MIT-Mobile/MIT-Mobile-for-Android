@@ -22,6 +22,7 @@ import java.util.Date;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryActivity;
+import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryDetailActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
 import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 
@@ -33,6 +34,9 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
     private QRCodeReaderView qrCodeReaderView;
 
     private int savedOrientation;
+
+    private boolean continuousScanning;
+    private boolean scanned;
 
     public QrReaderFragment() {
     }
@@ -114,14 +118,24 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
     /* QRCodeReaderView.OnQRCodeReadListener */
 
     @Override
-    public void onQRCodeRead(String s, PointF[] pointFs) {
-        // TODO: stop scanning/add continuous scanning logic here
-        QrReaderResult result = new QrReaderResult();
-        result.setText(s);
-        result.setDate(new Date());
+    public synchronized void onQRCodeRead(String s, PointF[] pointFs) {
+        if (!scanned) {
+            QrReaderResult result = new QrReaderResult();
+            result.setText(s);
+            result.setDate(new Date());
 
-        DBAdapter.getInstance().acquire(result);
-        result.persistToDatabase();
+            DBAdapter.getInstance().acquire(result);
+            result.persistToDatabase();
+
+            if (!continuousScanning) {
+                Intent intent = new Intent(getActivity(), ScannerHistoryDetailActivity.class);
+                intent.putExtra(ScannerHistoryDetailActivity.KEY_EXTRAS_SCANNER_RESULT, result);
+
+                startActivity(intent);
+            }
+        }
+
+        scanned = true;
 
 //        qrCodeReaderView.getCameraManager().startPreview();
 //        qrCodeReaderView.getCameraManager().getCamera().takePicture(null, null, null, new Camera.PictureCallback() {

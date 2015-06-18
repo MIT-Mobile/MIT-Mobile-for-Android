@@ -11,6 +11,7 @@ public class QrReaderDetails {
 
     public static final String TYPE_PROPERTY_OFFICE_USE_ONLY = "tag";
     public static final String TYPE_URL = "url";                        // not a MIT QR code - display as simple url
+    public static final String TYPE_OTHER = "other";
 
     @SerializedName("type")
     private String type;
