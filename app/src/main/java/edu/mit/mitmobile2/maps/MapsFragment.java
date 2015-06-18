@@ -67,6 +67,12 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public MapsFragment() {
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,7 +83,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_padding);
         places = new ArrayList<>();
 
-        this.setHasOptionsMenu(true);
 
         sharedPreferences = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
 
@@ -216,7 +221,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        MenuItem menuItem = menu.findItem(R.id.search);
+        MenuItem menuItem = menu.findItem(R.id.search_maps);
         searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
@@ -267,12 +272,15 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
 
             if (getActivity().getIntent().getBooleanExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, false)) {
-                queryText = sanitizeMapSearchString(queryText);
+                String sanitized = sanitizeMapSearchString(queryText);
+                if (!TextUtils.isEmpty(sanitized)) {
+                    queryText = sanitized;
+                } else {
+                    queryText = stripNonAlphanumeric(queryText);
+                }
             }
 
             menuItem.expandActionView();
-            EditText editText = (EditText) searchPlate.findViewById(R.id.search_src_text);
-            editText.setText(queryText);
             searchView.setQuery(queryText, true);
             getActivity().setIntent(new Intent());
         } else {
@@ -421,5 +429,15 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         }
 
         return buildingNumber;
+    }
+
+    private String stripNonAlphanumeric(String query) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : query.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 }
