@@ -37,9 +37,10 @@ public class MITContentProvider extends ContentProvider {
 
     //People
     public static final int PEOPLE = 130;
+    public static final int PEOPLE_COUNT = 140;
 
     //QR Reader
-    public static final int QRREADER = 140;
+    public static final int QRREADER = 150;
 
     private static final String AUTHORITY = "edu.mit.mitmobile2.provider";
 
@@ -74,6 +75,7 @@ public class MITContentProvider extends ContentProvider {
 
     //People
     public static final Uri PEOPLE_URI = PEOPLE_CONTENT_URI;
+    public static final Uri PEOPLE_COUNT_URI = Uri.parse(PEOPLE_CONTENT_URI.toString() + "/count");
 
     //QR Reader
     public static final Uri QRREADER_URI = QRREADER_CONTENT_URI;
@@ -89,6 +91,7 @@ public class MITContentProvider extends ContentProvider {
     public static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
+        //Shuttles
         sURIMatcher.addURI(AUTHORITY, SHUTTLES_BASE_PATH + "/routes", ROUTES);
         sURIMatcher.addURI(AUTHORITY, SHUTTLES_BASE_PATH + "/stops", STOPS);
         sURIMatcher.addURI(AUTHORITY, SHUTTLES_BASE_PATH + "/routes/check", CHECK_ROUTES);
@@ -101,10 +104,14 @@ public class MITContentProvider extends ContentProvider {
         sURIMatcher.addURI(AUTHORITY, SHUTTLES_BASE_PATH + "/intersecting-routes", INTERSECTING_ROUTES);
         sURIMatcher.addURI(AUTHORITY, SHUTTLES_BASE_PATH + "/alerts", ALERTS);
 
+        //Bookmarks
         sURIMatcher.addURI(AUTHORITY, BOOKMARKS_BASE_PATH, BOOKMARKS);
 
+        //People
         sURIMatcher.addURI(AUTHORITY, PEOPLE_BASE_PATH, PEOPLE);
+        sURIMatcher.addURI(AUTHORITY, PEOPLE_BASE_PATH + "/count", PEOPLE_COUNT);
 
+        //QR Reader
         sURIMatcher.addURI(AUTHORITY, QRREADER_BASE_PATH, QRREADER);
     }
 
@@ -152,6 +159,9 @@ public class MITContentProvider extends ContentProvider {
                 break;
             case PEOPLE:
                 cursor = DBAdapter.getInstance().db.query(Schema.Person.TABLE_NAME, Schema.Person.ALL_COLUMNS, selection, selectionArgs, null, null, null);
+                break;
+            case PEOPLE_COUNT:
+                cursor = DBAdapter.getInstance().db.rawQuery("SELECT count(*) FROM " + Schema.Person.TABLE_NAME, null);
                 break;
             case QRREADER:
                 cursor = DBAdapter.getInstance().db.query(Schema.QrReaderResult.TABLE_NAME, Schema.QrReaderResult.ALL_COLUMNS, selection, selectionArgs, null, null, null);
@@ -251,9 +261,10 @@ public class MITContentProvider extends ContentProvider {
                 break;
             case BOOKMARKS:
                 rows = DBAdapter.getInstance().db.delete(Schema.MapPlace.TABLE_NAME, selection, selectionArgs);
+                rows += DBAdapter.getInstance().db.delete(Schema.MapPlaceContent.TABLE_NAME, selection, selectionArgs);
                 break;
             case PEOPLE:
-                rows = DBAdapter.getInstance().db.delete(Schema.Person.TABLE_NAME, selection, null);
+                rows = DBAdapter.getInstance().db.delete(Schema.Person.TABLE_NAME, selection, selectionArgs);
                 break;
             case QRREADER:
                 rows = DBAdapter.getInstance().db.delete(Schema.QrReaderResult.TABLE_NAME, selection, null);
@@ -277,7 +288,11 @@ public class MITContentProvider extends ContentProvider {
                 rows = DBAdapter.getInstance().db.update(Schema.Route.TABLE_NAME, values, Schema.Route.ROUTE_ID + " = \'" + values.get(Schema.Route.ROUTE_ID) + "\'", null);
                 break;
             case STOPS:
-                rows = DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
+                if (values.containsKey(Schema.Stop.STOP_ID)) {
+                    rows = DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values, Schema.Stop.STOP_ID + " = \'" + values.get(Schema.Stop.STOP_ID) + "\'", null);
+                } else {
+                    rows = DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values, null, null);
+                }
                 break;
             case PREDICTIONS:
                 rows = DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values, selection, null);

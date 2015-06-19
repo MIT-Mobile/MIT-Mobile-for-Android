@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.shuttles.utils;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -13,7 +14,7 @@ import java.util.Set;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.DatabaseObject;
 import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.shuttles.model.MITAlert;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shuttles.model.MITShuttlePath;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleRoute;
 import edu.mit.mitmobile2.shuttles.model.MITShuttleStop;
@@ -204,26 +205,10 @@ public class ShuttlesDatabaseHelper {
         DBAdapter.getInstance().batchPersist(updatedObjects, Schema.Vehicle.TABLE_NAME);
     }
 
-    public static void clearAllPredictions() {
+    public static void clearAllPredictions(Context context) {
         ContentValues values = new ContentValues();
         values.put(Schema.Stop.PREDICTIONS, "[]");
-        DBAdapter.getInstance().db.update(Schema.Stop.TABLE_NAME, values,
-                null, null);
-    }
 
-    public static List<MITAlert> getAlerts(Cursor c) {
-        List<MITAlert> alerts = new ArrayList<>();
-
-        try {
-            while (c.moveToNext()) {
-                MITAlert alert = new MITAlert();
-                alert.buildFromCursor(c, DBAdapter.getInstance());
-                alerts.add(alert);
-            }
-        } finally {
-            c.close();
-        }
-
-        return alerts;
+        context.getContentResolver().update(MITContentProvider.STOPS_URI, values, null, null);
     }
 }

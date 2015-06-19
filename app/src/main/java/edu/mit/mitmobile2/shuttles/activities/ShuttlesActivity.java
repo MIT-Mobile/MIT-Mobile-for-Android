@@ -115,7 +115,7 @@ public class ShuttlesActivity extends MITMainActivity implements ShuttleAdapterC
                 loadCursor();
                 Timber.d("Predictions OK");
             } else {
-                ShuttlesDatabaseHelper.clearAllPredictions();
+                ShuttlesDatabaseHelper.clearAllPredictions(this);
                 loadCursor();
                 updatePredictions();
                 Timber.d("Routes OK, refreshing predictions");

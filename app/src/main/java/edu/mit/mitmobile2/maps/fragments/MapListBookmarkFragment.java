@@ -15,9 +15,11 @@ import android.widget.AdapterView;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.adapters.MapBookmarksAdapter;
 import edu.mit.mitmobile2.maps.callbacks.BookmarkCallback;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 
 public class MapListBookmarkFragment extends MapListFragment implements BookmarkCallback {
 
@@ -33,7 +35,7 @@ public class MapListBookmarkFragment extends MapListFragment implements Bookmark
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        adapter = new MapBookmarksAdapter(getActivity(), DBAdapter.getInstance().getBookmarks(), this);
+        adapter = new MapBookmarksAdapter(getActivity(), DBAdapter.getInstance().getBookmarks(getActivity()), this);
         listView.setAdapter(adapter);
 
         return view;
@@ -74,7 +76,8 @@ public class MapListBookmarkFragment extends MapListFragment implements Bookmark
     public void removeBookmark(int position) {
         MapBookmarksAdapter bookmarkAdapter = (MapBookmarksAdapter) adapter;
         MITMapPlace place = bookmarkAdapter.getItem(position);
-        DBAdapter.getInstance().deletePlaceFromDb(place);
-        bookmarkAdapter.updateItems(DBAdapter.getInstance().getBookmarks());
+        getActivity().getContentResolver().delete(MITContentProvider.BOOKMARKS_URI, Schema.MapPlace.PLACE_ID + "=?", new String[]{place.getId()});
+
+        bookmarkAdapter.updateItems(DBAdapter.getInstance().getBookmarks(getActivity()));
     }
 }

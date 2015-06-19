@@ -149,7 +149,7 @@ public class PersonDetailFragment extends Fragment {
         this.personSummary.setText(person.getAffiliation());
 
         /* Lets make sure this bit is up to date. */
-        if (!this.person.isFavorite() && PeopleDirectoryManager.isOnFavoritesList(this.person.getUid())) {
+        if (!this.person.isFavorite() && DBAdapter.isOnFavoritesList(getActivity(), this.person.getUid())) {
             this.person.setFavorite(true);
         }
 
@@ -233,7 +233,7 @@ public class PersonDetailFragment extends Fragment {
             if (item == null) continue;
 
             if (!(item instanceof List) && item instanceof String) {
-                ArrayList<String> litem = new ArrayList<String>();
+                ArrayList<String> litem = new ArrayList<>();
                 litem.add((String) item);
                 item = litem;
             }
@@ -308,7 +308,7 @@ public class PersonDetailFragment extends Fragment {
 
 
     private void addContactInformation(IntentValueSet intent) {
-        List<ContentValuesWrapperSet> data = new LinkedList<ContentValuesWrapperSet>();
+        List<ContentValuesWrapperSet> data = new LinkedList<>();
 
         for (MITContactInformation conInfo : generateContactListDisplayInformation()) {
             ContentValuesWrapperSet set = new ContentValuesWrapperSet();
@@ -360,7 +360,7 @@ public class PersonDetailFragment extends Fragment {
         addFieldIfValid(intent, invert(IS_STRING_EMPTY_TEST), ContactsContract.Intents.Insert.NAME, person.getName(), this.resolvedContactTitle);
         addFieldIfValid(intent, invert(IS_STRING_EMPTY_TEST), ContactsContract.Intents.Insert.NOTES, person.getAffiliation());
 
-        ArrayList<ContentValues> out = new ArrayList<ContentValues>();
+        ArrayList<ContentValues> out = new ArrayList<>();
 
         for (ContentValuesWrapperSet wrapper : data) {
             out.add(wrapper.returnDestroyContentValues());

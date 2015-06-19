@@ -340,24 +340,24 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
                         updateMapItems((ArrayList) places, true, true);
                     }
-                        break;
+                    break;
                     case 1: {
                         String id = data.getStringExtra(Constants.PLACES_KEY);
-                        MITMapPlace place = DBAdapter.getInstance().getBookmark(id);
+                        MITMapPlace place = DBAdapter.getInstance().getBookmark(getActivity(), id);
 
                         places.clear();
                         places.add(place);
 
                         updateMapItems((ArrayList) places, true, true);
                     }
-                        break;
+                    break;
                     case 2: {
                         String query = data.getStringExtra(Constants.Map.RECENT_QUERY);
                         if (!TextUtils.isEmpty(query)) {
                             performSearch(searchView, this, query);
                         }
                     }
-                        break;
+                    break;
                     default:
                 }
 

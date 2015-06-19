@@ -151,11 +151,11 @@ public class PeopleFragment extends Fragment {
     }
 
     private void updateFavoritesListVisibility() {
-        boolean hasItems = PeopleDirectoryManager.getPersistantFavoritesCount() > 0;
+        boolean hasItems = DBAdapter.getInstance().favoritesRowCount(getActivity()) > 0;
 
         favoritesLayout.setVisibility(hasItems ? View.VISIBLE : View.GONE);
 
-        favoritePersonsAdapter.updateItems(hasItems ? PeopleDirectoryManager.getPersistantFavoritesList() : new ArrayList<MITPerson>());
+        favoritePersonsAdapter.updateItems(hasItems ? DBAdapter.getPersistantFavoritesList(getActivity()) : new ArrayList<MITPerson>());
     }
 
     @Override

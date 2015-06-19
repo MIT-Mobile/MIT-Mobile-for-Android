@@ -144,7 +144,7 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
                 Timber.d("Predictions OK");
             } else {
                 showRefreshIndicator();
-                ShuttlesDatabaseHelper.clearAllPredictions();
+                ShuttlesDatabaseHelper.clearAllPredictions(getActivity());
                 loadCursor();
                 updatePredictions();
                 Timber.d("Routes OK, refreshing predictions");

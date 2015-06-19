@@ -36,7 +36,7 @@ public class ScannerHistoryFragment extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.list);
 
-        adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory());
+        adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory(getActivity()));
         listView.setAdapter(adapter);
 
         return view;
