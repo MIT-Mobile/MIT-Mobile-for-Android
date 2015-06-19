@@ -342,5 +342,8 @@
     <string name="scan_open_in_browser">Open in browser</string>
     <string name="scan_scanned">scanned</string>
     <string name="scan_share">SHARE</string>
-
+    <string name="scan_prefs_batch_scanning_toast">Code is scanned</string>
+    <string name="scan_prefs_batch_scanning">Batch scanning</string>
+    <string name="scan_prefs_fast_scan_on">The device is set to scan multiple codes in quick succession.</string>
+    <string name="scan_prefs_fast_scan_off">The device is set to scan one code at a time.</string>
 </resources>

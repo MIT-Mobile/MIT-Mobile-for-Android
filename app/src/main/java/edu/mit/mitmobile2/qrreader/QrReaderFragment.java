@@ -3,9 +3,12 @@ package edu.mit.mitmobile2.qrreader;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
@@ -21,12 +25,15 @@ import java.util.Date;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.activities.ScannerAdvancedActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryDetailActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
 import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
+
+    public static final int BATCH_SCANNING_DELAY = 3000; // 3 sec
 
     private TextView textViewDisclaimer;
     private TextView textViewInfo;
@@ -35,8 +42,8 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
 
     private int savedOrientation;
 
-    private boolean continuousScanning;
-    private boolean scanned;
+    private boolean batchScanning;
+    private boolean scanEnabled;
 
     public QrReaderFragment() {
     }
@@ -71,6 +78,14 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
         textViewAdvanced.setOnClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        batchScanning = prefs.getBoolean("batch_scanning", false);
     }
 
     @Override
@@ -109,7 +124,8 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
             }
             break;
             case R.id.scanner_tv_advanced: {
-                // TODO: navigate to "advanced" screen
+                Intent intent = new Intent(getActivity(), ScannerAdvancedActivity.class);
+                startActivity(intent);
             }
             break;
         }
@@ -119,7 +135,7 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
 
     @Override
     public synchronized void onQRCodeRead(String s, PointF[] pointFs) {
-        if (!scanned) {
+        if (!scanEnabled) {
             QrReaderResult result = new QrReaderResult();
             result.setText(s);
             result.setDate(new Date());
@@ -127,7 +143,15 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
             DBAdapter.getInstance().acquire(result);
             result.persistToDatabase();
 
-            if (!continuousScanning) {
+            if (batchScanning) {
+                Toast.makeText(getActivity(), R.string.scan_prefs_batch_scanning_toast, Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scanEnabled = false;
+                    }
+                }, BATCH_SCANNING_DELAY);
+            } else {
                 Intent intent = new Intent(getActivity(), ScannerHistoryDetailActivity.class);
                 intent.putExtra(ScannerHistoryDetailActivity.KEY_EXTRAS_SCANNER_RESULT, result);
 
@@ -135,7 +159,8 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
             }
         }
 
-        scanned = true;
+        // block scanning possibility to prevent multiple results addition
+        scanEnabled = true;
 
 //        qrCodeReaderView.getCameraManager().startPreview();
 //        qrCodeReaderView.getCameraManager().getCamera().takePicture(null, null, null, new Camera.PictureCallback() {
