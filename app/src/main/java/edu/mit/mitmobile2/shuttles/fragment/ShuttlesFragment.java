@@ -375,14 +375,16 @@ public class ShuttlesFragment extends Fragment implements LoaderManager.LoaderCa
             routes = sortRoutesByStatus(routes);
             mitShuttleAdapter.updateListItems(routes);
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (shuttleRefreshLayout.isRefreshing()) {
-                        shuttleRefreshLayout.setRefreshing(false);
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (shuttleRefreshLayout.isRefreshing()) {
+                            shuttleRefreshLayout.setRefreshing(false);
+                        }
                     }
-                }
-            });
+                });
+            }
         } else {
             immediatelyReloadPredictions = false;
             updatePredictions();
