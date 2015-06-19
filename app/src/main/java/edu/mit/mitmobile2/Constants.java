@@ -25,7 +25,7 @@ public class Constants {
     public static final String MAPS_SEARCH_HISTORY = "mapSearchHistory";
     public static final String FACILITIES_PROBLEM_TYPE = "problemType";
     public static final String FACILITIES_ROOM_NUMBER = "roomNumber";
-    public static final String FACILITIES_LOCATION = "location";
+    public static final String FACILITIES_LOCATION = "facilitiesLocation";
     public static final String FACILITIES_PHOTO = "photo";
     public static final String FACILITIES_EMAIL = "email";
     public static final String FACILITIES_DESCRIPTION = "description";
