@@ -386,4 +386,17 @@ public class MITMainActivity extends MITActivity {
             editor.apply();
         }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent.getStringExtra(Constants.LOCATION_KEY) != null) {
+            setIntent(intent);
+            swapInFragment(getPackageName() + ".maps.MapsFragment", "Map");
+        } else {
+            setIntent(new Intent());
+            checkForIncomingIntent(null);
+        }
+    }
 }

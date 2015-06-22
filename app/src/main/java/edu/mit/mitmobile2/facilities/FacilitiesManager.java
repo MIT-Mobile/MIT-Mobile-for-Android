@@ -5,7 +5,6 @@ import android.app.Activity;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
@@ -14,8 +13,6 @@ import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.facilities.model.FacilitiesCategory;
 import edu.mit.mitmobile2.facilities.model.FacilityPlace;
 import edu.mit.mitmobile2.facilities.model.FacilityPlaceCategory;
-import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
-import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -23,7 +20,6 @@ import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 
 public class FacilitiesManager extends RetrofitManager {

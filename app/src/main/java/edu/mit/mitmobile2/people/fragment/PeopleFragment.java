@@ -80,7 +80,15 @@ public class PeopleFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private MITSearchAdapter<String> searchRecommendationsAdapter;
 
+    private Menu menu;
+
     public PeopleFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -93,8 +101,6 @@ public class PeopleFragment extends Fragment {
     }
 
     private void initializeComponents(View subjectView) {
-        this.setHasOptionsMenu(true);
-
         inject(this, subjectView);
 
         this.quickDialAdapter = new MITPeopleDirectoryPersonAdapter(quickDialItems(subjectView.getContext()));
@@ -181,7 +187,6 @@ public class PeopleFragment extends Fragment {
             }
         });
 
-
         MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -210,6 +215,8 @@ public class PeopleFragment extends Fragment {
         assert searchText != null;
 
         searchText.setTextColor(Color.WHITE);
+
+        this.menu = menu;
     }
 
     @Override
@@ -317,6 +324,14 @@ public class PeopleFragment extends Fragment {
         return true;
     }
 
+    @Override
+    public void onDestroy() {
+        if (menu != null) {
+            menu.removeItem(R.id.search);
+            menu.clear();
+        }
+        super.onDestroy();
+    }
 
     /**
      * Current view mode of this fragment.
