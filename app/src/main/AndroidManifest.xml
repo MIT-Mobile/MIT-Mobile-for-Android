@@ -311,7 +311,15 @@
             android:label="@string/title_activity_scanner_history"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
-
+        <activity
+            android:name=".qrreader.activities.ScannerHistoryDetailActivity"
+            android:label="@string/title_activity_scanner_history_detail"
+            android:theme="@style/Theme.MyTheme"/>
+        <activity
+            android:name=".qrreader.activities.ScannerAdvancedActivity"
+            android:label="@string/title_activity_scanner_advanced"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

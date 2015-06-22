@@ -20,8 +20,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
+import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 import edu.mit.mitmobile2.people.model.MITPerson;
-import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
 import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
@@ -574,14 +574,21 @@ public class DBAdapter {
         return place;
     }
 
-    public List<QRReaderResult> getScanningHistory(Context context) {
-        List<QRReaderResult> results = new ArrayList<>();
+    public static boolean isOnFavoritesList(Context context, String uid) {
+        Cursor cursor = context.getContentResolver().query(MITContentProvider.PEOPLE_URI, Schema.Person.ALL_COLUMNS, Schema.Person.PERSON_ID + "=?", new String[]{uid}, null);
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+        return exists;
+    }
+
+    public List<QrReaderResult> getScanningHistory(Context context) {
+        List<QrReaderResult> results = new ArrayList<>();
 
         Cursor cursor = context.getContentResolver().query(MITContentProvider.QRREADER_URI, Schema.QrReaderResult.ALL_COLUMNS, null, null, null);
 
         try {
             while (cursor.moveToNext()) {
-                QRReaderResult result = new QRReaderResult();
+                QrReaderResult result = new QrReaderResult();
                 result.buildFromCursor(cursor, this);
                 results.add(result);
             }
@@ -592,10 +599,8 @@ public class DBAdapter {
         return results;
     }
 
-    public static boolean isOnFavoritesList(Context context, String uid) {
-        Cursor cursor = context.getContentResolver().query(MITContentProvider.PEOPLE_URI, Schema.Person.ALL_COLUMNS, Schema.Person.PERSON_ID + "=?", new String[]{uid}, null);
-        boolean exists = cursor.moveToFirst();
-        cursor.close();
-        return exists;
+
+    public void deleteQrHistoryFromDb(QrReaderResult result) {
+        db.delete(Schema.QrReaderResult.TABLE_NAME, String.format("%s='%s'", Schema.QrReaderResult.ID_COL, result.getId()), null);
     }
 }
