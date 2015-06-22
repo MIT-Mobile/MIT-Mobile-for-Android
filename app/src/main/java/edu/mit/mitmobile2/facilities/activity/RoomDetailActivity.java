@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.facilities.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import java.util.ArrayList;
 
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.adapter.RoomsAdapter;
 import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
@@ -163,10 +166,12 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
             }
         }
 
-        Intent result = new Intent();
-        result.putExtra(Constants.FACILITIES_ROOM_NUMBER, room);
-        setResult(RESULT_OK, result);
-        finish();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(Constants.FACILITIES_ROOM_NUMBER, room);
+        editor.commit();
+        Intent intent = new Intent(this, MITMainActivity.class);
+        startActivity(intent);
     }
 
     @Override
