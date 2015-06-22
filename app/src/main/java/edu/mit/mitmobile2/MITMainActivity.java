@@ -15,6 +15,7 @@ import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 
@@ -128,6 +129,8 @@ public class MITMainActivity extends MITActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        removeSharedPreference();
     }
 
     @Override
@@ -398,5 +401,18 @@ public class MITMainActivity extends MITActivity {
             setIntent(new Intent());
             checkForIncomingIntent(null);
         }
+    }
+
+
+    private void removeSharedPreference() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(Constants.FACILITIES_EMAIL);
+        editor.remove(Constants.FACILITIES_LOCATION);
+        editor.remove(Constants.FACILITIES_ROOM_NUMBER);
+        editor.remove(Constants.FACILITIES_PROBLEM_TYPE);
+        editor.remove(Constants.FACILITIES_DESCRIPTION);
+        editor.remove(Constants.FACILITIES_PROPERTYOWNER);
+        editor.commit();
     }
 }

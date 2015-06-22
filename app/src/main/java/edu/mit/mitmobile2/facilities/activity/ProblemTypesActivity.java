@@ -1,9 +1,7 @@
 package edu.mit.mitmobile2.facilities.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
@@ -70,11 +67,9 @@ public class ProblemTypesActivity extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String problem = (String) parent.getItemAtPosition(position);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.FACILITIES_PROBLEM_TYPE, problem);
-        editor.commit();
-        Intent intent = new Intent(this, MITMainActivity.class);
-        startActivity(intent);
+        Intent result = new Intent();
+        result.putExtra(Constants.FACILITIES_PROBLEM_TYPE, problem);
+        setResult(RESULT_OK, result);
+        finish();
     }
 }

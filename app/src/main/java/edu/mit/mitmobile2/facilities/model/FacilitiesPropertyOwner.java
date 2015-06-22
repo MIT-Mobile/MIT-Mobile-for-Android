@@ -1,17 +1,27 @@
 package edu.mit.mitmobile2.facilities.model;
 
-import java.util.HashSet;
-import java.util.List;
 
-/**
- * Created by serg on 6/10/15.
- */
-public class FacilitiesPropertyOwner {
+import android.os.Parcel;
+import android.os.Parcelable;
 
+public class FacilitiesPropertyOwner implements Parcelable {
+
+    private String id;
     private String name;
     private String phone;
     private String email;
-    private HashSet<FacilitiesLocation> locations;
+
+    public FacilitiesPropertyOwner() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -37,11 +47,46 @@ public class FacilitiesPropertyOwner {
         this.email = email;
     }
 
-    public HashSet<FacilitiesLocation> getLocations() {
-        return locations;
+    @Override
+    public String toString() {
+        return "FacilitiesPropertyOwner{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email=" + email +
+                '}';
     }
 
-    public void setLocations(HashSet<FacilitiesLocation> locations) {
-        this.locations = locations;
+    protected FacilitiesPropertyOwner(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        phone = in.readString();
+        email = in.readString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(phone);
+        dest.writeString(phone);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<FacilitiesPropertyOwner> CREATOR = new Parcelable.Creator<FacilitiesPropertyOwner>() {
+        @Override
+        public FacilitiesPropertyOwner createFromParcel(Parcel in) {
+            return new FacilitiesPropertyOwner(in);
+        }
+
+        @Override
+        public FacilitiesPropertyOwner[] newArray(int size) {
+            return new FacilitiesPropertyOwner[size];
+        }
+    };
 }

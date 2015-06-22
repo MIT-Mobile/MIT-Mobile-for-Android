@@ -69,7 +69,7 @@ public class PlaceAdapter extends BaseAdapter{
         viewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.fetchPlace(viewHolder.textViewTitle.getText().toString());
+                callback.fetchPlace(place.getId(), viewHolder.textViewTitle.getText().toString());
             }
         });
 

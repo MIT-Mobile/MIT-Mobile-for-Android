@@ -1,11 +1,16 @@
 package edu.mit.mitmobile2.facilities.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +22,7 @@ import edu.mit.mitmobile2.facilities.FacilitiesManager;
 import edu.mit.mitmobile2.facilities.adapter.LocationAdapter;
 import edu.mit.mitmobile2.facilities.callback.LocationCallback;
 import edu.mit.mitmobile2.facilities.model.FacilitiesCategory;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -24,6 +30,7 @@ import retrofit.client.Response;
 public class LocationActivity extends AppCompatActivity implements LocationCallback {
 
     public static final String NEARBY_LOCATIONS = "Nearby Locations";
+    private static final int REQUEST_CODE = 5;
 
     private ListView listView;
 
@@ -46,6 +53,18 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
         adapter.updateCategories(null);
 
         fetchCategories();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+            Intent result = new Intent();
+            result.putExtra(Constants.FACILITIES_LOCATION, data.getStringExtra(Constants.FACILITIES_LOCATION));
+            result.putExtra(Constants.FACILITIES_PROPERTYOWNER, data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
+            setResult(RESULT_OK, result);
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -85,10 +104,10 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
             intent.putStringArrayListExtra(Constants.FACILITIES_LOCATIONS_KEY, locationList);
 
         }
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
-    public void fetchPlace(String name) {
+    public void fetchPlace(String id, String name) {
     }
 }

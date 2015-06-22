@@ -292,6 +292,8 @@
     <string name="facilities_location">location</string>
     <string name="facilities_room">room</string>
     <string name="facilities_problem_type">problem type</string>
+    <string name="facilities_maintainer">maintainer</string>
+    <string name="facilities_phone">phone</string>
     <string name="facilities_description">description</string>
     <string name="facilities_attach_photo">Attach Photo</string>
     <string name="facilities_remove_photo">Remove Photo</string>
@@ -310,6 +312,7 @@
     <string name="title_activity_problem_types">ProblemTypesActivity</string>
     <string name="problem_query">What is it?</string>
     <string name="report_submit">Report submitted successfully</string>
+    <string name="is_leased">The Department of Facilities is not responsible for the maintenance of %1$s. Please contact the %2$s to report any issues.</string>
 
     <!--about-->
     <string name="about_version_title_template">MIT Mobile %s</string>

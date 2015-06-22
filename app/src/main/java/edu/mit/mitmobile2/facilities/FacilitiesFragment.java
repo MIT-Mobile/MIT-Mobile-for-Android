@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -39,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,6 +57,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
 import edu.mit.mitmobile2.facilities.activity.ProblemTypesActivity;
 import edu.mit.mitmobile2.facilities.activity.RoomDetailActivity;
+import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwner;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -68,6 +71,9 @@ public class FacilitiesFragment extends Fragment {
     private static final String BASE64_PREFIX = "data:image/png;base64,";
 
     private static final int PHOTO_REQUEST_CODE = 1;
+    private static final int LOCATION_REQUEST_CODE = 2;
+    private static final int ROOM_REQUEST_CODE = 3;
+    private static final int PROBLEM_REQUEST_CODE = 4;
 
     private Uri outputFileUri;
     private Uri editedPhotoUri;
@@ -79,6 +85,7 @@ public class FacilitiesFragment extends Fragment {
     private String problem;
     private String email;
     private String description;
+    private String proOwnerJson;
 
     private Menu optionMenu;
     private SharedPreferences.Editor editor;
@@ -100,6 +107,18 @@ public class FacilitiesFragment extends Fragment {
     EditText emailEditText;
     @InjectView(R.id.description_edit_text)
     EditText descriptionEditText;
+    @InjectView(R.id.maintainer_text_view)
+    TextView maintainerTextView;
+    @InjectView(R.id.contact_title_text_view)
+    TextView contactTitleTextView;
+    @InjectView(R.id.contact_info_text_view)
+    TextView contactInfoTextView;
+    @InjectView(R.id.info_text_view)
+    TextView infoTextView;
+    @InjectView(R.id.leased_layout)
+    LinearLayout leasedLayout;
+    @InjectView(R.id.not_leased_layout)
+    LinearLayout notLeasedLayout;
 
     @OnClick(R.id.urgent_issues_text_view)
     public void openUrgentIssuesBottomSheet() {
@@ -122,19 +141,19 @@ public class FacilitiesFragment extends Fragment {
     @OnClick(R.id.location_layout)
     public void selectLocation() {
         Intent intent = new Intent(getActivity(), LocationActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LOCATION_REQUEST_CODE);
     }
 
     @OnClick(R.id.room_layout)
     public void selectRoom() {
         Intent intent = new Intent(getActivity(), RoomDetailActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ROOM_REQUEST_CODE);
     }
 
     @OnClick(R.id.problem_type_layout)
     public void selectProblemType() {
         Intent intent = new Intent(getActivity(), ProblemTypesActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, PROBLEM_REQUEST_CODE);
     }
 
     @OnClick(R.id.attach_remove_photo_text_view)
@@ -160,64 +179,52 @@ public class FacilitiesFragment extends Fragment {
         getActivity().setTitle(getResources().getString(R.string.facilities_title));
         setHasOptionsMenu(true);
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        editor = prefs.edit();
-
-        updateProblemValues();
-        updateProblemViews();
-
-        emailEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                editor.putString(Constants.FACILITIES_EMAIL, s.toString());
-                editor.commit();
-                updateSubmitButtonStatus();
-            }
-        });
-        descriptionEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                editor.putString(Constants.FACILITIES_DESCRIPTION, s.toString());
-                editor.commit();
-                updateSubmitButtonStatus();
-            }
-        });
+        photoImageView.setVisibility(View.GONE);
+        emailEditText.addTextChangedListener(new editTextWatcher(Constants.FACILITIES_EMAIL));
+        descriptionEditText.addTextChangedListener(new editTextWatcher(Constants.FACILITIES_DESCRIPTION));
 
         return view;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        editor = prefs.edit();
+        updateProblemValues();
+        updateProblemViews();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == PHOTO_REQUEST_CODE) {
-            isAttached = true;
-            photoImageView.setVisibility(View.VISIBLE);
-            attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
-            try {
-                getNewPhotoFromActivity(data);
-            } catch (IOException e) {
-                LoggingManager.Timber.d("____________photo error____________", e);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PHOTO_REQUEST_CODE) {
+                isAttached = true;
+                photoImageView.setVisibility(View.VISIBLE);
+                attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
+                try {
+                    getNewPhotoFromActivity(data);
+                } catch (IOException e) {
+                    LoggingManager.Timber.d("____________photo error____________", e);
+                }
+            } else if (requestCode == ROOM_REQUEST_CODE) {
+                editor.putString(Constants.FACILITIES_ROOM_NUMBER, data.getStringExtra(Constants.FACILITIES_ROOM_NUMBER));
+                editor.commit();
+            } else if (requestCode == LOCATION_REQUEST_CODE) {
+                editor.putString(Constants.FACILITIES_LOCATION, data.getStringExtra(Constants.FACILITIES_LOCATION));
+                if (data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER) != null ){
+                    Gson gson = new Gson();
+                    String json = gson.toJson(data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
+                    editor.putString(Constants.FACILITIES_PROPERTYOWNER, json);
+                }
+                editor.commit();
+            } else if (requestCode == PROBLEM_REQUEST_CODE) {
+                editor.putString(Constants.FACILITIES_PROBLEM_TYPE, data.getStringExtra(Constants.FACILITIES_PROBLEM_TYPE));
+                editor.commit();
             }
         }
+
 
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -270,20 +277,22 @@ public class FacilitiesFragment extends Fragment {
     }
 
     private void updateSubmitButtonStatus() {
-        MenuItem item = optionMenu.findItem(R.id.submit);
-        item.setEnabled(false);
-        if (!location.isEmpty() && !room.isEmpty() && !problem.isEmpty()
-                && !email.isEmpty() && !description.isEmpty()) {
-            item.setEnabled(true);
-            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    submitProblem();
-                    return false;
-                }
-            });
-        } else {
+        if (optionMenu != null) {
+            MenuItem item = optionMenu.findItem(R.id.submit);
             item.setEnabled(false);
+            if (!location.isEmpty() && !room.isEmpty() && !problem.isEmpty()
+                    && !email.isEmpty() && !description.isEmpty()) {
+                item.setEnabled(true);
+                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        submitProblem();
+                        return false;
+                    }
+                });
+            } else {
+                item.setEnabled(false);
+            }
         }
     }
 
@@ -345,6 +354,8 @@ public class FacilitiesFragment extends Fragment {
         new Base64Task().execute(bitmap);
 
         photoImageView.setVisibility(View.VISIBLE);
+        updateProblemValues();
+        updateProblemViews();
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         int photoImageViewWidth = display.getWidth();
@@ -386,6 +397,7 @@ public class FacilitiesFragment extends Fragment {
         editor.remove(Constants.FACILITIES_ROOM_NUMBER);
         editor.remove(Constants.FACILITIES_PROBLEM_TYPE);
         editor.remove(Constants.FACILITIES_DESCRIPTION);
+        editor.remove(Constants.FACILITIES_PROPERTYOWNER);
         editor.remove(Constants.FACILITIES_PHOTO);
         editor.commit();
 
@@ -400,32 +412,41 @@ public class FacilitiesFragment extends Fragment {
         photo = prefs.getString(Constants.FACILITIES_PHOTO, "");
         email = prefs.getString(Constants.FACILITIES_EMAIL, "");
         description = prefs.getString(Constants.FACILITIES_DESCRIPTION, "");
+        proOwnerJson = prefs.getString(Constants.FACILITIES_PROPERTYOWNER, "");
+
+        updateSubmitButtonStatus();
     }
 
     private void updateProblemViews() {
-        if (!photo.isEmpty()) {
-            try {
-                photoImageView.setVisibility(View.VISIBLE);
-                byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                photoImageView.setImageBitmap(bitmap);
-                isAttached = true;
-            } catch (Resources.NotFoundException e) {
-                LoggingManager.Timber.d("____________photo error____________", e);
-            }
-        } else {
-            photoImageView.setVisibility(View.GONE);
-        }
-
-        emailEditText.setText((email.isEmpty()) ? null : email);
-        roomTextView.setText((room.isEmpty()) ? null : room);
-        problemTextView.setText((problem.isEmpty()) ? null : problem);
         locationTextView.setText((location.isEmpty()) ? null : location);
-        descriptionEditText.setText((description.isEmpty()) ? null : description);
-        roomLayout.setVisibility((location.isEmpty()) ? View.GONE : View.VISIBLE);
 
-        attachOrRemovePhotoTextView.setText((isAttached) ? getResources().getString(R.string.facilities_remove_photo) : getResources().getString(R.string.facilities_attach_photo));
-
+        if (proOwnerJson.isEmpty()) {
+            leasedLayout.setVisibility(View.GONE);
+            notLeasedLayout.setVisibility(View.VISIBLE);
+            emailEditText.setText((email.isEmpty()) ? null : email);
+            roomTextView.setText((room.isEmpty()) ? null : room);
+            problemTextView.setText((problem.isEmpty()) ? null : problem);
+            descriptionEditText.setText((description.isEmpty()) ? null : description);
+            roomLayout.setVisibility((location.isEmpty()) ? View.GONE : View.VISIBLE);
+            attachOrRemovePhotoTextView.setText((isAttached) ? getResources().getString(R.string.facilities_remove_photo) : getResources().getString(R.string.facilities_attach_photo));
+        } else {
+            notLeasedLayout.setVisibility(View.GONE);
+            leasedLayout.setVisibility(View.VISIBLE);
+            Gson gson = new Gson();
+            FacilitiesPropertyOwner propertyOwner = gson.fromJson(proOwnerJson, FacilitiesPropertyOwner.class);
+            infoTextView.setText(getResources().getString(R.string.is_leased, location, propertyOwner.getName()));
+            maintainerTextView.setText(propertyOwner.getName());
+            if (propertyOwner.getEmail() != null) {
+                contactTitleTextView.setText(getResources().getString(R.string.facilities_email));
+                contactInfoTextView.setText(propertyOwner.getEmail());
+            } else if (propertyOwner.getPhone() != null) {
+                contactTitleTextView.setText(getResources().getString(R.string.facilities_phone));
+                contactInfoTextView.setText(propertyOwner.getPhone());
+            } else {
+                contactTitleTextView.setVisibility(View.GONE);
+                contactInfoTextView.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void savePhotoStatus(String base64String) {
@@ -435,6 +456,34 @@ public class FacilitiesFragment extends Fragment {
             editor.remove(Constants.FACILITIES_PHOTO);
         }
         editor.commit();
+    }
+
+    private class editTextWatcher implements TextWatcher {
+        String name;
+
+        public editTextWatcher(String name) {
+            this.name = name;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (name.equals(Constants.FACILITIES_EMAIL)) {
+                editor.putString(Constants.FACILITIES_EMAIL, s.toString());
+            } else if (name.equals(Constants.FACILITIES_DESCRIPTION)) {
+                editor.putString(Constants.FACILITIES_DESCRIPTION, s.toString());
+            }
+            editor.commit();
+            updateProblemValues();
+        }
     }
 
     @Override
