@@ -1,1 +1,1 @@
-include ':app', ':android-async-http-1.4.6'
+include ':app', ':android-async-http-1.4.6', ':qrcodereaderview'

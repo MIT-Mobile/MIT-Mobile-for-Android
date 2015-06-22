@@ -35,6 +35,7 @@ repositories {
 }
 
 dependencies {
+
     // Replaced by LoggingManager: compile 'com.jakewharton.timber:timber:2.4.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:support-v4:22.2.0'
@@ -57,5 +58,6 @@ dependencies {
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
     compile 'com.cocosw:bottomsheet:1.+@aar'
-    compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:1.0.0'
+    compile project(':qrcodereaderview')
+    compile project(':android-async-http-1.4.6')
 }

@@ -30,6 +30,7 @@ import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryDetailActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
 import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
+import edu.mit.mitmobile2.qrreader.utils.ScannerImageUtils;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
 
@@ -134,11 +135,13 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
     /* QRCodeReaderView.OnQRCodeReadListener */
 
     @Override
-    public synchronized void onQRCodeRead(String s, PointF[] pointFs) {
+    public synchronized void onQRCodeRead(String s, byte[] data, PointF[] pointFs) {
         if (!scanEnabled) {
             QrReaderResult result = new QrReaderResult();
             result.setText(s);
             result.setDate(new Date());
+
+            ScannerImageUtils.saveScannedImage(getActivity(), data, result);
 
             DBAdapter.getInstance().acquire(result);
             result.persistToDatabase();
@@ -161,14 +164,6 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
 
         // block scanning possibility to prevent multiple results addition
         scanEnabled = true;
-
-//        qrCodeReaderView.getCameraManager().startPreview();
-//        qrCodeReaderView.getCameraManager().getCamera().takePicture(null, null, null, new Camera.PictureCallback() {
-//            @Override
-//            public void onPictureTaken(byte[] data, Camera camera) {
-//                // TODO: get current screenshot here
-//            }
-//        });
     }
 
     @Override

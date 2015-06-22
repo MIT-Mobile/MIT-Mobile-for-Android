@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.qrreader.utils.ScannerImageUtils;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryDetailActivity;
 import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter;
 import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter.OnScannerHistoryAdapterListener;
@@ -70,6 +71,8 @@ public class ScannerHistoryFragment extends Fragment implements OnScannerHistory
     @Override
     public void onDelete(int position, QrReaderResult result) {
         DBAdapter.getInstance().deleteQrHistoryFromDb(result);
+        ScannerImageUtils.removeScannedImage(result);
+
         adapter.updateData(DBAdapter.getInstance().getScanningHistory());
     }
 

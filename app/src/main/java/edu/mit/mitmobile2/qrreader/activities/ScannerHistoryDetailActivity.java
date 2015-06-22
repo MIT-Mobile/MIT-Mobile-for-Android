@@ -4,15 +4,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.zxing.common.StringUtils;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,15 +32,17 @@ import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryDetailAdapter;
 import edu.mit.mitmobile2.qrreader.models.QrReaderDetails;
 import edu.mit.mitmobile2.qrreader.models.QrReaderDetailsAction;
 import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
+import edu.mit.mitmobile2.qrreader.utils.ScannerImageUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ScannerHistoryDetailActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+public class ScannerHistoryDetailActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     public static final String KEY_EXTRAS_SCANNER_RESULT = "key_extras_scanner_result";
     private static final String KEY_STATE_SCANNER_DETAILS = "key_state_scanner_details";
 
+    private ImageView imageViewCode;
     private ListView listView;
 
     private ScannerHistoryDetailAdapter adapter;
@@ -49,6 +55,7 @@ public class ScannerHistoryDetailActivity extends ActionBarActivity implements A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner_history_detail);
 
+        imageViewCode = (ImageView) findViewById(R.id.scanner_detail_iv_image);
         listView = (ListView) findViewById(R.id.list);
 
         Bundle extras = getIntent().getExtras();
@@ -67,8 +74,9 @@ public class ScannerHistoryDetailActivity extends ActionBarActivity implements A
         adapter = new ScannerHistoryDetailAdapter(result);
         listView.setAdapter(adapter);
 
+        File file = new File(ScannerImageUtils.getCachePath(), result.getImageName());
+        Picasso.with(this).load(file).into(imageViewCode);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

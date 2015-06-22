@@ -16,17 +16,10 @@ import edu.mit.mitmobile2.Schema;
  */
 public class QrReaderResult extends DatabaseObject implements Parcelable {
 
-//    @property (nonatomic, strong) NSDate * date;
-//    @property (nonatomic, strong) UIImage * thumbnail;
-//    @property (nonatomic, copy) NSString * text;
-//    @property (nonatomic, strong, readonly) UIImage * image;
-//
-//    @property (nonatomic, strong, readonly) MITScannerImage *imageData;
-//    @property (nonatomic, strong) UIImage *scanImage;
-
     private long id;
     private Date date;
     private String text;
+    private String imageName;
 
     public QrReaderResult() {
         // empty constructor
@@ -56,6 +49,14 @@ public class QrReaderResult extends DatabaseObject implements Parcelable {
         this.text = text;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     /* DatabaseObject */
 
     @Override
@@ -68,12 +69,14 @@ public class QrReaderResult extends DatabaseObject implements Parcelable {
         setId(cursor.getLong(cursor.getColumnIndex(Schema.QrReaderResult.ID_COL)));
         setDate(new Date(cursor.getLong(cursor.getColumnIndex(Schema.QrReaderResult.DATE))));
         setText(cursor.getString(cursor.getColumnIndex(Schema.QrReaderResult.TEXT)));
+        setImageName(cursor.getString(cursor.getColumnIndex(Schema.QrReaderResult.IMG_NAME)));
     }
 
     @Override
     public void fillInContentValues(ContentValues values, DBAdapter dbAdapter) {
         values.put(Schema.QrReaderResult.DATE, this.date.getTime());
         values.put(Schema.QrReaderResult.TEXT, this.text);
+        values.put(Schema.QrReaderResult.IMG_NAME, this.imageName);
     }
 
     /* Parcelable */
@@ -83,6 +86,7 @@ public class QrReaderResult extends DatabaseObject implements Parcelable {
         long tmpDate = in.readLong();
         date = tmpDate != -1 ? new Date(tmpDate) : null;
         text = in.readString();
+        imageName = in.readString();
     }
 
     @Override
@@ -95,6 +99,7 @@ public class QrReaderResult extends DatabaseObject implements Parcelable {
         dest.writeLong(id);
         dest.writeLong(date != null ? date.getTime() : -1L);
         dest.writeString(text);
+        dest.writeString(imageName);
     }
 
     @SuppressWarnings("unused")
