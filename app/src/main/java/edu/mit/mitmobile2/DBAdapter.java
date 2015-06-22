@@ -600,7 +600,7 @@ public class DBAdapter {
     }
 
 
-    public void deleteQrHistoryFromDb(QrReaderResult result) {
-        db.delete(Schema.QrReaderResult.TABLE_NAME, String.format("%s='%s'", Schema.QrReaderResult.ID_COL, result.getId()), null);
+    public void deleteQrHistoryFromDb(Context context, QrReaderResult result) {
+        context.getContentResolver().delete(MITContentProvider.QRREADER_URI, String.format("%s='%s'", Schema.QrReaderResult.ID_COL, result.getId()), null);
     }
 }
