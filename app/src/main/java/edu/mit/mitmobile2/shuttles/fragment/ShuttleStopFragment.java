@@ -31,7 +31,7 @@ import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shuttles.MitCursorLoader;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopViewPagerAdapter;
 import edu.mit.mitmobile2.shuttles.callbacks.MapFragmentCallback;
@@ -74,7 +74,7 @@ public class ShuttleStopFragment extends ShuttleMapFragment implements GoogleMap
         routeId = getActivity().getIntent().getStringExtra(Constants.ROUTE_ID_KEY);
         initialStopid = getActivity().getIntent().getStringExtra(Constants.STOP_ID_KEY);
 
-        uriString = MITShuttlesProvider.STOPS_URI + "/" + initialStopid;
+        uriString = MITContentProvider.STOPS_URI + "/" + initialStopid;
         selectionString = Schema.Route.TABLE_NAME + "." + Schema.Stop.ROUTE_ID + "=\'" + routeId + "\'";
         queryDatabase();
 

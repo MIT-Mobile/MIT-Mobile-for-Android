@@ -7,17 +7,13 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import edu.mit.mitmobile2.Constants;
-import edu.mit.mitmobile2.DBAdapter;
-import edu.mit.mitmobile2.DBAdapter.Conditional;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.RetrofitManager;
-import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.people.model.MITPerson;
 import edu.mit.mitmobile2.people.model.MITPersonAttribute;
 import edu.mit.mitmobile2.shared.SharedActivityManager;
@@ -25,16 +21,6 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Callback;
 import retrofit.http.GET;
 
-import static edu.mit.mitmobile2.DatabaseObject.createListFromCursor;
-import static edu.mit.mitmobile2.DatabaseObject.getSchemaFieldForMethod;
-import static edu.mit.mitmobile2.DatabaseObject.getSchemaTableForClass;
-import static edu.mit.mitmobile2.DatabaseObject.getSchemaTableNameForClass;
-import static edu.mit.mitmobile2.Schema.Table.getTableColumns;
-import static edu.mit.mitmobile2.Schema.Table.getTableName;
-
-/**
- * Created by grmartin on 4/16/15.
- */
 public class PeopleDirectoryManager extends RetrofitManager {
     private static final MitPersonDirectoryService MIT_PEOPLE_DIR_SERVICE = MIT_REST_ADAPTER.create(MitPersonDirectoryService.class);
 
@@ -45,7 +31,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
     @SuppressWarnings("unused")
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
-        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
         Method m = findMethodViaDirectReflection(MitPersonDirectoryService.class, path, pathParams, queryParams, Callback.class);
         Timber.d("Method = " + m);
@@ -54,7 +40,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
     @SuppressWarnings("unused")
     public static Object makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams)
-        throws NoSuchFieldException,  NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+            throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
         Method m = findMethodViaDirectReflection(MitPersonDirectoryService.class, path, pathParams, queryParams);
         Timber.d("Method = " + m);
@@ -64,67 +50,16 @@ public class PeopleDirectoryManager extends RetrofitManager {
     public static PeopleDirectoryManagerCall searchPeople(Activity activity, String query, Callback<List<MITPerson>> people) {
         PeopleDirectoryManagerCallWrapper<?> returnValue = new PeopleDirectoryManagerCallWrapper<>(new MITAPIClient(activity), people);
 
-        returnValue.getClient().get(
-            Constants.PEOPLE_DIRECTORY,
-            Constants.People.PEOPLE_PATH,
-            null,
-            new FluentParamMap()
-                .add("q", query)
-                .object(),
-            returnValue);
+        returnValue.getClient().get(Constants.PEOPLE_DIRECTORY, Constants.People.PEOPLE_PATH, null,
+                new FluentParamMap().add("q", query).object(), returnValue);
 
         return returnValue;
-    }
-
-
-    public static Integer getPersistantFavoritesCount() {
-        return DBAdapter.getInstance().simpleCount(
-            getSchemaTableNameForClass(MITPerson.class),
-            getSchemaFieldForMethod(MITPerson.class, "isFavorite"),
-            true);
-    }
-
-    public static boolean isOnFavoritesList(String uid) {
-        return DBAdapter.getInstance().rowCount(
-            getSchemaTableNameForClass(MITPerson.class),
-            new Conditional(getSchemaFieldForMethod(MITPerson.class, "isFavorite"), true),
-            new Conditional(getSchemaFieldForMethod(MITPerson.class, "getUid"), uid)
-        ) == 1;
-    }
-
-    public static List<MITPerson>  getPersistantFavoritesList() {
-        List<MITPerson>  returnList = null;
-        final DBAdapter db = DBAdapter.getInstance();
-
-        Class<? extends Schema.Table> table = getSchemaTableForClass(MITPerson.class);
-
-        if (table != null) {
-            Cursor cur = db.simpleConditionedSelect(
-                    getTableName(table),
-                    getTableColumns(table),
-                    getSchemaFieldForMethod(MITPerson.class, "isFavorite"),
-                    true
-            );
-
-            returnList = createListFromCursor(MITPerson.class, cur, db);
-
-            cur.close();
-        }
-
-        return returnList;
-    }
-
-    public static void addUpdate(MITPerson person) {
-        final DBAdapter db = DBAdapter.getInstance();
-
-        db.acquireIfNeeded(person);
-
-        person.persistToDatabase();
     }
 
     public interface MitPersonDirectoryService {
         @GET(Constants.People.PEOPLE_PATH)
         void _get(Callback<List<MITPerson>> callback);
+
         @GET(Constants.People.PERSON_PATH)
         void _getapisperson(Callback<List<MITPerson>> callback);
     }
@@ -149,15 +84,16 @@ public class PeopleDirectoryManager extends RetrofitManager {
         public Intent generateIntent(@NonNull final String value) {
             Intent intent;
             switch (this) {
-                case EMAIL:    return SharedActivityManager.createSendEmailIntent(value);
-                case PHONE:    return SharedActivityManager.createTelephoneCallIntent(value);
-                case MAP:      return SharedActivityManager.createMapIntent(value);
+                case EMAIL:
+                    return SharedActivityManager.createSendEmailIntent(value);
+                case PHONE:
+                    return SharedActivityManager.createTelephoneCallIntent(value);
+                case MAP:
+                    return SharedActivityManager.createMapIntent(value);
                 case EXTERNAL:
                 default: /* Fall-through intentional, worst case, lets just google it... */
                     return SharedActivityManager.createBrowserIntent(value);
             }
-
-
         }
 
         @NonNull
@@ -169,7 +105,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
     /**
      * Directory item display enum.
-     *
+     * <p/>
      * <p>
      * This items purpose is to tell us what icon to show. We tried to duplicate the iOS implementation however there
      * are some places where Android just doesnt line up, notes at end.
@@ -182,14 +118,14 @@ public class PeopleDirectoryManager extends RetrofitManager {
      * <pre> key : display name : accessory icon
      * -----------------------------------
      * email     : email : email
-     *
+     * <p/>
      * phone     : phone : phone
      * fax       : fax   : phone
      * homephone : home  : phone
-     *
+     * <p/>
      * office            : office  : map
      * street/city/state : address : map
-     *
+     * <p/>
      * website   : website : external </pre>
      * <p>
      * Our implementation leaves determination of what attributes are available to the {@see MITPersonAttribute} enum
@@ -199,13 +135,13 @@ public class PeopleDirectoryManager extends RetrofitManager {
      * </p>
      */
     public enum DirectoryDisplayProperty {
-        EMAIL(      ActionIcon.EMAIL,    MITPersonAttribute.EMAIL     ),
-        PHONE(      ActionIcon.PHONE,    MITPersonAttribute.PHONE     ),
-        FAX(        ActionIcon.PHONE,    MITPersonAttribute.FAX       ),
-        HOMEPHONE(  ActionIcon.PHONE,    MITPersonAttribute.HOMEPHONE ),
-        OFFICE(     ActionIcon.MAP,      MITPersonAttribute.OFFICE    ),
-        ADDRESS(    ActionIcon.MAP,      MITPersonAttribute.ADDRESS   ),
-        WEBSITE(    ActionIcon.EXTERNAL, MITPersonAttribute.WEBSITE   );
+        EMAIL(ActionIcon.EMAIL, MITPersonAttribute.EMAIL),
+        PHONE(ActionIcon.PHONE, MITPersonAttribute.PHONE),
+        FAX(ActionIcon.PHONE, MITPersonAttribute.FAX),
+        HOMEPHONE(ActionIcon.PHONE, MITPersonAttribute.HOMEPHONE),
+        OFFICE(ActionIcon.MAP, MITPersonAttribute.OFFICE),
+        ADDRESS(ActionIcon.MAP, MITPersonAttribute.ADDRESS),
+        WEBSITE(ActionIcon.EXTERNAL, MITPersonAttribute.WEBSITE);
 
         private final ActionIcon actionIcon;
         private final MITPersonAttribute type;
@@ -262,11 +198,12 @@ public class PeopleDirectoryManager extends RetrofitManager {
 
     }
 
-    public static class PeopleDirectoryManagerCallWrapper<T>  extends MITAPIClient.ApiCallWrapper<T> implements PeopleDirectoryManagerCall, Callback<T> {
+    public static class PeopleDirectoryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements PeopleDirectoryManagerCall, Callback<T> {
         public PeopleDirectoryManagerCallWrapper(MITAPIClient client, Callback<T> callback) {
             super(client, callback);
         }
     }
 
-    public interface PeopleDirectoryManagerCall extends MITAPIClient.ApiCall {}
+    public interface PeopleDirectoryManagerCall extends MITAPIClient.ApiCall {
+    }
 }

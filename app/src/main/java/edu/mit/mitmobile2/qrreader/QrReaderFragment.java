@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.qrreader;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PointF;
@@ -25,6 +26,7 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
 import edu.mit.mitmobile2.qrreader.models.QRReaderResult;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
 
@@ -121,8 +123,9 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
         result.setText(s);
         result.setDate(new Date());
 
-        DBAdapter.getInstance().acquire(result);
-        result.persistToDatabase();
+        ContentValues contentValues = new ContentValues();
+        result.fillInContentValues(contentValues, DBAdapter.getInstance());
+        getActivity().getContentResolver().insert(MITContentProvider.QRREADER_URI, contentValues);
 
 //        qrCodeReaderView.getCameraManager().startPreview();
 //        qrCodeReaderView.getCameraManager().getCamera().takePicture(null, null, null, new Camera.PictureCallback() {
