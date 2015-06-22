@@ -6,6 +6,6 @@ import org.simpleframework.xml.Namespace;
 public class KeyInfo {
 
     @Element(name = "EncryptedKey")
-    @Namespace(prefix = "xenc")
+    @Namespace(prefix = "xenc", reference = "http://www.w3.org/2001/04/xmlenc#")
     EncryptedKey encryptedKey;
 }

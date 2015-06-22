@@ -25,7 +25,7 @@ public class Saml2pResponse {
     private String destination;
 
     @Element(name = "Issuer")
-    @Namespace(prefix = "saml2")
+    @Namespace(prefix = "saml2", reference = "urn:oasis:names:tc:SAML:2.0:assertion")
     Saml2Issuer issuer;
 
     @Element(name = "Status")

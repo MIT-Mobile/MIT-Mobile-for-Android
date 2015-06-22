@@ -4,7 +4,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 
-@Namespace(prefix = "soap11")
+@Namespace(prefix = "soap11", reference = "http://schemas.xmlsoap.org/soap/body/")
 @Root(name = "Body")
 public class TouchstoneBody {
 

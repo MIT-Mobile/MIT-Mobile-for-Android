@@ -13,7 +13,7 @@ public class EncryptedData {
     private String id;
 
     @Element(name = "EncryptionMethod")
-    @Namespace(prefix = "xenc")
+    @Namespace(prefix = "xenc", reference = "http://www.w3.org/2001/04/xmlenc#")
     EncryptionMethod encryptionMethod;
 
     @Element(name = "KeyInfo")
@@ -21,7 +21,7 @@ public class EncryptedData {
     KeyInfo keyInfo;
 
     @Element(name = "CipherData")
-    @Namespace(prefix = "xenc")
+    @Namespace(prefix = "xenc", reference = "http://www.w3.org/2001/04/xmlenc#")
     CipherData cipherData;
 
     public String getType() {
