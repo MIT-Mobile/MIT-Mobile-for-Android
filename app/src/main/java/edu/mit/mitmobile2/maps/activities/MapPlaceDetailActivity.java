@@ -1,6 +1,8 @@
 package edu.mit.mitmobile2.maps.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +19,10 @@ import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 
 public class MapPlaceDetailActivity extends AppCompatActivity {
 
@@ -64,7 +68,7 @@ public class MapPlaceDetailActivity extends AppCompatActivity {
         buildContentString();
 
         placeViewAngle.setText(place.getViewangle());
-        bookmarksButton.setText(DBAdapter.getInstance().placeIsBookmarked(place) ? getString(R.string.remove_from_bookmarks) : getString(R.string.add_to_bookmarks));
+        bookmarksButton.setText(placeIsBookmarked(place) ? getString(R.string.remove_from_bookmarks) : getString(R.string.add_to_bookmarks));
     }
 
     private void buildContentString() {
@@ -92,12 +96,14 @@ public class MapPlaceDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_to_bookmarks_button)
     void toggleBookmarks() {
-        if (!DBAdapter.getInstance().placeIsBookmarked(place)) {
-            DBAdapter.getInstance().acquire(place);
-            place.persistToDatabase();
+        if (!placeIsBookmarked(place)) {
+            ContentValues contentValues = new ContentValues();
+            place.fillInContentValues(contentValues, DBAdapter.getInstance());
+            getContentResolver().insert(MITContentProvider.BOOKMARKS_URI, contentValues);
+
             bookmarksButton.setText(getString(R.string.remove_from_bookmarks));
         } else {
-            DBAdapter.getInstance().deletePlaceFromDb(place);
+            getContentResolver().delete(MITContentProvider.BOOKMARKS_URI, Schema.MapPlace.PLACE_ID + "=?", new String[]{place.getId()});
             bookmarksButton.setText(getString(R.string.add_to_bookmarks));
         }
     }
@@ -108,4 +114,12 @@ public class MapPlaceDetailActivity extends AppCompatActivity {
         outState.putParcelable(Constants.PLACES_KEY, place);
     }
 
+    public boolean placeIsBookmarked(MITMapPlace place) {
+        Cursor cursor = getContentResolver().query(MITContentProvider.BOOKMARKS_URI, Schema.MapPlace.ALL_COLUMNS, Schema.MapPlace.PLACE_ID + "=?", new String[]{place.getId()}, null);
+
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+
+        return exists;
+    }
 }

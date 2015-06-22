@@ -2,6 +2,7 @@ package edu.mit.mitmobile2.qrreader;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -31,6 +32,7 @@ import edu.mit.mitmobile2.qrreader.activities.ScannerHistoryDetailActivity;
 import edu.mit.mitmobile2.qrreader.activities.ScannerInfoActivity;
 import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
 import edu.mit.mitmobile2.qrreader.utils.ScannerImageUtils;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 
 public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRCodeReadListener, View.OnClickListener {
 
@@ -143,8 +145,9 @@ public class QrReaderFragment extends Fragment implements QRCodeReaderView.OnQRC
 
             ScannerImageUtils.saveScannedImage(getActivity(), data, result);
 
-            DBAdapter.getInstance().acquire(result);
-            result.persistToDatabase();
+            ContentValues contentValues = new ContentValues();
+            result.fillInContentValues(contentValues, DBAdapter.getInstance());
+            getActivity().getContentResolver().insert(MITContentProvider.QRREADER_URI, contentValues);
 
             if (batchScanning) {
                 Toast.makeText(getActivity(), R.string.scan_prefs_batch_scanning_toast, Toast.LENGTH_SHORT).show();

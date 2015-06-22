@@ -42,7 +42,7 @@ public class ScannerHistoryFragment extends Fragment implements OnScannerHistory
 
         listView = (ListView) view.findViewById(R.id.list);
 
-        adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory(), this);
+        adapter = new ScannerHistoryAdapter(DBAdapter.getInstance().getScanningHistory(getActivity()), this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
@@ -73,7 +73,7 @@ public class ScannerHistoryFragment extends Fragment implements OnScannerHistory
         DBAdapter.getInstance().deleteQrHistoryFromDb(result);
         ScannerImageUtils.removeScannedImage(result);
 
-        adapter.updateData(DBAdapter.getInstance().getScanningHistory());
+        adapter.updateData(DBAdapter.getInstance().getScanningHistory(getActivity()));
     }
 
     /* AdapterView.OnItemClickListener */

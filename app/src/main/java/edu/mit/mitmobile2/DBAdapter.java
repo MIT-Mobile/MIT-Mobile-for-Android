@@ -21,7 +21,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
 import edu.mit.mitmobile2.qrreader.models.QrReaderResult;
+import edu.mit.mitmobile2.people.model.MITPerson;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
+
+import static edu.mit.mitmobile2.DatabaseObject.createListFromCursor;
+import static edu.mit.mitmobile2.DatabaseObject.getSchemaFieldForMethod;
+import static edu.mit.mitmobile2.DatabaseObject.getSchemaTableForClass;
+import static edu.mit.mitmobile2.Schema.Table.getTableColumns;
 
 public class DBAdapter {
     private interface Migration {
@@ -404,22 +411,18 @@ public class DBAdapter {
 
     }
 
-    public Integer simpleCount(String tableName, String whereCol, boolean condition) {
-        return rowCount(tableName, new Conditional(whereCol, condition));
-    }
+    public int favoritesRowCount(Context context) {
+        Cursor cursor = context.getContentResolver().query(MITContentProvider.PEOPLE_COUNT_URI, null, null, null, null);
 
-    public Integer rowCount(String tableName, Conditional... conditionals) {
-        Integer retVal = null;
-
-        ConditionalResult conditional = generateConditionalClause(conditionals);
-
-        Cursor cur = db.rawQuery("SELECT count(*) FROM " + escapeIdentifier(tableName) + " WHERE " + conditional.conditional, conditional.boundValues);
-        if (cur.moveToFirst()) {
-            retVal = cur.getInt(0);
+        int count = 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            count = cursor.getInt(0);
         }
-        cur.close();
+        if (cursor != null) {
+            cursor.close();
+        }
 
-        return retVal;
+        return count;
     }
 
     private ConditionalResult generateConditionalClause(Conditional... conditionals) {
@@ -459,8 +462,29 @@ public class DBAdapter {
         return new ConditionalResult(builder.toString(), vals.toArray(new String[vals.size()]));
     }
 
-    public Cursor simpleConditionedSelect(String tableName, String[] cols, String whereCol, boolean condition) {
-        return db.query(true, tableName, cols, escapeIdentifier(whereCol) + " = " + (condition ? 0x01 : 0x00), null, null, null, null, null);
+    public static List<MITPerson> getPersistantFavoritesList(Context context) {
+        List<MITPerson> returnList = null;
+
+        Class<? extends Schema.Table> table = getSchemaTableForClass(MITPerson.class);
+
+        if (table != null) {
+            Cursor cur = simpleConditionedSelect(
+                    context,
+                    getTableColumns(table),
+                    getSchemaFieldForMethod(MITPerson.class, "isFavorite"),
+                    true
+            );
+
+            returnList = createListFromCursor(MITPerson.class, cur, DBAdapter.getInstance());
+
+            cur.close();
+        }
+
+        return returnList;
+    }
+
+    public static Cursor simpleConditionedSelect(Context context, String[] cols, String whereCol, boolean condition) {
+        return context.getContentResolver().query(MITContentProvider.PEOPLE_URI, cols, escapeIdentifier(whereCol) + " =?", new String[]{String.valueOf((condition ? 0x01 : 0x00))}, null);
     }
 
     public boolean exists(String tableName, String[] columns) {
@@ -517,25 +541,11 @@ public class DBAdapter {
         return contents;
     }
 
-    public boolean placeIsBookmarked(MITMapPlace place) {
-        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
-                String.format("%s='%s'", Schema.MapPlace.PLACE_ID, place.getId()), null, null, null, null);
-
-        boolean exists = cursor.moveToFirst();
-        cursor.close();
-
-        return exists;
-    }
-
-    public void deletePlaceFromDb(MITMapPlace place) {
-        db.delete(Schema.MapPlace.TABLE_NAME, String.format("%s='%s'", Schema.MapPlace.PLACE_ID, place.getId()), null);
-        db.delete(Schema.MapPlaceContent.TABLE_NAME, String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, place.getId()), null);
-    }
-
-    public List<MITMapPlace> getBookmarks() {
+    public List<MITMapPlace> getBookmarks(Context context) {
         List<MITMapPlace> bookmarks = new ArrayList<>();
-        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
-                null, null, null, null, null);
+
+        Cursor cursor = context.getContentResolver().query(MITContentProvider.BOOKMARKS_URI, Schema.MapPlace.ALL_COLUMNS, null, null, null);
+
         try {
             while (cursor.moveToNext()) {
                 MITMapPlace place = new MITMapPlace();
@@ -548,10 +558,11 @@ public class DBAdapter {
         return bookmarks;
     }
 
-    public MITMapPlace getBookmark(String id) {
+    public MITMapPlace getBookmark(Context context, String id) {
         MITMapPlace place = null;
-        Cursor cursor = db.query(Schema.MapPlace.TABLE_NAME, Schema.MapPlace.ALL_COLUMNS,
-                String.format("%s='%s'", Schema.MapPlaceContent.PLACE_ID, id), null, null, null, null);
+
+        Cursor cursor = context.getContentResolver().query(MITContentProvider.BOOKMARKS_URI, Schema.MapPlace.ALL_COLUMNS, Schema.MapPlace.PLACE_ID + "=?", new String[]{id}, null);
+
         try {
             if (cursor.moveToFirst()) {
                 place = new MITMapPlace();
@@ -563,11 +574,18 @@ public class DBAdapter {
         return place;
     }
 
-    public List<QrReaderResult> getScanningHistory() {
+    public static boolean isOnFavoritesList(Context context, String uid) {
+        Cursor cursor = context.getContentResolver().query(MITContentProvider.PEOPLE_URI, Schema.Person.ALL_COLUMNS, Schema.Person.PERSON_ID + "=?", new String[]{uid}, null);
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+        return exists;
+    }
+
+    public List<QrReaderResult> getScanningHistory(Context context) {
         List<QrReaderResult> results = new ArrayList<>();
 
-        Cursor cursor = db.query(Schema.QrReaderResult.TABLE_NAME, Schema.QrReaderResult.ALL_COLUMNS,
-                null, null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(MITContentProvider.QRREADER_URI, Schema.QrReaderResult.ALL_COLUMNS, null, null, null);
+
         try {
             while (cursor.moveToNext()) {
                 QrReaderResult result = new QrReaderResult();
@@ -580,6 +598,7 @@ public class DBAdapter {
 
         return results;
     }
+
 
     public void deleteQrHistoryFromDb(QrReaderResult result) {
         db.delete(Schema.QrReaderResult.TABLE_NAME, String.format("%s='%s'", Schema.QrReaderResult.ID_COL, result.getId()), null);

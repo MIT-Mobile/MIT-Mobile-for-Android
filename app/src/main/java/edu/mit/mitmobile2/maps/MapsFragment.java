@@ -355,7 +355,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                     break;
                     case 1: {
                         String id = data.getStringExtra(Constants.PLACES_KEY);
-                        MITMapPlace place = DBAdapter.getInstance().getBookmark(id);
+                        MITMapPlace place = DBAdapter.getInstance().getBookmark(getActivity(), id);
 
                         places.clear();
                         places.add(place);
