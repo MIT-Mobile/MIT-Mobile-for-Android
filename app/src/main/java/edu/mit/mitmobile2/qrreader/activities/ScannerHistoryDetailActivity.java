@@ -2,7 +2,6 @@ package edu.mit.mitmobile2.qrreader.activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -13,21 +12,18 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.google.zxing.common.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.qrreader.ScannerManager;
-import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryAdapter;
 import edu.mit.mitmobile2.qrreader.adapters.ScannerHistoryDetailAdapter;
 import edu.mit.mitmobile2.qrreader.models.QrReaderDetails;
 import edu.mit.mitmobile2.qrreader.models.QrReaderDetailsAction;
@@ -63,19 +59,21 @@ public class ScannerHistoryDetailActivity extends AppCompatActivity implements A
             result = extras.getParcelable(KEY_EXTRAS_SCANNER_RESULT);
         }
 
-        if (savedInstanceState == null) {
-            fetchScannerDetails(result);
-        } else {
-            if (savedInstanceState.containsKey(KEY_STATE_SCANNER_DETAILS)) {
-
-            }
-        }
-
         adapter = new ScannerHistoryDetailAdapter(result);
+        listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
 
         File file = new File(ScannerImageUtils.getCachePath(), result.getImageName());
         Picasso.with(this).load(file).into(imageViewCode);
+
+        if (savedInstanceState == null) {
+            fetchScannerDetails(result);
+        } else {
+            if (savedInstanceState.containsKey(KEY_STATE_SCANNER_DETAILS)) {
+                details = savedInstanceState.getParcelable(KEY_STATE_SCANNER_DETAILS);
+                adapter.updateDetails(details);
+            }
+        }
     }
 
     @Override
@@ -89,11 +87,21 @@ public class ScannerHistoryDetailActivity extends AppCompatActivity implements A
         int id = item.getItemId();
 
         if (id == R.id.action_share) {
-            // TODO: add share logic here
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, result.getText());
+            startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.scan_share_using)));
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_STATE_SCANNER_DETAILS, details);
+        super.onSaveInstanceState(outState);
     }
 
     /* AdapterView.OnItemClickListener */

@@ -346,4 +346,5 @@
     <string name="scan_prefs_batch_scanning">Batch scanning</string>
     <string name="scan_prefs_fast_scan_on">The device is set to scan multiple codes in quick succession.</string>
     <string name="scan_prefs_fast_scan_off">The device is set to scan one code at a time.</string>
+    <string name="scan_share_using">Share using</string>
 </resources>
