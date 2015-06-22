@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -35,10 +35,10 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
         mitapiClient = new MITAPIClient(context);
         MITAPIClient.init(context);
 
-        map.put(MITShuttlesProvider.ROUTES, Schema.Route.ROUTE_ID);
-        map.put(MITShuttlesProvider.STOPS, Schema.Stop.STOP_ID);
-        map.put(MITShuttlesProvider.PREDICTIONS, Schema.Stop.STOP_ID);
-        map.put(MITShuttlesProvider.ROUTE_ID, Schema.Vehicle.ROUTE_ID);
+        map.put(MITContentProvider.ROUTES, Schema.Route.ROUTE_ID);
+        map.put(MITContentProvider.STOPS, Schema.Stop.STOP_ID);
+        map.put(MITContentProvider.PREDICTIONS, Schema.Stop.STOP_ID);
+        map.put(MITContentProvider.ROUTE_ID, Schema.Vehicle.ROUTE_ID);
     }
 
     @Override
@@ -58,12 +58,12 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             // Default: Get all routes data for periodic sync
             module = Constants.SHUTTLES;
             path = Constants.Shuttles.ALL_ROUTES_PATH;
-            uri = MITShuttlesProvider.ALL_ROUTES_URI.toString();
+            uri = MITContentProvider.ALL_ROUTES_URI.toString();
         }
 
         int uriType = getUriType(uri);
 
-        if (uriType == MITShuttlesProvider.PREDICTIONS) {
+        if (uriType == MITContentProvider.PREDICTIONS) {
             Timber.d("Predictions call received: " + System.currentTimeMillis());
             handleDualAgenciesForPredictions(module, path, uri, extras);
         } else {
@@ -127,7 +127,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getContext()).edit().putLong(Constants.PREDICTIONS_TIMESTAMP, System.currentTimeMillis()).apply();
         Timber.d("Saved Predictions Timestamp");
-        getContext().getContentResolver().notifyChange(MITShuttlesProvider.ALL_ROUTES_URI, null);
+        getContext().getContentResolver().notifyChange(MITContentProvider.ALL_ROUTES_URI, null);
     }
 
     private void requestDataAndStoreInDb(String module, String path, String uri, HashMap<String, String> pathParams, HashMap<String, String> queryparams) {
@@ -137,7 +137,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         if (object instanceof List) {
             Timber.d("Is List");
-            if (uriType == MITShuttlesProvider.PREDICTIONS) {
+            if (uriType == MITContentProvider.PREDICTIONS) {
                 //noinspection unchecked
                 bulkInsertPredictions(uri, (List<DatabaseObject>) object);
             } else {
@@ -146,7 +146,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
             }
         } else {
             Timber.d("Is single object");
-            if (uriType == MITShuttlesProvider.PREDICTIONS) {
+            if (uriType == MITContentProvider.PREDICTIONS) {
                 insertPredictionObject(uri, (DatabaseObject) object);
             } else {
                 insertObject(uri, (DatabaseObject) object);
@@ -214,7 +214,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
 
         String selection = getSelectionString(uriType, contentValues);
 
-        if (uriType == MITShuttlesProvider.ROUTES) {
+        if (uriType == MITContentProvider.ROUTES) {
             Cursor cursor = getContext().getContentResolver().query(Uri.parse(uri + "/check"), null, selection, null, null);
             boolean existsInDb = cursor.moveToFirst();
             cursor.close();
@@ -279,7 +279,7 @@ public class MITSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     private int getUriType(String uri) {
-        return MITShuttlesProvider.sURIMatcher.match(Uri.parse(uri));
+        return MITContentProvider.sURIMatcher.match(Uri.parse(uri));
     }
 
     private String getSelectionString(int uriType, ContentValues v) {

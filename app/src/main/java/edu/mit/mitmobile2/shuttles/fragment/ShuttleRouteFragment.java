@@ -27,7 +27,7 @@ import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shuttles.MitCursorLoader;
 import edu.mit.mitmobile2.shuttles.activities.ShuttleStopActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleRouteAdapter;
@@ -76,7 +76,7 @@ public class ShuttleRouteFragment extends ShuttleMapFragment implements GoogleMa
 
         adapter = new ShuttleRouteAdapter(getActivity(), R.layout.stop_list_item, new ArrayList<MITShuttleStop>());
 
-        uriString = MITShuttlesProvider.ALL_ROUTES_URI + "/" + routeId;
+        uriString = MITContentProvider.ALL_ROUTES_URI + "/" + routeId;
         Cursor cursor = getActivity().getContentResolver().query(Uri.parse(uriString), Schema.Route.ALL_COLUMNS, Schema.Route.ROUTE_ID + "=\'" + routeId + "\' ", null, null);
         cursor.moveToFirst();
         route.buildFromCursor(cursor, DBAdapter.getInstance());
