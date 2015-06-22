@@ -16,26 +16,64 @@ import java.util.ArrayList;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.adapter.RoomsAdapter;
-import edu.mit.mitmobile2.facilities.model.FacilitiesRoom;
+import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
+import edu.mit.mitmobile2.maps.MapManager;
+import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class RoomDetailActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    private static final String BUILDING = "building";
+
     private SearchView searchView;
+    private FacilitiesBuilding building;
+    private RoomsAdapter adapter;
+    private StickyListHeadersListView listView;
+    private View headerTop;
+    private View headerBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_detail);
 
-        RoomsAdapter adapter = new RoomsAdapter(this, new ArrayList<FacilitiesRoom>());
+        setTitle(getString(R.string.where));
 
-        StickyListHeadersListView listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
+        adapter = new RoomsAdapter(this, new ArrayList<FacilitiesBuilding.Floor>());
+
+        listView = (StickyListHeadersListView) findViewById(R.id.rooms_list_view);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+        listView.setFastScrollEnabled(true);
 
-        View header = View.inflate(this, R.layout.rooms_list_header, null);
-        listView.addHeaderView(header);
+        headerTop = View.inflate(this, R.layout.room_list_header_top, null);
+        headerBottom = View.inflate(this, R.layout.room_list_header_bottom, null);
+        listView.addHeaderView(headerTop);
+        listView.addHeaderView(headerBottom);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUILDING)) {
+            building = savedInstanceState.getParcelable(BUILDING);
+            if (building != null) {
+                adapter.updateItems(building.getFloors());
+            }
+        } else {
+            MapManager.getBuildingDetails(this, "W20", new Callback<FacilitiesBuilding>() {
+                @Override
+                public void success(FacilitiesBuilding facilitiesBuilding, Response response) {
+                    LoggingManager.Timber.d("Success!");
+                    building = facilitiesBuilding;
+                    adapter.updateItems(facilitiesBuilding.getFloors());
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    LoggingManager.Timber.e("Building details", error);
+                }
+            });
+        }
     }
 
     @Override
@@ -50,11 +88,23 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return performSearch();
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                if (s.length() > 0) {
+                    adapter.setSearchMode(true);
+                    listView.setFastScrollEnabled(false);
+                    listView.removeHeaderView(headerTop);
+                    listView.removeHeaderView(headerBottom);
+                } else {
+                    adapter.setSearchMode(false);
+                    listView.setFastScrollEnabled(true);
+                    listView.addHeaderView(headerTop);
+                    listView.addHeaderView(headerBottom);
+                }
+                performSearch(s);
                 return true;
             }
         });
@@ -73,8 +123,8 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
         return true;
     }
 
-    private boolean performSearch() {
-        //TODO: Query MIT api for building
+    private boolean performSearch(String query) {
+        adapter.getFilter().filter(query);
         return true;
     }
 
@@ -95,10 +145,33 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String problem = (String) parent.getItemAtPosition(position);
+        String room;
+        if (!adapter.isSearchMode()) {
+            if (position == 0) {
+                room = "Inside";
+            } else if (position == 1) {
+                room = "Outside";
+            } else {
+                room = (String) parent.getItemAtPosition(position);
+            }
+        } else {
+            if (position == 0) {
+                String rawString = (String) parent.getItemAtPosition(position);
+                room = rawString.substring(rawString.indexOf("\"") + 1, rawString.lastIndexOf("\""));
+            } else {
+                room = (String) parent.getItemAtPosition(position);
+            }
+        }
+
         Intent result = new Intent();
-        result.putExtra(Constants.FACILITIES_ROOM_NUMBER, problem);
+        result.putExtra(Constants.FACILITIES_ROOM_NUMBER, room);
         setResult(RESULT_OK, result);
         finish();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUILDING, building);
     }
 }

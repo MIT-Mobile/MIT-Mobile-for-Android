@@ -10,11 +10,13 @@ import java.util.HashMap;
 import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
+import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
 import edu.mit.mitmobile2.maps.model.MITMapCategory;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Path;
 
 public class MapManager extends RetrofitManager {
     private static final MitMapService MIT_MAP_SERVICE = MIT_REST_ADAPTER.create(MitMapService.class);
@@ -57,12 +59,26 @@ public class MapManager extends RetrofitManager {
         return returnValue;
     }
 
+    public static MapManagerCall getBuildingDetails(Activity activity, String buildingId, Callback<FacilitiesBuilding> callback) {
+        MapManagerCallWrapper<?> returnValue = new MapManagerCallWrapper<>(new MITAPIClient(activity), callback);
+
+        HashMap<String, String> pathParams = new HashMap<>();
+        pathParams.put("building", buildingId);
+
+        returnValue.getClient().get(Constants.MAP, Constants.Map.MAP_BUILDING_DETAILS_PATH, pathParams, null, returnValue);
+
+        return returnValue;
+    }
+
     public interface MitMapService {
         @GET(Constants.Map.MAP_PLACES)
         void _getmapplaces(Callback<ArrayList<MITMapPlace>> callback);
 
         @GET(Constants.Map.MAP_PLACE_CATEGORIES_PATH)
         void _getmapplacecategories(Callback<ArrayList<MITMapCategory>> callback);
+
+        @GET(Constants.Map.MAP_BUILDING_DETAILS_PATH)
+        void _getbuildingdetails(Callback<FacilitiesBuilding> callback);
     }
 
     public static class MapManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements MapManagerCall, Callback<T> {

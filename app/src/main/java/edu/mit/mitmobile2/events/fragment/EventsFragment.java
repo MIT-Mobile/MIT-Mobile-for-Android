@@ -47,6 +47,7 @@ public class EventsFragment extends Fragment {
     private CalendarDayPagerAdapter dayPagerAdapter;
     private ViewPager calendarDayViewPager;
     private ViewPager calendarWeekViewPager;
+    private Menu menu;
 
     private boolean triggeredFromTopViewPager = false;
     private boolean triggeredFromBottomViewPager = false;
@@ -56,14 +57,18 @@ public class EventsFragment extends Fragment {
     public EventsFragment() {
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_events, null);
 
         dateTextView = (TextView) view.findViewById(R.id.date_text);
-
-        this.setHasOptionsMenu(true);
 
         calendarWeekViewPager = (ViewPager) view.findViewById(R.id.calendar_viewpager);
         buildCalendarWeekPager(Calendar.getInstance(Locale.US));
@@ -255,6 +260,8 @@ public class EventsFragment extends Fragment {
                 return false;
             }
         });
+
+        this.menu = menu;
     }
 
     @Override
@@ -278,5 +285,14 @@ public class EventsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MitMobileApplication.bus.register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (menu != null) {
+            menu.removeItem(R.id.search);
+            menu.clear();
+        }
+        super.onDestroy();
     }
 }

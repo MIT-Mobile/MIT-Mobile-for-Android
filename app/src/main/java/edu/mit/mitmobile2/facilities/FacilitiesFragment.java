@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cocosw.bottomsheet.BottomSheet;
@@ -40,6 +41,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
 import edu.mit.mitmobile2.facilities.activity.ProblemTypesActivity;
@@ -51,8 +53,10 @@ public class FacilitiesFragment extends Fragment {
     private static final String MY_DIR = "MyDir";
     private static final String IMG_PREFIX = "img_";
     private static final String IMG_SUFFIX = ".jpg";
-    private static final int PHOTO_REQUEST_CODE = 1;
     private static final String BASE64_PREFIX = "data:image/png;base64,";
+
+    private static final int PHOTO_REQUEST_CODE = 1;
+    private static final int ROOM_REQUEST_CODE = 2;
 
     private Uri outputFileUri;
     private Uri editedPhotoUri;
@@ -60,8 +64,15 @@ public class FacilitiesFragment extends Fragment {
 
     @InjectView(R.id.attach_remove_photo_text_view)
     TextView attachOrRemovePhotoTextView;
+
     @InjectView(R.id.photo_image_view)
     ImageView photoImageView;
+
+    @InjectView(R.id.room_layout)
+    LinearLayout roomLayout;
+
+    @InjectView(R.id.room_text_view)
+    TextView roomTextView;
 
     @OnClick(R.id.urgent_issues_text_view)
     public void openUrgentIssuesBottomSheet() {
@@ -90,7 +101,7 @@ public class FacilitiesFragment extends Fragment {
     @OnClick(R.id.room_layout)
     public void selectRoom() {
         Intent intent = new Intent(getActivity(), RoomDetailActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ROOM_REQUEST_CODE);
     }
 
     @OnClick(R.id.problem_type_layout)
@@ -208,18 +219,23 @@ public class FacilitiesFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == PHOTO_REQUEST_CODE) {
-            isAttached = true;
-            photoImageView.setVisibility(View.VISIBLE);
-            attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
-            try {
-                getNewPhotoFromActivity(data);
-            } catch (IOException e) {
-                LoggingManager.Timber.d("____________photo error____________", e);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PHOTO_REQUEST_CODE) {
+                isAttached = true;
+                photoImageView.setVisibility(View.VISIBLE);
+                attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
+                try {
+                    getNewPhotoFromActivity(data);
+                } catch (IOException e) {
+                    LoggingManager.Timber.d("____________photo error____________", e);
+                }
+            } else if (requestCode == ROOM_REQUEST_CODE) {
+                if (data != null) {
+                    String room = data.getStringExtra(Constants.FACILITIES_ROOM_NUMBER);
+                    roomTextView.setText(room);
+                }
             }
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

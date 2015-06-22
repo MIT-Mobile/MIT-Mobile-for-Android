@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailDay;
@@ -126,7 +127,10 @@ public class DiningRetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.location_segment)
     void goToLocation() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + Uri.encode(venue.getLocation().getLatitude()) + "," + Uri.encode(venue.getLocation().getLongitude())));
+        Intent intent = new Intent(this, MITMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(Constants.LOCATION_KEY, venue.getLocation().getLocationDescription());
+        intent.putExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, true);
         startActivity(intent);
     }
 
