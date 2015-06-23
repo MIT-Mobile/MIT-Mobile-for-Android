@@ -215,6 +215,8 @@ public class FacilitiesFragment extends Fragment {
                     Gson gson = new Gson();
                     String json = gson.toJson(data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
                     editor.putString(Constants.FACILITIES_PROPERTYOWNER, json);
+                } else {
+                    editor.putString(Constants.FACILITIES_PROPERTYOWNER, "");
                 }
                 editor.commit();
             } else if (requestCode == PROBLEM_REQUEST_CODE) {

@@ -11,11 +11,11 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.facilities.model.FacilitiesCategory;
+import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwnerWrapper;
 import edu.mit.mitmobile2.facilities.model.FacilityPlace;
 import edu.mit.mitmobile2.facilities.model.FacilityPlaceCategory;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
@@ -61,7 +61,7 @@ public class FacilitiesManager extends RetrofitManager {
         return returnValue;
     }
 
-    public static FacilityManagerCall getLocationProperties(Activity activity, Callback<HashMap<String, HashMap<String, String>>> callback) {
+    public static FacilityManagerCall getLocationProperties(Activity activity, Callback<FacilitiesPropertyOwnerWrapper> callback) {
         LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
 
         returnValue.getClient().get(Constants.FACILITIES, Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH, null, null, returnValue);
@@ -87,11 +87,7 @@ public class FacilitiesManager extends RetrofitManager {
 
     /* POST requests */
     public static void postProblem(String email, String location, String room, String problem, String description, String photo, Callback<Response> callback) {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://mobile-dev.mit.edu/apis/building_services")
-                .build();
-
-        MitFacilityService service = restAdapter.create(MitFacilityService.class);
+        MitFacilityService service = MIT_REST_ADAPTER.create(MitFacilityService.class);
         service._post_problem(email, location, room, problem, description, photo, callback);
     }
 
@@ -104,7 +100,7 @@ public class FacilitiesManager extends RetrofitManager {
         void _get_problem_types(Callback<List<String>> callback);
 
         @GET(Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH)
-        void _get_location_properties(Callback<HashMap<String, HashMap<String, String>>> callback);
+        void _get_location_properties(Callback<FacilitiesPropertyOwnerWrapper> callback);
 
         @GET(Constants.Facilities.FACILITIES_PLACES_PATH)
         void _get_places(Callback<List<FacilityPlace>> callback);

@@ -11,6 +11,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 
 import edu.mit.mitmobile2.facilities.model.FacilitiesBuilding;
+import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwner;
+import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwnerWrapper;
 import edu.mit.mitmobile2.shared.collection.FluentMap;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Endpoint;
@@ -29,7 +32,8 @@ public abstract class RetrofitManager {
     public static final class FluentParamMap extends FluentMap<String, String> {
     }
 
-    private static final Gson gson = new GsonBuilder().registerTypeAdapter(FacilitiesBuilding.class, new FacilitiesDeserializer()).create();
+    private static final Gson gson = new GsonBuilder().registerTypeAdapter(FacilitiesBuilding.class, new FacilitiesBuildingDeserializer())
+                                            .registerTypeAdapter(FacilitiesPropertyOwnerWrapper.class, new FacilitiesPropertyOwnerDeserializer()).create();
 
     private static class MitEndpoint implements Endpoint {
 
@@ -173,7 +177,7 @@ public abstract class RetrofitManager {
         return buildMethodName__archaic__(path, pathParams, queryParams);
     }
 
-    public static class FacilitiesDeserializer implements JsonDeserializer<FacilitiesBuilding> {
+    public static class FacilitiesBuildingDeserializer implements JsonDeserializer<FacilitiesBuilding> {
 
         @Override
         public FacilitiesBuilding deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -200,6 +204,42 @@ public abstract class RetrofitManager {
             }
 
             return facilitiesBuilding;
+        }
+    }
+
+    public static class FacilitiesPropertyOwnerDeserializer implements JsonDeserializer<FacilitiesPropertyOwnerWrapper> {
+
+        @Override
+        public FacilitiesPropertyOwnerWrapper deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject object = json.getAsJsonObject();
+            Set<Map.Entry<String, JsonElement>> entries = object.entrySet();
+
+            FacilitiesPropertyOwnerWrapper propertyOwnerWrapper  = new FacilitiesPropertyOwnerWrapper();
+            List<FacilitiesPropertyOwner> facilitiesPropertyOwners = new ArrayList<>();
+
+            for (Map.Entry<String, JsonElement> entry : entries) {
+                JsonObject jsonObj = entry.getValue().getAsJsonObject();
+                Set<Map.Entry<String, JsonElement>> innerEntries = jsonObj.entrySet();
+                FacilitiesPropertyOwner facilitiesPropertyOwner = new FacilitiesPropertyOwner();
+                facilitiesPropertyOwner.setId(entry.getKey());
+                for (Map.Entry<String, JsonElement> e : innerEntries) {
+                    if (e.getKey().equals("contact-email")) {
+                        facilitiesPropertyOwner.setEmail(e.getValue().toString());
+                    } else if (e.getKey().equals("contact-phone")) {
+                        facilitiesPropertyOwner.setPhone(e.getValue().toString());
+                    } else if (e.getKey().equals("contact-name")) {
+                        facilitiesPropertyOwner.setName(e.getValue().toString());
+                    } else if (e.getKey().equals("hidden")) {
+                        facilitiesPropertyOwner.setHidden(e.getValue().toString());
+                    } else if (e.getKey().equals("leased")) {
+                        facilitiesPropertyOwner.setLeased(e.getValue().toString());
+                    }
+                }
+                facilitiesPropertyOwners.add(facilitiesPropertyOwner);
+            }
+            propertyOwnerWrapper.setPropertyOwners(facilitiesPropertyOwners);
+
+            return propertyOwnerWrapper;
         }
     }
 }

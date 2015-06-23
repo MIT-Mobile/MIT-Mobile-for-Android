@@ -17,9 +17,7 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.http.GET;
 
-/**
- * Created by grmartin on 5/7/15.
- */
+
 public class DiningManager extends RetrofitManager {
     private static final MitDiningService MIT_DINING_SERVICE = MIT_REST_ADAPTER.create(MitDiningService.class);
 

@@ -10,6 +10,8 @@ public class FacilitiesPropertyOwner implements Parcelable {
     private String name;
     private String phone;
     private String email;
+    private String isHidden;
+    private String isLeased;
 
     public FacilitiesPropertyOwner() {
 
@@ -47,10 +49,28 @@ public class FacilitiesPropertyOwner implements Parcelable {
         this.email = email;
     }
 
+    public void setHidden(String isHidden) {
+        this.isHidden = isHidden;
+    }
+
+    public String getHidden() {
+        return isHidden;
+    }
+
+    public void setLeased(String isLeased) {
+        this.isLeased = isLeased;
+    }
+
+    public String getLeased() {
+        return isLeased;
+    }
+
     @Override
     public String toString() {
         return "FacilitiesPropertyOwner{" +
                 "id='" + id + '\'' +
+                ", isHidden='" + isHidden + '\'' +
+                ", isLeased='" + isLeased + '\'' +
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email=" + email +
@@ -59,6 +79,8 @@ public class FacilitiesPropertyOwner implements Parcelable {
 
     protected FacilitiesPropertyOwner(Parcel in) {
         id = in.readString();
+        isHidden = in.readString();
+        isLeased = in.readString();
         name = in.readString();
         phone = in.readString();
         email = in.readString();
@@ -72,6 +94,8 @@ public class FacilitiesPropertyOwner implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(isHidden);
+        dest.writeString(isLeased);
         dest.writeString(name);
         dest.writeString(phone);
         dest.writeString(email);
