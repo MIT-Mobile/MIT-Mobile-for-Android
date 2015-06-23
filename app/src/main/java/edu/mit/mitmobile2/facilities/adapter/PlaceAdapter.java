@@ -59,7 +59,11 @@ public class PlaceAdapter extends BaseAdapter{
         final MITMapPlace place = getItem(position);
 
         if (place.getBuildingNumber() != null && place.getName() != null) {
-            viewHolder.textViewTitle.setText(place.getBuildingNumber() + " - " + place.getName());
+            if (place.getBuildingNumber().equals(place.getName())) {
+                viewHolder.textViewTitle.setText(place.getName());
+            } else {
+                viewHolder.textViewTitle.setText(place.getBuildingNumber() + " - " + place.getName());
+            }
         } else if (place.getName() == null && (place.getBuildingNumber() != null)) {
             viewHolder.textViewTitle.setText(place.getBuildingNumber());
         } else if (place.getBuildingNumber() == null && place.getName()!= null) {

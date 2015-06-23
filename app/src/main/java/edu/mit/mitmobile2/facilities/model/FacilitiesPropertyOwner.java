@@ -74,7 +74,7 @@ public class FacilitiesPropertyOwner implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(phone);
-        dest.writeString(phone);
+        dest.writeString(email);
     }
 
     @SuppressWarnings("unused")

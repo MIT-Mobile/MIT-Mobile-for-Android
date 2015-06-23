@@ -412,6 +412,7 @@ public class MITMainActivity extends MITActivity {
         editor.remove(Constants.FACILITIES_ROOM_NUMBER);
         editor.remove(Constants.FACILITIES_PROBLEM_TYPE);
         editor.remove(Constants.FACILITIES_DESCRIPTION);
+        editor.remove(Constants.FACILITIES_PHOTO);
         editor.remove(Constants.FACILITIES_PROPERTYOWNER);
         editor.commit();
     }

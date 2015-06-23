@@ -158,11 +158,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin">
             <TextView
                 android:id="@+id/info_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
 
             <View style="@style/MITView" />
 
@@ -171,12 +176,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/facilities_maintainer"
-                android:textColor="@color/mit_red" />
+                android:textColor="@color/mit_red"
+                />
 
             <TextView
                 android:id="@+id/maintainer_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/facilities_cell_height" />
+                android:layout_height="@dimen/facilities_cell_height"
+                />
 
             <View style="@style/MITView" />
 
@@ -186,12 +193,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/facilities_room"
-                android:textColor="@color/mit_red" />
+                android:textColor="@color/mit_red"
+                />
 
             <TextView
                 android:id="@+id/contact_info_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/facilities_cell_height" />
+                android:layout_height="@dimen/facilities_cell_height"
+                />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

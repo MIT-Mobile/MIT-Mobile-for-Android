@@ -201,8 +201,6 @@ public class FacilitiesFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PHOTO_REQUEST_CODE) {
                 isAttached = true;
-                photoImageView.setVisibility(View.VISIBLE);
-                attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
                 try {
                     getNewPhotoFromActivity(data);
                 } catch (IOException e) {
@@ -354,8 +352,6 @@ public class FacilitiesFragment extends Fragment {
         new Base64Task().execute(bitmap);
 
         photoImageView.setVisibility(View.VISIBLE);
-        updateProblemValues();
-        updateProblemViews();
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         int photoImageViewWidth = display.getWidth();
@@ -386,6 +382,8 @@ public class FacilitiesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
+            updateProblemValues();
+            updateProblemViews();
         }
     }
 
@@ -418,6 +416,20 @@ public class FacilitiesFragment extends Fragment {
     }
 
     private void updateProblemViews() {
+        if (!photo.isEmpty()) {
+            try {
+                photoImageView.setVisibility(View.VISIBLE);
+                byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                photoImageView.setImageBitmap(bitmap);
+                isAttached = true;
+            } catch (Resources.NotFoundException e) {
+                LoggingManager.Timber.d("____________photo error____________", e);
+            }
+        } else {
+            photoImageView.setVisibility(View.GONE);
+        }
+
         locationTextView.setText((location.isEmpty()) ? null : location);
 
         if (proOwnerJson.isEmpty()) {

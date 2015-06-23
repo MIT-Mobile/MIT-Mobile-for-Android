@@ -90,12 +90,6 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
                 }
 
                 fetchLocationProperties();
-                if (name.equals(NEARBY_LOCATIONS)) {
-                    updatePlacesByLocation();
-                } else {
-                    locationIdsbyCategory = getIntent().getStringArrayListExtra(Constants.FACILITIES_LOCATIONS_KEY);
-                    updatePlacesByCategory();
-                }
             }
 
             @Override
@@ -144,6 +138,13 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
                         propertyOwners.add(propertyOwner);
                     }
                 }
+
+                if (name.equals(NEARBY_LOCATIONS)) {
+                    updatePlacesByLocation();
+                } else {
+                    locationIdsbyCategory = getIntent().getStringArrayListExtra(Constants.FACILITIES_LOCATIONS_KEY);
+                    updatePlacesByCategory();
+                }
             }
 
             @Override
@@ -155,7 +156,7 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
 
     private String removeCharacter(String string) {
         if (string.contains("}")) {
-            string = string.substring(0, string.length()-1);
+            string = string.substring(0, string.length() - 1);
         }
         return string;
     }
