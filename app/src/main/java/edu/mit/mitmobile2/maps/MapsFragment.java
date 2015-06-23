@@ -45,6 +45,7 @@ import edu.mit.mitmobile2.maps.activities.MapItemPagerActivity;
 import edu.mit.mitmobile2.maps.activities.MapPlaceDetailActivity;
 import edu.mit.mitmobile2.maps.activities.MapSearchResultActivity;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
+import edu.mit.mitmobile2.shared.StringUtils;
 import edu.mit.mitmobile2.shared.callback.FullscreenMapCallback;
 import edu.mit.mitmobile2.shared.fragment.FullscreenMapFragment;
 import retrofit.Callback;
@@ -82,7 +83,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_padding);
         places = new ArrayList<>();
-
 
         sharedPreferences = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
 
@@ -272,7 +272,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
 
             if (getActivity().getIntent().getBooleanExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, false)) {
-                String sanitized = sanitizeMapSearchString(queryText);
+                String sanitized = StringUtils.sanitizeMapSearchString(queryText);
                 if (!TextUtils.isEmpty(sanitized)) {
                     queryText = sanitized;
                 } else {
@@ -408,27 +408,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         public static Mode getDefault() {
             return NO_SEARCH;
         }
-    }
-
-    private String sanitizeMapSearchString(String query) {
-        String buildingNumber = "";
-        String[] roomComponents = query.split("-");
-        String firstComponent = (roomComponents != null && roomComponents.length > 0) ? roomComponents[0] : null;
-        if (!TextUtils.isEmpty(firstComponent) && firstComponent.length() == 1 && firstComponent.matches("[a-zA-Z]")) {
-            // First component is a letter.  Someone probably put N-51 or E-15 instead of N51 or E15
-            if (roomComponents.length >= 2) {
-                String secondComponent = roomComponents[1];
-                if (Integer.getInteger(secondComponent) != null && Integer.getInteger(secondComponent) > 0) {
-                    buildingNumber = firstComponent + secondComponent;
-                }
-            } else {
-                buildingNumber = query;
-            }
-        } else {
-            buildingNumber = firstComponent;
-        }
-
-        return buildingNumber;
     }
 
     private String stripNonAlphanumeric(String query) {
