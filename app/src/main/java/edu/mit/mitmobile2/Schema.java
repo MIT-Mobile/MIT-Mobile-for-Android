@@ -101,7 +101,7 @@ public class Schema {
                                 HEADING + " integer not null, " +
                                 SPEED + " integer not null, " +
                                 SECS_SINCE_REPORT + " integer not null, " +
-                                ROUTE_ID + " test not null"
+                                ROUTE_ID + " text not null"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
