@@ -87,8 +87,7 @@ public class FacilitiesManager extends RetrofitManager {
 
     /* POST requests */
     public static void postProblem(String email, String location, String room, String problem, String description, String photo, Callback<Response> callback) {
-        MitFacilityService service = MIT_REST_ADAPTER.create(MitFacilityService.class);
-        service._post_problem(email, location, room, problem, description, photo, callback);
+        MIT_FACILITY_SERVICE._post_problem(email, location, room, problem, description, photo, callback);
     }
 
 
