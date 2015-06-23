@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.qrreader.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -15,6 +16,9 @@ public class QrReaderDetailsAction implements Parcelable {
 
     @SerializedName("url")
     private String url;
+
+    @Expose
+    private String subtitle;
 
     public QrReaderDetailsAction() {
         // empty constructor
@@ -36,11 +40,20 @@ public class QrReaderDetailsAction implements Parcelable {
         this.url = url;
     }
 
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
     /* Parcelable */
 
     protected QrReaderDetailsAction(Parcel in) {
         title = in.readString();
         url = in.readString();
+        subtitle = in.readString();
     }
 
     @Override
@@ -52,6 +65,7 @@ public class QrReaderDetailsAction implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(url);
+        dest.writeString(subtitle);
     }
 
     @SuppressWarnings("unused")

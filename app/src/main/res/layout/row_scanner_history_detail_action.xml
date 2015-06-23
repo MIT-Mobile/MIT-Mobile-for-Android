@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="14dp"
+    android:paddingRight="14dp">
 
-    <View
-        style="@style/MITView"
-        android:paddingLeft="14dp" />
+    <View style="@style/MITView" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/scanner_detail_action_tv_title"
+        style="@style/Base.TextAppearance.AppCompat.Small"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:paddingTop="5dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/scanner_detail_action_iv_icon"
+        android:textColor="@color/mit_red" />
 
-        <TextView
-            android:id="@+id/scanner_detail_action_tv_title"
-            style="@style/Base.TextAppearance.AppCompat.Small"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="14dp"
-            android:textColor="@color/mit_red" />
+    <TextView
+        android:id="@+id/scanner_detail_action_tv_subtitle"
+        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scanner_detail_action_tv_title"
+        android:layout_toLeftOf="@+id/scanner_detail_action_iv_icon"
+        android:textColor="@color/mit_grey" />
 
+    <ImageView
+        android:id="@+id/scanner_detail_action_iv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_open_in_browser"
+        android:tint="@color/mit_red" />
 
-        <ImageView
-            android:id="@+id/scanner_detail_action_iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_open_in_browser"
-            android:tint="@color/mit_red" />
-
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
