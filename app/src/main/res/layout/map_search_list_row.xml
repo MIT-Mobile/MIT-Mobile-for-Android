@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
+        android:textColor="@color/black"
         android:textSize="18sp" />
 
     <TextView
@@ -22,18 +23,15 @@
         android:textColor="@color/mit_grey"
         android:textSize="12sp" />
 
-    <TextView
+    <ImageView
         android:id="@+id/info_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:background="@drawable/red_circle_stroke"
         android:gravity="center"
-        android:text="i"
-        android:textColor="@color/mit_red"
-        android:textStyle="bold"
+        android:src="@drawable/ic_info_outline"
         android:visibility="gone" />
 
     <ImageView
@@ -42,7 +40,8 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/shuttle_stops_current"
+        android:src="@drawable/ic_remove_circle"
+        android:tint="@color/mit_red"
         android:visibility="gone" />
 
 </RelativeLayout>
