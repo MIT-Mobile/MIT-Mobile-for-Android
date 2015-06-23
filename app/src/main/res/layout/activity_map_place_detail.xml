@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="@string/hello_world"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -27,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
         <ImageView
@@ -46,6 +48,7 @@
             android:id="@+id/map_place_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
         <Button
