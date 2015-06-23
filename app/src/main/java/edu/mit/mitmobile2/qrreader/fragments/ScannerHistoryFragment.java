@@ -70,7 +70,7 @@ public class ScannerHistoryFragment extends Fragment implements OnScannerHistory
 
     @Override
     public void onDelete(int position, QrReaderResult result) {
-        DBAdapter.getInstance().deleteQrHistoryFromDb(result);
+        DBAdapter.getInstance().deleteQrHistoryFromDb(getActivity(), result);
         ScannerImageUtils.removeScannedImage(result);
 
         adapter.updateData(DBAdapter.getInstance().getScanningHistory(getActivity()));
