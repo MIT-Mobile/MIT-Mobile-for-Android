@@ -7,45 +7,31 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.callback.LocationCallback;
-import edu.mit.mitmobile2.facilities.model.FacilitiesCategory;
+import edu.mit.mitmobile2.facilities.model.FacilitiesLocation;
+import edu.mit.mitmobile2.maps.model.MITMapPlace;
 
-public class LocationAdapter extends BaseAdapter {
+public class PlaceAdapter extends BaseAdapter{
     private Context context;
-    private ArrayList<FacilitiesCategory> categories;
+    private List<MITMapPlace> places;
     private LocationCallback callback;
 
-    public LocationAdapter(Context context, LocationCallback callback) {
+    public PlaceAdapter(Context context, List<MITMapPlace> places, LocationCallback callback) {
         this.context = context;
+        this.places = places;
         this.callback = callback;
-        this.categories = new ArrayList<>();
-    }
-
-    public void updateCategories(ArrayList<FacilitiesCategory> categories) {
-        this.categories.clear();
-
-        FacilitiesCategory nearbyCategory = new FacilitiesCategory();
-        nearbyCategory.setName(context.getString(R.string.locations_nearby));
-        this.categories.add(nearbyCategory);
-
-        if (categories != null) {
-            this.categories.addAll(categories);
-        }
-
-        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return categories.size();
+        return places.size();
     }
 
     @Override
-    public FacilitiesCategory getItem(int position) {
-        return categories.get(position);
+    public MITMapPlace getItem(int position) {
+        return places.get(position);
     }
 
     @Override
@@ -55,7 +41,7 @@ public class LocationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
 
         if (convertView == null) {
             convertView = View.inflate(parent.getContext(), android.R.layout.simple_list_item_1, null);
@@ -63,19 +49,31 @@ public class LocationAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.textViewTitle = (TextView) convertView.findViewById(android.R.id.text1);
             viewHolder.textViewTitle.setTextColor(Color.BLACK);
+            viewHolder.textViewTitle.setSingleLine(true);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final FacilitiesCategory category = getItem(position);
+        final MITMapPlace place = getItem(position);
 
-        viewHolder.textViewTitle.setText(category.getName());
+        if (place.getBuildingNumber() != null && place.getName() != null) {
+            if (place.getBuildingNumber().equals(place.getName())) {
+                viewHolder.textViewTitle.setText(place.getName());
+            } else {
+                viewHolder.textViewTitle.setText(place.getBuildingNumber() + " - " + place.getName());
+            }
+        } else if (place.getName() == null && (place.getBuildingNumber() != null)) {
+            viewHolder.textViewTitle.setText(place.getBuildingNumber());
+        } else if (place.getBuildingNumber() == null && place.getName()!= null) {
+            viewHolder.textViewTitle.setText(place.getName());
+        }
+
         viewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.fetchPlacesByCategories(category.getName(), category.getLocations());
+                callback.fetchPlace(place.getId(), viewHolder.textViewTitle.getText().toString());
             }
         });
 

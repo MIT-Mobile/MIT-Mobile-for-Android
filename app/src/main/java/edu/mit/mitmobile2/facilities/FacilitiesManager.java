@@ -11,11 +11,11 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITAPIClient;
 import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.facilities.model.FacilitiesCategory;
+import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwnerWrapper;
 import edu.mit.mitmobile2.facilities.model.FacilityPlace;
 import edu.mit.mitmobile2.facilities.model.FacilityPlaceCategory;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.client.Response;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
@@ -61,7 +61,7 @@ public class FacilitiesManager extends RetrofitManager {
         return returnValue;
     }
 
-    public static FacilityManagerCall getLocationProperties(Activity activity, Callback<HashMap<String, HashMap<String, String>>> callback) {
+    public static FacilityManagerCall getLocationProperties(Activity activity, Callback<FacilitiesPropertyOwnerWrapper> callback) {
         LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
 
         returnValue.getClient().get(Constants.FACILITIES, Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH, null, null, returnValue);
@@ -86,19 +86,10 @@ public class FacilitiesManager extends RetrofitManager {
     }
 
     /* POST requests */
-
-    // http://mobile-dev.mit.edu/apis/building_services/
-    // http://m.mit.edu/apis/building_services/problems
-
-    // seems like it requires touchstone authorization, skip for now
-    public static void postProblem(String email, String message, String problemType, Callback<Response> callback) {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://mobile-dev.mit.edu/apis")
-                .build();
-
-        MitFacilityService service = restAdapter.create(MitFacilityService.class);
-        service._post_problem(email, message, problemType, callback);
+    public static void postProblem(String email, String location, String room, String problem, String description, String photo, Callback<Response> callback) {
+        MIT_FACILITY_SERVICE._post_problem(email, location, room, problem, description, photo, callback);
     }
+
 
     public interface MitFacilityService {
         @GET(Constants.Facilities.FACILITIES_LOCATION_CATEGORIES_PATH)
@@ -108,7 +99,7 @@ public class FacilitiesManager extends RetrofitManager {
         void _get_problem_types(Callback<List<String>> callback);
 
         @GET(Constants.Facilities.FACILITIES_LOCATION_PROPERTIES_PATH)
-        void _get_location_properties(Callback<HashMap<String, HashMap<String, String>>> callback);
+        void _get_location_properties(Callback<FacilitiesPropertyOwnerWrapper> callback);
 
         @GET(Constants.Facilities.FACILITIES_PLACES_PATH)
         void _get_places(Callback<List<FacilityPlace>> callback);
@@ -116,17 +107,14 @@ public class FacilitiesManager extends RetrofitManager {
         @GET(Constants.Facilities.FACILITIES_PLACE_CATEGORIES_PATH)
         void _get_place_categories(Callback<List<FacilityPlaceCategory>> callback);
 
-        // @POST(Constants.Facilities.FACILITIES_PROBLEMS_PATH)
         @FormUrlEncoded
-        @POST("/building_services/problems")
+        @POST(Constants.Facilities.FACILITIES_PROBLEMS_PATH)
         void _post_problem(@Field("email") String email,
-                           @Field("message") String message,
-                           @Field("problem_type") String problemType,
-//                           @Field("building") String building,                  // optional
-//                           @Field("building_by_user") String buildingByUser,    // optional
-//                           @Field("room") String room,                          // optional
-//                           @Field("room_by_user") String roomByUser,            // optional
-//                           @Field("image") String image,                        // optional, base64 (multipart - ?)
+                           @Field("building") String location,
+                           @Field("room") String room,
+                           @Field("problem_type") String problem,
+                           @Field("message") String description,
+                           @Field("image") String photo,
                            Callback<Response> callback);
     }
 

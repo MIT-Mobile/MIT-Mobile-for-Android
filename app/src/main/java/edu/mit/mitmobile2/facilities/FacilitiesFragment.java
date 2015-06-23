@@ -6,8 +6,11 @@ import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -15,22 +18,30 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +57,11 @@ import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.activity.LocationActivity;
 import edu.mit.mitmobile2.facilities.activity.ProblemTypesActivity;
 import edu.mit.mitmobile2.facilities.activity.RoomDetailActivity;
+import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwner;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class FacilitiesFragment extends Fragment {
 
@@ -56,23 +71,54 @@ public class FacilitiesFragment extends Fragment {
     private static final String BASE64_PREFIX = "data:image/png;base64,";
 
     private static final int PHOTO_REQUEST_CODE = 1;
-    private static final int ROOM_REQUEST_CODE = 2;
+    private static final int LOCATION_REQUEST_CODE = 2;
+    private static final int ROOM_REQUEST_CODE = 3;
+    private static final int PROBLEM_REQUEST_CODE = 4;
 
     private Uri outputFileUri;
     private Uri editedPhotoUri;
     private boolean isAttached = false;
+    private SharedPreferences prefs;
+    private String photo;
+    private String location;
+    private String room;
+    private String problem;
+    private String email;
+    private String description;
+    private String proOwnerJson;
+
+    private Menu optionMenu;
+    private SharedPreferences.Editor editor;
 
     @InjectView(R.id.attach_remove_photo_text_view)
     TextView attachOrRemovePhotoTextView;
 
     @InjectView(R.id.photo_image_view)
     ImageView photoImageView;
-
+    @InjectView(R.id.location_text_view)
+    TextView locationTextView;
+    @InjectView(R.id.problem_type_text_view)
+    TextView problemTextView;
     @InjectView(R.id.room_layout)
     LinearLayout roomLayout;
-
     @InjectView(R.id.room_text_view)
     TextView roomTextView;
+    @InjectView(R.id.email_edit_text)
+    EditText emailEditText;
+    @InjectView(R.id.description_edit_text)
+    EditText descriptionEditText;
+    @InjectView(R.id.maintainer_text_view)
+    TextView maintainerTextView;
+    @InjectView(R.id.contact_title_text_view)
+    TextView contactTitleTextView;
+    @InjectView(R.id.contact_info_text_view)
+    TextView contactInfoTextView;
+    @InjectView(R.id.info_text_view)
+    TextView infoTextView;
+    @InjectView(R.id.leased_layout)
+    LinearLayout leasedLayout;
+    @InjectView(R.id.not_leased_layout)
+    LinearLayout notLeasedLayout;
 
     @OnClick(R.id.urgent_issues_text_view)
     public void openUrgentIssuesBottomSheet() {
@@ -95,7 +141,7 @@ public class FacilitiesFragment extends Fragment {
     @OnClick(R.id.location_layout)
     public void selectLocation() {
         Intent intent = new Intent(getActivity(), LocationActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LOCATION_REQUEST_CODE);
     }
 
     @OnClick(R.id.room_layout)
@@ -107,7 +153,7 @@ public class FacilitiesFragment extends Fragment {
     @OnClick(R.id.problem_type_layout)
     public void selectProblemType() {
         Intent intent = new Intent(getActivity(), ProblemTypesActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, PROBLEM_REQUEST_CODE);
     }
 
     @OnClick(R.id.attach_remove_photo_text_view)
@@ -128,93 +174,26 @@ public class FacilitiesFragment extends Fragment {
         View view = inflater.inflate(R.layout.content_facilities, null);
         ButterKnife.inject(this, view);
 
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         getActivity().setTitle(getResources().getString(R.string.facilities_title));
         setHasOptionsMenu(true);
 
-        if (isAttached) {
-            attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
-        } else {
-            attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_attach_photo));
-        }
-
-        /*
-        FacilitiesManager.getProblemTypes(getActivity(), new Callback<List<String>>() {
-
-            @Override
-            public void success(List<String> strings, Response response) {
-                // TODO: handle response
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
-            }
-        });
-        */
-
-        /*
-        FacilitiesManager.getLocationProperties(getActivity(), new Callback<HashMap<String, HashMap<String, String>>>() {
-
-            @Override
-            public void success(HashMap<String, HashMap<String, String>> stringHashMapHashMap, Response response) {
-                // TODO: handle response
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
-            }
-        });
-        */
-
-        /*
-        FacilitiesManager.getPlaces(getActivity(), new Callback<List<FacilityPlace>>() {
-            @Override
-            public void success(List<FacilityPlace> facilityPlaces, Response response) {
-                // TODO: handle response
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
-            }
-        });
-        */
-
-        /*
-        FacilitiesManager.getPlaceCategories(getActivity(), new Callback<List<FacilityPlaceCategory>>() {
-
-            @Override
-            public void success(List<FacilityPlaceCategory> facilityPlaceCategories, Response response) {
-                // TODO: handle response
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
-            }
-        });
-        */
-
-        /*
-
-        Does not work :(
-
-        FacilitiesManager.postProblem("test.email@abc.def", "test message", "test problem type", new Callback<Response>() {
-
-            @Override
-            public void success(Response response, Response response2) {
-                // TODO: handle response
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
-            }
-        });
-        */
+        photoImageView.setVisibility(View.GONE);
+        emailEditText.addTextChangedListener(new editTextWatcher(Constants.FACILITIES_EMAIL));
+        descriptionEditText.addTextChangedListener(new editTextWatcher(Constants.FACILITIES_DESCRIPTION));
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        editor = prefs.edit();
+        updateProblemValues();
+        updateProblemViews();
     }
 
     @Override
@@ -222,30 +201,50 @@ public class FacilitiesFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PHOTO_REQUEST_CODE) {
                 isAttached = true;
-                photoImageView.setVisibility(View.VISIBLE);
-                attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_remove_photo));
                 try {
                     getNewPhotoFromActivity(data);
                 } catch (IOException e) {
                     LoggingManager.Timber.d("____________photo error____________", e);
                 }
             } else if (requestCode == ROOM_REQUEST_CODE) {
-                if (data != null) {
-                    String room = data.getStringExtra(Constants.FACILITIES_ROOM_NUMBER);
-                    roomTextView.setText(room);
+                editor.putString(Constants.FACILITIES_ROOM_NUMBER, data.getStringExtra(Constants.FACILITIES_ROOM_NUMBER));
+                editor.commit();
+            } else if (requestCode == LOCATION_REQUEST_CODE) {
+                editor.putString(Constants.FACILITIES_LOCATION, data.getStringExtra(Constants.FACILITIES_LOCATION));
+                if (data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER) != null ){
+                    Gson gson = new Gson();
+                    String json = gson.toJson(data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
+                    editor.putString(Constants.FACILITIES_PROPERTYOWNER, json);
+                } else {
+                    editor.putString(Constants.FACILITIES_PROPERTYOWNER, "");
                 }
+                editor.commit();
+            } else if (requestCode == PROBLEM_REQUEST_CODE) {
+                editor.putString(Constants.FACILITIES_PROBLEM_TYPE, data.getStringExtra(Constants.FACILITIES_PROBLEM_TYPE));
+                editor.commit();
             }
         }
+
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_facilities, menu);
+    private void getNewPhotoFromActivity(Intent data) throws IOException {
+        final boolean isCamera;
+        if (data.toString().equals("Intent {  }")) {
+            isCamera = true;
+        } else {
+            final String action = data.getAction();
+            isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
+        }
 
-        MenuItem item = menu.findItem(R.id.submit);
-        item.setEnabled(false);
+        if (isCamera) {
+            editedPhotoUri = outputFileUri;
+        } else {
+            editedPhotoUri = data.getData();
+        }
 
-        super.onCreateOptionsMenu(menu, inflater);
+        convertImage(editedPhotoUri);
     }
 
     private void sendUrgentIssuesByEmail() {
@@ -275,6 +274,41 @@ public class FacilitiesFragment extends Fragment {
                     }
                 })
                 .show();
+    }
+
+    private void updateSubmitButtonStatus() {
+        if (optionMenu != null) {
+            MenuItem item = optionMenu.findItem(R.id.submit);
+            item.setEnabled(false);
+            if (!location.isEmpty() && !room.isEmpty() && !problem.isEmpty()
+                    && !email.isEmpty() && !description.isEmpty()) {
+                item.setEnabled(true);
+                item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        submitProblem();
+                        return false;
+                    }
+                });
+            } else {
+                item.setEnabled(false);
+            }
+        }
+    }
+
+    private void submitProblem() {
+        FacilitiesManager.postProblem(email, location, room, problem, description, photo, new Callback<Response>() {
+            @Override
+            public void success(Response response, Response response2) {
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.report_submit),
+                        Toast.LENGTH_SHORT).show();
+                resetFacilitiesHome();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
     }
 
     private void attachPhoto() {
@@ -307,27 +341,10 @@ public class FacilitiesFragment extends Fragment {
 
     private void removePhoto() {
         isAttached = false;
+        savePhotoStatus(null);
         photoImageView.setImageDrawable(null);
         photoImageView.setVisibility(View.GONE);
         attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_attach_photo));
-    }
-
-    private void getNewPhotoFromActivity(Intent data) throws IOException {
-        final boolean isCamera;
-        if (data == null) {
-            isCamera = true;
-        } else {
-            final String action = data.getAction();
-            isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
-        }
-
-        if (isCamera) {
-            editedPhotoUri = outputFileUri;
-        } else {
-            editedPhotoUri = data.getData();
-        }
-
-        convertImage(editedPhotoUri);
     }
 
     private void convertImage(Uri uri) throws IOException {
@@ -336,8 +353,14 @@ public class FacilitiesFragment extends Fragment {
         is.close();
         new Base64Task().execute(bitmap);
 
-        int photoWidth = (photoImageView.getWidth() > bitmap.getWidth()) ? bitmap.getWidth() : photoImageView.getWidth();
-        int photoHeight = (photoImageView.getHeight() > bitmap.getHeight()) ? bitmap.getHeight() : photoImageView.getHeight();
+        photoImageView.setVisibility(View.VISIBLE);
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int photoImageViewWidth = display.getWidth();
+        int photoImageViewHeight = (int) getResources().getDimension(R.dimen.faciliteis_image_view);
+
+        int photoWidth = (photoImageViewWidth > bitmap.getWidth()) ? bitmap.getWidth() : photoImageViewWidth;
+        int photoHeight = (photoImageViewHeight > bitmap.getHeight()) ? bitmap.getHeight() : photoImageViewHeight;
 
         Picasso.with(photoImageView.getContext())
                 .load(editedPhotoUri.toString())
@@ -352,11 +375,137 @@ public class FacilitiesFragment extends Fragment {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             params[0].compress(Bitmap.CompressFormat.JPEG, 70, baos);
             byte[] b = baos.toByteArray();
+
+            String base64String = Base64.encodeToString(b, Base64.DEFAULT);
+            savePhotoStatus(base64String);
+
             return BASE64_PREFIX + Base64.encodeToString(b, Base64.DEFAULT);
         }
 
         @Override
         protected void onPostExecute(String result) {
+            updateProblemValues();
+            updateProblemViews();
         }
+    }
+
+    private void resetFacilitiesHome() {
+        isAttached = false;
+        updateSubmitButtonStatus();
+        editor.remove(Constants.FACILITIES_EMAIL);
+        editor.remove(Constants.FACILITIES_LOCATION);
+        editor.remove(Constants.FACILITIES_ROOM_NUMBER);
+        editor.remove(Constants.FACILITIES_PROBLEM_TYPE);
+        editor.remove(Constants.FACILITIES_DESCRIPTION);
+        editor.remove(Constants.FACILITIES_PROPERTYOWNER);
+        editor.remove(Constants.FACILITIES_PHOTO);
+        editor.commit();
+
+        updateProblemValues();
+        updateProblemViews();
+    }
+
+    private void updateProblemValues() {
+        location = prefs.getString(Constants.FACILITIES_LOCATION, "");
+        problem = prefs.getString(Constants.FACILITIES_PROBLEM_TYPE, "");
+        room = prefs.getString(Constants.FACILITIES_ROOM_NUMBER, "");
+        photo = prefs.getString(Constants.FACILITIES_PHOTO, "");
+        email = prefs.getString(Constants.FACILITIES_EMAIL, "");
+        description = prefs.getString(Constants.FACILITIES_DESCRIPTION, "");
+        proOwnerJson = prefs.getString(Constants.FACILITIES_PROPERTYOWNER, "");
+
+        updateSubmitButtonStatus();
+    }
+
+    private void updateProblemViews() {
+        if (!photo.isEmpty()) {
+            try {
+                photoImageView.setVisibility(View.VISIBLE);
+                byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                photoImageView.setImageBitmap(bitmap);
+                isAttached = true;
+            } catch (Resources.NotFoundException e) {
+                LoggingManager.Timber.d("____________photo error____________", e);
+            }
+        } else {
+            photoImageView.setVisibility(View.GONE);
+        }
+
+        locationTextView.setText((location.isEmpty()) ? null : location);
+
+        if (proOwnerJson.isEmpty()) {
+            leasedLayout.setVisibility(View.GONE);
+            notLeasedLayout.setVisibility(View.VISIBLE);
+            emailEditText.setText((email.isEmpty()) ? null : email);
+            roomTextView.setText((room.isEmpty()) ? null : room);
+            problemTextView.setText((problem.isEmpty()) ? null : problem);
+            descriptionEditText.setText((description.isEmpty()) ? null : description);
+            roomLayout.setVisibility((location.isEmpty()) ? View.GONE : View.VISIBLE);
+            attachOrRemovePhotoTextView.setText((isAttached) ? getResources().getString(R.string.facilities_remove_photo) : getResources().getString(R.string.facilities_attach_photo));
+        } else {
+            notLeasedLayout.setVisibility(View.GONE);
+            leasedLayout.setVisibility(View.VISIBLE);
+            Gson gson = new Gson();
+            FacilitiesPropertyOwner propertyOwner = gson.fromJson(proOwnerJson, FacilitiesPropertyOwner.class);
+            infoTextView.setText(getResources().getString(R.string.is_leased, location, propertyOwner.getName()));
+            maintainerTextView.setText(propertyOwner.getName());
+            if (propertyOwner.getEmail() != null) {
+                contactTitleTextView.setText(getResources().getString(R.string.facilities_email));
+                contactInfoTextView.setText(propertyOwner.getEmail());
+            } else if (propertyOwner.getPhone() != null) {
+                contactTitleTextView.setText(getResources().getString(R.string.facilities_phone));
+                contactInfoTextView.setText(propertyOwner.getPhone());
+            } else {
+                contactTitleTextView.setVisibility(View.GONE);
+                contactInfoTextView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void savePhotoStatus(String base64String) {
+        if (isAttached) {
+            editor.putString(Constants.FACILITIES_PHOTO, base64String);
+        } else {
+            editor.remove(Constants.FACILITIES_PHOTO);
+        }
+        editor.commit();
+    }
+
+    private class editTextWatcher implements TextWatcher {
+        String name;
+
+        public editTextWatcher(String name) {
+            this.name = name;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (name.equals(Constants.FACILITIES_EMAIL)) {
+                editor.putString(Constants.FACILITIES_EMAIL, s.toString());
+            } else if (name.equals(Constants.FACILITIES_DESCRIPTION)) {
+                editor.putString(Constants.FACILITIES_DESCRIPTION, s.toString());
+            }
+            editor.commit();
+            updateProblemValues();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_facilities, menu);
+        optionMenu = menu;
+        updateSubmitButtonStatus();
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

@@ -2,11 +2,7 @@ package edu.mit.mitmobile2.facilities.model;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
-/**
- * Created by serg on 6/10/15.
- */
 public class FacilitiesLocation {
 
     private String number;
