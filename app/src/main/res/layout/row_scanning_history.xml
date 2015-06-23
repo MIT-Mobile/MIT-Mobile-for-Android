@@ -23,12 +23,15 @@
         <TextView
             android:id="@+id/scanner_tv_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2" />
 
         <TextView
             android:id="@+id/scanner_tv_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:singleLine="true" />
 
     </LinearLayout>
 
@@ -38,7 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:padding="20dp"
-        android:src="@drawable/shuttle_stops_current"
+        android:src="@drawable/ic_remove_circle"
+        android:tint="@color/mit_red"
         android:visibility="invisible" />
 
 </LinearLayout>
