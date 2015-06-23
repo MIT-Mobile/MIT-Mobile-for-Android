@@ -100,5 +100,11 @@
     "test": "http://mobile-test.mit.edu/apis/building_services/",
     "prod": "http://m.mit.edu/apis/building_services/",
     "manager": "edu.mit.mitmobile2.facilities.FacilitiesManager"
+  },
+  "scanner": {
+    "dev": "http://mobile-dev.mit.edu/apis/scanner/",
+    "test": "http://mobile-test.mit.edu/apis/scanner/",
+    "prod": "http://m.mit.edu/apis/scanner/",
+    "manager": "edu.mit.mitmobile2.qrreader.ScannerManager"
   }
 }

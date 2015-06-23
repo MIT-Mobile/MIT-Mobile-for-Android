@@ -61,7 +61,7 @@
         </service>
 
         <provider
-            android:name=".shuttles.MITShuttlesProvider"
+            android:name=".shared.MITContentProvider"
             android:authorities="edu.mit.mitmobile2.provider"
             android:exported="false"
             android:label="MitProvider"
@@ -291,7 +291,15 @@
             android:label="@string/title_activity_scanner_history"
             android:parentActivityName=".MITMainActivity"
             android:theme="@style/Theme.MyTheme" />
-
+        <activity
+            android:name=".qrreader.activities.ScannerHistoryDetailActivity"
+            android:label="@string/title_activity_scanner_history_detail"
+            android:theme="@style/Theme.MyTheme"/>
+        <activity
+            android:name=".qrreader.activities.ScannerAdvancedActivity"
+            android:label="@string/title_activity_scanner_advanced"
+            android:parentActivityName=".MITMainActivity"
+            android:theme="@style/Theme.MyTheme" />
     </application>
 
 </manifest>

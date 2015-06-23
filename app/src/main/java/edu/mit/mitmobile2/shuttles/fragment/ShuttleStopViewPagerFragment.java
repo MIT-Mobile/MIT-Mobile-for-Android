@@ -3,9 +3,11 @@ package edu.mit.mitmobile2.shuttles.fragment;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -24,7 +26,7 @@ import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
 import edu.mit.mitmobile2.shuttles.AlarmReceiver;
-import edu.mit.mitmobile2.shuttles.MITShuttlesProvider;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 import edu.mit.mitmobile2.shuttles.activities.ShuttleRouteActivity;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopIntersectingAdapter;
 import edu.mit.mitmobile2.shuttles.adapter.ShuttleStopPredictionsAdapter;
@@ -78,13 +80,13 @@ public class ShuttleStopViewPagerFragment extends Fragment implements Intersecti
         intersectingRoutes = new ArrayList<>();
 
         String selectionString = Schema.Stop.TABLE_NAME + "." + Schema.Stop.STOP_ID + "=\'" + stopId + "\'";
-        Cursor cursor = getActivity().getContentResolver().query(MITShuttlesProvider.SINGLE_STOP_URI, Schema.Stop.ALL_COLUMNS, selectionString, null, null);
+        Cursor cursor = getActivity().getContentResolver().query(MITContentProvider.SINGLE_STOP_URI, Schema.Stop.ALL_COLUMNS, selectionString, null, null);
         cursor.moveToFirst();
         stop.buildFromCursor(cursor, DBAdapter.getInstance());
         cursor.close();
 
         String routesSelectionString = selectionString + " AND " + Schema.Route.TABLE_NAME + "." + Schema.Route.ROUTE_ID + "!=\'" + currentRouteId + "\'";
-        Cursor routesCursor = getActivity().getContentResolver().query(MITShuttlesProvider.INTERSECTING_ROUTES_URI, Schema.Route.ALL_COLUMNS, routesSelectionString, null, null);
+        Cursor routesCursor = getActivity().getContentResolver().query(MITContentProvider.INTERSECTING_ROUTES_URI, Schema.Route.ALL_COLUMNS, routesSelectionString, null, null);
         routesCursor.moveToFirst();
         while (!routesCursor.isAfterLast()) {
             MITShuttleIntersectingRoute route = new MITShuttleIntersectingRoute();
@@ -95,7 +97,7 @@ public class ShuttleStopViewPagerFragment extends Fragment implements Intersecti
         cursor.close();
 
         String selection = Schema.Alerts.ROUTE_ID + "=\'" + currentRouteId + "\' AND " + Schema.Alerts.STOP_ID + "=\'" + stopId + "\'";
-        Cursor c = getActivity().getContentResolver().query(MITShuttlesProvider.ALERTS_URI, Schema.Alerts.ALL_COLUMNS, selection, null, null);
+        Cursor c = getActivity().getContentResolver().query(MITContentProvider.ALERTS_URI, Schema.Alerts.ALL_COLUMNS, selection, null, null);
         MITAlert alert = null;
         if (c.moveToFirst()) {
             alert = new MITAlert();
@@ -209,20 +211,23 @@ public class ShuttleStopViewPagerFragment extends Fragment implements Intersecti
             MITShuttlePrediction prediction = predictions.get(position);
 
             String selection = Schema.Alerts.STOP_ID + "=\'" + stopId + "\' AND " + Schema.Alerts.ROUTE_ID + "=\'" + currentRouteId + "\'";
-            Cursor cursor = getActivity().getContentResolver().query(MITShuttlesProvider.ALERTS_URI, Schema.Alerts.ALL_COLUMNS, selection, null, null);
+            Cursor cursor = getActivity().getContentResolver().query(MITContentProvider.ALERTS_URI, Schema.Alerts.ALL_COLUMNS, selection, null, null);
             if (cursor.moveToNext()) {
                 long id = cursor.getLong(cursor.getColumnIndex(Schema.Alerts.ID_COL));
                 cancelAlarm((int) id);
                 Timber.d("Deleted alarm with ID_COL = " + id);
-                getActivity().getContentResolver().delete(MITShuttlesProvider.ALERTS_URI, selection, null);
+                getActivity().getContentResolver().delete(MITContentProvider.ALERTS_URI, selection, null);
             }
             cursor.close();
 
             if (newAlert) {
                 // Save alert in DB
                 MITAlert alert = new MITAlert(currentRouteId, stopId, prediction.getVehicleId(), prediction.getTimestamp());
-                DBAdapter.getInstance().acquire(alert);
-                long id = alert.persistToDatabase();
+                ContentValues contentValues = new ContentValues();
+                alert.fillInContentValues(contentValues, DBAdapter.getInstance());
+
+                Uri idUri = getActivity().getContentResolver().insert(MITContentProvider.ALERTS_URI, contentValues);
+                long id = Long.parseLong(idUri.toString());
 
                 String title = getRouteTitle();
                 String description = buildAlertDescription(title);

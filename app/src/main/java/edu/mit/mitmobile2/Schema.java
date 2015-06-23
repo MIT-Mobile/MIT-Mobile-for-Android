@@ -101,7 +101,7 @@ public class Schema {
                                 HEADING + " integer not null, " +
                                 SPEED + " integer not null, " +
                                 SECS_SINCE_REPORT + " integer not null, " +
-                                ROUTE_ID + " test not null"
+                                ROUTE_ID + " text not null"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
@@ -334,15 +334,17 @@ public class Schema {
         public static final String TABLE_NAME = "qr_reader_result";
         public static final String DATE = "content_name";
         public static final String TEXT = "categories";
+        public static final String IMG_NAME = "image_name";
 
         public static final String CREATE_TABLE_SQL =
                 buildCreateSQL(TABLE_NAME,
-                                DATE + " integer, " +
-                                TEXT + " text"
+                                DATE + " INTEGER, " +
+                                TEXT + " TEXT, " +
+                                IMG_NAME + " TEXT"
                 );
 
         public static final String[] ALL_COLUMNS = new String[]{
-                ID_COL, DATE, TEXT
+                ID_COL, DATE, TEXT, IMG_NAME
         };
     }
 }

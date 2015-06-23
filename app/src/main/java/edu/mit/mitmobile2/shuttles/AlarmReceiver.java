@@ -16,6 +16,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.Schema;
+import edu.mit.mitmobile2.shared.MITContentProvider;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -53,6 +54,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setContentIntent(pendingIntent);
 
         mNotificationManager.notify(1, mBuilder.build());
-        context.getContentResolver().delete(MITShuttlesProvider.ALERTS_URI, Schema.Alerts.ID_COL + "=" + alarmId, null);
+        context.getContentResolver().delete(MITContentProvider.ALERTS_URI, Schema.Alerts.ID_COL + "=" + alarmId, null);
     }
 }
