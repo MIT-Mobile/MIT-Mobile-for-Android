@@ -123,10 +123,17 @@ public class ScannerHistoryDetailActivity extends AppCompatActivity implements A
         }
     }
 
-    private void displayScannerResultDetails(QrReaderDetails details) {
+    private void handleResultDetailsResponse(QrReaderDetails details) {
         boolean isServerScannerCode = !TextUtils.isEmpty(details.getType()) && details.getActions() != null && details.getActions().size() > 0;
 
-        if (!isServerScannerCode) {
+        if (isServerScannerCode) {
+            if (details.getActions() != null) {
+                String subtitle = details.getType().equalsIgnoreCase(QrReaderDetails.TYPE_PROPERTY_OFFICE_USE_ONLY) ? getString(R.string.scan_property_office_use_only) : "";
+                for (QrReaderDetailsAction action : details.getActions()) {
+                    action.setSubtitle(subtitle);
+                }
+            }
+        } else {
             details.setDisplayName(result.getText());
 
             try {
@@ -161,7 +168,7 @@ public class ScannerHistoryDetailActivity extends AppCompatActivity implements A
             public void success(QrReaderDetails details, Response response) {
                 ScannerHistoryDetailActivity.this.details = details;
 
-                displayScannerResultDetails(ScannerHistoryDetailActivity.this.details);
+                handleResultDetailsResponse(ScannerHistoryDetailActivity.this.details);
             }
 
             @Override

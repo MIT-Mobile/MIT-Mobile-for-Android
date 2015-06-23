@@ -1,5 +1,6 @@
 package edu.mit.mitmobile2.qrreader.adapters;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -99,6 +100,7 @@ public class ScannerHistoryDetailAdapter extends BaseAdapter {
 
                     viewHolder = new ViewHolder();
                     viewHolder.textViewActionTitle = (TextView) convertView.findViewById(R.id.scanner_detail_action_tv_title);
+                    viewHolder.textViewActionSubtitle = (TextView) convertView.findViewById(R.id.scanner_detail_action_tv_subtitle);
                     viewHolder.imageViewIcon = (ImageView) convertView.findViewById(R.id.scanner_detail_action_iv_icon);
 
                     convertView.setTag(viewHolder);
@@ -109,6 +111,14 @@ public class ScannerHistoryDetailAdapter extends BaseAdapter {
                 QrReaderDetailsAction action = (QrReaderDetailsAction) getItem(position);
 
                 viewHolder.textViewActionTitle.setText(action.getTitle());
+
+                // TODO: not sure with this logic, should be clarified
+                if (TextUtils.isEmpty(action.getSubtitle())) {
+                    viewHolder.textViewActionSubtitle.setVisibility(View.GONE);
+                } else {
+                    viewHolder.textViewActionSubtitle.setVisibility(View.VISIBLE);
+                    viewHolder.textViewActionSubtitle.setText(action.getSubtitle());
+                }
             }
             break;
         }
@@ -137,6 +147,7 @@ public class ScannerHistoryDetailAdapter extends BaseAdapter {
 
         // ROW_TYPE_DETAIL_ACTION
         TextView textViewActionTitle;
+        TextView textViewActionSubtitle;
         ImageView imageViewIcon;
     }
 }
