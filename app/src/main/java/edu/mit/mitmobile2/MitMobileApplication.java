@@ -2,11 +2,14 @@ package edu.mit.mitmobile2;
 
 import android.accounts.Account;
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
 import edu.mit.mitmobile2.shared.SharedIntentManager;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
@@ -72,5 +75,11 @@ public class MitMobileApplication extends Application {
                 Timber.e(message);
             }
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
