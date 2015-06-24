@@ -490,13 +490,15 @@ public class FacilitiesFragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (name.equals(Constants.FACILITIES_EMAIL)) {
-                editor.putString(Constants.FACILITIES_EMAIL, s.toString());
-            } else if (name.equals(Constants.FACILITIES_DESCRIPTION)) {
-                editor.putString(Constants.FACILITIES_DESCRIPTION, s.toString());
+            if (editor != null) {
+                if (name.equals(Constants.FACILITIES_EMAIL)) {
+                    editor.putString(Constants.FACILITIES_EMAIL, s.toString());
+                } else if (name.equals(Constants.FACILITIES_DESCRIPTION)) {
+                    editor.putString(Constants.FACILITIES_DESCRIPTION, s.toString());
+                }
+                editor.commit();
+                updateProblemValues();
             }
-            editor.commit();
-            updateProblemValues();
         }
     }
 
