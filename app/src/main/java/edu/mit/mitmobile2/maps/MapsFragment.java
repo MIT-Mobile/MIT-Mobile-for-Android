@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,6 +54,8 @@ import retrofit.client.Response;
 public class MapsFragment extends FullscreenMapFragment implements FullscreenMapCallback {
 
     private static final String MAPS_SEARCH_HISTORY = "mapSearchHistory";
+    public static final String MAP_PLACES = "places";
+    public static final String SEARCH_TEXT = "searchText";
 
     private ListView recentsListview;
     private Mode mode;
@@ -64,6 +65,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     private SearchView searchView;
     private TextView searchTextView;
     private List<MITMapPlace> places;
+    private String searchText;
 
     public MapsFragment() {
     }
@@ -83,6 +85,16 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_padding);
         places = new ArrayList<>();
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(MAP_PLACES)) {
+            List<MITMapPlace> list = savedInstanceState.getParcelableArrayList(MAP_PLACES);
+            if (list != null) {
+                places.addAll(list);
+                updateMapItems((ArrayList) places, true, true);
+            }
+
+            searchText = savedInstanceState.getString(SEARCH_TEXT);
+        }
 
         sharedPreferences = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(getActivity());
 
@@ -123,6 +135,8 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     }
 
     private boolean performSearch(View sender, Object handler, String searchText) {
+        this.searchText = searchText;
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (!recentSearches.contains(searchText)) {
             recentSearches.add(searchText);
@@ -252,6 +266,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 }
                 updateMapItems(new ArrayList(), true, true);
                 places.clear();
+                searchText = null;
                 recentsListview.setVisibility(View.GONE);
                 return true;
             }
@@ -283,6 +298,11 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
             menuItem.expandActionView();
             searchView.setQuery(queryText, true);
             getActivity().setIntent(new Intent());
+        } else if (!TextUtils.isEmpty(searchText)) {
+            menuItem.expandActionView();
+            searchView.setQuery(searchText, false);
+            recentsListview.setVisibility(View.GONE);
+            searchView.clearFocus();
         } else {
             searchView.setQueryHint(getString(R.string.maps_search_hint));
             menuItem.collapseActionView();
@@ -375,6 +395,14 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //noinspection unchecked
+        outState.putParcelableArrayList(MAP_PLACES, (ArrayList) places);
+        outState.putString(SEARCH_TEXT, searchText);
     }
 
     public enum Mode {
