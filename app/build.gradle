@@ -56,11 +56,6 @@ dependencies {
     compile 'org.threeten:threetenbp:1.2'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
-    compile('com.squareup.retrofit:converter-simplexml:1.9.0') {
-        exclude(group: 'xpp3', module: 'xpp3')
-        exclude(group: 'stax', module: 'stax-api')
-        exclude(group: 'stax', module: 'stax')
-    }
     compile 'com.cocosw:bottomsheet:1.+@aar'
     compile 'com.android.support:multidex:1.0.1'
     compile project(':qrcodereaderview')

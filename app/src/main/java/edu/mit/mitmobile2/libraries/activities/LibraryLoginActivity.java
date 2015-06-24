@@ -1,42 +1,25 @@
 package edu.mit.mitmobile2.libraries.activities;
 
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Switch;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-import org.w3c.dom.Element;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.RetrofitManager;
 import edu.mit.mitmobile2.libraries.LibraryManager;
-import edu.mit.mitmobile2.libraries.model.MITLibrariesXmlObject;
-import edu.mit.mitmobile2.libraries.model.xml.touchstone.MITTouchstoneResponse;
-import edu.mit.mitmobile2.libraries.model.xml.user.RelayState;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Header;
 import retrofit.client.Response;
-import retrofit.converter.SimpleXMLConverter;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
+import retrofit.mime.TypedString;
 
 public class LibraryLoginActivity extends AppCompatActivity {
 
@@ -68,17 +51,26 @@ public class LibraryLoginActivity extends AppCompatActivity {
             // TODO: Save login info in AccountUtils?
         }
 
-        LibraryManager.getLoginAuth(this, new Callback<MITLibrariesXmlObject>() {
+        LibraryManager.getLoginAuth(this, new Callback<Response>() {
             @Override
-            public void success(MITLibrariesXmlObject mitLibrariesXmlObject, Response response) {
+            public void success(Response response, Response response2) {
                 LoggingManager.Timber.d("Success!");
 
                 List<Header> headers = response.getHeaders();
                 for (Header header : headers) {
                     if (header.getName().equals("Content-Type")) {
                         if (header.getValue().equals("application/vnd.paos+xml")) {
-                            // Continue with auth
-                            postUserLoginInfo(mitLibrariesXmlObject.getHeader().getRelayState(), mitLibrariesXmlObject);
+                            String xml = getStringFromBody(response.getBody());
+
+                            int i = xml.indexOf("<ecp:RelayState");
+                            int k = xml.indexOf("</S:Header>");
+
+                            String relayState = xml.substring(i, k);
+                            relayState = relayState.replaceAll(" S:", " soap11:");
+
+                            TypedString typedString = alterXmlString(xml, "<S:Header>", "<S:Body>", "");
+                            postUserLoginInfo(relayState, typedString);
+
                         }
                     }
                 }
@@ -91,19 +83,20 @@ public class LibraryLoginActivity extends AppCompatActivity {
         });
     }
 
-    private void postUserLoginInfo(final RelayState relayState, MITLibrariesXmlObject object) {
+
+    private void postUserLoginInfo(final String relayState, final TypedString body) {
         LibraryManager.changeEndpoint("https://idp.touchstonenetwork.net/");
         LibraryManager.setUsernameAndPassword("mitlibrarytest@gmail.com", "readingrainbow22");
 
-        object.setHeader(null);
-
-        //TODO: Wrap Post call
-
-        LibraryManager.MIT_SECURE_SERVICE._postloginuser(object, new Callback<MITTouchstoneResponse>() {
+        LibraryManager.postLoginToIdp(body, new Callback<Response>() {
             @Override
-            public void success(MITTouchstoneResponse response, Response response2) {
+            public void success(Response response, Response response2) {
                 LoggingManager.Timber.d("Success!");
-                postLoginAuth(relayState, response);
+
+                String xml = getStringFromBody(response.getBody());
+
+                TypedString typedString = alterXmlString(xml, "<ecp:Response", "</soap11:Header>", relayState);
+                postLoginAuth(typedString);
             }
 
             @Override
@@ -114,27 +107,12 @@ public class LibraryLoginActivity extends AppCompatActivity {
 
     }
 
-    private void postLoginAuth(RelayState relayState, MITTouchstoneResponse response) {
-        DocumentsContract.Document document;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
+    private void postLoginAuth(TypedString response) {
         LibraryManager.changeEndpoint("https://mobile-dev.mit.edu/Shibboleth.sso/");
 
         LibraryManager.setUsernameAndPassword(null, null);
 
-        response.getHeader().setResponse(null);
-        response.getHeader().setRelayState(new edu.mit.mitmobile2.libraries.model.xml.touchstone.RelayState(relayState.getActor(), relayState.getMustUnderstand(), relayState.getValue()));
-
-        //TODO: Wrap Post call
-
-        Serializer serializer = new Persister();
-        try {
-            serializer.write(response, new File(Environment.getExternalStorageDirectory().getPath() + "/Download/response.xml"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        LibraryManager.MIT_SECURE_SERVICE._postloginuser2(response, new Callback<Response>() {
+        LibraryManager.postAuthToShibboleth(response, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 LoggingManager.Timber.d("Success!");
@@ -147,16 +125,20 @@ public class LibraryLoginActivity extends AppCompatActivity {
         });
     }
 
-    public static void elementToStream(Element element, OutputStream out) {
-        try {
-            DOMSource source = new DOMSource(element);
-            StreamResult result = new StreamResult(out);
-            TransformerFactory transFactory = TransformerFactory.newInstance();
-            Transformer transformer = transFactory.newTransformer();
-            transformer.transform(source, result);
-        } catch (Exception ex) {
-            LoggingManager.Timber.d("XML element to stream error = " + ex.getMessage());
-        }
+    private TypedString alterXmlString(String xml, String start, String end, String substitution) {
+        int i = xml.indexOf(start);
+        int k = xml.indexOf(end);
+
+        String before = xml.substring(0, i);
+        String after = xml.substring(k, xml.length());
+
+        String postString = before + substitution + after;
+        return new TypedString(postString);
+    }
+
+    private String getStringFromBody(TypedInput body) {
+        TypedByteArray byteArray = (TypedByteArray) body;
+        return new String(byteArray.getBytes());
     }
 
 }

@@ -3,12 +3,6 @@ package edu.mit.mitmobile2;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.squareup.okhttp.OkHttpClient;
-
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.convert.AnnotationStrategy;
-import org.simpleframework.xml.core.Persister;
-import org.simpleframework.xml.strategy.Strategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -35,8 +29,6 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
-import retrofit.converter.SimpleXMLConverter;
 import retrofit.converter.GsonConverter;
 
 public abstract class RetrofitManager {
@@ -117,24 +109,6 @@ public abstract class RetrofitManager {
             })
             .setRequestInterceptor(requestInterceptor)
             .setLogLevel(RestAdapter.LogLevel.FULL)
-            .build();
-
-    static Strategy strategy = new AnnotationStrategy();
-    static Serializer serializer = new Persister(strategy);
-    static OkHttpClient okHttpClient = new OkHttpClient();
-
-    protected static RestAdapter LOGIN_AUTH_ADAPTER = new RestAdapter.Builder()
-            .setEndpoint(mitEndpoint)
-            .setLog(new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                    Timber.d(message);
-                }
-            })
-            .setRequestInterceptor(requestInterceptor)
-            .setLogLevel(RestAdapter.LogLevel.FULL)
-            .setClient(new OkClient(okHttpClient))
-            .setConverter(new SimpleXMLConverter(serializer))
             .build();
 
     public static void changeEndpoint(String url) {

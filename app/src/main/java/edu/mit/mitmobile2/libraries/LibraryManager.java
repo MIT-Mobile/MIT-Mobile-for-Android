@@ -17,8 +17,6 @@ import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesMITIdentity;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesUser;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesWorldcatItem;
-import edu.mit.mitmobile2.libraries.model.MITLibrariesXmlObject;
-import edu.mit.mitmobile2.libraries.model.xml.touchstone.MITTouchstoneResponse;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.client.Response;
@@ -26,10 +24,11 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
+import retrofit.mime.TypedString;
 
 public class LibraryManager extends RetrofitManager {
     private static final MitLibraryService MIT_LIBRARY_SERVICE = MIT_REST_ADAPTER.create(MitLibraryService.class);
-    public static final MitSecureService MIT_SECURE_SERVICE = LOGIN_AUTH_ADAPTER.create(MitSecureService.class);
+    private static final MitSecureService MIT_SECURE_SERVICE = MIT_REST_ADAPTER.create(MitSecureService.class);
 
     private static final int LIBRARY_ITEMS_SEARCH_LIMIT = 20;
 
@@ -125,7 +124,7 @@ public class LibraryManager extends RetrofitManager {
         return returnValue;
     }
 
-    public static LibraryManagerCall getLoginAuth(Activity activity, Callback<MITLibrariesXmlObject> callback) {
+    public static LibraryManagerCall getLoginAuth(Activity activity, Callback<Response> callback) {
         LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
 
         returnValue.getClient().get(Constants.SECURE, Constants.Secure.SECURE_USER_PATH, null, null, returnValue);
@@ -140,6 +139,15 @@ public class LibraryManager extends RetrofitManager {
 
         return returnValue;
     }
+
+    public static void postLoginToIdp(TypedString body, Callback<Response> callback) {
+        MIT_SECURE_SERVICE._postloginuser(body, callback);
+    }
+
+    public static void postAuthToShibboleth(TypedString body, Callback<Response> callback) {
+        MIT_SECURE_SERVICE._postloginuser2(body, callback);
+    }
+
 
     public static void setUsernameAndPassword(String username, String password) {
         RetrofitManager.userName = username;
@@ -177,19 +185,19 @@ public class LibraryManager extends RetrofitManager {
                 "PAOS: ver=\"urn:liberty:paos:2003-08\"; \"urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp\";"
         })
         @GET(Constants.Secure.SECURE_USER_PATH)
-        void _getsecure(Callback<MITLibrariesXmlObject> callback);
+        void _getsecure(Callback<Response> callback);
 
         @Headers({
                 "Content-Type: application/vnd.paos+xml"
         })
         @POST("/idp/profile/SAML2/SOAP/ECP")
-        void _postloginuser(@Body MITLibrariesXmlObject obj, Callback<MITTouchstoneResponse> callback);
+        void _postloginuser(@Body TypedString obj, Callback<Response> callback);
 
         @Headers({
                 "Content-Type: application/vnd.paos+xml"
         })
         @POST("/SAML2/ECP")
-        void _postloginuser2(@Body MITTouchstoneResponse obj, Callback<Response> callback);
+        void _postloginuser2(@Body TypedString obj, Callback<Response> callback);
     }
 
     public static class LibraryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements LibraryManagerCall, Callback<T> {
