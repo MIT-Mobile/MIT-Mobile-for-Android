@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.Tile;
@@ -48,6 +50,13 @@ public class TourDirectionsActivity extends AppCompatActivity {
         mapView.onCreate(savedInstanceState);
         mapView.setEnabled(false);
         mapView.getMap().getUiSettings().setAllGesturesEnabled(false);
+        mapView.getMap().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return true;
+            }
+        });
+
         MapsInitializer.initialize(this);
 
         TileProvider provider = new TileProvider() {
