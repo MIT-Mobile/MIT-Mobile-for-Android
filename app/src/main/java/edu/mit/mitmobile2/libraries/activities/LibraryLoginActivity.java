@@ -70,7 +70,7 @@ public class LibraryLoginActivity extends AppCompatActivity {
 
                             TypedString typedString = alterXmlString(xml, "<S:Header>", "<S:Body>", "");
                             postUserLoginInfo(relayState, typedString);
-
+                            return;
                         }
                     }
                 }
