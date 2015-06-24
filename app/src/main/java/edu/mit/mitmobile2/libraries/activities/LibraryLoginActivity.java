@@ -58,7 +58,7 @@ public class LibraryLoginActivity extends AppCompatActivity {
 
                 List<Header> headers = response.getHeaders();
                 for (Header header : headers) {
-                    if (header.getName().equals("Content-Type")) {
+                    if (header.getName() != null && header.getName().equals("Content-Type")) {
                         if (header.getValue().equals("application/vnd.paos+xml")) {
                             String xml = getStringFromBody(response.getBody());
 
