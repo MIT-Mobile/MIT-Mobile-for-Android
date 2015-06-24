@@ -3,6 +3,8 @@ package edu.mit.mitmobile2.facilities.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -211,5 +213,19 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
 
     @Override
     public void fetchPlacesByCategories(String name, HashSet<String> locations) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_facility_location, menu);
+        MenuItem menuItem = menu.findItem(R.id.search);
+
+        if (name.equals(NEARBY_LOCATIONS)) {
+            menuItem.setVisible(false);
+        } else {
+            menuItem.setVisible(true);
+        }
+
+        return true;
     }
 }
