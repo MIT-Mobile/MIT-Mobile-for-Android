@@ -67,6 +67,8 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     private List<MITMapPlace> places;
     private String searchText;
 
+    private boolean cameFromOtherModule = false;
+
     public MapsFragment() {
     }
 
@@ -134,7 +136,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         return false;
     }
 
-    private boolean performSearch(View sender, Object handler, String searchText) {
+    private boolean performSearch(View sender, Object handler, final String searchText) {
         this.searchText = searchText;
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -153,6 +155,27 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         MapManager.getMapPlaces(getActivity(), queryParams, new Callback<ArrayList<MITMapPlace>>() {
             @Override
             public void success(ArrayList<MITMapPlace> mitMapPlaces, Response response) {
+                if (cameFromOtherModule) {
+                    cameFromOtherModule = false;
+
+                    for (MITMapPlace mapPlace : mitMapPlaces) {
+                        if (mapPlace.getBuildingNumber() != null && mapPlace.getBuildingNumber().equals(searchText)) {
+                            String markerText = "   1   ";
+                            mapPlace.setMarkerText(markerText);
+
+                            ArrayList<MITMapPlace> building = new ArrayList<>();
+                            building.add(mapPlace);
+
+                            updateMapItems(building, true, true);
+                            setMode(Mode.NO_SEARCH);
+
+                            dismissKeyboard();
+                            places = building;
+                            return;
+                        }
+                    }
+                }
+
                 for (MITMapPlace mapPlace : mitMapPlaces) {
                     int i = mitMapPlaces.indexOf(mapPlace);
                     String markerText = (i + 1) < 10 ? "   " + (i + 1) + "   " : "  " + (i + 1) + "  ";
@@ -162,8 +185,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 updateMapItems(mitMapPlaces, true, true);
                 setMode(Mode.NO_SEARCH);
 
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                dismissKeyboard();
                 places = mitMapPlaces;
             }
 
@@ -174,6 +196,11 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         });
 
         return true;
+    }
+
+    private void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
     }
 
     public void setMode(@NonNull Mode mode) {
@@ -286,6 +313,8 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
         if (getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
             String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
+
+            cameFromOtherModule = true;
 
             if (getActivity().getIntent().getBooleanExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, false)) {
                 String sanitized = StringUtils.sanitizeMapSearchString(queryText);
