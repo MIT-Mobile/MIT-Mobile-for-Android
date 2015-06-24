@@ -268,6 +268,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 places.clear();
                 searchText = null;
                 recentsListview.setVisibility(View.GONE);
+                mitMapView.resetCameraView();
                 return true;
             }
         });
