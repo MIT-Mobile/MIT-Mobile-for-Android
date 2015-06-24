@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Created by serg on 6/9/15.
- */
+
 public class FacilitiesCategory {
 
     private String uid;

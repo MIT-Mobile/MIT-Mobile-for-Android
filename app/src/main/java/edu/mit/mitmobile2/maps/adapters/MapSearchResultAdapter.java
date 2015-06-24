@@ -19,7 +19,7 @@ public class MapSearchResultAdapter extends BaseAdapter {
     private class ViewHolder {
         TextView title;
         TextView subtitle;
-        TextView info;
+        ImageView info;
     }
 
     private Context context;
@@ -58,7 +58,7 @@ public class MapSearchResultAdapter extends BaseAdapter {
 
             holder.title = (TextView) view.findViewById(R.id.map_search_result_title);
             holder.subtitle = (TextView) view.findViewById(R.id.map_search_result_subtitle);
-            holder.info = (TextView) view.findViewById(R.id.info_icon);
+            holder.info = (ImageView) view.findViewById(R.id.info_icon);
 
             view.setTag(holder);
         } else {

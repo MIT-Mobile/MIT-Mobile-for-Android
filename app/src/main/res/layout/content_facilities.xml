@@ -67,84 +67,140 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/room_layout"
+            android:id="@+id/not_leased_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/room_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/facilities_room"
+                    android:textColor="@color/mit_red" />
+
+                <TextView
+                    android:id="@+id/room_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/facilities_cell_height" />
+
+                <View style="@style/MITView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/problem_type_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/facilities_problem_type"
+                    android:textColor="@color/mit_red" />
+
+                <TextView
+                    android:id="@+id/problem_type_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/facilities_cell_height" />
+
+                <View style="@style/MITView" />
+            </LinearLayout>
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/facilities_home__line_vertical_padding"
+                android:text="@string/facilities_description"
+                android:textColor="@color/mit_red" />
+
+            <EditText
+                android:id="@+id/description_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/facilities_cell_height"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:backgroundTint="@android:color/transparent" />
+
+            <View
+                style="@style/MITView"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin" />
+
+            <TextView
+                android:id="@+id/attach_remove_photo_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/facilities_home__line_vertical_padding"
+                android:gravity="center_horizontal"
+                android:text="@string/facilities_attach_photo"
+                android:textColor="@color/mit_red" />
+
+            <ImageView
+                android:id="@+id/photo_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/facilities_home__line_vertical_padding" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/leased_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin">
+            <TextView
+                android:id="@+id/info_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
+
+            <View style="@style/MITView" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/facilities_maintainer"
+                android:textColor="@color/mit_red"
+                />
+
+            <TextView
+                android:id="@+id/maintainer_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/facilities_cell_height"
+                />
+
+            <View style="@style/MITView" />
+
+            <TextView
+                android:id="@+id/contact_title_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/facilities_room"
-                android:textColor="@color/mit_red" />
+                android:textColor="@color/mit_red"
+                />
 
             <TextView
-                android:id="@+id/room_text_view"
+                android:id="@+id/contact_info_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/facilities_cell_height" />
-
-            <View style="@style/MITView" />
+                android:layout_height="@dimen/facilities_cell_height"
+                />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/problem_type_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/facilities_problem_type"
-                android:textColor="@color/mit_red" />
-
-            <TextView
-                android:id="@+id/problem_type_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/facilities_cell_height" />
-
-            <View style="@style/MITView" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/facilities_home__line_vertical_padding"
-            android:text="@string/facilities_description"
-            android:textColor="@color/mit_red" />
-
-        <EditText
-            android:id="@+id/description_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/facilities_cell_height"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:backgroundTint="@android:color/transparent" />
-
-        <View
-            style="@style/MITView"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin" />
-
-        <TextView
-            android:id="@+id/attach_remove_photo_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/facilities_home__line_vertical_padding"
-            android:gravity="center_horizontal"
-            android:text="@string/facilities_attach_photo"
-            android:textColor="@color/mit_red" />
-
-        <ImageView
-            android:id="@+id/photo_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/facilities_home__line_vertical_padding" />
     </LinearLayout>
 </ScrollView>

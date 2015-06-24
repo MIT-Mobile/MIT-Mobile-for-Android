@@ -15,7 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "buildDescription", "\"${getBuildDescription()}\""
-        multiDexEnabled = true
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -62,6 +62,7 @@ dependencies {
         exclude(group: 'stax', module: 'stax')
     }
     compile 'com.cocosw:bottomsheet:1.+@aar'
+    compile 'com.android.support:multidex:1.0.1'
     compile project(':qrcodereaderview')
     compile project(':android-async-http-1.4.6')
 }
