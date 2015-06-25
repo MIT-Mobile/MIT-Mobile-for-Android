@@ -231,7 +231,9 @@ public class FacilitiesFragment extends Fragment {
 
     private void getNewPhotoFromActivity(Intent data) throws IOException {
         final boolean isCamera;
-        if (data.toString().equals("Intent {  }")) {
+
+        //Different Android version returns different data
+        if (data == null || data.toString().equals("Intent {  }")) {
             isCamera = true;
         } else {
             final String action = data.getAction();
