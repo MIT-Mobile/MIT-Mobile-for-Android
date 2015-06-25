@@ -311,6 +311,10 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
 
         searchTextView.setTextColor(Color.WHITE);
 
+        setSearchBarQuery(menuItem);
+    }
+
+    private void setSearchBarQuery(MenuItem searchItem) {
         if (getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY) != null) {
             String queryText = getActivity().getIntent().getStringExtra(Constants.LOCATION_KEY);
 
@@ -325,17 +329,17 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 }
             }
 
-            menuItem.expandActionView();
+            searchItem.expandActionView();
             searchView.setQuery(queryText, true);
             getActivity().setIntent(new Intent());
         } else if (!TextUtils.isEmpty(searchText)) {
-            menuItem.expandActionView();
+            searchItem.expandActionView();
             searchView.setQuery(searchText, false);
             recentsListview.setVisibility(View.GONE);
             searchView.clearFocus();
         } else {
             searchView.setQueryHint(getString(R.string.maps_search_hint));
-            menuItem.collapseActionView();
+            searchItem.collapseActionView();
         }
     }
 
@@ -365,6 +369,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public void onResume() {
         super.onResume();
         animateFABs();
+//        setSearchBarQuery();
     }
 
     @Override
