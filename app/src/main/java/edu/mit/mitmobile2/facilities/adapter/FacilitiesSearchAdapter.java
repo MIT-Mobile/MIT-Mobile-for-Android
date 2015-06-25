@@ -2,9 +2,6 @@ package edu.mit.mitmobile2.facilities.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.facilities.callback.LocationCallback;
 import edu.mit.mitmobile2.maps.model.MITMapPlace;
 import edu.mit.mitmobile2.maps.model.MITMapPlaceContent;
@@ -33,7 +29,14 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
         this.places = places;
         this.callback = callback;
         this.query = query.toLowerCase();
+
         sortPlaces();
+
+        if (query.length() > 0) {
+            MITMapPlace place = new MITMapPlace();
+            place.setName(String.format("Use \"%s\"", query));
+            places.add(0, place);
+        }
     }
 
     @Override
@@ -61,6 +64,7 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
             viewHolder = new ViewHolder();
             viewHolder.textViewTitle = (TextView) convertView.findViewById(android.R.id.text1);
             viewHolder.textViewTitle.setTextColor(Color.BLACK);
+            viewHolder.textViewTitle.setSingleLine(true);
 
             convertView.setTag(viewHolder);
         } else {
@@ -68,29 +72,15 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
         }
 
         final MITMapPlace mitMapPlace = getItem(position);
-        String name = getName(mitMapPlace);
-        String outputString;
 
-        if (name.isEmpty()) {
-            if (mitMapPlace.getBuildingNumber() != null) {
-                outputString = mitMapPlace.getBuildingNumber() + " - " + mitMapPlace.getName();
-            } else {
-                outputString = mitMapPlace.getName();
-            }
+        String contentName = getContentName(mitMapPlace);
+        String outputString = getOutputString(contentName, mitMapPlace);
+
+        if (position != 0) {
+            viewHolder.textViewTitle.setText(outputString);
         } else {
-            if (mitMapPlace.getBuildingNumber() != null) {
-                outputString = mitMapPlace.getBuildingNumber() + " ( " + name + " ) ";
-            } else {
-                outputString = mitMapPlace.getName() + " - " + name;
-            }
+            viewHolder.textViewTitle.setText(mitMapPlace.getName());
         }
-
-        int index = outputString.toLowerCase().indexOf(query.toLowerCase());
-        Spannable spannable = new SpannableString(outputString);
-        spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.mit_red)), index, index + query.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        viewHolder.textViewTitle.setSingleLine(true);
-        viewHolder.textViewTitle.setText(spannable);
 
         viewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,13 +94,12 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
                     }
                 } else if (mitMapPlace.getName() == null && (mitMapPlace.getBuildingNumber() != null)) {
                     transfer = mitMapPlace.getBuildingNumber();
-                } else if (mitMapPlace.getBuildingNumber() == null && mitMapPlace.getName()!= null) {
+                } else if (mitMapPlace.getBuildingNumber() == null && mitMapPlace.getName() != null) {
                     transfer = mitMapPlace.getName();
                 }
                 callback.fetchPlace(mitMapPlace.getId(), transfer);
             }
         });
-
 
         return convertView;
     }
@@ -132,21 +121,23 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
         });
     }
 
-    public String getName(MITMapPlace mitMapPlace) {
-        String name = "";
+    public String getContentName(MITMapPlace mitMapPlace) {
+        String contentName = "";
 
         if (mitMapPlace.getName().toLowerCase().contains(query)) {
-            name = mitMapPlace.getName();
+            contentName = "";
+        } else if (mitMapPlace.getBuildingNumber() != null && mitMapPlace.getBuildingNumber().toLowerCase().contains(query)) {
+            contentName = "";
         } else {
             for (MITMapPlaceContent content : mitMapPlace.getContents()) {
                 if (content.getName().toLowerCase().contains(query)) {
-                    name = content.getName();
+                    contentName = content.getName();
                     break;
                 } else {
                     if (content.getAltname() != null && content.getAltname().size() > 0) {
                         for (String altName : content.getAltname()) {content.getName().toLowerCase().contains(query);
                             if (altName.toLowerCase().contains(query)) {
-                                name = altName;
+                                contentName = altName;
                                 break;
                             }
                         }
@@ -155,7 +146,25 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
             }
         }
 
-        return name;
+        return contentName;
+    }
+
+    private String getOutputString(String contentName, MITMapPlace mitMapPlace) {
+        String outputString;
+        if (contentName.isEmpty()) {
+            if (mitMapPlace.getBuildingNumber() != null) {
+                outputString = mitMapPlace.getBuildingNumber() + " - " + mitMapPlace.getName();
+            } else {
+                outputString = mitMapPlace.getName();
+            }
+        } else {
+            if (mitMapPlace.getBuildingNumber() != null) {
+                outputString = mitMapPlace.getBuildingNumber() + " ( " + contentName + " ) ";
+            } else {
+                outputString = mitMapPlace.getName() + " - " + contentName;
+            }
+        }
+        return outputString;
     }
 
     class ViewHolder {

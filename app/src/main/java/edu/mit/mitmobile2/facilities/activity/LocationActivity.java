@@ -96,7 +96,12 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
 
             @Override
             public boolean onQueryTextChange(String s) {
-                searchPlaces(s);
+                if (s.length() > 0) {
+                    searchPlaces(s);
+                } else {
+                    listView.setAdapter(adapter);
+                }
+
                 return true;
             }
         });
@@ -195,6 +200,4 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
 
         return propertyOwner;
     }
-
-
 }

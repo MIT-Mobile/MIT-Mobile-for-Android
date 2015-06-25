@@ -3,6 +3,7 @@ package edu.mit.mitmobile2.facilities.adapter;
 import android.content.Context;
 
 import android.graphics.Color;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -59,6 +60,7 @@ public class PlaceAdapter extends BaseAdapter implements Filterable {
             convertView = View.inflate(parent.getContext(), android.R.layout.simple_list_item_1, null);
 
             viewHolder = new ViewHolder();
+
             viewHolder.textViewTitle = (TextView) convertView.findViewById(android.R.id.text1);
             viewHolder.textViewTitle.setTextColor(Color.BLACK);
             viewHolder.textViewTitle.setSingleLine(true);
@@ -84,7 +86,7 @@ public class PlaceAdapter extends BaseAdapter implements Filterable {
         }
 
         viewHolder.textViewTitle.setText(outputString);
-        viewHolder.textViewTitle.setSingleLine(true);
+
         viewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
