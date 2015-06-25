@@ -54,7 +54,7 @@ public class FullscreenMapFragment extends Fragment implements GoogleMap.OnMapLo
         View view = inflater.inflate(R.layout.fragment_tour_stop_map, null);
 
         MapView googleMapView = (MapView) view.findViewById(R.id.tour_map);
-        googleMapView.onCreate(savedInstanceState);
+        googleMapView.onCreate(null);
 
         mitMapView = new MITMapView(getActivity(), googleMapView, this);
         mitMapView.setMapViewExpanded(true);

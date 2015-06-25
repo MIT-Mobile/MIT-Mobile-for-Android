@@ -5,6 +5,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,19 +61,22 @@ public class RoomDetailActivity extends AppCompatActivity implements AdapterView
                 adapter.updateItems(building.getFloors());
             }
         } else {
-            MapManager.getBuildingDetails(this, "W20", new Callback<FacilitiesBuilding>() {
-                @Override
-                public void success(FacilitiesBuilding facilitiesBuilding, Response response) {
-                    LoggingManager.Timber.d("Success!");
-                    building = facilitiesBuilding;
-                    adapter.updateItems(facilitiesBuilding.getFloors());
-                }
+            String buildingString = getIntent().getStringExtra(Constants.FACILITIES_LOCATION);
+            if (!TextUtils.isEmpty(buildingString)) {
+                MapManager.getBuildingDetails(this, buildingString, new Callback<FacilitiesBuilding>() {
+                    @Override
+                    public void success(FacilitiesBuilding facilitiesBuilding, Response response) {
+                        LoggingManager.Timber.d("Success!");
+                        building = facilitiesBuilding;
+                        adapter.updateItems(facilitiesBuilding.getFloors());
+                    }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    LoggingManager.Timber.e("Building details", error);
-                }
-            });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        LoggingManager.Timber.e("Building details", error);
+                    }
+                });
+            }
         }
     }
 

@@ -165,12 +165,11 @@ public class MITMainActivity extends MITActivity {
         // get NavItem from long_name
         mNavItem = MITMainActivity.navMap.get(longName);
         String intentString = mNavItem.getIntent();
-        String title = navigationTitles.get(position).getLongName();
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
         if (!fragmentAlreadyExists(intentString)) {
-            swapInFragment(intentString, title);
+            swapInFragment(intentString, longName);
         }
     }
 
@@ -191,6 +190,8 @@ public class MITMainActivity extends MITActivity {
         } catch (IllegalAccessException e) {
             Timber.e(e, "Swap Fragments");
         }
+
+        currentModule = title;
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, f, intentString).commit();
         setTitle(title);
@@ -414,6 +415,7 @@ public class MITMainActivity extends MITActivity {
         editor.remove(Constants.FACILITIES_DESCRIPTION);
         editor.remove(Constants.FACILITIES_PHOTO);
         editor.remove(Constants.FACILITIES_PROPERTYOWNER);
+        editor.remove(Constants.FACILITIES_SEARCH_MODE);
         editor.commit();
     }
 }
