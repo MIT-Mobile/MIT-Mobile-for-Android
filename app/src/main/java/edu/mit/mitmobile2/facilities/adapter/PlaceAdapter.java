@@ -23,6 +23,7 @@ public class PlaceAdapter extends BaseAdapter implements Filterable {
     private List<MITMapPlace> filteredPlaces;
     private LocationCallback callback;
     private boolean searchMode = false;
+    private String query;
 
     private SearchItemFilter searchItemFilter = new SearchItemFilter();
 
@@ -53,7 +54,7 @@ public class PlaceAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
 
         if (convertView == null) {
@@ -90,7 +91,11 @@ public class PlaceAdapter extends BaseAdapter implements Filterable {
         viewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.fetchPlace(place.getId(), viewHolder.textViewTitle.getText().toString());
+                if (position == 0 && searchMode) {
+                    callback.fetchPlace(null, query, true);
+                } else {
+                    callback.fetchPlace(place.getId(), viewHolder.textViewTitle.getText().toString(), false);
+                }
             }
         });
 
@@ -117,6 +122,7 @@ public class PlaceAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             String filterString = constraint.toString().toLowerCase();
+            query = constraint.toString();
 
             FilterResults results = new FilterResults();
 

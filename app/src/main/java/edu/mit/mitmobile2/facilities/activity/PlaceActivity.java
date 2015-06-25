@@ -205,12 +205,13 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
     }
 
     @Override
-    public void fetchPlace(String id, String name) {
+    public void fetchPlace(String id, String name, boolean searchMode) {
         Intent result = new Intent();
         result.putExtra(Constants.FACILITIES_LOCATION, name);
         if (getPropertyOwner(id) != null) {
             result.putExtra(Constants.FACILITIES_PROPERTYOWNER, getPropertyOwner(id));
         }
+        result.putExtra(Constants.FACILITIES_SEARCH_MODE, searchMode);
         setResult(RESULT_OK, result);
         finish();
     }

@@ -74,6 +74,7 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
             Intent result = new Intent();
             result.putExtra(Constants.FACILITIES_LOCATION, data.getStringExtra(Constants.FACILITIES_LOCATION));
             result.putExtra(Constants.FACILITIES_PROPERTYOWNER, data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
+            result.putExtra(Constants.FACILITIES_SEARCH_MODE, data.getBooleanExtra(Constants.FACILITIES_SEARCH_MODE, false));
             setResult(RESULT_OK, result);
             finish();
         }
@@ -173,18 +174,18 @@ public class LocationActivity extends AppCompatActivity implements LocationCallb
         if (!name.equals(NEARBY_LOCATIONS)) {
             ArrayList<String> locationList = new ArrayList<>(locations);
             intent.putStringArrayListExtra(Constants.FACILITIES_LOCATIONS_KEY, locationList);
-
         }
         startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
-    public void fetchPlace(String id, String name) {
+    public void fetchPlace(String id, String name, boolean searchMode) {
         Intent result = new Intent();
         result.putExtra(Constants.FACILITIES_LOCATION, name);
         if (getPropertyOwner(id) != null) {
             result.putExtra(Constants.FACILITIES_PROPERTYOWNER, getPropertyOwner(id));
         }
+        result.putExtra(Constants.FACILITIES_SEARCH_MODE, searchMode);
         setResult(RESULT_OK, result);
         finish();
     }

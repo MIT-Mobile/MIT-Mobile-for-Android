@@ -55,7 +55,7 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
 
         if (convertView == null) {
@@ -85,19 +85,23 @@ public class FacilitiesSearchAdapter extends BaseAdapter implements Filterable {
         viewHolder.textViewTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String transfer = "";
-                if (mitMapPlace.getBuildingNumber() != null && mitMapPlace.getName() != null) {
-                    if (mitMapPlace.getBuildingNumber().equals(mitMapPlace.getName())) {
+                if (position == 0) {
+                    callback.fetchPlace(null, query, true);
+                } else {
+                    String transfer = "";
+                    if (mitMapPlace.getBuildingNumber() != null && mitMapPlace.getName() != null) {
+                        if (mitMapPlace.getBuildingNumber().equals(mitMapPlace.getName())) {
+                            transfer = mitMapPlace.getName();
+                        } else {
+                            transfer = mitMapPlace.getBuildingNumber() + " - " + mitMapPlace.getName();
+                        }
+                    } else if (mitMapPlace.getName() == null && (mitMapPlace.getBuildingNumber() != null)) {
+                        transfer = mitMapPlace.getBuildingNumber();
+                    } else if (mitMapPlace.getBuildingNumber() == null && mitMapPlace.getName() != null) {
                         transfer = mitMapPlace.getName();
-                    } else {
-                        transfer = mitMapPlace.getBuildingNumber() + " - " + mitMapPlace.getName();
                     }
-                } else if (mitMapPlace.getName() == null && (mitMapPlace.getBuildingNumber() != null)) {
-                    transfer = mitMapPlace.getBuildingNumber();
-                } else if (mitMapPlace.getBuildingNumber() == null && mitMapPlace.getName() != null) {
-                    transfer = mitMapPlace.getName();
+                    callback.fetchPlace(null, transfer, false);
                 }
-                callback.fetchPlace(mitMapPlace.getId(), transfer);
             }
         });
 

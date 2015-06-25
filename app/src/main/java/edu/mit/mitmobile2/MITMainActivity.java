@@ -415,6 +415,7 @@ public class MITMainActivity extends MITActivity {
         editor.remove(Constants.FACILITIES_DESCRIPTION);
         editor.remove(Constants.FACILITIES_PHOTO);
         editor.remove(Constants.FACILITIES_PROPERTYOWNER);
+        editor.remove(Constants.FACILITIES_SEARCH_MODE);
         editor.commit();
     }
 }
