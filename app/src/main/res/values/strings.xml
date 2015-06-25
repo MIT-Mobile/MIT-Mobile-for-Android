@@ -352,4 +352,8 @@
     <string name="scan_prefs_fast_scan_on">The device is set to scan multiple codes in quick succession.</string>
     <string name="scan_prefs_fast_scan_off">The device is set to scan one code at a time.</string>
     <string name="scan_share_using">Share using</string>
+
+    <!-- Settings -->
+    <string name="settings_info">A lock icon will appear next to services requiring authentication. Use your MIT Kerberos username or Touchstone Collaboration Account to log in</string>
+    <string name="settings_title">Touchstone Settings</string>
 </resources>
