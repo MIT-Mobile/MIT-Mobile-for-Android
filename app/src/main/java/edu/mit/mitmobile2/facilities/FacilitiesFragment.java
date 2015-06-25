@@ -467,10 +467,10 @@ public class FacilitiesFragment extends Fragment {
                 FacilitiesPropertyOwner propertyOwner = gson.fromJson(proOwnerJson, FacilitiesPropertyOwner.class);
                 infoTextView.setText(getResources().getString(R.string.is_leased, location, propertyOwner.getName()));
                 maintainerTextView.setText(propertyOwner.getName());
-                if (propertyOwner.getEmail() != null) {
+                if (propertyOwner.getEmail() != null && !propertyOwner.getEmail().isEmpty()) {
                     contactTitleTextView.setText(getResources().getString(R.string.facilities_email));
                     contactInfoTextView.setText(propertyOwner.getEmail());
-                } else if (propertyOwner.getPhone() != null) {
+                } else if (propertyOwner.getPhone() != null && !propertyOwner.getPhone().isEmpty()) {
                     contactTitleTextView.setText(getResources().getString(R.string.facilities_phone));
                     contactInfoTextView.setText(propertyOwner.getPhone());
                 } else {
