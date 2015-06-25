@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MITMainActivity;
 import edu.mit.mitmobile2.PreferenceUtils;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.dining.model.MITDiningLocation;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailDay;
 import edu.mit.mitmobile2.dining.model.MITDiningRetailVenue;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
@@ -127,9 +129,12 @@ public class DiningRetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.location_segment)
     void goToLocation() {
+        MITDiningLocation location = venue.getLocation();
+        String queryString = !TextUtils.isEmpty(location.getMitRoomNumber()) ? location.getMitRoomNumber() : location.getLocationDescription();
+
         Intent intent = new Intent(this, MITMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(Constants.LOCATION_KEY, venue.getLocation().getLocationDescription());
+        intent.putExtra(Constants.LOCATION_KEY, queryString);
         intent.putExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, true);
         startActivity(intent);
     }
@@ -140,24 +145,27 @@ public class DiningRetailActivity extends AppCompatActivity {
         SharedPreferences sharedPrefs = PreferenceUtils.getDefaultSharedPreferencesMultiProcess(this);
         String id = venue.getIdentifier();
         Set<String> stringSet = new HashSet<>();
+        SharedPreferences.Editor editor = sharedPrefs.edit();
         if (isVenueFavorite()) {
             if (sharedPrefs.contains(Constants.FAVORITE_VENUES_KEY)) {
                 stringSet.addAll(sharedPrefs.getStringSet(Constants.FAVORITE_VENUES_KEY, null));
                 stringSet.remove(id);
-                sharedPrefs.edit().remove(Constants.FAVORITE_VENUES_KEY).commit();
-                sharedPrefs.edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+                editor.remove(Constants.FAVORITE_VENUES_KEY);
+                editor.putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet);
             }
         } else {
             if (sharedPrefs.contains(Constants.FAVORITE_VENUES_KEY)) {
                 stringSet.addAll(sharedPrefs.getStringSet(Constants.FAVORITE_VENUES_KEY, null));
                 stringSet.add(id);
-                sharedPrefs.edit().remove(Constants.FAVORITE_VENUES_KEY).commit();
-                sharedPrefs.edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+                editor.remove(Constants.FAVORITE_VENUES_KEY);
+                editor.putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet);
             } else {
                 stringSet.add(id);
-                sharedPrefs.edit().putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet).commit();
+                editor.putStringSet(Constants.FAVORITE_VENUES_KEY, stringSet);
             }
         }
+
+        editor.apply();
 
         favoritesButton.setText(!venue.isFavorite() ? R.string.venue_add_to_favs : R.string.venue_remove_from_favs);
     }
