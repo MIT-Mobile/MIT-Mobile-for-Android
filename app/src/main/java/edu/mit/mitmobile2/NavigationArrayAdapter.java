@@ -57,10 +57,17 @@ public class NavigationArrayAdapter extends ArrayAdapter<NavItem> {
             // This is how you obtain a reference to the TextViews.
             // These TextViews are created in the XML files we defined.
 
-            Log.d("ZZZ", "icon = " + i.getMenuIcon());
+            int menuIcon = i.getMenuIcon();
+            Log.d("ZZZ", "icon = " + menuIcon);
 
             holder.moduleText.setText(i.getShortName());
-            holder.moduleIcon.setImageResource(i.getMenuIcon());
+
+            if (menuIcon != 0) {
+                holder.moduleIcon.setVisibility(View.VISIBLE);
+                holder.moduleIcon.setImageResource(menuIcon);
+            } else {
+                holder.moduleIcon.setVisibility(View.GONE);
+            }
         }
 
         // the view must be returned to our activity

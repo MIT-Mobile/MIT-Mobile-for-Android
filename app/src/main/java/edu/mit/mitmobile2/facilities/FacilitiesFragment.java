@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +59,7 @@ import edu.mit.mitmobile2.facilities.activity.LocationActivity;
 import edu.mit.mitmobile2.facilities.activity.ProblemTypesActivity;
 import edu.mit.mitmobile2.facilities.activity.RoomDetailActivity;
 import edu.mit.mitmobile2.facilities.model.FacilitiesPropertyOwner;
+import edu.mit.mitmobile2.shared.StringUtils;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -147,6 +149,7 @@ public class FacilitiesFragment extends Fragment {
     @OnClick(R.id.room_layout)
     public void selectRoom() {
         Intent intent = new Intent(getActivity(), RoomDetailActivity.class);
+        intent.putExtra(Constants.FACILITIES_LOCATION, StringUtils.sanitizeMapSearchString(location));
         startActivityForResult(intent, ROOM_REQUEST_CODE);
     }
 
@@ -211,13 +214,14 @@ public class FacilitiesFragment extends Fragment {
                 editor.commit();
             } else if (requestCode == LOCATION_REQUEST_CODE) {
                 editor.putString(Constants.FACILITIES_LOCATION, data.getStringExtra(Constants.FACILITIES_LOCATION));
-                if (data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER) != null ){
+                if (data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER) != null) {
                     Gson gson = new Gson();
                     String json = gson.toJson(data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
                     editor.putString(Constants.FACILITIES_PROPERTYOWNER, json);
                 } else {
                     editor.putString(Constants.FACILITIES_PROPERTYOWNER, "");
                 }
+                editor.putString(Constants.FACILITIES_ROOM_NUMBER, "");
                 editor.commit();
             } else if (requestCode == PROBLEM_REQUEST_CODE) {
                 editor.putString(Constants.FACILITIES_PROBLEM_TYPE, data.getStringExtra(Constants.FACILITIES_PROBLEM_TYPE));
@@ -478,6 +482,7 @@ public class FacilitiesFragment extends Fragment {
         public editTextWatcher(String name) {
             this.name = name;
         }
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 

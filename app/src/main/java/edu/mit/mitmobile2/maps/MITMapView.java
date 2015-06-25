@@ -388,7 +388,15 @@ public class MITMapView {
     public void showSingleItem() {
         if (dynamicMarkers.size() > 0) {
             dynamicMarkers.get(0).showInfoWindow();
+
+            CameraPosition position = new CameraPosition.Builder()
+                    .target(new LatLng(dynamicMarkers.get(0).getPosition().latitude, dynamicMarkers.get(0).getPosition().longitude)).zoom(MITMapView.INITIAL_ZOOM).build();
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
+    }
+
+    public void resetCameraView() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLatLng, MITMapView.INITIAL_ZOOM));
     }
 }
 

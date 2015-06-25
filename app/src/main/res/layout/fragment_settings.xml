@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="40dp"
+    tools:context="edu.mit.mitmobile2.libraries.activities.LibraryLoginActivity">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_grey" />
+
+    <EditText
+        android:id="@+id/username_edittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/username_or_email"
+        android:padding="10dp"
+        android:textColor="@color/medium_grey" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/shuttle_home_image_padding"
+        android:background="@color/divider_grey" />
+
+    <EditText
+        android:id="@+id/password_edittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:hint="@string/pwd"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textColor="@color/medium_grey" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_grey" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="@string/login"
+        android:textColor="@color/mit_red" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:drawableLeft="@drawable/ic_lock_outline"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="@string/settings_info" />
+
+</LinearLayout>
