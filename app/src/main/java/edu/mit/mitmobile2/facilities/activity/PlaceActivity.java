@@ -3,6 +3,11 @@ package edu.mit.mitmobile2.facilities.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
     @InjectView(R.id.place_list_view)
     ListView placeListView;
 
+    private SearchView searchView;
     private List<String> locationIdsbyCategory;
     private String name;
     private List<MITMapPlace> allLocations;
@@ -199,17 +205,59 @@ public class PlaceActivity extends MITActivity implements LocationCallback {
     }
 
     @Override
-    public void fetchPlace(String id, String name) {
+    public void fetchPlace(String id, String name, boolean searchMode) {
         Intent result = new Intent();
         result.putExtra(Constants.FACILITIES_LOCATION, name);
         if (getPropertyOwner(id) != null) {
             result.putExtra(Constants.FACILITIES_PROPERTYOWNER, getPropertyOwner(id));
         }
+        result.putExtra(Constants.FACILITIES_SEARCH_MODE, searchMode);
         setResult(RESULT_OK, result);
         finish();
     }
 
     @Override
     public void fetchPlacesByCategories(String name, HashSet<String> locations) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_facility_location, menu);
+        MenuItem menuItem = menu.findItem(R.id.search);
+
+        if (name.equals(NEARBY_LOCATIONS)) {
+            menuItem.setVisible(false);
+        } else {
+            menuItem.setVisible(true);
+        }
+
+        searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.length() > 0) {
+                    placeAdapter.setSearchMode(true);
+                } else {
+                    placeAdapter.setSearchMode(false);
+                }
+
+                performSearch(s);
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    private boolean performSearch(String query) {
+        placeAdapter.getFilter().filter(query);
+        return true;
     }
 }
