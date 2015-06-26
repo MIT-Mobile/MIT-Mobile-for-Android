@@ -66,8 +66,10 @@ public class MapListBookmarkFragment extends MapListFragment implements Bookmark
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent result = new Intent();
-        result.putExtra(Constants.PLACES_KEY, ((MITMapPlace) adapter.getItem(position)).getId());
+        MITMapPlace place = (MITMapPlace) adapter.getItem(position);
+        result.putExtra(Constants.PLACES_KEY, place.getId());
         result.putExtra(Constants.Map.TAB_TYPE, 1);
+        result.putExtra(Constants.CATEGORY_SEARCH_QUERY, place.getName());
         getActivity().setResult(Activity.RESULT_OK, result);
         getActivity().finish();
     }

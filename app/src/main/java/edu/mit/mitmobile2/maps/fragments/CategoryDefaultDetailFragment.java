@@ -112,8 +112,13 @@ public class CategoryDefaultDetailFragment extends Fragment implements AdapterVi
         if (position == 0) {
             // add all is selected
             result.putParcelableArrayListExtra(Constants.PLACES_KEY, places);
+            if (places.size() > 0) {
+                result.putExtra(Constants.CATEGORY_SEARCH_QUERY, places.get(0).getMitCategory().getName());
+            }
         } else {
-            result.putExtra(Constants.PLACES_KEY, places.get(position - 1));
+            MITMapPlace place = places.get(position - 1);
+            result.putExtra(Constants.PLACES_KEY, place);
+            result.putExtra(Constants.CATEGORY_SEARCH_QUERY, place.getName());
         }
 
         result.putExtra(Constants.Map.TAB_TYPE, 0);
