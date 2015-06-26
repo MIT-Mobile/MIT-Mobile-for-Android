@@ -1,6 +1,7 @@
 package edu.mit.mitmobile2.emergency.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -15,10 +16,12 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mit.mitmobile2.Constants;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.emergency.EmergencyManager;
+import edu.mit.mitmobile2.emergency.activity.EmergencyContactsActivity;
 import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsInfoAdapter;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoAnnouncement;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
@@ -96,7 +99,9 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         int rowType = adapter.getItemViewType(position);
         if (rowType == MITEmergencyContactsInfoAdapter.ROW_TYPE_SHOW_MORE && contacts != null) {
-            ((AppCompatActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, EmergencyContactsFragment.newInstance(contacts)).addToBackStack(null).commit();
+            Intent intent = new Intent(getActivity(), EmergencyContactsActivity.class);
+            intent.putParcelableArrayListExtra(Constants.EMERGENCY_CONTACTS_KEY, (ArrayList<? extends Parcelable>) contacts);
+            startActivity(intent);
         }
     }
 

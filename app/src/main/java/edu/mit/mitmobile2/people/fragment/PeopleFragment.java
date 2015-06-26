@@ -36,6 +36,7 @@ import butterknife.OnItemClick;
 import edu.mit.mitmobile2.DBAdapter;
 import edu.mit.mitmobile2.MITSearchAdapter;
 import edu.mit.mitmobile2.R;
+import edu.mit.mitmobile2.emergency.activity.EmergencyContactsActivity;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager;
 import edu.mit.mitmobile2.people.PeopleDirectoryManager.PeopleDirectoryManagerCall;
 import edu.mit.mitmobile2.people.activity.PersonDetailActivity;
@@ -278,7 +279,8 @@ public class PeopleFragment extends Fragment {
     }
 
     protected void showEmergencyContacts(View sender) {
-        startActivity(SharedActivityManager.createEmergencyContactsIntent(getActivity()));
+        Intent intent = new Intent(getActivity(), EmergencyContactsActivity.class);
+        startActivity(intent);
     }
 
     private boolean searchTextChanged(View sender, Object handler, String s) {

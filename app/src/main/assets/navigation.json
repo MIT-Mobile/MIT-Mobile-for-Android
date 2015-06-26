@@ -110,13 +110,5 @@
     "home_icon": "home_about",
     "intent": "edu.mit.mitmobile2.about.AboutFragment",
     "url": "mitmobile2://about"
-  },
-  "mobius": {
-    "long_name": "Mobius",
-    "short_name": "Mobius",
-    "menu_icon": "menu_mobius",
-    "home_icon": "ic_settings",
-    "intent": "edu.mit.mitmobile2.mobius.ResourcesFragment",
-    "url": "mitmobile2://mobius"
   }
 }

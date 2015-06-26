@@ -33,6 +33,7 @@ public class Constants {
     public static final String FACILITIES_CATEGORY_KEY = "category";
     public static final String FACILITIES_PROPERTYOWNER = "propertyOwner";
     public static final String FACILITIES_SEARCH_MODE = "searchMode";
+    public static final String EMERGENCY_CONTACTS_KEY = "emergencyContacts";
 
     /* We use these to bind the *Managers to the MITAPIClient via api.json */
     public static final String TOURS = "tours";
