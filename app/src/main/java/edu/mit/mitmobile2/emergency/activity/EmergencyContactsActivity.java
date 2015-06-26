@@ -2,33 +2,78 @@ package edu.mit.mitmobile2.emergency.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
+import java.util.List;
+
+import edu.mit.mitmobile2.Constants;
+import edu.mit.mitmobile2.MitMobileApplication;
+import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.emergency.fragment.EmergencyContactsFragment;
+import edu.mit.mitmobile2.emergency.EmergencyManager;
+import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsAdapter;
+import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 import edu.mit.mitmobile2.shared.SharedActivityManager;
+import edu.mit.mitmobile2.shared.SharedIntentManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-public class EmergencyContactsActivity extends AppCompatActivity {
+public class EmergencyContactsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private MITEmergencyContactsAdapter adapter;
+    private ListView listView;
+    private List<MITEmergencyInfoContact> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emergency_contacts);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new EmergencyContactsFragment())
-                    .commit();
+
+        listView = (ListView) findViewById(R.id.emergency_contacts_listview);
+
+        List<MITEmergencyInfoContact> contacts = getIntent().getParcelableArrayListExtra(Constants.EMERGENCY_CONTACTS_KEY);
+        adapter = new MITEmergencyContactsAdapter();
+
+        if (contacts == null) {
+            fetchContacts();
+        } else {
+            adapter.updateItems(contacts);
         }
+
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void fetchContacts() {
+        EmergencyManager.getContacts(this, new Callback<List<MITEmergencyInfoContact>>() {
+            @Override
+            public void success(List<MITEmergencyInfoContact> mitEmergencyInfoContacts, Response response) {
+                contacts = mitEmergencyInfoContacts;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_emergency_contacts, menu);
-        return true;
+                onContactsReceived(contacts);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                MitMobileApplication.bus.post(new OttoBusEvent.RetrofitFailureEvent(error));
+            }
+        });
+    }
+
+    private void onContactsReceived(List<MITEmergencyInfoContact> contacts) {
+        if (contacts == null) {
+            return;
+        }
+
+        if (adapter != null) {
+            adapter.updateItems(contacts);
+        }
     }
 
     @Override
@@ -39,8 +84,6 @@ public class EmergencyContactsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_settings:
-                return true;
             case android.R.id.home:
                 this.startActivity(SharedActivityManager.createHomeJumpActivity(this));
                 this.finish();
@@ -50,4 +93,8 @@ public class EmergencyContactsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        startActivity(SharedIntentManager.createTelephoneCallIntent(((MITEmergencyInfoContact) adapter.getItem(position)).getPhone()));
+    }
 }

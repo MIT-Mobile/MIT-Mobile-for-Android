@@ -34,8 +34,6 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
     private List<MITDiningHouseVenue> listVenues;
     private List<MITDiningLinks> listResources;
 
-    private DiningHouseCallback callback;
-
     public HouseDiningAdapter(Context context, ArrayList<MITDiningDining> listAnnouncements, ArrayList<MITDiningHouseVenue> listVenues, ArrayList<MITDiningLinks> listResources) {
         this.context = context;
         this.listAnnouncements = listAnnouncements;
@@ -43,13 +41,12 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
         this.listResources = listResources;
     }
 
-    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining, DiningHouseCallback callback) {
+    public HouseDiningAdapter(Context context, MITDiningDining mitDiningDining) {
         this.context = context;
         this.mitDiningDining = mitDiningDining;
         this.listAnnouncements = new ArrayList<>();
         this.listVenues = new ArrayList<>();
         this.listResources = new ArrayList<>();
-        this.callback = callback;
 
         refreshData();
     }
@@ -178,13 +175,6 @@ public class HouseDiningAdapter extends BaseAdapter implements StickyListHeaders
                 } catch (NullPointerException e) {
                     Picasso.with(context).load(R.drawable.grey_rect).placeholder(R.drawable.grey_rect).into(holder.venueImageView);
                 }
-
-                holder.diningHouseRow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.diningHouseVenueCallback(venue);
-                    }
-                });
 
                 boolean isLast = (listVenues.indexOf(venue) == listVenues.size() - 1);
                 holder.venueDivider.setVisibility(isLast ? View.GONE : View.VISIBLE);

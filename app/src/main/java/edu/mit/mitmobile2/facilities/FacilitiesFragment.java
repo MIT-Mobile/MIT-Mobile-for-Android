@@ -88,6 +88,7 @@ public class FacilitiesFragment extends Fragment {
     private String email;
     private String description;
     private String proOwnerJson;
+    private boolean searchMode;
 
     private Menu optionMenu;
     private SharedPreferences.Editor editor;
@@ -214,6 +215,7 @@ public class FacilitiesFragment extends Fragment {
                 editor.commit();
             } else if (requestCode == LOCATION_REQUEST_CODE) {
                 editor.putString(Constants.FACILITIES_LOCATION, data.getStringExtra(Constants.FACILITIES_LOCATION));
+                editor.putBoolean(Constants.FACILITIES_SEARCH_MODE, data.getBooleanExtra(Constants.FACILITIES_SEARCH_MODE, false));
                 if (data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER) != null) {
                     Gson gson = new Gson();
                     String json = gson.toJson(data.getParcelableExtra(Constants.FACILITIES_PROPERTYOWNER));
@@ -403,6 +405,7 @@ public class FacilitiesFragment extends Fragment {
         editor.remove(Constants.FACILITIES_DESCRIPTION);
         editor.remove(Constants.FACILITIES_PROPERTYOWNER);
         editor.remove(Constants.FACILITIES_PHOTO);
+        editor.remove(Constants.FACILITIES_SEARCH_MODE);
         editor.commit();
 
         updateProblemValues();
@@ -417,6 +420,7 @@ public class FacilitiesFragment extends Fragment {
         email = prefs.getString(Constants.FACILITIES_EMAIL, "");
         description = prefs.getString(Constants.FACILITIES_DESCRIPTION, "");
         proOwnerJson = prefs.getString(Constants.FACILITIES_PROPERTYOWNER, "");
+        searchMode = prefs.getBoolean(Constants.FACILITIES_SEARCH_MODE, false);
 
         updateSubmitButtonStatus();
     }
@@ -438,33 +442,44 @@ public class FacilitiesFragment extends Fragment {
 
         locationTextView.setText((location.isEmpty()) ? null : location);
 
-        if (proOwnerJson.isEmpty()) {
-            leasedLayout.setVisibility(View.GONE);
+        if (searchMode) {
             notLeasedLayout.setVisibility(View.VISIBLE);
+            leasedLayout.setVisibility(View.GONE);
+            roomLayout.setVisibility(View.GONE);
             emailEditText.setText((email.isEmpty()) ? null : email);
-            roomTextView.setText((room.isEmpty()) ? null : room);
-            problemTextView.setText((problem.isEmpty()) ? null : problem);
             descriptionEditText.setText((description.isEmpty()) ? null : description);
-            roomLayout.setVisibility((location.isEmpty()) ? View.GONE : View.VISIBLE);
+            problemTextView.setText((problem.isEmpty()) ? null : problem);
             attachOrRemovePhotoTextView.setText((isAttached) ? getResources().getString(R.string.facilities_remove_photo) : getResources().getString(R.string.facilities_attach_photo));
         } else {
-            notLeasedLayout.setVisibility(View.GONE);
-            leasedLayout.setVisibility(View.VISIBLE);
-            Gson gson = new Gson();
-            FacilitiesPropertyOwner propertyOwner = gson.fromJson(proOwnerJson, FacilitiesPropertyOwner.class);
-            infoTextView.setText(getResources().getString(R.string.is_leased, location, propertyOwner.getName()));
-            maintainerTextView.setText(propertyOwner.getName());
-            if (propertyOwner.getEmail() != null) {
-                contactTitleTextView.setText(getResources().getString(R.string.facilities_email));
-                contactInfoTextView.setText(propertyOwner.getEmail());
-            } else if (propertyOwner.getPhone() != null) {
-                contactTitleTextView.setText(getResources().getString(R.string.facilities_phone));
-                contactInfoTextView.setText(propertyOwner.getPhone());
+            if (proOwnerJson.isEmpty()) {
+                leasedLayout.setVisibility(View.GONE);
+                notLeasedLayout.setVisibility(View.VISIBLE);
+                emailEditText.setText((email.isEmpty()) ? null : email);
+                roomTextView.setText((room.isEmpty()) ? null : room);
+                problemTextView.setText((problem.isEmpty()) ? null : problem);
+                descriptionEditText.setText((description.isEmpty()) ? null : description);
+                roomLayout.setVisibility((location.isEmpty()) ? View.GONE : View.VISIBLE);
+                attachOrRemovePhotoTextView.setText((isAttached) ? getResources().getString(R.string.facilities_remove_photo) : getResources().getString(R.string.facilities_attach_photo));
             } else {
-                contactTitleTextView.setVisibility(View.GONE);
-                contactInfoTextView.setVisibility(View.GONE);
+                notLeasedLayout.setVisibility(View.GONE);
+                leasedLayout.setVisibility(View.VISIBLE);
+                Gson gson = new Gson();
+                FacilitiesPropertyOwner propertyOwner = gson.fromJson(proOwnerJson, FacilitiesPropertyOwner.class);
+                infoTextView.setText(getResources().getString(R.string.is_leased, location, propertyOwner.getName()));
+                maintainerTextView.setText(propertyOwner.getName());
+                if (propertyOwner.getEmail() != null && !propertyOwner.getEmail().isEmpty()) {
+                    contactTitleTextView.setText(getResources().getString(R.string.facilities_email));
+                    contactInfoTextView.setText(propertyOwner.getEmail());
+                } else if (propertyOwner.getPhone() != null && !propertyOwner.getPhone().isEmpty()) {
+                    contactTitleTextView.setText(getResources().getString(R.string.facilities_phone));
+                    contactInfoTextView.setText(propertyOwner.getPhone());
+                } else {
+                    contactTitleTextView.setVisibility(View.GONE);
+                    contactInfoTextView.setVisibility(View.GONE);
+                }
             }
         }
+
     }
 
     private void savePhotoStatus(String base64String) {
