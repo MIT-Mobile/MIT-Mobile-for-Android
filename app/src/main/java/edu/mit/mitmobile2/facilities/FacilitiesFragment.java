@@ -11,9 +11,12 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -394,24 +398,7 @@ public class FacilitiesFragment extends Fragment {
         if (!photo.isEmpty()) {
             try {
                 photoImageView.setVisibility(View.VISIBLE);
-
-                try {
-                    InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse(photo));
-
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(photo, options);
-
-                    options.inSampleSize = 2;
-                    options.inJustDecodeBounds = false;
-                    options.inPurgeable = true;
-
-                    Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
-                    photoImageView.setImageBitmap(bitmap);
-
-                } catch (FileNotFoundException e) {
-                    LoggingManager.Timber.d("____________photo error____________", e);
-                }
+                photoImageView.setImageBitmap(getBitmap());
 
                 isAttached = true;
 
@@ -462,6 +449,88 @@ public class FacilitiesFragment extends Fragment {
             }
         }
 
+    }
+
+    private Bitmap getBitmap() {
+        Bitmap bitmap = null;
+        try {
+            InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse(photo));
+
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            int targetWidth = display.getWidth();
+            int targetHeight = (int) getResources().getDimension(R.dimen.faciliteis_image_view);
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(Uri.parse(photo), filePathColumn, null, null, null);
+            String imagePath;
+            if (cursor == null) {
+                imagePath = Uri.parse(photo).getPath();
+
+            } else {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imagePath = cursor.getString(columnIndex);
+            }
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(imagePath, options);
+
+            int photoWidth = options.outWidth;
+            int photoHeight = options.outHeight;
+
+            int scaleFactor = 1;
+            while (true) {
+                if(photoWidth / 2 < targetWidth && photoHeight / 2 < targetHeight) {
+                    break;
+                }
+                photoWidth /= 2;
+                photoHeight /= 2;
+                scaleFactor++;
+            }
+
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = scaleFactor;
+
+            bitmap = BitmapFactory.decodeStream(is, null, options);
+
+            ExifInterface ei = new ExifInterface(imagePath);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            bitmap = rotateImage(bitmap, orientation);
+
+        } catch (FileNotFoundException e1) {
+            LoggingManager.Timber.d("____________photo error____________", e1);
+        } catch (IOException e2) {
+            LoggingManager.Timber.d("____________photo error____________", e2);
+        }
+
+        return bitmap;
+    }
+
+    private Bitmap rotateImage(Bitmap bitmap, int orientation) {
+        int rotation = 0;
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotation = 270;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotation = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotation = 90;
+                break;
+            default:
+                return bitmap;
+        }
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
 
     private void savePhotoStatus(String base64String) {
