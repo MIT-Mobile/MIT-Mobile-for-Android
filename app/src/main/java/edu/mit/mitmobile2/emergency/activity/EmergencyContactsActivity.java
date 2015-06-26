@@ -95,6 +95,6 @@ public class EmergencyContactsActivity extends AppCompatActivity implements Adap
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        startActivity(SharedIntentManager.createTelephoneCallIntent(((MITEmergencyInfoContact) adapter.getItem(position)).getPhone()));
+        startActivity(SharedIntentManager.createTelephoneDialIntent(((MITEmergencyInfoContact) adapter.getItem(position)).getPhone()));
     }
 }

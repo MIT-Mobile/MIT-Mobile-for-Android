@@ -34,11 +34,11 @@ public class SharedIntentManager {
         return (list != null && list.size() > 0);
     }
 
-    public static Intent createTelephoneCallIntent(@NonNull Context packageContext, int stringId) {
-        return createTelephoneCallIntent(packageContext.getString(stringId));
+    public static Intent createTelephoneDialIntent(@NonNull Context packageContext, int stringId) {
+        return createTelephoneDialIntent(packageContext.getString(stringId));
     }
 
-    public static Intent createTelephoneCallIntent(@NonNull String number) {
+    public static Intent createTelephoneDialIntent(@NonNull String number) {
         return new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));
     }
 
@@ -61,7 +61,7 @@ public class SharedIntentManager {
     }
 
     public static Intent createBrowserIntent(String url) {
-        Intent intent = null;
+        Intent intent;
         if (url.startsWith("http://") || url.startsWith("https://")) {
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));

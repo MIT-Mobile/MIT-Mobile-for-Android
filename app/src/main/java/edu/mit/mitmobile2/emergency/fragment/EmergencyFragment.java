@@ -25,6 +25,7 @@ import edu.mit.mitmobile2.emergency.activity.EmergencyContactsActivity;
 import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsInfoAdapter;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoAnnouncement;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
+import edu.mit.mitmobile2.shared.SharedIntentManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -102,6 +103,9 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
             Intent intent = new Intent(getActivity(), EmergencyContactsActivity.class);
             intent.putParcelableArrayListExtra(Constants.EMERGENCY_CONTACTS_KEY, (ArrayList<? extends Parcelable>) contacts);
             startActivity(intent);
+        } else if (rowType == MITEmergencyContactsInfoAdapter.ROW_TYPE_CONTACT) {
+            MITEmergencyInfoContact contact = (MITEmergencyInfoContact) adapter.getItem(position);
+            this.startActivity(SharedIntentManager.createTelephoneDialIntent(contact.getPhone()));
         }
     }
 

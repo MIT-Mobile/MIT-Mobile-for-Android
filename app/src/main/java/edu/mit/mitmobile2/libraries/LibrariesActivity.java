@@ -11,8 +11,5 @@ public class LibrariesActivity extends MITMainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		this.setContentLayoutId(R.layout.content_libraries);
 		super.onCreate(savedInstanceState);
-
-
 	}
-
 }
