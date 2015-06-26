@@ -480,13 +480,8 @@ public class FacilitiesFragment extends Fragment {
             int photoHeight = options.outHeight;
 
             int scaleFactor = 1;
-            while (true) {
-                if(photoWidth / 2 < targetWidth && photoHeight / 2 < targetHeight) {
-                    break;
-                }
-                photoWidth /= 2;
-                photoHeight /= 2;
-                scaleFactor++;
+            while(photoWidth / scaleFactor > targetWidth || photoHeight / scaleFactor > targetHeight) {
+                scaleFactor *= 2;
             }
 
             options.inJustDecodeBounds = false;
