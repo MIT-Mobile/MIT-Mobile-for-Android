@@ -1,5 +1,6 @@
-{
-  "news": {
+[
+  {
+    "key": "news",
     "long_name": "MIT News",
     "short_name": "News",
     "menu_icon": "ic_newspaper",
@@ -7,7 +8,8 @@
     "intent": "edu.mit.mitmobile2.news.NewsFragment",
     "url": "mitmobile2://news"
   },
-  "shuttles": {
+  {
+    "key": "shuttles",
     "long_name": "Shuttles",
     "short_name": "Shuttles",
     "menu_icon": "ic_shuttle",
@@ -15,7 +17,8 @@
     "intent": "edu.mit.mitmobile2.shuttles.fragment.ShuttlesFragment",
     "url": "mitmobile2://shuttles"
   },
-  "maps": {
+  {
+    "key": "maps",
     "long_name": "Map",
     "short_name": "Map",
     "menu_icon": "ic_map",
@@ -23,7 +26,8 @@
     "intent": "edu.mit.mitmobile2.maps.MapsFragment",
     "url": "mitmobile2://maps"
   },
-  "events": {
+  {
+    "key": "events",
     "long_name": "Events Calendar",
     "short_name": "Events",
     "menu_icon": "ic_events_calendar",
@@ -31,7 +35,8 @@
     "intent": "edu.mit.mitmobile2.events.fragment.EventsFragment",
     "url": "mitmobile2://events"
   },
-  "people": {
+  {
+    "key": "people",
     "long_name": "People Directory",
     "short_name": "Directory",
     "menu_icon": "ic_people_directory",
@@ -39,7 +44,8 @@
     "intent": "edu.mit.mitmobile2.people.fragment.PeopleFragment",
     "url": "mitmobile2://people"
   },
-  "tour": {
+  {
+    "key": "tour",
     "long_name": "Campus Tour",
     "short_name": "Tours",
     "menu_icon": "ic_campus_tour",
@@ -47,7 +53,8 @@
     "intent": "edu.mit.mitmobile2.tour.fragment.TourFragment",
     "url": "mitmobile2://tour"
   },
-  "emergency": {
+  {
+    "key": "emergency",
     "long_name": "Emergency Info",
     "short_name": "Emergency",
     "menu_icon": "ic_emergency_info",
@@ -55,7 +62,8 @@
     "intent": "edu.mit.mitmobile2.emergency.fragment.EmergencyFragment",
     "url": "mitmobile2://emergency"
   },
-  "libraries": {
+  {
+    "key": "libraries",
     "long_name": "Libraries",
     "short_name": "Libraries",
     "menu_icon": "ic_library",
@@ -63,7 +71,8 @@
     "intent": "edu.mit.mitmobile2.libraries.LibrariesFragment",
     "url": "mitmobile2://libraries"
   },
-  "facilities": {
+  {
+    "key": "facilities",
     "long_name": "Bldg Services",
     "short_name": "Bldg Services",
     "menu_icon": "ic_bldg_services",
@@ -71,7 +80,8 @@
     "intent": "edu.mit.mitmobile2.facilities.FacilitiesFragment",
     "url": "mitmobile2://facilities"
   },
-  "dining": {
+  {
+    "key": "dining",
     "long_name": "Dining",
     "short_name": "Dining",
     "menu_icon": "ic_dining",
@@ -79,7 +89,8 @@
     "intent": "edu.mit.mitmobile2.dining.DiningFragment",
     "url": "mitmobile2://dining"
   },
-  "qrreader": {
+  {
+    "key": "qrreader",
     "long_name": "Scanner",
     "short_name": "Scanner",
     "menu_icon": "ic_qr_scanner",
@@ -87,7 +98,8 @@
     "intent": "edu.mit.mitmobile2.qrreader.QrReaderFragment",
     "url": "mitmobile2://qrreader"
   },
-  "links": {
+  {
+    "key": "links",
     "long_name": "Links",
     "short_name": "Links",
     "menu_icon": "menu_links",
@@ -95,7 +107,8 @@
     "intent": "edu.mit.mitmobile2.links.LinksFragment",
     "url": "mitmobile2://links"
   },
-  "settings": {
+  {
+    "key": "settings",
     "long_name": "Settings",
     "short_name": "Settings",
     "menu_icon": "menu_settings",
@@ -103,12 +116,22 @@
     "intent": "edu.mit.mitmobile2.settings.SettingsFragment",
     "url": "mitmobile2://settings"
   },
-  "about": {
+  {
+    "key": "about",
     "long_name": "About",
     "short_name": "About",
     "menu_icon": "menu_about",
     "home_icon": "home_about",
     "intent": "edu.mit.mitmobile2.about.AboutFragment",
     "url": "mitmobile2://about"
+  },
+  {
+    "key": "mobius",
+    "long_name": "Mobius",
+    "short_name": "Mobius",
+    "menu_icon": "menu_mobius",
+    "home_icon": "ic_settings",
+    "intent": "edu.mit.mitmobile2.mobius.ResourcesFragment",
+    "url": "mitmobile2://mobius"
   }
-}
+]
