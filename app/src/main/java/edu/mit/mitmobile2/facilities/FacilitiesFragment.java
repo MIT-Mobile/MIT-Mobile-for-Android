@@ -11,15 +11,17 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -41,10 +43,9 @@ import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -70,7 +71,6 @@ public class FacilitiesFragment extends Fragment {
     private static final String MY_DIR = "MyDir";
     private static final String IMG_PREFIX = "img_";
     private static final String IMG_SUFFIX = ".jpg";
-    private static final String BASE64_PREFIX = "data:image/png;base64,";
 
     private static final int PHOTO_REQUEST_CODE = 1;
     private static final int LOCATION_REQUEST_CODE = 2;
@@ -237,7 +237,9 @@ public class FacilitiesFragment extends Fragment {
 
     private void getNewPhotoFromActivity(Intent data) throws IOException {
         final boolean isCamera;
-        if (data.toString().equals("Intent {  }")) {
+
+        //Different Android version returns different data
+        if (data == null || data.toString().equals("Intent {  }")) {
             isCamera = true;
         } else {
             final String action = data.getAction();
@@ -250,7 +252,7 @@ public class FacilitiesFragment extends Fragment {
             editedPhotoUri = data.getData();
         }
 
-        convertImage(editedPhotoUri);
+        savePhotoStatus(editedPhotoUri.toString());
     }
 
     private void sendUrgentIssuesByEmail() {
@@ -303,7 +305,16 @@ public class FacilitiesFragment extends Fragment {
     }
 
     private void submitProblem() {
-        FacilitiesManager.postProblem(email, location, room, problem, description, photo, new Callback<Response>() {
+        String base64String = "";
+        if (!photo.isEmpty()) {
+            Bitmap bitmap = ((BitmapDrawable)photoImageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byte[] b = baos.toByteArray();
+            base64String = Base64.encodeToString(b, Base64.DEFAULT);
+        }
+
+        FacilitiesManager.postProblem(email, location, room, problem, description, base64String, new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.report_submit),
@@ -353,48 +364,6 @@ public class FacilitiesFragment extends Fragment {
         attachOrRemovePhotoTextView.setText(getResources().getString(R.string.facilities_attach_photo));
     }
 
-    private void convertImage(Uri uri) throws IOException {
-        InputStream is = getActivity().getContentResolver().openInputStream(uri);
-        Bitmap bitmap = BitmapFactory.decodeStream(is);
-        is.close();
-        new Base64Task().execute(bitmap);
-
-        photoImageView.setVisibility(View.VISIBLE);
-
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        int photoImageViewWidth = display.getWidth();
-        int photoImageViewHeight = (int) getResources().getDimension(R.dimen.faciliteis_image_view);
-
-        int photoWidth = (photoImageViewWidth > bitmap.getWidth()) ? bitmap.getWidth() : photoImageViewWidth;
-        int photoHeight = (photoImageViewHeight > bitmap.getHeight()) ? bitmap.getHeight() : photoImageViewHeight;
-
-        Picasso.with(photoImageView.getContext())
-                .load(editedPhotoUri.toString())
-                .resize(photoWidth, photoHeight)
-                .centerCrop()
-                .into(photoImageView);
-    }
-
-    private class Base64Task extends AsyncTask<Bitmap, Void, String> {
-        @Override
-        protected String doInBackground(Bitmap... params) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            params[0].compress(Bitmap.CompressFormat.JPEG, 70, baos);
-            byte[] b = baos.toByteArray();
-
-            String base64String = Base64.encodeToString(b, Base64.DEFAULT);
-            savePhotoStatus(base64String);
-
-            return BASE64_PREFIX + Base64.encodeToString(b, Base64.DEFAULT);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            updateProblemValues();
-            updateProblemViews();
-        }
-    }
-
     private void resetFacilitiesHome() {
         isAttached = false;
         updateSubmitButtonStatus();
@@ -429,10 +398,10 @@ public class FacilitiesFragment extends Fragment {
         if (!photo.isEmpty()) {
             try {
                 photoImageView.setVisibility(View.VISIBLE);
-                byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                photoImageView.setImageBitmap(bitmap);
+                photoImageView.setImageBitmap(getBitmap());
+
                 isAttached = true;
+
             } catch (Resources.NotFoundException e) {
                 LoggingManager.Timber.d("____________photo error____________", e);
             }
@@ -482,6 +451,83 @@ public class FacilitiesFragment extends Fragment {
 
     }
 
+    private Bitmap getBitmap() {
+        Bitmap bitmap = null;
+        try {
+            InputStream is = getActivity().getContentResolver().openInputStream(Uri.parse(photo));
+
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            int targetWidth = display.getWidth();
+            int targetHeight = (int) getResources().getDimension(R.dimen.faciliteis_image_view);
+
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(Uri.parse(photo), filePathColumn, null, null, null);
+            String imagePath;
+            if (cursor == null) {
+                imagePath = Uri.parse(photo).getPath();
+
+            } else {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imagePath = cursor.getString(columnIndex);
+            }
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(imagePath, options);
+
+            int photoWidth = options.outWidth;
+            int photoHeight = options.outHeight;
+
+            int scaleFactor = 1;
+            while(photoWidth / scaleFactor > targetWidth || photoHeight / scaleFactor > targetHeight) {
+                scaleFactor *= 2;
+            }
+
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = scaleFactor;
+
+            bitmap = BitmapFactory.decodeStream(is, null, options);
+
+            ExifInterface ei = new ExifInterface(imagePath);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            bitmap = rotateImage(bitmap, orientation);
+
+        } catch (FileNotFoundException e1) {
+            LoggingManager.Timber.d("____________photo error____________", e1);
+        } catch (IOException e2) {
+            LoggingManager.Timber.d("____________photo error____________", e2);
+        }
+
+        return bitmap;
+    }
+
+    private Bitmap rotateImage(Bitmap bitmap, int orientation) {
+        int rotation = 0;
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotation = 270;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotation = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotation = 90;
+                break;
+            default:
+                return bitmap;
+        }
+
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+    }
+
     private void savePhotoStatus(String base64String) {
         if (isAttached) {
             editor.putString(Constants.FACILITIES_PHOTO, base64String);
@@ -489,7 +535,11 @@ public class FacilitiesFragment extends Fragment {
             editor.remove(Constants.FACILITIES_PHOTO);
         }
         editor.commit();
+
+        updateProblemValues();
+        updateProblemViews();
     }
+
 
     private class editTextWatcher implements TextWatcher {
         String name;

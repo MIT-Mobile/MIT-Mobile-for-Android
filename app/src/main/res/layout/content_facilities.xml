@@ -38,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/facilities_cell_height"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:backgroundTint="@android:color/transparent" />
+            android:background="@null"
+            />
 
         <View
             style="@style/MITView"
@@ -134,7 +135,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/facilities_cell_height"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:backgroundTint="@android:color/transparent" />
+                android:background="@null"
+                />
 
             <View
                 style="@style/MITView"

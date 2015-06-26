@@ -7,22 +7,6 @@
     android:paddingRight="10dp"
     android:paddingTop="5dp">
 
-    <TextView
-        android:id="@+id/map_search_result_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:textColor="@color/black"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/map_search_result_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/map_search_result_title"
-        android:textColor="@color/mit_grey"
-        android:textSize="12sp" />
-
     <ImageView
         android:id="@+id/info_icon"
         android:layout_width="30dp"
@@ -43,5 +27,25 @@
         android:src="@drawable/ic_remove_circle"
         android:tint="@color/mit_red"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/map_search_result_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@+id/info_icon"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/map_search_result_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/map_search_result_title"
+        android:layout_toLeftOf="@+id/info_icon"
+        android:textColor="@color/mit_grey"
+        android:textSize="12sp" />
 
 </RelativeLayout>

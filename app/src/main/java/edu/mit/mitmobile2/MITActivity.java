@@ -3,6 +3,7 @@ package edu.mit.mitmobile2;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -100,7 +101,11 @@ public class MITActivity extends AppCompatActivity implements GoogleApiClient.Co
             cv.put(Schema.Location.LATITUDE, location.getLatitude());
             cv.put(Schema.Location.LONGITUDE, location.getLongitude());
             cv.put(Schema.Location.ID_COL, 1);
-            getContentResolver().insert(MITContentProvider.LOCATION_URI, cv);
+            try {
+                getContentResolver().insert(MITContentProvider.LOCATION_URI, cv);
+            } catch (SQLiteDatabaseLockedException e) {
+                Timber.e("Locked", e);
+            }
         }
     }
 

@@ -28,7 +28,7 @@ import edu.mit.mitmobile2.dining.model.MITDiningHouseVenue;
 import edu.mit.mitmobile2.dining.model.MITDiningLinks;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class HouseDiningFragment extends Fragment implements AdapterView.OnItemClickListener, DiningHouseCallback {
+public class HouseDiningFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private static final String KEY_STATE_DINING = "state_dining";
 
@@ -52,7 +52,7 @@ public class HouseDiningFragment extends Fragment implements AdapterView.OnItemC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dining_house, null);
 
-        adapter = new HouseDiningAdapter(getActivity(), null, this);
+        adapter = new HouseDiningAdapter(getActivity(), null);
 
         listView = (StickyListHeadersListView) view.findViewById(R.id.list_dining_house);
         listView.setOnItemClickListener(this);
@@ -123,6 +123,9 @@ public class HouseDiningFragment extends Fragment implements AdapterView.OnItemC
             startActivity(intent);
         } else if (selectedItem instanceof MITDiningHouseVenue) {                   // venue
             MITDiningHouseVenue houseVenue = (MITDiningHouseVenue) selectedItem;
+            Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
+            intent.putExtra(Constants.DINING_HOUSE, houseVenue);
+            startActivity(intent);
             // TODO: add logic here
         } else if (selectedItem instanceof MITDiningLinks) {                        // resource
             MITDiningLinks link = (MITDiningLinks) selectedItem;
@@ -136,13 +139,6 @@ public class HouseDiningFragment extends Fragment implements AdapterView.OnItemC
                 // TODO: show toast here or so
             }
         }
-    }
-
-    @Override
-    public void diningHouseVenueCallback(MITDiningHouseVenue venue) {
-        Intent intent = new Intent(getActivity(), DiningHouseActivity.class);
-        intent.putExtra(Constants.DINING_HOUSE, venue);
-        startActivity(intent);
     }
 
     @Override
