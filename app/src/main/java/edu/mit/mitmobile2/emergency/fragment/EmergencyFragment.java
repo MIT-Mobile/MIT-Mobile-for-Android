@@ -22,6 +22,7 @@ import edu.mit.mitmobile2.emergency.EmergencyManager;
 import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsInfoAdapter;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoAnnouncement;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
+import edu.mit.mitmobile2.shared.SharedIntentManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -97,6 +98,9 @@ public class EmergencyFragment extends Fragment implements AdapterView.OnItemCli
         int rowType = adapter.getItemViewType(position);
         if (rowType == MITEmergencyContactsInfoAdapter.ROW_TYPE_SHOW_MORE && contacts != null) {
             ((AppCompatActivity)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, EmergencyContactsFragment.newInstance(contacts)).addToBackStack(null).commit();
+        } else if (rowType == MITEmergencyContactsInfoAdapter.ROW_TYPE_CONTACT) {
+            MITEmergencyInfoContact contact = (MITEmergencyInfoContact) adapter.getItem(position);
+            this.startActivity(SharedIntentManager.createTelephoneDialIntent(contact.getPhone()));
         }
     }
 

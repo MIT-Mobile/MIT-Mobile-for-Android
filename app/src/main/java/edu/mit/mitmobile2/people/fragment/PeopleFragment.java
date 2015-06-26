@@ -274,7 +274,7 @@ public class PeopleFragment extends Fragment {
     }
 
     protected void callDirectoryAssistance(View sender) {
-        startActivity(SharedActivityManager.createTelephoneCallIntent(getActivity(), R.string.people_tel_directory_assistance));
+        startActivity(SharedActivityManager.createTelephoneDialIntent(getActivity(), R.string.people_tel_directory_assistance));
     }
 
     protected void showEmergencyContacts(View sender) {

@@ -11,18 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import edu.mit.mitmobile2.MitMobileApplication;
-import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.emergency.EmergencyManager;
-import edu.mit.mitmobile2.emergency.EmergencyManager.EmergencyManagerCall;
 import edu.mit.mitmobile2.emergency.adapter.MITEmergencyContactsAdapter;
 import edu.mit.mitmobile2.emergency.model.MITEmergencyInfoContact;
 import edu.mit.mitmobile2.shared.SharedIntentManager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 
 
 /**
@@ -71,7 +63,7 @@ public class EmergencyContactsFragment extends ListFragment {
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
-        this.startActivity(SharedIntentManager.createTelephoneCallIntent(((MITEmergencyInfoContact) adapter.getItem(position)).getPhone()));
+        this.startActivity(SharedIntentManager.createTelephoneDialIntent(((MITEmergencyInfoContact) adapter.getItem(position)).getPhone()));
     }
 }
 
