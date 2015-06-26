@@ -47,6 +47,7 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MITMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(Constants.LOCATION_KEY, venue.getLocation().getLocationDescription());
+        intent.putExtra(Constants.LOCATION_SHOULD_SANITIZE_QUERY_KEY, true);
         startActivity(intent);
     }
 
@@ -107,7 +108,9 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
                     String endDate = venue.getMealsByDay().get(i - 1).getDateString();
                     meals = venue.getMealsByDay().get(i - 1).getMeals();
 
-                    String range = formatDate(startDate) + " - " + formatDate(endDate);
+                    String start = formatDate(startDate);
+                    String end = formatDate(endDate);
+                    String range = start.equals(end) ? start : start + " - " + end;
                     buildAndAddView(range, meals);
 
                     previousMeals = venue.getMealsByDay().get(i).getMeals();
@@ -146,20 +149,29 @@ public class DiningHouseInfoActivity extends AppCompatActivity {
         ListView mealsListView = (ListView) layout.findViewById(R.id.meals_list_view);
         TextView hoursTextView = (TextView) layout.findViewById(R.id.hours_text_view);
 
-        mealsListView.setVisibility(View.VISIBLE);
-        hoursTextView.setVisibility(View.GONE);
+        if (meals == null) {
+            mealsListView.setVisibility(View.GONE);
+            hoursTextView.setVisibility(View.VISIBLE);
+            hoursTextView.setText(getResources().getString(R.string.dining_day_closed));
+        } else {
+            mealsListView.setVisibility(View.VISIBLE);
+            hoursTextView.setVisibility(View.GONE);
+
+            HouseHoursAdapter adapter = new HouseHoursAdapter(this, meals);
+            mealsListView.setAdapter(adapter);
+        }
 
         dateRangeTextView.setText(range);
-
-        HouseHoursAdapter adapter = new HouseHoursAdapter(this, meals);
-        mealsListView.setAdapter(adapter);
-
         hoursLayout.addView(layout);
     }
 
     private boolean checkMeals(List<MITDiningMeal> currentMeals, List<MITDiningMeal> previousMeals) {
         boolean isSame = true;
-        if (currentMeals.size() != previousMeals.size()) {
+        if (currentMeals == null) {
+            isSame = false;
+        } else if (previousMeals == null) {
+            isSame = false;
+        } else if (currentMeals.size() != previousMeals.size()) {
             isSame = false;
         } else {
             for (int i = 0; i < currentMeals.size(); i++) {

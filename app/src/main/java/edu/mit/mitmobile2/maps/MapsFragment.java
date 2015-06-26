@@ -83,6 +83,8 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        getActivity().setTitle(getString(R.string.maps));
+
         mapCallback = this;
 
         mitMapView.mapBoundsPadding = (int) getActivity().getResources().getDimension(R.dimen.map_bounds_padding);
@@ -310,8 +312,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
         assert searchTextView != null;
 
         searchTextView.setTextColor(Color.WHITE);
-
-        setSearchBarQuery(menuItem);
     }
 
     private void setSearchBarQuery(MenuItem searchItem) {
@@ -344,6 +344,12 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        setSearchBarQuery(menu.findItem(R.id.search_maps));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.home) {
             if (this.mode != Mode.NO_SEARCH) {
@@ -369,7 +375,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
     public void onResume() {
         super.onResume();
         animateFABs();
-//        setSearchBarQuery();
     }
 
     @Override
@@ -391,7 +396,6 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                 mitMapView.setToDefaultBounds(false, 0);
             } else if (requestCode == 200) {
                 int type = data.getIntExtra(Constants.Map.TAB_TYPE, -1);
-
                 switch (type) {
                     case 0: {
                         MITMapPlace place = data.getParcelableExtra(Constants.PLACES_KEY);
@@ -405,6 +409,7 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                             places.addAll(placesExtra);
                         }
 
+                        searchText = data.getStringExtra(Constants.CATEGORY_SEARCH_QUERY);
                         updateMapItems((ArrayList) places, true, true);
                     }
                     break;
@@ -415,19 +420,20 @@ public class MapsFragment extends FullscreenMapFragment implements FullscreenMap
                         places.clear();
                         places.add(place);
 
+                        searchText = data.getStringExtra(Constants.CATEGORY_SEARCH_QUERY);
                         updateMapItems((ArrayList) places, true, true);
                     }
                     break;
                     case 2: {
-                        String query = data.getStringExtra(Constants.Map.RECENT_QUERY);
-                        if (!TextUtils.isEmpty(query)) {
-                            performSearch(searchView, this, query);
+                        searchText = data.getStringExtra(Constants.Map.RECENT_QUERY);
+                        if (!TextUtils.isEmpty(searchText)) {
+                            performSearch(searchView, this, searchText);
                         }
                     }
                     break;
                     default:
                 }
-
+                getActivity().invalidateOptionsMenu();
             }
         }
     }
