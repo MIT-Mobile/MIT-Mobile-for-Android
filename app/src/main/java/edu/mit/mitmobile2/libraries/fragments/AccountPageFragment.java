@@ -55,7 +55,7 @@ public class AccountPageFragment extends Fragment {
             }
         });
 
-        //TODO: Query API for account info
+        // TODO: Query API for account info
 
         return view;
     }

@@ -236,11 +236,11 @@ public abstract class RetrofitManager {
                 facilitiesPropertyOwner.setId(entry.getKey());
                 for (Map.Entry<String, JsonElement> e : innerEntries) {
                     if (e.getKey().equals("contact-email")) {
-                        facilitiesPropertyOwner.setEmail(e.getValue().toString());
+                        facilitiesPropertyOwner.setEmail(e.getValue().toString().replaceAll("\"", ""));
                     } else if (e.getKey().equals("contact-phone")) {
-                        facilitiesPropertyOwner.setPhone(e.getValue().toString());
+                        facilitiesPropertyOwner.setPhone(e.getValue().toString().replaceAll("\"", ""));
                     } else if (e.getKey().equals("contact-name")) {
-                        facilitiesPropertyOwner.setName(e.getValue().toString());
+                        facilitiesPropertyOwner.setName(e.getValue().toString().replaceAll("\"", ""));
                     } else if (e.getKey().equals("hidden")) {
                         facilitiesPropertyOwner.setHidden(e.getValue().toString());
                     } else if (e.getKey().equals("leased")) {

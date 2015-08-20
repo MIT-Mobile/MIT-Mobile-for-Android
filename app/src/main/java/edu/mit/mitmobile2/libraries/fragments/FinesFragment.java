@@ -32,7 +32,7 @@ public class FinesFragment extends AccountPageFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        //TODO: Get fines
+        // TODO: Get fines
 
         List<MITLibrariesMITFineItem> fineItems = new ArrayList<>();
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -165,12 +165,11 @@ public class MITMainActivity extends MITActivity {
         // get NavItem from long_name
         mNavItem = MITMainActivity.navMap.get(longName);
         String intentString = mNavItem.getIntent();
-        String title = navigationTitles.get(position).getLongName();
 
         mDrawerLayout.closeDrawer(mDrawerList);
 
         if (!fragmentAlreadyExists(intentString)) {
-            swapInFragment(intentString, title);
+            swapInFragment(intentString, longName);
         }
     }
 
@@ -191,6 +190,8 @@ public class MITMainActivity extends MITActivity {
         } catch (IllegalAccessException e) {
             Timber.e(e, "Swap Fragments");
         }
+
+        currentModule = title;
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, f, intentString).commit();
         setTitle(title);
@@ -276,14 +277,14 @@ public class MITMainActivity extends MITActivity {
                 ex.printStackTrace();
             }
             try {
-                navigation = new JSONObject(json);
+                JSONArray jsonArray = new JSONArray(json);
 
-                Iterator n = navigation.keys();
                 List<String> keysList = new ArrayList<>();
-                while (n.hasNext()) {
+
+                for (int i = 0; i < jsonArray.length(); i++) {
                     try {
-                        String key = (String) n.next();
-                        JSONObject module = navigation.getJSONObject(key);
+                        JSONObject module = jsonArray.getJSONObject(i);
+                        String key = module.getString("key");
                         String longName = module.getString("long_name");
                         Timber.d(longName);
                         keysList.add(longName);
@@ -414,6 +415,7 @@ public class MITMainActivity extends MITActivity {
         editor.remove(Constants.FACILITIES_DESCRIPTION);
         editor.remove(Constants.FACILITIES_PHOTO);
         editor.remove(Constants.FACILITIES_PROPERTYOWNER);
+        editor.remove(Constants.FACILITIES_SEARCH_MODE);
         editor.commit();
     }
 }

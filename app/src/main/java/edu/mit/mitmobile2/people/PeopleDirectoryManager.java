@@ -87,7 +87,7 @@ public class PeopleDirectoryManager extends RetrofitManager {
                 case EMAIL:
                     return SharedActivityManager.createSendEmailIntent(value);
                 case PHONE:
-                    return SharedActivityManager.createTelephoneCallIntent(value);
+                    return SharedActivityManager.createTelephoneDialIntent(value);
                 case MAP:
                     return SharedActivityManager.createMapIntent(value);
                 case EXTERNAL:

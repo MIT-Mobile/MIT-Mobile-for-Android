@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/date_range_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/mit_grey"
-        />
+        android:textColor="@color/mit_grey" />
 
     <TextView
         android:id="@+id/hours_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="30dp"
-        android:visibility="gone"
-        />
+        android:layout_marginTop="4dp"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/meals_list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:dividerHeight="0dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="4dp"
         android:divider="@null"
-        />
+        android:dividerHeight="0dp" />
 </LinearLayout>
