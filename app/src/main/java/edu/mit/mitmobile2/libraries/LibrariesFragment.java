@@ -23,7 +23,7 @@ import butterknife.InjectView;
 import edu.mit.mitmobile2.MitMobileApplication;
 import edu.mit.mitmobile2.OttoBusEvent;
 import edu.mit.mitmobile2.R;
-import edu.mit.mitmobile2.libraries.activities.AccountActivity;
+import edu.mit.mitmobile2.libraries.activities.LibraryLoginActivity;
 import edu.mit.mitmobile2.libraries.adapter.LibraryLinksAdapter;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesLink;
 import edu.mit.mitmobile2.shared.SharedIntentManager;
@@ -91,7 +91,7 @@ public class LibrariesFragment extends Fragment {
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AccountActivity.class);
+                Intent intent = new Intent(getActivity(), LibraryLoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -134,10 +134,11 @@ public class LibrariesFragment extends Fragment {
     private void refreshLinks(List<MITLibrariesLink> mitLibrariesLink) {
         links.clear();
         if (mitLibrariesLink != null) {
-            // append predefined links here
-            String[] predefinedLinks = getResources().getStringArray(R.array.predefined_link_titles);
-            for (String title : predefinedLinks) {
-                links.add(new MITLibrariesLink(title));
+            // add predefined links here
+            String[] predefinedTitles = getResources().getStringArray(R.array.predefined_link_titles);
+            String[] predefinedLinks = getResources().getStringArray(R.array.predefined_links);
+            for (int i = 0; i < predefinedLinks.length; i++) {
+                links.add(new MITLibrariesLink(predefinedTitles[i], predefinedLinks[i]));
             }
             links.addAll(mitLibrariesLink);
         }

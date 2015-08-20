@@ -45,6 +45,7 @@ public class Constants {
     public static final String MAP = "map";
     public static final String LIBRARIES = "libraries";
     public static final String SECURE = "secure";
+    public static final String LOGIN = "login";
     public static final String LINKS = "links";
     public static final String FACILITIES = "facilities";
     public static final String SCANNER = "scanner";

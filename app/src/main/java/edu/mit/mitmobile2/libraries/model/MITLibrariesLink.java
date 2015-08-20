@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by serg on 5/19/15.
- */
 public class MITLibrariesLink implements Parcelable {
 
     @SerializedName("title")
@@ -20,8 +17,9 @@ public class MITLibrariesLink implements Parcelable {
         // empty constructor
     }
 
-    public MITLibrariesLink(String title) {
+    public MITLibrariesLink(String title, String url) {
         this.title = title;
+        this.url = url;
     }
 
     public String getTitle() {

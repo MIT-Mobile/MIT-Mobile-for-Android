@@ -19,13 +19,16 @@ import edu.mit.mitmobile2.libraries.model.MITLibrariesUser;
 import edu.mit.mitmobile2.libraries.model.MITLibrariesWorldcatItem;
 import edu.mit.mitmobile2.shared.logging.LoggingManager;
 import retrofit.Callback;
+import retrofit.client.Response;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Headers;
+import retrofit.http.POST;
+import retrofit.mime.TypedString;
 
-/**
- * Created by grmartin on 5/7/15.
- */
 public class LibraryManager extends RetrofitManager {
     private static final MitLibraryService MIT_LIBRARY_SERVICE = MIT_REST_ADAPTER.create(MitLibraryService.class);
+    private static final MitSecureService MIT_SECURE_SERVICE = MIT_REST_ADAPTER.create(MitSecureService.class);
 
     private static final int LIBRARY_ITEMS_SEARCH_LIMIT = 20;
 
@@ -33,9 +36,17 @@ public class LibraryManager extends RetrofitManager {
     public static void makeHttpCall(String apiType, String path, HashMap<String, String> pathParams, HashMap<String, String> queryParams, Object callback)
             throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
 
-        Method m = findMethodViaDirectReflection(MitLibraryService.class, path, pathParams, queryParams, Callback.class);
-        LoggingManager.Timber.d("Method = " + m);
-        m.invoke(MIT_LIBRARY_SERVICE, callback);
+        if (apiType.equals(Constants.SECURE) && path.equals(Constants.Secure.SECURE_USER_PATH)) {
+            Method m = findMethodViaDirectReflection(MitSecureService.class, path, pathParams, queryParams, Callback.class);
+            LoggingManager.Timber.d("Method = " + m);
+
+            m.invoke(MIT_SECURE_SERVICE, callback);
+        } else {
+            Method m = findMethodViaDirectReflection(MitLibraryService.class, path, pathParams, queryParams, Callback.class);
+            LoggingManager.Timber.d("Method = " + m);
+
+            m.invoke(MIT_LIBRARY_SERVICE, callback);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -113,6 +124,36 @@ public class LibraryManager extends RetrofitManager {
         return returnValue;
     }
 
+    public static LibraryManagerCall getLoginAuth(Activity activity, Callback<Response> callback) {
+        LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
+
+        returnValue.getClient().get(Constants.SECURE, Constants.Secure.SECURE_USER_PATH, null, null, returnValue);
+
+        return returnValue;
+    }
+
+    public static LibraryManagerCall loginUser(Activity activity, Callback<Response> callback) {
+        LibraryManagerCallWrapper<?> returnValue = new LibraryManagerCallWrapper<>(new MITAPIClient(activity), callback);
+
+        returnValue.getClient().get(Constants.LOGIN, "/", null, null, returnValue);
+
+        return returnValue;
+    }
+
+    public static void postLoginToIdp(TypedString body, Callback<Response> callback) {
+        MIT_SECURE_SERVICE._postloginuser(body, callback);
+    }
+
+    public static void postAuthToShibboleth(TypedString body, Callback<Response> callback) {
+        MIT_SECURE_SERVICE._postloginuser2(body, callback);
+    }
+
+
+    public static void setUsernameAndPassword(String username, String password) {
+        RetrofitManager.userName = username;
+        RetrofitManager.password = password;
+    }
+
     /* POST requests */
 
     public interface MitLibraryService {
@@ -136,6 +177,27 @@ public class LibraryManager extends RetrofitManager {
 
         @GET(Constants.Secure.SECURE_USER_PATH)
         void _getuser(Callback<MITLibrariesMITIdentity> callback);
+    }
+
+    public interface MitSecureService {
+        @Headers({
+                "Accept: application/vnd.paos+xml,*/*",
+                "PAOS: ver=\"urn:liberty:paos:2003-08\"; \"urn:oasis:names:tc:SAML:2.0:profiles:SSO:ecp\";"
+        })
+        @GET(Constants.Secure.SECURE_USER_PATH)
+        void _getsecure(Callback<Response> callback);
+
+        @Headers({
+                "Content-Type: application/vnd.paos+xml"
+        })
+        @POST("/idp/profile/SAML2/SOAP/ECP")
+        void _postloginuser(@Body TypedString obj, Callback<Response> callback);
+
+        @Headers({
+                "Content-Type: application/vnd.paos+xml"
+        })
+        @POST("/SAML2/ECP")
+        void _postloginuser2(@Body TypedString obj, Callback<Response> callback);
     }
 
     public static class LibraryManagerCallWrapper<T> extends MITAPIClient.ApiCallWrapper<T> implements LibraryManagerCall, Callback<T> {
