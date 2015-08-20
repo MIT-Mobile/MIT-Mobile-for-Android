@@ -24,8 +24,6 @@ public class LibraryLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library_login);
-
-
     }
 
     @OnClick(R.id.login_button)
@@ -34,7 +32,6 @@ public class LibraryLoginActivity extends AppCompatActivity {
         String pwd = String.valueOf(password.getText());
 
         // TODO: Connect with touchstone somehow
-
 
         if (saveLoginSwitch.isChecked()) {
             // TODO: Save login info in AccountUtils?

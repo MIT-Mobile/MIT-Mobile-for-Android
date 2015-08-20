@@ -13,8 +13,7 @@ import butterknife.InjectView;
 import edu.mit.mitmobile2.R;
 import edu.mit.mitmobile2.libraries.adapter.AccountPagerAdapter;
 
-public class AccountActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
-        PagerSlidingTabStrip.OnTabReselectedListener {
+public class AccountActivity extends AppCompatActivity {
 
     @InjectView(R.id.account_viewpager)
     ViewPager viewPager;
@@ -40,31 +39,9 @@ public class AccountActivity extends AppCompatActivity implements ViewPager.OnPa
     }
 
     private void setupTabHost() {
-        tabHost.setOnTabReselectedListener(this);
         tabHost.setAllCaps(true);
-        tabHost.setOnPageChangeListener(this);
         tabHost.setTextColorResource(R.color.mit_red);
         tabHost.setIndicatorColorResource(R.color.mit_red);
         tabHost.setShouldExpand(true);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onTabReselected(int i) {
-
     }
 }
