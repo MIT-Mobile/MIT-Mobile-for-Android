@@ -11,9 +11,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,6 +33,7 @@ import edu.mit.mitmobile2.shared.logging.LoggingManager.Timber;
 import retrofit.Endpoint;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public abstract class RetrofitManager {
@@ -98,18 +103,30 @@ public abstract class RetrofitManager {
         }
     };
 
-    protected static RestAdapter MIT_REST_ADAPTER = new RestAdapter.Builder()
-            .setEndpoint(mitEndpoint)
-            .setConverter(new GsonConverter(gson))
-            .setLog(new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                    Timber.d(message);
-                }
-            })
-            .setRequestInterceptor(requestInterceptor)
-            .setLogLevel(RestAdapter.LogLevel.FULL)
-            .build();
+    protected static RestAdapter MIT_REST_ADAPTER;
+
+    static {
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+
+        OkHttpClient client = new OkHttpClient();
+        client.setCookieHandler(cookieManager);
+
+        OkClient restServiceClient = new OkClient(client);
+        MIT_REST_ADAPTER = new RestAdapter.Builder()
+                .setEndpoint(mitEndpoint)
+                .setClient(restServiceClient)
+                .setConverter(new GsonConverter(gson))
+                .setLog(new RestAdapter.Log() {
+                    @Override
+                    public void log(String message) {
+                        Timber.d(message);
+                    }
+                })
+                .setRequestInterceptor(requestInterceptor)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+    }
 
     public static void changeEndpoint(String url) {
         if (mitEndpoint.getUrl() != null) {
